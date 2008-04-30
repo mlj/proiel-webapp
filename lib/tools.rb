@@ -1,4 +1,3 @@
-require 'tools/unicode-normaliser'
 require 'tools/static_tagger'
 require 'tools/dictionary_loader'
 require 'tools/db_validator'
@@ -9,15 +8,9 @@ require 'jobs'
 
 module PROIEL
   module Tools
-    def self.available_tools
-      [ "unicode-normaliser" ]
-    end
-
     # Executes a tool.
     def self.execute(tool_name, user_name, *args)
       case tool_name
-      when "unicode-normaliser"
-        t = UnicodeNormaliser
       when "static-tagger"
         t = StaticTagger
       when "dictionary-loader"

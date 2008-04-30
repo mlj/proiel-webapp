@@ -49,6 +49,7 @@ module PROIEL
 
           #check_dependency_structure_completeness(logger)
           check_orphaned_tokens(logger)
+          check_normalisation(logger)
         end
       end
 
@@ -198,6 +199,47 @@ module PROIEL
         end
 
         logger.info { "Checking that lemma morphology does not contradict token morphology..." }
+      end
+
+      def check_normalisation(logger)
+        Source.find(:all).each do |source|
+          source.sentences.each do |sentence|
+            sentence.tokens.each do |token|
+              unless token.form.nil?
+                normalisation = Unicode::normalize_C(token.form)
+                if normalisation != token.form
+                  logger.warning { "Token #{token.id}: Token form is not normalised" }
+                  if @fix
+                    token.form = normalisation
+                    token.save!
+                  end
+                end
+              end
+
+              unless token.composed_form.nil?
+                normalisation = Unicode::normalize_C(token.composed_form)
+                if normalisation != token.composed_form
+                  logger.warning { "Token #{token.id}: Token composed_form is not normalised" }
+                  if @fix
+                    token.composed_form = normalisation
+                    token.save!
+                  end
+                end
+              end
+            end
+          end
+        end
+
+        Lemma.find(:all).each do |lemma|
+          normalisation = Unicode::normalize_C(lemma.lemma)
+          if normalisation != lemma.lemma 
+            logger.warning { "Lemma #{lemma.id}: Lemma form is not normalised" }
+            if @fix
+              lemma.lemma = normalisation
+              lemma.save!
+            end
+          end
+        end
       end
     end
   end
