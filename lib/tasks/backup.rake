@@ -7,7 +7,8 @@ namespace :db do
 
   task :backup => [:environment] do
     # Grab arguments
-    max_backups = ENV["MAX"].to_i || 20
+    max_backups = ENV["MAX"] || 20 
+    max_backups = max_backups.to_i
     backup_folder = ENV["DIR"] || File.join('db', 'backup')
 
     # Figure out directories and file names
