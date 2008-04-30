@@ -1,0 +1,14 @@
+<% stylesheet "concordance" %>
+
+<table class="concordance">
+  <% concordance.each_with_index do |token, i| %>
+    <tr class="<%= i.odd? ? 'odd' : '' %>">
+      <td class="reference">
+        <%= link_to(readable_reference(token.reference), annotation_url(token.sentence)) %>&nbsp;<%= readable_completion(token.sentence, :checkmark => :only) %>
+      </td>
+      <td class="left"><%= format_abbreviated_sentence(token.previous_tokens, -5) %></td>
+      <td class="centre"><%= token.form %></td>
+      <td class="right"><%= format_abbreviated_sentence(token.next_tokens, 5) %></td>
+    </tr>
+  <% end %>
+</table>

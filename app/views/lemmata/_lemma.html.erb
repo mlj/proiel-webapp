@@ -1,0 +1,6 @@
+<tr>
+  <td class="foreign-word"><%=h lemma.lemma %></td>
+  <td class="language"><%= readable_language(lemma.language) %></td>
+  <td><% if lemma.short_gloss %><q><%= lemma.short_gloss %></q><% else %>&nbsp;<% end %></td>
+  <td><%= link_to 'Details', lemma %></td>
+</tr>

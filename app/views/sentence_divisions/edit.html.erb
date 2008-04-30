@@ -1,0 +1,34 @@
+<% javascript "sentence_divisions" %>
+<% stylesheet 'sentence_divisions' %>
+
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Sentence divisions', :edit_url => :edit_annotation_sentence_division_url } %>
+
+<div class="sentence-divisions">
+  <%= format_sentence(@sentence.previous_sentences.last(5) + [@sentence] + @sentence.next_sentences.first(5),
+                      { :verse_numbers => :all, :focused_sentence => @sentence.id, :sentence_numbers => true }) %>
+</div>
+
+<div class="adjustment-area">
+  <% @fixed.each do |token| %>
+    <span class="covered adjustable"><%= token.form %><span class="token-number"><%= token.token_number %></span></span>
+  <% end %>
+  <% @shorten.each_with_index do |token, i| %>
+    <span class="covered adjustable" id="change<%= i + 1 - @shorten.length %>"><%= token.form %><span class="token-number"><%= token.token_number %></span></span>
+  <% end %>
+  <% @expand.each_with_index do |token, i| %>
+    <span class="adjustable" id="change<%= i + 1 %>"><%= token.form %><span class="token-number"><%= token.token_number %></span></span>
+  <% end %>
+  <%= link_to_function(image_tag('delete.png', :alt => 'Shorten sentence', :border => 'none'), "shortenAfter()"); %>
+  <%= link_to_function(image_tag('add.png', :alt => 'Expand sentence', :border => 'none'), "expandAfter()"); %>
+  <br/>
+</div>
+
+<div class="annotation-actions">
+  <%= wizard_options(nil, params[:wizard]) %>
+  <%= button_to 'Flag bad sentence division', :action => 'flag_bad_alignment', :annotation_id => @sentence, :wizard => params[:wizard] %>
+
+  <% form_tag({ :controller => 'sentence_divisions', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :method => :put) do -%>
+    <%= hidden_field_tag 'change' %>
+    <%= submit_tag "Save", :id => 'submit' %>
+ <% end %>
+</div>

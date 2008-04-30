@@ -1,0 +1,40 @@
+8
+
+dir
+164
+http://svn.jamesgolick.com/resource_controller/tags/stable/test/app
+http://svn.jamesgolick.com/resource_controller
+
+
+
+2008-02-15T21:19:13.293570Z
+144
+james
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+a0c33c4f-3f3c-0410-8ba4-d3650ac1a399
+
+helpers
+dir
+
+models
+dir
+
+controllers
+dir
+
+views
+dir
+

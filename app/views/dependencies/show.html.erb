@@ -1,0 +1,17 @@
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Dependency structure', :edit_url => :annotation_dependencies_url } %>
+
+  <p style="text-align:center">
+    <%= format_sentence(@sentence, { 
+                             :verse_numbers => :noninitial,
+                             :sentence_numbers => true,
+                             :token_numbers => true,
+                             :tooltip => :morphtags,
+                             :ignore_fusing => true,
+    } ) %>
+  </p>
+
+<%= render :partial => 'show' %>
+
+<div class="annotation-actions">
+  <%= wizard_options(edit_annotation_dependencies_path(@sentence), params[:wizard]) %>
+</div>

@@ -1,0 +1,4 @@
+<%= form.collection_select :user_id, User.find(:all), :id, :login %>
+<%= form.collection_select :source_id, Source.find(:all), :id, :code %>
+<%= form.text_field :sentence_id %>
+<%= form.text_field :flow %>

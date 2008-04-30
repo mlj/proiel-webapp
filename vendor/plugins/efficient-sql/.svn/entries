@@ -1,0 +1,97 @@
+8
+
+dir
+30
+svn://rubyforge.org/var/svn/efficient-sql
+svn://rubyforge.org/var/svn/efficient-sql
+
+
+
+2008-03-09T06:42:53.150937Z
+30
+phlip
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+b2499610-0f32-4603-ac0a-af29e4de0430
+
+test
+dir
+
+Rakefile
+file
+
+
+
+
+2008-04-20T12:48:10.000000Z
+a09fc9c32cc5b87bc5d7292b6fa83c53
+2008-01-13T22:18:23.131160Z
+18
+phlip
+
+tasks
+dir
+
+init.rb
+file
+
+
+
+
+2008-04-20T12:48:10.000000Z
+7ce4aff82dbbb95125c8794bec36775a
+2008-01-07T15:19:41.099649Z
+1
+phlip
+
+lib
+dir
+
+install.rb
+file
+
+
+
+
+2008-04-20T12:48:10.000000Z
+cbe738c10eba4ae2da8c6859c9723e44
+2008-01-07T15:19:41.099649Z
+1
+phlip
+
+uninstall.rb
+file
+
+
+
+
+2008-04-20T12:48:10.000000Z
+2a5fc883fe7f8dfe22ced24643d59ad4
+2008-01-07T15:19:41.099649Z
+1
+phlip
+
+README
+file
+
+
+
+
+2008-04-20T12:48:10.000000Z
+4d8f088d8e30142a7a6a18834f9bcffe
+2008-01-14T15:07:11.523290Z
+24
+phlip
+

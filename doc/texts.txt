@@ -1,0 +1,17 @@
+TEKSTER
+
+Språk         Komplett  Segmentert  Setnings-  POS  Morf.  Lemmatisert
+              tekst     (D=disamb.) grenser        (D=disamb.)
+======================================================================
+Gotisk        N (1)     ?           ?          J    N      ?
+Kirkeslavisk  J         N           ?          N    N      N
+Armensk       J         N           ?          N    N      N
+
+(1) Basert på Wulfila, ikke Titus
+
+             Sidestilling    Strong-tall
+             (setningsnivå)
+========================================
+Gotisk       N               N
+Kirkeslavisk N               N
+Armensk      N               N

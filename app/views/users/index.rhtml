@@ -1,0 +1,6 @@
+<% search_form_tag users_path do %>
+  <label>User name</label><%= text_field_tag :login, params[:login] %>
+<% end %>
+
+<%= render_tabular @users, :pagination => true, :new => new_user_path,
+  :fields => [ 'User name', 'Name', 'Role', 'Activated' ] %>

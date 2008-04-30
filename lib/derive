@@ -1,0 +1,427 @@
+#!/usr/bin/env ruby
+
+# Set KCODE to UTF8 and grab active_support to get hold of real
+# string functions. Ye gods, how silly... 
+$KCODE = 'UTF8'
+require 'active_support'
+require 'oniguruma'
+include Oniguruma
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
+
+require 'proiel/morphtag'
+
+classes = { 
+  :GRa => { :tag => 'Ne-s---m--', :stemmer => 'as', :infl => { :case => { :n => 'as', :v => 'a', :a => 'am', :g => 'ae', :d => 'ae', :b => 'a' }, }, },
+  :GRb => { :tag => 'Ne-s---m--', :stemmer => 'as', :infl => { :case => { :n => 'as', :v => 'a', :a => 'an', :g => 'ae', :d => 'ae', :b => 'a' }, }, },
+  :GRc => { :tag => 'Ne-s---m--', :stemmer => 'es', :infl => { :case => { :n => 'es',            :a => 'em', :g => 'is', :d => 'i',  :b => 'e' }, }, },
+  :GRd => { :tag => 'Ne-s---m--', :stemmer => 'es', :infl => { :case => { :n => 'es',            :a => 'en', :g => 'is', :d => 'i',  :b => 'e' }, }, },
+  :GRe  => { :tag => 'N--s---m--', :stemmer => 'us', :infl => { :case => { :n => 'us', :v => 'u', :a => 'um', :g => 'u',  :d => 'ui', :b => 'u' }, }, },
+  # First declension inflection. There are some masculines that decline this way,
+  # so the tag pattern does not restrict the gender.
+  :D1  => { :tag => 'N---------', :stemmer => 'a', :infl => { 
+    :number => {
+      :s => { :case => { :n => 'a',  :v => 'a',  :a => 'am', :g => 'ae',   :d => 'ae', :b => 'a' }, }, 
+      :p => { :case => { :n => 'ae', :v => 'ae', :a => 'as', :g => 'arum', :d => 'is', :b => 'is' }, },
+    }, 
+  }, },
+  # Masculine second declension inflection. There are some feminines that decline this
+  # way as well, so the tag pattern does not restrict the gender.
+  :D2m  => { :tag => 'N---------', :stemmer => 'us', :infl => { 
+    :number => {
+      :s => { :case => { :n => 'us', :v => 'e', :a => 'um', :g => 'i',    :d => 'o',  :b => 'o' }, }, 
+      :p => { :case => { :n => 'i',  :v => 'i', :a => 'os', :g => 'orum', :d => 'is', :b => 'is' }, },
+    }, 
+  }, },
+  # Neuter second declension inflection.
+  :D2n => { :tag => 'N------n--', :stemmer => 'um', :infl => { 
+    :number => {
+      :s => { :case => { :n => 'um', :v => 'um', :a => 'um', :g => 'i',    :d => 'o',  :b => 'o' }, }, 
+      :p => { :case => { :n => 'a',  :v => 'a',  :a => 'a',  :g => 'orum', :d => 'is', :b => 'is' }, },
+    }, 
+  }, },
+  :D3  =>  { :tag => 'N------m--', :stemmer => '',   :infl => { 
+    :number => {
+       :s => { :case => { :n => '',   :v => '',   :a => 'em', :g => 'is', :d => 'i',    :b => 'e' }, }, 
+       :p => { :case => { :n => 'es', :v => 'es', :a => 'es', :g => 'um', :d => 'ibus', :b => 'ibus' }, }, 
+    },
+  }, },
+  :D4m  => { :tag => 'N------m--', :stemmer => 'us', :infl => { 
+    :number => {
+       :s => { :case => { :n => 'us', :v => 'us', :a => 'um', :g => 'us',  :d => 'ui',   :b => 'u' }, }, 
+       :p => { :case => { :n => 'us', :v => 'us', :a => 'us', :g => 'uum', :d => 'ibus', :b => 'ibus' }, }, 
+    },
+  }, },
+  # Regular a/o-adjectival inflection
+  :A3  => { :stemmer => 'us', :infl => { 
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => 'us', :v => 'e',  :a => 'um', :g => 'i',  :d => 'o',  :b => 'o' }, },
+          :n => { :case => { :n => 'um', :v => 'um', :a => 'um', :g => 'i',  :d => 'o',  :b => 'o' }, },
+          :f => { :case => { :n => 'a',  :v => 'a',  :a => 'am', :g => 'ae', :d => 'ae', :b => 'a' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'i',  :v => 'i',  :a => 'os', :g => 'orum', :d => 'is', :b => 'is' }, },
+          :n => { :case => { :n => 'a',  :v => 'a',  :a => 'a',  :g => 'orum', :d => 'is', :b => 'is' }, },
+          :f => { :case => { :n => 'ae', :v => 'ae', :a => 'as', :g => 'arum', :d => 'is', :b => 'is' }, },
+        },  
+      },
+    }, 
+  }, },
+  # = A3 only plur
+  :A3x => { :stemmer => 'i', :infl => { 
+    :number => {
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'i',  :v => 'i',  :a => 'os', :g => 'orum', :d => 'is', :b => 'is' }, },
+          :n => { :case => { :n => 'a',  :v => 'a',  :a => 'a',  :g => 'orum', :d => 'is', :b => 'is' }, },
+          :f => { :case => { :n => 'ae', :v => 'ae', :a => 'as', :g => 'arum', :d => 'is', :b => 'is' }, },
+        },  
+      },
+    }, 
+  }, },
+  # Regular a/o-adjectival inflection, but with zero ending instead of -us
+  :A3Z  => { :stemmer => '', :infl => { 
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => '', :v => 'e',  :a => 'um', :g => 'i',  :d => 'o',  :b => 'o' }, },
+          :n => { :case => { :n => 'um', :v => 'um', :a => 'um', :g => 'i',  :d => 'o',  :b => 'o' }, },
+          :f => { :case => { :n => 'a',  :v => 'a',  :a => 'am', :g => 'ae', :d => 'ae', :b => 'a' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'i',  :v => 'i',  :a => 'os', :g => 'orum', :d => 'is', :b => 'is' }, },
+          :n => { :case => { :n => 'a',  :v => 'a',  :a => 'a',  :g => 'orum', :d => 'is', :b => 'is' }, },
+          :f => { :case => { :n => 'ae', :v => 'ae', :a => 'as', :g => 'arum', :d => 'is', :b => 'is' }, },
+        },  
+      },
+    }, 
+  }, },
+  # a/o inflection in -er, -rum, type noster
+  :A3ER => { :stemmer => 'er', :infl => {
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => 'er', :v => 'er', :a => 'rum', :g => 'ri',  :d => 'ro',  :b => 'ro' }, },
+          :n => { :case => { :n => 'rum',:v => 'rum',:a => 'rum', :g => 'ri',  :d => 'ro',  :b => 'ro' }, },
+          :f => { :case => { :n => 'ra', :v => 'ra', :a => 'ram', :g => 'rae', :d => 'rae', :b => 'ra' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'ri',  :v => 'ri',  :a => 'ros', :g => 'rorum', :d => 'ris', :b => 'ris' }, },
+          :n => { :case => { :n => 'ra',  :v => 'ra',  :a => 'ra',  :g => 'rorum', :d => 'ris', :b => 'ris' }, },
+          :f => { :case => { :n => 'rae', :v => 'rae', :a => 'ras', :g => 'rarum', :d => 'ris', :b => 'ris' }, },
+        },  
+      },
+    }, 
+  }, },
+  # "Pronominal" a/o-adjectival inflection, i.e. = A3 but with -i, -ius
+  :A3P  => { :stemmer => 'us', :infl => { 
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => 'us', :v => 'e',  :a => 'um', :g => 'ius', :d => 'i', :b => 'o' }, },
+          :n => { :case => { :n => 'um', :v => 'um', :a => 'um', :g => 'ius', :d => 'i', :b => 'o' }, },
+          :f => { :case => { :n => 'a',  :v => 'a',  :a => 'am', :g => 'ius', :d => 'i', :b => 'a' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'i',  :v => 'i',  :a => 'os', :g => 'orum', :d => 'is', :b => 'is' }, },
+          :n => { :case => { :n => 'a',  :v => 'a',  :a => 'a',  :g => 'orum', :d => 'is', :b => 'is' }, },
+          :f => { :case => { :n => 'ae', :v => 'ae', :a => 'as', :g => 'arum', :d => 'is', :b => 'is' }, },
+        },  
+      },
+    }, 
+  }, },
+  # "Pronominal" a/o-adjectival inflection, but with zero ending instead of -us, i.e. = A3Z but with -i, -ius
+  :A3PZ  => { :stemmer => 'us', :infl => { 
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => '',   :v => 'e',  :a => 'um', :g => 'ius', :d => 'i', :b => 'o' }, },
+          :n => { :case => { :n => 'um', :v => 'um', :a => 'um', :g => 'ius', :d => 'i', :b => 'o' }, },
+          :f => { :case => { :n => 'a',  :v => 'a',  :a => 'am', :g => 'ius', :d => 'i', :b => 'a' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'i',  :v => 'i',  :a => 'os', :g => 'orum', :d => 'is', :b => 'is' }, },
+          :n => { :case => { :n => 'a',  :v => 'a',  :a => 'a',  :g => 'orum', :d => 'is', :b => 'is' }, },
+          :f => { :case => { :n => 'ae', :v => 'ae', :a => 'as', :g => 'arum', :d => 'is', :b => 'is' }, },
+        },  
+      },
+    }, 
+  }, },
+  # "Pronominal" a/o-adjectival inflection, but with zero ending instead of -us, i.e. = A3Z but with -i, -ius and -er > -r-
+  :A3PZER  => { :stemmer => 'er', :infl => { 
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => 'er', :v => 'er', :a => 'rum', :g => 'rius', :d => 'ri', :b => 'ro' }, },
+          :n => { :case => { :n => 'rum', :v => 'rum', :a => 'rum', :g => 'rius', :d => 'ri', :b => 'ro' }, },
+          :f => { :case => { :n => 'ra',  :v => 'ra',  :a => 'ram', :g => 'rius', :d => 'ri', :b => 'ra' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'ri',  :v => 'ri',  :a => 'ros', :g => 'rorum', :d => 'ris', :b => 'ris' }, },
+          :n => { :case => { :n => 'ra',  :v => 'ra',  :a => 'ra',  :g => 'rorum', :d => 'ris', :b => 'ris' }, },
+          :f => { :case => { :n => 'rae', :v => 'rae', :a => 'ras', :g => 'rarum', :d => 'ris', :b => 'ris' }, },
+        },  
+      },
+    }, 
+  }, },
+  # Adjectives of "two endings"
+  :A2  => { :stemmer => 'is', :infl => { 
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => 'is', :v => 'is', :a => 'em', :g => 'is', :d => 'i',  :b => 'e' }, },
+          :f => { :case => { :n => 'is', :v => 'is', :a => 'em', :g => 'is', :d => 'i',  :b => 'e' }, },
+          :n => { :case => { :n => 'e',  :v => 'e',  :a => 'e',  :g => 'is', :d => 'i',  :b => 'e' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'es', :v => 'es', :a => 'es', :g => 'ium', :d => 'ibus', :b => 'ibus' }, },
+          :f => { :case => { :n => 'es', :v => 'es', :a => 'es', :g => 'ium', :d => 'ibus', :b => 'ibus' }, },
+          :n => { :case => { :n => 'ia', :v => 'ia', :a => 'ia', :g => 'ium', :d => 'ibus', :b => 'ibus' }, },
+        },  
+      },
+    }, 
+  }, },
+  # Adjectives of "two endings": comparatives in -or/-us
+  :A2C => { :stemmer => 'or', :infl => { 
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => 'or',   :v => 'or', :a => 'orem', :g => 'oris', :d => 'ori', :b => 'ore' }, },
+          :f => { :case => { :n => 'or',   :v => 'or', :a => 'orem', :g => 'oris', :d => 'ori', :b => 'ore' }, },
+          :n => { :case => { :n => 'us',   :v => 'us', :a => 'us',   :g => 'oris', :d => 'ori', :b => 'ore' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'ores', :v => 'ores', :a => 'ores', :g => 'orum', :d => 'oribus', :b => 'oribus' }, },
+          :f => { :case => { :n => 'ores', :v => 'ores', :a => 'ores', :g => 'orum', :d => 'oribus', :b => 'oribus' }, },
+          :n => { :case => { :n => 'ora',  :v => 'ora',  :a => 'ora',  :g => 'orum', :d => 'oribus', :b => 'oribus' }, },
+        },  
+      },
+    }, 
+  }, },
+  # Adjectives of "one ending": no mutations
+  :A1 => { :stemmer => '', :infl => { 
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => '', :v => '', :a => 'em', :g => 'is', :d => 'i', :b => 'i' }, },
+          :f => { :case => { :n => '', :v => '', :a => 'em', :g => 'is', :d => 'i', :b => 'i' }, },
+          :n => { :case => { :n => '', :v => '', :a => 'em', :g => 'is', :d => 'i', :b => 'i' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'es', :v => 'es', :a => 'es', :g => 'ium', :d => 'ibus', :b => 'ibus' }, },
+          :f => { :case => { :n => 'es', :v => 'es', :a => 'es', :g => 'ium', :d => 'ibus', :b => 'ibus' }, },
+          :n => { :case => { :n => 'ia', :v => 'ia', :a => 'ia', :g => 'ium', :d => 'ibus', :b => 'ibus' }, },
+        },  
+      },
+    }, 
+  }, },
+  # Adjectives of "one ending": no mutations, abl. sin. -e, gen. plu. -um
+  :A1e => { :stemmer => '', :infl => { 
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => '', :v => '', :a => 'em', :g => 'is', :d => 'i', :b => 'e' }, },
+          :f => { :case => { :n => '', :v => '', :a => 'em', :g => 'is', :d => 'i', :b => 'e' }, },
+          :n => { :case => { :n => '', :v => '', :a => 'em', :g => 'is', :d => 'i', :b => 'e' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'es', :v => 'es', :a => 'es', :g => 'um', :d => 'ibus', :b => 'ibus' }, },
+          :f => { :case => { :n => 'es', :v => 'es', :a => 'es', :g => 'um', :d => 'ibus', :b => 'ibus' }, },
+          :n => { :case => { :n => 'ia', :v => 'ia', :a => 'ia', :g => 'um', :d => 'ibus', :b => 'ibus' }, },
+        },  
+      },
+    }, 
+  }, },
+  :Dntpc => { :tag => 'Df', :stemmer => 'nter', :infl => {
+    :degree => { :p => 'nter', :c => 'ntius' },
+  }, },
+  :Ditpc => { :tag => 'Df', :stemmer => 'iter', :infl => {
+    :degree => { :p => 'iter', :c => 'ius' },
+  }, },
+  # "Numeral" duo/ambo inflection
+  :A3D  => { :tag => '---p', :stemmer => 'o', :infl => { 
+    :gender => {
+      :m => { :case => { :n => 'o',  :v => 'o',  :a => 'os', :g => 'orum', :d => 'obus', :b => 'obus' }, },
+      :n => { :case => { :n => 'o',  :v => 'o',  :a => 'o',  :g => 'orum', :d => 'obus', :b => 'obus' }, },
+      :f => { :case => { :n => 'ae', :v => 'ae', :a => 'as', :g => 'arum', :d => 'abus', :b => 'abus' }, },
+    },  
+  }, },
+  # Pronominal ipse-type declension
+  :P3 => { :stemmer => 'e', :infl => { 
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => 'e', :a => 'um', :g => 'ius', :d => 'i', :b => 'o' }, },
+          :n => { :case => { :n => 'ud',:a => 'ud', :g => 'ius', :d => 'i', :b => 'o' }, },
+          :f => { :case => { :n => 'a', :a => 'am', :g => 'ius', :d => 'i', :b => 'a' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'i',  :a => 'os', :g => 'orum', :d => 'is', :b => 'is' }, },
+          :n => { :case => { :n => 'a',  :a => 'a',  :g => 'orum', :d => 'is', :b => 'is' }, },
+          :f => { :case => { :n => 'ae', :a => 'as', :g => 'arum', :d => 'is', :b => 'is' }, },
+        },  
+      },
+    }, 
+  }, },
+}
+
+# Generates inflections recursively. If the given starting tag
+# +tag+ is in conflict with a field value to be generated,
+# this is simply skipped. This is useful, for example,
+# for generating plurlalia tanta based on a general singular-
+# plural-scheme.
+# FIXME: change this behaviour by being explicit about what
+# should be ignored?
+def each_inflection(stem, tag, inflections, &block)
+  inflections.each_pair do |field, field_values|
+    field_values.each_pair do |field_value, next_level|
+      new_tag = tag.dup
+      if new_tag[field] == '-' or new_tag[field] == field_value
+        new_tag[field] = field_value 
+        if next_level.is_a?(String)
+          block.call(new_tag, stem + next_level)
+        else
+          each_inflection(stem, new_tag, next_level, &block)
+        end
+      else
+#        STDERR.puts "Ignoring: #{new_tag} > #{field} = #{field_value} for #{stem}"
+      end
+    end
+  end
+end
+
+# Emits a new rule
+def emit(language, lemma, variant, form, tag, options = {})
+  if tag.complete?
+    if options[:caseless]
+      capitalised_form = form.chars.capitalize
+      emit(language, lemma, variant, capitalised_form, tag) unless capitalised_form == form
+    end
+
+    # Language hooks
+    if language == "grc"
+      grave_form = acute_to_grave(form)
+      emit(language, lemma, variant, grave_form, tag) unless grave_form == form
+    end
+
+    puts [language, lemma, variant, form, tag.to_abbrev_s].join(',') 
+  else
+    STDERR.puts "Ignoring rule #{tag} for #{form}/#{lemma} (#{variant}): Incomplete tag."
+  end
+end
+
+# Ad hoc function for Greek: Generate form variants with acute -> grave
+# assert_equal 'μηδὲ' == acute_to_grave('μηδέ')
+ACUTE_TO_GRAVE = ORegexp.new([0x301].pack("U*") + '$')
+
+def acute_to_grave(s)
+  ACUTE_TO_GRAVE.sub(s.chars.decompose, [0x300].pack("U*")).chars.normalize
+end
+
+
+options = {}
+while ARGV.first.slice(1, 1) == '-'
+  case ARGV.shift
+  when '--caseless'
+    options[:caseless] = true
+  else
+    raise "Invalid argument"
+  end
+end
+
+unless ARGV.length == 2
+  STDERR.puts "Usage: derive language rule-file"
+  exit 1
+end
+
+language, rule_file = ARGV
+
+File.open(rule_file) do |f|
+  cur_pos = nil
+  cur_cls = nil
+  f.each_line do |l|
+    l.strip! # Get rid of surrounding whitespace and EOLs
+    l.sub!(/\s*#.*$/, '') # Ignore comments
+
+    next if l.empty?
+
+    if l[/^([\w-]+)(:(\w+))?\s+\{$/]
+      cur_pos = $1
+      cur_cls = $3
+      next
+    elsif l[/^\}$/]
+      cur_cls = nil
+      next
+    end
+
+    if cur_pos.nil?
+      STDERR.puts "Error parsing data file: Lemma definition outside class: #{l}"
+      exit 1
+    end
+
+    l.split(',').each do |lemma|
+      lemma.strip!
+      next if lemma.empty?
+
+      variant = nil
+
+      if lemma[/^(.*?):(.*?):(.*?)\/(.*)$/]
+        lemma, variant, form, tag = $1, $2, $3, $4
+      elsif lemma[/^(.*?)(:(.*?))?(\/(.*))?$/]
+        lemma, form, tag = $1, $3, $5
+      else
+        STDERR.puts "Error parsing field #{lemma} from line #{l}"
+        exit 1
+      end
+
+      form ||= lemma
+
+      if cur_cls
+        template = PROIEL::MorphTag.new(cur_pos)
+        template.union!(cur_pos + tag) if tag
+
+        cls = cur_cls
+        base_tag = classes[cls.to_sym][:tag]
+        template.union!(base_tag) if base_tag
+
+        inflections = classes[cls.to_sym][:infl]
+        stemmer = classes[cls.to_sym][:stemmer]
+        stem = form.gsub(/#{stemmer}$/, '')
+
+        each_inflection(stem, template, inflections) { |tag, form| 
+          emit(language, lemma, variant, form, tag, options)
+        }
+      else
+        emit(language, lemma, variant, form, PROIEL::MorphTag.new(tag ? cur_pos + tag : cur_pos), options)
+      end
+    end
+  end
+end
+
+
+
+

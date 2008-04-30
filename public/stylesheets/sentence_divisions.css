@@ -1,0 +1,23 @@
+.covered {
+  background-color: #F9CA69;
+}
+
+.adjustable {
+  border: 1px solid black;
+  padding: .25em .25em .25em .25em;
+  margin-left: .25em;
+  margin-bottom: .25em;
+  float: left;
+}
+
+.adjustment-area {
+  margin-top: 1em;
+}
+
+.adjustment-area br {
+  clear: both;
+}
+
+.adjustment-area img {
+  float: left;
+}

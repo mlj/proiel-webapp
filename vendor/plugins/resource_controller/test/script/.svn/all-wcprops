@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/resource_controller/!svn/ver/153/tags/stable/test/script
+END
+console
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/resource_controller/!svn/ver/153/tags/stable/test/script/console
+END
+server
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/resource_controller/!svn/ver/153/tags/stable/test/script/server
+END
+destroy
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/resource_controller/!svn/ver/153/tags/stable/test/script/destroy
+END
+generate
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/resource_controller/!svn/ver/153/tags/stable/test/script/generate
+END

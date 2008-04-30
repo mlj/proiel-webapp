@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates
+END
+unit_test.rb
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/unit_test.rb
+END
+view_show.erb
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/view_show.erb
+END
+helper.rb
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/helper.rb
+END
+view_index.haml
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/view_index.haml
+END
+shoulda_functional_test.rb
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/shoulda_functional_test.rb
+END
+controller.rb
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/controller.rb
+END
+view_edit.erb
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/view_edit.erb
+END
+old_migration.rb
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/old_migration.rb
+END
+view_show.haml
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/view_show.haml
+END
+view_new.erb
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/view_new.erb
+END
+migration.rb
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/migration.rb
+END
+view_edit.haml
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/view_edit.haml
+END
+model.rb
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/model.rb
+END
+view_new.haml
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/view_new.haml
+END
+functional_test.rb
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/functional_test.rb
+END
+view__form.erb
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/view__form.erb
+END
+view_index.erb
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/view_index.erb
+END
+fixtures.yml
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/fixtures.yml
+END
+view__form.haml
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/resource_controller/!svn/ver/153/tags/stable/generators/scaffold_resource/templates/view__form.haml
+END

@@ -1,0 +1,6 @@
+<tr>
+  <td><%= link_to user.login, user %></td>
+  <td><%= user.first_name %> <%= user.last_name %></td>
+  <td><%= user.role.description %></td>
+  <td><%= user.activated? ? 'Yes' : 'No' %></td>
+</tr>

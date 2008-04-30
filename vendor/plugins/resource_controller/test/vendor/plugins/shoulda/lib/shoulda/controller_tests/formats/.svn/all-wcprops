@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/resource_controller/!svn/ver/153/tags/stable/test/vendor/plugins/shoulda/lib/shoulda/controller_tests/formats
+END
+xml.rb
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/resource_controller/!svn/ver/153/tags/stable/test/vendor/plugins/shoulda/lib/shoulda/controller_tests/formats/xml.rb
+END
+html.rb
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/resource_controller/!svn/ver/153/tags/stable/test/vendor/plugins/shoulda/lib/shoulda/controller_tests/formats/html.rb
+END

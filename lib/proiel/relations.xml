@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tagset id="tags">
+  <tag code="pred" summary="predicate" shortcut="p"/>
+  <tag code="sub" summary="subject" shortcut="s"/>
+  <tag code="obj" summary="object" shortcut="o">
+    <isa ref="arg"/>
+  </tag>
+  <tag code="obl" summary="oblique" shortcut="b">
+    <isa ref="arg"/>
+    <isa ref="per"/>
+  </tag>
+  <tag code="part" summary="partitive">
+    <isa ref="adnom"/>
+  </tag>
+  <tag code="piv" summary="predicative"/>
+  <tag code="atr" summary="attribute" shortcut="t">
+    <isa ref="rel"/>
+    <isa ref="adnom"/>
+  </tag>
+  <tag code="apos" summary="apposition">
+    <isa ref="rel"/>
+    <isa ref="adnom"/>
+  </tag>
+  <tag code="rel" summary="apposition or attribute">
+    <isa ref="adnom"/>
+  </tag>
+  <tag code="ag" summary="agens"/>
+  <tag code="adv" summary="adverbial" shortcut="d">
+    <isa ref="per"/>
+  </tag>
+  <tag code="aux" summary="auxiliary" shortcut="x"/>
+  <tag code="arg" summary="argument (object or oblique)">
+    <isa ref="nonsub"/>
+  </tag>
+  <tag code="per" summary="peripheral (oblique or adverbial)">
+    <isa ref="nonsub"/>
+  </tag>
+  <tag code="nonsub" summary="non-subject (object, oblique or adverbial)"/>
+  <tag code="xadv" summary="open adverbial complement"/>
+  <tag code="xobj" summary="open objective complement"/>
+  <tag code="voc" summary="vocative" shortcut="v"/>
+  <tag code="parpred" summary="parenthetical predication"/>
+
+  <tag code="narg" summary="adnominal argument">
+    <isa ref="adnom"/>
+  </tag>
+  <tag code="adnom" summary="adnominal"/>
+  <tag code="comp" summary="complement"/>
+</tagset>

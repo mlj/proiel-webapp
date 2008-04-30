@@ -1,0 +1,61 @@
+8
+
+dir
+9248
+http://dev.rubyonrails.org/svn/rails/plugins/exception_notification
+http://dev.rubyonrails.org/svn/rails
+
+
+
+2008-02-08T18:26:13.576242Z
+8821
+david
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+5ecf4fe2-1ee6-0310-87b1-e25e094e27de
+
+test
+dir
+
+init.rb
+file
+
+
+
+
+2008-01-19T21:13:05.000000Z
+d68a35cf6df012c7fd6562da6355a201
+2005-10-29T15:16:10.495234Z
+2811
+david
+
+lib
+dir
+
+views
+dir
+
+README
+file
+
+
+
+
+2008-01-19T21:13:05.000000Z
+fe84727e1adb78f3b7c59207d612720b
+2005-10-30T00:00:58.572737Z
+2822
+minam
+

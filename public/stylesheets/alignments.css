@@ -1,0 +1,23 @@
+.alignment .before {
+  clear: both;
+  margin-bottom: 2em;
+}
+
+.alignment .after {
+  clear: both;
+}
+
+.alignment .focus {
+  clear: both;
+  font-weight: bold;
+}
+
+.alignment .standard {
+  width: 50%;
+  float: left;
+}
+
+.alignment .comparison {
+  width: 50%;
+  float: right;
+}

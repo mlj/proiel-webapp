@@ -1,0 +1,109 @@
+<%= create_values_list(@major_values, 'major_values') %>
+<%= create_cascade_map(@minor_values, 'minor_map') %>
+<%= create_cascade_map(@person_values, 'person_map') %>
+<%= create_cascade_map(@number_values, 'number_map') %>
+<%= create_cascade_map(@tense_values, 'tense_map') %>
+<%= create_cascade_map(@mood_values, 'mood_map') %>
+<%= create_cascade_map(@voice_values, 'voice_map') %>
+<%= create_cascade_map(@gender_values, 'gender_map') %>
+<%= create_cascade_map(@case_values, 'case_map') %>
+<%= create_cascade_map(@degree_values, 'degree_map') %>
+
+function updateField(field_id, values) {
+  var field = $(field_id);
+
+  options = field.options;
+  options.length = 0;
+
+  values.each(function(e) {
+    options[options.length] = new Option(e[0], e[1]);
+  });
+
+  if (options.length == 0) {
+    field.hide();
+  } else {
+    field.show();
+  }
+}
+
+function updateCascadedSelection(first_field_id, second_field_id, third_field_id, update_field_id, values_map) {
+  var first_field = $(first_field_id);
+  var update_field = $(update_field_id);
+  var first_id = first_field.getValue();
+
+  // Preserve the currently selection option in the update_field, if any
+  // so that we can restore it later, if it is there.
+  var old_selection = getSelectSelection(update_field);
+
+  options = update_field.options;
+  options.length = 0;
+
+  if (second_field_id) {
+    var second_field = $(second_field_id);
+    var second_id = second_field.getValue();
+
+    if (third_field_id) {
+      var third_field = $(third_field_id);
+      var third_id = third_field.getValue();
+
+      values_map.each(function(e) {
+        if (e[0] == first_id && e[1] == second_id && e[2] == third_id && e[3] && e[4]) {
+          options[options.length] = new Option(e[3], e[4]);
+        }
+      });
+    } else {
+      values_map.each(function(e) {
+        if (e[0] == first_id && e[1] == second_id && e[2] && e[3]) {
+          options[options.length] = new Option(e[2], e[3]);
+        }
+      });
+    }
+  } else {
+    values_map.each(function(e) {
+      if (e[0] == first_id && e[1] && e[2]) {
+        options[options.length] = new Option(e[1], e[2]);
+      }
+    });
+  }
+
+  if (options.length == 0) {
+    update_field.hide();
+  } else {
+    update_field.show();
+
+    // Try to restore the previously selected value, if it
+    // is still around.
+    for (var i = 0; i < update_field.options.length; i++) {
+      if (update_field.options[i].value == old_selection) {
+        update_field.options[i].selected = true;
+        break;
+      }
+    }
+  }
+}
+
+function majorSelected() {
+  updateCascadedSelection('major_field', null, null, 'minor_field', minor_map);
+  minorSelected();
+}
+
+function minorSelected() {
+  updateCascadedSelection('major_field', 'minor_field', null, 'mood_field', mood_map);
+  moodSelected();
+}
+
+function moodSelected() {
+  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'person_field', person_map);
+  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'number_field', number_map);
+  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'tense_field', tense_map);
+  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'voice_field', voice_map);
+  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'gender_field', gender_map);
+  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'case_field', case_map);
+  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'degree_field', degree_map);
+}
+
+document.observe('dom:loaded', function() {
+  $('major_field').observe('change', majorSelected);
+  $('minor_field').observe('change', minorSelected);
+  $('mood_field').observe('change', moodSelected);
+});

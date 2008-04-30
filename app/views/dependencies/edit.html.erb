@@ -1,0 +1,54 @@
+<% javascript "relations", "tree", "dependencies" %>
+<% stylesheet "dependencies" %>
+
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Dependency structure', :edit_url => :edit_annotation_dependencies_url } %>
+
+<div id="annotation" class="annotation">
+  <%= hidden_field_tag 'input-tokens', @tokens %>
+  <%= hidden_field_tag 'input-structure', @structure %>
+  <%= hidden_field_tag 'input-relations', [] %>
+
+  <div class="actions">
+    <%= button_to_function "Delete subtree", :id => 'button-delete', :disabled => true %>
+    <%= button_to_function "Cut subtree", :id => 'button-cut', :disabled => true %>
+    <%= button_to_function "Paste subtree", :id => 'button-paste', :disabled => true %>
+    <%= button_to_function "Clear", :id => "button-clear" %>
+    <%= button_to_function "Reset", :id => "button-reset" %>
+    <%= button_to_function "Add empty node", :id => "button-insert-empty-node" %>
+    <%= button_to_function "Add slash", :id => 'button-add-slash', :disabled => true %>
+    <%= button_to_function "Remove slashes", :id => 'button-remove-slashes', :disabled => true %>
+  </div>
+
+  <div class="actions">
+    <label>Build direction</label>
+    <%= radio_button_to_function "direction", "down", true, "onChangeDirectionClick()", :id => 'build-down' %> Downwards
+    <%= radio_button_to_function "direction", "up", false, "onChangeDirectionClick()", :id => 'build-up' %> Upwards 
+  </div>
+
+  <div id="palette">
+      <ul class="palette">
+        <% PROIEL::RELATIONS.values.sort_by { |v| v.code.to_s }.each do |v| %>
+          <li id="<%= v.code %>" class="box"><%= readable_relation(v.code) %></li>
+        <% end %>
+      </ul>
+  </div>
+
+  <ul id="words" style="text-align: center"> 
+    <% @sentence.word_tokens.each do |t| %>
+      <li id="word-<%= t.id %>" class="word">
+        <span class="form"><%= t.form %></span><span class="token-number"><%= t.token_number %></span>
+      </li>
+    <% end %>
+  </ul>
+
+  <ul id="relations" class="tree"></ul>
+
+  <div class="actions">
+    <% form_tag({ :controller => 'dependencies', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :method => :put) do -%>
+      <%= hidden_field_tag 'output', '' %>
+      <%= submit_tag 'Save' %>
+    <% end %>
+  </div>
+
+  <%= wizard_options(nil, params[:wizard]) %>
+</div>

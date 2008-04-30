@@ -1,0 +1,32 @@
+<% form_tag :action => 'search' do -%>
+  <p style="text-align: center">
+    <%= text_field_tag :query, params[:query] %>
+    <%= submit_tag 'Search' %>
+  </p>
+  <p style="text-align: center">
+    <%= check_box_tag :tokens, 'yes', params[:tokens] %>&nbsp;<label>Word forms</label>
+    <%= check_box_tag :lemmata, 'yes', params[:lemmata] %>&nbsp;<label>Lemmata</label>
+    <%= check_box_tag :exact, 'yes', params[:exact] %>&nbsp;<label>Only exact matches</label>
+  </p>
+<% end %>
+
+<% if params[:tokens] and @tokens %>
+  <% layer("tokens", :title => 'Matches in text') do -%>
+    <%= render :partial => 'tokens/concordance', :object => @tokens %>
+  <% end %>
+<% end %>
+
+<% if params[:lemmata] and @lemmata %>
+  <% layer("lemmata", :title => 'Matches in dictionary') do -%>
+    <table class="concordance">
+      <% @lemmata.each_with_index do |lemma, i| %>
+        <tr class="<%= i.odd? ? 'odd' : '' %>">
+          <td class="lemma"><%= link_to_lemma(lemma) %></td>
+          <td><% if lemma.short_gloss %><q><%= lemma.short_gloss %></q><% else %>&nbsp;<% end %></td>
+          <td class="language"><%= readable_language(lemma.language) %></td>
+          <td><%= lemma.frequency %> occurences</td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+<% end %>

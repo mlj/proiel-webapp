@@ -1,0 +1,4 @@
+<tr>
+  <td><%= change.auditable and change.auditable_type != 'SlashEdge' ? link_to("#{change.auditable_type} #{change.auditable_id}", change.auditable) : "#{change.auditable_type} #{change.auditable_id}" %></td>
+  <td><%= change.version - 1 %> to <%= change.version %> <%= change.current_version? ? '(current)' : '' %></td>
+</tr>

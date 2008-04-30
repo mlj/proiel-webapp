@@ -1,0 +1,26 @@
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Sentence divisions, morphology and dependency structure', :edit_url => :annotation_url } %>
+
+<% layer_if(is_reviewer?, "completion", :actions => [
+                          link_to_unless(@sentence.is_reviewed?, "Flag as reviewed", :action => 'flag_as_reviewed', :id => @sentence),
+                          link_to_if(@sentence.is_reviewed?, "Flag as not reviewed", :action => 'flag_as_not_reviewed', :id => @sentence),
+  ] ) do -%>
+  <%= format_annotator(@sentence, :time => true) %><br/>
+  <%= format_reviewer(@sentence, :time => true) %>
+<% end %>
+
+<% layer("sentence-division", :title => "Sentence division", :actions => [ 
+  link_to_if(is_annotator?, "Edit", edit_annotation_sentence_division_url(@sentence))]) do -%>
+  <%= render :partial => 'sentence_divisions/show' %>
+<% end %>
+
+<% layer("morphology", :actions => [ 
+  link_to_if(is_annotator?, "Edit", edit_annotation_morphtags_url(@sentence))]) do -%>
+  <%= render :partial => 'morphtags/legend' %>
+  <%= render :partial => 'morphtags/show' %>
+<% end %>
+
+<% layer("dependencies", :actions => [
+  link_to_if(is_annotator?, "Edit", edit_annotation_dependencies_url(@sentence))]) do -%>
+  <%= render :partial => 'dependencies/legend' %>
+  <%= render :partial => 'dependencies/show' %>
+<% end %>

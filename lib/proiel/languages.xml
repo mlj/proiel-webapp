@@ -1,0 +1,7 @@
+<tagset id="languages">
+  <tag code="la" summary="Latin"/>
+  <tag code="cu" summary="Church Slavonic"/>
+  <tag code="hy" summary="Armenian"/>
+  <tag code="grc" summary="Classical Greek"/>
+  <tag code="got" summary="Gothic"/>
+</tagset>

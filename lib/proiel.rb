@@ -1,0 +1,7 @@
+require 'proiel/tagsets'
+require 'proiel/reference'
+require 'proiel/morphtag'
+require 'proiel/src'
+require 'proiel/boundaries'
+require 'proiel/tagger'
+require 'proiel/dependency_graph'

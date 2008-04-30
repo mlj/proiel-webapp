@@ -1,0 +1,10 @@
+<div class="roundedbox">
+  <b><%= readable_reference(sentence.reference) %>:</b>
+  <%= value %> <%= readable_completion(sentence, :checkmark => :only) %><br/>
+  <%= annotation_navigation_links(sentence, edit_url) %>&nbsp;
+  <%= external_text_links(sentence.reference) %>&nbsp;
+
+  <% if is_reviewer? %>
+    <%= link_to("Low-level sentence data", sentence_url(@sentence)) %>
+  <% end %>
+</div>

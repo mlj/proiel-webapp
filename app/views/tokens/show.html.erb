@@ -1,0 +1,34 @@
+<% roundedbox do -%>
+  <dt>Token ID:</dt><dd><%= @token.id %></dd>
+  <dt>Sentence ID:</dt><dd><%= link_to @token.sentence.id, @token.sentence %></dd>
+  <dt>Linearisation index:</dt><dd><%= @token.token_number %></dd>
+  <dt>Sort:</dt><dd><%= readable_token_sort(@token.sort) %></dd>
+  <% if @token.form %>
+    <dt>Form:</dt><dd class="foreign-word"><%= @token.form %></dd>
+  <% end %>
+  <% if @token.composed_form %>
+    <dt>Composed form:</dt><dd class="foreign-word"><%= @token.composed_form %></dd>
+  <% end %>
+  <% if @token.morphtaggable? %>
+    <dt>Morphtag:</dt><dd class="morphtag"><%= @token.morphtag || '&nbsp;' %></dd>
+    <dt>Part of speech:</dt><dd><%= readable_pos(@token.morph) %></dd>
+    <dt>Morphology:</dt><dd><%= readable_morphology(@token.morph) %></dd>
+    <dt>Lemma:</dt><dd class="foreign-word"><%= @token.lemma ? link_to(@token.lemma.to_s, @token.lemma) : '&nbsp;' %></dd>
+    <% if @token.morphtag_performance %>
+      <dt>Tagger performance:</dt><dd><%= @token.morphtag_performance %></dd>
+    <% end %>
+    <% if @token.source_morphtag %>
+      <dt>Source morphtag:</dt><dd class="morphtag"><%= @token.source_morphtag %></dd>
+      <dt>Source lemma:</dt><dd class="lemma"><%= @token.source_lemma %></dd>
+    <% end %>
+  <% end %>
+  <% if @token.relation %>
+    <dt>Dependency relation:</dt><dd><%= readable_dependency(@token.relation, @token.head ? link_to(@token.head.id, @token.head) : nil) %></dd>
+  <% end %>
+  <dt>Annotation completion:</dt><dd><%= link_to(readable_completion(@token.sentence), annotation_path(@token.sentence)) %></dd>
+<% end %>
+
+<% layer("revisions") do -%>
+  <%= render :partial => 'changesets/legend' %>
+  <%= render :partial => 'changesets/audits', :object => @token.audits %>
+<% end %>

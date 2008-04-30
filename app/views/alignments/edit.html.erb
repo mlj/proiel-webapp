@@ -1,0 +1,53 @@
+<% stylesheet 'alignments' %>
+
+<%= make_information_box([
+  [ 'Location', @sentence.reference.classical_reference ],
+  [ 'External links', external_text_links(@sentence.reference) ], 
+]) %>
+
+<div class="alignment">
+  <div class="context before">
+    <%= format_sentence_for_alignment(@standard_sentence_before, :standard) %>
+    <%= format_sentence_for_alignment(@sentence_before, :comparison) %>
+  </div>
+
+  <div class="focus">
+    <%= format_sentence_for_alignment(@standard_sentence_x, :standard) %>
+    <span class="comparison">
+      <% if @sentence_before %>
+        <!-- FIXME
+        <% if @sentence_x.length > 1 %>
+          <%= link_to_remote "-", :update => 'body', :url => { :action => 'edit', :id => @sentence, :modifications => @modifications + ['shorten_first'], :_context => params[:_context] }, :html => { :title => 'Shorten sentence' } %>
+        <% end %>
+        <% if @sentence_before.length > 1 %>
+          <%= link_to_remote "+", :update => 'body', :url => { :action => 'edit', :id => @sentence, :modifications => @modifications + ['expand_first'], :_context => params[:_context] }, :html => { :title => 'Expand sentence' } %>
+        <% end %>
+        -->
+      <% end %>
+      <%= format_sentence_for_alignment(@sentence_x) %>
+      <% if @sentence_after %>
+        <!-- FIXME
+        <% if @sentence_after.length > 1 %>
+          <%= make_expand_sentence_link(:expand_last) %>
+        <% end %>
+        <% if @sentence_x.length > 1 %>
+          <%= make_shorten_sentence_link(:shorten_last) %>
+        <% end %>
+        -->
+      <% end %>
+    </span>
+  </div>
+
+  <div class="context after">
+    <%= format_sentence_for_alignment(@standard_sentence_after, :standard) %>
+    <%= format_sentence_for_alignment(@sentence_after, :comparison) %>
+  </div>
+
+  <div class="actions">
+    <% form_tag({ :controller => 'alignments', :action => 'update', :id => @sentence, :wizard => params[:wizard]}, :method => :put) do -%>
+      <%= submit_tag "Save", :confirm => 'All dependency annotation on this sentence and the preceding sentence will be lost. Are you sure that you want to continue?' %>
+    <% end %>
+  </div>
+
+  <%= wizard_options(nil, params[:wizard]) %>
+</div>

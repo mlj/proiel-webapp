@@ -1,0 +1,7 @@
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Morphology', :edit_url => :annotation_morphtags_url } %>
+<%= render :partial => 'legend' %>
+<%= render :partial => 'show' %>
+
+<div class="annotation-actions">
+  <%= wizard_options(edit_annotation_morphtags_path(@sentence), params[:wizard]) %>
+</div>

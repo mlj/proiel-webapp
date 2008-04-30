@@ -1,0 +1,8 @@
+<%= error_messages_for :source %>
+
+<div class="edit">
+  <% form_for(@source) do |form| %>
+    <%= render :partial => 'form', :object => form %>
+    <%= form.submit "Update" %>
+  <% end %>
+</div>

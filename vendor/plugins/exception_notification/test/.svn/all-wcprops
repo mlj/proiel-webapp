@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/rails/!svn/ver/7132/plugins/exception_notification/test
+END
+test_helper.rb
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/rails/!svn/ver/7132/plugins/exception_notification/test/test_helper.rb
+END
+exception_notifier_helper_test.rb
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/rails/!svn/ver/7132/plugins/exception_notification/test/exception_notifier_helper_test.rb
+END

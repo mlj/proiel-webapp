@@ -1,0 +1,7 @@
+<% search_form_tag annotations_path do %>
+  <label>Source</label><%= source_select_tag :source, params[:source], :include_blank => true %>
+  <label>Completion</label><%= completion_select_tag :completion, params[:completion], :include_blank => true %>
+<% end %>
+
+<%= render_tabular @sentences, :pagination => true, :partial => 'annotation',
+  :fields => [ 'Location', 'Completion', '&nbsp;' ] %>

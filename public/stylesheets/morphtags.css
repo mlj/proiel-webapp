@@ -1,0 +1,41 @@
+.morphtags .item {
+  float: left;
+  padding-left: .15em;
+  padding-right: .15em;
+  margin-left: .10em;
+  margin-right: .10em;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.morphtags .form {
+  margin: 0em;
+  padding: 0em 0.5em;
+  font-weight: bold;
+  font-style: normal;
+}
+
+.morphtags .pos, #morphtagging .morphology {
+  margin: 0em;
+  padding: 0em 1em;
+  text-align: center;
+}
+
+.morphtags .selected { 
+  background-color: gray;
+}
+
+.morphtags #palette {
+  text-align: left;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  margin-bottom: 1em;
+}
+
+.morphtags br { clear: both; }
+
+.mannotated { color: green; }
+.mguessed { color: orange; }
+.munannotated { color: red; }
+.mannotated-bg { background-color: green; }
+.mguessed-bg { background-color: orange; }
+.munannotated-bg { background-color: red; }

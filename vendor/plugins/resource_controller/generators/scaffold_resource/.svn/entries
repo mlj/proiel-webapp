@@ -1,0 +1,55 @@
+8
+
+dir
+164
+http://svn.jamesgolick.com/resource_controller/tags/stable/generators/scaffold_resource
+http://svn.jamesgolick.com/resource_controller
+
+
+
+2008-02-15T21:22:43.613465Z
+146
+james
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+a0c33c4f-3f3c-0410-8ba4-d3650ac1a399
+
+scaffold_resource_generator.rb
+file
+
+
+
+
+2008-04-04T14:56:11.000000Z
+a60ece328ee1c1792b4782bcee5427a6
+2008-02-15T21:22:43.613465Z
+146
+james
+
+USAGE
+file
+
+
+
+
+2008-04-04T14:56:11.000000Z
+7b212dc26f2bb464134d9a9bf74a091f
+2007-10-24T23:18:26.289222Z
+65
+james
+
+templates
+dir
+

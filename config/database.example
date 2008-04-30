@@ -1,0 +1,26 @@
+#
+# $Id: $
+#
+development:
+  adapter: mysql
+  database: proiel
+  username: proiel 
+  password: wulfila33
+  encoding: utf8
+  socket: /var/lib/mysql/mysql.sock
+
+test:
+  adapter: mysql
+  database: proiel
+  username: root
+  password:
+  encoding: utf8
+  socket: /var/run/mysqld/mysqld.sock
+
+production:
+  adapter: mysql
+  database: proiel
+  username: proiel 
+  password: wulfila33
+  encoding: utf8
+  socket: /var/lib/mysql/mysql.sock

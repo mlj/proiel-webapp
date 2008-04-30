@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>PROIEL</title>
+    <script type="text/javascript">var ie = false;</script>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="search" type="application/opensearchdescription+xml" title="Search PROIEL" href="http://logos.uio.no:3000/search.xml">
+    <link rel="contents" href="/">
+    <!-- link rel="next" -->
+    <!-- link rel="prev" -->
+    <link rel="index"    href="/annotations">
+    <link rel="glossary" href="/lemmata">
+    <!--[if IE]>
+    <script type="text/javascript">ie = true;</script>
+    <![endif]-->
+    <%= javascript_include_tag "prototype", "utils", "effects" %>
+    <%= stylesheet_link_tag "all", :media => "all" %>
+    <%= stylesheet_link_tag "screen", :media => "screen" %>
+    <%= stylesheet_link_tag "print", :media => "print" %>
+    <%= stylesheet_link_tag "generic", :media => "all" %>
+    <%= yield(:head) %>
+  </head>
+
+  <body>
+    <div id="headline">
+    </div>
+    <div id="navbar">
+      <% if logged_in? %>
+        <span style="float:left">
+          <%= link_to 'Text', '/', :accesskey => 't', :accesskey => '1' %>
+          <% if current_user.has_role?(:annotator) %>
+            <%= link_to 'Annotation', :controller => :home, :action => 'annotation' %>
+            <% if current_user.has_role?(:reviewer) %>
+              <%= link_to 'Administration', :controller => :home, :action => :user_administration %>
+            <% end %>
+          <% end %>
+          <%= link_to 'Search', { :controller => :home, :action => :search }, :accesskey => 's', :style => 'display: none' %>
+          <%= link_to 'Preferences', { :controller => :home, :action => :preferences }, :accesskey => 'r' %>
+        </span>
+        <span style="float:right">
+          <% form_tag({ :controller => "home", :action => "search" }, { :style => 'display: inline; padding: 0 0 0 0;' }) do -%>
+            <%= text_field_tag :q, params[:q], :size => 15 %>
+            <%= submit_tag 'Search' %>
+          <% end %>
+          <%= link_to 'Help', site_path('help'), :accesskey => '6' %>
+          <%= link_to 'Logout', logout_path %>
+        </span>
+        <br style="clear:both"/>
+      <% else %>
+        &nbsp;
+      <% end %>
+    </div>
+
+    <div id="body">
+      <% if flash[:notice] and flash[:notice] != '' %>
+        <p id="notice"><%= flash[:notice] %></p>
+      <% end %>
+
+      <% if flash[:error] and flash[:error] != '' %>
+        <p id="error"><%= flash[:error] %></p>
+      <% end %>
+
+      <%= yield %>
+    </div>
+    <div id="footer">
+      University of Oslo, 2007, 2008
+      <% if ENV['RAILS_ENV'] == 'development' %>(Running in development mode)<% end %>
+    </div>
+  </body>
+</html>

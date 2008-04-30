@@ -1,0 +1,718 @@
+# 
+# la-rules.dat - Hand-written morphology rules for Latin
+#
+# $Id: $
+#
+
+# ================================================================
+# Parts of speech exclusively determined by manually crafted rules
+# i.e. everything except nouns, adjectives and verbs, mostly non-
+# productive/semi-productive classes
+# ================================================================
+
+#
+# NUMBERS
+#
+
+# Declinable cardinalia
+Ma-p---:A3D {
+ duo
+}
+
+Ma-s---:A3P {
+ unus
+}
+
+#FIXME:A3x->A3P with stemmer
+Ma-p---:A3x {
+ ducenti
+}
+
+Ma-p--- {
+ tres/mn, tres/ma, tres/fn, tres/fa, tres:tria/nn, 
+ tres:trium/mg, tres:trium/ng, tres:trium/fg,
+ tres:tribus/mb, tres:tribus/nb, tres:tribus/fb, 
+ tres:tribus/md, tres:tribus/nd, tres:tribus/fd, 
+
+ mille:milia/qa, mille:milia/qn, mille:milia/qv, mille:milibus/qb, mille:milibus/qd, mille:milium/qg, 
+}
+
+# Indeclinable cardinalia
+Mg {
+ quattuor, quinque, sex, septem, octo, novem, decem, undecim, duodecim, 
+ tredecim, quattuordecim, quindecim, sedecim, septendecim, duodeviginti,
+ undeviginti, viginti, triginta, quadraginta, quinquaginta, sexaginta,
+ septuaginta, octoginta, octoginta quattuor, nonaginta, nonaginta novem, centum, mille, 
+}
+
+# Ordinal numbers
+Mo:A3 {
+ primus, secundus, tertius, quartus, quintus, sextus, septimus, octavus, 
+ nonus, decimus, undecimus, duodecimus, duodevicesimus, undevicesimus, 
+ vicesimus, tricesimus, quadragesimus, quinquagesimus, sexagesimus, 
+ septagesimus, octagesimus, nonagesimus, centesimus, millesimus
+}
+
+#
+# CONJUNCTIONS AND SUBJUNCTIONS
+#
+
+# Conjunctions
+C {
+ atque, atque:ac, aut, et, et:que, et:c, sed, vel
+}
+
+# Subjunctions
+G {
+ an, antequam, cum, donec, dum, ne, neque, neque:nec,
+ nisi, postquam, prout, quamquam, quia, quod, quoniam, si,
+ sicut, sicut:sicuti, sin, siquidem, tametsi, ut, ut:uti,
+ quoadusque,
+}
+
+#
+# ADVERBS, PREPOSITIONS AND INTERJECTIONS
+#
+
+# Interjections
+I {
+ a, alleluia, alleluia:halleluia, amen, ecce, ei, euge, ave:have, ave, 
+ ne, o, osanna, osanna:hosanna, pro, vae, quomodo,
+}
+
+# Prepositions
+R {
+ ab, ab:a, ab:abs, absque, ad, adversus:adversum, adversus,
+ ante, apud, circa, circiter, circum, contra, coram, cum, de, desuper, 
+ desursum, erga, ex, ex:e, extra, in, infra, inter, intra, iuxta, ob, palam, 
+ per, post, prae, praeter, pro, propter, secundum, secus, sine, sub, super, 
+ supra, trans, ultra
+}
+
+# Non-comparable adverbs
+Dn {
+ abunde, adhuc, alia, alias, alio, alioquin, alioquin:alioqui, aliquanto,
+ aliquantum, aliquo, aliquot, aliter, aliunde, amodo, antea, at, autem,
+ clam, confestim, continuo, corporaliter, cumque, cur, deinceps, 
+ demum, denuo, deorsum, dolose, eadem, enim, eo, eodem,
+ ergo, etenim, etiam, extrinsecus, fatue, fere, foras,
+ foris, forte, forsitan, frustra, gentiliter, germane, hac, haud, haud:haut,
+ heri, hic, hinc, hodie, huc, huc:hoc, iam, ibi, idcirco, ideo, igitur,
+ ilico, illa, illic, illuc, illuc:illic, illuc:illo, immo, impie,
+ inportune, inaniter, inde, indesinenter, inordinate, inquiete,
+ insuper, interea, interim, intrinsecus, intro, intus, invicem, isto, ita,
+ itaque, iterato, iterum, legitime, longanimiter, magnopere, 
+ manifesto, met, modo, mox, nam, namque,
+ naturaliter, nave, ne, necdum, nequaquam, nimis, nimium, nisi,
+ nominatim, non, nondum, nonne, nudius, numquam, numquid, 
+ nusquam, obviam, omnino, paene, par, pariter, pars, partim, paululum,
+ peregre, plerumque, porro, posteaquam, potius, potissimum,
+ praeceps,
+ praeterquam, priusquam, privatim, profecto, propterea,
+ prospere, protinus, proximo, publice, quam, quamvis, quapropter,
+ quasi, qui, quidem, quippe, quodam, quoque, retro, retrorsum, retrorsum:retrorsus, 
+ retrorsum:retrovorsum, retrorsum:retroversus,
+ saltim:saltem, saltim, separatim, serve, sic, sicut, sicut:sicuti,
+ sincere, singillatim, solummodo, spiritaliter, splendide,
+ spontanee, statim, subito, subtus, summum, superabundanter, sursum,
+ tamen, tamquam, tandem, temere, tenere,
+ ubique, ultimum, ultro, umquam, una, undique, unianimiter,
+ usque, utinam, utique, utrum, vel, velut, vero, verum, versus, verumtamen,
+ viriliter, vix, vulgo,
+
+ falso, secreto, sedulo, 
+
+ cras, vespere, vesperi, mane, noctu, postridie, pridie, interdiu, 
+ quotannis, cottidie, cottidie:cotidie, 
+ pridem, deinde, deinde:dein, exinde, exinde:exin, posthac, extemplo,
+ postremo, postremum, primum,
+ tum, postea, repente, olim, nunc, tunc, nuper, semper, simul, 
+ praeterea, imprimis, adeo, ceterum,
+ rursus, rursus:rursum, 
+ paulatim,
+
+ domi, humi, ruri, belli, luci,
+
+ primo, secundo, tertio,
+
+ semel, bis, ter, quater, quinquies, sexies, septies, octies, novies, decies,
+ undecies, duodecies, terdecies, undevicies, vicies, tricies, septuagies, nonagies,
+ centies, milies,
+
+ taliter, tam, tanto, toties, toties:totiens, tantopere, tantum, tot,
+}
+
+# Interrogative adverbs
+Du {
+ qua, qualiter, quando, quare, quo, quoties, quoties:quotiens, ubi, unde, quamdiu, 
+ quanto, quantopere, quantum, quemadmodum, quot, quousque, quomodo, usquequo,
+
+ quippini, 
+}
+
+# Relative adverbs
+Dq {
+ qua, qualiter, quando, quare, quo, quoties, quoties:quotiens, ubi, unde, quamdiu,
+ quanto, quantopere, quantum, quemadmodum, quot, quousque, quomodo, cum, usquequo,
+
+ quacumque, quocumque, quotienscumque, ubicumque,  
+}
+
+# Comparable adverbs in -nter with positive and comparative
+Df:Dntpc {
+ abundanter, affluenter, diligenter, confidenter, constanter, 
+ festinanter, frequenter, patienter, prudenter, sapienter, vehementer 
+}
+
+# Comparable adverbs in -iter with positive and comparative
+Df:Ditpc {
+ celeriter, fortiter, tolerabiliter
+}
+
+Df------- {
+ adtentius/c, amare/p, amice/p, amplius/c, asse/p, 
+ audacter/p, audacter:audacius/c, 
+ beate/p, beate:beatius/c, 
+ benigne/p, 
+ bone/p, bone:optime/s, 
+ breviter/p, breviter:brevius/c, breviter:brevissime/s,
+ caece/p, carissime/s,
+ certe:certissime/s, certe:certius/c, 
+ citius/c, cito/p, clare/p, considerate/p,
+ crebro/p, cupide/p, curiose/p, deterior:deterius/c, digne/p, 
+ diu/p, diu:diutius/c, diu:diutissime/s, 
+ dulce/p, dure/p, dure:durius/c, 
+ facile/p, facile:facilius/c, facillime/s,
+ fide/p, fideliter/p, fiducialiter/p, 
+ gloriose/p, graviter/p, honeste/p, honore/p, humane/p, inmunde/p,
+ indigne/p, inimice/p, inique/p, iniuste/p, iuste/p,
+ libenter/p, libenter:libentissime/s, 
+ longe/p, longe:longius/c, longe:longissime/s,
+ luxuriose/p,
+ mature:maturius/c, merito/p, mundate/p, mute/p,
+ nequam/p, novissime/s, orbe/p, parce/p, 
+ pius:pie/p, plene/p, plene:plenissime/s,
+ pretiose:pretiosius/c, prolixius/c, prope/p, recte/p, remissius/c, saepe/p, secus/p,
+ sero/p,
+ similiter/p, stulte/p, sublime/p, supra/p, surde/p, tarde/p, tuto/p,
+ valde/p, valide/p, velociter/p,
+ vere/p, raro/p,
+
+ # Suppletives
+ bene/p, bene:melius/c, bene:optime/s,
+ male/p, male:peius/c, male:pessime/s,
+ magis/c, magis:maxime/s, 
+ multum/p, multum:plus/c, multum:plurimum/s,
+ parum/p, parum:minus/c, parum:minime/s,
+}
+
+#
+# PRONOUNS
+#
+
+# Here be dragons!
+
+Pp {
+ is/3s---mn,      is:id/3s---nn,   is:ea/3s---fn, 
+ is:eum/3s---ma,  is:id/3s---na,   is:eam/3s---fa,
+ is:eius/3s---mg, is:eius/3s---ng, is:eius/3s---fg, 
+ is:ei/3s---md,   is:ei/3s---nd,   is:ei/3s---fd, 
+ is:eo/3s---mb,   is:eo/3s---nb,   is:ea/3s---fb, 
+
+ is:ei/3p---mn,    is:ea/3p---nn,
+ is:ei/3p---mv,    is:ea/3p---nv,  
+ is:eos/3p---ma,   is:ea/3p---na,    is:eas/3p---fa, 
+ is:eorum/3p---mg, is:eorum/3p---ng, is:earum/3p---fg, 
+ is:eis/3p---md,   is:eis/3p---nd,   is:eis/3p---fd, 
+ is:eis/3p---mb,   is:eis/3p---nb,   is:eis/3p---fb,
+
+ ego/1s---mn,      ego/1s---fn, 
+ ego:me/1s---ma,   ego:me/1s---fa, 
+ ego:mei/1s---mg,  ego:mei/1s---fg,
+ ego:mi/1s---md,   ego:mi/1s---fd, 
+ ego:mihi/1s---md, ego:mihi/1s---fd, 
+ ego:me/1s---mb,   ego:me/1s---fb, 
+ 
+ nos/1p---mn, nos/1p---fn, 
+ nos/1p---ma, nos/1p---fa, 
+ nos:nostri/1p---mg, nos:nostri/1p---fg, 
+ nos:nostrum/1p---mg, nos:nostrum/1p---fg,
+ nos:nobis/1p---md, nos:nobis/1p---fd, 
+ nos:nobis/1p---mb, nos:nobis/1p---fb,
+
+ tu/2s---mn, tu/2s---fn, 
+ tu/2s---mv, tu/2s---fv, 
+ tu:te/2s---ma, tu:te/2s---fa, 
+ tu:tui/2s---mg, tu:tui/2s---fg, 
+ tu:tibi/2s---md, tu:tibi/2s---fd, 
+ tu:te/2s---mb, tu:te/2s---fb,
+ 
+ vos/2p---mn, vos/2p---fn, 
+ vos/2p---mv, vos/2p---fv,
+ vos/2p---ma, vos/2p---fa, 
+ vos:vestri/2p---mg, vos:vestri/2p---fg, 
+ vos:vobis/2p---md, vos:vobis/2p---fd,
+ vos:vobis/2p---mb, vos:vobis/2p---fb, 
+}
+
+# FIXME: overgenerates (unattested)
+#Pr-:A3 {
+# cuius/s---mn,
+#}
+
+Pr-:A3PZER {
+ uter
+}
+
+# TODO: not fully verified
+Pr- {
+ qui/p---mn, qui/s---mn, qui:cui/s---qd, qui:cuius/s---qg, qui:qua/s---fb,
+ qui:quae/p---fn, qui:quae/p---na, qui:quae/p---nn, qui:quae/s---fn,
+ qui:quam/s---fa, qui:quas/p---fa, qui:quem/s---ma, qui:quibus/p---qb,
+ qui:quibus/p---qd, qui:quo/s---ob, qui:quod/s---na, qui:quod/s---nn,
+ qui:quos/p---ma, quicumque/p---mn, quicumque/s---mn,
+ quicumque:cuicumque/s---qd, quicumque:quacumque/s---fb,
+ quicumque:quaecumque/p---fn, quicumque:quaecumque/p---na,
+ quicumque:quaecumque/p---nn, quicumque:quaecumque/s---fn,
+ quicumque:quamcumque/s---fa, quicumque:quemcumque/s---ma,
+ quicumque:quocumque/s---mb, quicumque:quocumque/s---nb,
+ quicumque:quodcumque/s---na, quicumque:quodcumque/s---nn,
+ quicumque:quoscumque/p---ma, quisquis/s---fn, quisquis/s---mn,
+ quisquis:quamquam/s---fa, quisquis:quicquid/s---na,
+ quisquis:quicquid/s---nn,
+}
+
+# FIXME: overgenerates (unattested)
+#Pi-:A3 {
+# cuius/s---mn,
+#}
+
+Pi-:A3PZER {
+ uter
+}
+
+# TODO: not fully verified
+Pi- {
+ qui/p---mn, qui/s---mn, qui:cui/s---qd, qui:cuius/s---qg, qui:qua/s---fb,
+ qui:quae/p---fn, qui:quae/p---na, qui:quae/p---nn, qui:quae/s---fn,
+ qui:quam/s---fa, qui:quarum/p---fg, qui:quas/p---fa, qui:quem/s---ma,
+ qui:quibus/p---qb, qui:quibus/p---qd, qui:quid/s---na, qui:quid/s---nn,
+ qui:quis/s---mn, qui:quo/s---ob, qui:quod/s---na, qui:quod/s---nn,
+ qui:quorum/p---mg, qui:quos/p---ma, quisnam/s---mn, quisnam:quidnam/s---na,
+ quisnam:quidnam/s---nn
+}
+
+Ps:A3 {
+ # FIXME: generates bogus mee and tue
+ meus/1, tuus/2
+}
+
+Ps:A3ER {
+ noster/1, vester/2,
+}
+
+# FIXME: eliminate
+Ps {
+ meus:mi/1s---fv, meus:mi/1s---mv, 
+}
+
+Pt3:A3 {
+ # FIXME: generates bogus sue
+ suus
+}
+
+# TODO: not verified
+Pk3 {
+ sui/p---fg, sui/p---mg, sui/s---fg, sui/s---mg, sui:se/p---fa,
+ sui:se/p---fb, sui:se/p---ma, sui:se/p---mb, sui:se/s---fa, sui:se/s---fb,
+ sui:se/s---ma, sui:se/s---mb, sui:sibi/p---fd, sui:sibi/p---md,
+ sui:sibi/s---fd, sui:sibi/s---md
+}
+
+Px-:A3P {
+ nullus, ullus,
+}
+
+# TODO: not verified
+Px- {
+ aliquis/s---fn, aliquis/s---mn, aliquis:alicui/s---qd,
+ aliquis:alicuius/s---qg, aliquis:aliquae/p---fn, aliquis:aliquae/p---na,
+ aliquis:aliquae/p---nn, aliquis:aliquae/s---fn, aliquis:aliquam/s---fa,
+ aliquis:aliquem/s---fa, aliquis:aliquem/s---ma, aliquis:aliqui/p---mn,
+ aliquis:aliqui/s---mn, aliquis:aliquid/s---na, aliquis:aliquid/s---nn,
+ aliquis:aliquo/s---fb, aliquis:aliquo/s---mb, aliquis:aliquo/s---nb,
+ aliquis:aliquod/s---na, aliquis:aliquod/s---nn, aliquis:aliquos/p---ma,
+
+ alius/s---na, alius/s---nn, alius:alia/p---na, alius:alia/p---nn,
+ alius:alia/p---nv, alius:alia/s---fb, alius:alia/s---fn,
+ alius:aliae/p---fn, alius:aliae/p---fv, alius:aliae/s---fd,
+ alius:aliam/s---fa, alius:alias/p---fa, alius:alii/p---mn,
+ alius:alii/p---mv, alius:alii/s---qd, alius:aliis/p---qb,
+ alius:aliis/p---qd, alius:alio/s---ob, alius:alio/s---od,
+ alius:aliorum/p---og, alius:alios/p---ma, alius:aliud/s---na,
+ alius:aliud/s---nn, alius:alium/p---mg, alius:alium/p---ng,
+ alius:alium/s---ma, 
+ 
+ nemo/s---pn, nemo:neminem/s---pa, nemo:nemini/s---pd, nemo:nemine/s---pb,
+
+ nihil/s---na, nihil/s---nn,
+ qui/p---mn, qui/s---mn,
+ qui:cui/s---qd, qui:cuius/s---qg, qui:qua/p---na, qui:qua/p---nn,
+ qui:qua/s---fb, qui:qua/s---fn, qui:quae/p---fn, qui:quae/p---na,
+ qui:quae/p---nn, qui:quae/s---fn, qui:quam/s---fa, qui:quarum/p---fg,
+ qui:quas/p---fa, qui:quem/s---ma, qui:quibus/p---qb, qui:quibus/p---qd,
+ qui:quid/s---na, qui:quid/s---nn, qui:quis/s---mn, qui:quo/s---ob,
+ qui:quod/s---na, qui:quod/s---nn, qui:quorum/p---mg, qui:quos/p---ma,
+ quidam/p---mn, quidam/s---mn, quidam:cuidam/s---qd, quidam:cuiusdam/s---qg,
+ quidam:quadam/s---fb, quidam:quaedam/p---fn, quidam:quaedam/p---na,
+ quidam:quaedam/p---nn, quidam:quaedam/s---fn, quidam:quandam/s---fa,
+ quidam:quasdam/p---fa, quidam:quendam/s---ma, quidam:quibusdam/p---qb,
+ quidam:quibusdam/p---qd, quidam:quoddam/s---na, quidam:quoddam/s---nn,
+ quidam:quosdam/p---ma, quisquam/s---fn, quisquam/s---mn,
+ quisquam:cuiusquam/s---qg, quisquam:quamquam/s---fa,
+ quisquam:quemquam/s---ma, quisquam:quicquam/s---na,
+ quisquam:quicquam/s---nn, quisque/s---mn, quisque:cuique/s---qd,
+ quisque:cuiusque/s---qg, quivis:quamvis/s---fa, 
+ 
+ uterque/s---mn, uterque/s---mv,
+ uterque:utraque/p---na, uterque:utraque/p---nn, uterque:utraque/p---nv, 
+ uterque:utraque/s---fb, uterque:utraque/s---fn, 
+ uterque:utrumque/p---mg, uterque:utrumque/p---ng, uterque:utrumque/s---ma, 
+ uterque:utrumque/s---nn, uterque:utrumque/s---nv,
+ uterque:utrisque/p---qb, uterque:utrisque/p---qd,
+
+ alteruter:alterutrum/p---mg,
+ alteruter:alterutrum/p---ng, alteruter:alterutrum/s---ma,
+ alteruter:alterutrum/s---nn, alteruter:alterutrum/s---nv, 
+
+ unusquisque:unusquisque/s---mn,
+ unusquisque:unaquaeque/s---fn,
+}
+
+Pd-:P3 {
+ ille, ipse, iste
+}
+
+# TODO: not verified
+Pd- {
+ hic/s---mn, hic:hac/s---fb, hic:haec/p---na, hic:haec/p---nn,
+ hic:haec/s---fn, hic:hanc/s---fa, hic:harum/p---fg, hic:has/p---fa,
+ hic:hii/p---mn, hic:hii/p---mv, hic:his/p---qb, hic:his/p---qd,
+ hic:hoc/s---na, hic:hoc/s---nn, hic:hoc/s---ob, hic:horum/p---og,
+ hic:hos/p---ma, hic:huic/s---qd, hic:huius/s---qg, hic:hunc/s---ma,
+ idem/s---mn, idem/s---na, idem/s---nn, idem:eadem/p---na,
+ idem:eadem/p---nn, idem:eadem/p---nv, idem:eadem/s---fb, idem:eadem/s---fn,
+ idem:eandem/s---fa, idem:easdem/p---fa, idem:eiusdem/s---qg,
+ idem:eodem/s---ob, idem:eodem/s---od, idem:eundem/s---ma, illic/s---mn,
+ illic/s---na, illic/s---nn, 
+}
+
+# ================================================================
+# Parts of speech determined by generated rules and manual 
+# overrides, i.e. nouns, adjectives and verbs.
+
+#
+# ADJECTIVES
+#
+
+A--:A3 {
+ bonus/------p,  bonus:optimus/------s,
+ malus/------p,  malus:pessimus/------s,
+ magnus/------p, magnus:maximus/------s,
+ parvus/------p, parvus:minimus/------s, 
+ multus/------p, multus:plurimus/------s,
+ summus/------p,
+
+ sanctus/------p, sanctus:Sanctus/------p,
+ altissimus:Altissimus/------s,
+
+ quantus/------p, tantus/------p, ceterus/------p, reliquus/------p,
+
+ verus/------p, infirmus/------p, sublimus/------p,
+
+ Pharisaeus/------p,
+
+ # curiosa: maybe a typo in the text?
+ Samaritanus:samaritanus/------p,
+}
+
+A--:A2C {
+ bonus:melior/------c,
+ malus:peior/------c,
+ magnus:maior/------c,
+ parvus:minor/------c, 
+ senex:senior/------c,
+ iuvenis:iunior/------c,
+
+ amplus:amplior/------c, infirmus:infirmior/------c, superus:superior/------c, 
+ sublimus:sublimior/------c,
+}
+
+A-- {
+ multus:plus/s---mnc, multus:plus/s---mac,
+ multus:plus/s---fnc, multus:plus/s---fac,
+ multus:plus/s---nnc, multus:plus/s---nac,
+ multus:pluris/s---mgc, 
+ multus:pluris/s---fgc, 
+ multus:pluris/s---ngc, 
+ multus:plures/p---mnc, multus:plures/p---mvc, multus:plures/p---mac, 
+ multus:plures/p---fnc, multus:plures/p---fvc, multus:plures/p---fac, 
+ multus:plura/p---nnc,  multus:plura/p---nac,  multus:plura/p---nac, 
+ multus:pluribus/p---mbc, multis:plutibus/p---mdc,
+ multus:pluribus/p---fbc, multis:plutibus/p---fdc,
+ multus:pluribus/p---nbc, multis:plutibus/p---ndc,
+}
+
+A--:A3P {
+ solus/------p, 
+ totus/------p, 
+ unus/------p,
+}
+
+A--:A3PZ {
+ alter/------p,
+}
+
+A--:A2 {
+ omnis/------p,
+ qualis/------p,
+}
+
+A--p:A3D {
+ ambo/-----p
+}
+
+A-- {
+ dives/s---fnp, 
+ dives/s---mnp, dives:divitem/s---fap,
+ dives:divitem/s---map, dives:divites/p---fap, dives:divites/p---fnp,
+ dives:divites/p---fvp, dives:divites/p---map, dives:divites/p---mnp,
+ dives:divites/p---mvp,
+ dives:divitis/s---mgp, dives:divitis/s---fgp, dives:divitis/s---ngp,
+
+ rapax:rapax/s---mnp, rapax:rapax/s---mvp,
+ rapax:rapax/s---fnp, rapax:rapax/s---fvp,
+ rapax:rapax/s---nnp, rapax:rapax/s---nvp,
+ rapax:rapaces/p---map, rapax:rapaces/p---mnp, rapax:rapaces/p---mvp,
+ rapax:rapaces/p---fap, rapax:rapaces/p---fnp, rapax:rapaces/p---fvp,
+ rapax:rapacibus/p---mbp, rapax:rapacibus/p---mdp,
+ rapax:rapacibus/p---fbp, rapax:rapacibus/p---fdp,
+ rapax:rapacibus/p---nbp, rapax:rapacibus/p---ndp,
+
+# TODO: not fully verified
+ benus:bene/s---ovp, 
+
+ mansuetus/s---mnp, 
+
+ praeceps/s---fnp, praeceps/s---mnp, praeceps/s---nnp, 
+ anceps:ancipiti/s---fdp, anceps:ancipiti/s---mdp, anceps:ancipiti/s---ndp
+
+ singularis/s---fnp,
+ singularis/s---fvp, singularis/s---mnp, singularis/s---mvp,
+ singularis/s---qgp, 
+}
+
+# True addenda to the Perseus data
+A--------:A3 {
+ mortiferus/p,
+}
+
+# No neuter 
+A------m-:A1e {
+ pauper/p,
+}
+A------f-:A1e {
+ pauper/p,
+}
+
+# Indeclinable
+A-- {
+ huiusmodi/s---mgp, huiusmodi/s---ngp
+}
+
+# NOUNS
+# =====
+
+# Declinable proper names
+Ne:GRa {   
+  Zaccharias, Iudas, Ozias, Helias, Ezechias, Iosias, Ionas, Messias,
+  Esaias, Urias, Andreas,
+}
+
+Ne:GRb { 
+  Barabbas, Caiaphas, Satanas,
+}
+
+Ne:GRc { 
+  Iohannes 
+}
+
+Ne:GRd { 
+  Manasses, Moses, Iordanes,
+}
+
+Ne-s---f:D1 {
+  Maria, Galilaea, Martha, Caesarea, Calvaria, Bethsaida, Bethania, Cana,
+}
+
+Ne-s---m:D1 {
+ Baptista
+}
+
+Ne-s---m:D2m {
+ Iacob:Iacobus, Zebedaeus, Saulus, Lazarus, Petrus, Nicodemus, Iairus, Christus,
+ Zaccheus,
+}
+
+Ne-s:D2n {
+ Olivetum,
+}
+
+Ne-s:D3 {
+ Caesar, Simon,
+}
+
+Ne:GRe {
+ Iesus
+}
+
+Ne- {
+ Abia/s---mn, Abia:Abiam/s---ma, 
+ Babylon:Babylonis/s---fg,
+ Iacob:Iacob/s---mn,
+ Magdalene:Magdalene/s---fn, Magdalene:Magdalenae/s---fd,
+ Herodias/s---fn, Herodias:Herodiadem/s---fa, Herodias:Herodiadis/s---fg, Herodias:Herodiade/s---fb,
+ Abraham/s---mn, Abraham/s---ma, Abraham:Abrahae/s---mg, Abraham:Abrahae/s---md,
+}
+
+# Indeclinable proper nouns
+Nj {
+ Abiud, Achaz, Acheldemach, Achim, Aminadab, Amon, Aram, Asa, Aser,
+ Azor, Beelzebub, Bethleem, Booz, Capharnaum, David, Eleazar, Elisabeth, Eliud,
+ Esrom, Gabrihel, Hierusalem, Iacob, Iesse, Ioatham, Ioram, Ioseph, Isaac,
+ Israhel, Nasson, Nazareth, Objed, Phares, Phanuel, Rachab, Roboam, Ruth, Salmon,
+ Thamar, Zara, Golgotha, Arimathia, Symeon, Iared, Eliachim, 
+ Levi, Gennesareth, Iohanna, Loth, Noe, Nathanahel, Corazain, Abel,
+}
+
+# "Messy" inflection
+Ne- {
+ # This is a variant of Hierosolyma, -orum (n.)
+ Hierosolymam/s---fa
+}
+
+# Indeclinable common nouns
+Nh {
+ rabbi, rabboni,
+}
+
+Nb-----f:D1 {
+ gratia, dragma, mamona, pascha,
+}
+
+Nb-s---f:D1 {
+ manna,
+}
+
+Nb-----m:D2m {
+ # FIXME: deus will be wrong
+ deus, dominus, grabattus,
+}
+
+Nb-s---m:D2m {
+ # FIXME: Deus will be wrong
+ # FIXME: Filius will be wrong
+ deus:Deus, dominus:Dominus, filius:Filius,
+}
+
+Nb:D2n {
+ gazofiliacium,
+}
+
+Nb-s:D2n {
+ verbum:Verbum,
+}
+
+Nb-----f:D2m {
+ ficus,
+}
+
+Nb-s:D4m {
+ spiritus:Spiritus, terraemotus,
+}
+
+Nb- {
+ os:1:os/s---nn, os:1:os/s---nv, os:1:os/s---na,
+ os:1:oris/s---ng,
+ os:1:ori/s---nd,
+ os:1:ore/s---nb,
+ os:1:ora/p---nn, os:1:ora/p---nv, os:1:ora/p---na, 
+
+ os:2:os/s---nn, os:2:os/s---nv, os:2:os/s---na, 
+ os:2:ossibus/p---nb, os:2:ossibus/p---nd, 
+
+ nardus:nardi/p---rn, nardus:nardi/p---rv, nardus:nardi/s---rg, 
+ porrus:porro/s---ob, porrus:porro/s---od, 
+
+ domus/s---fn, domus/s---fv, domus:domum/s---fa, domus/s---fg,
+ domus:domui/s---fd, domus:domo/s---fb, 
+ domus/p---fn, domus/p---fv, domus/p---fa, domus:domos/p---fa, 
+ domus:domuum/p---fg, domus:domorum/p---fg, domus:domibus/p---fb, domus:domibus/p---fd,
+
+ # TODO: not fully verified
+ praeses/s---mn,
+
+ filia/s---fb, filia/s---fn, filia/s---fv,
+ filia:filiabus/p---fb, filia:filiae/p---fn, filia:filiae/p---fv,
+ filia:filiae/s---fd, filia:filiae/s---fg, filia:filiam/s---fa,
+ filia:filias/p---fa, filia:filiis/p---fb, filia:filiis/p---fd, 
+ 
+ mane/s---fb,
+ 
+ mortuus/s---mn, mortuus:mortui/p---mn, mortuus:mortui/p---mv,
+ mortuus:mortui/s---mg, mortuus:mortuis/p---mb, mortuus:mortuis/p---md,
+ mortuus:mortuorum/p---mg, mortuus:mortuos/p---ma, 
+
+ mulier/s---fn, mulier/s---fv,
+ mulier:mulierem/s---fa, mulier:mulieres/p---fa, mulier:mulieres/p---fn,
+ mulier:mulieres/p---fv, mulier:mulieri/s---fd, mulier:mulieribus/p---fb,
+ mulier:mulieribus/p---fd, mulier:mulierum/p---fg, mulier:muliere/s---fb,
+ mulier:mulieris/s---fg,
+
+ pater:Pater/s---mn,
+ pater:Pater/s---mv, pater:Patre/s---mb, pater:Patrem/s---ma,
+ pater:Patri/s---md, pater:Patris/s---mg, 
+
+ rex/s---mn, rex:regem/s---ma,
+ rex:reges/p---ma, rex:reges/p---mn, rex:reges/p---mv, rex:regi/s---md,
+ rex:regum/p---mg, rex:Regis/s---mg,
+ rex:regibus/p---mb, rex:regibus/p---md,
+
+ satis/s---nn, 
+
+ secus/s---na, secus/s---nn,
+ 
+ solus/p---ma, solus/p---mn, solus/s---mg, solus/s---mn, solus:solum/s---ma,
+ 
+ utris:utres/s---ma, utris:utres/s---mn,
+
+ divisor:divisorem/s---ma,
+}
+
+# VERBS 
+# =====
+
+V- {
+ crucifigo:crucifigere/--pna,
+ crucifigo:crucifigunt/3ppia,
+ crucifigo:crucifixerunt/3pria,
+ crucifigo:crucifige/2spma,
+ crucifigo:crucifixus/-srppmn,
+ crucifigo:crucifixum/-srppma,
+ crucifigo:crucifixi/-prppmn,
+
+ introeo:introisset/3slsa,
+ introeo:introissent/3plsa,
+
+ neo:nent/3ppia,
+}

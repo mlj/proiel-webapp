@@ -1,0 +1,19 @@
+<table>
+  <tr><th>Form</th><th>Part of speech</th><th>Morphology</th><th>Occurrences</th></tr>
+  <% @exemplars.keys.sort.each do |morphtag| %>
+    <% @exemplars[morphtag].each_pair do |form, occurrences| %>
+      <tr>
+        <td><em><%=h form %></em></td>
+        <td><%= MorphTag.new(morphtag).descriptions([:pos]).join(', ').capitalize %></td>
+        <td><%= MorphTag.new(morphtag).descriptions([:pos], false).join(', ').capitalize %></td>
+        <td><%= link_to_remote(occurrences, 
+                               :update => "extras",
+                               :url => { :action => 'concordance', :id => @lemma, :morphtag => morphtag },
+                               :before => "Element.show('spinner')",
+                               :success => "Element.hide('spinner')") %></td>
+      </tr>
+    <% end %>
+  <% end %>
+  <tr><td>Untagged</td><td>&nbsp;</td><td>&nbsp;</td><td><%= @untagged.length %></td></tr>
+  <tr><th>Total</th><th>&nbsp;</th><th>&nbsp;</th><th><%= @lemma.tokens.length %></th></tr>
+</table>

@@ -1,0 +1,89 @@
+8
+
+dir
+164
+http://svn.jamesgolick.com/resource_controller/tags/stable/test/vendor/plugins/shoulda
+http://svn.jamesgolick.com/resource_controller
+
+
+
+2007-12-15T19:16:52.307633Z
+118
+james
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+a0c33c4f-3f3c-0410-8ba4-d3650ac1a399
+
+Rakefile
+file
+
+
+
+
+2008-04-04T14:56:11.000000Z
+c529b1e7219a3539101ef55bc720d184
+2007-10-15T20:37:11.072387Z
+16
+james
+
+tasks
+dir
+
+init.rb
+file
+
+
+
+
+2008-04-04T14:56:11.000000Z
+2d2064713082fbb48e33c52b2f0c0564
+2007-10-15T20:37:11.072387Z
+16
+james
+
+lib
+dir
+
+bin
+dir
+
+cruise_control.rb
+file
+
+
+
+
+2008-04-04T14:56:11.000000Z
+a515eb37024a8163425fece0632cbe01
+2007-10-15T20:37:11.072387Z
+16
+james
+has-props
+
+
+svn:special
+
+README
+file
+
+
+
+
+2008-04-04T14:56:11.000000Z
+a9b2998dcdf70b7ebad3845c82278ce0
+2007-10-15T20:37:11.072387Z
+16
+james
+

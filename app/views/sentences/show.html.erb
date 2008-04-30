@@ -1,0 +1,20 @@
+<div class="roundedbox">
+  <dl>
+    <dt>Sentence ID:</dt><dd><%= @sentence.id %></dd>
+    <dt>Source:</dt><dd><%= link_to(@sentence.source.presentation_form, source_url(@sentence.source)) %></dd>
+    <dt>PROIEL reference:</dt><dd class="reference"><%= @sentence.reference %></dd>
+    <dt>Linearisation index:</dt><dd><%= @sentence.sentence_number %></dd>
+    <dt>Time stamps:</dt><dd><%= @sentence.created_at ? @sentence.created_at : '?' %> (creation), <%= @sentence.updated_at %> (last update)</dd>
+    <dt>Annotation completion:</dt><dd><%= link_to(readable_completion(@sentence), annotation_path(@sentence)) %></dd>
+  </dl>
+</div>
+
+<% layer("revisions") do -%>
+  <%= render :partial => 'changesets/legend' %>
+  <%= render :partial => 'changesets/audits', :object => @sentence.audits %>
+<% end %>
+
+<% layer("tokens") do -%>
+  <%= render_tabular @sentence.tokens, :partial => 'tokens/token',
+  :fields => [ 'Form', 'Sort', 'Location', 'Morphology and lemma', '&nbsp;' ] %>
+<% end %>

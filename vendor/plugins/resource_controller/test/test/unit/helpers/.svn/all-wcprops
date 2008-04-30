@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/resource_controller/!svn/ver/153/tags/stable/test/test/unit/helpers
+END
+nested_test.rb
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/resource_controller/!svn/ver/153/tags/stable/test/test/unit/helpers/nested_test.rb
+END
+urls_test.rb
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/resource_controller/!svn/ver/153/tags/stable/test/test/unit/helpers/urls_test.rb
+END
+current_objects_test.rb
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/resource_controller/!svn/ver/153/tags/stable/test/test/unit/helpers/current_objects_test.rb
+END
+internal_test.rb
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/resource_controller/!svn/ver/153/tags/stable/test/test/unit/helpers/internal_test.rb
+END

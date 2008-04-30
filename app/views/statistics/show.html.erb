@@ -1,0 +1,25 @@
+<%= render :partial => 'statistics/activity' %>
+
+<h2>Completion</h2>
+
+<%= render :partial => 'statistics/completion' %>
+<%= render_tabular @sources, :partial => 'statistics/source_stats',
+  :fields => [ 'Source', 'Annotated (sentences)', 'Reviewed (sentences)', 'Total (sentences/tokens)' ] %>
+  
+<h2>Tagger performance</h2>
+
+<div class="chart">
+<%= google_pie_chart([["Correct pick", @tagger_performance[:picked]],
+                      ["Suggested",    @tagger_performance[:suggested]],
+                      ["Failed",    @tagger_performance[:failed]],
+                      ["Overridden", @tagger_performance[:overridden]]]) %>
+                    </div>
+
+<h2>User activity</h2>
+
+<div class="chart">
+<%= render_tabular @users, :partial => 'user_stats',
+  :fields => [ 'User', 'Annotated (sentences/tokens)', 'Reviewed (sentences/tokens)' ] %>
+
+<%= google_pie_chart(@users.collect { |user| [user.full_name, user.annotated_sentences.count] }, :width => 626, :height => 300) %>
+</div>

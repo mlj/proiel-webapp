@@ -1,0 +1,28 @@
+/* Print specific, layout dependent stuff */
+
+/* Header */
+
+div#headline {
+  font-weight: bold;
+  font-style: small-caps;
+}
+
+/* Navigation bar */
+
+div#navbar { display: none; }
+
+/* Footer */
+
+div#footer {
+  clear: both;
+  margin: 1cm 0 0 0;
+  font-size: smaller;
+}
+
+/* Contents */
+
+div#body { }
+
+/* Link decorations */
+
+a { text-decoration: underline; }

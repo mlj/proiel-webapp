@@ -1,0 +1,62 @@
+<% stylesheet 'morphtags' %>
+<% javascript "dynamic_pos/#{@language}", 'morphtags', 'morphtag_presentation' %>
+
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Morphology', :edit_url => :edit_annotation_morphtags_url } %>
+
+<div class="morphtags">
+  <div id="palette" style="display: none">
+    <label>Fields:</label>
+    <span id="fields">
+      <% MorphTag::PRESENTATION_SEQUENCE.each do |field| -%>
+        <%= morphtag_palette_select_tag(field) %>
+      <% end %>
+      <input type="text" id="lemma" name="lemma" value=""></input>
+    </span>
+  </div>
+
+  <div id="guesses">
+  </div>
+
+  <%= render :partial => 'legend' %>
+
+  <div id="tokens">
+    <% for token in @sentence.word_tokens %>
+      <div id="item-<%= token.id %>" class="item" onclick="onTokenSelect(<%= token.id %>)">
+        <p class="form"><%= token.form %></p>
+        <div class="morph-lemma-tags <%= @tags[token.id][:state] %>">
+          <p class="pos">&nbsp;<%= @tags[token.id][:set] ? @tags[token.id][:set].morphtag.descriptions([:major, :minor], true, :style => :abbreviation).join(', ') : '&nbsp;' %></p>
+          <p class="morphology">&nbsp;<%= @tags[token.id][:set] ? @tags[token.id][:set].morphtag.descriptions([:major, :minor], false, :style => :abbreviation).join(', ') : '&nbsp;' %></p>
+          <p class="lemma">&nbsp;<%= @tags[token.id][:set] and @tags[token.id][:set].lemma ? "(#{@tags[token.id][:set].lemma_to_s})" : '&nbsp;'%></p>
+        </div>
+      </div>
+    <% end %>
+
+    <br/>
+  </div>
+
+<div class="annotation-actions">
+  <% form_tag({ :controller => 'morphtags', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :method => :put) do -%>
+    <input type="hidden" id="token-ids" value='<%= ActiveSupport::JSON.encode(@sentence.word_tokens.collect(&:id)) %>'/>
+    <% for token in @sentence.word_tokens %>
+      <input type="hidden" 
+             id="morphtag-<%= token.id %>" name="morphtag-<%= token.id %>" 
+             value='<%= ActiveSupport::JSON.encode(@tags[token.id][:set] ? @tags[token.id][:set].morphtag : nil) %>'/>
+      <input type="hidden" 
+             id="lemma-<%= token.id %>" name="lemma-<%= token.id %>" 
+             value="<%= @tags[token.id][:set] ? @tags[token.id][:set].lemma_to_s : nil %>"/>
+      <input type="hidden" 
+             id="suggestions-<%= token.id %>" name="suggestions-<%= token.id %>" 
+             value='<%= ActiveSupport::JSON.encode(@tags[token.id][:suggestions]) %>'/>
+
+      <input type="hidden" 
+             id="suggestions-<%= token.id %>" name="orig-suggestions-<%= token.id %>" 
+             value='<%= @tags[token.id][:suggestions].collect { |s, w| s.to_s }.join(',') %>'/>
+      <input type="hidden" 
+             id="pick-<%= token.id %>" name="pick-<%= token.id %>" 
+             value='<%= @tags[token.id][:set].to_s %>'/>
+    <% end %>
+
+    <%= submit_tag "Save" %>
+  <% end %>
+  <%= wizard_options(nil, params[:wizard]) %>
+</div>

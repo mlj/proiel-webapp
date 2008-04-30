@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/resource_controller/!svn/ver/153/tags/stable/test/config/environments
+END
+test.rb
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/resource_controller/!svn/ver/153/tags/stable/test/config/environments/test.rb
+END
+development.rb
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/resource_controller/!svn/ver/153/tags/stable/test/config/environments/development.rb
+END

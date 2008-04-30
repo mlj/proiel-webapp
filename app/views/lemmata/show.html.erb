@@ -1,0 +1,51 @@
+<% roundedbox do -%>
+  <dt>Lemma:</dt><dd><span class="lemma"><%= @lemma %></span></dd>
+  <dt>Language:</dt><dd><span class="language"><%= readable_language(@lemma.language) %></span></dd>
+  <% if @lemma.pos %>
+    <dt>Part of speech:</dt><dd><%= MorphTag.new(@lemma.pos).descriptions([:major, :minor], true).join(", ").capitalize %></dd>
+  <% end %>
+  <dt>Frequency:</dt><dd><span class="language"><%= pluralize(@lemma.frequency, 'occurrence') %></span></dd>
+  <% if @lemma.short_gloss %>
+    <dt>Translation:</dt><dd><q><%= @lemma.short_gloss %></q></dd>
+  <% end %>
+<% end %>
+  
+<%= will_paginate(@tokens) %>
+<%= render :partial => 'tokens/concordance', :object => @tokens %>
+
+  <!--
+<% layer("dictionary-references", :title => 'Dictionary references') do -%>
+  <ol>
+    <% if perseus_url(@lemma) %>
+      <li><%= link_to 'Perseus', perseus_url(@lemma), :class => 'external' %></li>
+    <% end %>
+  </ol>
+<% end %>
+-->
+<!-- 
+<div id="actions">
+  <%= link_to_remote('Concordance',
+                     :update => "extras",
+                     :url => { :action => 'concordance', :id => @lemma },
+                     :before => "Element.show('spinner')",
+                     :success => "Element.hide('spinner')") %>
+
+  <%= link_to_remote('Morphology',
+                     :update => "extras",
+                     :url => { :action => 'morphology', :id => @lemma },
+                     :before => "Element.show('spinner')",
+                     :success => "Element.hide('spinner')") %>
+
+  <%= link_to_remote('Dependencies',
+                     :update => "extras",
+                     :url => { :action => 'dependencies', :id => @lemma },
+                     :before => "Element.show('spinner')",
+                     :success => "Element.hide('spinner')") %>
+
+  <%= image_tag("loading.gif",
+                :align => "absmiddle",
+                :border => 0,
+                :id => "spinner",
+                :style =>"display: none;") %>
+              </div>
+              -->

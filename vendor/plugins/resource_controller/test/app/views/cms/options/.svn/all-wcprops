@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/resource_controller/!svn/ver/153/tags/stable/test/app/views/cms/options
+END
+show.rhtml
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/resource_controller/!svn/ver/153/tags/stable/test/app/views/cms/options/show.rhtml
+END
+edit.rhtml
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/resource_controller/!svn/ver/153/tags/stable/test/app/views/cms/options/edit.rhtml
+END
+index.rhtml
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/resource_controller/!svn/ver/153/tags/stable/test/app/views/cms/options/index.rhtml
+END
+new.rhtml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/resource_controller/!svn/ver/153/tags/stable/test/app/views/cms/options/new.rhtml
+END

@@ -1,0 +1,8 @@
+<tr>
+  <td><%=h job.name %></td>
+  <td><%= job.source ? job.source.code : '?' %></td>
+  <td><%= job.audited ? 'Yes' : 'No' %></td>
+  <td><%= link_to job.user.login, job.user %></td>
+  <td><%=h job.result ? job.result.to_s.capitalize : '?' %></td>
+  <td><%= link_to 'Details', job %></td>
+</tr>

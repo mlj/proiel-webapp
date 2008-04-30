@@ -1,0 +1,366 @@
+--- 
+- :criteria: # articles are aux
+    :dependent_major: S 
+  :actions: 
+    :inferred_relation: aux 
+#conjunctions downwards
+- :criteria:
+    :head_major: C
+  :actions:
+    :inferred_relation: COPY
+# We need a reversed rule for building upwards (which is 
+# frequent with conjunctions)
+
+# VOCs
+- :criteria: #interjections
+    :head_major: false
+    :dependent_major: I
+  :actions:
+    :inferred_relation: voc
+- :criteria: #vocatives
+    :head_major: false
+    :dependent_case: v
+  :actions:
+    :inferred_relation: voc
+#finite verbs
+#finite: true iff dependent_mood = i,s,m or o
+- :criteria: #Under the sentence root
+    :head_major: false 
+    :dependent_major: V
+    :dependent_finite: true
+  :actions:
+    :inferred_relation: pred
+- :criteria: #empty nodes under the sentence root are PREDs
+    :head_major: false
+    :dependent_major: false
+  actions:
+    :inferred_relation: pred
+- :criteria: #conjunctions under the sentence root are PREDs
+    :head_major: false
+    :dependent_major: C
+  :actions:
+    :inferred_relation: pred
+- :criteria: # verbs under subjunctions are PREDs
+    :head_major: G # subjunction 
+    :dependent_major: V
+    :dependent_finite: true
+  :actions:
+    :inferred_relation: pred
+- :criteria: # empty nodes under subjunctions are PREDs
+    :head_major: G
+    :dependent_major: false
+  :actions:
+    :inferred_relation: pred
+- :criteria: #Periphrastic forms under the sentence root
+    :head_major: false 
+    :dependent_major: V
+    :dependent_mood: p
+    :dependent_case: n
+  :actions:
+    :inferred_relation: pred
+- :criteria:
+    :head_major: G # Periphrastic forms under a subjunction 
+    :dependent_major: V
+    :dependent_mood: p
+    :dependent_case: n
+  :actions:
+    :inferred_relation: pred
+- :criteria: # Auxiliary verb in Latin
+    :language: la
+    :head_major: V 
+    :head_mood: p
+    :head_case: n
+    :dependent_form: est
+  :actions:
+    :inferred_relation: aux   
+- :criteria: # Auxiliary verb in Latin
+    :language: la
+    :head_major: V 
+    :head_mood: p
+    :head_case: n
+    :dependent_form: sunt 
+  :actions:
+    :inferred_relation: aux   
+- :criteria: # Relatives with proper noun antecedents
+    :head_major: N
+    :head_minor: e
+    :dependent_major: V
+    :dependent_finite: true
+  :actions:
+    :inferred_relation: apos
+- :criteria: # Relatives with other antecedents should be the only thing left
+    :head_major: N
+    :dependent_major: V
+    :dependent_finite: true
+  :actions:
+    :inferred_relation: atr
+
+#before we go on to the more nominal forms, we need some rules for prepositions
+- :criteria: # under a preposition, adverbs will be ADVs 
+    :head_major: R
+    :dependent_major: D
+  :actions:
+    :inferred_relation: adv
+- :criteria: # everything else will be an OBL
+    :head_major: R
+  :actions:
+    :inferred_relation: obl    
+  
+#infinitives  
+# I introduce dependent_mood to keep participles from gerunds and gerundives
+# Would it be possible to first have a rule which checks the head lemma against a (short) list of raising and control verbs and infers XOBJ? 
+- :criteria: # typical auxiliary verbs
+    :head_lemma: possum
+    :dependent_mood: n
+  :actions:
+    :inferred_relation: xobj
+- :criteria: # typical auxiliary verbs
+    :head_lemma: coepio
+    :dependent_mood: n
+  :actions:
+    :inferred_relation: xobj
+- :criteria: # typical auxiliary verbs
+    :head_lemma: ἄρχω
+    :dependent_mood: n
+  :actions:
+    :inferred_relation: xobj
+- :criteria: # typical auxiliary verbs
+    :head_lemma: δύναμαι
+    :dependent_mood: n
+  :actions:
+    :inferred_relation: xobj
+- :criteria: # typical auxiliary verbs
+    :head_lemma: θέλω
+    :dependent_mood: n
+  :actions:
+    :inferred_relation: xobj  
+
+- :criteria: # AcI 
+    :head_major: V 
+    :dependent_major: V
+    :dependent_mood: n
+  :actions:
+    :inferred_relation: comp
+- :criteria: # nominal heads
+    :head_major: N 
+    :dependent_major: V
+    :dependent_mood: n
+  :actions:
+    :inferred_relation: narg
+    
+#participles 
+- :criteria: #  absolute ablatives in Latin
+    :language: la
+    :head_major: V 
+    :dependent_major: V
+    :dependent_mood: p
+    :dependent_case: b
+  :actions:
+    :inferred_relation: adv
+- :criteria: #  absolute genitives in Greek
+    :language: grc
+    :head_major: V 
+    :dependent_major: V
+    :dependent_mood: p
+    :dependent_case: g
+  :actions:
+    :inferred_relation: adv    
+- :criteria: #  conjunct participles
+    :head_major: V 
+    :dependent_major: V
+    :dependent_mood: p
+  :actions:
+    :inferred_relation: xadv
+- :criteria: #  other participles
+    :dependent_major: V
+    :dependent_mood: p
+  :actions:
+    :inferred_relation: atr    
+
+#gerunds
+- :criteria: #  sentence-level
+    :head_major: V 
+    :dependent_major: V
+    :dependent_mood: d
+  :actions:
+    :inferred_relation: xadv
+- :criteria: #  dependents of nouns
+    :head_major: N
+    :dependent_major: V
+    :dependent_mood: d
+  :actions:
+    :inferred_relation: narg
+    
+#gerundives
+- :criteria: #  dependents of nouns
+    :head_major: N
+    :dependent_major: V
+    :dependent_mood: g
+  :actions:
+    :inferred_relation: atr
+#subjunctions
+- :criteria: # COMPs
+    :dependent_major: G
+    :dependent_form: quia
+  :actions:
+    :inferred_relation: comp
+- :criteria: # COMPs
+    :dependent_major: G
+    :dependent_form: quod
+  :actions:
+    :inferred_relation: comp
+- :criteria: # COMPs
+    :dependent_form: ὅτι
+  :actions:
+    :inferred_relation: comp 
+- :criteria: # ADVs
+    :dependent_major: G
+  :actions:
+    :inferred_relation: adv
+- :criteria: # Wild guess for relative clauses without antecedent and dependent questions
+    :head_major: V 
+    :dependent_major: V
+    :dependent_finite: true
+  :actions:
+    :inferred_relation: obj
+
+#nouns in sentence-level functions
+- :criteria: # adjectives dependent on esse are pivs
+    :head_form: est
+    :dependent_major: A
+  :actions: 
+    :inferred_relation: piv
+- :criteria: # adjectives dependent on esse are pivs
+    :head_form: sunt
+    :dependent_major: A
+  :actions: 
+    :inferred_relation: piv
+- :criteria: # ablatives dependent on ablative participles are subjects
+    :language: la
+    :head_mood: p
+    :head_case: b
+    :dependent_case: b
+  :actions:
+    :inferred_relation: sub
+- :criteria: # genitives dependent on genitive participles are subjects   
+    :language: grc
+    :head_mood: p 
+    :head_case: g
+    :dependent_case: g
+  :actions:
+    :inferred_relation: sub
+- :criteria: # nominatives are subjects under verbs
+    :head_major: V
+    :dependent_case: n
+  :actions: 
+    :inferred_relation: sub
+- :criteria: # nominatives are subjects under empty nodes
+    :head_major: false
+    :dependent_case: n
+  :actions: 
+    :inferred_relation: sub
+- :criteria: # accusatives are objects under verbs
+    :head_major: V
+    :dependent_case: a
+  :actions: 
+    :inferred_relation: obj
+- :criteria: # accusatives are objects under empty nodes
+    :head_major: false
+    :dependent_case: a
+  :actions: 
+    :inferred_relation: obj
+- :criteria: # datives are obliques under verbs
+    :head_major: V
+    :dependent_case: d
+  :actions: 
+    :inferred_relation: obl
+- :criteria: # datives are obliques under empty nodes
+    :head_major: false
+    :dependent_case: d
+  :actions: 
+    :inferred_relation: obl
+- :criteria: # numerals are objects
+    :head_major: V
+    :dependent_major: M
+  :actions: 
+    :inferred_relation: obj
+- :criteria: # prepositions are obliques
+    :head_major: V
+    :dependent_major: R
+  :actions: 
+    :inferred_relation: obl
+- :criteria: # non-comparable adverbs are auxiliaries
+    :head_major: V
+    :dependent_major: D
+    :dependent_minor: n
+  :actions: 
+    :inferred_relation: aux
+- :criteria: # other adverbs are adverbials
+    :head_major: V
+    :dependent_major: D
+  :actions: 
+    :inferred_relation: adv
+
+#Adnominal functions
+- :criteria: # adjectives are atrs
+    :head_major: N
+    :dependent_major: A
+  :actions: 
+    :inferred_relation: atr
+- :criteria: # numerals are atrs (except those dependent on verbs)
+    :dependent_major: M
+  :actions:
+    :inferred_relation: atr
+- :criteria: # genitives are atrs
+    :head_major: N
+    :dependent_case: g
+  :actions: 
+    :inferred_relation: atr
+#- :criteria: # nouns dependent on nouns in the same case are apos (unless genitive)
+#    :head_major: N
+#    :dependent_major: N
+#    :dependent_case = head_case #will this work?
+#  :actions: 
+#    :inferred_relation: apos
+#- :criteria: # other dependents in the same case are atrs
+#    :head_major: N
+#    :dependent_case = head_case #will this work?
+#  :actions:
+#    :inferred_relation: atr 
+- :criteria: # pronouns dependent on nouns are atr
+    :head_major: N
+    :dependent_major: P 
+  :actions: 
+    :inferred_relation: atr
+- :criteria: # nouns dependent on pronouns are apos
+    :head_major: P
+    :dependent_major: N
+  :actions: 
+    :inferred_relation: apos
+- :criteria: # adjectives dependent on pronouns are atrs
+    :head_major: P
+    :dependent_major: A
+  :actions: 
+    :inferred_relation: atr
+- :criteria: # nouns dependent on adverbs are obls
+    :head_major: D 
+    :dependent_major: N
+  :actions: 
+    :inferred_relation: obl
+- :criteria: # prepositions dependent on adverbs are obls
+    :head_major: D 
+    :dependent_major: P 
+  :actions: 
+    :inferred_relation: obl
+- :criteria: # adverbs are advs
+    :dependent_major: D
+  :actions: 
+    :inferred_relation: adv 
+- :criteria:
+    :dependent_major: R
+  :actions:
+    :inferred_relation: atr
+
+# Default action    
+- :actions: 
+    :inferred_relation: aux

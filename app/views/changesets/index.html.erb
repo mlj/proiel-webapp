@@ -1,0 +1,6 @@
+<% search_form_tag changesets_path do %>
+  <label>User name</label><%= user_select_tag :user, params[:user], :include_blank => true %>
+<% end %>
+  
+<%= render_tabular @changesets, :pagination => true,
+  :fields => [ 'User name', 'Changes', 'Time', '&nbsp;' ] %>

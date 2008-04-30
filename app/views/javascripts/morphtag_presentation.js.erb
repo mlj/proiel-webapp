@@ -1,0 +1,51 @@
+var presentation_sequence = <%= array_or_string_for_javascript(MorphTag::PRESENTATION_SEQUENCE) %>;
+var summaries = <%= ActiveSupport::JSON.encode(@summaries) %>;
+var abbreviations = <%= ActiveSupport::JSON.encode(@abbreviations) %>;
+
+function present_tags(morphtag) {
+  var s = new Array;
+  presentation_sequence.each(function(tag) {
+    value = morphtag.get(tag);
+
+    if (value) {
+      s.push($H($H(abbreviations).get(tag)).get(value));
+    }
+  });
+
+  if (s.length == 0)
+    return '&nbsp;';
+  else 
+    return s.join(', ');
+}
+
+function present_pos_tags(morphtag) {
+  var s = new Array;
+  presentation_sequence.each(function(tag) {
+    if (tag == 'major' || tag == 'minor') {   
+      value = morphtag.get(tag);
+      if (value)
+        s.push($H($H(abbreviations).get(tag)).get(value));
+    }
+  });
+
+  if (s.length == 0)
+    return '&nbsp;';
+  else 
+    return s.join(', ');
+}
+
+function present_morphology_tags(morphtag) {
+  var s = new Array;
+  presentation_sequence.each(function(tag) {
+    if (tag != 'major' && tag != 'minor') {
+      value = morphtag.get(tag);
+      if (value)
+        s.push($H($H(abbreviations).get(tag)).get(value));
+    }
+  });
+
+  if (s.length == 0)
+    return '&nbsp;';
+  else
+    return s.join(', ');
+}

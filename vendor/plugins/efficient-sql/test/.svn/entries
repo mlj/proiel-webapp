@@ -1,0 +1,40 @@
+8
+
+dir
+30
+svn://rubyforge.org/var/svn/efficient-sql/test
+svn://rubyforge.org/var/svn/efficient-sql
+
+
+
+2008-03-06T20:13:19.935415Z
+27
+phlip
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+b2499610-0f32-4603-ac0a-af29e4de0430
+
+assert_efficient_sql_test.rb
+file
+
+
+
+
+2008-04-20T12:48:09.000000Z
+dcf7389e94b3232d96154b9b17b188cf
+2008-03-06T20:13:19.935415Z
+27
+phlip
+

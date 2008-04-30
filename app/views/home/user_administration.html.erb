@@ -1,0 +1,106 @@
+<% layer('history', :title => 'History and activity reports') do -%>
+
+<ul style="list-style: lower-greek">
+  <li><%= link_to 'Changesets', changesets_url %></li>
+  <li><%= link_to 'Jobs', jobs_url %></li>
+  <li><%= link_to 'Statistics', :controller => :statistics %></li>
+</ul>
+
+<% end %>
+
+<% layer('users', :title => 'User administration') do -%>
+
+<ul style="list-style: armenian">
+  <li><%= link_to 'Users', :controller => :users %></li>
+  <li><%= link_to 'Bookmarks', :controller => :bookmarks %></li>
+</ul>
+
+<% end %>
+ 
+<% layer('low-level', :title => 'Low-level data access') do -%>
+
+<ul style="list-style: upper-roman">
+  <li><%= link_to 'Sources', :controller => :sources %></li>
+  <li><%= link_to 'Sentences', :controller => :sentences %></li>
+  <li><%= link_to 'Tokens', :controller => :tokens %></li>
+  <li><%= link_to 'Lemmata', :controller => :lemmata %></li>
+  <li>Morphological tagger
+      <% form_tag :action => 'tagger' do -%> 
+        Language: <%= language_select_tag :language, params[:language] %>
+        Form: <%= text_field_tag :form, params[:form] %>
+        Source tag: <%= text_field_tag :existing, params[:existing] %>
+        <%= submit_tag 'Query' %>
+      <% end %>
+      <% form_tag :action => 'tag_token_test' do -%> 
+        Token ID: <%= text_field_tag :id, params[:id] %>
+        <%= submit_tag 'Query' %>
+      <% end %>
+  </li>
+  <li>
+    Tokeniser
+    <p><span class="warning">Warning:</span> These functions are not protected by
+    any sanity checks and can therefore cause data corruption that
+    is difficult to revert if used improperly. Please read the description of each function carefully
+    so that you understand exactly what the function does and that it is
+    the correct solution to the problem that you are attempting to solve!</p>
+    <ul>
+      <li><b>Merge word token pair.</b>
+      <p>
+      The ID of the first token should be provided, the ID of the second token
+      is inferred from the linearisation numbers. The second token is permanently
+      deleted from the database, while the first token is updated with new
+      information. After the function has been performed, the first token will
+      have its word form set to the concatenation of the first token's original 
+      word form,
+      a single space, and the second token's word form. 
+      No other attributes are
+      changed, i.e. morphology, dependency information and token sort is kept
+      as-is. This means that this function is <em>only</em> suitable for merging adjacent
+      tokens that represent orthographically separate, stand-alone words, whose
+      syntax is better described if single tokens. Remember that the linearly adjacent token
+      is not necessarily a word, it may be a punctuation token or an empty token. 
+      The function will be ill-behaved if there is no next token in the sentence.
+      </p>
+      <% form_tag :action => 'merge_tokens' do -%> 
+        First token ID: <%= text_field_tag :id, params[:id] %>
+        <%= submit_tag 'Merge tokens' %>
+      <% end %>
+      </li>
+      <li><b>Merge linearly adjacent sentences.</b>
+      <p>
+      The ID of the first sentence should be provided, the ID of the second sentence
+      is inferred from the linearisation numbers. The second sentence is permanently
+      deleted from the database, while all tokens belonging to this sentence are
+      appended at the end of the first sentence. All syntactic
+      annotation is removed from both sentences.
+      The function will be ill-behaved if there is no next token in the source.
+      </p>
+      TODO
+      <!-- 
+      <% form_tag :action => 'merge_sentences' do -%> 
+        First sentence ID: <%= text_field_tag :id, params[:id] %>
+        <%= submit_tag 'Merge sentences' %>
+      <% end %>
+      -->
+      </li>
+      <li><b>Split sentence.</b>
+      <p></p>
+      TODO
+      <!-- 
+      <% form_tag :action => 'split_sentence' do -%> 
+        First token ID of new sentence: <%= text_field_tag :id, params[:id] %>
+        <%= submit_tag 'Split sentence' %>
+      <% end %>
+      -->
+      </li>
+      <li><b>Split word token into clitic-host token pair.</b>
+      <p>TODO</p>
+      </li>
+      <li><b>Merge clitic-host token pair into word token.</b>
+      <p>TODO</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<% end %>

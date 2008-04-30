@@ -1,0 +1,390 @@
+---
+:grc:
+  :nonspacing_punctuation: 
+  - ;
+  - .
+  - ·
+  - ","
+  :left_bracketing_punctuation:
+  - "["
+  :right_bracketing_punctuation:
+  - "]"
+  :contractions:
+    # Crasis
+    κἂν:
+    - καὶ
+    - ἄν
+    Κἀκεῖ:
+    - Καὶ
+    - ἐκεῖ
+    κἀκεῖ:
+    - καὶ
+    - ἐκεῖ
+    Κἀκεῖθεν:
+    - Καὶ
+    - ἐκεῖθεν
+    κἀκεῖθεν:
+    - καὶ
+    - ἐκεῖθεν
+    Κἀγώ:
+    - Καὶ
+    - ἐγώ
+    Κἀγὼ:
+    - Καὶ
+    - ἐγώ
+    κἀγώ:
+    - καὶ
+    - ἐγώ
+    κἀγὼ:
+    - καὶ
+    - ἐγώ
+    κακεινη:
+    - καὶ
+    - ἐκείνη
+    κἀκείνους:
+    - καὶ
+    - ἐκείνους
+    κἀκεῖνα:
+    - καὶ
+    - ἐκεῖνα
+    κἀκεῖνοι:
+    - καὶ
+    - ἐκεῖνοι
+    κἀκεῖνον:
+    - καὶ
+    - ἐκεῖνον
+    κἀκεῖνος:
+    - καὶ
+    - ἐκεῖνος
+    κἀκεῖνός:
+    - καὶ
+    - ἐκεῖνος
+    κἀμοί:
+    - καὶ
+    - ἐμοί 
+    κἀμοὶ:
+    - καὶ
+    - ἐμοί 
+    κἀμὲ:
+    - καὶ
+    - ἐμὲ 
+    τοὐναντίον:
+    - τὸ
+    - ἐναντίον
+    τοὔνομα: 
+    - τὸ
+    - ὄνομα
+    # Other stuff
+    διατί:
+    - διά
+    - τί
+:la:
+  :nonspacing_punctuation:
+  - .
+  - ","
+  - ":"
+  - ;
+  - \?
+  - \!
+  :bound_morphemes:
+    c:
+      :enclitic:
+        true
+      :mode:
+        :whitelist_only 
+      :whitelist:
+        nec
+    st:
+      :enclitic:
+        false
+      :mode:
+        :all 
+      :blacklist:
+        Est
+        est
+        Post
+        post
+        potest
+        adest
+        deest
+        superest
+        prodest
+        praeest
+        præest
+        interest
+    met:
+      :enclitic:
+        false
+      :mode:
+        # This should be switched to whitelist_only (non-productive) once a
+        # reasonable list has been accumulated
+        :all 
+      :whitelist:
+        vosmet
+        semet
+        vobismet
+        temet
+        sibimet
+        nosmet
+      :blacklist:
+        timet
+        emet
+        aestimet
+        æstimet
+        existimet
+        confirmet
+    cum:
+      :enclitic:
+        true
+      :mode:
+        # This should be switched to whitelist_only (non-productive) once a
+        # reasonable list has been accumulated
+        :all 
+      :whitelist:
+        nobiscum
+        Nobiscum
+        mecum
+        tecum
+        secum
+        vobiscum
+      :blacklist:
+        vocum
+        lacum
+        vilicum
+        modicum
+        locum
+        canticum
+        Andronicum
+        Damascum
+        Illyricum
+        Marcum
+        Ponticum
+        Tychicum
+        Africum
+        africum
+        amicum
+        arcum
+        cæcum
+        caecum
+        calicum
+        circum
+        ficum
+        Hæreticum
+        hereticum
+        inimicum
+        Leviticum
+        leviticum
+        luscum
+        medicum
+        Modicum
+        paralyticum
+        porticum
+        propheticum
+        pudicum
+        triticum
+        vicum
+        vilicum
+        villicum
+    ve:
+      :enclitic:
+        true
+      :mode:
+        :all
+      :whitelist:
+        Sive
+        sive
+      :blacklist:   
+        breve
+        Ave
+        have
+        leve
+        nave
+        suave
+        ove
+        parasceve
+        qualive
+        Solve
+        solve
+        Serve
+        serve
+    que:
+      :enclitic:
+        true
+      :mode:
+        :all
+      :whitelist:
+        Cumque
+        cumque
+        Ideoque
+        ideoque 
+        ibique 
+        deditque
+        Dixitque
+        dixitque
+        Jussitque
+        jussitque
+        iussitque
+        Omnesque
+        omnesque
+        omnibusque
+        omnisque
+        partemque 
+        Adieruntque
+        adieruntque
+        adsumentesque
+        assumentesque
+        apertisque
+        circumponensque
+        Commotaque
+        commotaque
+        Consideransque
+        consideransque
+        consummatisque
+        Conveneruntque
+        conveneruntque
+        descendensque
+        Devenitque
+        devenitque
+        dixeruntque
+        dominationemque
+        eratque
+        exhortantesque
+        fecitque
+        frangensque
+        gentilibusque
+        habuitque
+        imponentesque
+        inponentesque
+        Jovisque
+        Iovisque
+        Isque
+        isque
+        lapidantesque
+        legensque
+        locumque
+        lucrique
+        Misitque
+        misitque
+        Multique
+        multique
+        multisque
+        multusque
+        nihilque
+        nuntiavitque
+        percussoque
+        Petitoque
+        petitoque
+        portansque
+        protraxitque
+        Rogavitque
+        rogavitque
+        satisque
+        seditque
+        simulque
+        solidabitque
+        Statimque
+        statimque
+        suadensque
+        suadebatque
+        superque
+        supplicationesque
+        terroresque
+        Timueruntque
+        timueruntque
+        Transeuntesque
+        transeuntesque
+        villasque
+        Virtutesque
+        virtutesque
+        Volensque
+        volensque
+      :blacklist:
+        Absque
+        absque
+        Quinque
+        quinque 
+        undique
+        Usque
+        usque
+        itaque
+        Itaque
+        namque
+        atque
+        Utique
+        utique
+        quoque
+        quoadusque
+        quisque
+        cuique
+        cuiusque
+        cujusque
+        Quousque
+        quousque
+        quicumque
+        Quicumque
+        Quæcumque
+        quæcumque
+        quaecumque
+        Quodcumque
+        quodcumque
+        quamcumque
+        Quemcumque
+        quemcumque
+        quacumque
+        Quocumque
+        quocumque
+        cuicumque
+        quoscumque
+        Ubicumque
+        ubicumque
+        Quotiescumque
+        quotiescumque
+        quotienscumque
+        Unusquisque
+        unusquisque
+        Unaquæque
+        unaquæque
+        unaquaeque
+        unumquemque
+        Unicuique
+        unicuique
+        uniuscuiusque
+        uniuscujusque
+        unoquoque
+        unumquodque
+        uterque
+        utraque
+        utrumque
+        utrisque
+        inique
+        relinque
+:hy:
+  :nonspacing_punctuation:
+    - .
+    - ":"
+    - ։
+    - ","
+    - ;
+  :left_bracketing_punctuation:
+  - "["
+  :right_bracketing_punctuation:
+  - "]"
+:cu:
+  :nonspacing_punctuation:
+  - . 
+  - ":"
+  - "?"
+  :right_bracketing_punctuation:
+  - "]"
+  - "}"
+  - ">"
+  :left_bracketing_punctuation:
+  - "-"
+  - "["
+  - "{"
+  - "<"
+  :spacing_punctuation:
+  - ⁘
+  - ჻
+  - ⁓
+  - ·

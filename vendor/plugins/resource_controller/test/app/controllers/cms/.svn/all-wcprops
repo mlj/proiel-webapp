@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/resource_controller/!svn/ver/153/tags/stable/test/app/controllers/cms
+END
+options_controller.rb
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/resource_controller/!svn/ver/153/tags/stable/test/app/controllers/cms/options_controller.rb
+END
+products_controller.rb
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/resource_controller/!svn/ver/153/tags/stable/test/app/controllers/cms/products_controller.rb
+END

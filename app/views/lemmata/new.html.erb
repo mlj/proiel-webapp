@@ -1,0 +1,8 @@
+<%= error_messages_for :lemma %>
+
+<div class="new">
+  <% form_for(@lemma) do |form| %>
+    <%= render :partial => 'form', :object => form %>
+    <%= form.submit "Create" %>
+  <% end %>
+</div>

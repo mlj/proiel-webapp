@@ -1,0 +1,154 @@
+<tagset id="morphology">
+  <order>
+    <position ref="major"/>
+    <position ref="minor"/>
+    <position ref="person"/>
+    <position ref="number"/>
+    <position ref="tense"/>
+    <position ref="mood"/>
+    <position ref="voice"/>
+    <position ref="gender"/>
+    <position ref="case"/>
+    <position ref="degree"/>
+    <position ref="extra"/>
+  </order>
+
+  <field id='major'>
+    <tag code='N' summary='noun'/>
+    <tag code='P' summary='pronoun'/>
+    <tag code='M' summary='numeral'/>
+    <tag code='V' summary='verb'/>
+    <tag code='A' summary='adjective' abbreviation='adj.'/>
+    <tag code='S' summary='article' abbreviation='art.'/>
+    <tag code='D' summary='adverb' abbreviation='adv.'/>
+    <tag code='R' summary='preposition' abbreviation='prep.'/>
+    <tag code='C' summary='conjunction' abbreviation='conj.'/>
+    <tag code='G' summary='subjunction'/>
+    <tag code='F' summary='foreign word'/>
+    <tag code='I' summary='interjection'/>
+  </field>
+
+  <field id='minor'>
+    <!-- P -->
+    <tag code='p' summary='personal' abbreviation="pers."/>
+    <tag code='r' summary='relative' abbreviation="rel."/>
+    <tag code='d' summary='demonstrative' abbreviation="dem."/>
+    <tag code='s' summary='possessive' abbreviation="poss."/>
+    <tag code='k' summary='personal reflexive'/>
+    <tag code='t' summary='possessive reflexive'/>
+    <tag code='c' summary='reciprocal'/>
+    <tag code='i' summary='interrogative' abbreviation="interrog."/>
+    <tag code='x' summary='indefinite' abbreviation="indef."/>
+
+    <!-- M -->
+    <tag code='a' summary='cardinal'/>
+    <tag code='g' summary='cardinal, indeclinable'/>
+    <tag code='o' summary='ordinal'/>
+
+    <!-- N -->
+    <tag code='b' summary='common'/>
+    <tag code='h' summary='common, indeclinable'/>
+    <tag code='e' summary='proper'/>
+    <tag code='j' summary='proper, indeclinable'/>
+
+    <!-- D -->
+    <tag code='f' summary='comparable'/>
+    <tag code='n' summary='non-comparable' abbreviation="non-comp."/>
+    <tag code='q' summary='relative'/>
+    <tag code='u' summary='interrogative'/>
+  </field>
+
+  <field id='person'>
+    <tag code='1' summary='first person' abbreviation='1st p.'/>
+    <tag code='2' summary='second person' abbreviation='2nd p.'/>
+    <tag code='3' summary='third person' abbreviation='3rd p.'/>
+  </field>
+
+  <field id='number'>
+    <tag code='s' summary='singular' abbreviation='sin.'/>
+    <tag code='d' summary='dual' abbreviation='dua.'/>
+    <tag code='p' summary='plural' abbreviation='pl.'/>
+  </field>
+
+  <field id='tense'>
+    <tag code='p' summary='present' abbreviation='pres.'/>
+    <tag code='i' summary='imperfect' abbreviation='imperf.'/>
+
+    <tag code='l' summary='pluperfect' abbreviation='ppf.'/>
+    <tag code='a' summary='aorist' abbreviation='aor.'/>
+    <tag code='f' summary='future' abbreviation='fut.'/>
+    <tag code='r' summary='perfect' abbreviation='perf.'/>
+    <tag code='t' summary='future perfect'/>
+  </field>
+
+  <field id='mood'>
+    <tag code='i' summary='indicative' abbreviation='ind.'/>
+    <tag code='s' summary='subjunctive' abbreviation='subj.'/>
+    <tag code='m' summary='imperative'/>
+    <tag code='o' summary='optative' abbreviation='opt.'/>
+
+    <tag code='n' summary='infinitive' abbreviation='inf.'/>
+    <tag code='p' summary='participle'/>
+    <tag code='d' summary='gerund'/>
+    <tag code='g' summary='gerundive'/>
+    <tag code='u' summary='supine'/>
+  </field>
+
+  <field id='voice'>
+    <tag code='a' summary='active' abbreviation='act.'/>
+
+    <tag code='e' summary='middle or passive'/>
+    <tag code='m' summary='middle' abbreviation='mid.'/>
+    <tag code='p' summary='passive' abbreviation='pass.'/>
+
+    <tag code='n' summary='middle or passive deponent'/>
+    <tag code='d' summary='middle deponent'/>
+    <tag code='o' summary='passive deponent' abbreviation="pass. dep."/>
+
+    <tag code='q' summary='impersonal active'/>
+
+    <equivalence ref='m' isa='e'/>
+    <equivalence ref='p' isa='e'/>
+    <equivalence ref='d' isa='n'/>
+    <equivalence ref='o' isa='n'/>
+  </field>
+  
+  <field id='gender'>
+    <tag code='o' summary='masculine or neuter' abbreviation='m./n.'/>
+    <tag code='p' summary='masculine or feminine' abbreviation='m./f.'/>
+    <tag code='q' summary='masculine, feminine or neuter' abbreviation='m./f./n.'/>
+    <tag code='r' summary='feminine or neuter' abbreviation='f./n.'/>
+
+    <tag code='m' summary='masculine' abbreviation='m.'/>
+    <tag code='f' summary='feminine' abbreviation='f.'/>
+    <tag code='n' summary='neuter' abbreviation='n.'/>
+
+    <equivalence ref='m' isa='o'/>
+    <equivalence ref='m' isa='p'/>
+    <equivalence ref='m' isa='q'/>
+    <equivalence ref='f' isa='p'/>
+    <equivalence ref='f' isa='q'/>
+    <equivalence ref='n' isa='o'/>
+    <equivalence ref='n' isa='q'/>
+  </field>
+
+  <field id='case'>
+    <tag code='n' summary='nominative' abbreviation='nom.'/>
+    <tag code='v' summary='vocative' abbreviation='voc.'/>
+    <tag code='a' summary='accusative' abbreviation='acc.'/>
+    <tag code='g' summary='genitive' abbreviation='gen.'/>
+    <tag code='d' summary='dative' abbreviation='dat.'/>
+    <tag code='b' summary='ablative' abbreviation='abl.'/>
+    <tag code='i' summary='instrumental' abbreviation='ins.'/>
+    <tag code='l' summary='locative' abbreviation='loc.'/>
+  </field>
+
+  <field id='degree'>
+    <tag code='p' summary='positive'/>
+    <tag code='c' summary='comparative'/>
+    <tag code='s' summary='superlative'/>
+  </field>
+
+  <field id='extra'>
+  </field>
+</tagset>

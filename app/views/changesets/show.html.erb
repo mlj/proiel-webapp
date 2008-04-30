@@ -1,0 +1,8 @@
+<%= make_information_box([ 
+  [ 'Changeset ID', @changeset.id ],
+  [ 'User name', @changeset.user.login ],
+  [ 'Created at', @changeset.created_at ],
+]) %>
+
+<%= render_tabular @changeset.changes, :partial => 'change', 
+  :fields => [ 'Element', 'Version' ] %>

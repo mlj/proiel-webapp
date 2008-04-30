@@ -1,0 +1,8 @@
+<%= error_messages_for :bookmark %>
+
+<div class="edit">
+  <% form_for(@user) do |form| %>
+    <%= render :partial => 'form', :object => form %>
+    <%= form.submit "Update" %>
+  <% end %>
+</div>

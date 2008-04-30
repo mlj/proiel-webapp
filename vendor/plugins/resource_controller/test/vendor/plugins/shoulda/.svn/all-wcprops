@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/resource_controller/!svn/ver/153/tags/stable/test/vendor/plugins/shoulda
+END
+Rakefile
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/resource_controller/!svn/ver/153/tags/stable/test/vendor/plugins/shoulda/Rakefile
+END
+init.rb
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/resource_controller/!svn/ver/153/tags/stable/test/vendor/plugins/shoulda/init.rb
+END
+cruise_control.rb
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/resource_controller/!svn/ver/153/tags/stable/test/vendor/plugins/shoulda/cruise_control.rb
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/resource_controller/!svn/ver/153/tags/stable/test/vendor/plugins/shoulda/README
+END
