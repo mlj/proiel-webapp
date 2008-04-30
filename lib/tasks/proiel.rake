@@ -1,16 +1,19 @@
-
 #TODO
 USER_NAME='mlj'
 
+DEFAULT_EXPORT_DIRECTORY = File.join(RAILS_ROOT, 'public', 'exports')
+
 namespace :proiel do
   task(:myenvironment => :environment) do
-    # FIXME: bootstrap legacy tool system
-    require 'tools'
+    require 'jobs'
   end
 
   desc "Validate PROIEL database"
   task(:validator => :myenvironment) do
-    PROIEL::Tools.execute('db-validator', USER_NAME)
+    require 'tools/db_validator'
+
+    v = Validator.new(false)
+    v.execute!(USER_NAME)
   end
 
   namespace :import do
@@ -29,15 +32,22 @@ namespace :proiel do
     end
   end
 
-  namespace :export do
-    desc "Export a PROIEL source text. Options: ID=source_identifier FILE=destination_file"
+  desc "Export a PROIEL source text. Options: ID=source_identifier"
+  task(:export => :environment) do
+    s = Source.find_by_code(ENV['ID'])
+    raise "Source not found" unless s
+    source.export("#{source.code}.xml")
+  end
 
-    task(:proiel => :environment) do
-      args = []
-      #TODO: [--without-morphtags] [--without-lemmata] [--without-dependencies]
-      args << ENV['ID']
-      args << ENV['FILE']
-      PROIEL::Tools.execute('proiel-export', USER_NAME, *args)
+  namespace :export do
+    namespace :all do
+      desc "Export all PROIEL source texts with all publicly available data."
+      task(:public => :myenvironment) do
+        Dir::mkdir(DEFAULT_EXPORT_DIRECTORY) unless File::directory?(DEFAULT_EXPORT_DIRECTORY)
+        Source.find(:all).each do |source|
+          source.export(File.join(DEFAULT_EXPORT_DIRECTORY, "#{source.code}.xml"), :reviewed_only => true)
+        end
+      end
     end
   end
 end
