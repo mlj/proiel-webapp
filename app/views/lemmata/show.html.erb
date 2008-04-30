@@ -2,7 +2,7 @@
   <dt>Lemma:</dt><dd><span class="lemma"><%= @lemma %></span></dd>
   <dt>Language:</dt><dd><span class="language"><%= readable_language(@lemma.language) %></span></dd>
   <% if @lemma.pos %>
-    <dt>Part of speech:</dt><dd><%= MorphTag.new(@lemma.pos).descriptions([:major, :minor], true).join(", ").capitalize %></dd>
+    <dt>Part of speech:</dt><dd><%= PROIEL::MorphTag.new(@lemma.pos).descriptions([:major, :minor], true).join(", ").capitalize %></dd>
   <% end %>
   <dt>Frequency:</dt><dd><span class="language"><%= pluralize(@lemma.frequency, 'occurrence') %></span></dd>
   <% if @lemma.short_gloss %>

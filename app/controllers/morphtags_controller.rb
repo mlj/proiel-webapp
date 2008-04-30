@@ -37,7 +37,7 @@ class MorphtagsController < ApplicationController
       end
 
       if x = params["morphtag-#{token.id}".to_sym] and y = params["lemma-#{token.id}".to_sym]
-        xy = MorphLemmaTag.new("#{x}:#{y}")
+        xy = PROIEL::MorphLemmaTag.new("#{x}:#{y}")
         if tags[token.id][:set] != xy
           tags[token.id][:set] = xy
           tags[token.id][:state] = :mannotated
@@ -67,7 +67,7 @@ class MorphtagsController < ApplicationController
       # or with them...
       params.keys.reject { |key| !(key =~ /^morphtag-/) }.each do |key|
         token_id = key.sub(/^morphtag-/, '')
-        new_morphtag = MorphTag.new(ActiveSupport::JSON.decode(params[key]))
+        new_morphtag = PROIEL::MorphTag.new(ActiveSupport::JSON.decode(params[key]))
         new_lemma = params['lemma-' + token_id]
 
         # FIXME: for now, insert this bit here to catch missing lemmata. When all existing
@@ -78,10 +78,10 @@ class MorphtagsController < ApplicationController
           return
         end
 
-        ml = MorphLemmaTag.new("#{new_morphtag.to_s}:#{new_lemma}")
+        ml = PROIEL::MorphLemmaTag.new("#{new_morphtag.to_s}:#{new_lemma}")
 
-        suggestions = params['orig-suggestions-' + token_id].split(',').collect { |s| MorphLemmaTag.new(s) }
-        pick = MorphLemmaTag.new(params['pick-' + token_id])
+        suggestions = params['orig-suggestions-' + token_id].split(',').collect { |s| PROIEL::MorphLemmaTag.new(s) }
+        pick = PROIEL::MorphLemmaTag.new(params['pick-' + token_id])
 
         if ml == pick
           performance = :picked

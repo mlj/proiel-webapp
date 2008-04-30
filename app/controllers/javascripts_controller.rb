@@ -8,23 +8,23 @@ class JavascriptsController < ApplicationController
   def dynamic_pos
     language = params[:id].to_sym
 
-    @major_values = MorphTag.pos_values(language).collect { |e| [e[0], e[1]] }.uniq
-    @minor_values = MorphTag.pos_values(language).collect { |e| [e[0], e[3], e[2]] }
-    @mood_values = MorphTag.field_values(:mood, language).collect { |e| [e[0], e[1], e[4], e[3]] }.uniq
-    @person_values = MorphTag.field_values(:person, language)
-    @number_values = MorphTag.field_values(:number, language)
-    @tense_values = MorphTag.field_values(:tense, language)
-    @voice_values = MorphTag.field_values(:voice, language)
-    @gender_values = MorphTag.field_values(:gender, language)
-    @case_values = MorphTag.field_values(:case, language)
-    @degree_values = MorphTag.field_values(:degree, language)
+    @major_values = PROIEL::MorphTag.pos_values(language).collect { |e| [e[0], e[1]] }.uniq
+    @minor_values = PROIEL::MorphTag.pos_values(language).collect { |e| [e[0], e[3], e[2]] }
+    @mood_values = PROIEL::MorphTag.field_values(:mood, language).collect { |e| [e[0], e[1], e[4], e[3]] }.uniq
+    @person_values = PROIEL::MorphTag.field_values(:person, language)
+    @number_values = PROIEL::MorphTag.field_values(:number, language)
+    @tense_values = PROIEL::MorphTag.field_values(:tense, language)
+    @voice_values = PROIEL::MorphTag.field_values(:voice, language)
+    @gender_values = PROIEL::MorphTag.field_values(:gender, language)
+    @case_values = PROIEL::MorphTag.field_values(:case, language)
+    @degree_values = PROIEL::MorphTag.field_values(:degree, language)
   end
 
   def morphtag_presentation
     @summaries = {}
     @abbreviations = {}
 
-    MORPHOLOGY.each_pair do |field, tags|
+    PROIEL::MORPHOLOGY.each_pair do |field, tags|
       s = {}
       a = {}
       tags.values.each do |tag| 
@@ -38,7 +38,7 @@ class JavascriptsController < ApplicationController
 
   # Returns a Javascript representation of valid dependency relations
   def relations
-    @relations = RELATIONS
-    @inferences = INFERENCES
+    @relations = PROIEL::RELATIONS
+    @inferences = PROIEL::INFERENCES
   end
 end

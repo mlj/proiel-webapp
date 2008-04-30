@@ -68,7 +68,7 @@ module ApplicationHelper
   # Returns a select tag for the morphtag field +field+.
   def morphtag_select_tag(name, field, value = nil, options = {})
     value = value.to_sym unless value.nil? or value == ''
-    option_tags = MORPHOLOGY[field].sort { |a, b| a.to_s <=> b.to_s }.collect do |code, values|
+    option_tags = PROIEL::MORPHOLOGY[field].sort { |a, b| a.to_s <=> b.to_s }.collect do |code, values|
       if code == value
         "<option value='#{code}' selected='selected'>#{values.summary.capitalize}</option>"
       else
@@ -85,7 +85,7 @@ module ApplicationHelper
   # +:include_blank+:: If +true+, includes an empty value first.
   def language_select_tag(name, value = nil, options = {})
     value = value.to_sym unless value.nil? or value == '' 
-    option_tags = LANGUAGES.collect do |code, values| 
+    option_tags = PROIEL::LANGUAGES.collect do |code, values| 
       if code == value
         "<option value='#{code}' selected='selected'>#{values.summary}</option>"
       else
@@ -101,7 +101,7 @@ module ApplicationHelper
   # ==== Options
   # +:include_blank+:: If +true+, includes an empty value first.
   def relation_select_tag(name, value = nil, options = {})
-    relations = RELATIONS.values.collect { |r| r.code.to_s }
+    relations = PROIEL::RELATIONS.values.collect { |r| r.code.to_s }
 
     option_tags = relations.collect do |r| 
       if r == value
@@ -406,7 +406,7 @@ module ApplicationHelper
   #  c # => "Latin"
   #
   def readable_language(code)
-    make_nonblank(LANGUAGES[code].summary)
+    make_nonblank(PROIEL::LANGUAGES[code].summary)
   end
 
   # Generates a human readable representation of a completion rate for a sentence.

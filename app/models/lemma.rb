@@ -84,7 +84,7 @@ class Lemma < ActiveRecord::Base
       conditions << "#{search[:variant]}"
     end
 
-    morphtag = MorphTag.new
+    morphtag = PROIEL::MorphTag.new
     [:major, :minor, :person, :number, :tense, :mood, :voice, :gender, :case, :degree, :extra].each do |field|
       if search[field] and search[field] != ''
         morphtag[field] = search[field]
