@@ -266,45 +266,60 @@ if $0 == __FILE__
       tagger = Tagger.new(:statistics_retriever => lambda { |language, form| [[ "R----------", "cum", 20 ], [ "G----------", "cum", 80 ]] })
       assert_equal [:ambiguous, MorphLemmaTag.new("G:cum"), 
         [MorphLemmaTag.new("G:cum"), 1.4], 
-        [MorphLemmaTag.new("R:cum"), 1.1]], tagger.tag_token(:la, 'cum', :word)
+        [MorphLemmaTag.new("R:cum"), 1.1],
+        [MorphLemmaTag.new("Dq:cum"), 1.0]], tagger.tag_token(:la, 'cum', :word)
 
       # Then do it the other way around
       tagger = Tagger.new(:statistics_retriever => lambda { |language, form| [[ "R----------", "cum", 300 ], [ "G----------", "cum", 100 ]] })
       assert_equal [:ambiguous, MorphLemmaTag.new("R:cum"), 
         [MorphLemmaTag.new("R:cum"), 1.375], 
-        [MorphLemmaTag.new("G:cum"), 1.125]], tagger.tag_token(:la, 'cum', :word)
+        [MorphLemmaTag.new("G:cum"), 1.125],
+        [MorphLemmaTag.new("Dq:cum"), 1.0]], tagger.tag_token(:la, 'cum', :word)
     end
 
-    def test_existing_tag_influence
+    def test_existing_tag_influence_complete_tag
       tagger = Tagger.new
 
       # Existing tag is complete
       assert_equal [:ambiguous, MorphLemmaTag.new("R:cum"), 
         [MorphLemmaTag.new("R:cum"), 2.0], 
-        [MorphLemmaTag.new("G:cum"), 1.0]], tagger.tag_token(:la, 'cum', :word, MorphLemmaTag.new('R:cum'))
+        [MorphLemmaTag.new("Dq:cum"), 1.0],
+        [MorphLemmaTag.new("G:cum"), 1.0],
+      ], tagger.tag_token(:la, 'cum', :word, MorphLemmaTag.new('R:cum'))
       assert_equal [:ambiguous, MorphLemmaTag.new("G:cum"), 
         [MorphLemmaTag.new("G:cum"), 2.0], 
-        [MorphLemmaTag.new("R:cum"), 1.0]], tagger.tag_token(:la, 'cum', :word, MorphLemmaTag.new('G:cum'))
+        [MorphLemmaTag.new("R:cum"), 1.0],
+        [MorphLemmaTag.new("Dq:cum"), 1.0],
+      ], tagger.tag_token(:la, 'cum', :word, MorphLemmaTag.new('G:cum'))
+    end
+
+    def test_existing_tag_influence_incomplete_tag
+      tagger = Tagger.new
 
       # Existing tag is incomplete
       assert_equal [:ambiguous, MorphLemmaTag.new("Dn:ne"),
         [MorphLemmaTag.new("Dn:ne"), 1.0], 
         [MorphLemmaTag.new("I:ne"), 0.5], 
-        [MorphLemmaTag.new("G:ne"), 0.5], 
-        [MorphLemmaTag.new("V-2spma:neo#1"), 0.1]], tagger.tag_token(:la, 'ne', :word, MorphLemmaTag.new('D'))
+        [MorphLemmaTag.new("G:ne"), 0.5],
+      ], tagger.tag_token(:la, 'ne', :word, MorphLemmaTag.new('D'))
+    end
+
+    def test_existing_tag_influence_complete_tag_but_contradictory_lemma
+      tagger = Tagger.new
 
       # Existing tag is complete, but contradictory lemma 
       assert_equal [:ambiguous, nil,
         [MorphLemmaTag.new("I:ne"), 0.5], 
+        [MorphLemmaTag.new("Dn:ne"), 0.5],
         [MorphLemmaTag.new("G:ne"), 0.5], 
-        [MorphLemmaTag.new("Dn:ne"), 0.5], 
-        [MorphLemmaTag.new("V-2spma:neo#1"), 0.1]], tagger.tag_token(:la, 'ne', :word, MorphLemmaTag.new('Df:neo'))
+      ], tagger.tag_token(:la, 'ne', :word, MorphLemmaTag.new('Df:neo'))
     end
 
     def test_draw
       tagger = Tagger.new
       assert_equal [:ambiguous, nil, 
         [MorphLemmaTag.new("R:cum"), 1.0],
+        [MorphLemmaTag.new("Dq:cum"), 1.0],
         [MorphLemmaTag.new("G:cum"), 1.0],
       ], tagger.tag_token(:la, 'cum', :word)
     end
