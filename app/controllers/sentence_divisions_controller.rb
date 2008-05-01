@@ -11,7 +11,7 @@ class SentenceDivisionsController < ApplicationController
   def _edit_cover_length(tokens, function, limit = EDIT_LIMIT)
     # We can get at most n tokens if we want to leave at least one behind
     # so that the sentence isn't orphaned.
-    n = tokens.count - 1
+    n = tokens.length - 1
 
     # We only want to grab up to a certain number of tokens.
     n = limit if n > limit
@@ -26,7 +26,7 @@ class SentenceDivisionsController < ApplicationController
     @sentence = Sentence.find(params[:annotation_id])
 
     @shorten = _edit_cover_length(@sentence.nonempty_tokens, :last)
-    @expand = _edit_cover_length(@sentence.next_sentence.nonempty_tokens, :first)
+    @expand = _edit_cover_length(@sentence.has_next_sentence? ? @sentence.next_sentence.nonempty_tokens : [], :first)
     @fixed = @sentence.nonempty_tokens.first(@sentence.nonempty_tokens.length - @shorten.length)
   end
   
