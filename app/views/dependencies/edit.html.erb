@@ -34,7 +34,7 @@
   </div>
 
   <ul id="words" style="text-align: center"> 
-    <% @sentence.word_tokens.each do |t| %>
+    <% @sentence.morphtaggable_tokens.each do |t| %>
       <li id="word-<%= t.id %>" class="word">
         <span class="form"><%= t.form %></span><span class="token-number"><%= t.token_number %></span>
       </li>

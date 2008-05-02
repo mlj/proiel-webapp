@@ -2,7 +2,7 @@
 
 <div class="morphtags">
   <div id="tokens">
-    <% for token in @sentence.word_tokens %>
+    <% for token in @sentence.morphtaggable_tokens %>
       <div id="item-<%= token.id %>" class="item">
         <p class="form"><%= token.form %></p>
         <div class="morph-lemma-tags <%= (token.morphtag and token.lemma_id) ? 'mannotated' : 'munannotated' %>">

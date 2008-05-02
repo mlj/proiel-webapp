@@ -131,7 +131,7 @@ class Validator < Task
     sentences = Sentence.find(:all)
     sentences.each do |s|
       s.tokens.each do |t|
-        if t.morphtaggable? and not t.morphtag.nil?
+        if t.is_morphtaggable? and not t.morphtag.nil?
           m = MorphTag.new(t.morphtag)
 
           if m.valid? and not m.complete?

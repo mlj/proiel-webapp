@@ -9,7 +9,7 @@
   <% if @token.composed_form %>
     <dt>Composed form:</dt><dd class="foreign-word"><%= @token.composed_form %></dd>
   <% end %>
-  <% if @token.morphtaggable? %>
+  <% if @token.is_morphtaggable? %>
     <dt>Morphtag:</dt><dd class="morphtag"><%= @token.morphtag || '&nbsp;' %></dd>
     <dt>Part of speech:</dt><dd><%= readable_pos(@token.morph) %></dd>
     <dt>Morphology:</dt><dd><%= readable_morphology(@token.morph) %></dd>

@@ -253,7 +253,7 @@ module ApplicationHelper
         next if token.empty?
 
         # Check if the next token is bound and we should fuse it
-        next if next_token and (next_token.fused_morpheme? and not options[:ignore_fusing])
+        next if next_token and (next_token.sort == :fused_morpheme and not options[:ignore_fusing])
 
         # Add book name
         if options[:book_names] and token.sentence.book and n_book != token.sentence.book

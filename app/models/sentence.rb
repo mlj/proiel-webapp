@@ -13,17 +13,17 @@ class Sentence < ActiveRecord::Base
   # All tokens
   has_many :tokens, :order => 'token_number'
 
-  # Tokens that are candidates for participation in dependency structures
+  # Tokens that can be tagged with dependency relations.
   has_many :dependency_tokens, :class_name => 'Token', :foreign_key => 'sentence_id', 
-    :conditions => [ "sort != 'nonspacing_punctuation'" ], :order => 'token_number'
+    :conditions => { "sort" => PROIEL::DEPENDENCY_TOKEN_SORTS }, :order => 'token_number'
 
-  # Word tokens only, i.e. non-empty, non-puctuation tokens.
-  has_many :word_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
-    :conditions => [ "sort != 'nonspacing_punctuation' and sort != 'empty'" ], :order => 'token_number'
+  # Tokens that can be tagged with morphology and lemma.
+  has_many :morphtaggable_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
+    :conditions => { "sort" => PROIEL::MORPHTAGGABLE_TOKEN_SORTS }, :order => 'token_number'
 
   # Tokens that are non-empty.
   has_many :nonempty_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
-    :conditions => [ "sort != 'empty'" ], :order => 'token_number'
+    :conditions => { "sort" => PROIEL::NON_EMPTY_TOKEN_SORTS }, :order => 'token_number'
 
   # General schema-defined validations
  

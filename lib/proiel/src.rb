@@ -327,22 +327,37 @@ module PROIEL
     end
   end
 
+  WORD_TOKEN_SORTS =
+    [ :word, :fused_morpheme, :enclitic ].freeze
+  EMPTY_TOKEN_SORTS =
+    [ :empty ].freeze
+  NON_BRACKETING_PUNCTUATION_TOKEN_SORTS =
+    [ :nonspacing_punctuation, :spacing_punctuation ].freeze
+  BRACKETING_PUNCTUATION_TOKEN_SORTS =
+    [ :left_bracketing_punctuation, :right_bracketing_punctuation ].freeze
+
+  PUNCTUATION_TOKEN_SORTS =
+    NON_BRACKETING_PUNCTUATION_TOKEN_SORTS + BRACKETING_PUNCTUATION_TOKEN_SORTS
+  NON_EMPTY_TOKEN_SORTS =
+    WORD_TOKEN_SORTS + PUNCTUATION_TOKEN_SORTS
+
+  MORPHTAGGABLE_TOKEN_SORTS = WORD_TOKEN_SORTS
+  DEPENDENCY_TOKEN_SORTS = WORD_TOKEN_SORTS + EMPTY_TOKEN_SORTS
+
   # FIXME: where do these functions belong?
 
-  # Returns true if token sort represents a non-bracketing type of
-  # punctuation.
+  # Returns true if token sort represents a non-bracketing type of punctuation.
   def self.is_non_bracketing_punctuation?(sort)
-    sort == :nonspacing_punctuation or sort == :spacing_punctuation
+    NON_BRACKETING_PUNCTUATION_TOKEN_SORTS.include?(sort)
   end
 
-  # Returns true if token sort represents a bracketing type of
-  # punctuation.
+  # Returns true if token represents a bracketing type of punctuation.
   def self.is_bracketing_punctuation?(sort)
-    sort == :left_bracketing_punctuation or sort == :right_bracketing_punctuation
+    BRACKETING_PUNCTUATION_TOKEN_SORTS.include?(sort)
   end
 
-  # Returns true if token sort represents punctuation.
+  # Returns true if token represents punctuation.
   def self.is_punctuation?(sort)
-    is_bracketing_punctuation?(sort) || is_non_bracketing_punctuation?(sort)
+    PUNCTUATION_TOKEN_SORTS.include?(sort)
   end
 end

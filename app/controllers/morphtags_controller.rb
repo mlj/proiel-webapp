@@ -10,7 +10,7 @@ class MorphtagsController < ApplicationController
     @sentence = Sentence.find(params[:annotation_id])
     @language = @sentence.language
 
-    @tags = @sentence.word_tokens.inject({}) do |tags, token|
+    @tags = @sentence.morphtaggable_tokens.inject({}) do |tags, token|
       tags[token.id] = {}
 
       result, tags[token.id][:pick], *tags[token.id][:suggestions] = token.invoke_tagger

@@ -20,7 +20,7 @@ class Token < ActiveRecord::Base
 
   # General schema-defined validations
   validates_presence_of :sentence_id
-  validates_presence_of :verse, :if => :nonempty? 
+  validates_presence_of :verse, :unless => :is_empty?
   validates_presence_of :token_number
   # Ensure that relation != '' (instead of NULL)
   validates_length_of :relation, :minimum => 1, :allow_nil => true
@@ -129,33 +129,16 @@ class Token < ActiveRecord::Base
 
   # Returns true if this is an empty token, i.e. a token used for empty nodes
   # in dependency structures.
-  def empty?
-    sort == :empty
+  def is_empty?
+    PROIEL::EMPTY_TOKEN_SORTS.include?(sort)
   end
 
-  # Returns true if this is a non-empty token.
-  def nonempty?
-    !empty?
-  end
-
-  # Returns true if this is a puctuation token.
-  def punctuation?
-    sort == :nonspacing_punctuation
-  end
-
-  # Returns true if this is a fused morpheme.
-  def fused_morpheme?
-    sort == :fused_morpheme
-  end
-
-  # Returns true if this is an enclitic.
-  def enclitic?
-    sort == :enclitic
-  end
+  # FIXME: eliminate
+  alias empty? is_empty?
 
   # Returns true if this is a token that takes part in morphology tagging.
-  def morphtaggable?
-    (not empty?) and (not punctuation?)
+  def is_morphtaggable?
+    PROIEL::MORPHTAGGABLE_TOKEN_SORTS.include?(sort)
   end
 
   # Invokes the PROIEL morphology tagger. Takes exitsing information into
@@ -271,7 +254,7 @@ class Token < ActiveRecord::Base
   def validate_sort
     # morphtag and morphtag source may only be set 
     # if token is morphtaggable
-    unless morphtaggable?
+    unless is_morphtaggable?
       errors.add(:morphtag, "not allowed on non-morphtaggable token") unless morphtag.nil?
       errors.add(:morphtag_source, "not allowed on non-morphtaggable token") unless morphtag_source.nil?
     end

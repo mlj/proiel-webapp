@@ -20,7 +20,7 @@
   <%= render :partial => 'legend' %>
 
   <div id="tokens">
-    <% for token in @sentence.word_tokens %>
+    <% for token in @sentence.morphtaggable_tokens %>
       <div id="item-<%= token.id %>" class="item" onclick="onTokenSelect(<%= token.id %>)">
         <p class="form"><%= token.form %></p>
         <div class="morph-lemma-tags <%= @tags[token.id][:state] %>">
@@ -36,8 +36,8 @@
 
 <div class="annotation-actions">
   <% form_tag({ :controller => 'morphtags', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :method => :put) do -%>
-    <input type="hidden" id="token-ids" value='<%= ActiveSupport::JSON.encode(@sentence.word_tokens.collect(&:id)) %>'/>
-    <% for token in @sentence.word_tokens %>
+    <input type="hidden" id="token-ids" value='<%= ActiveSupport::JSON.encode(@sentence.morphtaggable_tokens.collect(&:id)) %>'/>
+    <% for token in @sentence.morphtaggable_tokens %>
       <input type="hidden" 
              id="morphtag-<%= token.id %>" name="morphtag-<%= token.id %>" 
              value='<%= ActiveSupport::JSON.encode(@tags[token.id][:set] ? @tags[token.id][:set].morphtag : nil) %>'/>

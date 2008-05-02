@@ -63,7 +63,7 @@ module PROIEL
           cond = 'id != -1' #dummy
           cond = "reviewed_by is null" unless @change_all
           job.source.sentences.find(:all, :conditions => cond).each do |s|
-            s.word_tokens.find(:all, :conditions => [ 'form = ? and morphtag is not null', @word_form ]).each do |t|
+            s.morphtaggable_tokens.find(:all, :conditions => [ 'form = ? and morphtag is not null', @word_form ]).each do |t|
               raise "Encountered token with unexpected sort #{t.sort}" unless t.sort == @expected_sort
               unless t.morphtag == @ml_tag.morphtag.to_s and t.lemma_id == @lemma_id
                 stats.inc(t.morph_lemma_tag)
