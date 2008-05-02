@@ -342,3 +342,10 @@ a.token {
 .lemma { font-style: italic; }
 
 .chart { text-align: center; }
+
+/* Documentation */
+
+p.doc-img { 
+  text-align: center;
+  padding-top: .5em;
+}

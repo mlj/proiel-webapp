@@ -1,0 +1,14 @@
+<h1>Downloadable data</h1>
+
+<p>
+These data files are generated daily from the subset of our data that we consider
+to be completed.
+</p>
+
+<ul>
+  <li><%= link_to "Schema file", "/exports/text.xsd" %> <span class="warning">(Please note that this schema is not yet considered stable and may be modified at any
+    time.)</li>
+  <% Source.find(:all).each do |s| %>
+    <li><%= link_to "Data for " + s.title, "/exports/#{s.code}.xml" %></li>
+  <% end %>
+</ul>
