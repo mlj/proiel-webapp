@@ -49,7 +49,7 @@ module PROIEL
       @statistics_retriever = options[:statistics_retriever]
       @data_directory = options[:data_directory] || '.'
 
-      Tagger.update_databases(@data_directory, LANGUAGES.keys, @logger)
+      Tagger.update_databases(@data_directory, @logger)
     end
 
     # Generates a list of tags for a token.
@@ -127,6 +127,7 @@ module PROIEL
       end
     end
 
+
     def access_rule_db(mode, language, form)
       db_name = "#{mode}-#{language}.db"
       unless @@open_dbs[db_name]
@@ -182,16 +183,22 @@ module PROIEL
 
     # Creates or updates any databases that need to be updated based on the modification 
     # time of the rule files.
-    def self.update_databases(data_directory, languages, logger = nil)
+    def self.update_databases(data_directory, logger = nil)
       for mode in [:manual, :generated]
         data_file = File.join(data_directory, "#{mode}.csv")
         recreate = false
 
-        logger.info { "Checking if #{data_file} has changed..." } if logger 
+        # Get the languages covered by this rule file.
+        languages = {}
+        FasterCSV.foreach(data_file, :skip_blanks => true) do |e|
+          languages[e.first] = true
+        end
+
+        logger.info { "Checking if #{data_file} (for languages #{languages.keys.join(', ')}) has changed..." } if logger 
 
         # Find the earliest mtime for the databases
         db_mtime = Time.now
-        languages.each do |language|
+        languages.keys.each do |language|
           db_file_name = File.join(data_directory, "#{mode}-#{language}.db")
 
           if File.exists?(db_file_name)
