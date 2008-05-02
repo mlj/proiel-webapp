@@ -16,20 +16,17 @@ namespace :proiel do
     v.execute!(USER_NAME)
   end
 
-  namespace :import do
-    desc "Import a PROIEL source text. Options: FILE=data_file BOOK=book_filter" 
-
-    task(:proiel => :environment) do
-      require 'tools'
-
-      args = []
-      if ENV['BOOK']
-        args << '--book'
-        args << ENV['BOOK']
-      end
-      args << ENV['FILE']
-      PROIEL::Tools.execute('proiel-import', USER_NAME, *args)
+  desc "Import a PROIEL source text. Options: FILE=data_file BOOK=book_filter" 
+  task(:import => :environment) do
+    require 'tools/proiel_import'
+    args = []
+    if ENV['BOOK']
+      args << '--book'
+      args << ENV['BOOK']
     end
+    args << ENV['FILE']
+    i = PROIELImport.new(ENV['FILE'], ENV['BOOK'])
+    i.execute!(USER_NAME)
   end
 
   desc "Export a PROIEL source text. Options: ID=source_identifier"

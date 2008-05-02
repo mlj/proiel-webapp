@@ -9,72 +9,54 @@
 require 'simplepullparser'
 require 'jobs'
 
-module PROIEL
-  module Tools
-    class PROIELImport
-      def initialize(args)
-        @filters = {
-          :book => nil,
-        }
+class PROIELImport < Task
+  def initialize(data_file, book_filter = nil)
+    @data_file = data_file 
+    @book_filer = book_filter
 
-        if args.first == '--book'
-          args.shift
-          @filters[:book] = args.shift
-        end
+    super('import', false, false)
+  end
 
-        unless args.length == 1 
-          raise "Usage: [--book code] data_file"
-        end
+  protected
 
-        @data_file = args.first
-      end
+  def run!(logger)
+    Sentence.disable_auditing
+    Token.disable_auditing
 
-      def source
-        nil
-      end
+    metadata, new_tokens = PROIEL::read_source2(@data_file, { :filters => @filters })
 
-      def audited?
-        false
-      end
+    source = Source.find_by_code_and_language(metadata[:id], metadata[:language])
+    unless source
+      logger.info { "* Creating new source #{metadata[:id]}..." }
+      source = Source.new(:code => metadata[:id])
+      [:title, :language, :edition, :source, :editor, :url].each { |e| source[e] = metadata[e] }
+      source.save!
+    else
+      logger.warn { "* Source #{metadata[:id]} exists. Old data associated with source will not be removed and meta-data will not be overwritten..." }
+    end
 
-      def run!(logger, job)
-        Sentence.disable_auditing
-        Token.disable_auditing
+    # Deal with the tokens
+    book = nil
+    book_id = nil
+    sentence_number = nil
+    sentence = nil
 
-        metadata, new_tokens = PROIEL::read_source2(@data_file, { :filters => @filters })
-
-        source = Source.find_by_code_and_language(metadata[:id], metadata[:language])
-        unless source
-          logger.info { "* Creating new source #{metadata[:id]}..." }
-          source = Source.new(:code => metadata[:id])
-          [:title, :language, :edition, :source, :editor, :url].each { |e| source[e] = metadata[e] }
-          source.save!
-        else
-          logger.warn { "* Source #{metadata[:id]} exists. Old data associated with source will not be removed and meta-data will not be overwritten..." }
-        end
-
-        # Deal with the tokens
-        book = nil
-        book_id = nil
+    new_tokens.each do |form, attributes|
+      if book != attributes[:book]
+        book = attributes[:book]
+        book_id = Book.find_by_code(book).id
         sentence_number = nil
-        sentence = nil
+        logger.info { "* Working on book #{book}..." }
+      end
 
-        new_tokens.each do |form, attributes|
-          if book != attributes[:book]
-            book = attributes[:book]
-            book_id = Book.find_by_code(book).id
-            sentence_number = nil
-            logger.info { "* Working on book #{book}..." }
-          end
+      if sentence_number != attributes[:sentence_number]
+        sentence_number = attributes[:sentence_number]
+        sentence = source.sentences.create!(:sentence_number => sentence_number, 
+                                    :book_id => book_id,
+                                    :chapter => attributes[:chapter])
+      end
 
-          if sentence_number != attributes[:sentence_number]
-            sentence_number = attributes[:sentence_number]
-            sentence = source.sentences.create!(:sentence_number => sentence_number, 
-                                        :book_id => book_id,
-                                        :chapter => attributes[:chapter])
-          end
-
-          # First, handle the lemma, if any
+      # First, handle the lemma, if any
 #          if attributes[:lemma]
 #            lemma, variant = attributes[:lemma].split('#')
 #
@@ -92,31 +74,29 @@ module PROIEL
 #            end
 #          end
 
-          # Then, add the token
-          if attributes[:morphtag]
-            m = PROIEL::MorphTag.new(attributes[:morphtag])
-            if m.valid?
-              morphtag = m.to_s
-            else
-              logger.error { "Invalid morphtag #{m} encountered." }
-              morphtag = nil
-            end
-          end
-
-          sentence.tokens.create!(
-                       :token_number => attributes[:token_number], 
-                       :source_morphtag => morphtag,
-                       :source_lemma => attributes[:lemma],
-                       :form => form, 
-                       :verse => attributes[:verse], 
-                       :composed_form => attributes[:composed_form],
-                       :sort => attributes[:sort])
-
-          if (attributes[:relation] or attributes[:head]) and not dependency_warned
-            logger.warn { "Import of dependency structures not supported. Ignoring." }
-            dependency_warned = true
-          end
+      # Then, add the token
+      if attributes[:morphtag]
+        m = PROIEL::MorphTag.new(attributes[:morphtag])
+        if m.valid?
+          morphtag = m.to_s
+        else
+          logger.error { "Invalid morphtag #{m} encountered." }
+          morphtag = nil
         end
+      end
+
+      sentence.tokens.create!(
+                   :token_number => attributes[:token_number], 
+                   :source_morphtag => morphtag,
+                   :source_lemma => attributes[:lemma],
+                   :form => form, 
+                   :verse => attributes[:verse], 
+                   :composed_form => attributes[:composed_form],
+                   :sort => attributes[:sort])
+
+      if (attributes[:relation] or attributes[:head]) and not dependency_warned
+        logger.warn { "Import of dependency structures not supported. Ignoring." }
+        dependency_warned = true
       end
     end
   end
