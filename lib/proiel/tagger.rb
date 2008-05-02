@@ -127,7 +127,6 @@ module PROIEL
       end
     end
 
-
     def access_rule_db(mode, language, form)
       db_name = "#{mode}-#{language}.db"
       unless @@open_dbs[db_name]
@@ -216,6 +215,7 @@ module PROIEL
         logger.info { "#{data_file} has changed..." } if logger and recreate
 
         Tagger.update_database(data_file, mode, data_directory, logger) if recreate
+        Tagger.create_dummy_databases(mode, data_directory, logger)
       end
     end
 
@@ -246,6 +246,21 @@ module PROIEL
       end
 
       dbs.values.each { |db| db.close }
+    end
+
+    # Creates empty dummy databases for each (mode, language) pair for which we have
+    # no definitions. This allows us to easily handle errors with the morphology databases
+    # later.
+    def self.create_dummy_databases(mode, data_directory, logger)
+      for language in LANGUAGES.keys
+        db_name = "#{mode}-#{language}.db"
+        file_name = File.join(data_directory, db_name)
+        unless File.exists?(file_name)
+          logger.info { "Creating dummy database #{file_name}" } if logger
+          db = GDBM::open(file_name, 0666)
+          db.close
+        end
+      end
     end
   end
 end
