@@ -18,6 +18,7 @@ application.
 
 To generate all the documentation, you will in addition need
 * railroad
+and run the rake task +rake doc+.
 
 == Overview
 
@@ -47,8 +48,8 @@ exporting data and for running various forms of validation jobs.
 
 === PROIEL ad hoc XML format
 
-The schema for the PROIEL ad hoc XML format is found in the data directory
-and called text.xsd.
+The schema for the PROIEL ad hoc XML format is found in the +data+ directory
+and called +text.xsd+.
   :include:../data/text.xsd
 
 ==== Language tags
@@ -67,6 +68,11 @@ got:: Gothic (ISO 639-1: none; ISO 639-2: got; ISO/FDIS 639-3: got)
 In the PROIEL ad hoc XML format the xml:lang attribute is not used.
 Instead an attribute lang is used, as xml:lang will fail
 validation with the current combination of language tags and schemata.
+
+==== Morphological tagset
+
+The definition for the morphological tagset is found in +lib/proiel/morphology.xml+.
+  :include:../lib/proiel/morphology.xml
 
 == Tools
 
