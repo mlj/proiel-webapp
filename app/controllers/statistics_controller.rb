@@ -1,5 +1,5 @@
 class StatisticsController < ApplicationController
-  before_filter :is_reviewer?
+  before_filter :is_annotator?
 
   # GET /statistics
   def show

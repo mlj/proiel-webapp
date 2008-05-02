@@ -34,6 +34,9 @@
               <%= link_to 'Administration', :controller => :home, :action => :user_administration %>
             <% end %>
           <% end %>
+          <% if current_user.has_role?(:annotator) %>
+            <%= link_to 'Statistics', statistics_path %>
+          <% end %>
           <%= link_to 'Search', { :controller => :home, :action => :search }, :accesskey => 's', :style => 'display: none' %>
           <%= link_to 'Preferences', { :controller => :home, :action => :preferences }, :accesskey => 'r' %>
         </span>
