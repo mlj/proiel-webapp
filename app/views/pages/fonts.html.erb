@@ -1,20 +1,30 @@
 <h1>Font setup</h1>
 
-<h2>Old Church Slavonic</h2>
-
 <p>
-  Correct rendering of the script used for Old Church Slavonic can be a bit tricky. 
-  The Unicode standard, which is the most commonly used standard for encoding
-  the world's writing systems nowadays, was for a long time
-  inadequate for the purposes of unambiguously encoding Old Church Slavonic.
-  This was rectified in April 2008 with the release of Unicode 5.1, 
-  and our Old Church Slavonic text takes these standard changes into acoount.
-  For correct rendering, you will therefore need a font that
-  supports the characters included in Unicode 5.1. If you see boxes instead of
-  characters like in the picture below, you will need to install a new font.
-  We currently recommend <a href="http://kodeks.uni-bamberg.de/AKSL/Schrift/RomanCyrillicStd.htm">RomanCyrllic Std</a>.
+  For your browser to correctly render our pages, you will need fonts that support
+  the scripts that occur in our texts. On most modern systems this should work fairly 
+  well without any manual intervention, but should you see misplaced diacritics or
+  odd-looking boxes, like in the picture below, it is likely that you need
+  to update your fonts.
 </p>
 
 <p class="doc-img">
   <img src="/images/help-bad-fonts.png"></img>
+</p>
+
+<p>
+  For some languages, we rely on very recent additions to the Unicode standard (we
+  use Unicode 5.1), which means that the range of available fonts with full support
+  for our character set is still limited.
+</p>
+
+<h2>Old Church Slavonic</h2>
+
+<p>
+  These are the fonts we are currently aware of that support our Old Church Slavonic character repertoire
+  and our system has been configured to prefer:
+  <ul>
+    <li><a href="http://kodeks.uni-bamberg.de/AKSL/Schrift/RomanCyrillicStd.htm">RomanCyrllic Std</a></li>
+    <li><a href="http://kodeks.uni-bamberg.de/AKSL/Schrift/KlimentStd.htm">Kliment Std</a> (use the <tt>Kliment_Std.ttf</tt> font and not the ‘compatibility’ font <tt>Kliment_Std_51.ttf</tt>)</li>
+  </ul>
 </p>
