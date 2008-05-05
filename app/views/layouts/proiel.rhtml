@@ -55,13 +55,7 @@
     </div>
 
     <div id="body">
-      <% if flash[:notice] and flash[:notice] != '' %>
-        <p id="notice"><%= flash[:notice] %></p>
-      <% end %>
-
-      <% if flash[:error] and flash[:error] != '' %>
-        <p id="error"><%= flash[:error] %></p>
-      <% end %>
+      <%= message_block %>
 
       <%= yield %>
     </div>

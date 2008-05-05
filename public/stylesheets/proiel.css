@@ -430,21 +430,6 @@ form.button-to, .button-to div {
   display: inline;
 }
 
-/* Error messages */
-
-#error {
-  background: pink;
-  padding: .5em;
-  border: 1px solid gray;
-  width: 100%;
-}
-
-#notice {
-  background: lime;
-  padding: .5em;
-  border: 1px solid gray;
-}
-
 /* Misc. */
 
 .good { color: green; }
