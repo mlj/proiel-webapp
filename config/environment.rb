@@ -66,3 +66,4 @@ Inflector.inflections do |inflect|
   inflect.irregular "lemma", "lemmata"
 end
 
+require 'form_helper'
