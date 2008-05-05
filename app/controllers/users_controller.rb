@@ -1,107 +1,104 @@
-require 'password_generator'
- 
 class UsersController < ApplicationController
   before_filter :is_administrator?
-  skip_before_filter :login_required, :only => [ :activate ]
-  skip_before_filter :is_administrator?, :only => [ :activate ]
+  skip_before_filter :login_required, :only => [ :new, :create, :activate ]
+  skip_before_filter :is_administrator?, :only => [ :new, :create, :activate ]
   filter_parameter_logging :password
 
-  # GET /users
-  # GET /users.xml
+  before_filter :find_user, :only => [:suspend, :unsuspend, :destroy, :purge]
+ 
+  DEFAULT_ROLE = Role.find_by_code('reader')
+
   def index
     @users = User.search(params.slice(:login), params[:page])
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @users }
-    end
   end
 
   def new
     @user = User.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @user }
-    end
   end
 
-  # POST /users
-  # POST /users.xml
   def create
     cookies.delete :auth_token
     # protects against session fixation attacks, wreaks havoc with 
     # request forgery protection.
     # uncomment at your own risk
     # reset_session
-    pw = Password.generate
-    @user = User.new(params[:user].merge!({ :password => pw, :password_confirmation => pw}))
-
-    respond_to do |format|
-      if @user.save
-        flash[:notice] = 'User was successfully created.'
-        format.html { redirect_to(@user) }
-        format.xml  { render :xml => @user, :status => :created, :location => @user }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
-      end
-    end
-  rescue ActiveRecord::RecordInvalid
-    render :action => 'new'
-  end
-
-  def activate
-    unless request.post?
-      self.current_user = params[:activation_code].blank? ? :false : User.find_by_activation_code(params[:activation_code])
-      if not logged_in? or current_user.activated?
-        flash.now[:error] = "Activation failed!"
-        redirect_to :controller => 'home'
-      end
+    @user = User.new(params[:user])
+    @user.role_id = DEFAULT_ROLE 
+    @user.register! if @user.valid?
+    if @user.errors.empty?
+      flash[:notice] = "An e-mail has been sent to #{params[:user][:email]} for confirmation."
+      redirect_to :action => 'new'
     else
-      # Be specific about which attributes we update so that nobody sneaks
-      # anything past us.
-      if self.current_user.update_attributes!({ :password => params[:user][:password],
-                                                :password_confirmation => params[:user][:password_confirmation]})
-        current_user.activate
-        flash.now[:notice] = 'Account successfully activated.'
-        redirect_to :controller => 'home'
-      end
+      render :action => 'new'
     end
-  rescue ActiveRecord::RecordInvalid
-    @user = self.current_user
-    render
   end
 
   def show
     @user = User.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @user }
-    end
   end
 
   def edit
     @user = User.find(params[:id])
   end
-  
+
   def update
     @user = User.find(params[:id])
 
-    respond_to do |format|
-      if @user.update_attributes(params[:user])
-        #FIXME
-        @user.role_id = params[:user][:role_id]
-        @user.save!
+    if @user.update_attributes(params[:user])
+      #FIXME
+      @user.role_id = params[:user][:role_id]
+      @user.save!
 
-        flash[:notice] = 'User was successfully updated.'
-        format.html { redirect_to(@user) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
-      end
+      flash[:notice] = 'User was successfully updated.'
+      redirect_to(@user)
+    else
+      render :action => "edit"
     end
+  end
+
+  def activate
+    self.current_user = params[:activation_code].blank? ? false : User.find_by_activation_code(params[:activation_code])
+
+    #if !current_user.crypted_password?
+    #  if !params[:user][:password] or !params[:user][:password_confirmation]
+    #    # Account has no password yet
+    #    render :action => 'activate'
+    #    return
+    #  else
+    #    self.current_user.update_attributes(params[:user].slice(:password, :password_confirmation))
+    #  end
+    #end
+
+    if logged_in? && !current_user.active?
+      current_user.activate!
+      flash[:notice] = "Account activated."
+    end
+    redirect_back_or_default('/')
+  end
+
+  def suspend
+    @user.suspend!
+    redirect_to users_path
+  end
+
+  def unsuspend
+    @user.unsuspend!
+    redirect_to users_path
+  end
+
+  def destroy
+    @user.delete!
+    redirect_to users_path
+  end
+
+  def purge
+    @user.destroy
+    redirect_to users_path
+  end
+
+  protected
+
+  def find_user
+    @user = User.find(params[:id])
   end
 end

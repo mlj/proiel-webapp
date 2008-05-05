@@ -4,8 +4,10 @@
   <dt>Last name</dt><dd><%=h @user.last_name %></dd>
   <dt>E-mail address</dt><dd><%=h @user.email %></dd>
   <dt>Role</dt><dd><%=h @user.role.description %></dd>
+  <dt>State</dt><dd><%=h @user.state.humanize %></dd>
   <dt>Created</dt><dd><%=h @user.created_at %></dd>
   <dt>Activated</dt><dd><%=h @user.activated_at %></dd>
   <dt>Updated</dt><dd><%=h @user.updated_at %></dd>
+  <dt>Deleteted</dt><dd><%=h @user.deleted_at %></dd>
 </dl>
 <p><%= link_to "Edit", edit_user_path(@user) %></dd>

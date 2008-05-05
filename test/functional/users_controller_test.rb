@@ -56,6 +56,19 @@ class UsersControllerTest < Test::Unit::TestCase
     end
   end
   
+  def test_should_sign_up_user_in_pending_state
+    create_user
+    assigns(:user).reload
+    assert assigns(:user).pending?
+  end
+
+  
+  def test_should_sign_up_user_with_activation_code
+    create_user
+    assigns(:user).reload
+    assert_not_nil assigns(:user).activation_code
+  end
+
   def test_should_activate_user
     assert_nil User.authenticate('aaron', 'test')
     get :activate, :activation_code => users(:aaron).activation_code

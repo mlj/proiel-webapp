@@ -15,6 +15,11 @@ module UsersHelper
     link_to(readable_name(user), user) + (options[:role] ? " (#{user.role.description})" : '')
   end
 
+  # Returns true if the current user is an administrator.
+  def is_administrator?
+    current_user.has_role?(:administrator)
+  end
+
   # Returns true if the current user is a reviewer.
   def is_reviewer?
     current_user.has_role?(:reviewer)

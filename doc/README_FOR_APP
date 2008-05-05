@@ -10,7 +10,6 @@ The application depends on (at least) these gems:
 * fastercsv
 * memoize
 * oniguruma
-* password_generator
 * ruby-xslt
 
 You will also need an installation of graphviz in a path accessible to the

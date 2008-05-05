@@ -3,6 +3,7 @@
 <div class="edit">
   <% form_for(@user) do |form| %>
     <%= render :partial => 'form', :object => form %>
+    <%= form.collection_select :role_id, Role.find(:all), :id, :description %>
     <%= form.submit "Update" %>
   <% end %>
 </div>

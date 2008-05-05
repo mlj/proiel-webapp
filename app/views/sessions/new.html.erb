@@ -1,0 +1,27 @@
+<%= message_block :on => :session %>  
+
+<h2>
+Welcome to the PROIEL Corpus! 
+</h2>
+
+<p>To access the PROIEL Corpus you need to be logged in. If you do
+not already have an account, you can <a href="/signup">sign up</a>.
+
+<div class="standard_form">
+<% form_tag session_path do -%>
+  <label for="login">
+    Login<br />
+    <%= text_field_tag 'login' %>
+  </label>
+  <label for="password">
+    Password<br />
+    <%= password_field_tag 'password' %>
+  </label>
+  <label for="remember_me">
+    Remember me&nbsp;<%= check_box_tag 'remember_me' %> 
+  </label>
+  <label>
+    <%= submit_tag 'Log in' %>
+  </label>
+<% end -%>
+</div>

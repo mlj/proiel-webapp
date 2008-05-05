@@ -1,5 +1,4 @@
 require 'digest/sha1'
-
 class User < ActiveRecord::Base
   belongs_to :role
   has_many :bookmarks
@@ -16,18 +15,18 @@ class User < ActiveRecord::Base
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
-  validates_presence_of     :login, :email
+  validates_presence_of     :login, :message => 'cannot be blank.'
+  validates_presence_of     :email
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?
   validates_length_of       :login,    :within => 3..40
   validates_length_of       :email,    :within => 3..100
-  validates_uniqueness_of   :login, :case_sensitive => false
-  validates_presence_of     :first_name
-  validates_presence_of     :last_name
+  validates_uniqueness_of   :login, :case_sensitive => false, :message => 'already exists. Please choose a different login.'
+  validates_presence_of     :first_name, :message => 'cannot be blank.'
+  validates_presence_of     :last_name, :message => 'cannot be blank.'
   before_save :encrypt_password
-  before_create :make_activation_code 
 
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
@@ -37,28 +36,39 @@ class User < ActiveRecord::Base
   def full_name
     "#{first_name} #{last_name}"
   end
+
+  acts_as_state_machine :initial => :pending
+  state :passive
+  state :pending, :enter => :make_activation_code
+  state :active,  :enter => :do_activate
+  state :suspended
+  state :deleted, :enter => :do_delete
+
+  event :register do
+    transitions :from => :passive, :to => :pending, :guard => Proc.new {|u| !(u.crypted_password.blank? && u.password.blank?) }
+  end
   
-  # Activates the user in the database.
-  def activate
-    @activated = true
-    self.activated_at = Time.now.utc
-    self.activation_code = nil
-    save(false)
+  event :activate do
+    transitions :from => :pending, :to => :active 
   end
 
-  def activated?
-    # the existence of an activation code means they have not activated yet
-    activation_code.nil?
+  event :suspend do
+    transitions :from => [:passive, :pending, :active], :to => :suspended
   end
 
-  # Returns true if the user has just been activated.
-  def recently_activated?
-    @activated
+  event :delete do
+    transitions :from => [:passive, :pending, :active, :suspended], :to => :deleted
+  end
+
+  event :unsuspend do
+    transitions :from => :suspended, :to => :active,  :guard => Proc.new {|u| !u.activated_at.blank? }
+    transitions :from => :suspended, :to => :pending, :guard => Proc.new {|u| !u.activation_code.blank? }
+    transitions :from => :suspended, :to => :passive
   end
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
-    u = find :first, :conditions => ['login = ? and activated_at IS NOT NULL', login] # need to get the salt
+    u = find_in_state :first, :active, :conditions => {:login => login} # need to get the salt
     u && u.authenticated?(password) ? u : nil
   end
 
@@ -101,6 +111,11 @@ class User < ActiveRecord::Base
     save(false)
   end
 
+  # Returns true if the user has just been activated.
+  def recently_activated?
+    @activated
+  end
+
   protected
     # before filter 
     def encrypt_password
@@ -108,14 +123,25 @@ class User < ActiveRecord::Base
       self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") if new_record?
       self.crypted_password = encrypt(password)
     end
-    
+
     def password_required?
       crypted_password.blank? || !password.blank?
     end
-    
+
     def make_activation_code
+      self.deleted_at = nil
       self.activation_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )
-    end 
+    end
+
+    def do_delete
+      self.deleted_at = Time.now.utc
+    end
+
+    def do_activate
+      @activated = true
+      self.activated_at = Time.now.utc
+      self.deleted_at = self.activation_code = nil
+    end
 
   protected
     def self.search(search, page)
@@ -131,7 +157,7 @@ class User < ActiveRecord::Base
       conditions = [clauses.join(' and ')] + conditions
 
       paginate(:page => page, :per_page => 50, :order => 'login', :conditions => conditions)
-    end	  
+    end
 
   public
     # Role management
