@@ -61,20 +61,20 @@ a:link:hover, a:visited:hover { color: #6F9DBE; }
 
 a[href $='.pdf'] { 
   padding-right: 18px;
-  background: transparent url(/images/icon_pdf.gif) no-repeat center right;
+  background: transparent url(/images/iconize/icon_pdf.gif) no-repeat center right;
 }
 
 a[href ^="mailto:"] {
   padding-right: 20px;
-  background: transparent url(/images/icon_mail.gif) no-repeat center right;
+  background: transparent url(/images/iconize/icon_mail.gif) no-repeat center right;
 }
 
 a[class ~="popup"] {
   padding-right: 18px;
-  background: transparent url(/images/icon_popup.gif) no-repeat center right;
+  background: transparent url(/images/iconize/icon_popup.gif) no-repeat center right;
 }
 
 a[class ~="external"] {
   padding-right: 18px;
-  background: transparent url(/images/icon_external.gif) no-repeat center right;
+  background: transparent url(/images/iconize/icon_external.gif) no-repeat center right;
 }
