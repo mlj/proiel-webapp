@@ -1,6 +1,6 @@
 class UpdateUsers < ActiveRecord::Migration
   def self.up
-    add_column :users, :state, :string, :null => :no, :default => 'passive'
+    add_column :users, :state, :string, :null => false, :default => 'passive'
     add_column :users, :deleted_at, :datetime
   end
 
