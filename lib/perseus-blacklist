@@ -69,6 +69,15 @@ moror:1>moror moror:2
 # converro "sweep together"; converto "turn around"
 converro
 
+# gero#1 "bear"; gero#2 "carrier"
+gero:1>gero gero:2
+
+# effero#1 "bring out"; effero#2 "make wild"
+effero:1>effero effero:2
+
+# offendo#1 "to strike"; offendo#2 "an offence"
+offendo:1>offendo offendo:2
+
 # stagnum#1 "pool"; stagnum#2 = stannum; stannum, an alloy
 stagnum:1>stagnum stagnum:2 stannum
 
@@ -458,8 +467,10 @@ carus:1>carus
 Creta:1>Creta
 Pilatus:3>Pilatus
 
-# Fanciful, made up and broken forms
+# Fanciful, made up, broken or doubtful forms
 dispermulceo
+infer # supposed to be a verb with particple infans
+exulciscor
 
 #
 # Stuff that we prefer to to manually because of differring analyses

@@ -499,6 +499,12 @@ A-- {
  rapax:rapacibus/p---fbp, rapax:rapacibus/p---fdp,
  rapax:rapacibus/p---nbp, rapax:rapacibus/p---ndp,
 
+ infans:infans/s---mnp,
+ infans:infantem/s---map,
+ infans:infantes/p---mnp,
+ infans:infantium/p---mgp,
+
+
 # TODO: not fully verified
  benus:bene/s---ovp, 
 
