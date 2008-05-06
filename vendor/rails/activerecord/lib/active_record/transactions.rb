@@ -73,7 +73,6 @@ module ActiveRecord
     # trigger a ROLLBACK when raised, but not be re-raised by the transaction block.
     module ClassMethods
       def transaction(user = nil, &block)
-        rails "Transaction called with user set no a non-user!" if user and !user.is_a?(User)
         previous_handler = trap('TERM') { raise TransactionError, "Transaction aborted" }
         increment_open_transactions(user)
 
