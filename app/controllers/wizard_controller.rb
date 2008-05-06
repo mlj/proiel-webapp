@@ -67,7 +67,7 @@ class WizardController < ApplicationController
 
   def set_state(level, state)
     # Grab bookmark, if any
-    bm = Bookmark.find_flow_bookmark(session[:user], level)
+    bm = Bookmark.find_flow_bookmark(User.find(session[:user_id]), level)
 
     if bm
       case level
@@ -81,8 +81,8 @@ class WizardController < ApplicationController
           render_state(bm, :annotation, :dependencies, :edit)
         when 4:
           begin
-            Sentence.transaction(session[:user]) do
-              bm.sentence.set_annotated!(session[:user])
+            versioned_transaction do
+              bm.sentence.set_annotated!(User.find(session[:user_id]))
             end
             render_state(bm, :annotation, :dependencies, :verify_or_modify)
           rescue ActiveRecord::RecordInvalid => invalid
@@ -104,8 +104,8 @@ class WizardController < ApplicationController
           render_state(bm, :review, :dependencies, :verify_or_modify)
         when 4:
           begin
-            Sentence.transaction(session[:user]) do
-              bm.sentence.set_reviewed!(session[:user])
+            versioned_transaction do
+              bm.sentence.set_reviewed!(User.find(session[:user_id]))
             end
             next_sentence(bm, :review)
           rescue ActiveRecord::RecordInvalid => invalid
