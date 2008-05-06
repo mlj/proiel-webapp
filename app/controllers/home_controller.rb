@@ -60,7 +60,7 @@ class HomeController < ApplicationController
     @activity = Source.activity
     @completion = Source.completion
 
-    user = session[:user]
+    user = User.find(session[:user_id])
     limit = 10
     @recent_annotations = Sentence.find(:all, :limit => limit, 
                                :conditions => [ 'annotated_by = ?', user ],

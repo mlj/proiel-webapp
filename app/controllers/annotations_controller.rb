@@ -52,8 +52,8 @@ class AnnotationsController < ApplicationController
   def flag_as_reviewed
     @sentence = Sentence.find(params[:id])
 
-    Sentence.transaction(session[:user]) do
-      @sentence.set_reviewed!(session[:user])
+    versioned_transaction do
+      @sentence.set_reviewed!(User.find(session[:user_id]))
       flash[:notice] = 'Annotation was successfully updated.'
       redirect_to(annotation_path(@sentence))
     end
@@ -65,8 +65,8 @@ class AnnotationsController < ApplicationController
   def flag_as_not_reviewed
     @sentence = Sentence.find(params[:id])
 
-    Sentence.transaction(session[:user]) do
-      @sentence.unset_reviewed!(session[:user])
+    versioned_transaction do
+      @sentence.unset_reviewed!(User.find(session[:user_id]))
       flash[:notice] = 'Annotation was successfully updated.'
       redirect_to(annotation_path(@sentence))
     end

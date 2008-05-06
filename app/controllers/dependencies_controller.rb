@@ -46,7 +46,7 @@ class DependenciesController < ApplicationController
   def update 
     @sentence = Sentence.find(params[:annotation_id])
 
-    if @sentence.is_reviewed? and not current_user.has_role?(:reviewer)
+    if @sentence.is_reviewed? and not user_is_reviewer?
       flash[:error] = 'You do not have permission to update reviewed sentences'
       redirect_to :action => 'edit', :wizard => params[:wizard], :annotation_id => params[:annotation_id]
       return
@@ -69,7 +69,7 @@ class DependenciesController < ApplicationController
 
       removed_tokens = @sentence.tokens.collect(&:id) - affected_tokens
 
-      Token.transaction(session[:user]) do
+      versioned_transaction do
         # Since the new analysis may overwrite an old one, we need to do some housekeeping
         # first. To ensure that the history appears atomic, each token must be updated only
         # once, and each token has to be touched.

@@ -14,4 +14,14 @@ class ApplicationController < ActionController::Base
   session :session_key => '_proiel_session_id'
 
   layout 'proiel' 
+
+  def versioned_transaction
+    Sentence.transaction(User.find(session[:user_id])) do
+      yield
+    end
+  end
+
+  def user_is_reviewer?
+    current_user.has_role?(:reviewer)
+  end
 end

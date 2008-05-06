@@ -34,7 +34,7 @@ class SentenceDivisionsController < ApplicationController
   def update
     sentence = Sentence.find(params[:annotation_id])
 
-    if sentence.is_reviewed? and not current_user.has_role?(:reviewer)
+    if sentence.is_reviewed? and not user_is_reviewer?
       flash[:error] = 'You do not have permission to update reviewed sentences'
       redirect_to :action => 'edit', :wizard => params[:wizard], :annotation_id => params[:annotation_id]
       return
@@ -43,7 +43,7 @@ class SentenceDivisionsController < ApplicationController
     change = params[:change] || 0 
     change = change.to_i
 
-    Sentence.transaction(session[:user]) do
+    versioned_transaction do
       # First flush dependencies from affected sentences so that we don't have to bother with them.
       # They won't make sense after this anyway.
       unless change.zero?
@@ -69,16 +69,17 @@ class SentenceDivisionsController < ApplicationController
   def flag_bad_alignment
     sentence = Sentence.find(params[:annotation_id])
 
-    if sentence.is_reviewed? and not current_user.has_role?(:reviewer)
+    if sentence.is_reviewed? and not user_is_reviewer?
       flash[:error] = 'You do not have permission to update reviewed sentences'
       redirect_to :action => 'edit', :wizard => params[:wizard], :annotation_id => params[:annotation_id]
       return
     end
 
-    Sentence.transaction(session[:user]) do
+    versioned_transaction do
       sentence.bad_alignment_flag = true
       sentence.save!
     end
+
     if params[:wizard]
       redirect_to :controller => :wizard, :action => "skip_sentence_divisions", :wizard => params[:wizard]
     else

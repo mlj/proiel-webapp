@@ -56,13 +56,13 @@ class MorphtagsController < ApplicationController
   def update
     @sentence = Sentence.find(params[:annotation_id])
 
-    if @sentence.is_reviewed? and not current_user.has_role?(:reviewer)
+    if @sentence.is_reviewed? and not user_is_reviewer?
       flash[:error] = 'You do not have permission to update reviewed sentences'
       redirect_to :action => 'edit', :wizard => params[:wizard], :annotation_id => params[:annotation_id]
       return
     end
 
-    Token.transaction(session[:user]) do
+    versioned_transaction do
       # Cycle the parameters and check whether this one originated with us 
       # or with them...
       params.keys.reject { |key| !(key =~ /^morphtag-/) }.each do |key|
