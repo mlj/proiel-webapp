@@ -81,6 +81,7 @@ class Source < ActiveRecord::Base
             attributes[:id] = token.id
             attributes[:relation] = token.relation if token.relation
             attributes[:head] = token.head_id if token.head
+            attributes[:slashes] = token.slashees.collect { |s| s.id }.join(' ') unless token.slashees.empty?
           end
 
           if options[:morphology]
