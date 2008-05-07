@@ -8,6 +8,8 @@ to be completed.
 <ul>
   <li><%= link_to "Schema file", "/exports/text.xsd" %> <span class="warning">(Please note that this schema is not yet considered stable and may be modified at any
     time.)</li>
+  <li><%= link_to "Definition of the morphological annotation", "/exports/morphology.xml" %></li>
+  <li><%= link_to "Definition of the dependency structure relations", "/exports/relations.xml" %></li>
   <% Source.find(:all).each do |s| %>
     <li><%= link_to "Data for " + s.title, "/exports/#{s.code}.xml" %></li>
   <% end %>

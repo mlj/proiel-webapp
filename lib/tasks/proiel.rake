@@ -40,9 +40,13 @@ namespace :proiel do
     namespace :all do
       desc "Export all PROIEL source texts with all publicly available data."
       task(:public => :myenvironment) do
+        Dir::mkdir(DEFAULT_EXPORT_DIRECTORY) unless File::directory?(DEFAULT_EXPORT_DIRECTORY)
         File::copy(File.join(RAILS_ROOT, 'data', 'text.xsd'), 
                    File.join(DEFAULT_EXPORT_DIRECTORY, 'text.xsd'))
-        Dir::mkdir(DEFAULT_EXPORT_DIRECTORY) unless File::directory?(DEFAULT_EXPORT_DIRECTORY)
+        File::copy(File.join(RAILS_ROOT, 'lib', 'proiel', 'morphology.xml'), 
+                   File.join(DEFAULT_EXPORT_DIRECTORY, 'morphology.xml'))
+        File::copy(File.join(RAILS_ROOT, 'lib', 'proiel', 'relations.xml'), 
+                   File.join(DEFAULT_EXPORT_DIRECTORY, 'relations.xml'))
         Source.find(:all).each do |source|
           source.export(File.join(DEFAULT_EXPORT_DIRECTORY, "#{source.code}.xml"), :reviewed_only => true)
         end
