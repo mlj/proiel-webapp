@@ -33,7 +33,7 @@ namespace :proiel do
   task(:export => :environment) do
     s = Source.find_by_code(ENV['ID'])
     raise "Source not found" unless s
-    source.export("#{source.code}.xml")
+    s.export("#{s.code}.xml")
   end
 
   namespace :export do
