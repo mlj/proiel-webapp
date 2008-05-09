@@ -215,6 +215,10 @@ module PROIEL
 
     alias :contradicts? :contradiction?
 
+    def self.union(*tags)
+      tags.inject(MorphTag.new) { |m, n| m.union(n.is_a?(MorphTag) ? n : MorphTag.new(n)) }
+    end
+
     # Returns the union of the morphtag and another morphtag +x+. +x+
     # may be a MorphTag object or a string. Raises an exception if 
     # the morphtags conflict.
