@@ -5,6 +5,7 @@ la,ab,,a,R
 la,Abel,,Abel,Nj
 la,Abia,,Abiam,Ne-s---ma
 la,Abia,,Abia,Ne-s---mn
+la,Abiathar,,Abiathar,Nj
 la,Abiud,,Abiud,Nj
 la,Abraham,,Abrahae,Ne-s---md
 la,Abraham,,Abrahae,Ne-s---mg
@@ -542,6 +543,7 @@ la,cottidie,,cotidie,Dn
 la,cottidie,,cottidie,Dn
 la,cras,,cras,Dn
 la,crebro,,crebro,Df-------p
+la,crucifigo,,crucifigendum,V--s-g-ma
 la,crucifigo,,crucifigere,V---pna
 la,crucifigo,,crucifige,V-2spma
 la,crucifigo,,crucifigunt,V-3ppia
@@ -2521,6 +2523,17 @@ la,primus,,primum,Mo-s---na
 la,primus,,primum,Mo-s---nn
 la,primus,,primum,Mo-s---nv
 la,primus,,primus,Mo-s---mn
+la,princeps,,princeps,A--s---mnp
+la,princeps,,principe,A--s---mbp
+la,princeps,,principem,A--s---map
+la,princeps,,principes,A--p---map
+la,princeps,,principes,A--p---mnp
+la,princeps,,principes,A--p---mvp
+la,princeps,,principi,A--s---mdp
+la,princeps,,principibus,A--p---mbp
+la,princeps,,principibus,A--p---mdp
+la,princeps,,principis,A--s---mgp
+la,princeps,,principum,A--p---mgp
 la,priusquam,,priusquam,Dn
 la,privatim,,privatim,Dn
 la,profecto,,profecto,Dn

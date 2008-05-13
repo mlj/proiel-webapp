@@ -504,6 +504,18 @@ A-- {
  infans:infantes/p---mnp,
  infans:infantium/p---mgp,
 
+ princeps:princeps/s---mnp,
+ princeps:principem/s---map,
+ princeps:principe/s---mbp,
+ princeps:principes/p---map,
+ princeps:principes/p---mnp,
+ princeps:principes/p---mvp,
+ princeps:principibus/p---mbp,
+ princeps:principibus/p---mdp,
+ princeps:principi/s---mdp,
+ princeps:principis/s---mgp,
+ princeps:principum/p---mgp,
+
 
 # TODO: not fully verified
  benus:bene/s---ovp, 
@@ -599,6 +611,7 @@ Nj {
  Israhel, Nasson, Nazareth, Objed, Phares, Phanuel, Rachab, Roboam, Ruth, Salmon,
  Thamar, Zara, Golgotha, Arimathia, Symeon, Iared, Eliachim, 
  Levi, Gennesareth, Iohanna, Loth, Noe, Nathanahel, Corazain, Abel,
+ Abiathar,
 }
 
 # "Messy" inflection
@@ -710,6 +723,7 @@ Nb- {
 
 V- {
  crucifigo:crucifigere/--pna,
+ crucifigo:crucifigendum/-s-g-ma,
  crucifigo:crucifigunt/3ppia,
  crucifigo:crucifixerunt/3pria,
  crucifigo:crucifige/2spma,

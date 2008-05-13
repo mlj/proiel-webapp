@@ -8457,12 +8457,6 @@ la,iuro,,iuraveris,V-2srsa,V-2stia
 la,iuro,,iuraverit,V-3srsa,V-3stia
 la,iuro,,iuravit,V-3sria
 la,iuro,,iuravi,V-1sria
-la,iuror,,iurare,V-2spip,V-2spmp
-la,iuror,,iurasset,V-3slsa
-la,iuror,,iuraveris,V-2srsa,V-2stia
-la,iuror,,iuraverit,V-3srsa,V-3stia
-la,iuror,,iuravit,V-3sria
-la,iuror,,iuravi,V-1sria
 la,iussum,,iussi,Nb-s---ng
 la,iussus,2,iussu,Nb-s---mb
 la,iusta,,iusta,Nb-p---na,Nb-p---nn,Nb-p---nv
@@ -8787,6 +8781,12 @@ la,liber,1,liberos,A--p---map
 la,liber,2,liberi,Nb-p---mn,Nb-p---mv
 la,liber,2,liberorum,Nb-p---mg
 la,liber,2,liberos,Nb-p---ma
+la,liber,3,liber,Nb-s---mn,Nb-s---mv
+la,liber,3,libri,Nb-p---mn,Nb-p---mv,Nb-s---mg
+la,liber,3,libris,Nb-p---mb,Nb-p---md
+la,liber,3,libro,Nb-s---mb,Nb-s---md
+la,liber,3,libros,Nb-p---ma
+la,liber,3,librum,Nb-p---mg,Nb-s---ma
 la,libero,,liberabitur,V-3sfip
 la,libero,,liberabit,V-3sfia
 la,libero,,liberans,V--sppafn,V--sppafv,V--sppamn,V--sppamv,V--sppana,V--sppann,V--sppanv
@@ -16053,7 +16053,6 @@ la,Tyrii,,Tyriis,Ne-p---mb,Ne-p---md
 la,Tyrium,,Tyriis,Ne-p---nb,Ne-p---nd
 la,Tyrius,,Tyri,A--s---mgp,A--s---ngp
 la,Tyrius,,Tyriis,A--p---fbp,A--p---fdp,A--p---mbp,A--p---mdp,A--p---nbp,A--p---ndp
-la,Tyro,,Tyro,Ne-s---fa,Ne-s---fb,Ne-s---fd,Ne-s---fn
 la,Tyrus,,Tyri,Ne-p---fn,Ne-p---fv,Ne-s---fg
 la,Tyrus,,Tyro,Ne-s---fb,Ne-s---fd
 la,Tyrus,,Tyrum,Ne-p---fg,Ne-s---fa
@@ -16691,7 +16690,6 @@ la,viride,,viride,Nb-s---na,Nb-s---nb,Nb-s---nn,Nb-s---nv
 la,viride,,viridi,Nb-s---nb,Nb-s---nd
 la,viridis,,viride,A--s---nap,A--s---nnp,A--s---nvp
 la,viridis,,viridi,A--s---fbp,A--s---fdp,A--s---mbp,A--s---mdp,A--s---nbp,A--s---ndp
-la,viror,,virorum,Nb-p---mg
 la,virtus,,virtus,Nb-s---fn
 la,virtus,,virtutem,Nb-s---fa
 la,virtus,,virtute,Nb-s---fb
