@@ -93,4 +93,19 @@ class HomeController < ApplicationController
       render :text => 'No such token'
     end
   end
+
+  def merge_tokens
+    token = Token.find(params[:id])
+    versioned_transaction { token.merge! }
+    redirect_to token_url(token)
+  end
+
+  def merge_lemmata
+    versioned_transaction do
+      from = Lemma.find(params[:first_id])
+      to = Lemma.find(params[:second_id])
+      to.merge!(from)
+      redirect_to lemma_url(to)
+    end
+  end
 end
