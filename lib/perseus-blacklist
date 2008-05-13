@@ -57,6 +57,10 @@ dextera:1
 # amicus#1 "friendly"; amicus#2 "friend" [SB]; amica v. amicus#2 [SB]
 amicus:1>amicus amicus:2 amica
 
+# princeps#1 "first" [MN - only as a noun in Perseus, we'd like it to
+# be an adjective]; Princeps#2, a name
+princeps:1 Princeps:2 principes
+
 # labor#1 "to slide"; labor#2 "labour"
 labor:1 labor:2>labor
 
@@ -109,6 +113,9 @@ edo:1>edo edo:2
 # Phoenix#1 "Phoenician"; Phoenix#2 myth.
 Phoenix:1>Phoenix Phoenix#2
 
+# Tyro, a name; Tyrus, a place
+Tyro
+
 # caelum#1 "chisel"; caelum#2/caelus "sky"
 caelum:1 caelum:2>caelum caelus
 
@@ -118,10 +125,10 @@ capio:1>capio capio:2
 # latus#1 "wide"; latus#2 "side"; latus#3 pp. of "fero"
 latus:3
 
-# liber#1 "free"; liber#2 "child"; liber#3 deity; liber#4 "bark", "paper"; 
+# liber#1 "free"; liber#2 "child"; liber#3 deity; liber#4 "bark", "paper", "book"; 
 # liberi "children" (v. liber#2). No forms match liber#2, only liberi, so
 # the original liber#2 is out and liberi is remapped to liber#2.
-liber:3 liber:4 liberi>liber:2
+liber:3 liber:4>liber:3 liberi>liber:2
 
 # pullus#1 "young animal"; pullus#2 dim. of purus; pullus#3 "blackish"; pullum
 # a garment
@@ -317,15 +324,20 @@ contingo:1>contingo contingo:2
 # platalea "spoonbill"; platea#1 "court-yard"; platea#2 "spoonbill"
 platalea platea:1>platea platea:2
 
+# tertius "third"; tertium v. tertius; tertio#1 v. tertius; tertio#2 "do for the third time"
+tertio:2
+
 #TODO
 # illic, illuc
 # converto, converro
-# iuro, iuror
 
+# areo "be dry"; aresco "become dry"; a-ruo ???
+aruo
+
+# vir "man"; viror "green colour"
+viror
 
 #TODO
-# areo aresco aruo
-aruo
 libet
 
 # TODO
@@ -417,7 +429,13 @@ ambago # no such variant of ambigo
 
 #
 # Deponent/non-deponent pairs where only one occurs in NT
+# FIXME: this requires some more consideration. The concordance
+# I use may not be the best source for making these judgements, 
+# but for now this will have to do.
 #
+
+# iuror(r)
+iuror
 
 # miro(r) "wonder"
 miro
@@ -427,9 +445,6 @@ commino
 
 # pasco(r) "pasture"
 pascor
-
-# tertius "third"; tertium v. tertius; tertio#1 v. tertius; tertio#2 "do for the third time"
-tertio:2
 
 #
 # Truly ambiguous
@@ -447,9 +462,6 @@ tertio:2
 
 # sabbatum subsumes sabbata (n. pl)
 sabbata 
-
-# princeps subsumes principes
-principes
 
 # Pharisaeus subsumes Pharisaei
 Pharisaei
