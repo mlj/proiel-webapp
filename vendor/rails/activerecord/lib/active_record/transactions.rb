@@ -85,11 +85,11 @@ module ActiveRecord
       end
 
       private
-        def increment_open_transactions(user_id) #:nodoc:
+        def increment_open_transactions(user) #:nodoc:
           open = Thread.current['open_transactions'] ||= 0
           Thread.current['start_db_transaction'] = open.zero?
           Thread.current['open_transactions'] = open + 1
-          Thread.current['user_id'] = user_id if user_id
+          Thread.current['user_id'] = user.id if user
         end
 
         def decrement_open_transactions #:nodoc:

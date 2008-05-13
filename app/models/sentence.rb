@@ -290,7 +290,7 @@ class Sentence < ActiveRecord::Base
   # Flags the sentence as annotated and saves the sentence.
   def set_annotated!(user)
     unless is_annotated?
-      self.annotated_by = user
+      self.annotated_by = user.id
       self.annotated_at = Time.now
       save!
     end
@@ -307,7 +307,7 @@ class Sentence < ActiveRecord::Base
     unless is_reviewed?
       set_annotated!(user)
 
-      self.reviewed_by = user
+      self.reviewed_by = user.id
       self.reviewed_at = Time.now
       save!
     end

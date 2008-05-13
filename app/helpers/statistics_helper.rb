@@ -48,6 +48,6 @@ module StatisticsHelper
       lc.axis :x, :labels => x_labels, :color => options[:colors][1], :font_size => 16, :alignment => :center
     end
 
-    image_tag(lc.to_url)
+    image_tag(lc.to_url, :alt => 'Statistics')
   end
 end
