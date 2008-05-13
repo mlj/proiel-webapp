@@ -185,6 +185,13 @@
         vicum
         vilicum
         villicum
+    ne:
+      :enclitic:
+        true
+      :mode:
+        :whitelist_only
+      :whitelist:
+        putasne
     ve:
       :enclitic:
         true

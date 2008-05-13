@@ -24,7 +24,7 @@ module Lingua
       @contractions = @definitions[:contractions] || {}
 
       @bound_morphemes = @definitions[:bound_morphemes] || {}
-      @bound_morpheme_patterns = @bound_morphemes.collect { |key, value| Regexp.new("(#{key})$") } 
+      @bound_morpheme_patterns = @bound_morphemes.collect { |key, value| Regexp.new("(?:.)(#{key})$") } 
       @all_punctuation = []
       @all_punctuation += @definitions[:nonspacing_punctuation] if @definitions[:nonspacing_punctuation]
       @all_punctuation += @definitions[:spacing_punctuation] if @definitions[:spacing_punctuation] 
@@ -96,7 +96,10 @@ module Lingua
       bound = false
 
       if morpheme_match
-        base, morpheme = word.gsub(morpheme_match, ''), word[morpheme_match] 
+        w = word.match(morpheme_match)
+        # We can't use pre_match for base here as the non-capturing group matches, even though
+        # it doesn't capture.
+        base, morpheme = word.slice(0...w.begin(1)), w[1]
         d = @bound_morphemes[morpheme]
 
         case d[:mode]
