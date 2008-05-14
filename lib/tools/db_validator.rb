@@ -21,6 +21,7 @@ class Validator < Task
     check_lemmata(logger)
     check_orphaned_tokens(logger)
     #check_normalisation(logger)
+    check_dependency_structure_interpretation(logger)
 
     #check_changesets_and_changes(logger)
     #check_sentences_and_tokens(logger)
@@ -107,12 +108,13 @@ class Validator < Task
     end
   end
 
+  # FIXME: move to validation
   def check_dependency_structure_completeness(logger)
     logger.info { "Checking dependency structure completeness..." }
 
     sentences = Sentence.find(:all, :conditions => [ "annotated_by is not null"])
     sentences.each do |s|
-      complete = s.dependency_tokens.all?(&:relation)
+      complete = s.dependency_graph_complete?
       logger.error { "Sentence #{s.id}: Incomplete dependency structure." } unless complete
     end
   end
@@ -171,6 +173,18 @@ class Validator < Task
 
     logger.info { "Checking that lemma morphology does not contradict token morphology..." }
     #FIXME
+  end
+
+  # Tests if dependency structures are fully interpretable, i.e. verifies
+  # that certain unclear, vague or conventional aspects of the structures
+  # that may at some point be codified can be interpreted or disambiguated.
+  def check_dependency_structure_interpretation(logger)
+    sentences = Sentence.find(:all, :conditions => [ "annotated_by is not null"])
+    sentences.each do |s|
+      if s.dependency_graph.select { |n| n.is_empty? }.any? { |n| n.interpret_empty_node == :unknown } 
+        logger.error { "Sentence #{s.id}: Uninterpretable empty node." }
+      end
+    end
   end
 
   def check_normalisation(logger)

@@ -85,6 +85,15 @@ module Lingua
         ' ' * indentation + "[#{identifier}: #{relation.inspect}, #{data.inspect}]\n"
       end
     end
+
+    def each_dependent(&block)
+      raise ArgumentError, "Block expected" unless block_given?
+
+      dependents.each do |d|
+        block.call(d)
+        d.each_dependent(&block)
+      end
+    end
   end
 
   class SlashedDependencyGraphNode < DependencyGraphNode
@@ -153,6 +162,24 @@ module Lingua
 
     def empty?
       @nodes.empty?
+    end
+
+    def each(&block)
+      @root.each_dependent(&block)
+    end
+
+    def select(&block)
+      r = []
+      self.each do |n| 
+        r << n if block.call(n)
+      end
+      r
+    end
+
+    def nodes
+      r = []
+      self.each { |n| r << n }
+      r
     end
 
     #FIXME: merge with add_node and use method aliasing
@@ -676,6 +703,30 @@ if $0 == __FILE__
   include PROIEL
 
   class DependencyGraphTestCase < Test::Unit::TestCase
+    def test_each_node
+      g = Lingua::DependencyGraph.new
+      g.add_node(1, :foo, nil)
+      g.add_node(11, :bar, 1)
+      g.add_node(111, :bar, 11)
+      g.add_node(12, :bar, 1)
+      g.add_node(121, :bax, 12)
+      g.add_node(122, :bay, 12)
+      g.add_node(123, :baz, 12)
+      assert_equal [g[1], g[11], g[111], g[12], g[121], g[122], g[123]], g.nodes
+    end
+
+    def test_select
+      g = Lingua::DependencyGraph.new
+      g.add_node(1, :foo, nil)
+      g.add_node(11, :bar, 1)
+      g.add_node(111, :bar, 11)
+      g.add_node(12, :bar, 1)
+      g.add_node(121, :bax, 12)
+      g.add_node(122, :bay, 12)
+      g.add_node(123, :baz, 12)
+      assert_equal [g[11], g[111], g[12]], g.select { |n| n.relation == :bar }
+    end
+
     def test_siblings
       g = Lingua::DependencyGraph.new
       g.add_node(1, :foo, nil)

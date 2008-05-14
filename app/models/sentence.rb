@@ -357,6 +357,12 @@ class Sentence < ActiveRecord::Base
     end
   end
 
+  # Returns true if the dependency graph for the sentence covers all
+  # tokens in the sentence.
+  def dependency_graph_complete?
+    self.dependency_tokens.all?(&:relation)
+  end
+
   # Returns the tokens that are immediate descendants of the root node
   # in the dependency structure of the sentence.
   def root_tokens 
