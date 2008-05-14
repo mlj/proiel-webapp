@@ -23,7 +23,7 @@ namespace :db do
 
     # Clean up old mess
     dir = Dir.new(backup_folder)
-    all_backups = dir.entries[2..-1].sort.reverse
+    all_backups = dir.select { |e| e[/\.sql\.gz$/] }.entries[2..-1].sort.reverse
     unwanted_backups = all_backups[max_backups..-1] || []
     for unwanted_backup in unwanted_backups
       File.unlink(File.join(backup_folder, unwanted_backup))
