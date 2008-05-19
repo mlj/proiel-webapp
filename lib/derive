@@ -283,6 +283,46 @@ classes = {
       },
     }, 
   }, },
+
+  ##### GREEK CLASSES
+
+  :GA1 => { :stemmer => 'ος', :infl => { 
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => 'ος', :a => 'ον', :g => 'ου', :d => 'ῳ' }, },
+          :f => { :case => { :n => 'η',  :a => 'ην', :g => 'is', :d => 'ῃ' }, },
+          :n => { :case => { :n => 'ον', :a => 'ον', :g => 'ου', :d => 'ῳ' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'οι', :a => 'ους', :g => 'ων', :d => 'οις', }, },
+          :f => { :case => { :n => 'αι', :a => 'ας',  :g => 'ων', :d => 'αις', }, },
+          :n => { :case => { :n => 'α',  :a => 'α',   :g => 'ων', :d => 'οις', }, },
+        },  
+      },
+    }, 
+  }, },
+
+  :GA2 => { :stemmer => 'ος', :infl => { 
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => 'ος', :a => 'ον', :g => 'ου', :d => 'ῳ' }, },
+          :f => { :case => { :n => 'α',  :a => 'αν', :g => 'is', :d => 'ᾳ' }, },
+          :n => { :case => { :n => 'ο',  :a => 'ο',  :g => 'ου', :d => 'ῳ' }, },
+        },  
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'οι', :a => 'ους', :g => 'ων', :d => 'οις', }, },
+          :f => { :case => { :n => 'αι', :a => 'ας',  :g => 'ων', :d => 'αις', }, },
+          :n => { :case => { :n => 'α',  :a => 'α',   :g => 'ων', :d => 'οις', }, },
+        },  
+      },
+    }, 
+  }, },
 }
 
 # Generates inflections recursively. If the given starting tag
@@ -397,7 +437,7 @@ File.open(rule_file) do |f|
 
         inflections = classes[cls.to_sym][:infl]
         stemmer = classes[cls.to_sym][:stemmer]
-        stem = form.gsub(/#{stemmer}$/, '')
+        stem = Lingua::GRC::strip_accents(form).gsub(/#{stemmer}$/, '')
 
         each_inflection(stem, template, inflections) { |tag, form| 
           emit(language, lemma, variant, form, tag, options)

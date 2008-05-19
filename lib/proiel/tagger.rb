@@ -148,7 +148,19 @@ module PROIEL
     end
 
     def get_manual_rule_matches(language, form)
+      form = normalise_form(language, form)
       access_rule_db(:manual, language, form)
+    end
+
+    def normalise_form(language, form)
+      case language
+      when :grc
+        # Strip all accents
+        # FIXME: duplication
+        form = Lingua::GRC::strip_accents(form)
+      else
+        form
+      end
     end
 
     def get_generated_rule_matches(language, form)
