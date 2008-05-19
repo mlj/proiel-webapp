@@ -550,9 +550,9 @@ module PROIEL
         # All dependents have the same relation to this node, as this
         # node has to its head. This indicates an asyndetic conjunction.
         :conjunction
-      elsif self.has_dependents?(:sub) or self.relation == :pred
-        # We weren't a conjunction, but have a subject or a pred relation, 
-        # and that means we're verbal.
+      elsif self.has_dependents?(:sub) or self.relation == :pred or self.has_dependents?(:comp)
+        # We weren't a conjunction, but have a subject or comp depdenednt,
+        # or a pred relation, and that means we're verbal.
         :verbal
       else
         :unknown # FIXME: catch in validation? or log as warning
