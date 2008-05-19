@@ -492,12 +492,100 @@ module PROIEL
         false
       end
     end
+
+#####
+    private
+
+    CLOSED_MAJOR = [:V, :A, :N]
+
+    def self.fields_with_inheritance
+      [:gender]
+    end
+
+    public
+
+    # Returns +true+ if the tag belongs to one of the `closed' parts
+    # of speech.
+    #
+    # Examples:
+    #  MorphTag.new('C').is_closed?  #-> true
+    #  MorphTag.new('A').is_closed?  #-> false
+    #  MorphTag.new('-').is_closed?  #-> false
+    def is_closed?
+      self.has_key?(:major) and not CLOSED_MAJOR.include?(self[:major])
+    end
+
+    # Returns +true+ if the tag is a subtag of another tag +o+.
+    #
+    # Examples (assuming that the defined field in the examples
+    # represents gender, and that 'q' is a supertag for 'n'):
+    #
+    #   MorphTag.new('-------n---').is_subtag?(MorphTag.new('-------q---'))  #-> true
+    #   MorphTag.new('-------q---').is_subtag?(MorphTag.new('-------n---'))  #-> false
+    #   MorphTag.new('-------n---').is_subtag?(MorphTag.new('-----------'))  #-> false
+    #   MorphTag.new('-----------').is_subtag?(MorphTag.new('-------n---'))  #-> false
+    def is_subtag?(o)
+      # Copy the two tags in question, mask out all fields with inheritance and compare
+      # the rest.
+      a, b = self.dup, o.dup
+      a[*MorphTag::fields_with_inheritance], b[*MorphTag::fields_with_inheritance] = nil, nil
+      return false unless a == b
+
+      # Test the inheritable fields
+      [:m, :f, :n].include?(self[:gender]) ? o.is_gender?(self[:gender]) : false
+    end
+
+    # Returns +true+ if the tag is compatible with another tag +o+, i.e.
+    # if the tag is a subtag of the tag +o+ or the tag is a supertag of
+    # the tag +o+ or the tags are identical.
+    #
+    # Examples (assuming that the defined field in the examples
+    # represents gender, and that 'q' is a supertag for 'n'):
+    #
+    #   MorphTag.new('-------n---').is_compatible?(MorphTag.new('-------q---'))  #-> true
+    #   MorphTag.new('-------q---').is_compatible?(MorphTag.new('-------n---'))  #-> true
+    #   MorphTag.new('-------n---').is_compatible?(MorphTag.new('-----------'))  #-> false
+    #   MorphTag.new('-----------').is_compatible?(MorphTag.new('-------n---'))  #-> false
+    def is_compatible?(o)
+      self == o or self.is_subtag?(o) or o.is_subtag?(self)
+    end
   end
 end
 
 if $0 == __FILE__
   require 'test/unit'
   include PROIEL
+
+  class MorphTagTestCase < Test::Unit::TestCase
+    def test_is_closed
+      assert_equal false, PROIEL::MorphTag.new('V').is_closed?
+      assert_equal false, PROIEL::MorphTag.new('V-').is_closed?
+      assert_equal false, PROIEL::MorphTag.new('-').is_closed?
+      assert_equal false, PROIEL::MorphTag.new('N').is_closed?
+      assert_equal false, PROIEL::MorphTag.new('A').is_closed?
+      assert_equal true, PROIEL::MorphTag.new('C').is_closed?
+    end
+
+    def test_is_subtag
+      assert_equal true, PROIEL::MorphTag.new('-------n---').is_subtag?(PROIEL::MorphTag.new('-------q---'))
+      assert_equal false, PROIEL::MorphTag.new('-------q---').is_subtag?(PROIEL::MorphTag.new('-------n---'))
+      assert_equal false, PROIEL::MorphTag.new('-------n---').is_subtag?(PROIEL::MorphTag.new('-----------'))
+      assert_equal false, PROIEL::MorphTag.new('-----------').is_subtag?(PROIEL::MorphTag.new('-------n---'))
+
+      assert_equal true, PROIEL::MorphTag.new('A------n---').is_subtag?(PROIEL::MorphTag.new('A------q---'))
+      assert_equal false, PROIEL::MorphTag.new('P------n---').is_subtag?(PROIEL::MorphTag.new('A------q---'))
+    end
+
+    def test_is_compatible
+      assert_equal true, PROIEL::MorphTag.new('-------n---').is_compatible?(PROIEL::MorphTag.new('-------q---'))
+      assert_equal true, PROIEL::MorphTag.new('-------q---').is_compatible?(PROIEL::MorphTag.new('-------n---'))
+      assert_equal false, PROIEL::MorphTag.new('-------n---').is_compatible?(PROIEL::MorphTag.new('-----------'))
+      assert_equal false, PROIEL::MorphTag.new('-----------').is_compatible?(PROIEL::MorphTag.new('-------n---'))
+
+      assert_equal true, PROIEL::MorphTag.new('A------n---').is_compatible?(PROIEL::MorphTag.new('A------q---'))
+      assert_equal false, PROIEL::MorphTag.new('P------n---').is_compatible?(PROIEL::MorphTag.new('A------q---'))
+    end
+  end
 
   class MorphologyTestCase < Test::Unit::TestCase
     def setup
