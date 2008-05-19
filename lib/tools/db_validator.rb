@@ -172,8 +172,13 @@ class Validator < Task
       end
     end
 
-    logger.info { "Checking that lemma morphology does not contradict token morphology..." }
-    #FIXME
+    Lemma.find(:all).each do |l|
+      l.tokens.each do |t|
+        if t.morph_lemma_tag.morphtag.pos_to_s != l.pos
+          log_token_error(logger, t, "Token POS does not match lemma POS")      
+        end
+      end
+    end
   end
 
   # Tests if dependency structures are fully interpretable, i.e. verifies
