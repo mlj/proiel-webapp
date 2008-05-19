@@ -1,5 +1,3 @@
-require 'utils'
-
 class BrowseController < ApplicationController
   def view 
     source, book, chapter, verse = params.values_at(:source, :book, :chapter, :verse).collect { |i| i.to_i }

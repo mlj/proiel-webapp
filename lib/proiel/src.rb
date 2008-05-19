@@ -4,10 +4,7 @@
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
-# $Id: src.rb 927 2008-04-29 15:35:22Z mariuslj $
-#
 require 'simplepullparser'
-require 'utils'
 require 'unicode'
 
 module PROIEL
@@ -281,7 +278,8 @@ module PROIEL
       xattrs[:chapter] = @last_chapter
       xattrs[:verse] = @last_verse
       xattrs[:lemma] = Unicode.normalize_C(xattrs[:lemma]) if xattrs[:lemma]
-      puts make_tag('token', xattrs, 6) { form ? Unicode.normalize_C(form) : '' }
+      formatted_attrs = xattrs.keys.collect { |s| s.to_s }.sort.collect { |k| " #{k.gsub(/_/, '-')}='#{xattrs[k.to_sym].to_s.gsub(/_/, '-')}'" }
+      puts "      <token#{formatted_attrs}>#{form ? Unicode.normalize_C(form) : '' }</token>"
     end
 
     # Emits an array of tokens. Each token is a hash with the token
