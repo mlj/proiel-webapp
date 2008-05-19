@@ -18,15 +18,16 @@ class Validator < Task
   protected
 
   def run!(logger)
+    check_manual_morphology(logger)
     check_lemmata(logger)
     check_orphaned_tokens(logger)
-    #check_normalisation(logger)
+    check_normalisation(logger)
     check_dependency_structure_interpretation(logger)
 
     #check_changesets_and_changes(logger)
-    #check_sentences_and_tokens(logger)
-    #check_morphtag_completeness(logger)
-    #check_dependency_structure_completeness(logger)
+    check_sentences_and_tokens(logger)
+    check_morphtag_completeness(logger)
+    check_dependency_structure_completeness(logger)
   end
 
   private
@@ -227,5 +228,40 @@ class Validator < Task
         end
       end
     end
+  end
+
+  def check_manual_morphology(logger)
+    Source.find(:all).each do |source|
+      source.annotated_sentences.each do |sentence|
+        sentence.morphtaggable_tokens.each do |token|
+          #FIXME: at some point move to validation
+          if (token.morphtag and not token.lemma_id) or (not token.morphtag and token.lemma_id)
+            logger.error { "Token #{token.id}: Token has morphtag or lemma but not both" }
+            next
+          end
+
+          ml = token.morph_lemma_tag
+
+          if ml and ml.morphtag.is_closed?
+            next unless ml.morphtag.complete?  # FIXME: at some point eliminate
+
+            manual_tags = TAGGER.get_manual_rule_matches(token.language, token.form)
+
+            if manual_tags.length == 0
+              log_token_error(logger, token, "Tagged with closed class morphology but not found in definition.")
+            else
+              unless manual_tags.any? { |m| token.morph_lemma_tag.morphtag.is_compatible?(m.morphtag) }
+                log_token_error(logger, token, "Closed class morphology does not match: #{token.morphtag} (actual) != #{manual_tags.collect { |m| m.morphtag.to_s }.join(' | ')} (expected)")
+              end
+            end
+          end
+        end
+      end
+    end
+    exit
+  end
+
+  def log_token_error(logger, token, msg)
+    logger.error { "Token #{token.id} (sentence #{token.sentence.id}) '#{token.form}' (#{token.language}): #{msg}" }
   end
 end
