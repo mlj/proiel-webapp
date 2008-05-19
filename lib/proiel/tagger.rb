@@ -9,6 +9,7 @@
 require 'proiel/morphtag'
 require 'fastercsv'
 require 'gdbm'
+require 'lingua/normalisation'
 
 module PROIEL
   class Tagger

@@ -4,11 +4,7 @@
 # string functions. Ye gods, how silly... 
 $KCODE = 'UTF8'
 require 'active_support'
-require 'oniguruma'
-include Oniguruma
-
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
-
+require 'lingua/normalisation'
 require 'proiel/morphtag'
 
 classes = { 
@@ -324,8 +320,8 @@ def emit(language, lemma, variant, form, tag, options = {})
 
     # Language hooks
     if language == "grc"
-      grave_form = acute_to_grave(form)
-      emit(language, lemma, variant, grave_form, tag) unless grave_form == form
+      # Strip all accents from the form, as that is what we do later on
+      form = Lingua::GRC::strip_accents(form)
     end
 
     puts [language, lemma, variant, form, tag.to_abbrev_s].join(',') 
@@ -333,15 +329,6 @@ def emit(language, lemma, variant, form, tag, options = {})
     STDERR.puts "Ignoring rule #{tag} for #{form}/#{lemma} (#{variant}): Incomplete tag."
   end
 end
-
-# Ad hoc function for Greek: Generate form variants with acute -> grave
-# assert_equal 'μηδὲ' == acute_to_grave('μηδέ')
-ACUTE_TO_GRAVE = ORegexp.new([0x301].pack("U*") + '$')
-
-def acute_to_grave(s)
-  ACUTE_TO_GRAVE.sub(s.chars.decompose, [0x300].pack("U*")).chars.normalize
-end
-
 
 options = {}
 while ARGV.first.slice(1, 1) == '-'

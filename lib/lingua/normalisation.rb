@@ -1,9 +1,15 @@
 #!/usr/bin/env ruby
 #
 # normalisation.rb - Language specific orthographic normalisation
+# and manipulation
 #
 # Written by Marius L. Jøhndal, 2007, 2008
 #
+
+# Set KCODE to UTF8 and grab active_support to get hold of real
+# string functions. Ye gods, how silly... 
+$KCODE = 'UTF8'
+require 'active_support'
 require 'unicode'
 require 'ucodes'
 
@@ -19,14 +25,14 @@ module Lingua
 
       text.gsub!(/Æ/, 'Ae')
       text.gsub!(/æ/, 'ae')
-      text.gsub!(/Ø/, 'oe')
+      text.gsub!(/Ø/, 'Oe')
       text.gsub!(/[œø]/, 'oe')
       text.gsub!(/Ë/, 'E')
       text.gsub!(/ë/, 'e')
       text.gsub!(/Ö/, 'O')
       text.gsub!(/ö/, 'o')
-      text.gsub!(/J([Aeiouyaeiouy])/, 'I\1')
-      text.gsub!(/j([Aeiouyaeiouy])/, 'i\1')
+      text.gsub!(/J([AEIOUYaeiouy])/, 'I\1')
+      text.gsub!(/j([aeiouy])/, 'i\1')
 
       text
     end
@@ -98,6 +104,71 @@ module Lingua
       end
       w.gsub!(SUPERSCRIPT_LETTERS_REGEXP) { |c| REVERSE_SUPERSCRIPTS[$&] }
       options[:no_case_folding] ? w : Unicode::downcase(w)
+    end
+  end
+
+  module GRC
+    private
+
+    U_ACUTE = Unicode::U0301
+    U_GRAVE = Unicode::U0300
+    U_CIRCUMFLEX = Unicode::U0342
+
+    FINAL_ACUTE_REGEXP = Regexp.new("#{U_ACUTE}$").freeze
+    ACUTE_REGEXP = Regexp.new(U_ACUTE).freeze
+    ACCENTS_REGEXP = Regexp.union(U_ACUTE, U_GRAVE, U_CIRCUMFLEX).freeze
+
+    public
+
+    # Changes an acute to a grave in a string +s+. Returns the
+    # new string on Normalisation form C.
+    #
+    # ==== Options
+    # final_only: Only changes a final vowel with an acute.
+    def self.acute_to_grave(s, options = {})
+      if options[:final_only]
+        s.chars.decompose.sub(FINAL_ACUTE_REGEXP, U_GRAVE).chars.normalize
+      else
+        s.chars.decompose.sub(ACUTE_REGEXP, U_GRAVE).chars.normalize
+      end
+    end
+
+    # Removes all accents from a string +s+. Returns the new
+    # string on Normalisation form C.
+    def self.strip_accents(s)
+      s.chars.decompose.sub(ACCENTS_REGEXP, '').chars.normalize
+    end
+  end
+end
+
+if $0 == __FILE__
+  require 'test/unit'
+
+  class LatTestCase < Test::Unit::TestCase
+    def test_normalisation
+      assert_equal 'aequalia', Lingua::LAT::normalise('æqualia')
+      assert_equal 'coepit', Lingua::LAT::normalise('cœpit')
+      assert_equal 'Israel', Lingua::LAT::normalise('Israël')
+      assert_equal 'Iesus', Lingua::LAT::normalise('Jesus')
+      assert_equal 'eiusmodi', Lingua::LAT::normalise('ejusmodi')
+    end
+  end
+
+  class GrcTestCase < Test::Unit::TestCase
+    def test_acute_to_grave
+      assert_equal 'μηδὲ', Lingua::GRC::acute_to_grave('μηδέ')
+      assert_equal 'μηδὲ', Lingua::GRC::acute_to_grave('μηδέ', :final_only => true)
+      assert_equal 'μηδὲ', Lingua::GRC::acute_to_grave('μηδέ', :final_only => false)
+      
+      assert_equal 'αὐτοὺς', Lingua::GRC::acute_to_grave('αὐτούς')
+      assert_equal 'αὐτούς', Lingua::GRC::acute_to_grave('αὐτούς', :final_only => true)
+      assert_equal 'σὐτοὺς', Lingua::GRC::acute_to_grave('σὐτούς', :final_only => false)
+    end
+
+    def test_strip_accents
+      assert_equal 'μηδε', Lingua::GRC::strip_accents('μηδέ')
+      assert_equal 'αὐτους', Lingua::GRC::strip_accents('αὐτοὺς')
+      assert_equal 'αὐτοις', Lingua::GRC::strip_accents('αὐτοῖς')
     end
   end
 end
