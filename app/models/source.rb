@@ -48,57 +48,6 @@ class Source < ActiveRecord::Base
     self.title
   end
 
-  # Export source as PROIEL text XML.
-  #
-  # ==== Options
-  # reviewed_only:: Only include reviewed sentences. Default: +false+.
-  # dependencies:: Include dependency structure annotation. Default: +true+.
-  # morphology:: Include morphological annotation. Default: +true+.
-  def export(filename, options = {})
-    options.assert_valid_keys(:reviewed_only, :dependencies, :morphology)
-    options.reverse_merge! :reviewed_only => false, :dependencies => true,
-      :morphology => true
-    src = self
-
-    PROIEL::Writer.new(filename, self.code, self.language, {
-      :title => self.title,
-      :edition => self.edition,
-      :source => self.source,
-      :editor => self.editor,
-      :url => self.url,
-    }) do
-      ss = options[:reviewed_only] ? src.reviewed_sentences : src.sentences
-      ss.each do |sentence|
-        sentence.tokens.each do |token|
-          # Skip empty nodes unless we include dependencies
-          next if token.empty? and not options[:dependencies]
-
-          track_references(sentence.book.code, sentence.chapter, token.verse)
-
-          attributes = {}
-
-          if options[:dependencies]
-            attributes[:id] = token.id
-            attributes[:relation] = token.relation if token.relation
-            attributes[:head] = token.head_id if token.head
-            attributes[:slashes] = token.slashees.collect { |s| s.id }.join(' ') unless token.slashees.empty?
-          end
-
-          if options[:morphology]
-            attributes[:morphtag] = token.morphtag if token.morphtag
-            attributes[:lemma] = token.lemma.presentation_form if token.lemma
-          end
-
-          attributes[:sort] = token.sort.to_s.gsub(/_/, '-')
-          attributes['composed-form'] = token.composed_form if token.composed_form
-
-          emit_word(token.form, attributes)
-        end
-        next_sentence
-      end
-    end
-  end
-
   protected
 
   def self.search(search, page)

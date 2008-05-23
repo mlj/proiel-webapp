@@ -9,8 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 2) do
-
+ActiveRecord::Schema.define(:version => 4) do
   create_table "audits", :force => true do |t|
     t.integer "auditable_id"
     t.string  "auditable_type"
@@ -172,22 +171,25 @@ ActiveRecord::Schema.define(:version => 2) do
   add_index "tokens", ["lemma_id"], :name => "index_tokens_on_lemma_id"
   add_index "tokens", ["relation"], :name => "index_tokens_on_relation"
   add_index "tokens", ["morphtag"], :name => "index_tokens_on_morphtag"
+  add_index "tokens", ["head_id"], :name => "index_tokens_on_head_id"
 
   create_table "users", :force => true do |t|
-    t.string   "login",                                   :default => "", :null => false
-    t.string   "email",                                   :default => "", :null => false
-    t.string   "crypted_password",          :limit => 40, :default => "", :null => false
-    t.string   "salt",                      :limit => 40, :default => "", :null => false
-    t.datetime "created_at",                                              :null => false
-    t.datetime "updated_at",                                              :null => false
+    t.string   "login",                                   :default => "",        :null => false
+    t.string   "email",                                   :default => "",        :null => false
+    t.string   "crypted_password",          :limit => 40, :default => "",        :null => false
+    t.string   "salt",                      :limit => 40, :default => "",        :null => false
+    t.datetime "created_at",                                                     :null => false
+    t.datetime "updated_at",                                                     :null => false
     t.string   "remember_token"
     t.datetime "remember_token_expires_at"
     t.string   "activation_code",           :limit => 40
     t.datetime "activated_at"
-    t.string   "last_name",                 :limit => 60, :default => "", :null => false
-    t.string   "first_name",                :limit => 60, :default => "", :null => false
+    t.string   "last_name",                 :limit => 60, :default => "",        :null => false
+    t.string   "first_name",                :limit => 60, :default => "",        :null => false
     t.string   "preferences"
-    t.integer  "role_id",                   :limit => 3,  :default => 1,  :null => false
+    t.integer  "role_id",                   :limit => 3,  :default => 1,         :null => false
+    t.string   "state",                                   :default => "passive", :null => false
+    t.datetime "deleted_at"
   end
 
 end

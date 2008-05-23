@@ -1,16 +1,20 @@
 <h1>Downloadable data</h1>
 
-<p>
-These data files are generated daily from the subset of our data that we consider
-to be completed.
-</p>
+<p>These data files are generated daily from the subset of our data that we consider to be completed.</p>
+
+<p>The data is available on several formats, but only the PROIEL XML export format faithfully represents all the information available.</p>
 
 <ul>
-  <li><%= link_to "Schema file", "/exports/text.xsd" %> <span class="warning">(Please note that this schema is not yet considered stable and may be modified at any
-    time.)</li>
+  <li><%= link_to "Schema file", "/exports/text.xsd" %> <span class="warning">(Please note that this schema is not yet considered stable and may be modified at any time.)</li>
   <li><%= link_to "Definition of the morphological annotation", "/exports/morphology.xml" %></li>
   <li><%= link_to "Definition of the dependency structure relations", "/exports/relations.xml" %></li>
   <% Source.find(:all).each do |s| %>
-    <li><%= link_to "Data for " + s.title, "/exports/#{s.code}.xml" %></li>
+    <li>Data for <%= s.title %>
+      <ul>
+        <li><%= link_to "PROIEL XML", "/exports/#{s.code}.xml" %></li>
+        <li><%= link_to "TigerXML", "/exports/#{s.code}-tiger.xml" %> <span class="warning">(Experimental!)</span></li>
+        <li><%= link_to "MaltXML", "/exports/#{s.code}-malt.xml" %> <span class="warning">(Experimental!)</span></li>
+      </ul>
+    </li>
   <% end %>
 </ul>

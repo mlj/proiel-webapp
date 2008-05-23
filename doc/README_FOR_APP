@@ -11,6 +11,7 @@ The application depends on (at least) these gems:
 * memoize
 * oniguruma
 * ruby-xslt
+* builder
 
 You will also need an installation of graphviz in a path accessible to the
 application.

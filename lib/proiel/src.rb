@@ -205,35 +205,34 @@ module PROIEL
 
   # A PROIEL source writer.
   class Writer
-    def initialize(filename, text_id, lang, metadata, &block)
-      @text_id = text_id
-      @lang = lang
+    def initialize(file, text_id, language, metadata = {})
+      metadata.keys.each do |k|
+        unless [:title, :edition, :source, :editor, :url].include?(k.to_sym)
+          raise ArgumentError, "Invalid metadata #{k.inspect}"
+        end
+      end
+
+      @file = file
       @first_word = true
 
       @last_book = nil
       @last_chapter = nil
       @last_verse = nil
 
-      File.open(filename, 'w') do |@f|
-        # Output prologue
-        puts "<?xml version='1.0' encoding='utf-8'?>"
-        puts "<text id='#{@text_id}' lang='#{@lang}'>"
+      @file.puts "<?xml version='1.0' encoding='utf-8'?>"
+      @file.puts "<text id='#{text_id}' lang='#{language}'>"
 
-        puts "  <metadata>"
-        [:title, :edition, :source, :editor, :url].each do |e|
-          puts "    <#{e}>#{metadata[e]}</#{e}>" if metadata[e]
-        end
-        puts "  </metadata>"
+      @file.puts "  <metadata>"
+      [:title, :edition, :source, :editor, :url].each { |k| @file.puts "    <#{k}>#{metadata[k]}</#{k}>" if metadata[k] }
+      @file.puts "  </metadata>"
 
-        instance_eval(&block)
+      yield self
 
-        # Ensure that all div elements are closed
-        close_all_elements
-
-        # Output epilogue
-        puts '</text>'
-      end
+      close_all_elements
+      @file.puts '</text>'
     end
+
+    public
 
     def segment_sentence(segmenter, sentence_dividers, text, book, chapter, verse = nil,
                          reencoder = nil)
@@ -259,9 +258,9 @@ module PROIEL
 
     def track_references(book, chapter, verse = nil)
       if book != @last_book
-        puts '    </sentence>' unless @first_word
-        puts '  </book>' if @last_book
-        puts "  <book name='#{book}'>"
+        @file.puts '    </sentence>' unless @first_word
+        @file.puts '  </book>' if @last_book
+        @file.puts "  <book name='#{book}'>"
 
         @first_word = true
       end
@@ -272,14 +271,14 @@ module PROIEL
     end
 
     def emit_word(form, attrs = {})
-      puts "    <sentence>" if @first_word
+      @file.puts "    <sentence>" if @first_word
       @first_word = false
       xattrs = attrs.dup
       xattrs[:chapter] = @last_chapter
       xattrs[:verse] = @last_verse
       xattrs[:lemma] = Unicode.normalize_C(xattrs[:lemma]) if xattrs[:lemma]
       formatted_attrs = xattrs.keys.collect { |s| s.to_s }.sort.collect { |k| " #{k.gsub(/_/, '-')}='#{xattrs[k.to_sym].to_s.gsub(/_/, '-')}'" }
-      puts "      <token#{formatted_attrs}>#{form ? Unicode.normalize_C(form) : '' }</token>"
+      @file.puts "      <token#{formatted_attrs}>#{form ? Unicode.normalize_C(form) : '' }</token>"
     end
 
     # Emits an array of tokens. Each token is a hash with the token
@@ -308,7 +307,7 @@ module PROIEL
     end
 
     def next_sentence
-      puts '    </sentence>' unless @first_word
+      @file.puts '    </sentence>' unless @first_word
 
       @first_word = true
     end
@@ -316,12 +315,8 @@ module PROIEL
     private
 
     def close_all_elements
-      puts '    </sentence>' unless @first_word
-      puts '  </book>' if @last_book
-    end
-
-    def puts(s)
-      @f.puts s
+      @file.puts '    </sentence>' unless @first_word
+      @file.puts '  </book>' if @last_book
     end
   end
 

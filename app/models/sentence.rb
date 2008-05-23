@@ -369,6 +369,21 @@ class Sentence < ActiveRecord::Base
     dependency_tokens.reject { |t| t.head }
   end
 
+  # Returns +true+ if sentence has dependency annotation.
+  def has_dependency_annotation?
+    # Assumed invariant: dependency annotated sentence <=> all dependency 
+    # tokens have non-nil relation attributes.
+    @has_dependency_annotation ||= !dependency_tokens.first.relation.nil?
+  end
+
+  # Returns +true+ if sentence has morphological annotation (i.e.
+  # morphtag + lemma).
+  def has_morphological_annotation?
+    # Assumed invariant: morphologically annotated sentence <=> all
+    # morphology tokens have non-nil morphtag and lemma_id attributes.
+    @has_morphological_annotation ||= !morphtaggable_tokens.first.morphtag.nil?
+  end
+
   protected
 
   def self.search(search, page)
