@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 #
-# exporter - Export a PROIEL source to various export formats
+# export.rb - Export functions for PROIEL sources
 #
-# Written by Marius L. Jøhndal
+# Written by Marius L. Jøhndal, 2007, 2008.
 #
 
 gem 'builder', '~> 2.0'
@@ -35,9 +35,6 @@ class SourceExport
   # Returns the sentences to be exported by the exporter.
   def filtered_sentences
     @options[:reviewed_only] ? @source.reviewed_sentences : @source.sentences
-    #FIXME
-    x = @options[:reviewed_only] ? @source.reviewed_sentences : @source.sentences
-    x[0, 100]
   end
 
   protected
@@ -237,14 +234,4 @@ class MaltXMLExport < SourceExport
       end
     end
   end
-end
-
-if $0 == __FILE__
-  require '../config/environment'
-
-  s = Source.find(1)
-#  e = MaltXMLExport.new(s)
-#  e.write(File.new('maltxml.xml', 'w'))
-  e = TigerXMLExport.new(s, :reviewed_only => true)
-  e.write(STDOUT) #File.new('maltxml.xml', 'w'))
 end
