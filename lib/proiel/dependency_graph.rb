@@ -248,15 +248,15 @@ module Lingua
 
     # Produces an image visualising the dependency graph.
     def visualise(format = :png, options = {})
-      raise "Invalid format" unless format == :png 
-      Open3.popen3('dot -Tpng') do |dot, png, err|
+      raise ArgumentError, "Invalid format #{format}" unless format == :png || format == :svg 
+      Open3.popen3("dot -T#{format}") do |dot, img, err|
         if options[:linearised]
           self.linearisation_dot(dot)
         else
           self.regular_dot(dot)
         end
 
-        @image = png.read
+        @image = img.read
       end
       @image
     end

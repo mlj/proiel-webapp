@@ -61,6 +61,7 @@ Rails::Initializer.run do |config|
 end
 
 Mime::Type.register "image/png", :png
+Mime::Type.register "image/svg+xml", :svg
 
 Inflector.inflections do |inflect|
   inflect.irregular "lemma", "lemmata"
