@@ -15,6 +15,7 @@ class MinimalRangeSet
   end
 
   def add(o)
+    raise "Cannot add reversed range #{o.inspect}" unless o.begin <= o.end
     accumulated_range = o.dup
 
     # We need to look for overlaps. Difficulty lies in the fact that the new
@@ -26,7 +27,7 @@ class MinimalRangeSet
         # Recompute the accumulated range to contain both this range
         # and the accumulated one.
         f = Range.combine(accumulated_range, r)
-        raise "Error combining ranges: multiple ranges returned #{f}: call #{accumulated_ranges}, #{r}" unless f.length == 1
+        raise "Error combining ranges: multiple ranges returned #{f}: call #{accumulated_range.inspect}, #{r}" unless f.length == 1
         accumulated_range = f.first
         true
       else

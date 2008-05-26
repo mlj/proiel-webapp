@@ -137,6 +137,7 @@ module PROIEL
       # tokens in this region belong to the same chapter.
       def verse_range
         raise "Tokens belong to different chapters" unless self.first[:chapter] == self.last[:chapter]
+        raise "Verse numbers are in the wrong order" if self.first[:verse].to_i > self.last[:verse].to_i
         Range.new(self.first[:verse].to_i, self.last[:verse].to_i)
       end
     end
