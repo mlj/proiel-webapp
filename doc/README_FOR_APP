@@ -12,13 +12,11 @@ The application depends on (at least) these gems:
 * oniguruma
 * ruby-xslt
 * builder
+* hpricot
+* railroad
 
 You will also need an installation of graphviz in a path accessible to the
 application.
-
-To generate all the documentation, you will in addition need
-* railroad
-and run the rake task +rake doc+.
 
 Before starting the application for the first time, run
 

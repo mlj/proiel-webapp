@@ -18,22 +18,21 @@ namespace :proiel do
 
   desc "Import a PROIEL source text. Options: FILE=data_file BOOK=book_filter" 
   task(:import => :environment) do
-    require 'tools/proiel_import'
-    args = []
-    if ENV['BOOK']
-      args << '--book'
-      args << ENV['BOOK']
-    end
-    args << ENV['FILE']
-    i = PROIELImport.new(ENV['FILE'], ENV['BOOK'])
-    i.execute!(USER_NAME)
+    require 'import'
+
+    raise "Filename required" unless ENV['FILE']
+    e = PROIELXMLImport.new(:book_filter => ENV['BOOK'])
+    e.read(ENV['FILE'])
   end
 
   desc "Export a PROIEL source text. Options: ID=source_identifier"
   task(:export => :environment) do
-    s = Source.find_by_code(ENV['ID'])
-    raise "Source not found" unless s
-    s.export("#{s.code}.xml")
+    require 'export'
+
+    source = Source.find_by_code(ENV['ID'])
+    raise "Source not found" unless source
+    e = PROIELXMLExport.new(source)
+    e.write("#{source.code}.xml")
   end
 
   namespace :export do

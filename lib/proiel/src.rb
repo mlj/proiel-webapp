@@ -4,116 +4,97 @@
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
-require 'simplepullparser'
 require 'unicode'
+require 'open-uri'
+require 'hpricot'
 
 module PROIEL
   # FIXME: moronic Rails (documentation). This clashes with ::Source
   # in the webapp and causes all sorts of weird problems. Why?
   class XSource
-    def initialize(filename)
-      @metadata = { :filename => filename } 
-      @books = []
+    def initialize(uri)
+      doc = Hpricot.XML(open(uri))
 
-      parser = SimplePullParser.new(File.open(filename))
-      parser.parse do |element_path, attributes, text|
-        case element_path.join('/')
-        when 'text'
-          @metadata[:id] = attributes[:id]
-          @metadata[:language] = attributes[:lang].to_sym
-        when 'text/metadata'
-          # Ignore
-        when 'text/metadata/title'
-          @metadata[:title] = text
-        when 'text/metadata/edition'
-          @metadata[:text] = text
-        when 'text/metadata/source'
-          @metadata[:source] = text
-        when 'text/metadata/editor'
-          @metadata[:editor] = text
-        when 'text/metadata/url'
-          @metadata[:url] = text
-        when 'text/book'
-          @books << attributes[:name]
-        end
+      @metadata = {}
+
+      t = doc.at("text")
+      @metadata[:id] = t.attributes["id"]
+      @metadata[:language] = t.attributes["lang"].to_sym
+
+      m = (doc/:text).at("metadata")
+      ["title", "edition", "source", "editor", "url"].collect { |k| [k, m.at(k)] }.each do |k, e|
+        @metadata[k.to_sym] = e.inner_html if e
       end
+
+      raise "Invalid source: No metadata found" if @metadata.empty?
+
+      @metadata.merge!({ :filename => uri })
+
+      @sequence = []
+      @books = Hash[*(doc/:text/:book).collect { |b| @sequence << b.attributes["name"]; [b.attributes["name"], b] }.flatten]
+
+      raise "Invalid source: No books found in source" if @books.empty?
     end
 
     # Returns the list of books defined in the source. The list is
     # returned as an array of book codes.
-    attr_reader :books
+    def books
+      # This could of course be @books.keys, but keeping this
+      # sorted the way it was read makes it a lot easier to
+      # produce predictable XML files. This in turn makes it 
+      # easier to diff the resulting files.
+      @sequence
+    end
 
     # Returns the meta-data for the source. The meta-data is returned
     # as a hash with keys corresponding to elements in the meta-data
     # header, and including the source identifier, language tag
     # and filename.
     attr_reader :metadata
-  end
 
-  # FIXME/Deprecated: migrate to PROIEL::Source
-  def PROIEL.read_source2(file, options = {})
-    metadata = {} 
+    # Reads one or more books from a source.
+    #
+    # ==== Options
+    # books: A list of books to read.
+    def read_tokens(options = {})
+      sentence_number = nil
+      token_number = nil
 
-    book = nil
-    sentence_number = nil
-    token_number = nil
+      books = options[:books] ? @books.values_at(*options[:books]) : @books.values
 
-    read_tokens = false
-
-    tokens = []
-
-    parser = SimplePullParser.new(File.open(file))
-    parser.parse do |element_path, attributes, text|
-      case element_path.join('/')
-      when 'text'
-        metadata[:id] = attributes[:id]
-        metadata[:language] = attributes[:lang].to_sym
-      when 'text/metadata'
-        # Ignore
-      when 'text/metadata/title'
-        metadata[:title] = text
-      when 'text/metadata/edition'
-        metadata[:text] = text
-      when 'text/metadata/source'
-        metadata[:source] = text
-      when 'text/metadata/editor'
-        metadata[:editor] = text
-      when 'text/metadata/url'
-        metadata[:url] = text
-      when 'text/book'
+      books.each do |b|
         sentence_number = 0
-        if options[:filters] and options[:filters][:book]
-          # Only commence reading if this is the book
-          # that we're looking for
-          if attributes[:name] == options[:filters][:book] 
-            read_tokens = true
-          else
-            # Not our book; if tokens has already been set, we've
-            # evidently already read out book so we might as well
-            # break off.
-            break if read_tokens
+
+        (b/:sentence).each do |s|
+          sentence_number += 1
+          token_number = 0
+
+          (s/:token).each do |t|
+            token_number += 1
+
+            a = { :book => b.attributes["name"], 
+                  :sentence_number => sentence_number, 
+                  :token_number => token_number }
+            t.attributes.each_pair do |k, v|
+              case k
+              when 'form', 'references', 'lemma', 'morphtag'
+                a[k.to_sym] = v
+              when 'chapter', 'verse'
+                a[k.to_sym] = v.to_i
+              when 'composed-form'
+                a[:composed_form] = v
+              when 'sort'
+                a[:sort] = v.gsub(/-/, '_').to_sym
+              else
+                raise "Invalid source: token has unknown attribute #{k}"
+              end
+            end
+
+            yield t.inner_html, a
           end
-        else
-          # Commence reading.
-          read_tokens = true
-        end
-        book = attributes[:name]
-      when 'text/book/sentence'
-        sentence_number += 1
-        token_number = 0
-      when 'text/book/sentence/token'
-        token_number += 1
-        if read_tokens
-          a = attributes || {}
-          a.merge!({ :book => book, :sentence_number => sentence_number, :token_number => token_number })
-          a[:composed_form] = a[:"composed-form"] if a[:"composed-form"] #FIXME 
-          a[:sort] = a[:sort].gsub(/-/, '_').to_sym
-          tokens.push [ text, a ]
         end
       end
     end
-
-    [metadata, tokens]
   end
 
   # FIXME: migrate to PROIEL::Source?
