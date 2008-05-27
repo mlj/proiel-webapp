@@ -54,23 +54,6 @@ class HomeController < ApplicationController
     end
   end
 
-  def annotation
-    @activity = Source.activity
-    @completion = Source.completion
-
-    user = User.find(session[:user_id])
-    limit = 10
-    @recent_annotations = Sentence.find(:all, :limit => limit, 
-                               :conditions => [ 'annotated_by = ?', user ],
-                               :order => 'annotated_at DESC')
-    @recent_reviews = Sentence.find(:all, :limit => limit, 
-                                :conditions => [ 'reviewed_by = ?', user ],
-                               :order => 'reviewed_at DESC')
-    @recent_reviewed = Sentence.find(:all, :limit => limit, 
-                                :conditions => [ 'annotated_by = ? and reviewed_by is not null', user ],
-                                :order => 'reviewed_at DESC')
-  end
-
   def user_administration
   end
 

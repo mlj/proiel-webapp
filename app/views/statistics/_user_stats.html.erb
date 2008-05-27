@@ -1,5 +1,5 @@
 <tr>
-  <td><%= link_to_user(user_stats, :role => true) %></td>
-  <td><%= user_stats.annotated_sentences.count %>/<%= user_stats.annotated_tokens.count %></td>
-  <td><%= user_stats.reviewed_sentences.count %>/<%= user_stats.reviewed_tokens.count %></td>
+  <td><%= link_to_user(user_stats.user, :role => true) %></td>
+  <td><%= user_stats.annotated_sentences %>/<%= user_stats.annotated_tokens %></td>
+  <td><%= user_stats.reviewed_sentences %>/<%= user_stats.reviewed_tokens %></td>
 </tr>
