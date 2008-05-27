@@ -224,36 +224,24 @@ module Lingua
 
   # FIXME: Move to PROIEL?
   module Graphviz
-    FONTNAME = "Legendum"
-    #FONTNAME = "RomanCyrillic Std"
-
-    GRAPHVIZ_NODES = { 
-      :fontname => FONTNAME,
-      :fontsize => 12,
-    }
-    GRAPHVIZ_EDGES = { 
-      :color => "orange", 
-      :fontname => FONTNAME,
-      :fontsize => 12,
-      :weight => 1.0 
-    }
-    GRAPHVIZ_SLASHES = { 
-      :color => "blue", 
-      :fontcolor => "blue", 
-      :fontname => FONTNAME, 
-      :fontsize => 10,
-      :weight => 0.0, 
-      :style=> "dashed",
-    }
-
     # Produces an image visualising the dependency graph.
+    #
+    # ==== Options
+    # font_name:: Forces the use of a particular font.
+    # font_size:: Forces the use of a particular font size.
+    # linearised:: Visualises the graph in a linearised fashion.
     def visualise(format = :png, options = {})
       raise ArgumentError, "Invalid format #{format}" unless format == :png || format == :svg 
+
+      node_options = {}
+      node_options[:fontname] = options[:font_name] if options[:font_name]
+      node_options[:fontsize] = options[:font_size] if options[:font_size]
+
       Open3.popen3("dot -T#{format}") do |dot, img, err|
         if options[:linearised]
-          self.linearisation_dot(dot)
+          self.linearisation_dot(dot, node_options)
         else
-          self.regular_dot(dot)
+          self.regular_dot(dot, node_options)
         end
 
         @image = img.read
@@ -265,12 +253,12 @@ module Lingua
 
     protected
 
-    def regular_dot(dot)
+    def regular_dot(dot, node_options)
       @f = dot
       @f.puts "digraph G {"
       @f.puts "  charset=\"UTF-8\";"
 
-      make_node(:root, GRAPHVIZ_NODES.merge({ :label => '', :shape => 'circle' }))
+      make_node(:root, node_options.merge({ :label => '', :shape => 'circle' }))
 
       @nodes.values.each do |node|
         identifier, relation, head, slashes = node.identifier, node.relation, node.head, node.slashes
@@ -287,25 +275,26 @@ module Lingua
                   else
                     ['?', 'box', 'red']
                   end
-          make_node(identifier, GRAPHVIZ_NODES.merge({ :label => label, :shape => shape,
-                                                       :fontcolor => colour }))
+          make_node(identifier, node_options.merge({ :label => label, :shape => shape,
+                                                     :fontcolor => colour }))
         else
           if node.is_coordinator? and node.has_dependents?
-            make_node(identifier, GRAPHVIZ_NODES.merge({ :label => form, :shape => 'diamond' }))
+            make_node(identifier, node_options.merge({ :label => form, :shape => 'diamond' }))
           else
-            make_node(identifier, GRAPHVIZ_NODES.merge({ :label => form, :shape => 'box' }))
+            make_node(identifier, node_options.merge({ :label => form, :shape => 'box' }))
           end
         end
 
         rel_colour = 'black'
         if head and relation
           make_edge(head.identifier, identifier, 
-                    GRAPHVIZ_EDGES.merge({ :label => relation.to_s.upcase, :fontcolor => rel_colour }))
+                    node_options.merge({ :color => 'orange', :weight => 1.0, 
+                                         :label => relation.to_s.upcase, :fontcolor => rel_colour }))
         end
 
         slashes.each do |slashee|
           make_edge(identifier, slashee.identifier, 
-                    GRAPHVIZ_SLASHES.merge({ :label => node.interpret_slash(slashee).humanise.capitalize }))
+                    node_options.merge({ :label => node.interpret_slash(slashee).humanise.capitalize, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dashed" }))
         end
       end
 
@@ -313,7 +302,7 @@ module Lingua
       @f.close
     end
 
-    def linearisation_dot(dot)
+    def linearisation_dot(dot, node_options)
       @f = dot
       @f.puts "digraph G {"
       @f.puts "  charset=\"UTF-8\"; rankdir=TD; ranksep=.0005; nodesep=.05;"
@@ -354,7 +343,7 @@ module Lingua
 
         slashes.each do |slashee|
           make_edge(identifier, slashee.identifier, 
-                    { :weight => 0.0, :color => 'blue', :style => 'dotted', :label => node.interpret_slash(slashee) })
+                    node_options.merge({ :label => node.interpret_slash(slashee).humanise.capitalize, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dotted" }))
         end
       end
 

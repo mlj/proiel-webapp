@@ -10,7 +10,7 @@ class DependenciesController < ApplicationController
         :filename => "#{params[:id]}.svg",
         :disposition => 'inline',
         :type => "image/svg+xml" }
-      format.png  { send_data @sentence.dependency_graph.visualise(:png),
+      format.png  { send_data @sentence.dependency_graph.visualise(:png, :font_name => 'Legendum'),
         :filename => "#{params[:id]}.png",
         :disposition => 'inline',
         :type => "image/png" }
