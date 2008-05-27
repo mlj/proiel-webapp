@@ -12,13 +12,10 @@ class HomeController < ApplicationController
 
   def search
     if params[:q]
-      # Simple query
-      params[:tokens] = true
-      params[:lemmata] = true
+      # Simple query: Enter defaults
+      params[:mode] = 'tokens'
       params[:exact] = nil
       params[:query] = params[:q]
-    else
-      # Advanced query
     end
 
     query = params[:query] || ""
@@ -43,15 +40,16 @@ class HomeController < ApplicationController
         redirect_to annotations_url
       end
     else
-      @tokens = params[:tokens] ? Token.search({ :form => query, :exact => params[:exact] }, nil, nil) : []
-
-      base_form, variant = query.split('#')
-      @lemmata = params[:lemmata] ? Lemma.search({ :lemma => base_form, :variant => variant,
-                                                   :exact => params[:exact] }, nil, 10) : [] 
-    
-      if @tokens.length == 0 and @lemmata.length == 0
-        #FIXME
-        # Present suggestions instead
+      # Must be a lemma/token lookup
+      case params[:mode]
+      when 'tokens'
+        @tokens = Token.search({ :form => query, :exact => params[:exact] }, params[:page])
+      when 'lemmata'
+        base_form, variant = query.split('#')
+        @lemmata = Lemma.search({ :lemma => base_form, :variant => variant,
+                                  :exact => params[:exact] }, params[:page])
+      else
+        flash[:error] = 'Invalid query'
       end
     end
   end

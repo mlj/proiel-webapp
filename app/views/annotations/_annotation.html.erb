@@ -1,5 +1,19 @@
-<tr>
-  <td><%= readable_reference(annotation.reference) %></td>
-  <td><%= readable_completion(annotation, :checkmark => true) %></td>
-  <td><%= link_to 'Details', annotation_path(annotation) %></td>
+<% stylesheet "annotation" %>
+
+<tr class="<%= cycle('even', 'odd') %>">
+  <% if annotation.is_a? Token %>
+    <% stylesheet 'concordance' %>
+
+    <td class="reference">
+      <%= link_to(readable_reference(annotation.reference), annotation_url(annotation.sentence)) %>&nbsp;<%= readable_completion(annotation.sentence, :checkmark => :only) %>
+    </td>
+    <td class="left"><%= format_abbreviated_sentence(annotation.previous_tokens, -5) %></td>
+    <td class="centre"><%= annotation.form %></td>
+    <td class="right"><%= format_abbreviated_sentence(annotation.next_tokens, 5) %></td>
+  <% else %>
+    <td class="reference">
+      <%= link_to(readable_reference(annotation.reference), annotation_url(annotation)) %>&nbsp;<%= readable_completion(annotation, :checkmark => :only) %>
+    </td>
+    <td class="left"><%= format_abbreviated_sentence(annotation.tokens, 10) %></td>
+  <% end %>
 </tr>

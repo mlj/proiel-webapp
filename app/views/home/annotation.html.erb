@@ -18,26 +18,29 @@
   <%= render :partial => 'statistics/completion' %>
 <% end %>
 
+<% reset_cycle %>
 <% layer_unless(@recent_annotations.empty?, "recent-annotations", 
     :title => 'Your recent sentence annotations') do -%>
   <%= render_tabular @recent_annotations, 
     :pagination => false, 
     :partial => 'annotations/annotation',
-    :fields => [ 'Location', 'Completion', '&nbsp;' ] %>
+    :fields => [ 'Location', 'Sentence' ] %>
 <% end %>
 
+<% reset_cycle %>
 <% layer_unless(@recent_reviews.empty?, "recent-reviews", 
     :title => 'Your recent sentence reviews') do -%>
   <%= render_tabular @recent_reviews, 
     :pagination => false, 
     :partial => 'annotations/annotation',
-    :fields => [ 'Location', 'Completion', '&nbsp;' ] %>
+    :fields => [ 'Location', 'Sentence' ] %>
 <% end %>
 
+<% reset_cycle %>
 <% layer_unless(@recent_reviewed.empty?, "recent-reviewed", 
     :title => 'Your recently reviewed sentences') do -%>
   <%= render_tabular @recent_reviewed, 
     :pagination => false, 
     :partial => 'annotations/annotation',
-    :fields => [ 'Location', 'Completion', '&nbsp;' ] %>
+    :fields => [ 'Location', 'Sentence' ] %>
 <% end %>

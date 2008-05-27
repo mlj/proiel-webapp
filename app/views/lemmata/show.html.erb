@@ -10,8 +10,8 @@
   <% end %>
 <% end %>
   
-<%= will_paginate(@tokens) %>
-<%= render :partial => 'tokens/concordance', :object => @tokens %>
+<%= render_tabular @tokens, :partial => 'annotations/annotation', :pagination => true,
+    :class => 'concordance' %>
 
   <!--
 <% layer("dictionary-references", :title => 'Dictionary references') do -%>
@@ -24,12 +24,6 @@
 -->
 <!-- 
 <div id="actions">
-  <%= link_to_remote('Concordance',
-                     :update => "extras",
-                     :url => { :action => 'concordance', :id => @lemma },
-                     :before => "Element.show('spinner')",
-                     :success => "Element.hide('spinner')") %>
-
   <%= link_to_remote('Morphology',
                      :update => "extras",
                      :url => { :action => 'morphology', :id => @lemma },

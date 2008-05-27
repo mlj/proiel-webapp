@@ -1,6 +1,6 @@
-<tr>
-  <td class="foreign-word"><%=h lemma.lemma %></td>
-  <td class="language"><%= readable_language(lemma.language) %></td>
+<tr class="<%= cycle('even', 'odd') %>">
+  <td class="lemma"><%= link_to_lemma(lemma) %></td>
   <td><% if lemma.short_gloss %><q><%= lemma.short_gloss %></q><% else %>&nbsp;<% end %></td>
-  <td><%= link_to 'Details', lemma %></td>
+  <td class="language"><%= readable_language(lemma.language) %></td>
+  <td><%= lemma.frequency %> occurences</td>
 </tr>

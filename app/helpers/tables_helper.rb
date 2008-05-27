@@ -3,7 +3,7 @@ module TablesHelper
     fields = options[:fields]
     pagination = will_paginate(collection) if options[:pagination]
     pg = (pagination ? will_paginate(collection) : '')
-    hd = content_tag(:thead, content_tag(:tr, fields.map { |field| "<th>#{field}</th>" }))
+    hd = fields ? content_tag(:thead, content_tag(:tr, fields.map { |field| "<th>#{field}</th>" })) : ''
     if options[:partial]
       bd = content_tag(:tbody, render(:partial => options[:partial], :collection => collection))
     else
@@ -15,6 +15,6 @@ module TablesHelper
     else
       ft = ''
     end
-    content_tag(:div, pg + content_tag(:table, hd + bd + ft), :class => :tabular)
+    content_tag(:div, pg + content_tag(:table, hd + bd + ft, :class => options[:class]), :class => 'tabular')
   end
 end
