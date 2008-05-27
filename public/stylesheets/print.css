@@ -1,17 +1,11 @@
-/* Print specific, layout dependent stuff */
-
-/* Header */
+/* Print specific stuff */
 
 div#headline {
   font-weight: bold;
   font-style: small-caps;
 }
 
-/* Navigation bar */
-
 div#navbar { display: none; }
-
-/* Footer */
 
 div#footer {
   clear: both;
@@ -19,10 +13,13 @@ div#footer {
   font-size: smaller;
 }
 
-/* Contents */
-
-div#body { }
-
-/* Link decorations */
-
 a { text-decoration: underline; }
+
+.text-view {
+  margin-left: 0em;
+  margin-right: 0em;
+}
+
+.text-view a { text-decoration: none; }
+
+.actions, .pagination { display: none; }

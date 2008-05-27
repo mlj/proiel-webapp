@@ -1,4 +1,4 @@
-/* Screen specific, layout dependent stuff */
+/* Screen specific stuff */
 
 /* Header */
 
@@ -49,13 +49,6 @@ div#body {
   margin: 0 1em 0 1em;
   padding: 5px 5px 5px 5px;
 }
-
-/* Link decorations */
-
-a { text-decoration: underline; }
-a:link { color: #678090; }
-a:visited { color: #678090; }
-a:link:hover, a:visited:hover { color: #6F9DBE; }
 
 /* Link target decorations */
 

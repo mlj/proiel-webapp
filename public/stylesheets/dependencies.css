@@ -2,16 +2,11 @@ div.dependencies-image { text-align: center; }
 .form { font-style: italic; }
 .case { display: none; }
 
-.dependencies .head-dependent-relation-bg { background-color: orange; } 
-.dependencies .slash-relation-bg { background-color: blue; } 
-.dependencies .invalid-relation-bg { background-color: red; } 
+.dependencies .head-dependent-relation-bg { background-color: orange; }
+.dependencies .slash-relation-bg { background-color: blue; }
 
-#words li { display: inline; }
-#words .word {
-  padding: .15em .15em .15em .15em;
-}
-#words .consumed { background: gray; }
-#words .selected { background: #9999ff; }
+#palette li, #words li { display: inline; }
+#words .word { padding: .15em .15em .15em .15em; }
 
 /* The proper rule: does not work in IE 6 */
 #relations .selected > .user-value { background: #9999ff; }
@@ -19,15 +14,4 @@ div.dependencies-image { text-align: center; }
 #relations .selected .user-value { background: #9999ff; }
 #relations .selected * .user-value { background: white; }
 
-#palette .selected { background-color: #9999ff; }
-#palette .unavailable { color: gray; }
-#palette {
-  text-align: center;
-}
-#palette li { 
-  display: inline; 
-}
-
-#cut-buffer {
-  display: none;
-}
+#cut-buffer { display: none; }

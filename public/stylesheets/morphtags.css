@@ -1,7 +1,6 @@
 .morphtags .item {
   float: left;
-  padding-left: .15em;
-  padding-right: .15em;
+  padding: .15em .15em .15em .15em;
   margin-left: .10em;
   margin-right: .10em;
   margin-bottom: 1em;
@@ -22,7 +21,8 @@
 }
 
 .morphtags .selected { 
-  background-color: gray;
+  background-color: #eeeeee;
+  border: #c0c0c0 1px solid;
 }
 
 .morphtags #palette {

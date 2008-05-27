@@ -1,7 +1,7 @@
-<dl class="details">
-  <dt>User name</dt><dd><%=h @bookmark.user.login %></dd>
-  <dt>Flow</dt><dd><%=h @bookmark.flow %></dd>
-  <dt>Source</dt><dd><%= link_to @bookmark.source.code, @bookmark.source %></dd>
-  <dt>Sentence ID</dt><dd><%= link_to @bookmark.sentence.id, @bookmark.sentence %></dd>
+<dl>
+  <dt>User name:</dt><dd><%=h @bookmark.user.login %></dd>
+  <dt>Flow:</dt><dd><%=h @bookmark.flow %></dd>
+  <dt>Source:</dt><dd><%= link_to @bookmark.source.code, @bookmark.source %></dd>
+  <dt>Sentence ID:</dt><dd><%= link_to @bookmark.sentence.id, @bookmark.sentence %></dd>
 </dl>
 <p><%= link_to "Edit", edit_bookmark_path(@bookmark) %></dd>
