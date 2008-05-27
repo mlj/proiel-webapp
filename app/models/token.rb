@@ -22,13 +22,24 @@ class Token < ActiveRecord::Base
   validates_presence_of :sentence_id
   validates_presence_of :verse, :unless => :is_empty?
   validates_presence_of :token_number
-  # Ensure that relation != '' (instead of NULL)
-  validates_length_of :relation, :minimum => 1, :allow_nil => true
   validates_presence_of :composed_form, :if => lambda { |t| t.sort == :composed_form }
   validates_presence_of :sort
 
-  # Specific validations
+  # If the token has a lemma, it must also have a morphtag (this does
+  # not, however, apply to source_morphtag and source_lemma).
+#  validates_presence_of :lemma, :if => lambda { |t| t.morphtag }
+#  validates_presence_of :morphtag, :if => lambda { |t| t.lemma }
 
+  # Invariant constraint: t.head_id => t.relation
+  validates_presence_of :relation, :if => lambda { |t| !t.head_id.nil? }
+
+  validate do |t|
+    if t.relation and not PROIEL::RELATIONS.valid?(t.relation)
+      errors.add_to_base("Relation #{t.relation} is invalid")
+    end
+  end
+
+  # Specific validations
   validate :validate_sort
 
   def previous_tokens

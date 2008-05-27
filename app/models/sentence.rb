@@ -33,8 +33,7 @@ class Sentence < ActiveRecord::Base
   validates_presence_of :sentence_number
   validates_inclusion_of :bad_alignment_flag, :in => [true, false] 
 
-  # Specific validations
-  validate :validate_sort
+  validate :check_invariants
 
   acts_as_audited :except => [ :annotated_by, :annotated_at, :reviewed_by, :reviewed_at ]
 
@@ -357,12 +356,6 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  # Returns true if the dependency graph for the sentence covers all
-  # tokens in the sentence.
-  def dependency_graph_complete?
-    self.dependency_tokens.all?(&:relation)
-  end
-
   # Returns the tokens that are immediate descendants of the root node
   # in the dependency structure of the sentence.
   def root_tokens 
@@ -371,8 +364,6 @@ class Sentence < ActiveRecord::Base
 
   # Returns +true+ if sentence has dependency annotation.
   def has_dependency_annotation?
-    # Assumed invariant: dependency annotated sentence <=> all dependency 
-    # tokens have non-nil relation attributes.
     @has_dependency_annotation ||= !dependency_tokens.first.relation.nil?
   end
 
@@ -416,26 +407,43 @@ class Sentence < ActiveRecord::Base
 
   private
 
-  def validate_sort
+  def check_invariants
+    # Pairwise attributes: reviewed_by && reviewed_at
+    # Pairwise attributes: annotated_by && annotated_at
+
+    #   is_reviewed? <=> reviewed_by    sentence is reviewed
+    #   is_annotated? <=> annotated_by  sentence is annotated
+    #   has_dependency_annotation       sentence is dependency annotated
+
+    # Invariant: sentence is reviewed => sentence is annotated
+    if is_reviewed? and not is_annotated?
+      errors.add_to_base("Reviewed sentence must be annotated")
+    end
+
+    # Invariant: sentence is annotated => sentence is dependency annotated
+    if is_annotated? and not has_dependency_annotation?
+      errors.add_to_base("Annotated sentence must have dependency annotation")
+    end
+
+    # Invariant: sentence is dependency annotated <=>
+    # all dependency tokens have non-nil relation attributes <=> there exists one
+    # dependency token with non-nil relation.
+    if dependency_tokens.any?(&:relation) and not dependency_tokens.all?(&:relation)
+      errors.add_to_base("Dependency annotation must be complete")
+    end
+
     # Check each token for validity (this could of course also be done with validates_associated),
     # but that leads to confusing error messages for users.
-    tokens.each do |token| 
-      unless token.valid? 
-        token.errors.each_full { |msg| add_dependency_error(msg, [token]) }
+    tokens.each do |t|
+      unless t.valid?
+        t.errors.each_full { |msg| add_dependency_error(msg, [t]) }
       end
     end
 
-    # Ignore sentences without *any* syntactic annotation.
-    return unless dependency_tokens.any?(&:relation)
-
-    # FIXME: move to Token
-    # Dependency structure constraints
-    t = dependency_tokens.to_a.select { |r| !PROIEL::RELATIONS.valid?(r.relation) }
-    add_dependency_error('Invalid relation', t) unless t.empty?
-
-    dependency_graph.valid?(lambda { |token_ids, msg| 
-      add_dependency_error(msg, Token.find(token_ids)) 
-    })
+    # Invariant: sentence is dependency annotated => dependency graph is valid
+    if has_dependency_annotation?
+      dependency_graph.valid?(lambda { |token_ids, msg| add_dependency_error(msg, Token.find(token_ids)) })
+    end
   end
 
   def add_dependency_error(msg, tokens)

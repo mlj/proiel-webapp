@@ -27,7 +27,6 @@ class Validator < Task
     #check_changesets_and_changes(logger)
     check_sentences_and_tokens(logger)
     check_morphtag_completeness(logger)
-    check_dependency_structure_completeness(logger)
   end
 
   private
@@ -109,17 +108,6 @@ class Validator < Task
     end
   end
 
-  # FIXME: move to validation
-  def check_dependency_structure_completeness(logger)
-    logger.info { "Checking dependency structure completeness..." }
-
-    sentences = Sentence.find(:all, :conditions => [ "annotated_by is not null"])
-    sentences.each do |s|
-      complete = s.dependency_graph_complete?
-      logger.error { "Sentence #{s.id}: Incomplete dependency structure." } unless complete
-    end
-  end
-
   def check_orphaned_tokens(logger)
     logger.info { "Checking for orphaned tokens..." }
     orphans = Token.find(:all, 
@@ -164,8 +152,7 @@ class Validator < Task
     end
 
     logger.info { "Checking that lemmata with variant numbers do not also occur without variant numbers..." }
-    candidates = Lemma.find(:all, 
-                            :conditions => [ "variant is not null" ])
+    candidates = Lemma.find(:all, :conditions => [ "variant is not null" ])
     candidates.each do |o|
       if c = Lemma.find(:first, :conditions => [ "lemma = ? and language = ? and variant is null", o.lemma, o.language ])
         logger.error { "Lemma base form #{o.lemma} occurs both with and without variant numbers" }
@@ -173,8 +160,9 @@ class Validator < Task
     end
 
     Lemma.find(:all).each do |l|
+      pos = l.pos
       l.tokens.each do |t|
-        if t.morph_lemma_tag.morphtag.pos_to_s != l.pos
+        if t.morph_lemma_tag.morphtag.pos_to_s != pos
           log_token_error(logger, t, "Token POS does not match lemma POS")      
         end
       end
@@ -263,7 +251,6 @@ class Validator < Task
         end
       end
     end
-    exit
   end
 
   def log_token_error(logger, token, msg)
