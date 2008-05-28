@@ -16,6 +16,18 @@ namespace :proiel do
     v.execute!(USER_NAME)
   end
 
+  desc "Force manual morphological rules. SOURCES=source_identifier[,..]"
+  task(:manual_tagger => :myenvironment) do
+    require 'tools/manual_tagger'
+  
+    raise "Source identifiers required" unless ENV['SOURCES']
+
+    source_ids = ENV['SOURCES'].split(',').collect { |s| Source.find_by_code(s) }
+
+    v = ManualTagger.new(source_ids)
+    v.execute!(USER_NAME)
+  end
+
   desc "Import a PROIEL source text. Options: FILE=data_file BOOK=book_filter" 
   task(:import => :environment) do
     require 'import'
