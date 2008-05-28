@@ -21,7 +21,7 @@ namespace :proiel do
     require 'import'
 
     raise "Filename required" unless ENV['FILE']
-    e = PROIELXMLImport.new(:book_filter => ENV['BOOK'])
+    e = ENV['BOOK'] ? PROIELXMLImport.new(:book_filter => ENV['BOOK']) : PROIELXMLImport.new
     e.read(ENV['FILE'])
   end
 

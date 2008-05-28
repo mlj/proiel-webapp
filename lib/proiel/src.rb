@@ -34,6 +34,8 @@ module PROIEL
       @books = Hash[*(doc/:text/:book).collect { |b| @sequence << b.attributes["name"]; [b.attributes["name"], b] }.flatten]
 
       raise "Invalid source: No books found in source" if @books.empty?
+
+      puts "Registered books #{@books.keys.join(',' )}..."
     end
 
     # Returns the list of books defined in the source. The list is
@@ -61,6 +63,8 @@ module PROIEL
       token_number = nil
 
       books = options[:books] ? @books.values_at(*options[:books]) : @books.values
+
+      raise "No books matched filter" if books.empty?
 
       books.each do |b|
         sentence_number = 0
