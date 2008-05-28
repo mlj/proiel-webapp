@@ -1,7 +1,7 @@
 # 
 # la-rules.dat - Hand-written morphology rules for Latin
 #
-# $Id: $
+# Written by Marius L. Jøhndal, 2008.
 #
 
 # ================================================================
@@ -29,12 +29,19 @@ Ma-p---:A3x {
 }
 
 Ma-p--- {
- tres/mn, tres/ma, tres/fn, tres/fa, tres:tria/nn, 
+ tres/mn, tres/ma, tres/fn, tres/fa, tres:tria/nn, tres:tria/na,
  tres:trium/mg, tres:trium/ng, tres:trium/fg,
  tres:tribus/mb, tres:tribus/nb, tres:tribus/fb, 
  tres:tribus/md, tres:tribus/nd, tres:tribus/fd, 
 
  mille:milia/qa, mille:milia/qn, mille:milia/qv, mille:milibus/qb, mille:milibus/qd, mille:milium/qg, 
+
+ centum quinquaginta tres:centum quinquaginta tribus/mb,
+ centum quinquaginta tres:centum quinquaginta tribus/nb,
+ centum quinquaginta tres:centum quinquaginta tribus/fb,
+ centum quinquaginta tres:centum quinquaginta tribus/md,
+ centum quinquaginta tres:centum quinquaginta tribus/nd,
+ centum quinquaginta tres:centum quinquaginta tribus/fd,
 }
 
 # Indeclinable cardinalia
@@ -84,9 +91,9 @@ I {
 R {
  ab, ab:a, ab:abs, absque, ad, adversus:adversum, adversus,
  ante, apud, circa, circiter, circum, contra, coram, cum, de, desuper, 
- desursum, erga, ex, ex:e, extra, in, infra, inter, intra, iuxta, ob, palam, 
- per, post, prae, praeter, pro, propter, secundum, secus, sine, sub, super, 
- supra, trans, ultra
+ desursum, erga, ex, ex:e, extra, in, infra, inter, intra, iuxta, ob, obviam,
+ palam, per, post, prae, praeter, pro, propter, secundum, secus, sine, sub,
+ super, supra, trans, ultra
 }
 
 # Non-comparable adverbs
@@ -105,7 +112,7 @@ Dn {
  manifesto, met, modo, mox, nam, namque,
  naturaliter, nave, ne, necdum, nequaquam, nimis, nimium, nisi,
  nominatim, non, nondum, nonne, nudius, numquam, numquid, 
- nusquam, obviam, omnino, paene, par, pariter, pars, partim, paululum,
+ nusquam, omnino, paene, par, pariter, pars, partim, paululum,
  peregre, plerumque, porro, posteaquam, potius, potissimum,
  praeceps,
  praeterquam, priusquam, privatim, profecto, propterea,
@@ -113,7 +120,7 @@ Dn {
  quasi, qui, quidem, quippe, quodam, quoque, retro, retrorsum, retrorsum:retrorsus, 
  retrorsum:retrovorsum, retrorsum:retroversus,
  saltim:saltem, saltim, separatim, serve, sic, sicut, sicut:sicuti,
- sincere, singillatim, solummodo, spiritaliter, splendide,
+ sincere, singillatim, solum, solummodo, spiritaliter, splendide,
  spontanee, statim, subito, subtus, summum, superabundanter, sursum,
  tamen, tamquam, tandem, temere, tenere,
  ubique, ultimum, ultro, umquam, una, undique, unianimiter,
@@ -189,7 +196,7 @@ Df------- {
  libenter/p, libenter:libentissime/s, 
  longe/p, longe:longius/c, longe:longissime/s,
  luxuriose/p,
- mature:maturius/c, merito/p, mundate/p, mute/p,
+ manifeste/p, mature:maturius/c, merito/p, mundate/p, mute/p,
  nequam/p, novissime/s, orbe/p, parce/p, 
  pius:pie/p, plene/p, plene:plenissime/s,
  pretiose:pretiosius/c, prolixius/c, prope/p, recte/p, remissius/c, saepe/p, secus/p,

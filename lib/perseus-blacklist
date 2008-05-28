@@ -6,8 +6,6 @@
 # The file lists each lemma to be excluded, separated by white space, with comments
 # introduced by : and extending to the end of the line.
 #
-# $Id: $
-#
 # Abbreviations:
 #  [SB]  Removed because it is a substantivised adjective
 #  [PP]  Removed because it is an adjectivified participle
@@ -21,7 +19,7 @@
 
 # Remove X from X, X#1, ... 
 parens mundus capio dextera forus fretus manna malus malum servus
-mina claudo amicus natus interminatus
+mina claudo amicus natus interminatus Paulus
 
 #
 # Double entries for proper nouns. We don't care.
@@ -243,6 +241,9 @@ vado:1>vado vado:2 vadum
 # visus#1 < video [PP]; visus#2 "a look"; video "to see"; viso "to behold"
 visus:2>visus viso
 
+# colo#1 (colere) "cultivate"; colo#2 (colare) "strain"
+colo:1>colo colo:2
+
 # mundus#1 "clean"; mundus#2 "the world", "decorations"; mundum v. mundus#2
 mundum
 
@@ -327,6 +328,24 @@ platalea platea:1>platea platea:2
 # tertius "third"; tertium v. tertius; tertio#1 v. tertius; tertio#2 "do for the third time"
 tertio:2
 
+# solum#1 "ground"; solum#2 adv. [MN]
+solum:1
+
+# adiuro:1 "swear"; adiuro:2 v. adiuvo "give aid to"
+adiuro:1>adiuro adiuro:2
+
+# lupus:1 "wolf"; Lupus:2, a name
+lupus:1>lupus Lupus:2
+
+# adeo:1 "approach"; adeo:2, adv. [MN]
+adeo:1>adeo adeo:2
+
+# aquila:1 "eagle"; Aquila:2, a name
+aquila:1>aquila Aquila:2>Aquila
+
+# festus:1 "festive"; Festus:2, a name
+festus:1>festus Festus:2>Festus
+
 #TODO
 # illic, illuc
 # converto, converro
@@ -345,7 +364,6 @@ adulter:1>adulter
 # #1 (f.) #2 (m.)
 Aegyptus:1>Aegyptus Aegyptus:2
 altus:1>altus altus:2
-aquila:1>aquila
 argenteus:1>argenteus
 asper:1>asper
 auster:1>auster
@@ -355,8 +373,6 @@ canis:1>canis
 colligo:1>colligo colligo:2
 discus:1>discus
 erro:1>erro
-#Festus#2
-festus:1>festus
 figulus:1>figulus
 flamma:1>flamma
 gallina:1>gallina
@@ -416,6 +432,7 @@ promptus:2>promptus
 praesto:2>praesto
 plecto:2>plecto
 victus:2>victus
+Paulus:2>Paulus
 
 #
 # Variant spelling -- different tastes in lemma spelling
