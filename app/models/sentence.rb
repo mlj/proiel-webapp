@@ -364,7 +364,7 @@ class Sentence < ActiveRecord::Base
 
   # Returns +true+ if sentence has dependency annotation.
   def has_dependency_annotation?
-    @has_dependency_annotation ||= !dependency_tokens.first.relation.nil?
+    @has_dependency_annotation ||= dependency_tokens.first && !dependency_tokens.first.relation.nil?
   end
 
   # Returns +true+ if sentence has morphological annotation (i.e.
@@ -372,7 +372,7 @@ class Sentence < ActiveRecord::Base
   def has_morphological_annotation?
     # Assumed invariant: morphologically annotated sentence <=> all
     # morphology tokens have non-nil morphtag and lemma_id attributes.
-    @has_morphological_annotation ||= !morphtaggable_tokens.first.morphtag.nil?
+    @has_morphological_annotation ||= morphtaggable_tokens.first && !morphtaggable_tokens.first.morphtag.nil?
   end
 
   protected
@@ -408,6 +408,11 @@ class Sentence < ActiveRecord::Base
   private
 
   def check_invariants
+    # Constraint: sentence must have at least one token.
+    if tokens.length < 1
+      errors.add_to_base("Sentence must have at least one token")
+    end
+
     # Pairwise attributes: reviewed_by && reviewed_at
     # Pairwise attributes: annotated_by && annotated_at
 

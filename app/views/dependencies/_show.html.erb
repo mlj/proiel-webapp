@@ -1,5 +1,9 @@
 <%= stylesheet 'dependencies' %>
 
 <div class="dependencies-image">
-  <img src="<%= url_for :action => 'show', :controller => 'dependencies', :annotation_id => @sentence %>.png" />
+  <% if @sentence.has_dependency_annotation? %>
+    <img src="<%= annotation_dependencies_url(@sentence, :format => :png) %>" />
+  <% else %>
+    No dependency annotation
+  <% end %>
 </div>
