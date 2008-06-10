@@ -3,7 +3,7 @@
 == Installation
 
 The application depends on (at least) these gems:
-* xmlsimple
+* xml-simple
 * unicode
 * diff-lcs
 * facets
@@ -14,6 +14,7 @@ The application depends on (at least) these gems:
 * builder
 * hpricot
 * railroad
+* gchartrb
 
 You will also need an installation of graphviz in a path accessible to the
 application.
