@@ -119,8 +119,8 @@ a.sentence-number, .token-number { color: #F7A700; }
 
 /* Shared between multiple "widgets" */
 
-.selected { background: #9999ff; }
 .unavailable, .consumed { background: #eeeeee; }
+.selected { background: #9999ff; }
 
 /* roundedbox */
 
