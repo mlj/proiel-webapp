@@ -5,6 +5,7 @@
   margin-right: .10em;
   margin-bottom: 1em;
   text-align: center;
+  border: white 1px solid; /* This prevents redraws of items when selected. */
 }
 
 .morphtags .form {
