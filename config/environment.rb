@@ -60,11 +60,4 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
 end
 
-Mime::Type.register "image/png", :png
-Mime::Type.register "image/svg+xml", :svg
-
-Inflector.inflections do |inflect|
-  inflect.irregular "lemma", "lemmata"
-end
-
 require 'form_helper'
