@@ -4,22 +4,22 @@
   <dt>Linearisation index:</dt><dd><%= @token.token_number %></dd>
   <dt>Sort:</dt><dd><%= readable_token_sort(@token.sort) %></dd>
   <% if @token.form %>
-    <dt>Form:</dt><dd class="foreign-word"><%= @token.form %></dd>
+    <dt>Form:</dt><dd class="foreign-word"><%= format_token_form(@token) %></dd>
   <% end %>
   <% if @token.composed_form %>
-    <dt>Composed form:</dt><dd class="foreign-word"><%= @token.composed_form %></dd>
+    <dt>Composed form:</dt><dd class="foreign-word"><%= format_token_composed_form(@token) %></dd>
   <% end %>
   <% if @token.is_morphtaggable? %>
     <dt>Morphtag:</dt><dd class="morphtag"><%= @token.morphtag || '&nbsp;' %></dd>
     <dt>Part of speech:</dt><dd><%= readable_pos(@token.morph) %></dd>
     <dt>Morphology:</dt><dd><%= readable_morphology(@token.morph) %></dd>
-    <dt>Lemma:</dt><dd class="foreign-word"><%= @token.lemma ? link_to(@token.lemma.to_s, @token.lemma) : '&nbsp;' %></dd>
+    <dt>Lemma:</dt><dd class="foreign-word"><%= @token.lemma ? link_to(format_lemma_form(@token.lemma), @token.lemma) : '&nbsp;' %></dd>
     <% if @token.morphtag_performance %>
       <dt>Tagger performance:</dt><dd><%= @token.morphtag_performance %></dd>
     <% end %>
     <% if @token.source_morphtag %>
       <dt>Source morphtag:</dt><dd class="morphtag"><%= @token.source_morphtag %></dd>
-      <dt>Source lemma:</dt><dd class="lemma"><%= @token.source_lemma %></dd>
+      <dt>Source lemma:</dt><dd class="lemma"><%= format_language_string(@token.source_lemma, @token.language) %></dd>
     <% end %>
   <% end %>
   <% if @token.relation %>

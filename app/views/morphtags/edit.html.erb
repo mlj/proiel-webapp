@@ -22,11 +22,11 @@
   <div id="tokens">
     <% for token in @sentence.morphtaggable_tokens %>
       <div id="item-<%= token.id %>" class="item" onclick="onTokenSelect(<%= token.id %>)">
-        <p class="form"><%= token.form %></p>
+        <p class="form"><%= format_token_form(token) %></p>
         <div class="morph-lemma-tags <%= @tags[token.id][:state] %>">
           <p class="pos">&nbsp;<%= @tags[token.id][:set] ? @tags[token.id][:set].morphtag.descriptions([:major, :minor], true, :style => :abbreviation).join(', ') : '&nbsp;' %></p>
           <p class="morphology">&nbsp;<%= @tags[token.id][:set] ? @tags[token.id][:set].morphtag.descriptions([:major, :minor], false, :style => :abbreviation).join(', ') : '&nbsp;' %></p>
-          <p class="lemma">&nbsp;<%= @tags[token.id][:set] and @tags[token.id][:set].lemma ? "(#{@tags[token.id][:set].lemma_to_s})" : '&nbsp;'%></p>
+          <p class="lemma">&nbsp;<%= @tags[token.id][:set] and @tags[token.id][:set].lemma ? "(#{format_language_string(@tags[token.id][:set].lemma_to_s, token.language)})" : '&nbsp;'%></p>
         </div>
       </div>
     <% end %>

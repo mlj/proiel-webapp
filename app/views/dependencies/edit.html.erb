@@ -36,12 +36,14 @@
   <ul id="words" style="text-align: center"> 
     <% @sentence.morphtaggable_tokens.each do |t| %>
       <li id="word-<%= t.id %>" class="word">
-        <span class="form"><%= t.form %></span><span class="token-number"><%= t.token_number %></span>
+        <span class="form"><%= format_token_form(t) %></span><span class="token-number"><%= t.token_number %></span>
       </li>
     <% end %>
   </ul>
 
-  <ul id="relations" class="tree"></ul>
+  <!-- FIXME: the lang attribute here is a work-around. This will break if
+       LangText is ever extended beyond simple language attribute handling. -->
+  <ul id="relations" lang="<%= @sentence.language %>" class="tree"></ul>
 
   <div class="actions">
     <% form_tag({ :controller => 'dependencies', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :method => :put) do -%>

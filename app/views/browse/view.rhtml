@@ -21,7 +21,7 @@
   <%= check_box_tag 'token_numbers', 'yes', true, :id => 'token-numbers' %>
 </div>
 
-<div class="text-view" lang="<%= @source.language %>">
+<div class="text-view">
   <%= format_sentence(@sentences, { :chapter_numbers => true, 
                          :verse_numbers => :noninitial,
                          :sentence_numbers => true,

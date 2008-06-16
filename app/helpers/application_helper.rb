@@ -295,22 +295,22 @@ module ApplicationHelper
             # We do actually permit "sentences" to start with nonspacing punctuation
             # in the case of concordances where the search word is split off and
             # treated separately
-            t << token.form
+            t << format_token_form(token)
           else
-            t.last << token.form
+            t.last << format_token_form(token)
           end
 
         when :left_bracketing_punctuation
           dangling_punctuation = token
 
         when :spacing_punctuation
-          t << token.form
+          t << format_token_form(token)
 
         when :enclitic
           clitic = token
 
         when :fused_morpheme
-          s = link_to(token.composed_form, annotation_path(token.sentence), :class => token_class + ' bad')
+          s = link_to(format_token_composed_form(token), annotation_path(token.sentence), :class => token_class + ' bad')
           s << content_tag(:span, "#{token.token_number - 1}-#{token.token_number}", 
                            :class => 'token-number') if options[:token_numbers]
           t << s
@@ -319,22 +319,22 @@ module ApplicationHelper
           s = ''
 
           if dangling_punctuation
-            s << dangling_punctuation.form
+            s << format_token_form(dangling_punctuation)
             dangling_punctuation = nil
           end
 
           if options[:tooltip] == :morphtags
-            s << link_to(token.form, annotation_path(token.sentence), :class => token_class, :title => readable_lemma_morphology(token))
+            s << link_to(format_token_form(token), annotation_path(token.sentence), :class => token_class, :title => readable_lemma_morphology(token))
           else
-            s << link_to(token.form, annotation_path(token.sentence), :class => token_class)
+            s << link_to(format_token_form(token), annotation_path(token.sentence), :class => token_class)
           end
           s << content_tag(:span, token.token_number, :class => 'token-number') if options[:token_numbers]
 
           if clitic
             if options[:tooltip] == :morphtags
-              s << link_to(clitic.form, annotation_path(clitic.sentence), :class => token_class, :title => readable_lemma_morphology(clitic))
+              s << link_to(format_token_form(clitic), annotation_path(clitic.sentence), :class => token_class, :title => readable_lemma_morphology(clitic))
             else
-              s << link_to(clitic.form, annotation_path(clitic.sentence), :class => token_class)
+              s << link_to(format_token_form(form), annotation_path(clitic.sentence), :class => token_class)
             end
             s << content_tag(:span, clitic.token_number, :class => 'token-number') if options[:token_numbers]
             clitic = nil
@@ -585,5 +585,25 @@ module ApplicationHelper
       end
     end
     content_tag(:div, out, :class => 'flash')
+  end
+
+  # Formats a token form with HTML language attributes.
+  def format_token_form(token)
+    LangString.new(token.form, token.language).to_h
+  end
+
+  # Formats a token composed_form with HTML language attributes.
+  def format_token_composed_form(token)
+    LangString.new(token.composed_form, token.language).to_h
+  end
+
+  # Formats a lemma form with HTML language attributes.
+  def format_lemma_form(lemma)
+    LangString.new(lemma.lemma, lemma.language).to_h
+  end
+
+  # Formats a language-dependent string with HTML language attributes.
+  def format_language_string(s, language)
+    LangString.new(s, language).to_h
   end
 end

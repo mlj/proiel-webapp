@@ -6,7 +6,7 @@
       <%= link_to(readable_reference(annotation.reference), annotation_url(annotation.sentence)) %>&nbsp;<%= readable_completion(annotation.sentence, :checkmark => :only) %>
     </td>
     <td class="left"><%= format_abbreviated_sentence(annotation.previous_tokens, -5) %></td>
-    <td class="centre"><%= annotation.form %></td>
+    <td class="centre"><%= format_token_form(annotation) %></td>
     <td class="right"><%= format_abbreviated_sentence(annotation.next_tokens, 5) %></td>
   <% else %>
     <td class="reference">

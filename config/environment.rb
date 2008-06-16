@@ -61,3 +61,4 @@ Rails::Initializer.run do |config|
 end
 
 require 'form_helper'
+require 'lang_string'
