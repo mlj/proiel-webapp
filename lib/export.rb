@@ -54,9 +54,7 @@ class PROIELXMLExport < SourceExport
                        @source.attributes.slice("title", "edition", "source", "editor", "url")) do |w|
       filtered_sentences.each do |sentence|
         sentence.tokens.each do |token|
-          w.track_references(sentence.book.code, sentence.chapter, token.verse)
-
-          attributes = { :id => token.id, :sort => token.sort.to_s.gsub(/_/, '-') }
+          attributes = { :id => token.id }
           attributes[:relation] = token.relation if token.relation
           attributes[:head] = token.head_id if token.head
           attributes[:slashes] = token.slashees.collect { |s| s.id }.join(' ') unless token.slashees.empty?
@@ -64,7 +62,8 @@ class PROIELXMLExport < SourceExport
           attributes[:lemma] = token.lemma.presentation_form if token.lemma
           attributes['composed-form'] = token.composed_form if token.composed_form
 
-          w.emit_word(token.form, attributes)
+          w.write_token(token.form, token.sort.to_s.gsub(/_/, '-'), sentence.book.code, sentence.chapter,
+                        token.verse, attributes)
         end
         w.next_sentence
       end

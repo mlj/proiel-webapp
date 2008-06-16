@@ -198,7 +198,9 @@ module PROIEL
       end
 
       @file = file
-      @first_word = true
+      @first_token = true # true if the next token is the first token in a sentence
+      @seen_sentence_divider = false # true if write_token has seen a sentence divider which it
+                                     # it still has not emitted
 
       @last_book = nil
       @last_chapter = nil
@@ -219,35 +221,50 @@ module PROIEL
 
     public
 
-    def segment_sentence(segmenter, sentence_dividers, text, book, chapter, verse = nil,
-                         reencoder = nil)
+    # Writes a token to the source. The function also takes care of tracking
+    # book, chapter and verse identifiers and may do automatic reencoding and
+    # normalisation of the token string. If +sentence_dividers+ is set,
+    # will also insert sentence divisions whenever the required boundary
+    # conditions are met. Returns the (reencoded) token form.
+    def write_token(form, sort, book, chapter, verse, other_attributes = {}, reencoder = nil, sentence_dividers = nil)
+      if @seen_sentence_divider
+        # We've saved a note about a sentence divider having been encountered. This means
+        # that we will have to start a new sentence now, UNLESS we immediately encounter
+        # another sentence divider.
+        unless sentence_dividers and sentence_dividers.include?(form)
+          next_sentence
+          @seen_sentence_divider = false
+        end
+      end
+
+      track_references(book, chapter, verse) if book and chapter
+      form = reencoder.call(form) if reencoder
+      emit_word(form, other_attributes.merge({ :sort => sort }))
+
+      @seen_sentence_divider = true if sentence_dividers and sentence_dividers.include?(form)
+    end
+
+    def tokenise_and_write_string(s, segmenter, book, chapter, verse, other_attributes = {}, reencoder = nil, sentence_dividers = nil)
       # Occasionally, we encounter texts in which punctuation and chapter divisions
       # don't add up. We therefore insert an extra sentence division whenever the
       # chapter number changes.
       next_sentence unless chapter.nil? or chapter.to_i == @last_chapter
 
-      track_references(book, chapter, verse) 
-
-      segmenter.segmenter(reencoder ? reencoder.call(text) : text) do |t|
-        if t[:sort] == :nonspacing_punctuation
-          emit_word(t[:form], t.slice(:sort)) 
-        else
-          emit_word(t[:form], t.slice(:sort, :composed_form)) 
-        end 
-
-        if t[:sort] == :nonspacing_punctuation
-          next_sentence if sentence_dividers.include?(t[:form])
-        end
+      segmenter.segmenter(reencoder ? reencoder.call(s) : s) do |t|
+        write_token(t[:form], t[:sort], book, chapter, verse, t.slice(:composed_form).merge(other_attributes), 
+                    nil, sentence_dividers || [])
       end
     end
 
+    alias :tokenize_and_write_string :tokenise_and_write_string
+
     def track_references(book, chapter, verse = nil)
       if book != @last_book
-        @file.puts '    </sentence>' unless @first_word
+        @file.puts '    </sentence>' unless @first_token
         @file.puts '  </book>' if @last_book
         @file.puts "  <book name='#{book}'>"
 
-        @first_word = true
+        @first_token = true
       end
 
       @last_verse = verse.to_i if verse
@@ -255,9 +272,11 @@ module PROIEL
       @last_book = book
     end
 
+    private
+
     def emit_word(form, attrs = {})
-      @file.puts "    <sentence>" if @first_word
-      @first_word = false
+      @file.puts "    <sentence>" if @first_token
+      @first_token = false
       xattrs = attrs.dup
       xattrs[:chapter] = @last_chapter
       xattrs[:verse] = @last_verse
@@ -265,6 +284,8 @@ module PROIEL
       formatted_attrs = xattrs.keys.collect { |s| s.to_s }.sort.collect { |k| " #{k.gsub(/_/, '-')}='#{xattrs[k.to_sym].to_s.gsub(/_/, '-')}'" }
       @file.puts "      <token#{formatted_attrs}>#{form ? Unicode.normalize_C(form) : '' }</token>"
     end
+
+    public
 
     # Emits an array of tokens. Each token is a hash with the token
     # form as the value for the key :token, the reference as the values
@@ -292,15 +313,14 @@ module PROIEL
     end
 
     def next_sentence
-      @file.puts '    </sentence>' unless @first_word
-
-      @first_word = true
+      @file.puts '    </sentence>' unless @first_token
+      @first_token = true
     end
 
     private
 
     def close_all_elements
-      @file.puts '    </sentence>' unless @first_word
+      @file.puts '    </sentence>' unless @first_token
       @file.puts '  </book>' if @last_book
     end
   end

@@ -47,11 +47,12 @@ module PROIEL
         if PROIEL::is_non_bracketing_punctuation?(v[:sort])
           # Don't track the references for this token, as it may have the wrong
           # chapter or verse numbers.
-          writer.emit_word(v[:token], v.except(:deleted, :added, :token_number, :sentence_number, :chapter, :verse, :book, :token)) unless options[:strip_punctuation]
+          writer.write_token(v[:token], v[:sort], nil, nil, nil,
+                             v.except(:sort, :deleted, :added, :token_number, :sentence_number, :chapter, :verse, :book, :token)) unless options[:strip_punctuation]
           writer.next_sentence if v[:token] == '.' || v[:token] == '?' || v[:token] == ':'
         else
-          writer.track_references(v[:book], v[:chapter], v[:verse])
-          writer.emit_word(v[:token], v.except(:deleted, :added, :token_number, :sentence_number, :chapter, :verse, :book, :token))
+          writer.write_token(v[:token], v[:sort], v[:book], v[:chapter], v[:verse],
+                             v.except(:sort, :deleted, :added, :token_number, :sentence_number, :chapter, :verse, :book, :token))
         end
       end
     end  
