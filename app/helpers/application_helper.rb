@@ -334,7 +334,7 @@ module ApplicationHelper
             if options[:tooltip] == :morphtags
               s << link_to(format_token_form(clitic), annotation_path(clitic.sentence), :class => token_class, :title => readable_lemma_morphology(clitic))
             else
-              s << link_to(format_token_form(form), annotation_path(clitic.sentence), :class => token_class)
+              s << link_to(format_token_form(clitic), annotation_path(clitic.sentence), :class => token_class)
             end
             s << content_tag(:span, clitic.token_number, :class => 'token-number') if options[:token_numbers]
             clitic = nil
