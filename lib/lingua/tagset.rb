@@ -69,7 +69,8 @@ module Lingua
     end
   end
 
-  class PositionalTagSet < Hash 
+  # A definition of positional tag set.
+  class PositionalTagSet < Hash
     attr_reader :fields
 
     def initialize(data_file, klass = Tag)
@@ -106,43 +107,18 @@ module Lingua
       keys.each { |field| r[field] = descriptions(field, options) }
       r
     end
-
-    # Computes the `intersection' of two positional tags
-    def self.intersect(a, b)
-      raise "Tags have different length" unless a.length == b.length
-      a.split('').zip(b.split('')).collect { |x, y| x == y ? x : '-' }.join('')
-    end
-
-    # Computes the `union' of two positional tags. Raises an
-    # exceptions if the tags conflict.
-    def self.union(a, b)
-      raise "Tags have different length" unless a.length == b.length
-      a.split('').zip(b.split('')).collect { |x, y| 
-        if x == '-'
-          y
-        elsif y != '-' and x != y
-          raise "Union undefined; tags conflict: #{a} <-> #{b}"
-        else
-          x
-        end
-      }.join('')
-    end
-
-    # Returns true if any tag in the positional tag has contradictory
-    # values.
-    def self.contradictory?(a, b)
-      a.split('').zip(b.split('')).find { |x, y| x != '-' && y != '-' && x != y } ? true : false
-    end
   end
+
 end
 
 if $0 == __FILE__
   require 'test/unit'
   include Lingua
+  MY_PATH = File.dirname(__FILE__)
 
   class TagSetTestClass < Test::Unit::TestCase
     def setup
-      @c = TagSet.new('test.xml')
+      @c = TagSet.new(File.join(MY_PATH, 'test.xml'))
     end
 
     def test_access
@@ -162,25 +138,6 @@ if $0 == __FILE__
 
     def test_string_or_symbol
       assert_equal @c['bar'], @c[:bar]
-    end
-
-    def test_intersection
-      assert_equal '-y----w-', PositionalTagSet.intersect('xyz---w-', 'XyZV--w-')
-    end
-
-    def test_union
-      assert_equal 'xyzv--w-', PositionalTagSet.union('xyz---w-', 'xy-v--w-')
-    end
-
-    def test_bad_union
-      assert_raise RuntimeError do
-        PositionalTagSet.union('xyz---w-', 'xz-v--w-')
-      end
-    end
-
-    def test_contradictory
-      assert_equal true, PositionalTagSet.contradictory?('xyz---w-', 'xz-v--w-')
-      assert_equal false, PositionalTagSet.contradictory?('xyz---w-', 'xy-v--w-')
     end
   end
 end

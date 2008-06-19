@@ -16,6 +16,7 @@ The application depends on (at least) these gems:
 * railroad
 * gchartrb
 * gdbm
+* treetop
 
 You will also need an installation of graphviz in a path accessible to the
 application.

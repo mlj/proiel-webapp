@@ -89,7 +89,7 @@ module PROIEL
           end
         else
           # At least use it to lower the score of others
-          raw_candidates.collect! { |c, w, s| c.morphtag.contradiction?(existing.morphtag) || (existing.lemma and c.lemma != existing.lemma) ? [c, w * CONTRADICTION_RATIO, s] : [c, w, s] }
+          raw_candidates.collect! { |c, w, s| c.morphtag.contradicts?(existing.morphtag) || (existing.lemma and c.lemma != existing.lemma) ? [c, w * CONTRADICTION_RATIO, s] : [c, w, s] }
 
           @logger.warn { "Tagger: Failed to use existing tag as candidate due to its incompleteness: #{existing}" } if @logger
         end

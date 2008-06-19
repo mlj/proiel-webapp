@@ -4,11 +4,9 @@
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
-# $Id: morphtag.rb 926 2008-04-29 15:35:12Z mariuslj $
-#
-
 require 'proiel/tagsets'
-require 'extensions'
+require 'proiel/morphtag_constraints'
+require 'proiel/positional_tag'
 
 module PROIEL
   MorphLemmaTag = Struct::new(:morphtag, :lemma, :variant)
@@ -57,39 +55,22 @@ module PROIEL
     end
   end
 
-  class MorphTag < Hash
+  class MorphTag < Logos::PositionalTag
     PRESENTATION_SEQUENCE = [:major, :minor, :mood, :tense, :voice, :degree, :case, 
       :person, :number, :gender]
 
     def initialize(values = nil)
-      self.default = '-'
+      values = PROIEL::MorphTag.pad_s(values) if values.is_a?(String)
 
-      if values.is_a? Hash
-        values.each_pair { |k, v| self[k.to_sym] = v unless v == '-' }
-      elsif values.is_a? String
-        values = values.ljust(MORPHOLOGY.fields.length, '-') # pad the string with -'s if necessary
-
-        MORPHOLOGY.fields.zip(values.split('')).each { |e| 
-          self[e[0]] = e[1].to_sym if e[1] != '-' }
-      else
-        raise "Invalid morphtag #{values}" unless values.is_a? NilClass
-      end
+      super
     end
 
-    def []=(field, value)
-      raise "Invalid field #{field.inspect}. Possible fields are #{MORPHOLOGY.fields.inspect}" unless MORPHOLOGY.fields.include?(field)
-
-      if value == '-' or value.nil?
-        delete(field)
-      else
-        store(field, value)
-      end
+    def self.pad_s(s)
+      s.ljust(MORPHOLOGY.fields.length, '-')
     end
 
-    # Returns the tags as a string on a format suitable for storing
-    # in a database or an XML file.
-    def to_s
-      MORPHOLOGY.fields.collect { |field| self[field] }.join
+    def fields
+      MORPHOLOGY.fields
     end
 
     # Returns the tag as an string, abbreviated as much as possible.
@@ -117,219 +98,26 @@ module PROIEL
         MORPHOLOGY.descriptions(field, options)[self[field]] : nil }.compact
     end
 
-    # Checks a part of speech for validity and completeness.
-    def self.check_pos(major, minor, language = nil)
-      case major
-      when :P
-        return :incomplete if minor.nil? # P- 
-        return :valid if [:p, :r, :d, :s, :k, :t, :c, :i, :x].include?(minor)  
-      when :N
-        return :incomplete if minor.nil? # N-
-        return :valid if [:b, :e, :h, :j].include?(minor)  
-      when :M
-        return :incomplete if minor.nil? # M-
-        return :valid if [:a, :o, :g].include?(minor)  
-      when :D
-        return :incomplete if minor.nil? # D-
-        return :valid if [:f, :n, :q, :u].include?(minor)  
-      when :S
-        return :invalid unless language.nil? or language == :grc
-        return :valid if minor.nil?
-      else
-        if major.nil?
-          return :incomplete if minor.nil? # --
-          return :incomplete if MORPHOLOGY[:minor][minor] # --
-        else
-          return :valid if MORPHOLOGY[:major][major] and minor.nil? # X-
-        end
-      end
-
-      return :invalid
+    def union(x)
+      super(x.to_s.ljust(fields.length, '-'))
     end
 
     private
 
-    FIELD_RESTRICTIONS = {
-      :number => {
-        :d => [[:language, :cu], [:language, :got]],
-      },
-      :gender => { 
-        :m => [[:language, :la], [:language, :cu], [:language, :grc], [:language, :got]],
-        :f => [[:language, :la], [:language, :cu], [:language, :grc], [:language, :got]],
-        :n => [[:language, :la], [:language, :cu], [:language, :grc], [:language, :got]],
-        :o => [[:language, :la], [:language, :cu], [:language, :grc], [:language, :got]],
-        :p => [[:language, :la], [:language, :cu], [:language, :grc], [:language, :got]],
-        :q => [[:language, :la], [:language, :cu], [:language, :grc], [:language, :got]],
-        :r => [[:language, :la], [:language, :cu], [:language, :grc], [:language, :got]],
-      },
-      :case => {
-        :v => [[:language, :la], [:language, :cu], [:language, :grc]],
-        :b => [[:language, :la], [:language, :hy]],
-        :i => [[:language, :cu], [:language, :hy]],
-        :l => [[:language, :la], [:language, :cu], [:language, :hy]],
-      },
-      :tense => {
-        :a => [[:language, :cu], [:language, :hy], [:language, :grc]],
-      },
-      :mood => {
-        :o => [[:language, :grc]],
-      },
-      :voice => {
-        :e => [[:language, :grc]],
-        :m => [[:language, :grc]],
-        :n => [[:language, :grc]],
-        :d => [[:language, :grc]],
-      },
-    }
+    def self.check_field_is_valid?(field, major, minor, mood, value, language = nil)
+      return :invalid unless value.nil? or MORPHOLOGY[field][value]
 
-    def self.check_field_restrictions(field, value, language)
-      return :incomplete if value.nil?
+      q = MorphTag.new({ :major => major, :minor => minor, :mood => mood,
+                         field => value })
+      PROIEL::MorphtagConstraints.instance.is_valid?(q.to_s, language)
+    end
 
-      if FIELD_RESTRICTIONS[field] and FIELD_RESTRICTIONS[field][value]
-        restrictions = FIELD_RESTRICTIONS[field][value]
-        approved = false
-        restrictions.each do |restriction|
-          f, v = restriction
-
-          case f
-          when :language
-            approved = true if language.nil? or language == v
-          end
-
-          break if approved
-        end
-
-        return approved ? :valid : :invalid
-      else
-        # No restrictions on field, so valid.
-        return :valid
-      end
+    def self.check_pos_is_valid?(major, minor, language = nil)
+      q = MorphTag.new({ :major => major, :minor => minor })
+      PROIEL::MorphtagConstraints.instance.is_valid?(q.to_s, language)
     end
 
     public
-
-    # Returns true if the morphtag +x+ contradicts this morphtag.
-    def contradiction?(x)
-      MORPHOLOGY.fields.find { |field| self[field] != '-' and x[field] != '-' and self[field] != x[field] }
-    end
-
-    alias :contradicts? :contradiction?
-
-    def self.union(*tags)
-      tags.inject(MorphTag.new) { |m, n| m.union(n.is_a?(MorphTag) ? n : MorphTag.new(n)) }
-    end
-
-    # Returns the union of the morphtag and another morphtag +x+. +x+
-    # may be a MorphTag object or a string. Raises an exception if 
-    # the morphtags conflict.
-    #
-    # Example
-    #   m = MorphTag.new('D')
-    #   n = MorphTag.new('-f-------p')
-    #   m.union(n) # Df-------p
-    def union(x)
-      MorphTag.new(Lingua::PositionalTagSet.union(self.to_s, x.to_s.ljust(MORPHOLOGY.fields.length, '-')))
-    end
-
-    # Updates the morphtag to the union of itself and another morphtag +x+.
-    # +x+ may be a MorphTag object or a string. Raises an exception if the 
-    # morphtags conflict.
-    #
-    # Example
-    #   m = MorphTag.new('D')
-    #   n = MorphTag.new('-f-------p')
-    #   m.union!(n)
-    #   m # Df-------p
-    def union!(x)
-      s = union(x)
-      MORPHOLOGY.fields.zip(s.to_s.split('')).each { |e| self[e[0]] = e[1].to_sym if e[1] != '-' }
-    end
-
-    def self.check_field(field, major, minor, mood, value, language = nil)
-      return :invalid unless value.nil? or MORPHOLOGY[field][value]
-
-      # Decide some common subcategories
-      case major
-      when :N, :M
-        indeclinable_nominal = [:g, :h, :j].include?(minor)
-      when :V
-        finite_verb = [:i, :s, :m, :o].include?(mood)
-      end
-
-      # Get indeclinables out of the way right away
-      return (value.nil? ? :valid : :invalid) if indeclinable_nominal
-
-      case field
-      when :person
-        return check_field_restrictions(field, value, language) if finite_verb
-        return check_field_restrictions(field, value, language) if (major == :P and [:p, :s, :k, :t].include?(minor))
-
-      when :number
-        if major == :V
-          # :n  Infinitive   no
-          # :p  Participle   yes 
-          # :d  Gerund       no 
-          # :g  Gerundive    yes 
-          # :u  Supine       no 
-          #     Rest         yes 
-          return check_field_restrictions(field, value, language) if [:p, :g, :i, :s, :m, :o].include?(mood)
-        else
-          return check_field_restrictions(field, value, language) if [:N, :P, :M, :A, :S].include?(major)
-        end
-
-      when :gender
-        if major == :V
-          # :n  Infinitive   no
-          # :p  Participle   yes 
-          # :d  Gerund       no 
-          # :g  Gerundive    yes 
-          # :u  Supine       no 
-          #     Rest         no
-          return check_field_restrictions(field, value, language) if [:p, :g].include?(mood)
-        else
-          return check_field_restrictions(field, value, language) if [:N, :P, :M, :A, :S].include?(major)
-        end
-
-      when :case
-        if major == :V
-          # :n  Infinitive   no 
-          # :p  Participle   yes 
-          # :d  Gerund       yes 
-          # :g  Gerundive    yes 
-          # :u  Supine       yes 
-          #     Rest         no
-          return check_field_restrictions(field, value, language) if [:p, :d, :g, :u].include?(mood)
-        else
-          return check_field_restrictions(field, value, language) if [:N, :P, :M, :A, :S].include?(major)
-        end
-
-      when :mood
-        return check_field_restrictions(field, value, language) if major == :V
-
-      when :tense, :voice
-        if major == :V
-          # :n  Infinitive   yes 
-          # :p  Participle   yes 
-          # :d  Gerund       no 
-          # :g  Gerundive    no 
-          # :u  Supine       no 
-          #     Rest         yes 
-          return check_field_restrictions(field, value, language) unless [:d, :g, :u].include?(mood) 
-        end
-
-      when :degree
-        return check_field_restrictions(field, value, language) if major == :A or (major == :D and minor == :f) # adjective or comparable adverb
-
-      when :extra
-        # Everything goes
-        return :valid
-
-      else
-        raise "Invalid field #{field}"
-      end
-
-      return value.nil? ? :valid : :invalid
-    end
 
     # Returns all possible values for POS-fields.
     def self.pos_values(language = nil)
@@ -339,9 +127,9 @@ module PROIEL
         m << nil
         m.each do |minor|
           if minor
-            p.push([major.code, major.summary, minor.code, minor.summary]) if check_pos(major.code, minor.code, language) == :valid
+            p.push([major.code, major.summary, minor.code, minor.summary]) if check_pos_is_valid?(major.code, minor.code, language)
           else
-            p.push([major.code, major.summary, nil, nil]) if check_pos(major.code, nil, language) == :valid
+            p.push([major.code, major.summary, nil, nil]) if check_pos_is_valid?(major.code, nil, language)
           end
         end
       end
@@ -357,24 +145,18 @@ module PROIEL
         m.each do |minor|
           MORPHOLOGY[field].values.each do |f|
             minor_code = minor ? minor.code : nil
-            next unless check_pos(major.code, minor_code, language) == :valid
+            next unless check_pos_is_valid?(major.code, minor_code, language)
 
             n = MORPHOLOGY[:mood].values
             n << nil
             n.each do |mood|
               mood_code = mood ? mood.code : nil
-              p.push([major.code, minor_code, mood_code, f.code, f.summary]) if check_field(field, major.code, minor_code, mood_code, f.code, language) == :valid
+              p.push([major.code, minor_code, mood_code, f.code, f.summary]) if check_field_is_valid?(field, major.code, minor_code, mood_code, f.code, language)
             end
           end
         end
       end
       p
-    end
-
-    # Generates all possible completions of a particular field of the 
-    # current tag.
-    def field_completions(field, language = nil)
-      MORPHOLOGY[field].keys.reject { |code| contradiction?(MorphTag.new(field => code)) }
     end
 
     # Generates all possible completions of the possibly incomplete tag.
@@ -385,7 +167,10 @@ module PROIEL
 
       # See what we can complete this with
       for field in fields
-        candidates[field] = field_completions(field, language)
+        candidates[field] = MORPHOLOGY[field].keys.select do |code| 
+          m = MorphTag.new(field => code)
+          !contradicts?(m)
+        end
       end
 
       # Cut down the forest by eliminating invalid combinations. Compose
@@ -420,56 +205,28 @@ module PROIEL
       result.select { |m| m.complete?(language) }
     end
 
-    # Checks the tag for completion and validity. If +language+ is set, will
-    # take language into account.
-    def status(language = nil)
-      s = MorphTag.check_pos(self.fetch(:major) { nil },
-                             self.fetch(:minor) { nil },
-                             language)
-      return s if s == :invalid
-
-      MORPHOLOGY.keys.each do |field|
-        next if field == :major or field == :minor
-
-        t = MorphTag.check_field(field, 
-                                 self.fetch(:major) { nil },
-                                 self.fetch(:minor) { nil },
-                                 self.fetch(:mood) { nil },
-                                 self.fetch(field) { nil },
-                                 language)
-
-        return t if t == :invalid # Invalid trumphs everything
-        s = t if t == :incomplete # Incomplete trumphs everything but invalid
-      end
-
-      return s
-    end
-
     # Returns +true+ if the tag is valid, i.e. if the subset of fields
     # with a value match the constraints on the fields. If +language+ is
     # set, will take language into account when validating.
-    def valid?(language = nil)
-      s = status(language)
-      s == :valid || s == :incomplete
+    def is_valid?(language = nil)
+      PROIEL::MorphtagConstraints.instance.is_valid?(self.to_s, language)
     end
+
+    alias valid? is_valid?
 
     # Returns +true+ if the tag is complete, i.e. if the entire subset of
     # fields allowed to have a value by the constraints on the fields,
     # have a value. If +language+ is set, will take language into account
     # when testing for completion.
-    def complete?(language = nil)
-      s = status(language)
-      s == :valid
+    def is_complete?(language = nil)
+      PROIEL::MorphtagConstraints.instance.is_complete?(self.to_s, language)
     end
+
+    alias complete? is_complete?
 
     # Returns +true+ if the tag is empty, i.e. uninitialised.
     def empty?
       keys.length == 0
-    end
-
-    # Tests if the tag is equal in value to another tag.
-    def ==(other)
-      self.to_s == other.to_s
     end
 
     # Returns true if gender has value +value+ or a value that is
@@ -493,7 +250,6 @@ module PROIEL
       end
     end
 
-#####
     private
 
     CLOSED_MAJOR = [:V, :A, :N]
@@ -619,19 +375,19 @@ if $0 == __FILE__
     end
 
     def test_pos_validity
-      assert_equal :valid, MorphTag.check_pos(:F, nil)
-      assert_equal :valid, MorphTag.check_pos(:N, :e)
-      assert_equal :valid, MorphTag.check_pos(:D, :f)
-      assert_equal :valid, MorphTag.check_pos(:M, :a)
-      assert_equal :invalid, MorphTag.check_pos(:D, :e)
-      assert_equal :invalid, MorphTag.check_pos(:P, :q)
-      assert_equal :incomplete, MorphTag.check_pos(:P, nil)
-      assert_equal :incomplete, MorphTag.check_pos(:D, nil)
-      assert_equal :incomplete, MorphTag.check_pos(:M, nil)
-      assert_equal :incomplete, MorphTag.check_pos(:N, nil)
-      assert_equal :incomplete, MorphTag.check_pos(nil, nil)
-      assert_equal :incomplete, MorphTag.check_pos(nil, :f)
-      assert_equal :invalid, MorphTag.check_pos(nil, :y)
+      assert_equal true, MorphTag.check_pos_is_valid?(:F, nil)
+      assert_equal true, MorphTag.check_pos_is_valid?(:N, :e)
+      assert_equal true, MorphTag.check_pos_is_valid?(:D, :f)
+      assert_equal true, MorphTag.check_pos_is_valid?(:M, :a)
+      assert_equal false, MorphTag.check_pos_is_valid?(:D, :e)
+      assert_equal false, MorphTag.check_pos_is_valid?(:P, :q)
+      assert_equal true, MorphTag.check_pos_is_valid?(:P, nil)
+      assert_equal true, MorphTag.check_pos_is_valid?(:D, nil)
+      assert_equal true, MorphTag.check_pos_is_valid?(:M, nil)
+      assert_equal true, MorphTag.check_pos_is_valid?(:N, nil)
+      assert_equal false, MorphTag.check_pos_is_valid?(nil, nil)
+      assert_equal false, MorphTag.check_pos_is_valid?(nil, :f)
+      assert_equal false, MorphTag.check_pos_is_valid?(nil, :y)
     end
 
     def test_validity
@@ -668,12 +424,6 @@ if $0 == __FILE__
       assert_equal ["Nb-s---mn--","Ne-s---mn--", "Nh---------", "Nj---------"], MorphTag.new('N--s---mn-').completions.collect { |t| t.to_s }.sort
       assert_equal ["Nb-p---mn--","Nb-s---mn--"], MorphTag.new('Nb-----mn-').completions(:la).collect { |t| t.to_s }.sort
       assert_equal ["Nb-d---mn--","Nb-p---mn--","Nb-s---mn--"], MorphTag.new('Nb-----mn-').completions(:cu).collect { |t| t.to_s }.sort
-    end
-
-    def test_equality
-      a = MorphTag.new('Nb-s---mn')
-      b = MorphTag.new('Nb-s---mn--')
-      assert_equal true, a == b
     end
 
     def test_union

@@ -1,0 +1,125 @@
+module PROIEL
+  grammar MorphtagConstraintsGrammar
+    rule poses
+      'P' [pskt] personal_pronominal <CompletionTest> / 
+      'P' [rdcix] nominal <CompletionTest> /
+      'P-' personal_pronominal {
+        def complete?
+          false
+        end
+      } /
+
+      'M' [ao] nominal <CompletionTest> / 
+      'Mg' indeclinable <CompletionTest> /
+      'M-' nominal {
+        def complete?
+          false
+        end
+      } /
+      
+      'N' [be] nominal <CompletionTest> / 
+      'N' [jh] indeclinable <CompletionTest> /
+      'N-' nominal {
+        def complete?
+          false
+        end
+      } /
+      
+      'V-' verb <CompletionTest> / 
+      
+      'A-' adjective <CompletionTest> / 
+
+      'S-' nominal <CompletionTest> / 
+
+      'Df' comparable_adverb <CompletionTest> / 
+      'D' [nqu] indeclinable <CompletionTest> / 
+      'D-' comparable_adverb {
+        def complete?
+          false
+        end
+      } /
+
+      [RCGFI] '-' indeclinable <CompletionTest>
+    end
+
+    # POS-specific rules
+
+    rule verb
+      # Infinitive
+      '-'    '-'    tense 'n'    voice '-'    '-'  '--' <CompletionTest> /
+
+      # Participle
+      '-'    number tense 'p'    voice gender kase '--' <CompletionTest> /
+
+      # Gerund, supine
+      '-'    '-'    '-'   [du]   '-'   '-'    kase '--' <CompletionTest> /
+
+      # Gerundive
+      '-'    number '-'   'g'    '-'   gender kase '--' <CompletionTest> / 
+
+      # Finite
+      person number tense [ismo] voice '-'    '-'  '--' <CompletionTest> /
+
+      # Unspecified mood
+      person number tense '-'    voice '-'    '-'  '--' {
+        def complete?
+          false
+        end
+      }
+    end
+
+    rule personal_pronominal
+      person number '---' gender kase '--' <CompletionTest> 
+    end
+
+    rule nominal
+      '-' number '---' gender kase '--' <CompletionTest> 
+    end
+
+    rule adjective
+      '-' number '---' gender kase degree '-' <CompletionTest> 
+    end
+
+    rule comparable_adverb
+      '-------' degree '-' <CompletionTest> 
+    end
+
+    rule indeclinable
+      '---------' {
+        def complete?
+          true
+        end
+      }
+    end
+
+    # Categorial rules
+
+    rule person
+      [123-] <TerminalCompletionTest>
+    end
+
+    rule number
+      [sdp-] <TerminalCompletionTest>
+    end
+
+    rule tense
+      [pilafrt-] <TerminalCompletionTest>
+    end
+
+    rule voice
+      [aempndoq-] <TerminalCompletionTest>
+    end
+
+    rule gender
+      [opqrmfn-] <TerminalCompletionTest>
+    end
+
+    rule kase
+      [nvagdbil-] <TerminalCompletionTest>
+    end
+
+    rule degree
+      [pcs-] <TerminalCompletionTest>
+    end
+  end
+end
