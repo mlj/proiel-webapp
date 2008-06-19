@@ -19,6 +19,8 @@
     <% end %>
     <% if @token.source_morphtag %>
       <dt>Source morphtag:</dt><dd class="morphtag"><%= @token.source_morphtag %></dd>
+    <% end %>
+    <% if @token.source_lemma %>
       <dt>Source lemma:</dt><dd class="lemma"><%= format_language_string(@token.source_lemma, @token.language) %></dd>
     <% end %>
   <% end %>
