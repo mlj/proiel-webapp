@@ -1,4 +1,4 @@
-require 'proiel'
+require 'proiel/tagger'
 
 # Singleton objects
 TAGGER = PROIEL::Tagger.new(:data_directory => File.expand_path(File.dirname(__FILE__)),
@@ -14,5 +14,3 @@ TAGGER = PROIEL::Tagger.new(:data_directory => File.expand_path(File.dirname(__F
 
   result
 })
-
-

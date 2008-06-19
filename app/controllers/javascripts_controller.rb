@@ -1,5 +1,3 @@
-require 'proiel'
-
 class JavascriptsController < ApplicationController
   layout nil
 

@@ -1,5 +1,3 @@
-require 'proiel'
-
 module ApplicationHelper
   # Inserts javascript files in the layout.
   def javascript(*files)

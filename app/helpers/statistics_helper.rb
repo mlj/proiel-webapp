@@ -1,6 +1,3 @@
-require 'google_chart'
-require 'statistics'
-
 module StatisticsHelper
   def google_pie_chart(data, options = {})
     data.reject! { |k, v| v == 0 }

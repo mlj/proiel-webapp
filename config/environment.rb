@@ -60,5 +60,14 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
 end
 
+require 'google_chart'
+require 'logos'
+
 require 'form_helper'
+
 require 'lang_string'
+require 'stats'
+require 'statistics'
+
+require 'proiel'
+require 'hooks'

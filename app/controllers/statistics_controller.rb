@@ -1,5 +1,3 @@
-require 'stats'
-
 class StatisticsController < ApplicationController
   before_filter :is_annotator?
 

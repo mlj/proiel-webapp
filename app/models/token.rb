@@ -1,6 +1,3 @@
-require 'proiel'
-require 'hooks'
-
 class Token < ActiveRecord::Base
   belongs_to :sentence
   belongs_to :book

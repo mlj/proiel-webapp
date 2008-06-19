@@ -1,5 +1,3 @@
-require 'proiel'
-
 class Sentence < ActiveRecord::Base
   belongs_to :book
   belongs_to :source
