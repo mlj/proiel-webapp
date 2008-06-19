@@ -360,6 +360,7 @@ viror
 libet
 
 # TODO
+cito:1 cito:2>cito
 adulter:1>adulter
 # #1 (f.) #2 (m.)
 Aegyptus:1>Aegyptus Aegyptus:2
@@ -398,6 +399,7 @@ pecus:1>pecus
 pedum:1>pedum
 petra:1>petra
 planus:1>planus
+crastinus:1>crastinus
 sacerdos:1>sacerdos
 serenus:1>serenus
 sinus:1>sinus
@@ -433,6 +435,8 @@ praesto:2>praesto
 plecto:2>plecto
 victus:2>victus
 Paulus:2>Paulus
+# appello and appello#1 both exist. appello#1 is broken, appello is OK
+appello:1
 
 #
 # Variant spelling -- different tastes in lemma spelling

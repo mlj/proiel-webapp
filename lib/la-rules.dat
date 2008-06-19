@@ -50,6 +50,7 @@ Mg {
  tredecim, quattuordecim, quindecim, sedecim, septendecim, duodeviginti,
  undeviginti, viginti, triginta, quadraginta, quinquaginta, sexaginta,
  septuaginta, octoginta, octoginta quattuor, nonaginta, nonaginta novem, centum, mille, 
+ viginti quattuor,
 }
 
 # Ordinal numbers
@@ -58,6 +59,10 @@ Mo:A3 {
  nonus, decimus, undecimus, duodecimus, duodevicesimus, undevicesimus, 
  vicesimus, tricesimus, quadragesimus, quinquagesimus, sexagesimus, 
  septagesimus, octagesimus, nonagesimus, centesimus, millesimus
+}
+
+Mo- {
+ quartadecima/s---fb-
 }
 
 #
@@ -147,6 +152,8 @@ Dn {
  centies, milies,
 
  taliter, tam, tanto, toties, toties:totiens, tantopere, tantum, tot,
+
+ lycaonice, graece,
 }
 
 # Interrogative adverbs
@@ -246,6 +253,8 @@ Pp {
  nos:nostrum/1p---mg, nos:nostrum/1p---fg,
  nos:nobis/1p---md, nos:nobis/1p---fd, 
  nos:nobis/1p---mb, nos:nobis/1p---fb,
+ nos:Nobis/1p---md, nos:Nobis/1p---fd,
+ nos:Nobis/1p---mb, nos:Nobis/1p---fb,
 
  tu/2s---mn, tu/2s---fn, 
  tu/2s---mv, tu/2s---fv, 
@@ -392,8 +401,10 @@ Px- {
  alteruter:alterutrum/p---ng, alteruter:alterutrum/s---ma,
  alteruter:alterutrum/s---nn, alteruter:alterutrum/s---nv, 
 
- unusquisque:unusquisque/s---mn,
- unusquisque:unaquaeque/s---fn,
+ unusquisque:unusquisque/s---mn, unusquisque:unaquaeque/s---fn,
+ unusquisque:unumquemque/s---ma,
+ unusquisque:unoquoque/s---mb, unusquisque:unoquoque/s---nb,
+ unusquisque:unicuique/s---md, unusquisque:unicuique/s---fd, unusquisque:unicuique/s---nd,
 }
 
 Pd-:P3 {
