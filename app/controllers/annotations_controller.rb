@@ -24,31 +24,6 @@ class AnnotationsController < ApplicationController
     end
   end
 
-  # GET /annotations/1/edit
-#  def edit
-#    @sentence = Sentence.find(params[:id])
-#  end
-
-  # PUT /annotations/1
-  # PUT /annotations/1.xml
-#  def update
-#    @sentence = Sentence.find(params[:id])
-#
-#    respond_to do |format|
-#      if @sentence.update_attributes(params[:sentence])
-#        flash[:notice] = 'Annotation was successfully updated.'
-#        format.html { redirect_to(@sentence) }
-#        format.xml  { head :ok }
-#      else
-#        format.html { render :action => "edit" }
-#        format.xml  { render :xml => @sentence.errors, :status => :unprocessable_entity }
-#      end
-#    end
-#  rescue ActiveRecord::RecordInvalid => invalid
-#    flash[:error] = invalid.record.errors.full_messages.join('<br>')
-#    render :action => "edit"
-#  end
-  
   def flag_as_reviewed
     @sentence = Sentence.find(params[:id])
 
