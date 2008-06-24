@@ -60,7 +60,8 @@ module PROIEL
     end
 
     def verse
-      get_interval(:verse).first #FIXME
+      x = get_interval(:verse)
+      x ? x.first : nil
     end
 
     private
@@ -117,7 +118,7 @@ module PROIEL
     def to_url(ref)
       # Links are on the form http://biblos.com/matthew/24-44.htm.
       r = @base_url + @mapping[ref.book] + '/'
-      if ref.location
+      unless ref.location.empty?
         r += "#{ref.location[:chapter]}-#{ref.verse}.htm"
       end
       r
@@ -136,38 +137,6 @@ module PROIEL
         r += "&chapter=#{ref.location[:chapter]}"
       end
       r
-    end
-  end
-end
-
-if $0 == __FILE__
-  require 'test/unit'
-  include PROIEL
-
-  class BiblosReferenceTest < Test::Unit::TestCase
-    def test_loading
-      BiblosReferenceMapper.instance  
-    end
-    
-    def test_mapping_short
-      r = Reference.new(1, 'vulgate', 2, 'MATT')
-      assert_equal "http://biblos.com/matthew/", BiblosReferenceMapper.instance.to_url(r)
-    end
-
-    def test_mapping_long
-      r = Reference.new(1, 'vulgate', 2, 'MATT', { :chapter => 1, :verse => 1 })
-      assert_equal "http://biblos.com/matthew/1-1.htm", BiblosReferenceMapper.instance.to_url(r)
-    end
-  end
-
-  class BibelenNOReferenceTest < Test::Unit::TestCase
-    def test_loading
-      BiblosReferenceMapper.instance  
-    end
-    
-    def test_mapping
-      r = Reference.new(1, 'vulgate', 2, '1THESS', { :chapter => 2 })
-      assert_equal "http://bibelen.no/chapter.aspx?book=1TH&chapter=2", BibelenNOReferenceMapper.instance.to_url(r)
     end
   end
 end
