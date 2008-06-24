@@ -18,20 +18,25 @@ The application depends on (at least) these gems:
 * gdbm
 * treetop
 
-You will also need an installation of graphviz in a path accessible to the
-application.
+In addition, you need the following gems that are part of the PROIEL Corpus
+* logos
+
+You will also need a installations of the following tools with binaries
+in a path accessible to the application:
+* graphviz
+* SFST
 
 Before starting the application for the first time, run
 
   make -C lib
 
-to build the morphological rules.
+to build the morphological rule databases.
 
 == Overview
 
 The PROIEL application consists of four components
-* General utilities for corpus linguistics. This is kept within the Lingua
-namespace and resides in the directory <tt>lib/lingua</tt>.
+* General utilities for corpus linguistics. This is kept within the Logos
+namespace and resides in the gem <tt>logos</tt>.
 * Generic PROIEL-specific functionality. This comprises all the logic that
 is specific to the data model used by the PROIEL corpus, but not tied to
 the web-application or database. This resides in <tt>lib/proiel</tt> and is
@@ -43,13 +48,14 @@ as a regular Ruby on Rails application. An overview of the models can be
 found here[link:../models.svg] and for the controllers 
 here[link:../controllers.svg].
 
-These components are in principle separable, but probably not in
-practice, although it could be done with some effort. 
-
 === Rake tasks
 
 The Ruby on Rails application includes a set of rake tasks for importing and
-exporting data and for running various forms of validation jobs.
+exporting data and for running various forms of validation jobs. Run
+
+    rake --tasks proiel
+    
+for an overview.
 
 == Data sources 
 
@@ -80,13 +86,6 @@ validation with the current combination of language tags and schemata.
 
 The definition for the morphological tagset is found in +lib/proiel/morphology.xml+.
   :include:../lib/proiel/morphology.xml
-
-== Tools
-
-=== proiel-import
-
-The proiel-import tools loads the baseline text for a particular source,
-initialising or updating the source meta data if necessary.
 
 == Text sources 
 
@@ -120,4 +119,3 @@ of occasional encoding errors.
   format than PNG. The issue may be resolved by using a more
   recent version of graphviz that supports GIF images and
   the correct fonts.
-
