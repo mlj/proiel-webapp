@@ -9,7 +9,7 @@ div#headline {
   background-repeat: no-repeat;
   color: #585858;
   font-weight: bold;
-  font-style: small-caps;
+  font-variant: small-caps;
 }
 
 /* Navigation bar */

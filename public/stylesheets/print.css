@@ -2,7 +2,7 @@
 
 div#headline {
   font-weight: bold;
-  font-style: small-caps;
+  font-variant: small-caps;
 }
 
 div#navbar { display: none; }
