@@ -37,7 +37,7 @@ if $0 == __FILE__
 
   class MorphologyTestCase < Test::Unit::TestCase
     def test_components
-      assert_equal [:major, :minor, :person, :number, :tense, :mood, :voice, :gender, :case, :degree, :extra], MORPHOLOGY.fields
+      assert_equal [:major, :minor, :person, :number, :tense, :mood, :voice, :gender, :case, :degree, :animacy, :strength], MORPHOLOGY.fields
     end
   end
 end

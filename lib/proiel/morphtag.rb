@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby 
 #
-# morphtag.rb - Morphology tags
+# morphtag.rb - Morphological tags
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
@@ -53,11 +53,24 @@ module PROIEL
     def ==(o)
       o.is_a?(MorphLemmaTag) && to_s == o.to_s
     end
+
+    # Returns an integer, -1, 0 or 1, suitable for sorting the tag.
+    def <=>(o)
+      s = self.morphtag.to_s <=> o.morphtag.to_s
+      return s unless s.zero?
+
+      s = self.lemma <=> o.lemma
+      return s unless s.zero?
+
+      0
+    end
   end
 
   class MorphTag < Logos::PositionalTag
+    @@field_values = {}
+
     PRESENTATION_SEQUENCE = [:major, :minor, :mood, :tense, :voice, :degree, :case, 
-      :person, :number, :gender]
+      :person, :number, :gender, :animacy, :strength]
 
     def initialize(values = nil)
       values = PROIEL::MorphTag.pad_s(values) if values.is_a?(String)
@@ -67,6 +80,10 @@ module PROIEL
 
     def self.pad_s(s)
       s.ljust(MORPHOLOGY.fields.length, '-')
+    end
+
+    def self.fields
+      MORPHOLOGY.fields
     end
 
     def fields
@@ -102,107 +119,62 @@ module PROIEL
       super(x.to_s.ljust(fields.length, '-'))
     end
 
-    private
-
-    def self.check_field_is_valid?(field, major, minor, mood, value, language = nil)
-      return :invalid unless value.nil? or MORPHOLOGY[field][value]
-
-      q = MorphTag.new({ :major => major, :minor => minor, :mood => mood,
-                         field => value })
-      PROIEL::MorphtagConstraints.instance.is_valid?(q.to_s, language)
+    # Returns all possible values for POS-fields.
+    def self.pos_tag_space(language = nil)
+      PROIEL::MorphtagConstraints::instance.tag_space(language).map { |t| t[0, 2] }.sort.uniq
     end
 
-    def self.check_pos_is_valid?(major, minor, language = nil)
-      q = MorphTag.new({ :major => major, :minor => minor })
-      PROIEL::MorphtagConstraints.instance.is_valid?(q.to_s, language)
+    def self.expand_s(tag)
+      PROIEL::MorphTag.new(tag).to_s
     end
 
-    public
-
+    # DEPRECATED
     # Returns all possible values for POS-fields.
     def self.pos_values(language = nil)
       p = []
-      MORPHOLOGY[:major].values.each do |major|
-        m = MORPHOLOGY[:minor].values
-        m << nil
-        m.each do |minor|
-          if minor
-            p.push([major.code, major.summary, minor.code, minor.summary]) if check_pos_is_valid?(major.code, minor.code, language)
-          else
-            p.push([major.code, major.summary, nil, nil]) if check_pos_is_valid?(major.code, nil, language)
-          end
+      poses = tag_space(language).map { |tag| MorphTag.new(tag) }.map { |tag| [tag.major, tag.minor] }.uniq.each do |major, minor|
+        major = MORPHOLOGY[:major][major.to_sym]
+        if minor != '-'
+          minor = MORPHOLOGY[:minor][minor.to_sym]
+          p.push([major.code, major.summary, minor.code, minor.summary])
+        else
+          p.push([major.code, major.summary, nil, nil])
         end
       end
       p
     end
 
-    # Returns all possible values for non-POS fields. 
-    def self.field_values(field, language = nil)
+    # DEPRECATED
+    def self._field_values(field, language = nil)
       p = []
-      MORPHOLOGY[:major].values.each do |major|
-        m = MORPHOLOGY[:minor].values
-        m << nil
-        m.each do |minor|
-          MORPHOLOGY[field].values.each do |f|
-            minor_code = minor ? minor.code : nil
-            next unless check_pos_is_valid?(major.code, minor_code, language)
-
-            n = MORPHOLOGY[:mood].values
-            n << nil
-            n.each do |mood|
-              mood_code = mood ? mood.code : nil
-              p.push([major.code, minor_code, mood_code, f.code, f.summary]) if check_field_is_valid?(field, major.code, minor_code, mood_code, f.code, language)
-            end
-          end
-        end
+      tag_space(language).map { |tag| MorphTag.new(tag) }.reject { |tag| tag[field] == '-' }.map { |tag| [tag.major, tag.minor, tag.mood, tag[field.to_sym]] }.uniq.each do |major, minor, mood, value|
+        major = MORPHOLOGY[:major][major.to_sym]
+        minor = MORPHOLOGY[:minor][minor.to_sym] if minor != '-'
+        mood = MORPHOLOGY[:mood][mood.to_sym] if mood != '-'
+        value = MORPHOLOGY[field.to_sym][value.to_sym]
+        p.push([major.code, 
+               minor != '-' ? minor.code : nil, 
+               mood != '-' ? mood.code : nil, 
+               value.code, 
+               value.summary])
       end
       p
+    end
+
+    # DEPRECATED
+    # Returns all possible values for non-POS fields. 
+    def self.field_values(field, language = nil)
+      @@field_values[language] ||= {}
+      @@field_values[language][field] ||= _field_values(field, language)
     end
 
     # Generates all possible completions of the possibly incomplete tag.
     def completions(language = nil)
-      me = self.to_s
-      candidates = {}
-      fields = MORPHOLOGY.fields.reject { |field| field == :extra } #FIXME
+      PROIEL::MorphtagConstraints::instance.tag_space(language).reject { |t| contradicts?(t) }
+    end
 
-      # See what we can complete this with
-      for field in fields
-        candidates[field] = MORPHOLOGY[field].keys.select do |code| 
-          m = MorphTag.new(field => code)
-          !contradicts?(m)
-        end
-      end
-
-      # Cut down the forest by eliminating invalid combinations. Compose
-      # tags from left to right and recurse whenever we have somthing that
-      # is valid.
-      result = (rec = lambda do |fields, result|
-        if fields.empty?
-          return result
-        else
-          new_result = []
-          field = fields.head 
-
-          result.each do |m|
-            candidates[field].each do |candidate|
-              m[field] = candidate
-              new_result << m.dup if m.valid?(language)
-            end
-
-            # This additional test cuts down time a lot; an empty
-            # major field will never lead to a complete tag.
-            unless field == :major
-              m[field] = nil 
-              new_result << m.dup if m.valid?(language)
-            end
-          end
-
-          return rec[fields.tail, new_result]
-        end
-      end)[fields, [MorphTag.new]]
-
-      # Filter away the incompletes
-      result.select { |m| m.complete?(language) }
+    def self.tag_space(language = nil)
+      PROIEL::MorphtagConstraints::instance.tag_space(language)
     end
 
     # Returns +true+ if the tag is valid, i.e. if the subset of fields
@@ -212,23 +184,19 @@ module PROIEL
       PROIEL::MorphtagConstraints.instance.is_valid?(self.to_s, language)
     end
 
+    # DEPRECATED
     alias valid? is_valid?
 
-    # Returns +true+ if the tag is complete, i.e. if the entire subset of
-    # fields allowed to have a value by the constraints on the fields,
-    # have a value. If +language+ is set, will take language into account
-    # when testing for completion.
-    def is_complete?(language = nil)
-      PROIEL::MorphtagConstraints.instance.is_complete?(self.to_s, language)
+    def to_features
+      PROIEL::MorphtagConstraints.instance.to_features(self.to_s)
     end
-
-    alias complete? is_complete?
 
     # Returns +true+ if the tag is empty, i.e. uninitialised.
     def empty?
       keys.length == 0
     end
 
+    # DEPRECATED
     # Returns true if gender has value +value+ or a value that is
     # a super-tag for +value+.
     def is_gender?(value)
@@ -304,226 +272,6 @@ module PROIEL
     #   MorphTag.new('-----------').is_compatible?(MorphTag.new('-------n---'))  #-> false
     def is_compatible?(o)
       self == o or self.is_subtag?(o) or o.is_subtag?(self)
-    end
-  end
-end
-
-if $0 == __FILE__
-  require 'test/unit'
-  include PROIEL
-
-  class MorphTagTestCase < Test::Unit::TestCase
-    def test_is_closed
-      assert_equal false, PROIEL::MorphTag.new('V').is_closed?
-      assert_equal false, PROIEL::MorphTag.new('V-').is_closed?
-      assert_equal false, PROIEL::MorphTag.new('-').is_closed?
-      assert_equal false, PROIEL::MorphTag.new('N').is_closed?
-      assert_equal false, PROIEL::MorphTag.new('A').is_closed?
-      assert_equal true, PROIEL::MorphTag.new('C').is_closed?
-    end
-
-    def test_is_subtag
-      assert_equal true, PROIEL::MorphTag.new('-------n---').is_subtag?(PROIEL::MorphTag.new('-------q---'))
-      assert_equal false, PROIEL::MorphTag.new('-------q---').is_subtag?(PROIEL::MorphTag.new('-------n---'))
-      assert_equal false, PROIEL::MorphTag.new('-------n---').is_subtag?(PROIEL::MorphTag.new('-----------'))
-      assert_equal false, PROIEL::MorphTag.new('-----------').is_subtag?(PROIEL::MorphTag.new('-------n---'))
-
-      assert_equal true, PROIEL::MorphTag.new('A------n---').is_subtag?(PROIEL::MorphTag.new('A------q---'))
-      assert_equal false, PROIEL::MorphTag.new('P------n---').is_subtag?(PROIEL::MorphTag.new('A------q---'))
-    end
-
-    def test_is_compatible
-      assert_equal true, PROIEL::MorphTag.new('-------n---').is_compatible?(PROIEL::MorphTag.new('-------q---'))
-      assert_equal true, PROIEL::MorphTag.new('-------q---').is_compatible?(PROIEL::MorphTag.new('-------n---'))
-      assert_equal false, PROIEL::MorphTag.new('-------n---').is_compatible?(PROIEL::MorphTag.new('-----------'))
-      assert_equal false, PROIEL::MorphTag.new('-----------').is_compatible?(PROIEL::MorphTag.new('-------n---'))
-
-      assert_equal true, PROIEL::MorphTag.new('A------n---').is_compatible?(PROIEL::MorphTag.new('A------q---'))
-      assert_equal false, PROIEL::MorphTag.new('P------n---').is_compatible?(PROIEL::MorphTag.new('A------q---'))
-    end
-  end
-
-  class MorphologyTestCase < Test::Unit::TestCase
-    def setup
-      @c = MorphTag.new('V-3spia----')
-      @d = MorphTag.new('-----------')
-    end
-
-    def test_default
-      assert_equal '-' * 11, @d.to_s
-    end
-
-    def test_presentation_sequence
-      # FIXME: This will fail until we get rid of :extra
-      #assert_equal MORPHOLOGY.fields.collect { |f| f.to_s }.sort, MorphTag::PRESENTATION_SEQUENCE.collect { |f| f.to_s }.sort
-    end
-
-    def test_descriptions_pos
-      assert_equal ['verb'], @c.descriptions([:major, :minor])
-    end
-
-    def test_descriptions_nonpos
-      assert_equal ['indicative', 'present', 'active', 'third person', 'singular'], @c.descriptions([:major, :minor], false)
-    end
-
-    def test_description_undef_pos
-      assert_equal [], @d.descriptions([:major, :minor])
-    end
-
-    def test_description_undef_nonpos
-      assert_equal [], @d.descriptions([:major, :minor], false)
-    end
-
-    def test_pos_validity
-      assert_equal true, MorphTag.check_pos_is_valid?(:F, nil)
-      assert_equal true, MorphTag.check_pos_is_valid?(:N, :e)
-      assert_equal true, MorphTag.check_pos_is_valid?(:D, :f)
-      assert_equal true, MorphTag.check_pos_is_valid?(:M, :a)
-      assert_equal false, MorphTag.check_pos_is_valid?(:D, :e)
-      assert_equal false, MorphTag.check_pos_is_valid?(:P, :q)
-      assert_equal true, MorphTag.check_pos_is_valid?(:P, nil)
-      assert_equal true, MorphTag.check_pos_is_valid?(:D, nil)
-      assert_equal true, MorphTag.check_pos_is_valid?(:M, nil)
-      assert_equal true, MorphTag.check_pos_is_valid?(:N, nil)
-      assert_equal false, MorphTag.check_pos_is_valid?(nil, nil)
-      assert_equal false, MorphTag.check_pos_is_valid?(nil, :f)
-      assert_equal false, MorphTag.check_pos_is_valid?(nil, :y)
-    end
-
-    def test_validity
-      assert_equal true, MorphTag.new('A--s---na--').valid?
-      assert_equal true, MorphTag.new('A--s---na--').valid?(:la)
-      assert_equal true, MorphTag.new('A--s---na--').valid?(:grc)
-      assert_equal true, MorphTag.new('A--p---mdp-').valid?
-      assert_equal true, MorphTag.new('A--p---mdp-').valid?(:la)
-
-      # Indicative, imperfect, middle or passive deponent, third person, plural
-      assert_equal true, MorphTag.new('V-3piin----').valid?
-      assert_equal false, MorphTag.new('V-3piin----').valid?(:la)
-      assert_equal true, MorphTag.new('V-3piin----').valid?(:grc)
-    end
-
-    def test_pos_values
-      #assert_equal 16, MorphTag.pos_values.length
-    end
-
-    def test_completeness
-      assert_equal false, MorphTag.new('A--s---na--').complete?
-      assert_equal false, MorphTag.new('A--s---na--').complete?(:la)
-      assert_equal false, MorphTag.new('A--s---na--').complete?(:grc)
-
-      assert_equal true, MorphTag.new('Pd-p---nd--').complete?(:la)
-      assert_equal true, MorphTag.new('Pi-p---mn--').complete?(:la)
-      assert_equal true, MorphTag.new('Pk3p---mb--').complete?(:la) # personal reflexive
-      assert_equal true, MorphTag.new('V--pppama--').complete?(:la) # present participle
-      assert_equal true, MorphTag.new('V-2sfip----').complete?(:la) # future indicative
-      assert_equal true, MorphTag.new('V----u--d--').complete?(:la) # supine, dative
-    end
-
-    def test_completions
-      assert_equal ["Nb-s---mn--","Ne-s---mn--", "Nh---------", "Nj---------"], MorphTag.new('N--s---mn-').completions.collect { |t| t.to_s }.sort
-      assert_equal ["Nb-p---mn--","Nb-s---mn--"], MorphTag.new('Nb-----mn-').completions(:la).collect { |t| t.to_s }.sort
-      assert_equal ["Nb-d---mn--","Nb-p---mn--","Nb-s---mn--"], MorphTag.new('Nb-----mn-').completions(:cu).collect { |t| t.to_s }.sort
-    end
-
-    def test_union
-      m = MorphTag.new('D')
-      n = MorphTag.new('-f-------p')
-      assert_equal 'Df-------p-', m.union(n).to_s
-
-      n.union!(m)
-      assert_equal 'Df-------p-', n.to_s
-    end
-
-    def test_abbrev_s
-      assert_equal 'Df-------p-', MorphTag.new('Df-------p').to_s
-      assert_equal 'Df-------p-', MorphTag.new('Df-------p-').to_s
-      assert_equal 'Df-------p', MorphTag.new('Df-------p').to_abbrev_s
-      assert_equal 'Df-------p', MorphTag.new('Df-------p-').to_abbrev_s
-    end
-
-    def test_pos_to_s
-      assert_equal 'Df', MorphTag.new('Df-------p').pos_to_s
-      assert_equal 'D-', MorphTag.new('D----------').pos_to_s
-    end
-
-    def test_morph_lemma_tag
-      m = MorphLemmaTag.new(MorphTag.new('Dq'), 'cur')
-      assert_equal 'cur', m.lemma
-      assert_equal MorphTag.new('Dq'), m.morphtag
-      assert_equal nil, m.variant
-      assert_equal "Dq---------:cur", m.to_s
-      assert_equal "Dq:cur", m.to_abbrev_s
-
-      m = MorphLemmaTag.new(MorphTag.new('Dq'), 'cur#2')
-      assert_equal 'cur', m.lemma
-      assert_equal MorphTag.new('Dq'), m.morphtag
-      assert_equal 2, m.variant
-      assert_equal "Dq---------:cur#2", m.to_s
-      assert_equal "Dq:cur#2", m.to_abbrev_s
-
-      m = MorphLemmaTag.new(MorphTag.new('Dq'), 'cur', 2)
-      assert_equal 'cur', m.lemma
-      assert_equal MorphTag.new('Dq'), m.morphtag
-      assert_equal 2, m.variant
-      assert_equal "Dq---------:cur#2", m.to_s
-      assert_equal "Dq:cur#2", m.to_abbrev_s
-
-      m = MorphLemmaTag.new('Dq', 'cur#2')
-      assert_equal 'cur', m.lemma
-      assert_equal MorphTag.new('Dq'), m.morphtag
-      assert_equal 2, m.variant
-      assert_equal "Dq---------:cur#2", m.to_s
-      assert_equal "Dq:cur#2", m.to_abbrev_s
-
-      m = MorphLemmaTag.new('Dq', 'cur', 2)
-      assert_equal 'cur', m.lemma
-      assert_equal MorphTag.new('Dq'), m.morphtag
-      assert_equal 2, m.variant
-      assert_equal "Dq---------:cur#2", m.to_s
-      assert_equal "Dq:cur#2", m.to_abbrev_s
-    end
-
-    def test_morph_lemma_tag_string_initialization
-      m = MorphLemmaTag.new('Dq')
-      assert_equal MorphTag.new('Dq'), m.morphtag
-      assert_equal nil, m.lemma
-      assert_equal nil, m.variant
-      assert_equal "Dq---------", m.to_s
-      assert_equal "Dq", m.to_abbrev_s
-
-      m = MorphLemmaTag.new('Dq', nil)
-      assert_equal MorphTag.new('Dq'), m.morphtag
-      assert_equal nil, m.lemma
-      assert_equal nil, m.variant
-      assert_equal "Dq---------", m.to_s
-      assert_equal "Dq", m.to_abbrev_s
-
-      m = MorphLemmaTag.new('Dq:cur')
-      assert_equal MorphTag.new('Dq'), m.morphtag
-      assert_equal 'cur', m.lemma
-      assert_equal nil, m.variant
-      assert_equal "Dq---------:cur", m.to_s
-      assert_equal "Dq:cur", m.to_abbrev_s
-
-      m = MorphLemmaTag.new('Dq:cur#2')
-      assert_equal MorphTag.new('Dq'), m.morphtag
-      assert_equal 'cur', m.lemma
-      assert_equal 2, m.variant
-      assert_equal "Dq---------:cur#2", m.to_s
-      assert_equal "Dq:cur#2", m.to_abbrev_s
-    end
-
-    def test_is_gender
-      m = MorphTag.new('Px-s---mn--')
-      assert_equal true, m.is_gender?(:m)
-      assert_equal false, m.is_gender?(:f)
-      assert_equal false, m.is_gender?(:n)
-
-      m = MorphTag.new('Px-s---qn--')
-      assert_equal true, m.is_gender?(:m)
-      assert_equal true, m.is_gender?(:f)
-      assert_equal true, m.is_gender?(:n)
     end
   end
 end

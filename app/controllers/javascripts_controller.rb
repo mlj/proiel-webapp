@@ -16,6 +16,8 @@ class JavascriptsController < ApplicationController
     @gender_values = PROIEL::MorphTag.field_values(:gender, language)
     @case_values = PROIEL::MorphTag.field_values(:case, language)
     @degree_values = PROIEL::MorphTag.field_values(:degree, language)
+    @animacy_values = PROIEL::MorphTag.field_values(:animacy, language)
+    @strength_values = PROIEL::MorphTag.field_values(:strength, language)
   end
 
   def morphtag_presentation

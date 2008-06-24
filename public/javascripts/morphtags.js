@@ -35,6 +35,14 @@ var PaletteWidget = Class.create({
   },
 
   setMorphtags: function(morphtags) {
+    // Update major field options
+    var options = $('major_field').options;
+    options.length = 0;
+    major_values.each(function(e) {
+      options[options.length] = new Option(e[1], e[0]);
+    });
+    $('major_field').show();
+
     // Do major, minor and mood first
     setSelectedByValue('major_field', morphtags.get('major'));
     $('major_field').show();
@@ -117,16 +125,9 @@ function onPaletteChange()
 {
   var tags = new Hash();
 
-  tags.set('major', getSelectSelection($('major_field')));
-  tags.set('minor', getSelectSelection($('minor_field')));
-  tags.set('degree', getSelectSelection($('degree_field')));
-  tags.set('tense', getSelectSelection($('tense_field')));
-  tags.set('mood', getSelectSelection($('mood_field')));
-  tags.set('voice', getSelectSelection($('voice_field')));
-  tags.set('case', getSelectSelection($('case_field')));
-  tags.set('person', getSelectSelection($('person_field')));
-  tags.set('number', getSelectSelection($('number_field')));
-  tags.set('gender', getSelectSelection($('gender_field')));
+  morphtag_fields.each(function(t) {
+    tags.set(t, getSelectSelection($(t + '_field')));
+  });
 
   var element = morphtag_selection.getSelection();
   var id = element.identify();
@@ -161,16 +162,10 @@ function onUpdateTokenPresentation(element) {
 }
 
 document.observe('dom:loaded', function() {
-  $('major_field').observe('change', onPaletteChange);
-  $('minor_field').observe('change', onPaletteChange);
-  $('person_field').observe('change', onPaletteChange);
-  $('number_field').observe('change', onPaletteChange);
-  $('tense_field').observe('change', onPaletteChange);
-  $('mood_field').observe('change', onPaletteChange);
-  $('voice_field').observe('change', onPaletteChange);
-  $('gender_field').observe('change', onPaletteChange);
-  $('case_field').observe('change', onPaletteChange);
-  $('degree_field').observe('change', onPaletteChange);
+  morphtag_fields.each(function(field) {  
+    $(field + '_field').observe('change', onPaletteChange);
+  });
+
   //$('lemma').observe('keypressed', function() { alert("foo"); onPaletteChange(); });
 
   palette.deactivate();

@@ -1,12 +1,4 @@
 module JavascriptsHelper
-  def create_values_list(values, list)
-    s = "var #{list} = new Array();"
-    values.each do |e|
-      s += "#{list}.push(new Array('#{e[1]}', '#{e[0]}'));"
-    end
-    s
-  end
-
   def create_cascade_map(values, map)
     s = "var #{map} = new Array();"
     values.each do |e|

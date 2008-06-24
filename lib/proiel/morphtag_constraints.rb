@@ -4,8 +4,8 @@
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
-require 'treetop'
 require 'singleton'
+require 'logos'
 
 module PROIEL
   # Definition and test functions for constraints on PROIEL morphtags.
@@ -16,100 +16,97 @@ module PROIEL
 
     # Regexps for matching certain sets of features in positional tags. 
     BLACK_LIST_REGEXPS = {
-      :art =>      /^S/,
-      :dual =>     /^...d/,
-      :gender =>   /^.......[^-]/,
-      :voc =>      /^........v/,
-      :abl =>      /^........b/,
-      :ins =>      /^........i/,
-      :loc =>      /^........l/,
-      :aorist =>   /^....a/,
-      :optative => /^.....o/,
-      :middle =>   /^......[emnd]/,
+      :art =>           /^S/,
+
+      :dual =>          /^...d/,
+
+      :gender =>        /^.......[^-]/,
+
+      :voc =>           /^........v/,
+      :abl =>           /^........b/,
+      :ins =>           /^........i/,
+      :loc =>           /^........l/,
+
+      :resultative =>   /^....s/,
+      :past =>          /^....u/,
+      :aorist =>        /^....a/,
+      
+      :optative =>      /^.....o/,
+
+      :middle =>        /^......[emnd]/,
+
+      :animacy =>       /^..........[^\-]/,
+
+      :strength =>      /^...........[^\-]/,
     }
 
     # A specification of feature sets that should be treated as invalid
     # in specific languages
     LANGUAGE_BLACK_LISTS = {
-      :la =>  [ :art, :dual,                      :ins,       :aorist, :optative, :middle, ],
-      :grc => [       :dual,                :abl, :ins, :loc,                              ],
-      :hy  => [ :art, :dual, :gender, :voc, :abl, :ins,                :optative, :middle, ],
-      :got => [ :art,                 :voc, :abl, :ins, :loc, :aorist, :optative, :middle, ],
-      :cu  => [ :art,                       :abl,                      :optative, :middle, ]
+      :la =>  [ :art, :dual,                      :ins,       :aorist, :resultative, :past, :optative, :middle, :animacy, :strength, ],
+      :grc => [       :dual,                :abl, :ins, :loc,          :resultative, :past,                     :animacy, :strength, ],
+      :hy  => [ :art, :dual, :gender, :voc, :abl, :ins,                :resultative, :past, :optative, :middle, :animacy, :strength, ],
+      :got => [ :art,                 :voc, :abl, :ins, :loc, :aorist, :resultative,        :optative, :middle, :animacy, :strength, ],
+      :cu  => [ :art,                       :abl,                                           :optative, :middle,                      ],
     }
-
-    # Tests if a PROIEL morphtag is valid, i.e. that it does not violate
-    # any of the constraints in the constraint grammar. If +language+
-    # is specified, additional language specific constraints are taken
-    # into account.
-    def is_valid?(morphtag, language = nil)
-      !parse(morphtag, language).nil?
-    end
-
-    # Tests if a PROIEL morphtag is complete, i.e. that it includes
-    # values for all the fields that are required by the constraint grammar. 
-    # If +language+ is specified, additional language specific constraints 
-    # are taken into account.
-    def is_complete?(morphtag, language = nil)
-      m = parse(morphtag, language)
-      (m and m.complete?) ? true : false
-    end
 
     private
 
     def initialize
-      Treetop.load File.join(File.dirname(__FILE__), "morphtag_constraints_grammar")
-      @parser = PROIEL::MorphtagConstraintsGrammarParser.new
+      @fst = Logos::SFST::RegularTransducer.new(File.join(File.dirname(__FILE__), "morphtag_constraints.a"))
+      @tag_spaces = {}
     end
 
-    def parse(morphtag, language = nil)
-      if m = @parser.parse(morphtag)
-        # Apply language specific black-lists
-        if language and LANGUAGE_BLACK_LISTS.has_key?(language.to_sym)
-          black_list = LANGUAGE_BLACK_LISTS[language.to_sym]
-          return nil if black_list.any? { |b| BLACK_LIST_REGEXPS[b].match(morphtag) }
+    def make_tag_space(language)
+      tags = []
+      @fst.generate_language(:levels => :upper) do |t|
+        t = t.join
+        if language
+          tags << t if is_valid_in_language?(t, language)
+        else
+          tags << t
         end
+      end
+      tags
+    end
 
-        m
+    def is_valid_in_language?(tag, language)
+      black_list = LANGUAGE_BLACK_LISTS[language]
+
+      if black_list and black_list.any? { |b| BLACK_LIST_REGEXPS[b].match(tag) }
+        false
       else
-        nil
-      end
-    end
-  end
-
-  module MorphtagConstraintsGrammar #:nodoc:
-    class TerminalCompletionTest < Treetop::Runtime::SyntaxNode
-      def complete?
-        text_value == '-' ? false : true
+        true
       end
     end
 
-    class CompletionTest < Treetop::Runtime::SyntaxNode
-      def complete?
-        # We are complete if everyone else are
-        elements.select { |e| e.respond_to?(:complete?) }.all? { |e| e.complete? }
+    public
+
+    def tag_space(language = nil)
+      language = language.to_sym if language
+      @tag_spaces[language] ||= make_tag_space(language)
+    end
+
+    # Tests if a PROIEL morphtag is valid, i.e. that it does not violate
+    # any of the specified constraints. If +language+ is specified, 
+    # additional language specific constraints are taken into account.
+    def is_valid?(morphtag, language = nil)
+      language = language.to_sym if language
+      if @fst.analyze(morphtag)
+        return is_valid_in_language?(morphtag, language) if language
+        true
+      else
+        false
       end
     end
-  end
-end
 
-if $0 == __FILE__
-  require 'test/unit'
-
-  class MorphtagConstraintsTestCase < Test::Unit::TestCase
-    def test_simple
-      m = PROIEL::MorphtagConstraints.instance
-      assert_equal true, m.is_valid?('V-3sfio----', :la)
-      assert_equal true, m.is_complete?('V-3sfio----', :la)
-
-      assert_equal true, m.is_valid?('V----------', :la)
-      assert_equal false, m.is_complete?('V----------', :la)
-
-      assert_equal true, m.is_valid?('A--p---fac-', :la)
-      assert_equal true, m.is_complete?('A--p---fac-', :la)
-
-      assert_equal true, m.is_valid?('D----------', :cu)
-      assert_equal false, m.is_complete?('D----------', :cu)
+    def to_features(morphtag)
+      s = nil
+      @fst.analyze(morphtag) do |f|
+        raise "Multiple analyses" if s
+        s = f
+      end
+      s
     end
   end
 end

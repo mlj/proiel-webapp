@@ -26,7 +26,7 @@ class ManualTagger < Task
           ml = token.morph_lemma_tag
 
           if ml and ml.morphtag.is_closed?
-            next unless ml.morphtag.complete?  # FIXME: at some point eliminate
+            next unless ml.morphtag.is_valid?  # FIXME: at some point eliminate
 
             manual_tags = TAGGER.get_manual_rule_matches(token.language, token.form)
 

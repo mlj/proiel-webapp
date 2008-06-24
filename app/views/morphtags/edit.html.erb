@@ -8,7 +8,7 @@
     <label>Fields:</label>
     <span id="fields">
       <% PROIEL::MorphTag::PRESENTATION_SEQUENCE.each do |field| -%>
-        <%= morphtag_palette_select_tag(field) %>
+        <select id="<%= field %>_field" name="<%= field %>_field"></select>
       <% end %>
       <input type="text" id="lemma" name="lemma" value=""></input>
     </span>

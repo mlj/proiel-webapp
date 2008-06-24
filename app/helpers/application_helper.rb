@@ -63,20 +63,6 @@ module ApplicationHelper
     end
   end
 
-  # Returns a select tag for the morphtag field +field+.
-  def morphtag_select_tag(name, field, value = nil, options = {})
-    value = value.to_sym unless value.nil? or value == ''
-    option_tags = PROIEL::MORPHOLOGY[field].sort { |a, b| a.to_s <=> b.to_s }.collect do |code, values|
-      if code == value
-        "<option value='#{code}' selected='selected'>#{values.summary.capitalize}</option>"
-      else
-        "<option value='#{code}'>#{values.summary.capitalize}</option>"
-      end
-    end.join
-
-    _select_tag name, value, option_tags, options
-  end
-
   # Returns a select tag for languages.
   #
   # ==== Options

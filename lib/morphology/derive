@@ -352,7 +352,7 @@ end
 
 # Emits a new rule
 def emit(language, lemma, variant, form, tag, options = {})
-  if tag.complete?
+  if tag.is_valid?
     if options[:caseless]
       capitalised_form = form.chars.capitalize
       emit(language, lemma, variant, capitalised_form, tag) unless capitalised_form == form
@@ -366,7 +366,7 @@ def emit(language, lemma, variant, form, tag, options = {})
 
     puts [language, lemma, variant, form, tag.to_abbrev_s].join(',') 
   else
-    STDERR.puts "Ignoring rule #{tag} for #{form}/#{lemma} (#{variant}): Incomplete tag."
+    STDERR.puts "Ignoring rule #{tag} for #{form}/#{lemma} (#{variant}): Invalid tag."
   end
 end
 

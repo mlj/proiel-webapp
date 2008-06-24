@@ -1,4 +1,6 @@
-<%= create_values_list(@major_values, 'major_values') %>
+var morphtag_fields = <%= PROIEL::MorphTag.fields.to_json %>;
+
+var major_values = <%= @major_values.to_json %>;
 <%= create_cascade_map(@minor_values, 'minor_map') %>
 <%= create_cascade_map(@person_values, 'person_map') %>
 <%= create_cascade_map(@number_values, 'number_map') %>
@@ -8,6 +10,8 @@
 <%= create_cascade_map(@gender_values, 'gender_map') %>
 <%= create_cascade_map(@case_values, 'case_map') %>
 <%= create_cascade_map(@degree_values, 'degree_map') %>
+<%= create_cascade_map(@animacy_values, 'animacy_map') %>
+<%= create_cascade_map(@strength_values, 'strength_map') %>
 
 function updateField(field_id, values) {
   var field = $(field_id);
@@ -100,6 +104,8 @@ function moodSelected() {
   updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'gender_field', gender_map);
   updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'case_field', case_map);
   updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'degree_field', degree_map);
+  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'animacy_field', animacy_map);
+  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'strength_field', strength_map);
 }
 
 document.observe('dom:loaded', function() {

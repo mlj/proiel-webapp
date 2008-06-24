@@ -26,7 +26,7 @@ class Validator < Task
 
     #check_changesets_and_changes(logger)
     check_sentences_and_tokens(logger)
-    check_morphtag_completeness(logger)
+    check_morphtag_validity(logger)
   end
 
   private
@@ -116,18 +116,13 @@ class Validator < Task
     orphans.each { |o| logger.error { "Token #{o.id} is orphaned" } }
   end
 
-  def check_morphtag_completeness(logger)
-    logger.info { "Checking morphtag completeness..." }
-
+  def check_morphtag_validity(logger)
     sentences = Sentence.find(:all)
     sentences.each do |s|
       s.tokens.each do |t|
         if t.is_morphtaggable? and not t.morphtag.nil?
           m = MorphTag.new(t.morphtag)
-
-          if m.valid? and not m.complete?
-            logger.warn { "Token #{t.id} (#{t.form}): Morphtag is incomplete." }
-          end
+          logger.warn { "Token #{t.id} (#{t.form}): Morphtag is invalid." } unless m.is_valid?
         end
       end
     end
@@ -236,7 +231,7 @@ class Validator < Task
           ml = token.morph_lemma_tag
 
           if ml and ml.morphtag.is_closed?
-            next unless ml.morphtag.complete?  # FIXME: at some point eliminate
+            next unless ml.morphtag.is_valid?  # FIXME: at some point eliminate
 
             manual_tags = TAGGER.get_manual_rule_matches(token.language, token.form)
 
