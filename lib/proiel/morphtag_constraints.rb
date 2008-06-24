@@ -92,7 +92,7 @@ module PROIEL
     # additional language specific constraints are taken into account.
     def is_valid?(morphtag, language = nil)
       language = language.to_sym if language
-      if @fst.analyze(morphtag)
+      if @fst.accepted_analysis?(morphtag)
         return is_valid_in_language?(morphtag, language) if language
         true
       else
@@ -101,12 +101,8 @@ module PROIEL
     end
 
     def to_features(morphtag)
-      s = nil
-      @fst.analyze(morphtag) do |f|
-        raise "Multiple analyses" if s
-        s = f
-      end
-      s
+      s = @fst.analyze(morphtag)
+      raise "Multiple analyses" if s.length > 0
     end
   end
 end
