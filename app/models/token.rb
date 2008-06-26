@@ -239,14 +239,15 @@ class Token < ActiveRecord::Base
       end
     end
     
-    morphtag = PROIEL::MorphTag.new
-    [:major, :minor, :person, :number, :tense, :mood, :voice, :gender, :case, :degree, :extra].each do |field|
+    morphtag_fields = {}
+    PROIEL::MorphTag.fields.each do |field|
       if search[field] and search[field] != ''
-        morphtag[field] = search[field]
+        morphtag_fields[field] = search[field]
       end
     end
 
-    if morphtag.to_s != '-----------'
+    unless morphtag_fields.empty?
+      morphtag = PROIEL::MorphTag.new(morphtag_fields)
       clauses << "morphtag like ?"
       conditions << morphtag.to_s.gsub('-', '_')
     end
