@@ -33,7 +33,7 @@ module Lingua
 
       # Why is there no ORegexp.union?
       nsp = ORegexp.escape(@definitions.fetch(:nonspacing_punctuation, []).join)
-      ssp = ORegexp.escape(@definitions.fetch(:spacing_punctuation, []).join)
+      ssp = @definitions.fetch(:spacing_punctuation, [])
       lbr = ORegexp.escape(@definitions.fetch(:left_bracketing_punctuation, []).join)
       rbr = ORegexp.escape(@definitions.fetch(:right_bracketing_punctuation, []).join)
 
@@ -43,7 +43,7 @@ module Lingua
 
       @punctuation_pattern = ORegexp.new("^(#{lbr})?(.*?)(#{rbr})?(#{nsp})?$", 'i', 'utf8')
 
-      @spacing_punctuation_pattern = ORegexp.new("^([#{ssp}])?$", 'i', 'utf8') unless ssp == ''
+      @spacing_punctuation_pattern = ssp
     end
 
     # Returns +true+ if segmenter considers the given string +s+
@@ -61,8 +61,8 @@ module Lingua
     private
 
     def process_word_segment(word_segment)
-      if @spacing_punctuation_pattern and m = @spacing_punctuation_pattern.match(word_segment)
-        dummy, punctuation = m.to_a
+      if @spacing_punctuation_pattern.include?(word_segment)
+        punctuation = word_segment
         r = [{ :form => punctuation, :sort => :spacing_punctuation }]
       elsif m = @punctuation_pattern.match(word_segment)
         dummy, lbr, word, rbr, punctuation = m.to_a
