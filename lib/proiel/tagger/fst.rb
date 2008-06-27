@@ -38,9 +38,13 @@ module PROIEL
             orthographic_forms = @orthography.analyse(c.lemma)
 
             if orthographic_forms.length == 0
-              raise "FST orthography translation of #{form} (#{@language}) failed"
+              raise "FST orthography translation of #{c.lemma} (#{@language}) failed"
             elsif orthographic_forms.length > 1
-              raise "FST orthography translation of #{form} (#{@language}) is ambiguous"
+              # Pick the shortest one
+              # FIXME: find a better solution
+              c.lemma = orthographic_forms.sort_by(&:length).first
+              #raise "FST orthography translation of #{form} (#{@language}) is ambiguous"
+
             else
               c.lemma = orthographic_forms.first
             end
@@ -70,9 +74,9 @@ module PROIEL
         'DUA' => '---d',
         'PLU' => '---p',
 
-        'MASC' => '-------m',
-        'FEM' => '-------f',
-        'NEUT' => '-------n',
+        'MASCULINE' => '-------m',
+        'FEMININE' => '-------f',
+        'NEUTER' => '-------n',
 
         '1' => '--1',
         '2' => '--2',
@@ -81,12 +85,21 @@ module PROIEL
         'NOUN' => 'Nb', # FIXME: inaccurate
         'VERB' => 'V',
 
-        'PRES' => '----p',
+        'PRESENT' => '----p',
+        'IMPERFECT' =>  '----i',
+        'AORIST'  => '----a',
+
+        'INDICATIVE' => '-----i',
+        'IMPERATIVE' => '-----m',
+        'INFINITIVE' => '-----n',
+
+        'ACTIVE' => '------a',
       }.freeze
 
       def features2mltag(t)
-        lemma, *features = t.split('<')
-        features.collect! { |f| f.sub('>', '') }
+        pieces = t.split('>')
+        lemma, *features = pieces.reverse
+        features.collect! { |f| f.sub('<', '') }
         morphtags = compose_features(features)
         morphtags.collect { |morphtag| PROIEL::MorphLemmaTag.new("#{morphtag}:#{lemma}") }
       end

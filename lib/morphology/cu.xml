@@ -1,0 +1,252 @@
+<morphology name="cu" tags="tags" forms="forms">
+  <!-- Lunt § 2.42, 2.421, 3.10 -->
+  <preamble>
+#vowels# = aeiouŭyĭěęǫü
+#consonants1# = sšzž
+#consonants2# = ptkcčxbdgZ
+#consonants3# = vmn
+#consonants4# = lr
+#consonants5# = j
+#consonantsx# = GfT
+#consonants# = #consonants1# #consonants2# #consonants3# #consonants4# #consonants5# #consonantsx#
+#letters# = #vowels# #consonants#
+% FIXME: The correct pattern requires a vowel, but since we subst off stem vowels later so
+% that we obtain sensible lemmata, we cannot enforce this. This is bad. Something clever
+% has to be done.
+$syllable-pattern$ = [#consonants1#]? [#consonants2#]? [#consonants3#]? [#consonants4#]? [#consonants5#]? [#vowels#]
+$any-root$ = $syllable-pattern$+
+
+</preamble>
+  <!-- symbols>
+    <symbol name="vowels">a,e,i,o,u,ŭ,y,ĭ,ě,ę,ǫ,ü</symbol>
+    <symbol name="consonants">b,v,g,d,ž,z,g',k,l,m,n,p,r,s,t,f,x,št,c,č,š,j,th</symbol>
+  </symbols -->
+  <classes>
+    <class name="Base" abstract="true">
+      <!-- These are supposed to be overridden by subclasses. -->
+      <!-- FIXME: mark as public? -->
+
+      <!-- "stem" is the "stem" that can be derived by stripping
+      a fixed suffix off from the lemma. -->
+      <variable name="stem">!lemma!</variable>
+
+      <!-- "suffixes" is the suffixes to be appended to the "basic-
+      stem". -->
+      <variable name="suffixes"></variable>
+
+      <!--- "forms" is the output variable and simply concatenates
+      "stem" and "suffixes". -->
+      <variable name="forms">cons(!basic-stem!, !suffixes!)</variable>
+
+      <!-- These are not intended to be overridden by subclasses. -->
+      <!-- FIXME: mark as private? -->
+
+      <!-- "lemma" is the input variable -->
+      <variable name="lemma">!input!</variable>
+
+      <!-- "basic-stem" is the derivational stem used to build
+      inflected form. It is equivalent to "stem" except that "j"
+      is appended to any "stem" that ends in a vowel, so that any
+      "basic-stem" is guaranteed to end in a consonant. -->
+      <!-- <>:j ^-> [#vowel] __
+      Now all stems will end in a consonant -->
+      <variable name="basic-stem">replacement(!stem!, "", "j", "[#vowels#]", "")</variable>
+    </class>
+
+    <class name="Verb" inherits="Base" abstract="true">
+      <variable name="tags">cons({VERB, ACTIVE}, chain(chain(chain(chain(!infinitive-tags!, !present-tags!), !imperfect-tags!), !aorist-tags!), !imperative-tags!))</variable>
+      <variable name="finite-tags">[{1, SIN}, {2, SIN}, {3, SIN}, 
+                                    {1, DUA}, {2, DUA}, {3, DUA},
+                                    {1, PLU}, {2, PLU}, {3, PLU}]</variable>
+      <variable name="finite-imperative-tags">[{2, SIN}, {3, SIN}, 
+                                    {1, DUA}, {2, DUA}, {3, DUA},
+                                    {1, PLU}, {2, PLU}]</variable>
+      <variable name="infinitive-tags">{PRESENT, INFINITIVE}</variable>
+      <variable name="present-tags">cons({PRESENT, INDICATIVE}, !finite-tags!)</variable>
+      <variable name="imperfect-tags">cons({IMPERFECT, INDICATIVE}, !finite-tags!)</variable>
+      <variable name="aorist-tags">cons({AORIST, INDICATIVE}, !finite-tags!)</variable>
+      <variable name="imperative-tags">cons({PRESENT, IMPERATIVE}, !finite-imperative-tags!)</variable>
+      <variable name="forms">chain(chain(chain(chain(!infinitive-form!, !present-forms!), !imperfect-forms!), !aorist-forms!), !imperative-forms!)</variable>
+
+      <variable name="stem">subst(!lemma!, "ti", nil)</variable>
+
+      <!-- Infinitive -->
+      <variable name="infinitive-form">cons(!basic-stem!, !infinitive-suffix!)</variable>
+      <variable name="infinitive-suffix">"ti"</variable>
+
+      <!-- Present indicative -->
+      <variable name="present-forms">cons(!basic-stem!, !present-suffixes!)</variable>
+      <variable name="present-suffixes">cons(!present-theme!, !present-pt-suffixes!)</variable>
+      <variable name="present-theme">[nil, "e", "e", "e", "e", "e", "e", "e", "ǫ"]</variable>
+      <variable name="present-alt-theme">[nil, "i", "i", "i", "i", "i", "i", "i", "ę"]</variable>
+      <variable name="present-pt-suffixes">["ǫ", "ši", "tŭ", "vě", "ta", "te", "mŭ", "te", "tŭ"]</variable>
+
+      <!-- Imperfect -->
+      <variable name="imperfect-forms">cons(!basic-stem!, !imperfect-suffixes!)</variable>
+      <variable name="imperfect-suffixes">cons(!imperfect-theme!, !imperfect-pt-suffixes!)</variable>
+      <variable name="imperfect-theme">"ě"</variable>
+      <variable name="imperfect-soft-theme">"a"</variable>
+      <variable name="imperfect-pt-suffixes">["axŭ", "aše", "aše", "axově", "ašeta", "ašete", "axomŭ", "ašete", "axǫ"]</variable>
+
+      <!-- Aorist -->
+      <variable name="aorist-forms">cons(!basic-stem!, !aorist-suffixes!)</variable>
+      <variable name="aorist-suffixes">cons(!aorist-theme!, !aorist-pt-suffixes!)</variable>
+      <variable name="aorist-theme">nil</variable>
+      <variable name="aorist-obstruent-theme">["o", "e", "e", "o", "o", "o", "o", "o", "o"]</variable>
+      <variable name="aorist-pt-suffixes">["xŭ", nil, nil, "xově", "sta", "ste", "xomŭ", "ste", "šę"]</variable>
+
+      <!-- Imperative -->
+      <variable name="imperative-forms">cons(!basic-stem!, !imperative-suffixes!)</variable>
+      <variable name="imperative-suffixes">cons(!imperative-theme!, !imperative-pt-suffixes!)</variable>
+      <variable name="imperative-theme">"i"</variable>
+      <variable name="imperative-alt-theme">["i", "i", "ě", "ě", "ě", "ě", "ě"]</variable>
+      <variable name="imperative-pt-suffixes">[nil, nil, "vě", "ta", "te", "mŭ", "te"]</variable>
+    </class>
+
+    <class name="VerbVocalic" inherits="Verb" abstract="true">
+    </class>
+
+    <!-- Ca -->
+    <class name="verb-Ca" inherits="VerbVocalic">
+      <!-- filter(!lemma!, Cati) -->
+      <variable name="default">glagolati</variable>
+      <variable name="stem">subst(!lemma!, "ati", nil)</variable>
+      <variable name="infinitive-suffix">"ati"</variable>
+    </class>
+
+    <class name="verb-ova" inherits="VerbVocalic">
+      <!-- filter(!lemma!, ) -->
+      <variable name="default">milovati</variable>
+      <variable name="stem">subst(!lemma!, "[oeĭ]vati", "uj")</variable>
+    </class>
+
+    <class name="verb-Sa" inherits="VerbVocalic">
+      <!-- filter(!lemma!, Sati) -->
+      <variable name="default">kričati</variable>
+      <variable name="stem">subst(!lemma!, "ati", nil)</variable>
+      <variable name="present-theme">!present-alt-theme!</variable>
+    </class>
+
+    <class name="verb-i" inherits="VerbVocalic">
+      <!-- filter(!lemma!, Citi) -->
+      <variable name="default">moliti</variable>
+      <variable name="stem">subst(filter(!lemma!, ".* [#consonants#] iti"), "iti", nil)</variable>
+      <variable name="infinitive-suffix">"iti"</variable>
+      <variable name="present-theme">!present-alt-theme!</variable>
+    </class>
+
+    <class name="verb-e" inherits="VerbVocalic">
+      <!-- filter(!lemma!, Cěti) -->
+      <variable name="default">mĭněti</variable>
+      <variable name="stem">subst(!lemma!, "ěti", nil)</variable>
+      <variable name="infinitive-suffix">"ěti"</variable>
+      <variable name="present-theme">!present-alt-theme!</variable>
+    </class>
+
+    <class name="verb-no" inherits="VerbVocalic">
+      <!-- filter(!lemma!, nǫti) -->
+      <variable name="default">rinǫti</variable>
+      <variable name="stem">subst(filter(!lemma!, ".* nǫti"), "nǫti", "n")</variable>
+      <variable name="infinitive-suffix">"ǫti"</variable>
+    </class>
+
+    <class name="Noun" inherits="Base" abstract="true">
+      <variable name="tags">cons({NOUN}, [{NOM, SIN}, {VOC, SIN}, {ACC, SIN}, {GEN, SIN}, {DAT, SIN}, {INS, SIN}, {LOC, SIN}, {NOM/ACC, DUA}, {GEN/LOC, DUA}, {DAT/INS, DUA}, {NOM/VOC, PLU}, {ACC, PLU}, {GEN, PLU}, {DAT, PLU}, {INS, PLU}, {LOC, PLU}])</variable>
+    </class>
+
+    <!--
+    <class name="NounUm" inherits="Noun">
+      <variable name="tags">cons(!super!, {MASC})</variable>
+      <variable name="stem">subst(!lemma!, "ŭ", nil)</variable>
+      <variable name="suffixes">["ŭ", "e", "ŭ", "a", "u", "omĭ", "ě", "a", "u", "oma", "i", "y", "ŭ", "omŭ", "y", "ěxŭ"]</variable>
+    </class>
+
+    <class name="NounUn" inherits="Noun">
+      <variable name="tags">cons(!super!, {NEUT})</variable>
+      <variable name="stem">subst(!lemma!, "o", nil)</variable>
+      <variable name="suffixes">["o", "o", "o", "a", "u", "omĭ", "ě", "ě", "u", "oma", "a", "a", "ŭ", "omŭ", "y", "ěxŭ"]</variable>
+    </class>
+
+    <class name="NounA" inherits="Noun">
+      <variable name="tags">cons(!super!, {FEM})</variable>
+      <variable name="stem">subst(!lemma!, "a", nil)</variable>
+      <variable name="suffixes">["a", "o", "ǫ", "y", "ě", "ojǫ", "ě", "ě", "u", "ama", "y", "y", "ŭ", "amŭ", "ami", "axŭ"]</variable>
+    </class>
+    -->
+
+    <!-- i-stems: Lunt §4.4 -->
+
+    <!--
+    <class name="NounI" inherits="Noun" abstract="true">
+      <variable name="stem">subst(!lemma!, "ĭ", nil)</variable>
+      <variable name="suffixes">cons(!a-suffixes!, !b-suffixes!)</variable>
+      <variable name="a-suffixes">["ĭ", "i", "ĭ", "i", "i", nil, "i", "i", "ĭju", "ĭma", nil, "i", "ĭi", "ĭmŭ", "ĭmi", "ĭxŭ"]</variable>
+    </class>
+
+    <class name="NounIf" inherits="NounI">
+      <variable name="tags">cons(!super!, {FEM})</variable>
+      <variable name="default">"kostĭ"</variable>
+      <variable name="b-suffixes">[nil, nil, nil, nil, nil, "ĭjǫ", nil, nil, nil, nil, "i", nil, nil, nil, nil, nil]</variable>
+    </class>
+    -->
+
+    <!-- Masculine i-stems: Lunt §4.4, §4.401, §403 -->
+
+    <!--
+    <class name="NounIm" inherits="NounI" unproductive="true">
+      <variable name="tags">cons(!super!, {MASC})</variable>
+      <variable name="default">"pǫtǫ"</variable>--><!-- FIXME: must be wrong --><!--
+      <variable name="b-suffixes">[nil, nil, nil, nil, nil, "ĭmĭ", nil, nil, nil, nil, "ĭe", nil, nil, nil, nil, nil]</variable>
+    </class>-->
+
+    <!-- Consonantal/"mixed" stems (Lunt §4.410-4.414, §4.5-4.551) -->
+
+    <!--
+    <class name="NounConsonantal" inherits="Noun" abstract="true">
+      <variable name="suffixes-m">["ĭ", "ĭ", "ĭ", "e", "i", "ĭmĭ", "e", "i", "u", "ĭma", "e", "i", "ŭ", "emŭ", "ĭmi", "exŭ"]</variable> 
+      <variable name="suffixes-f">[nil, nil, "ĭ", "e", "i", "ĭmĭ", "e", "i", "u", "ĭma", "i", "i", "ŭ", "emŭ", "ĭmi", "exŭ"]</variable> 
+    </class>
+
+    <class name="NounConsonantalNeuter" inherits="NounConsonantal" abstract="true">
+      <variable name="tags">cons(!super!, {NEUT})</variable>
+      <variable name="suffixes-n">[nil, nil, nil, "e", "i", "ĭmĭ", "e", "i", "u", "ĭma", "a", "a", "ŭ", "emŭ", "ĭmi", "exŭ"]</variable> 
+      <variable name="suffixes">cons(!infix!, !suffixes-n!)</variable>
+    </class>-->
+
+    <!-- "n-stems": Lunt §4.414 -->
+    <!--    <class name="NounN" inherits="NounConsonantalNeuter" unproductive="true">
+      <variable name="default">"vrěmę"</variable>
+      <variable name="stem">subst(!lemma!, "ę", nil)</variable>
+      <variable name="infix">["ę", "ę", "ę", "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", "en"]</variable>
+    </class> -->
+
+    <!-- "nt-stems": Lunt §4.414 -->
+    <!--    <class name="NounNt" inherits="NounConsonantalNeuter" unproductive="true">
+      <variable name="default">"otročę"</variable>
+      <variable name="stem">subst(!lemma!, "ę", nil)</variable>
+      <variable name="infix">["ę", "ę", "ę", "ęt", "ęt", "ęt", "ęt", "ęt", "ęt", "ęt", "ęt", "ęt", "ęt", "ęt", "ęt", "ęt"]</variable>
+    </class> -->
+
+    <!-- "s-stems": Lunt §4.414 and §4.55 -->
+    <!--    <class name="NounS" inherits="NounConsonantalNeuter" unproductive="true">
+      <variable name="default">"slovo"</variable>
+      <variable name="stem">subst(!lemma!, "o", nil)</variable>
+      <variable name="mutated-basic-stem">replacement(!basic-stem!, ["k", "g", "x", "c", "z", "sk", "zg"], ["č", "ž", "š", "č", "ž", "št", "žd"], nil, "es")</variable>
+      <variable name="forms">cons(!mutated-basic-stem!, !suffixes!)</variable>
+      <variable name="infix">["o", "o", "o", "es", "es", "es", "es", "es", "es", "es", "es", "es", "es", "es", "es", "es"]</variable>
+    </class> -->
+
+
+    <!-- TODO
+
+    Test
+      soft-stem <=> stem() ~ /SOFTSTEM$/
+      hard-stem <=> !soft-stem
+
+      SOFTSTEM = (š|ž|č|j|[lnr]j|c|3|št|žd)
+
+      replacement(x|[k, g, x, c, z, sk, zg]|[č, ž, š, č, ž, št, žd]||)
+    -->
+
+  </classes>
+</morphology>

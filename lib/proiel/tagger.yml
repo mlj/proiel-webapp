@@ -2,6 +2,13 @@
   :cu:
     :manual_rules:
       cu-rules.csv
+    :fst:
+      :normalisation:
+        cu-normalisation.ca
+      :analysis:
+        cu.ca
+      :orthography:
+        cu-orthographics.ca
     :instance_frequencies:
       true
     :source_tag_pattern_filtering:

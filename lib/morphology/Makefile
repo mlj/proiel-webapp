@@ -1,6 +1,16 @@
-TARGETS=cu-rules.csv grc-rules.csv la-rules.csv la-generated.csv
+TARGETS=cu-rules.csv grc-rules.csv la-rules.csv la-generated.csv cu-normalisation.ca cu-orthographics.ca cu.ca
 
 all: $(TARGETS)
+	make -C class_morphology
+
+%.a: %.fst
+	fst-compiler $< $@
+
+%.ca: %.fst
+	fst-compiler -c $< $@
+
+cu.fst: cu.xml class_morphology.rb class_morphology/*
+	ruby -I.. class_morphology.rb cu.xml cu.fst
 
 clean:
 	rm -f $(TARGETS)
@@ -17,3 +27,6 @@ grc-rules.csv: derive grc-rules.dat
 
 la-generated.csv: perseus-blacklist derive-generated ../../data/morph-la-open.csv 
 	./derive-generated ../../data/morph-la-open.csv | sort > $@
+
+test: cu.ca
+	fst-infl2 cu.ca < test.txt > test.tmp && diff -u test.tmp test.exp
