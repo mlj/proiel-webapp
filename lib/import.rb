@@ -76,20 +76,13 @@ class PROIELXMLImport < SourceImport
 #              end
 #            end
 
-      # Then, add the token
-      if attributes[:morphtag]
-        m = PROIEL::MorphTag.new(attributes[:morphtag])
-        if m.valid?
-          morphtag = m.to_s
-        else
-          STDERR.puts "Invalid morphtag #{m} encountered." 
-          morphtag = nil
-        end
-      end
+      # Source morphtags do not have to be valid, so we eat the tag without
+      # validation.
+      morphtag = PROIEL::MorphTag.new(attributes[:morphtag]) if attributes[:morphtag]
 
       sentence.tokens.create!(
                    :token_number => attributes[:token_number], 
-                   :source_morphtag => morphtag,
+                   :source_morphtag => morphtag.to_s,
                    :source_lemma => attributes[:lemma],
                    :form => form, 
                    :verse => attributes[:verse], 
