@@ -61,7 +61,7 @@ module PROIEL
             language, lemma, variant, form, *morphtags = e
             
             raise "Word list database update aborted: invalid language in rule file #{@csv_file_name}" unless language.to_sym == @language
-            raise "Word list database Update aborted: invalid morphtag for form #{form} in rule file #{@csv_file_name}" unless morphtags.all? { |m| PROIEL::MorphTag.new(m).is_valid? }
+            raise "Word list database Update aborted: invalid morphtag for form #{form} in rule file #{@csv_file_name}" unless morphtags.all? { |m| PROIEL::MorphTag.new(m).is_valid?(@language) }
 
             base_form = variant ? "#{lemma}##{variant}" : lemma
             morphtags.collect! { |m| [PROIEL::MorphTag.new(m).to_s, base_form].join(':') }

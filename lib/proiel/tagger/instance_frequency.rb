@@ -23,7 +23,7 @@ module PROIEL
         instances = @@statistics_callback.call(@language, form)
 
         # Filter out those that fail validation or lack a lemma.
-        instances.reject! { |tag, lemma, frequency| not PROIEL::MorphTag.new(tag).is_valid? or lemma.nil? }
+        instances.reject! { |tag, lemma, frequency| not PROIEL::MorphTag.new(tag).is_valid?(@language) or lemma.nil? }
 
         # Compute frequency
         sum = instances.inject(0) { |sum, instance| sum + instance[2] }

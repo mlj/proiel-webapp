@@ -122,7 +122,7 @@ class Validator < Task
       s.tokens.each do |t|
         if t.is_morphtaggable? and not t.morphtag.nil?
           m = MorphTag.new(t.morphtag)
-          logger.warn { "Token #{t.id} (#{t.form}): Morphtag is invalid." } unless m.is_valid?
+          logger.warn { "Token #{t.id} (#{t.form}): Morphtag is invalid." } unless m.is_valid?(t.language)
         end
       end
     end
@@ -231,7 +231,7 @@ class Validator < Task
           ml = token.morph_lemma_tag
 
           if ml and ml.morphtag.is_closed?
-            next unless ml.morphtag.is_valid?  # FIXME: at some point eliminate
+            next unless ml.morphtag.is_valid?(token.language)  # FIXME: at some point eliminate
 
             manual_tags = TAGGER.get_manual_rule_matches(token.language, token.form)
 
