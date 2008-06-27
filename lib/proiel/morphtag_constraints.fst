@@ -1,3 +1,5 @@
+#languages#      = <CU><LA><HY><GRC><GOT>
+
 #major#          = PMNVASDRCGFI\-
 #minor#          = psktrdcixagobejhfnqu\-
 #person#         = 123\-
@@ -11,11 +13,15 @@
 #animacy#        = ia\-
 #strength#       = ws\-
 
+ALPHABET = [#major#] [#minor#] [#person#] [#number#] [#tense#] [#mood#] [#voice#] [#gender#] [#case#] [#degree#] [#animacy#] [#strength#]
+$any$    = [#major#] [#minor#] [#person#] [#number#] [#tense#] [#mood#] [#voice#] [#gender#] [#case#] [#degree#] [#animacy#] [#strength#]
+
 $n$ = [^\-]
 $e$ = \-
 
-ALPHABET = [#major#] [#minor#] [#person#] [#number#] [#tense#] [#mood#] [#voice#] [#gender#] [#case#] [#degree#] [#animacy#] [#strength#]
-$any$    = [#major#] [#minor#] [#person#] [#number#] [#tense#] [#mood#] [#voice#] [#gender#] [#case#] [#degree#] [#animacy#] [#strength#]
+% Mapping between positional tags and feature sets
+% ================================================
+
 $feature_mapping$ = \
   (<PRONOUN>:P | <NUMERAL>:M | <NOUN>:N | <VERB>:V | <ADJECTIVE>:A | <ARTICLE>:S | <ADVERB>:D | <PREPOSITION>:R | <CONJUNCTION>:C | <SUBJUNCTION>:G | <FOREIGNWORD>:F | <INTERJECTION>:I | <>:\-) \
   (<PERSONAL>:p | <POSSESSIVE>:s | <PERSONALREFLEXIVE>:k | <POSSESSIVEREFLEXIVE>:t | <RELATIVE>:r | <DEMONSTRATIVE>:d | <RECIPROCAL>:c | <INTERROGATIVE>:i | <INDEFINITE>:x | <CARDINAL>:a | <CARDINALINDECL>:g | <ORDINAL>:o | <COMMON>:b | <PROPER>:e | <COMMONINDECL>:h | <PROPERINDECL>:j | <COMPARABLE>:f | <NONCOMPARABLE>:n | <RELATIVE>:q | <INTERROGATIVE>:u | <>:\-) \
@@ -30,24 +36,27 @@ $feature_mapping$ = \
   (<INANIMATE>:i | <ANIMATE>:a | <>:\-) \
   (<WEAK>:w | <STRONG>:s | <>:\-)
 
+% Positional tag space
+% ====================
+
 %                               Person  Number  Tense   Mood   Voice  Gender  Case  Degree  Animacy  Strength
-$personal_pronominal$ =         $n$     $n$     $e$     $e$    $e$    $n$     $n$   $e$     $e$      $e$
-$nominal$ =                     $e$     $n$     $e$     $e$    $e$    $n$     $n$   $e$     $e$      $e$
-$adjective$ =                   $e$     $n$     $e$     $e$    $e$    $n$     $n$   $n$     $e$      $e$
+$personal_pronominal$ =         $n$     $n$     $e$     $e$    $e$    $n$     $n$   $e$     $n$      $e$
+$nominal$ =                     $e$     $n$     $e$     $e$    $e$    $n$     $n$   $e$     $n$      $e$
+$adjective$ =                   $e$     $n$     $e$     $e$    $e$    $n$     $n$   $n$     $n$      $n$
 $comparable_adverb$ =           $e$     $e$     $e$     $e$    $e$    $e$     $e$   $n$     $e$      $e$
 $indeclinable$ =                $e$     $e$     $e$     $e$    $e$    $e$     $e$   $e$     $e$      $e$
 
 % Verbs are complex and need more detailed attention
 $verb$ = ( \
-  % Person  Number  Tense   Mood   Voice  Gender  Case  Degree  Animacy  Indefiniteness
+  % Person  Number  Tense   Mood   Voice  Gender  Case  Degree  Animacy  Strength
   $e$       $e$     $n$     n      $n$    $e$     $e$   $e$     $e$      $e$ | \ % ininitive
-  $e$       $n$     $n$     p      $n$    $n$     $n$   $e$     $e$      $e$ | \ % participle
+  $e$       $n$     $n$     p      $n$    $n$     $n$   $e$     $n$      $n$ | \ % participle
   $e$       $e$     $e$     [du]   $e$    $e$     $n$   $e$     $e$      $e$ | \ % gerund & supine
-  $e$       $n$     $e$     g      $e$    $n$     $n$   $e$     $e$      $e$ | \ % gerundive
-  $n$       $n$     $n$     [ismo] $n$    $e$     $e$   $e$     $e$      $e$   \ % finite forms
+  $e$       $n$     $e$     g      $e$    $n$     $n$   $e$     $n$      $n$ | \ % gerundive
+  $n$       $n$     $n$     [miso] $n$    $e$     $e$   $e$     $e$      $e$   \ % other finite forms
 )
 
-$tags$ = ( \
+$legal_tags$ = ( \
   P [pskt]  $personal_pronominal$ | \
   P [rdcix] $nominal$             | \
   M [ao]    $nominal$             | \
@@ -62,4 +71,39 @@ $tags$ = ( \
   [RCGFI] \- $indeclinable$         \
 )
 
-$feature_mapping$ || $any$ || $tags$
+$tags$ = $any$ & $legal_tags$
+
+% Language-specific removal of entire categories
+% ==============================================
+
+$hy_category_removals$ =  (.   .   .   .   .   .   .   \-:[#gender#] .    .   \-:[#animacy#] \-:[#strength#])
+$la_category_removals$ =  (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#])
+$grc_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#])
+$got_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#])
+$cu_category_removals$ =  (.   .   .   .   .   .   .   .             .    .   .              .              )
+
+% Language-specific removal of specific category *values*
+% =======================================================
+
+% Global or language-specific restrictions on category value combinations
+% =======================================================================
+
+% (Some of these restrictions are properly language-specific, but currently flagged
+% as global as they (coincidentally) apply to all our current languages.)
+
+                       % Maj Min Per Num Ten Moo Voi Gender  Case Deg Ani             Str
+$c$                   = (.   .   .   .   .   .   .   m       .    .   .               . ) | \
+                        (.   .   .   .   .   .   .   [^m]    .    .   \-:[#animacy#]  . )
+$d$                   = (.   .   .   .   .   .   .   .       a    .   .               . ) | \
+                        (.   .   .   .   .   .   .   .       [^a] .   \-:[#animacy#]  . )
+
+$restricted_tags$ = (\
+  (<HY>  ($hy_category_removals$  || $tags$)) | \
+  (<LA>  ($la_category_removals$  || $tags$)) | \
+  (<GRC> ($grc_category_removals$ || $tags$)) | \
+  (<GOT> ($got_category_removals$ || $tags$)) | \
+  (<CU>  ($c$ || $d$ || $cu_category_removals$  || $tags$))   \
+)
+$restricted_tag_space$ = _$restricted_tags$
+
+([#languages#] $feature_mapping$) || $restricted_tag_space$

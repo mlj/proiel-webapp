@@ -17,37 +17,26 @@ module PROIEL
     # Regexps for matching certain sets of features in positional tags. 
     BLACK_LIST_REGEXPS = {
       :art =>           /^S/,
-
       :dual =>          /^...d/,
-
-      :gender =>        /^.......[^-]/,
-
       :voc =>           /^........v/,
       :abl =>           /^........b/,
       :ins =>           /^........i/,
       :loc =>           /^........l/,
-
       :resultative =>   /^....s/,
       :past =>          /^....u/,
       :aorist =>        /^....a/,
-      
       :optative =>      /^.....o/,
-
       :middle =>        /^......[emnd]/,
-
-      :animacy =>       /^..........[^\-]/,
-
-      :strength =>      /^...........[^\-]/,
     }
 
     # A specification of feature sets that should be treated as invalid
     # in specific languages
     LANGUAGE_BLACK_LISTS = {
-      :la =>  [ :art, :dual,                      :ins,       :aorist, :resultative, :past, :optative, :middle, :animacy, :strength, ],
-      :grc => [       :dual,                :abl, :ins, :loc,          :resultative, :past,                     :animacy, :strength, ],
-      :hy  => [ :art, :dual, :gender, :voc, :abl, :ins,                :resultative, :past, :optative, :middle, :animacy, :strength, ],
-      :got => [ :art,                 :voc, :abl, :ins, :loc, :aorist, :resultative,        :optative, :middle, :animacy, :strength, ],
-      :cu  => [ :art,                       :abl,                                           :optative, :middle,                      ],
+      :la =>  [ :art, :dual,             :ins,       :aorist, :resultative, :past, :optative, :middle, ],
+      :grc => [       :dual,       :abl, :ins, :loc,          :resultative, :past,                     ],
+      :hy  => [ :art, :dual, :voc, :abl, :ins,                :resultative, :past, :optative, :middle, ],
+      :got => [ :art,        :voc, :abl, :ins, :loc, :aorist, :resultative,        :optative, :middle, ],
+      :cu  => [ :art,              :abl,                                           :optative, :middle, ],
     }
 
     private
@@ -60,14 +49,13 @@ module PROIEL
     def make_tag_space(language)
       tags = []
       @fst.generate_language(:levels => :upper) do |t|
-        t = t.join
-        if language
-          tags << t if is_valid_in_language?(t, language)
-        else
-          tags << t
-        end
+        lang, *others = t
+        next unless lang == "<#{language.to_s.upcase}>"
+        t = others.join
+
+        tags << t if is_valid_in_language?(t, language)
       end
-      tags
+      tags.uniq
     end
 
     def is_valid_in_language?(tag, language)
@@ -82,17 +70,17 @@ module PROIEL
 
     public
 
-    def tag_space(language = nil)
-      language = language.to_sym if language
+    def tag_space(language)
+      language = language.to_sym
       @tag_spaces[language] ||= make_tag_space(language)
     end
 
     # Tests if a PROIEL morphtag is valid, i.e. that it does not violate
-    # any of the specified constraints. If +language+ is specified, 
-    # additional language specific constraints are taken into account.
-    def is_valid?(morphtag, language = nil)
-      language = language.to_sym if language
-      if @fst.accepted_analysis?(morphtag)
+    # any of the specified constraints.
+    def is_valid?(morphtag, language)
+      language = language.to_sym
+      t = "<#{language.to_s.upcase}>" + morphtag
+      if @fst.accepted_analysis?(t)
         return is_valid_in_language?(morphtag, language) if language
         true
       else
