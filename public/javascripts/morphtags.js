@@ -30,35 +30,13 @@ var PaletteWidget = Class.create({
 
   hideSuggestions: function() { this.guesses.hide(); },
 
-  setLemma: function(lemma) {
-    $('lemma').value = lemma;
-  },
+  setLemma: function(lemma) { $('lemma').value = lemma; },
 
-  setMorphtags: function(morphtags) {
-    // Update major field options
-    var options = $('major_field').options;
-    options.length = 0;
-    major_values.each(function(e) {
-      options[options.length] = new Option(e[1], e[0]);
-    });
-    $('major_field').show();
+  setMorphtags: function(morphtags) { 
+    // Clear out all the old values to avoid contamination from existing selections.
+    morphtag_fields.each(function(field) { $(field + '_field').options.length = 0; });
 
-    // Do major, minor and mood first
-    setSelectedByValue('major_field', morphtags.get('major'));
-    $('major_field').show();
-    majorSelected();
-
-    setSelectedByValue('minor_field', morphtags.get('minor'));
-    minorSelected();
-     
-    setSelectedByValue('mood_field', morphtags.get('mood'));
-    moodSelected();
-     
-    // Do the rest
-    morphtags.each(function(pair) {
-      if (pair.key != 'major' && pair.key != 'minor' && pair.key != 'mood' && pair.key != 'extra')
-      setSelectedByValue(pair.key + '_field', pair.value);
-    });
+    cascadedFieldUpdate('major', morphtags); 
   }
 });
 
@@ -159,6 +137,39 @@ function onUpdateTokenPresentation(element) {
   element.down('.morph-lemma-tags').removeClassName('mguessed');
   element.down('.morph-lemma-tags').removeClassName('munannotated');
   element.down('.morph-lemma-tags').addClassName('mannotated');
+  element.removeClassName('validation-error');
+}
+
+function getTokenIDs() {
+  return $F('token-ids').evalJSON();
+}
+
+function validateLemmata() {
+  var errors = new Array();
+  var ids = getTokenIDs();
+
+  ids.each(function(id) {
+    if ($F("lemma-" + id) == "") {
+      errors.push(id);
+      validated = false;
+    }
+  });
+
+  return errors;
+}
+
+function validate(ev) {
+  var errors = validateLemmata().uniq();
+
+  if (errors.length > 0) {
+    alert("Annotation is incomplete. Please correct the indicated errors before saving.");
+
+    errors.each(function(id) {
+      new Effect.Highlight($("item-" + id), { startcolor: '#ff9999', endcolor: '#ffffff' });
+      $("item-" + id).addClassName("validation-error");
+    });
+    Event.stop(ev) // stop event propagation
+  }
 }
 
 document.observe('dom:loaded', function() {
@@ -166,7 +177,7 @@ document.observe('dom:loaded', function() {
     $(field + '_field').observe('change', onPaletteChange);
   });
 
-  //$('lemma').observe('keypressed', function() { alert("foo"); onPaletteChange(); });
+  $('morphtag-form').observe('submit', validate, false);
 
   palette.deactivate();
 });

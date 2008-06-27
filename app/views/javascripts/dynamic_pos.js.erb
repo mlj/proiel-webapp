@@ -1,115 +1,121 @@
 var morphtag_fields = <%= PROIEL::MorphTag.fields.to_json %>;
+var morphtag_field_sequence = <%= PROIEL::MorphTag::PRESENTATION_SEQUENCE.to_json %>;
+var morphtag_field_positions = <%= Hash[*(PROIEL::MorphTag::fields.zip((0..PROIEL::MorphTag::fields.length).to_a).collect { |field, i| [field, i] }.flatten)].to_json %>;
+var morphtag_default_pattern = <%= ('.' * PROIEL::MorphTag::fields.length).to_json %>;
+var morphtags = <%= PROIEL::MorphTag.tag_space(@language).to_json %>;
 
-var major_values = <%= @major_values.to_json %>;
-<%= create_cascade_map(@minor_values, 'minor_map') %>
-<%= create_cascade_map(@person_values, 'person_map') %>
-<%= create_cascade_map(@number_values, 'number_map') %>
-<%= create_cascade_map(@tense_values, 'tense_map') %>
-<%= create_cascade_map(@mood_values, 'mood_map') %>
-<%= create_cascade_map(@voice_values, 'voice_map') %>
-<%= create_cascade_map(@gender_values, 'gender_map') %>
-<%= create_cascade_map(@case_values, 'case_map') %>
-<%= create_cascade_map(@degree_values, 'degree_map') %>
-<%= create_cascade_map(@animacy_values, 'animacy_map') %>
-<%= create_cascade_map(@strength_values, 'strength_map') %>
+// FIXME: Is there a simpler way of replacing a single
+// character at a particular index in a string?
+function stringReplaceChar(str, i, c) {
+  var characters = str.toArray();
+  characters[i] = c;
+  return characters.join('');
+}
 
-function updateField(field_id, values) {
-  var field = $(field_id);
+// Updates a morphtag regexp pattern (containing "." for each field
+// without a set value) with the value for a particular field.
+function updateMorphtagPattern(pattern, field, value) {
+  var position = morphtag_field_positions[field];
 
-  options = field.options;
+  return stringReplaceChar(pattern, position, value);
+}
+
+function extractLegalFieldValues(pattern, field) {
+  var r = new RegExp("^" + pattern);
+  var position = morphtag_field_positions[field];
+
+  // This can be done a lot more elegantly, but in FF2 and other
+  // browsers with slow JS implementations we need to do this
+  // the old-fashioned, compact way to avoid too much laggin.
+  var fields = new Array;
+
+  for (var i = 0; i < morphtags.length; i++) {
+    if (morphtags[i].match(r))
+      fields.push(morphtags[i][position]);
+  }
+
+  return fields.uniq();
+}
+
+function extractFieldValues(field, full_morphtags) {
+
+  return full_morphtags.collect(function(tag) { return tag[position]; }).uniq();
+}
+
+// Updates the option list for a field taking the given
+// morphtag regexp pattern into account when computing the
+// legal values.
+function updateFieldOptions(field, pattern) {
+  var element = $(field + '_field');
+  var field_values = extractLegalFieldValues(pattern, field);
+
+  var options = element.options;
   options.length = 0;
 
-  values.each(function(e) {
-    options[options.length] = new Option(e[0], e[1]);
+  field_values.each(function(value) {
+    if (value != '-')  
+      options[options.length] = new Option(getFieldValueSummary(field, value), value);
   });
 
   if (options.length == 0) {
-    field.hide();
+    element.hide();
   } else {
-    field.show();
+    element.show();
   }
 }
 
-function updateCascadedSelection(first_field_id, second_field_id, third_field_id, update_field_id, values_map) {
-  var first_field = $(first_field_id);
-  var update_field = $(update_field_id);
-  var first_id = first_field.getValue();
+function fieldSelected(ev) {
+  var element = Event.element(ev);
+  var updated_field = element.id.sub('_field', '');
 
-  // Preserve the currently selection option in the update_field, if any
-  // so that we can restore it later, if it is there.
-  var old_selection = getSelectSelection(update_field);
+  cascadedFieldUpdate(updated_field, null);
+}
 
-  options = update_field.options;
-  options.length = 0;
+function cascadedFieldUpdate(updated_field, new_field_values) {
+  var pattern = morphtag_default_pattern;
 
-  if (second_field_id) {
-    var second_field = $(second_field_id);
-    var second_id = second_field.getValue();
+  for (var i = 0; i < morphtag_field_sequence.length; i++) {
+    var field = morphtag_field_sequence[i];
+    var element = $(field + '_field');
 
-    if (third_field_id) {
-      var third_field = $(third_field_id);
-      var third_id = third_field.getValue();
+    var field_selection = null;
+    
+    if (new_field_values)
+      field_selection = new_field_values.get(field);
 
-      values_map.each(function(e) {
-        if (e[0] == first_id && e[1] == second_id && e[2] == third_id && e[3] && e[4]) {
-          options[options.length] = new Option(e[3], e[4]);
+    if (!field_selection)
+      field_selection = getSelectSelection(element);
+
+    updateFieldOptions(field, pattern);
+
+    // Ensure that noe "bad value" flags are left floating around.
+    element.removeClassName('bad-field-value');
+      
+    if (field_selection) {
+      for (var j = 0; j < element.options.length; j++) {
+        if (element.options[j].value == field_selection) {
+          element.options[j].selected = true;
+          break;
         }
-      });
-    } else {
-      values_map.each(function(e) {
-        if (e[0] == first_id && e[1] == second_id && e[2] && e[3]) {
-          options[options.length] = new Option(e[2], e[3]);
-        }
-      });
-    }
-  } else {
-    values_map.each(function(e) {
-      if (e[0] == first_id && e[1] && e[2]) {
-        options[options.length] = new Option(e[1], e[2]);
       }
-    });
-  }
-
-  if (options.length == 0) {
-    update_field.hide();
-  } else {
-    update_field.show();
-
-    // Try to restore the previously selected value, if it
-    // is still around.
-    for (var i = 0; i < update_field.options.length; i++) {
-      if (update_field.options[i].value == old_selection) {
-        update_field.options[i].selected = true;
-        break;
-      }
+    } else if (element.options.length > 0) {
+      // No selection made but the field has to have a value.
+      // Insert an empty option and highlight it as an error.
+      element.addClassName('bad-field-value');
+      var options = element.options;
+      options[options.length] = new Option('', '-');
+      options[options.length - 1].selected = true;
     }
+
+    var current_selection = getSelectSelection(element);
+
+    if (current_selection)
+      pattern = updateMorphtagPattern(pattern, field, current_selection);
   }
-}
-
-function majorSelected() {
-  updateCascadedSelection('major_field', null, null, 'minor_field', minor_map);
-  minorSelected();
-}
-
-function minorSelected() {
-  updateCascadedSelection('major_field', 'minor_field', null, 'mood_field', mood_map);
-  moodSelected();
-}
-
-function moodSelected() {
-  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'person_field', person_map);
-  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'number_field', number_map);
-  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'tense_field', tense_map);
-  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'voice_field', voice_map);
-  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'gender_field', gender_map);
-  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'case_field', case_map);
-  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'degree_field', degree_map);
-  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'animacy_field', animacy_map);
-  updateCascadedSelection('major_field', 'minor_field', 'mood_field', 'strength_field', strength_map);
 }
 
 document.observe('dom:loaded', function() {
-  $('major_field').observe('change', majorSelected);
-  $('minor_field').observe('change', minorSelected);
-  $('mood_field').observe('change', moodSelected);
+  morphtag_field_sequence.each(function(field) {
+    $(field + '_field').observe('change', fieldSelected);
+  });
 });

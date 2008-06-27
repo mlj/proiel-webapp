@@ -2,6 +2,10 @@ var presentation_sequence = <%= array_or_string_for_javascript(PROIEL::MorphTag:
 var summaries = <%= ActiveSupport::JSON.encode(@summaries) %>;
 var abbreviations = <%= ActiveSupport::JSON.encode(@abbreviations) %>;
 
+function getFieldValueSummary(field, value) {
+  return $H($H(summaries).get(field)).get(value);
+}
+
 function present_tags(morphtag) {
   var s = new Array;
   presentation_sequence.each(function(tag) {

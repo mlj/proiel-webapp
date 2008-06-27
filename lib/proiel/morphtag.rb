@@ -67,8 +67,6 @@ module PROIEL
   end
 
   class MorphTag < Logos::PositionalTag
-    @@field_values = {}
-
     PRESENTATION_SEQUENCE = [:major, :minor, :mood, :tense, :voice, :degree, :case, 
       :person, :number, :gender, :animacy, :strength]
 
@@ -119,18 +117,13 @@ module PROIEL
       super(x.to_s.ljust(fields.length, '-'))
     end
 
-    # Returns all possible values for POS-fields.
-    def self.pos_tag_space(language = nil)
-      PROIEL::MorphtagConstraints::instance.tag_space(language).map { |t| t[0, 2] }.sort.uniq
-    end
-
     def self.expand_s(tag)
       PROIEL::MorphTag.new(tag).to_s
     end
 
     # DEPRECATED
     # Returns all possible values for POS-fields.
-    def self.pos_values(language = nil)
+    def self.pos_values(language)
       p = []
       poses = tag_space(language).map { |tag| MorphTag.new(tag) }.map { |tag| [tag.major, tag.minor] }.uniq.each do |major, minor|
         major = MORPHOLOGY[:major][major.to_sym]
@@ -144,48 +137,20 @@ module PROIEL
       p
     end
 
-    # DEPRECATED
-    def self._field_values(field, language = nil)
-      p = []
-      tag_space(language).map { |tag| MorphTag.new(tag) }.reject { |tag| tag[field] == '-' }.map { |tag| [tag.major, tag.minor, tag.mood, tag[field.to_sym]] }.uniq.each do |major, minor, mood, value|
-        major = MORPHOLOGY[:major][major.to_sym]
-        minor = MORPHOLOGY[:minor][minor.to_sym] if minor != '-'
-        mood = MORPHOLOGY[:mood][mood.to_sym] if mood != '-'
-        value = MORPHOLOGY[field.to_sym][value.to_sym]
-        p.push([major.code, 
-               minor != '-' ? minor.code : nil, 
-               mood != '-' ? mood.code : nil, 
-               value.code, 
-               value.summary])
-      end
-      p
-    end
-
-    # DEPRECATED
-    # Returns all possible values for non-POS fields. 
-    def self.field_values(field, language = nil)
-      @@field_values[language] ||= {}
-      @@field_values[language][field] ||= _field_values(field, language)
-    end
-
     # Generates all possible completions of the possibly incomplete tag.
-    def completions(language = nil)
-      PROIEL::MorphtagConstraints::instance.tag_space(language).reject { |t| contradicts?(t) }
+    def completions(language)
+      PROIEL::MorphtagConstraints::instance.tag_space(language.to_sym).reject { |t| contradicts?(t) }
     end
 
-    def self.tag_space(language = nil)
-      PROIEL::MorphtagConstraints::instance.tag_space(language)
+    def self.tag_space(language)
+      PROIEL::MorphtagConstraints::instance.tag_space(language.to_sym)
     end
 
     # Returns +true+ if the tag is valid, i.e. if the subset of fields
-    # with a value match the constraints on the fields. If +language+ is
-    # set, will take language into account when validating.
-    def is_valid?(language = nil)
-      PROIEL::MorphtagConstraints.instance.is_valid?(self.to_s, language)
+    # with a value match the constraints on the fields.
+    def is_valid?(language)
+      PROIEL::MorphtagConstraints.instance.is_valid?(self.to_s, language.to_sym)
     end
-
-    # DEPRECATED
-    alias valid? is_valid?
 
     def to_features
       PROIEL::MorphtagConstraints.instance.to_features(self.to_s)

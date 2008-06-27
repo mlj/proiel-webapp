@@ -7,6 +7,8 @@ class Lemma < ActiveRecord::Base
   has_many :tokens
   has_many :dictionary_references
 
+  validates_presence_of :lemma
+
   # Returns the Perseus lemma for this lemma or +nil+ if unknown.
   def perseus_lemma
     if variant && m = variant.match(/^perseus=(\d+)$/)

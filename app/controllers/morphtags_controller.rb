@@ -70,14 +70,6 @@ class MorphtagsController < ApplicationController
         new_morphtag = PROIEL::MorphTag.new(ActiveSupport::JSON.decode(params[key]))
         new_lemma = params['lemma-' + token_id]
 
-        # FIXME: for now, insert this bit here to catch missing lemmata. When all existing
-        # tokens have lemmata, move it to validation.
-        unless new_lemma and new_lemma != ''
-          flash[:error] = 'Missing lemma'
-          redirect_to :action => 'edit', :wizard => params[:wizard], :annotation_id => params[:annotation_id]
-          return
-        end
-
         ml = PROIEL::MorphLemmaTag.new("#{new_morphtag.to_s}:#{new_lemma}")
 
         suggestions = params['orig-suggestions-' + token_id].split(',').collect { |s| PROIEL::MorphLemmaTag.new(s) }

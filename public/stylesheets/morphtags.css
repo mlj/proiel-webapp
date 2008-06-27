@@ -1,3 +1,7 @@
+/* Palette */
+.bad-field-value { border: red 2px solid; }
+
+/* Items */
 .morphtags .item {
   float: left;
   padding: .15em .15em .15em .15em;
@@ -24,6 +28,10 @@
 .morphtags .selected { 
   background-color: #eeeeee;
   border: #c0c0c0 1px solid;
+}
+
+.morphtags .validation-error {
+  border: red 2px solid;
 }
 
 .morphtags #palette {

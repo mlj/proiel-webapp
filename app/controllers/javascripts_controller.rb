@@ -4,20 +4,7 @@ class JavascriptsController < ApplicationController
   # Generates javascript suitable to control a sequence of dynamic
   # morphology drop-downs.
   def dynamic_pos
-    language = params[:id].to_sym
-
-    @major_values = PROIEL::MorphTag.pos_values(language).collect { |e| [e[0], e[1]] }.uniq
-    @minor_values = PROIEL::MorphTag.pos_values(language).collect { |e| [e[0], e[3], e[2]] }
-    @mood_values = PROIEL::MorphTag.field_values(:mood, language).collect { |e| [e[0], e[1], e[4], e[3]] }.uniq
-    @person_values = PROIEL::MorphTag.field_values(:person, language)
-    @number_values = PROIEL::MorphTag.field_values(:number, language)
-    @tense_values = PROIEL::MorphTag.field_values(:tense, language)
-    @voice_values = PROIEL::MorphTag.field_values(:voice, language)
-    @gender_values = PROIEL::MorphTag.field_values(:gender, language)
-    @case_values = PROIEL::MorphTag.field_values(:case, language)
-    @degree_values = PROIEL::MorphTag.field_values(:degree, language)
-    @animacy_values = PROIEL::MorphTag.field_values(:animacy, language)
-    @strength_values = PROIEL::MorphTag.field_values(:strength, language)
+    @language = params[:id].to_sym
   end
 
   def morphtag_presentation

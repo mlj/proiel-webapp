@@ -35,7 +35,7 @@
   </div>
 
 <div class="annotation-actions">
-  <% form_tag({ :controller => 'morphtags', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :method => :put) do -%>
+  <% form_tag({ :controller => 'morphtags', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :id => "morphtag-form", :method => :put) do -%>
     <input type="hidden" id="token-ids" value='<%= ActiveSupport::JSON.encode(@sentence.morphtaggable_tokens.collect(&:id)) %>'/>
     <% for token in @sentence.morphtaggable_tokens %>
       <input type="hidden" 
