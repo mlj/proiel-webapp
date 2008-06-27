@@ -153,15 +153,15 @@ module PROIEL
           m = @configuration[:languages][language]
 
           if m[:include_new_source_tags]
-            if existing.morphtag.is_valid?(language) and !existing.lemma.nil?
-              found = nil
-              m[:include_new_source_tags].each_pair do |src, dst|
-                src = Regexp.new(src)
-                dst = PROIEL::MorphTag.expand_s(dst)
-                existing.morphtag.union!(dst) if src.match(existing.morphtag.to_s)
-                found = true
-              end
+            found = nil
+            m[:include_new_source_tags].each_pair do |src, dst|
+              src = Regexp.new(src)
+              dst = PROIEL::MorphTag.expand_s(dst)
+              existing.morphtag.union!(dst) if src.match(existing.morphtag.to_s)
+              found = true
+            end
               
+            if found and existing.morphtag.is_valid?(language) and !existing.lemma.nil?
               raw_candidates << WeightedMorphLemmaTag.new(existing, EXISTING_TAG_WEIGHT, :source) if found
             end
           end
