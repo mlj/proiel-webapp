@@ -10,8 +10,9 @@
       <% PROIEL::MorphTag::PRESENTATION_SEQUENCE.each do |field| -%>
         <select id="<%= field %>_field" name="<%= field %>_field"></select>
       <% end %>
-      <input type="text" id="lemma" name="lemma" value=""></input>
+      <%= text_field_with_auto_complete :morphtags, :lemma, { :size => 15 }, :with => "'morphtags[lemma]=' + encodeURIComponent(element.value) + '&morphtags[language]=#{@language}'" %>
     </span>
+    <%= button_to_function "Update", "onPaletteUpdate()" %>
   </div>
 
   <div id="guesses">

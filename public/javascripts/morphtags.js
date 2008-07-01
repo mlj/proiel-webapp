@@ -30,7 +30,7 @@ var PaletteWidget = Class.create({
 
   hideSuggestions: function() { this.guesses.hide(); },
 
-  setLemma: function(lemma) { $('lemma').value = lemma; },
+  setLemma: function(lemma) { $('morphtags_lemma').value = lemma; },
 
   setMorphtags: function(morphtags) { 
     // Clear out all the old values to avoid contamination from existing selections.
@@ -52,7 +52,7 @@ function onGuessClick(morphtags, lemma) {
   palette.setMorphtags($H(morphtags));
   palette.setLemma(lemma);
 
-  onPaletteChange();
+  onPaletteUpdate();
 }
 
 // Updates the guess/tag palette for the activated token.
@@ -99,7 +99,9 @@ function onDeactivate(element)
   palette.deactivate();
 }
 
-function onPaletteChange()
+// Updates the current item's morphtag and lemma based on the palette's current
+// settings.
+function onPaletteUpdate()
 {
   var tags = new Hash();
 
@@ -111,7 +113,7 @@ function onPaletteChange()
   var id = element.identify();
   id = id.sub('item-', '');
   $('morphtag-' + id).value = tags.toJSON();
-  $('lemma-' + id).value = $F('lemma');
+  $('lemma-' + id).value = $F('morphtags_lemma');
 
   onUpdateTokenPresentation(element);
 }
@@ -173,10 +175,6 @@ function validate(ev) {
 }
 
 document.observe('dom:loaded', function() {
-  morphtag_fields.each(function(field) {  
-    $(field + '_field').observe('change', onPaletteChange);
-  });
-
   $('morphtag-form').observe('submit', validate, false);
 
   palette.deactivate();

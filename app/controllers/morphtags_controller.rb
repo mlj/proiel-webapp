@@ -2,6 +2,19 @@
 class MorphtagsController < ApplicationController
   before_filter :is_annotator?, :only => [:edit, :update]
 
+  # Returns potential renderings of transliterated lemmata.
+  def auto_complete_for_morphtags_lemma
+    search = params[:morphtags][:lemma]
+    if "cu" == params[:morphtags][:language] # FIXME: only enabled for cu now
+      xliterator = Logos::TransliteratorFactory::get_transliterator("cu-ascii") # FIXME: only one xliterator available for now
+      @results = xliterator.transliterate_string(search)
+    else
+      @results = []
+    end
+
+    render :partial => "transliterations/input"
+  end
+
   def show
     @sentence = Sentence.find(params[:annotation_id])
   end
