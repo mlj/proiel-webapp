@@ -331,14 +331,25 @@ module ApplicationHelper
     options[:no_spacing] ? t : t.join(' ')
   end
 
+  # Enters Markaby "mode"; actually just a wrapper for the-semi ugly Markaby + helper hack.
+  # Borrowed from http://railscasts.com/episodes/69.
+  def markaby(&block)
+    Markaby::Builder.new({}, self, &block)
+  end
+
   # Makes an information box intended for display of meta-data and navigational
   # aids.
-  def make_information_box(entries, nav_actions = nil)
-    entries = entries.collect { |e| "<dt>#{e[0]}:</dt><dd>#{e[1]}</dd>" }
-    content = ''
-    content += content_tag(:dl, entries)
-    content += content_tag(:p, nav_actions.join) if nav_actions 
-    content_tag(:div, content, :class => :roundedbox)
+  def make_information_box(entries)
+    markaby do
+      div.roundedbox do
+        dl do
+          entries.each do |title, data|
+            dt "#{title}:"
+            dd data
+          end
+        end
+      end
+    end
   end
 
   # Returns a radio button with a function as onclick handler.
