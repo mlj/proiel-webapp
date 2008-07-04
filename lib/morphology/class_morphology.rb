@@ -10,7 +10,7 @@ definition = Logos::ClassMorphology::ProgramDefinition.new(input)
 definition.each_pair do |class_name, d|
   puts "* Evaluating #{class_name}..."
   @evaluations[class_name] = ClassBasedMorphology::ClassExpression.new(d)
-  puts "  Optimised expression: " + @evaluations[class_name].to_s
+#  puts "  Optimised expression: " + @evaluations[class_name].to_s
 end
 
 produce_output("cu", definition, @evaluations)

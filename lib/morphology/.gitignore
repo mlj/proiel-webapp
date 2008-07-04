@@ -1,4 +1,7 @@
 *.a
 *.ca
 *.csv
-*.lex
+cu.fst
+cu-symbols.fst
+cu.fst
+cu-symbols.fst
