@@ -48,10 +48,22 @@ namespace :proiel do
   end
 
   namespace :export do
+    namespace :maltxml do
+      require 'export'
+
+      desc "Export a PROIEL source text as MaltXML. Options: ID=source_identifier"
+      task(:all => :myenvironment) do
+        source = Source.find_by_code(ENV['ID'])
+        raise "Source not found" unless source
+        e = MaltXMLExport.new(source)
+        e.write("#{source.code}-malt.xml")
+      end
+    end
+
     namespace :all do
       require 'export'
 
-      desc "Export all PROIEL source texts with all publicly available data."
+      desc "Export all PROIEL source texts with all publicly available data (i.e. reviewed data)."
       task(:public => :myenvironment) do
         Dir::mkdir(DEFAULT_EXPORT_DIRECTORY) unless File::directory?(DEFAULT_EXPORT_DIRECTORY)
         File::copy(File.join(RAILS_ROOT, 'data', 'text.xsd'), 
