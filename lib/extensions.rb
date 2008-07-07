@@ -148,21 +148,7 @@ class Hash
   end unless defined?(ActiveSupport)
 end
 
-# Iterates elements and constructs a hash based on pairs of [ key, value ] from
-# the block. 
-#
-# This is syntactic sugar for collect followed by Facets' Array#to_h.
-#
-# ==== Example:
-# 
-#   (0..2).collect_to_h { |i| [ i, i * 2 ] }
-#   => { 0 => 0, 1 => 2,  2 => 4 }
-#
 module Enumerable
-  def collect_to_h
-    Hash[*self.collect { |e| yield e }.flatten]
-  end
-
   #FIXME: incompatible with Ruby 1.8.7!
   def count
     inject(Hash.new(0)) { |k, e| k[e] += 1; k }
