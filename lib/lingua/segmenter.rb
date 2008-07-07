@@ -15,9 +15,14 @@ module Lingua
   DATADIR = File.expand_path(File.dirname(__FILE__))
 
   class Segmenter
+    DEFINITIONS = YAML::load_file(File.join(DATADIR, 'segmenter.yml'))
+
+    def self.has_language?(language)
+      DEFINITIONS.has_key?(language.to_sym)
+    end
+
     def initialize(language, options = {})
-      all_definitions = YAML::load_file(File.join(DATADIR, 'segmenter.yml'))
-      @definitions = all_definitions[language]
+      @definitions = DEFINITIONS[language]
       
       @language = language
       
