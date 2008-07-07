@@ -1,26 +1,4 @@
 <morphology name="cu" tags="tags" forms="forms">
-  <!-- Lunt § 2.42, 2.421, 3.10 -->
-  <preamble>
-#vowels# = aeiouŭyĭěęǫü
-#consonants1# = sšzž
-#consonants2# = ptkcčxbdgZ
-#consonants3# = vmn
-#consonants4# = lr
-#consonants5# = j
-#consonantsx# = GfT
-#consonants# = #consonants1# #consonants2# #consonants3# #consonants4# #consonants5# #consonantsx#
-#letters# = #vowels# #consonants#
-% FIXME: The correct pattern requires a vowel, but since we subst off stem vowels later so
-% that we obtain sensible lemmata, we cannot enforce this. This is bad. Something clever
-% has to be done.
-$syllable-pattern$ = [#consonants1#]? [#consonants2#]? [#consonants3#]? [#consonants4#]? [#consonants5#]? [#vowels#]
-$any-root$ = $syllable-pattern$+
-
-</preamble>
-  <!-- symbols>
-    <symbol name="vowels">a,e,i,o,u,ŭ,y,ĭ,ě,ę,ǫ,ü</symbol>
-    <symbol name="consonants">b,v,g,d,ž,z,g',k,l,m,n,p,r,s,t,f,x,št,c,č,š,j,th</symbol>
-  </symbols -->
   <classes>
     <class name="Base" abstract="true">
       <!-- These are supposed to be overridden by subclasses. -->
@@ -106,6 +84,13 @@ $any-root$ = $syllable-pattern$+
     <class name="VerbVocalic" inherits="Verb" abstract="true">
     </class>
 
+    <class name="verb-i" inherits="VerbVocalic">
+      <variable name="default">moliti</variable>
+      <variable name="stem">subst(filter(!lemma!, ".* [#consonants#] iti"), "iti", nil)</variable>
+      <variable name="infinitive-suffix">"iti"</variable>
+      <variable name="present-theme">!present-alt-theme!</variable>
+    </class>
+
     <!-- Ca -->
     <class name="verb-Ca" inherits="VerbVocalic">
       <!-- filter(!lemma!, Cati) -->
@@ -120,22 +105,7 @@ $any-root$ = $syllable-pattern$+
       <variable name="stem">subst(!lemma!, "[oeĭ]vati", "uj")</variable>
     </class>
 
-    <class name="verb-Sa" inherits="VerbVocalic">
-      <!-- filter(!lemma!, Sati) -->
-      <variable name="default">kričati</variable>
-      <variable name="stem">subst(!lemma!, "ati", nil)</variable>
-      <variable name="present-theme">!present-alt-theme!</variable>
-    </class>
-
-    <class name="verb-i" inherits="VerbVocalic">
-      <!-- filter(!lemma!, Citi) -->
-      <variable name="default">moliti</variable>
-      <variable name="stem">subst(filter(!lemma!, ".* [#consonants#] iti"), "iti", nil)</variable>
-      <variable name="infinitive-suffix">"iti"</variable>
-      <variable name="present-theme">!present-alt-theme!</variable>
-    </class>
-
-    <class name="verb-e" inherits="VerbVocalic">
+    <class name="verb-e" inherits="VerbVocalic" unproductive="true">
       <!-- filter(!lemma!, Cěti) -->
       <variable name="default">mĭněti</variable>
       <variable name="stem">subst(!lemma!, "ěti", nil)</variable>
@@ -149,6 +119,17 @@ $any-root$ = $syllable-pattern$+
       <variable name="stem">subst(filter(!lemma!, ".* nǫti"), "nǫti", "n")</variable>
       <variable name="infinitive-suffix">"ǫti"</variable>
     </class>
+
+    <class name="verb-Sa" inherits="VerbVocalic" unproductive="true">
+      <!-- filter(!lemma!, Sati) -->
+      <variable name="default">kričati</variable>
+      <variable name="stem">subst(!lemma!, "ati", nil)</variable>
+      <variable name="present-theme">!present-alt-theme!</variable>
+    </class>
+
+    <class name="verb-ja" inherits="VerbVocalic" unproductive="true">
+    </class>
+
 
     <class name="Noun" inherits="Base" abstract="true">
       <variable name="tags">cons({NOUN}, [{NOM, SIN}, {VOC, SIN}, {ACC, SIN}, {GEN, SIN}, {DAT, SIN}, {INS, SIN}, {LOC, SIN}, {NOM/ACC, DUA}, {GEN/LOC, DUA}, {DAT/INS, DUA}, {NOM/VOC, PLU}, {ACC, PLU}, {GEN, PLU}, {DAT, PLU}, {INS, PLU}, {LOC, PLU}])</variable>

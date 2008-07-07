@@ -126,8 +126,6 @@ module Logos
 
     # A wrapper around the entire "program" definition.
     class ProgramDefinition < Hash
-      attr_reader :preamble
-
       def initialize(file_name)
         doc = Hpricot.XML(open(file_name))
         body = Definition.assert_unique_element(doc, "morphology")
@@ -135,9 +133,6 @@ module Logos
         @name = Definition.assert_text_attribute(body, "name")
         @forms = Definition.assert_text_attribute(body, "forms", true)
         @tags = Definition.assert_text_attribute(body, "tags", true)
-        if p = Definition.assert_unique_element(body, "preamble")
-          @preamble = p.inner_html
-        end
 
         @constants = {}
         (body/:symbols/:symbol).each do |e| 

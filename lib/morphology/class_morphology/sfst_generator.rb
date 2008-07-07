@@ -78,14 +78,22 @@ end
 def produce_output(base_name, program, evaluations)
   f = SFSTFile.new(base_name)
 
-  # Emit preamble
-  f.print program.preamble
-
   # Emit computed constants
   f.puts
   f.puts "% Computed constants"
 
+  f.puts "#consonants1# = sšzž
+#consonants2# = ptkcčxbdgZ
+#consonants3# = vmn
+#consonants4# = lr
+#consonants5# = j
+#front#    = iĭeęě
+#back#     = aouŭyǫü
+#consonants# = #consonants1# #consonants2# #consonants3# #consonants4# #consonants5# GfT
+#vowels# = #front# #back#
+#letters# = #vowels# #consonants#"
   f.puts "ALPHABET = [#letters#] [#classes#] [#features#] [#disposable_symbols#]"
+  f.puts "$any-root$ = \"<#{base_name}-guesser.a>\""
  
   compilers = []
   evaluations.each_pair do |class_name, c|
