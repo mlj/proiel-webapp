@@ -227,6 +227,11 @@ module PROIEL
     # will also insert sentence divisions whenever the required boundary
     # conditions are met. Returns the (reencoded) token form.
     def write_token(form, sort, book, chapter, verse, other_attributes = {}, reencoder = nil, sentence_dividers = nil)
+      # Occasionally, we encounter texts in which punctuation and chapter divisions
+      # don't add up. We therefore insert an extra sentence division whenever the
+      # chapter number changes.
+      next_sentence unless chapter.nil? or chapter.to_i == @last_chapter
+
       if @seen_sentence_divider
         # We've saved a note about a sentence divider having been encountered. This means
         # that we will have to start a new sentence now, UNLESS we immediately encounter
@@ -245,11 +250,6 @@ module PROIEL
     end
 
     def tokenise_and_write_string(s, segmenter, book, chapter, verse, other_attributes = {}, reencoder = nil, sentence_dividers = nil)
-      # Occasionally, we encounter texts in which punctuation and chapter divisions
-      # don't add up. We therefore insert an extra sentence division whenever the
-      # chapter number changes.
-      next_sentence unless chapter.nil? or chapter.to_i == @last_chapter
-
       segmenter.segmenter(reencoder ? reencoder.call(s) : s) do |t|
         write_token(t[:form], t[:sort], book, chapter, verse, t.slice(:composed_form).merge(other_attributes), 
                     nil, sentence_dividers || [])
