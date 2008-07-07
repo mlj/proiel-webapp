@@ -5,12 +5,10 @@
 # Written by Marius L. Jøhndal <mariuslj at ifi.uio.no>, 2008
 #
 class Object
-  # From http://moonbase.rydia.net/mental/blog/programming/eavesdropping-on-expressions.
-  # Is defined in Ruby 1.9.
   def tap
     yield self
     self
-  end if RUBY_VERSION < '1.9'
+  end if RUBY_VERSION < '1.8.7'
 
   def using(object, &block)
     object.instance_eval(&block)
@@ -47,18 +45,9 @@ class Numeric
 end
 
 class Symbol
-  # [From Rails 2.0.1 verbatim]
-  #
-  # Turns the symbol into a simple proc, which is especially useful for enumerations. Examples:
-  #
-  #   # The same as people.collect { |p| p.name }
-  #   people.collect(&:name)
-  #
-  #   # The same as people.select { |p| p.manager? }.collect { |p| p.salary }
-  #   people.select(&:manager?).collect(&:salary)
   def to_proc
     Proc.new { |*args| args.shift.__send__(self, *args) }
-  end unless :test.respond_to?(:to_proc)
+  end if RUBY_VERSION < '1.8.7' and not :test.respond_to?(:to_proc)
 
   def humanize
     to_s.humanize
@@ -174,6 +163,7 @@ module Enumerable
     Hash[*self.collect { |e| yield e }.flatten]
   end
 
+  #FIXME: incompatible with Ruby 1.8.7!
   def count
     inject(Hash.new(0)) { |k, e| k[e] += 1; k }
   end
@@ -208,7 +198,7 @@ class Array
 
   def shuffle
     sort { rand(3) - 1 }
-  end
+  end if RUBY_VERSION < '1.8.7'
 
   # Verbatim from 
   # ActiveSupport::CoreExtensions::Array::Conversions (2.0.1) except
