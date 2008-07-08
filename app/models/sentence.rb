@@ -406,10 +406,11 @@ class Sentence < ActiveRecord::Base
   private
 
   def check_invariants
-    # Constraint: sentence must have at least one token.
-    if tokens.length < 1
-      errors.add_to_base("Sentence must have at least one token")
-    end
+    # FIXME? This breaks creation of new sentences
+    # # Constraint: sentence must have at least one token.
+    # if tokens.length < 1
+    #   errors.add_to_base("Sentence must have at least one token")
+    # end
 
     # Pairwise attributes: reviewed_by && reviewed_at
     # Pairwise attributes: annotated_by && annotated_at
