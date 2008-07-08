@@ -144,6 +144,11 @@
     <tag code="b" summary="ablative" abbreviation="abl."/>
     <tag code="i" summary="instrumental" abbreviation="ins."/>
     <tag code="l" summary="locative" abbreviation="loc."/>
+
+    <tag code="c" summary="genitive or dative" abbreviation="gen./dat."/>
+
+    <equivalence ref="g" isa="c"/>
+    <equivalence ref="d" isa="c"/>
   </field>
 
   <field id="degree" default="positive">
@@ -160,5 +165,10 @@
   <field id="strength" default="weak">
     <tag code="w" summary="weak"/>
     <tag code="s" summary="strong"/>
+
+    <tag code="t" summary="weak or strong"/>
+
+    <equivalence ref="w" isa="t"/>
+    <equivalence ref="s" isa="t"/>
   </field>
 </tagset>

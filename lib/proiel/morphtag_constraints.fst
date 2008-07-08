@@ -8,10 +8,10 @@
 #mood#           = ismonpdgu\-
 #voice#          = aempndoq\-
 #gender#         = opqrmfn\-
-#case#           = nvagdbil\-
+#case#           = nvagdbilc\-
 #degree#         = pcs\-
 #animacy#        = ia\-
-#strength#       = ws\-
+#strength#       = wst\-
 
 ALPHABET = [#major#] [#minor#] [#person#] [#number#] [#tense#] [#mood#] [#voice#] [#gender#] [#case#] [#degree#] [#animacy#] [#strength#]
 $any$    = [#major#] [#minor#] [#person#] [#number#] [#tense#] [#mood#] [#voice#] [#gender#] [#case#] [#degree#] [#animacy#] [#strength#]
@@ -31,10 +31,10 @@ $feature_mapping$ = \
   (<INDICATIVE>:i | <SUBJUNCTIVE>:s | <IMPERATIVE>:m | <OPTATIVE>:o | <INFINITIVE>:n | <PARTICIPLE>:p | <GERUND>:d | <GERUNDIVE>:g | <SUPINE>:u | <>:\-) \
   (<ACTIVE>:a | <MIDDLEPASSIVE>:e | <MIDDLE>:m | <PASSIVE>:p | <MIDDLEPASSIVEDEPONENT>:n | <MIDDLEDEPONENT>:d | <PASSIVEDEPONENT>:o | <IMPERSONALACTIVE>:q | <>:\-) \
   (<MASCULINENEUTER>:o | <MASCULINEFEMININE>:p | <MASCULINEFEMININENEUTER>:q | <FEMININENEUTER>:r | <MASCULINE>:m | <FEMININE>:f | <NEUTER>:n | <>:\-) \
-  (<NOM>:n | <VOC>:v | <ACC>:a | <GEN>:g | <DAT>:d | <ABL>:b | <INS>:i | <LOC>:l | <>:\-) \
+  (<NOM>:n | <VOC>:v | <ACC>:a | <GEN>:g | <DAT>:d | <ABL>:b | <INS>:i | <LOC>:l | <GEN/DAT>:c | <>:\-) \
   (<POSITIVE>:p | <COMPARATIVE>:c | <SUPERLATIVE>:s | <>:\-) \
   (<INANIMATE>:i | <ANIMATE>:a | <>:\-) \
-  (<WEAK>:w | <STRONG>:s | <>:\-)
+  (<WEAK>:w | <STRONG>:s | <WEAK/STRONG>:t | <>:\-)
 
 % Positional tag space
 % ====================
