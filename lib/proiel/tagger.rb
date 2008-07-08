@@ -145,7 +145,13 @@ module PROIEL
         language = language.to_sym
         raise "Undefined language #{language}" unless @methods.has_key?(language) 
 
-        raw_candidates = @methods[language].collect { |method| method.call(form) }.flatten
+        begin
+          raw_candidates = @methods[language].collect { |method| method.call(form) }.flatten
+        rescue Exception => e
+          @logger.error { "Tagger method failed: #{e}" }
+          return [:failed, nil]
+        end
+
         raw_candidates.sort!
 
         # Try to make sense of any existing information that we have
