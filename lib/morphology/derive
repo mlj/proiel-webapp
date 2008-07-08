@@ -323,6 +323,76 @@ classes = {
       },
     }, 
   }, },
+
+  # Old Church Slavonic classes
+
+  # numerals that inflect like singular feminine i-stems
+  :C1 => { :tag => '---p---q', :stemmer => 'ь', :infl => {
+    :case => { :n => 'и',  :v => 'и', :a => 'и', :g => 'ьи', :d => 'ьмъ', :i => 'ьми', :l => 'ьхъ' },
+  }, },
+
+  # numerals that inflect like singular neuter o-stems
+  :C2 => { :tag => '---p---q', :stemmer => 'о', :infl => {
+    :case => { :n => 'о',  :v => 'о', :a => 'о', :g => 'а', :d => 'оу', :i => 'омь', :l => 'ѣ' },
+  }, },
+
+  # hard adjectives
+  :C4 => { :stemmer => 'ъ', :infl => {
+    :number => {
+      :s => {
+        :gender => {
+          :m => { :case => { :n => 'ъ',  :v => 'ъ', :a => 'ъ', :g => 'а', :d => 'оу', :i => 'омь', :l => 'ѣ' }, },
+          :f => { :case => { :n => 'а',  :v => 'а', :a => 'ѫ', :g => 'ꙑ', :d => 'ѣ',  :i => 'оѭ',  :l => 'ѣ' }, },
+          :n => { :case => { :n => 'о',  :v => 'о', :a => 'о', :g => 'а', :d => 'оу', :i => 'омь', :l => 'ѣ' }, },
+        },
+      },
+      :d => {
+        :gender => {
+          :m => { :case => { :n => 'а',  :v => 'а', :a => 'а', :g => 'оу', :d => 'ома', :i => 'ома', :l => 'оу' }, },
+          :f => { :case => { :n => 'ѣ',  :v => 'ѣ', :a => 'ѣ', :g => 'оу', :d => 'ама', :i => 'ама', :l => 'оу' }, },
+          :n => { :case => { :n => 'о',  :v => 'о', :a => 'о', :g => 'оу', :d => 'ома', :i => 'ома', :l => 'оу' }, },
+        },
+      },
+      :p => {
+        :gender => {
+          :m => { :case => { :n => 'и',  :v => 'и', :a => 'ꙑ', :g => 'ъ', :d => 'омъ', :i => 'ꙑ',   :l => 'ѣхъ' }, },
+          :f => { :case => { :n => 'ꙑ',  :v => 'ꙑ', :a => 'ꙑ', :g => 'ъ', :d => 'амъ', :i => 'ами', :l => 'ахъ' }, },
+          :n => { :case => { :n => 'о',  :v => 'о', :a => 'о', :g => 'а', :d => 'оу', :i => 'омь', :l => 'ѣ' }, },
+          :n => { :case => { :n => 'а',  :v => 'а', :a => 'а', :g => 'ъ', :d => 'омъ', :i => 'ꙑ', :l => 'ѣхъ' }, },
+        },
+      },
+    },  
+  }, },
+
+  # feminine i-stems
+  #:C10 => { :tag => '-------f', :stemmer => 'ь', :infl => {
+  #  :number => {
+  #    :s => {
+  #      :case => { :n => 'ь',  :v => 'и', :a => 'ь', :g => 'и', :d => 'и', :i => 'ьѭ', :l => 'и' },
+  #    },
+  #    :d => {
+  #      :case => { :n => 'и',  :v => 'и', :a => 'и', :g => 'ью', :d => 'ьма', :i => 'ьма', :l => 'ью' },
+  #    },
+  #    :p => {
+  #      :case => { :n => 'и',  :v => 'и', :a => 'и', :g => 'ьи', :d => 'ьмъ', :i => 'ьми', :l => 'ьхъ' },
+  #    },
+  #  }, 
+  #}, },
+  
+  # neuter, o-stems
+  #:C2 => { :tag => '-------n', :stemmer => 'о', :infl => {
+  #  :number => {
+  #    :s => {
+  #      :case => { :n => 'о',  :v => 'о', :a => 'о', :g => 'а', :d => 'оу', :i => 'омь', :l => 'ѣ' },
+  #    },
+  #    :d => {
+  #      :case => { :n => 'ѣ',  :v => 'ѣ', :a => 'ѣ', :g => 'оу', :d => 'ома', :i => 'ома', :l => 'оу' },
+  #    },
+  #    :p => {
+  #      :case => { :n => 'а',  :v => 'а', :a => 'а', :g => 'ъ', :d => 'омъ', :i => 'ꙑ', :l => 'ѣхъ' },
+  #    },
+  #  }, 
+  #}, },
 }
 
 # Generates inflections recursively. If the given starting tag
@@ -352,7 +422,9 @@ end
 
 # Emits a new rule
 def emit(language, lemma, variant, form, tag, options = {})
-  if tag.is_valid?(language)
+  if lemma.empty?
+    STDERR.puts "Ignoring rule #{tag} for #{form} (#{variant}): Missing lemma."
+  elsif tag.is_valid?(language)
     if options[:caseless]
       capitalised_form = form.chars.capitalize
       emit(language, lemma, variant, capitalised_form, tag) unless capitalised_form == form
@@ -428,27 +500,27 @@ File.open(rule_file) do |f|
       form ||= lemma
 
       if cur_cls
-        template = PROIEL::MorphTag.new(cur_pos)
-        template.union!(cur_pos + tag) if tag
+        if classes[cur_cls.to_sym]
+          template = PROIEL::MorphTag.new(cur_pos)
+          template.union!(cur_pos + tag) if tag
 
-        cls = cur_cls
-        base_tag = classes[cls.to_sym][:tag]
-        template.union!(base_tag) if base_tag
+          cls = cur_cls
+          base_tag = classes[cls.to_sym][:tag]
+          template.union!(base_tag) if base_tag
 
-        inflections = classes[cls.to_sym][:infl]
-        stemmer = classes[cls.to_sym][:stemmer]
-        stem = Lingua::GRC::strip_accents(form).gsub(/#{stemmer}$/, '')
+          inflections = classes[cls.to_sym][:infl]
+          stemmer = classes[cls.to_sym][:stemmer]
+          stem = Lingua::GRC::strip_accents(form).gsub(/#{stemmer}$/, '')
 
-        each_inflection(stem, template, inflections) { |tag, form| 
-          emit(language, lemma, variant, form, tag, options)
-        }
+          each_inflection(stem, template, inflections) { |tag, form| 
+            emit(language, lemma, variant, form, tag, options)
+          }
+        else
+          STDERR.puts "Invalid class #{cur_cls}. Ignoring."
+        end
       else
         emit(language, lemma, variant, form, PROIEL::MorphTag.new(tag ? cur_pos + tag : cur_pos), options)
       end
     end
   end
 end
-
-
-
-
