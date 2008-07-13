@@ -21,5 +21,5 @@ config.action_mailer.delivery_method = :sendmail
 
 ExceptionNotifier.exception_recipients = %w(mariuslj@ifi.uio.no)
 
-SITE_CANONICAL_URL = 'http://logos.uio.no:3001'
+SITE_CANONICAL_URL = 'http://foni.uio.no:3001'
 SITE_ADMINISTRATOR_EMAIL = 'mariuslj@ifi.uio.no'
