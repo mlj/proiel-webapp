@@ -195,6 +195,16 @@ module ClassBasedMorphology
 
     def arity; string.arity end
 
+    def optimise
+      s = string.optimise
+
+      if arity == 1 and s.arity == 1 and s.is_a?(Subst) and s.to.value.first.is_a?(EmptyLiteral)
+        Subst.new(s.string, Literal.new(from.value.first + s.from.value.first), to)
+      else
+        Subst.new(s, from, to)
+      end
+    end
+
     def type
       raise "Invalid type #{string.type} for expression #{string}" unless string.type == :string
       raise "Invalid type #{from.type} for expression #{rule}" unless from.type == :string

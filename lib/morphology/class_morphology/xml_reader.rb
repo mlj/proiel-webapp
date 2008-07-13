@@ -80,7 +80,7 @@ module Logos
           s = @variables[variable].body
 
           macros = {}
-          s.scan(/\!([a-z-]+)\!/).each do |id|
+          s.scan(/\!([0-9a-z-]+)\!/).each do |id|
             id = id.first
 
             case id
