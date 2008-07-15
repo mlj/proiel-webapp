@@ -89,6 +89,8 @@ module PROIEL
                 a[:composed_form] = v
               when 'sort'
                 a[:sort] = v.gsub(/-/, '_').to_sym
+              when 'foreign-ids'
+                a[:foreign_ids] = v
               else
                 raise "Invalid source: token has unknown attribute #{k}"
               end

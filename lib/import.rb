@@ -4,7 +4,6 @@
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
-require 'hpricot'
 require 'proiel/src'
 
 class SourceImport
@@ -87,7 +86,8 @@ class PROIELXMLImport < SourceImport
                    :form => form, 
                    :verse => attributes[:verse], 
                    :composed_form => attributes[:composed_form],
-                   :sort => attributes[:sort])
+                   :sort => attributes[:sort],
+                   :foreign_ids => attributes[:foreign_ids])
 
       if (attributes[:relation] or attributes[:head]) and not dependency_warned
         STDERR.puts "Dependency structures cannot be imported. Ignoring."

@@ -9,7 +9,8 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 4) do
+ActiveRecord::Schema.define(:version => 5) do
+
   create_table "audits", :force => true do |t|
     t.integer "auditable_id"
     t.string  "auditable_type"
@@ -55,7 +56,7 @@ ActiveRecord::Schema.define(:version => 4) do
   create_table "dictionary_entries", :force => true do |t|
     t.integer "dictionary_id",               :default => 0,  :null => false
     t.string  "identifier",    :limit => 32, :default => "", :null => false
-    t.text    "data",                        :default => "", :null => false
+    t.text    "data",                                        :null => false
   end
 
   create_table "dictionary_references", :force => true do |t|
@@ -165,6 +166,7 @@ ActiveRecord::Schema.define(:version => 4) do
     t.enum     "morphtag_performance", :limit => [:failed, :overridden, :suggested, :picked]
     t.string   "source_morphtag",      :limit => 17
     t.string   "source_lemma",         :limit => 32
+    t.text     "foreign_ids"
   end
 
   add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true
