@@ -106,6 +106,16 @@ class Token < ActiveRecord::Base
     end
   end
 
+  # Returns true if the morphtag is valid.
+  def morphtag_is_valid?
+    PROIEL::MorphTag.new(morphtag).is_valid?(language)
+  end
+
+  # Returns true if the source morphtag is valid.
+  def source_morphtag_is_valid?
+    PROIEL::MorphTag.new(source_morphtag).is_valid?(language)
+  end
+
   def reference
     if verse
       PROIEL::Reference.new(sentence.source.abbreviation, sentence.source.id,
