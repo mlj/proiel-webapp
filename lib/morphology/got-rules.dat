@@ -1,0 +1,169 @@
+# 
+# got-rules.dat - Hand-written morphology rules for Gothic
+#
+# Written by Marius L. Jøhndal, 2008.
+#
+
+Nj {
+}
+
+Ne- {
+  Iesus/s---mn, Iesus:Iesu/s---mv, Iesus:Iesuis/s---mg,
+}
+ 
+Nh {
+  rabbaunei, rabbei
+}
+
+Mo- {
+  ahtuda:ahtudin/s---nd--w,
+}
+
+Ma-p--- {
+  twai:twai/mn, twai:twos/fn, twai:twa/nn,
+  twai:twans/ma, twai:twos/fa, twai:twa/na,
+  twai:twaddje/mg, twai:twaddje/ng,
+  twai:twaim/md, twai:twaim/fd, twai:twaim/nd,
+
+  þreis:þrins/ma,
+  þreis:þrins/fa,
+  þreis:þrija/na,
+  þreis:þrije/mg,
+  þreis:þrim/md, þreis:þrim/nd,
+}
+
+Mg {
+  fidwor, fimf, saihs, sibun, ahtau, niun, taihun,
+  twalif, fidwortaihun, *fimftaihun,
+
+  sibuntehund, ahtautehund, niuntehund, taihuntehund,
+}
+
+Ma- {
+  fidwor:fidworim/p---md, fidwor:fidworim/p---fd, fidwor:fidworim/p---nd,
+  niun:niune/p---md, niun:niune/p---fd, niun:niune/p---nd,
+  # *ainlif
+  ainlibim:ainlibim/p---md, ainlibim:ainlibim/p---fd, ainlibim:ainlibim/p---nd,
+  twalif:twalibim/p---md, twalif:twalibim/p---fd, twalif:twalibim/p---nd, 
+  twalif:twalibe/p---mg, twalif:twalibe/p---fg, twalif:twalibe/p---ng,
+  fimftaihun:fimftaihunim/p---md, fimftaihun:fimftaihunim/p---fd, fimftaihun:fimftaihunim/p---nd,
+}
+
+Ma- {
+  fidwor tigjus:fidwor tiguns/p---ma, fidwor tigjus:fidwor tiguns/p---fa, fidwor tigjus:fidwor tiguns/p---na,
+  fimf tigjus:fimf tiguns/p---ma, fimf tigjus:fimf tiguns/p---fa, fimf tigjus:fimf tiguns/p---na,
+  fimf tigjus:fim tiguns/p---ma, fimf tigjus:fim tiguns/p---fa, fimf tigjus:fim tiguns/p---na,
+  þreis tigjus:þrins tiguns/p---ma, þreis tigjus:þrins tiguns/p---fa,
+  þreis tigjus:þrije tigiwe/p---mg,
+  saihs tigjus:saihs tigum/p---md, saihs tigjus:saihs tigum/p---fd, saihs tigjus:saihs tigum/p---nd,
+  twai tigjus:twaim tigum/p---md, twai tigjus:twaim tigum/p---fd, twai tigjus:twaim tigum/p---nd,
+
+  þreis hunda:þrija hunda/p---nn,
+  fimf hunda:fimf hunda/p---mn, fimf hunda:fimf hunda/p---fn, fimf hunda:fimf hunda/p---nn,
+  fimf hunda:fimf hundam/p---md, fimf hunda:fimf hundam/p---fd, fimf hunda:fimf hundam/p---nd,
+  twai hunda:twaim hundam/p---md, twai hunda:twaim hundam/p---fd, twai hunda:twaim hundam/p---nd,
+}
+
+# `both'
+A-- {
+  bai:ba/p---nnp, bai:ba/p---nap, bai:bai/p---mnp, bai:baim/p---mdp, bai:bans/p---map,
+
+  bajoþs:bajoþs/p----np, bajoþs:bajoþs/p----ap, bajoþs:bajoþum/p----dp,
+}
+
+# Distributive numerals
+A-- {
+  # *tweihnai
+  tweihnos:tweihnos/p---fnp-s, tweihnos:tweihnaim/p---fdp-s
+}
+
+Pp1 {
+}
+
+Pp2 {
+}
+
+Pp3 {
+}
+
+Pr- {
+}
+
+Ps1 {
+}
+
+Ps2 {
+}
+
+Pi- {
+}
+
+Pk {
+}
+
+Pd- {
+}
+
+Pc-p--- {
+}
+
+Px- {
+}
+
+R {
+  af, afar, alja, ana, and, at, bi, du, faur, faura, fram, hindar, in, inuh,
+  miþ, uf, ufar, ufaro, und, undar, undaro, us, wiþra, þairh
+}
+
+C {
+  jah,
+}
+
+G {
+}
+
+F {
+  helei, kaurban, lima, raka, sibakþanei, 
+}
+
+I {
+  amen, o, osanna, wai, wainei
+}
+
+Df------- {
+  # Is there a positive?
+  fruma:frumist/s,
+}
+
+Dn {
+  -uh, an, sweþauh,
+
+  # Temporal
+  air, anaks, gistradagis, ju, þan, simle, ufta,
+
+  # Local
+  inn,            inna,   innana, innaþro,
+  iup,            iupa,           iupaþro,
+  ut,             uta,    utana,  utaþro,
+                  fairra,         fairraþro,
+                  afta,   aftana,
+          dalaþ,  dalaþa,         dalaþro,
+  aljar,  aljaþ,                  aljaþro,
+                                  allaþro,
+  her,                                       hidre,
+  jainar, jaind,                  jainþro,   jaindre,
+  þar, 
+                  neƕa,
+
+  # Manner
+  ƕassaba,
+}
+
+Du {
+          ƕaþ,                    ƕaþro,     ƕadre,
+  ibai,
+}
+
+Dq {
+  ei, þei
+}

@@ -79,7 +79,7 @@ $tags$ = $any$ & $legal_tags$
 $hy_category_removals$ =  (.   .   .   .   .   .   .   \-:[#gender#] .    .   \-:[#animacy#] \-:[#strength#])
 $la_category_removals$ =  (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#])
 $grc_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#])
-$got_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#])
+$got_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] .              )
 $cu_category_removals$ =  (.   .   .   .   .   .   .   .             .    .   .              .              )
 
 % Language-specific removal of specific category *values*

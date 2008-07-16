@@ -39,7 +39,7 @@ module PROIEL
       :la =>  [ :art, :dual,             :ins,       :aorist, :resultative, :past, :optative, :middle, :gen_dat, ],
       :grc => [       :dual,       :abl, :ins, :loc,          :resultative, :past,                     :gen_dat, ],
       :hy  => [ :art, :dual, :voc, :abl, :ins,                :resultative, :past, :optative, :middle, :gen_dat, ],
-      :got => [ :art,        :voc, :abl, :ins, :loc, :aorist, :resultative,        :optative, :middle, :gen_dat, ],
+      :got => [ :art,              :abl, :ins, :loc, :aorist, :resultative,                   :middle, :gen_dat, ],
       :cu  => [ :art,              :abl,                                           :optative, :middle,           :pluperfect, :futperfect, :perfect, ],
     }
 

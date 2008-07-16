@@ -1,4 +1,21 @@
 :languages:
+  :got:
+    :instance_frequencies:
+      true
+    :source_tag_pattern_filtering:
+      true
+    :include_new_source_tags:
+      "^V":
+      "^N":
+      "^A":
+      "^P":
+      "^Mo":
+      "^D-":
+        "-n"
+      "^Df":
+      "^C":
+    :manual_rules:
+      got-rules.csv
   :cu:
     :manual_rules:
       cu-rules.csv

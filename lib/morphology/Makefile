@@ -1,4 +1,4 @@
-TARGETS=cu-rules.csv grc-rules.csv la-rules.csv la-generated.csv cu-normalisation.ca cu-orthographics.ca cu.ca
+TARGETS=cu-rules.csv grc-rules.csv la-rules.csv la-generated.csv cu-normalisation.ca cu-orthographics.ca cu.ca got-rules.csv
 
 all: $(TARGETS)
 	make -C class_morphology
@@ -18,6 +18,9 @@ clean:
 
 la-rules.csv: derive la-rules.dat
 	ruby -I.. derive la la-rules.dat | sort > $@ 
+
+got-rules.csv: derive got-rules.dat
+	ruby -I.. derive got got-rules.dat | sort > $@
 
 cu-rules.csv: derive cu-rules.dat
 	ruby -I.. derive cu cu-rules.dat | sort > $@ 
