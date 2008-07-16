@@ -89,6 +89,8 @@ module PROIEL
                 a[:composed_form] = v
               when 'sort'
                 a[:sort] = v.gsub(/-/, '_').to_sym
+              when 'foreign-ids'
+                a[:foreign_ids] = v
               else
                 raise "Invalid source: token has unknown attribute #{k}"
               end
@@ -244,7 +246,7 @@ module PROIEL
 
       track_references(book, chapter, verse) if book and chapter
       form = reencoder.call(form) if reencoder
-      emit_word(form.gsub(/</, '&lt;').gsub(/>/, '&gt;'), other_attributes.merge({ :sort => sort }))
+      emit_word(form ? form.gsub(/</, '&lt;').gsub(/>/, '&gt;') : nil, other_attributes.merge({ :sort => sort }))
 
       @seen_sentence_divider = true if sentence_dividers and sentence_dividers.include?(form)
     end

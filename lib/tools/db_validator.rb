@@ -143,7 +143,7 @@ class Validator < Task
                           :include => [ :sentence ], 
                           :conditions => [ "sort not in ('empty', 'nonspacing_punctuation') and sentences.reviewed_by is not null and lemma_id is null" ])
     bad_ones.each do |o| 
-      logger.error { "Token #{o.id} [#{o.sort}]: Reviewed but no lemma (http://logos.uio.no:3000/tokens/#{o.id})" } 
+      logger.error { "Token #{o.id} [#{o.sort}]: Reviewed but no lemma" } 
     end
 
     logger.info { "Checking that lemmata with variant numbers do not also occur without variant numbers..." }
