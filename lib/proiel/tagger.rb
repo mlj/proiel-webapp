@@ -161,10 +161,10 @@ module PROIEL
           if m[:include_new_source_tags]
             found = nil
             m[:include_new_source_tags].each_pair do |src, dst|
-              src = Regexp.new(src)
-              dst = PROIEL::MorphTag.expand_s(dst)
-              existing.morphtag.union!(dst) if src.match(existing.morphtag.to_s)
-              found = true
+              if Regexp.new(src).match(existing.morphtag.to_s)
+                existing.morphtag.union!(dst) if dst
+                found = true
+              end
             end
               
             if found and existing.morphtag.is_valid?(language) and !existing.lemma.nil?
