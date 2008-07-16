@@ -40,30 +40,30 @@ class Token < ActiveRecord::Base
   validate :validate_sort
 
   def previous_tokens
-    self.sentence.tokens.find(:all, 
-                              :conditions => [ "token_number < ?", self.token_number ], 
+    self.sentence.tokens.find(:all,
+                              :conditions => [ "token_number < ?", self.token_number ],
                               :order => "token_number ASC")
   end
 
   def next_tokens
-    self.sentence.tokens.find(:all, 
-                              :conditions => [ "token_number > ?", self.token_number ], 
+    self.sentence.tokens.find(:all,
+                              :conditions => [ "token_number > ?", self.token_number ],
                               :order => "token_number ASC")
   end
 
   # Returns the previous token in the linearisation sequence. Returns +nil+
   # if there is no previous token.
   def previous_token
-    self.sentence.tokens.find(:first, 
-                              :conditions => [ "token_number < ?", self.token_number ], 
+    self.sentence.tokens.find(:first,
+                              :conditions => [ "token_number < ?", self.token_number ],
                               :order => "token_number DESC")
   end
 
   # Returns the next token in the linearisation sequence. Returns +nil+
   # if there is no next token.
   def next_token
-    self.sentence.tokens.find(:first, 
-                              :conditions => [ "token_number > ?", self.token_number ], 
+    self.sentence.tokens.find(:first,
+                              :conditions => [ "token_number > ?", self.token_number ],
                               :order => "token_number ASC")
   end
 
@@ -76,7 +76,7 @@ class Token < ActiveRecord::Base
   def morph_lemma_tag
     if self.morphtag
       if lemma
-        PROIEL::MorphLemmaTag.new(PROIEL::MorphTag.new(morphtag), 
+        PROIEL::MorphLemmaTag.new(PROIEL::MorphTag.new(morphtag),
                                   lemma.lemma, lemma.variant)
       else
         PROIEL::MorphLemmaTag.new(morphtag)
@@ -110,15 +110,15 @@ class Token < ActiveRecord::Base
     if verse
       PROIEL::Reference.new(sentence.source.abbreviation, sentence.source.id,
                     sentence.book.code, sentence.book.id,
-                    { :chapter => sentence.chapter.to_i, 
-                      :verse => verse.to_i, 
-                      :sentence => sentence.sentence_number.to_i, 
+                    { :chapter => sentence.chapter.to_i,
+                      :verse => verse.to_i,
+                      :sentence => sentence.sentence_number.to_i,
                       :token => token_number.to_i })
     else
       PROIEL::Reference.new(sentence.source.abbreviation, sentence.source.id,
                     sentence.book.code, sentence.book.id,
-                    { :chapter => sentence.chapter.to_i, 
-                      :sentence => sentence.sentence_number.to_i, 
+                    { :chapter => sentence.chapter.to_i,
+                      :sentence => sentence.sentence_number.to_i,
                       :token => token_number.to_i })
     end
   end
@@ -154,7 +154,7 @@ class Token < ActiveRecord::Base
   # of the same token form.
   def invoke_tagger
     TAGGER.logger = logger
-    TAGGER.tag_token(self.language, self.form, self.sort, 
+    TAGGER.tag_token(self.language, self.form, self.sort,
                      self.morph_lemma_tag || self.source_morph_lemma_tag)
   end
 
@@ -162,7 +162,7 @@ class Token < ActiveRecord::Base
   def language
     # FIXME: eliminate to_sym
     sentence.source.language.to_sym
-  end 
+  end
 
   # Merges the token with the token linearly subsequent to it. The succeding
   # token is destroyed, and the original token's word form is updated. All
@@ -184,7 +184,7 @@ class Token < ActiveRecord::Base
   # number changes are saved.
   def split!(new_form, new_sort, new_composed_form = nil)
     # Shift token numbers after the old token numbers. We have to do the numbers
-    # in descending order to avoid duplicates keys in the sentence_id, token_number 
+    # in descending order to avoid duplicates keys in the sentence_id, token_number
     # index.
     sentence.tokens.reject { |t| t.token_number <= self.token_number }.sort_by(&:token_number).reverse.each do |t|
       t.token_number += 1
@@ -215,12 +215,17 @@ class Token < ActiveRecord::Base
     end
   end
 
+  def nominal?
+    @nominal ||= marked_as_nominal || PROIEL::MORPHOLOGY.include?(morphtag) ||
+      PROIEL::RELATIONS.include?(relation)
+  end
+
   protected
 
   def self.search(search, page, limit = 50)
     search ||= {}
-    conditions = [] 
-    clauses = [] 
+    conditions = []
+    clauses = []
     includes = []
 
     if search[:source] and search[:source] != ''
@@ -228,7 +233,7 @@ class Token < ActiveRecord::Base
       conditions << search[:source]
       includes << :sentence
     end
-    
+
     if search[:form] and search[:form] != ''
       if search[:exact] == 'yes'
         clauses << "form = ?"
@@ -238,7 +243,7 @@ class Token < ActiveRecord::Base
         conditions << "%#{search[:form]}%"
       end
     end
-    
+
     morphtag_fields = {}
     PROIEL::MorphTag.fields.each do |field|
       if search[field] and search[field] != ''
@@ -254,14 +259,14 @@ class Token < ActiveRecord::Base
 
     conditions = [clauses.join(' and ')] + conditions
 
-    paginate(:page => page, :per_page => limit, :conditions => conditions, 
+    paginate(:page => page, :per_page => limit, :conditions => conditions,
              :include => includes)
   end
 
   private
 
   def validate_sort
-    # morphtag and morphtag source may only be set 
+    # morphtag and morphtag source may only be set
     # if token is morphtaggable
     unless is_morphtaggable?
       errors.add(:morphtag, "not allowed on non-morphtaggable token") unless morphtag.nil?
@@ -277,7 +282,7 @@ class Token < ActiveRecord::Base
     # if morphtag is set, is it actually a morphtag or just a blank?
     if morphtag
       errors.add(:morphtag, "is blank (probably should be NULL)") if morphtag == ''
-      errors.add(:morphtag, "is blank (probably should be NULL)") if morphtag == PROIEL::MorphTag.new().to_s 
+      errors.add(:morphtag, "is blank (probably should be NULL)") if morphtag == PROIEL::MorphTag.new().to_s
     end
 
     # sort :empty <=> form.nil?
@@ -285,7 +290,7 @@ class Token < ActiveRecord::Base
       errors.add_to_base("Empty tokens must have NULL form and sort set to 'empty'") unless sort == :empty and form.nil?
     end
 
-    # sort :fused_morpheme <=> !composed_form.nil? 
+    # sort :fused_morpheme <=> !composed_form.nil?
     if sort == :fused_morpheme or !composed_form.nil?
       errors.add_to_base("Fused morpheme tokens must have a composed form and sort set to 'fused_morpheme'") unless sort == :fused_morpheme and !composed_form.nil?
     end

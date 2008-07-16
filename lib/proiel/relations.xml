@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tagset id="tags">
   <tag code="pred" summary="predicate" shortcut="p"/>
-  <tag code="sub" summary="subject" shortcut="s"/>
-  <tag code="obj" summary="object" shortcut="o">
+  <tag code="sub" summary="subject" shortcut="s" nominal="true"/>
+  <tag code="obj" summary="object" shortcut="o" nominal="true">
     <isa ref="arg"/>
   </tag>
-  <tag code="obl" summary="oblique" shortcut="b">
+  <tag code="obl" summary="oblique" shortcut="b" nominal="true">
     <isa ref="arg"/>
     <isa ref="per"/>
   </tag>
-  <tag code="part" summary="partitive">
+  <tag code="part" summary="partitive" nominal="true">
     <isa ref="adnom"/>
   </tag>
   <tag code="piv" summary="predicative"/>
@@ -25,7 +25,7 @@
     <isa ref="adnom"/>
   </tag>
   <tag code="ag" summary="agens"/>
-  <tag code="adv" summary="adverbial" shortcut="d">
+  <tag code="adv" summary="adverbial" shortcut="d" nominal="true">
     <isa ref="per"/>
   </tag>
   <tag code="aux" summary="auxiliary" shortcut="x"/>
@@ -41,7 +41,7 @@
   <tag code="voc" summary="vocative" shortcut="v"/>
   <tag code="parpred" summary="parenthetical predication"/>
 
-  <tag code="narg" summary="adnominal argument">
+  <tag code="narg" summary="adnominal argument" nominal="true">
     <isa ref="adnom"/>
   </tag>
   <tag code="adnom" summary="adnominal"/>

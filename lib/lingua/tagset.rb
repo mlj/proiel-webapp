@@ -10,12 +10,12 @@ require 'xmlsimple'
 require 'extensions'
 
 module Lingua
-  class Tag 
+  class Tag
     attr_reader :code
     attr_reader :summary
     attr_reader :abbreviation
 
-    # Creates a new tag identified by a given code +code+ and optional descriptive 
+    # Creates a new tag identified by a given code +code+ and optional descriptive
     # information.
     #
     # ==== Options
@@ -45,10 +45,10 @@ module Lingua
     end
   end
 
-  class TagSet < Hash 
+  class TagSet < Hash
     def initialize(data, klass = Tag)
-      c = (data.class == Hash ? data : 
-        XmlSimple.xml_in(data, { 
+      c = (data.class == Hash ? data :
+        XmlSimple.xml_in(data, {
           'KeyToSymbol' => true, 'KeyAttr' => 'code' }))
       if c[:tag]
         c[:tag].each_pair do |key, value|
@@ -67,7 +67,12 @@ module Lingua
     def valid?(code)
       !code.nil? and code != '' and has_key?(code.to_sym)
     end
-  end
+
+      # Returns the set of tags that are considered nominal
+    def nominals
+      @nominals ||= self[:major].select { |key, value| value[:nominal] }
+    end
+end
 
   # A definition of positional tag set.
   class PositionalTagSet < Hash
@@ -76,7 +81,7 @@ module Lingua
     def initialize(data_file, klass = Tag)
       file_name = data_file
 
-      c = XmlSimple.xml_in(file_name, { 
+      c = XmlSimple.xml_in(file_name, {
         'KeyAttr' => { 'field' => 'id', 'tag' => 'code' }})
       c['field'].each_pair do |key, value|
         self[key.to_sym] = TagSet.new(value.rekey { |k| k.to_sym })
@@ -96,7 +101,7 @@ module Lingua
     end
 
     # Returns a hash with descriptions for all fields in the tag set.
-    # 
+    #
     # ==== Options
     # style:: The style the description should be returned in, one of
     # +:abbreviation+ or +:summary+. Default is +:summary+.
@@ -107,6 +112,7 @@ module Lingua
       keys.each { |field| r[field] = descriptions(field, options) }
       r
     end
+
   end
 
 end

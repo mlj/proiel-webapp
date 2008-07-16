@@ -15,8 +15,8 @@
   </order>
 
   <field id="major">
-    <tag code="N" summary="noun"/>
-    <tag code="P" summary="pronoun"/>
+    <tag code="N" summary="noun" nominal="true"/>
+    <tag code="P" summary="pronoun" nominal="true"/>
     <tag code="M" summary="numeral"/>
     <tag code="V" summary="verb"/>
     <tag code="A" summary="adjective" abbreviation="adj."/>
@@ -115,7 +115,7 @@
     <equivalence ref="d" isa="n"/>
     <equivalence ref="o" isa="n"/>
   </field>
-  
+
   <field id="gender">
     <tag code="o" summary="masculine or neuter" abbreviation="m./n."/>
     <tag code="p" summary="masculine or feminine" abbreviation="m./f."/>
