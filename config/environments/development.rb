@@ -19,7 +19,5 @@ config.action_view.debug_rjs                         = true
 config.action_mailer.raise_delivery_errors = true 
 config.action_mailer.delivery_method = :sendmail
 
-ExceptionNotifier.exception_recipients = %w(mariuslj@ifi.uio.no)
-
 SITE_CANONICAL_URL = 'http://foni.uio.no:3001'
 SITE_ADMINISTRATOR_EMAIL = 'mariuslj@ifi.uio.no'
