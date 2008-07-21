@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 5) do
+ActiveRecord::Schema.define(:version => 6) do
 
   create_table "audits", :force => true do |t|
     t.integer "auditable_id"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(:version => 5) do
   create_table "dictionary_entries", :force => true do |t|
     t.integer "dictionary_id",               :default => 0,  :null => false
     t.string  "identifier",    :limit => 32, :default => "", :null => false
-    t.text    "data",                                        :null => false
+    t.text    "data",                        :default => "", :null => false
   end
 
   create_table "dictionary_references", :force => true do |t|
@@ -150,9 +150,9 @@ ActiveRecord::Schema.define(:version => 5) do
   end
 
   create_table "tokens", :force => true do |t|
-    t.integer  "sentence_id",                                                                                                                                                                             :default => 0,     :null => false
+    t.integer  "sentence_id",                                                                                                                                                                                       :default => 0,     :null => false
     t.integer  "verse",                :limit => 2
-    t.integer  "token_number",         :limit => 3,                                                                                                                                                       :default => 0,     :null => false
+    t.integer  "token_number",         :limit => 3,                                                                                                                                                                 :default => 0,     :null => false
     t.string   "morphtag",             :limit => 17
     t.string   "form",                 :limit => 64
     t.integer  "lemma_id"
@@ -160,7 +160,7 @@ ActiveRecord::Schema.define(:version => 5) do
     t.integer  "head_id",              :limit => 3
     t.enum     "morphtag_source",      :limit => [:source_ambiguous, :source_unambiguous, :auto_ambiguous, :auto_unambiguous, :manual]
     t.string   "composed_form",        :limit => 64
-    t.enum     "sort",                 :limit => [:word, :empty, :fused_morpheme, :enclitic, :nonspacing_punctuation, :spacing_punctuation, :left_bracketing_punctuation, :right_bracketing_punctuation], :default => :word, :null => false
+    t.enum     "sort",                 :limit => [:word, :empty, :fused_morpheme, :enclitic, :nonspacing_punctuation, :spacing_punctuation, :left_bracketing_punctuation, :right_bracketing_punctuation, :prodrop], :default => :word, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.enum     "morphtag_performance", :limit => [:failed, :overridden, :suggested, :picked]
