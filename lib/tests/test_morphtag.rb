@@ -100,6 +100,11 @@ class MorphtagTestCase < Test::Unit::TestCase
       assert_equal 'D-', PROIEL::MorphTag.new('D----------').pos_to_s
     end
 
+    def test_non_pos_to_s
+      assert_equal '-s---mn---', PROIEL::MorphTag.new('Ne-s---mn---').non_pos_to_s
+      assert_equal '-s---mn---', PROIEL::MorphTag.new('Ne-s---mn').non_pos_to_s
+    end
+
     def test_morph_lemma_tag
       m = PROIEL::MorphLemmaTag.new(PROIEL::MorphTag.new('Dq'), 'cur')
       assert_equal 'cur', m.lemma
@@ -189,6 +194,7 @@ class MorphtagTestCase < Test::Unit::TestCase
         t = PROIEL::MorphTag.new(tag)
         l = language.to_sym
         v = (validity == 'true') ? true : false
+        puts t.descriptions(t.fields), l, v unless v == t.is_valid?(l)
 
         assert_equal v, t.is_valid?(l)
       end

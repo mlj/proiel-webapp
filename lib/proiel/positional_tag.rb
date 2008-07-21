@@ -23,9 +23,19 @@ module Logos
       self.to_s == other.to_s
     end
 
+    # Returns an integer, -1, 0 or 1, suitable for sorting the tag.
+    def <=>(o)
+      self.to_s <=> o.to_s
+    end
+
     # Returns the positional tag as a string.
     def to_s
       fields.collect { |field| self[field] }.join
+    end
+
+    # Returns +true+ if the tag is empty, i.e. uninitialised.
+    def empty?
+      keys.length == 0
     end
 
     # Tests if the positional tag is contradicted by another positional tag. The
