@@ -1,4 +1,4 @@
-TARGETS=cu-rules.csv grc-rules.csv la-rules.csv la-generated.csv cu-normalisation.ca cu-orthographics.ca cu.ca got-rules.csv
+TARGETS=cu-rules.csv grc-rules.csv la-rules.csv la-generated.csv cu-normalisation.ca cu-orthographics.ca cu.ca got-rules.csv got-generated.csv
 
 all: $(TARGETS)
 	make -C class_morphology
@@ -22,6 +22,9 @@ la-rules.csv: derive la-rules.dat
 got-rules.csv: derive got-rules.dat
 	ruby -I.. derive got got-rules.dat | sort > $@
 
+got-generated.csv: derive-generated ../../data/morph-got.csv
+	ruby -I.. derive-generated got ../../data/morph-got.csv | sort > $@
+
 cu-rules.csv: derive cu-rules.dat
 	ruby -I.. derive cu cu-rules.dat | sort > $@ 
 
@@ -29,7 +32,7 @@ grc-rules.csv: derive grc-rules.dat
 	ruby -I.. derive --caseless grc grc-rules.dat | sort > $@
 
 la-generated.csv: perseus-blacklist derive-generated ../../data/morph-la-open.csv 
-	./derive-generated ../../data/morph-la-open.csv | sort > $@
+	ruby -I.. derive-generated la ../../data/morph-la-open.csv | sort > $@
 
 test: cu.ca
 	fst-infl2 cu.ca < test.txt > test.tmp && diff -u test.tmp test.exp

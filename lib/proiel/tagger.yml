@@ -16,6 +16,8 @@
       "^C":
     :manual_rules:
       got-rules.csv
+    :generated_rules:
+      got-generated.csv
   :cu:
     :manual_rules:
       cu-rules.csv
