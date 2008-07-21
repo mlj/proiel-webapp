@@ -19,7 +19,6 @@ class Token < ActiveRecord::Base
   validates_presence_of :sentence_id
   validates_presence_of :verse, :unless => :is_empty?
   validates_presence_of :token_number
-  validates_presence_of :composed_form, :if => lambda { |t| t.sort == :composed_form }
   validates_presence_of :sort
 
   # If the token has a lemma, it must also have a morphtag (this does
@@ -151,9 +150,6 @@ class Token < ActiveRecord::Base
     PROIEL::EMPTY_TOKEN_SORTS.include?(sort)
   end
 
-  # FIXME: eliminate
-  alias empty? is_empty?
-
   # Returns true if this is a token that takes part in morphology tagging.
   def is_morphtaggable?
     PROIEL::MORPHTAGGABLE_TOKEN_SORTS.include?(sort)
@@ -164,7 +160,7 @@ class Token < ActiveRecord::Base
   # of the same token form.
   def invoke_tagger
     TAGGER.logger = logger
-    TAGGER.tag_token(self.language, self.form, self.sort, 
+    TAGGER.tag_token(self.language, self.form,
                      self.morph_lemma_tag || self.source_morph_lemma_tag)
   end
 
@@ -185,44 +181,6 @@ class Token < ActiveRecord::Base
       n.destroy
     end
     self
-  end
-
-  # Splits the token into two linearly adjacent tokens. The original
-  # token's data is left as-is, and the new token, whose linear
-  # position is immediately after the original token, is returned for
-  # further initialisation. The creation of a new token and all token
-  # number changes are saved.
-  def split!(new_form, new_sort, new_composed_form = nil)
-    # Shift token numbers after the old token numbers. We have to do the numbers
-    # in descending order to avoid duplicates keys in the sentence_id, token_number 
-    # index.
-    sentence.tokens.reject { |t| t.token_number <= self.token_number }.sort_by(&:token_number).reverse.each do |t|
-      t.token_number += 1
-      t.save!
-    end
-
-    sentence.tokens.create!(:verse => self.verse,
-                            :token_number => self.token_number + 1,
-                            :form => new_form,
-                            :composed_form => new_composed_form,
-                            :sort => new_sort)
-  end
-
-  # Splits the token into two linearly adjactent tokens representing
-  # a fused morpheme. The original token's data is left as-is except
-  # for the form which is stripped of the fused morpheme. The new
-  # token is returned.
-  def split_fused_morpheme!(fused_morpheme_form)
-    if self.form[/^(.*)#{fused_morpheme_form}$/]
-      Token.transaction do
-        n = self.split!(fused_morpheme_form, :fused_morpheme, self.form)
-        self.form = $1
-        self.save!
-        n
-      end
-    else
-      raise "Fused morpheme form '#{fused_morpheme_form}' is not a suffix of original token's form '#{self.form}'."
-    end
   end
 
   protected
@@ -290,14 +248,16 @@ class Token < ActiveRecord::Base
       errors.add(:morphtag, "is blank (probably should be NULL)") if morphtag == PROIEL::MorphTag.new().to_s 
     end
 
-    # sort :empty <=> form.nil?
-    if sort == :empty or form.nil?
-      errors.add_to_base("Empty tokens must have NULL form and sort set to 'empty'") unless sort == :empty and form.nil?
+    # sort :empty_dependency_token <=> form.nil?
+    if sort == :empty_dependency_token or sort == :lacuna or form.nil?
+      errors.add_to_base("Empty tokens must have NULL form and sort set to 'empty_dependency_token' or 'lacuna'") unless (sort == :empty_dependency_token or sort == :lacuna) and form.nil?
     end
 
-    # sort :fused_morpheme <=> !composed_form.nil? 
-    if sort == :fused_morpheme or !composed_form.nil?
-      errors.add_to_base("Fused morpheme tokens must have a composed form and sort set to 'fused_morpheme'") unless sort == :fused_morpheme and !composed_form.nil?
+    # sort :presentation_form <=> :presentation_span <=> (contraction || emendation || abbreviation || capitalisation)
+    if !presentation_form.nil? or !presentation_span.nil? or contraction or emendation or abbreviation or capitalisation
+      errors.add_to_base("Tokens with presentation form must have presentation_form set") if presentation_form.nil?
+      errors.add_to_base("Tokens with presentation form must have presentation_span set") if presentation_span.nil?
+      errors.add_to_base("Tokens with presentation form must have one of contraction, emendation, abbreviation or capitalisation set") unless contraction or emendation or abbreviation or capitalisation
     end
   end
 end

@@ -24,4 +24,12 @@ module TokensHelper
       content_tag(element, '&nbsp;', :class => classes.join(' '))
     end
   end
+
+  def readable_presentation_flags(t)
+    flags = []
+    [:contraction, :emendation, :abbreviation, :capitalisation].each do |flag|
+      flags << flag.to_s if t.send(flag)
+    end
+    flags.join(', ')
+  end
 end

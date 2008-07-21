@@ -85,9 +85,13 @@ module PROIEL
                 a[k.to_sym] = v
               when 'chapter', 'verse'
                 a[k.to_sym] = v.to_i
-              when 'composed-form'
-                a[:composed_form] = v
-              when 'sort'
+              when 'presentation-span'
+                a[:presentation_span] = v.to_i
+              when 'presentation-form'
+                a[:presentation_form] = v
+              when 'contraction', 'emendation', 'abbreviation', 'capitalisation'
+                a[k.to_sym] = (v == 'true' ? true : false)
+              when 'sort', 'nospacing'
                 a[:sort] = v.gsub(/-/, '_').to_sym
               when 'foreign-ids'
                 a[:foreign_ids] = v
@@ -96,7 +100,7 @@ module PROIEL
               end
             end
 
-            yield t.inner_html, a
+            yield a[:form], a
           end
         end
       end
@@ -228,7 +232,7 @@ module PROIEL
     # normalisation of the token string. If +sentence_dividers+ is set,
     # will also insert sentence divisions whenever the required boundary
     # conditions are met. Returns the (reencoded) token form.
-    def write_token(form, sort, book, chapter, verse, other_attributes = {}, reencoder = nil, sentence_dividers = nil)
+    def write_token(form, sort, book, chapter, verse, other_attributes = {}, reencoder = nil, sentence_dividers = nil, notes = nil)
       # Occasionally, we encounter texts in which punctuation and chapter divisions
       # don't add up. We therefore insert an extra sentence division whenever the
       # chapter number changes.
@@ -246,14 +250,14 @@ module PROIEL
 
       track_references(book, chapter, verse) if book and chapter
       form = reencoder.call(form) if reencoder
-      emit_word(form ? form.gsub(/</, '&lt;').gsub(/>/, '&gt;') : nil, other_attributes.merge({ :sort => sort }))
+      emit_word(form, other_attributes.merge({ :sort => sort }), notes)
 
       @seen_sentence_divider = true if sentence_dividers and sentence_dividers.include?(form)
     end
 
     def tokenise_and_write_string(s, segmenter, book, chapter, verse, other_attributes = {}, reencoder = nil, sentence_dividers = nil)
       segmenter.segmenter(reencoder ? reencoder.call(s) : s) do |t|
-        write_token(t[:form], t[:sort], book, chapter, verse, t.slice(:composed_form).merge(other_attributes), 
+        write_token(t[:form], t[:sort], book, chapter, verse, t.merge(other_attributes),
                     nil, sentence_dividers || [])
       end
     end
@@ -276,15 +280,70 @@ module PROIEL
 
     private
 
-    def emit_word(form, attrs = {})
+    def escape_string(s)
+      s.gsub(/</, '&lt;').gsub(/>/, '&gt;').gsub(/'/, '&quot;')
+    end
+
+    def emit_word(form, attrs = {}, notes = nil)
       @file.puts "    <sentence>" if @first_token
       @first_token = false
-      xattrs = attrs.dup
-      xattrs[:chapter] = @last_chapter
-      xattrs[:verse] = @last_verse
-      xattrs[:lemma] = Unicode.normalize_C(xattrs[:lemma]) if xattrs[:lemma]
-      formatted_attrs = xattrs.keys.collect { |s| s.to_s }.sort.collect { |k| " #{k.gsub(/_/, '-')}='#{xattrs[k.to_sym].to_s.gsub(/_/, '-')}'" }
-      @file.puts "      <token#{formatted_attrs}>#{form ? Unicode.normalize_C(form) : '' }</token>"
+
+      xattrs = { :chapter => @last_chapter, :verse   => @last_verse }
+      xattrs[:form] = Unicode.normalize_C(escape_string(form)) unless form.nil? or form == ''
+
+      attrs.each_pair do |key, value|
+        next if value.nil? or value == ''
+
+        case key
+        when :lemma, :presentation_form # text
+          xattrs[key] = Unicode.normalize_C(value)
+
+        when :morphtag # morphtag
+          value = MorphTag.new(value) unless value.is_a?(MorphTag)
+          xattrs[key] = value.to_s unless value.empty?
+
+        when :foreign_ids # key-value lists
+          raise ArgumentError, "invalid value for token attribute 'foreign_ids'" unless value.is_a?(Hash) and !value.values.any? { |x| x and x[/,/] }
+          xattrs[key] = value.sort { |x, y| x.to_s <=> y.to_s }.collect { |k, v| v.nil? ? nil : "#{k}=#{v}" }.compact.join(',') unless value.empty?
+
+        when :sort, :nospacing # symbols
+          xattrs[key] = value.to_s.gsub(/_/, '-')
+
+        when :contraction, :emendation, :abbreviation, :capitalisation # booleans
+          case value
+          when TrueClass, 'true'
+            xattrs[key] = 'true'
+          when FalseClass, 'false'
+            xattrs[key] = 'false'
+          else
+            raise ArgumentError, "invalid value for token attribute '#{key}'"
+          end
+
+        when :id, :head, :slashes, :relation, :presentation_span # strings and integers
+          xattrs[key] = value.to_s
+
+        when :form
+          # Ignore form if it is given here.
+          # FIXME: Redo this so that form is actually given here?
+          raise "Form inconsistency" unless value == xattrs[:form]
+        else
+          raise ArgumentError, "invalid token attribute '#{key}'"
+        end
+      end
+
+      formatted_attrs = xattrs.keys.collect(&:to_s).sort.collect { |k| "#{k.gsub(/_/, '-')}='#{escape_string(xattrs[k.to_sym].to_s)}'" }.join(' ')
+
+      if notes
+        @file.puts "      <token #{formatted_attrs}>"
+        @file.puts "        <notes>"
+        notes.each do |note|
+          @file.puts "          <note origin='#{note[:origin]}'>#{escape_string(note[:text])}</note>"
+        end
+        @file.puts "        </notes>"
+        @file.puts "      </token>"
+      else
+        @file.puts "      <token #{formatted_attrs}/>"
+      end
     end
 
     public
@@ -327,34 +386,14 @@ module PROIEL
     end
   end
 
-  WORD_TOKEN_SORTS =
-    [ :word, :fused_morpheme, :enclitic ].freeze
-  EMPTY_TOKEN_SORTS =
-    [ :empty ].freeze
-  NON_BRACKETING_PUNCTUATION_TOKEN_SORTS =
-    [ :nonspacing_punctuation, :spacing_punctuation ].freeze
-  BRACKETING_PUNCTUATION_TOKEN_SORTS =
-    [ :left_bracketing_punctuation, :right_bracketing_punctuation ].freeze
-
-  PUNCTUATION_TOKEN_SORTS =
-    NON_BRACKETING_PUNCTUATION_TOKEN_SORTS + BRACKETING_PUNCTUATION_TOKEN_SORTS
-  NON_EMPTY_TOKEN_SORTS =
-    WORD_TOKEN_SORTS + PUNCTUATION_TOKEN_SORTS
-
+  WORD_TOKEN_SORTS = [ :text ].freeze
+  EMPTY_TOKEN_SORTS = [ :empty_dependency_token ].freeze
+  PUNCTUATION_TOKEN_SORTS = [ :punctuation ].freeze
+  NON_EMPTY_TOKEN_SORTS = WORD_TOKEN_SORTS + PUNCTUATION_TOKEN_SORTS
   MORPHTAGGABLE_TOKEN_SORTS = WORD_TOKEN_SORTS
   DEPENDENCY_TOKEN_SORTS = WORD_TOKEN_SORTS + EMPTY_TOKEN_SORTS
 
   # FIXME: where do these functions belong?
-
-  # Returns true if token sort represents a non-bracketing type of punctuation.
-  def self.is_non_bracketing_punctuation?(sort)
-    NON_BRACKETING_PUNCTUATION_TOKEN_SORTS.include?(sort)
-  end
-
-  # Returns true if token represents a bracketing type of punctuation.
-  def self.is_bracketing_punctuation?(sort)
-    BRACKETING_PUNCTUATION_TOKEN_SORTS.include?(sort)
-  end
 
   # Returns true if token represents punctuation.
   def self.is_punctuation?(sort)

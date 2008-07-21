@@ -4,8 +4,6 @@
 #
 # Written by Marius L. Jøhndal, 2008.
 #
-# $Id: $
-#
 require 'jobs'
 
 class Validator < Task
@@ -141,7 +139,7 @@ class Validator < Task
     logger.info { "Checking that each reviewed token has a valid lemma..." }
     bad_ones = Token.find(:all, 
                           :include => [ :sentence ], 
-                          :conditions => [ "sort not in ('empty', 'nonspacing_punctuation') and sentences.reviewed_by is not null and lemma_id is null" ])
+                          :conditions => [ "sort not in ('empty_dependency_token', 'punctuation') and sentences.reviewed_by is not null and lemma_id is null" ])
     bad_ones.each do |o| 
       logger.error { "Token #{o.id} [#{o.sort}]: Reviewed but no lemma" } 
     end
@@ -192,12 +190,12 @@ class Validator < Task
             end
           end
 
-          unless token.composed_form.nil?
-            normalisation = Unicode::normalize_C(token.composed_form)
-            if normalisation != token.composed_form
-              logger.warning { "Token #{token.id}: Token composed_form is not normalised" }
+          unless token.presentation_form.nil?
+            normalisation = Unicode::normalize_C(token.presentation_form)
+            if normalisation != token.presentation_form
+              logger.warning { "Token #{token.id}: Token presentation_form is not normalised" }
               if @fix
-                token.composed_form = normalisation
+                token.presentation_form = normalisation
                 token.save!
               end
             end

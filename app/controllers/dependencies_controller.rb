@@ -28,7 +28,7 @@ class DependenciesController < ApplicationController
           :form => token.form, #FIXME: eliminate when lemmata more stable
           :lemma => token.lemma ? token.lemma.lemma : nil,
         }),
-        :empty => token.empty?,
+        :empty => token.is_empty?,
         :form => token.form,
         :token_number => token.token_number
       } ] 

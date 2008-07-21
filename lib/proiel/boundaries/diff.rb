@@ -16,8 +16,7 @@ module PROIEL
     def self.diff(a, b, writer, options = {})
       # Filter out everything we don't care about from text B.
       new_b = b.reject { |v| 
-        if v[:sort] == :nonspacing_punctuation && v[:token] != '.' && v[:token] != '?' && v[:token] != ':' 
-  require 'proiel/src'
+        if v[:sort] == :punctuation && v[:token] != '.' && v[:token] != '?' && v[:token] != ':'
           true
         else
           false
@@ -41,10 +40,10 @@ module PROIEL
       # Remove all additions in the merged source except the
       # punctuation (which should by now only be the punctuation
       # relevant for sentence divisions).
-      final_result = res.reject { |v| v[:added] && v[:sort] != :nonspacing_punctuation }
+      final_result = res.reject { |v| v[:added] && v[:sort] != :punctuation }
 
       final_result.each do |v|
-        if PROIEL::is_non_bracketing_punctuation?(v[:sort])
+        if PROIEL::is_punctuation?(v[:sort])
           # Don't track the references for this token, as it may have the wrong
           # chapter or verse numbers.
           writer.write_token(v[:token], v[:sort], nil, nil, nil,

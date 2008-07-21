@@ -58,7 +58,7 @@ class HomeController < ApplicationController
   end
 
   def tagger
-    state, pick, *suggestions = TAGGER.tag_token(params[:language], params[:form], :word, 
+    state, pick, *suggestions = TAGGER.tag_token(params[:language], params[:form],
                                                  (params[:existing] and params[:existing] != '') ? PROIEL::MorphLemmaTag.new(params[:existing]) : nil)
     render :text => "result = #{state}<br>pick = #{pick}<br>suggestions = <ul>#{suggestions.collect { |s, w| "<li>tag = #{s}, weight = #{w}</li>" }}</ul>"
   end
