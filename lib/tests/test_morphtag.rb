@@ -102,73 +102,6 @@ class MorphtagTestCase < Test::Unit::TestCase
     assert_equal '-s---mn---', PROIEL::MorphTag.new('Ne-s---mn').non_pos_to_s
   end
 
-  def test_morph_lemma_tag
-    m = PROIEL::MorphLemmaTag.new(PROIEL::MorphTag.new('Dq'), 'cur')
-    assert_equal 'cur', m.lemma
-    assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
-    assert_equal nil, m.variant
-    assert_equal "Dq----------:cur", m.to_s
-    assert_equal "Dq:cur", m.to_abbrev_s
-
-    m = PROIEL::MorphLemmaTag.new(PROIEL::MorphTag.new('Dq'), 'cur#2')
-    assert_equal 'cur', m.lemma
-    assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
-    assert_equal 2, m.variant
-    assert_equal "Dq----------:cur#2", m.to_s
-    assert_equal "Dq:cur#2", m.to_abbrev_s
-
-    m = PROIEL::MorphLemmaTag.new(PROIEL::MorphTag.new('Dq'), 'cur', 2)
-    assert_equal 'cur', m.lemma
-    assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
-    assert_equal 2, m.variant
-    assert_equal "Dq----------:cur#2", m.to_s
-    assert_equal "Dq:cur#2", m.to_abbrev_s
-
-    m = PROIEL::MorphLemmaTag.new('Dq', 'cur#2')
-    assert_equal 'cur', m.lemma
-    assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
-    assert_equal 2, m.variant
-    assert_equal "Dq----------:cur#2", m.to_s
-    assert_equal "Dq:cur#2", m.to_abbrev_s
-
-    m = PROIEL::MorphLemmaTag.new('Dq', 'cur', 2)
-    assert_equal 'cur', m.lemma
-    assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
-    assert_equal 2, m.variant
-    assert_equal "Dq----------:cur#2", m.to_s
-    assert_equal "Dq:cur#2", m.to_abbrev_s
-  end
-
-  def test_morph_lemma_tag_string_initialization
-    m = PROIEL::MorphLemmaTag.new('Dq')
-    assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
-    assert_equal nil, m.lemma
-    assert_equal nil, m.variant
-    assert_equal "Dq----------", m.to_s
-    assert_equal "Dq", m.to_abbrev_s
-
-    m = PROIEL::MorphLemmaTag.new('Dq', nil)
-    assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
-    assert_equal nil, m.lemma
-    assert_equal nil, m.variant
-    assert_equal "Dq----------", m.to_s
-    assert_equal "Dq", m.to_abbrev_s
-
-    m = PROIEL::MorphLemmaTag.new('Dq:cur')
-    assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
-    assert_equal 'cur', m.lemma
-    assert_equal nil, m.variant
-    assert_equal "Dq----------:cur", m.to_s
-    assert_equal "Dq:cur", m.to_abbrev_s
-
-    m = PROIEL::MorphLemmaTag.new('Dq:cur#2')
-    assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
-    assert_equal 'cur', m.lemma
-    assert_equal 2, m.variant
-    assert_equal "Dq----------:cur#2", m.to_s
-    assert_equal "Dq:cur#2", m.to_abbrev_s
-  end
-
   def test_is_gender
     m = PROIEL::MorphTag.new('Px-s---mn---')
     assert_equal true, m.is_gender?(:m)
@@ -180,29 +113,29 @@ class MorphtagTestCase < Test::Unit::TestCase
     assert_equal true, m.is_gender?(:f)
     assert_equal true, m.is_gender?(:n)
   end
-end
 
-def test_morphtags_massively
-  File.open(File.join(File.dirname(__FILE__), "test_morphtag.exp")) do |f|
-    f.each_line do |l|
-      l.chomp!
-      tag, language, validity = l.split(',')
+  def test_morphtags_massively
+    File.open(File.join(File.dirname(__FILE__), "test_morphtag.exp")) do |f|
+      f.each_line do |l|
+        l.chomp!
+        tag, language, validity = l.split(',')
 
-      t = PROIEL::MorphTag.new(tag)
-      l = language.to_sym
-      v = (validity == 'true') ? true : false
-      puts t.descriptions(t.fields), l, v unless v == t.is_valid?(l)
+        t = PROIEL::MorphTag.new(tag)
+        l = language.to_sym
+        v = (validity == 'true') ? true : false
+        puts t.descriptions(t.fields), l, v unless v == t.is_valid?(l)
 
-      assert_equal v, t.is_valid?(l)
+        assert_equal v, t.is_valid?(l)
+      end
     end
   end
 
   def test_union
     m = PROIEL::MorphTag.new('D')
     n = PROIEL::MorphTag.new('-f-------p')
-    assert_equal 'Df-------p-', m.union(n).to_s
+    assert_equal 'Df-------p--', m.union(n).to_s
 
     n.union!(m)
-    assert_equal 'Df-------p-', n.to_s
+    assert_equal 'Df-------p--', n.to_s
   end
 end
