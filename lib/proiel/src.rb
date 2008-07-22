@@ -252,7 +252,9 @@ module PROIEL
       form = reencoder.call(form) if reencoder
       emit_word(form, other_attributes.merge({ :sort => sort }), notes)
 
-      @seen_sentence_divider = true if sentence_dividers and sentence_dividers.include?(form)
+      if (sentence_dividers and sentence_dividers.include?(form)) or sort == :lacuna_start
+        @seen_sentence_divider = true
+      end
     end
 
     def tokenise_and_write_string(s, segmenter, book, chapter, verse, other_attributes = {}, reencoder = nil, sentence_dividers = nil)

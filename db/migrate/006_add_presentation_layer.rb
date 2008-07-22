@@ -7,7 +7,7 @@ class AddPresentationLayer < ActiveRecord::Migration
     add_column :tokens, :emendation, :boolean, :null => false, :default => false
     add_column :tokens, :abbreviation, :boolean, :null => false, :default => false
     add_column :tokens, :capitalisation, :boolean, :null => false, :default => false
-    change_column :tokens, :sort, :enum, :limit => [:text, :punctuation, :empty_dependency_token, :lacuna, :word, :empty, :fused_morpheme, :enclitic, :nonspacing_punctuation, :spacing_punctuation, :left_bracketing_punctuation, :right_bracketing_punctuation], :default     => :word, :null => false
+    change_column :tokens, :sort, :enum, :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :word, :empty, :fused_morpheme, :enclitic, :nonspacing_punctuation, :spacing_punctuation, :left_bracketing_punctuation, :right_bracketing_punctuation], :default     => :word, :null => false
 
     swap_tokens = []
 
@@ -70,7 +70,7 @@ class AddPresentationLayer < ActiveRecord::Migration
       end
     end
 
-    change_column :tokens, :sort, :enum, :limit => [:text, :punctuation, :empty_dependency_token, :lacuna], :default     => :text, :null => false
+    change_column :tokens, :sort, :enum, :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end], :default     => :text, :null => false
     remove_column :tokens, :composed_form
   end
 
