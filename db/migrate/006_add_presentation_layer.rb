@@ -14,9 +14,9 @@ class AddPresentationLayer < ActiveRecord::Migration
     # Do this directly using SQL otherwise it will take forever.
     ActiveRecord::Base.connection.execute('UPDATE tokens SET sort = "text" WHERE sort = "word"')
     ActiveRecord::Base.connection.execute('UPDATE tokens SET sort = "empty_dependency_token" WHERE sort = "empty"')
-    ActiveRecord::Base.connection.execute('UPDATE tokens SET nospacing = "left" WHERE sort = "nonspacing_punctuation"')
-    ActiveRecord::Base.connection.execute('UPDATE tokens SET nospacing = "left" WHERE sort = "right_bracketing_punctuation"')
-    ActiveRecord::Base.connection.execute('UPDATE tokens SET nospacing = "right" WHERE sort = "left_bracketing_punctuation"')
+    ActiveRecord::Base.connection.execute('UPDATE tokens SET nospacing = "before" WHERE sort = "nonspacing_punctuation"')
+    ActiveRecord::Base.connection.execute('UPDATE tokens SET nospacing = "before" WHERE sort = "right_bracketing_punctuation"')
+    ActiveRecord::Base.connection.execute('UPDATE tokens SET nospacing = "after" WHERE sort = "left_bracketing_punctuation"')
     ActiveRecord::Base.connection.execute('UPDATE tokens SET sort = "punctuation" WHERE sort IN ("nonspacing_punctuation", "right_bracketing_punctuation", "spacing_punctuation", "left_bracketing_punctuation")')
 
     Token.transaction do
