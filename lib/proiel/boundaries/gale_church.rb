@@ -149,7 +149,7 @@ module PROIEL
       tokens.collect do |t|
         form = t[:token]
 
-        if PROIEL::is_non_bracketing_punctuation?(t[:sort])
+        if PROIEL::is_punctuation?(t[:sort])
           unless current_region
             # This means that we are at the beginning of a region and have encountered
             # some punctuation. This may happen in two situations: 1) there is a sequence

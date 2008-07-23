@@ -6,6 +6,7 @@
 #
 # $Id: $
 #
+require 'rubygems'
 require 'xmlsimple'
 require 'extensions'
 

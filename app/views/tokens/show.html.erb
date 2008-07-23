@@ -6,8 +6,10 @@
   <% if @token.form %>
     <dt>Form:</dt><dd class="foreign-word"><%= format_token_form(@token) %></dd>
   <% end %>
-  <% if @token.composed_form %>
-    <dt>Composed form:</dt><dd class="foreign-word"><%= format_token_composed_form(@token) %></dd>
+  <% if @token.presentation_form %>
+    <dt>Presentation form:</dt><dd class="foreign-word"><%= format_token_presentation_form(@token) %></dd>
+    <dt>Presentation span:</dt><dd><%= @token.presentation_span %></dd>
+    <dt>Presentation flags:</dt><dd><%= readable_presentation_flags(@token) %></dd>
   <% end %>
   <% if @token.is_morphtaggable? %>
     <dt>Morphtag:</dt><%= fmt_morphtag(@token, 'dd') %>

@@ -11,7 +11,7 @@ class TokensController < ResourceController::Base # ApplicationController
 
   update.before do
     if params[:token]
-      params[:token][:composed_form] = nil if params[:token][:composed_form] == ''
+      params[:token][:presentation_form] = nil if params[:token][:presentation_form] == ''
       params[:token][:morphtag] = nil if params[:token][:morphtag] == ''
       params[:token][:lemma_id] = nil if params[:token][:lemma_id] == ''
     end

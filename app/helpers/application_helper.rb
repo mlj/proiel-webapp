@@ -191,10 +191,8 @@ module ApplicationHelper
   #
   # ignore_punctuation:: If +true+, will ignore any punctuation.
   #
-  # ignore_clitc_reordering:: If +true+, will not reorder enclitics.
-  #
-  # ignore_fusing:: If +true+, will not fuse bound morphemes with their
-  # hosts.
+  # ignore_presentation_forms:: If +true+, will preserve the token form of
+  # of tokens with a presentation forms.
   #
   # no_spacing:: Do not insert spaces in the final result, but rather return
   # the result as an array of processed items.
@@ -212,18 +210,20 @@ module ApplicationHelper
       sentences = value
     end
 
-    # Set up state information
-    t = [] 
+    # This function employs a trick to easily get the spacing right. Each token
+    # is pushed onto an array with spaces around the text of the token according
+    # to the styling parameters given for the token. Then, the array is joined
+    # together and all single spaces are removed, while sequences of two spaces
+    # are changed to a single space. In this way, we get the spacing right without
+    # having to store additional state information during traversal.
 
+    t = [] 
     n_book = nil
     n_chapter = nil
     n_verse = nil
     n_sentence = nil
+    skip_tokens = 0
 
-    clitic = nil
-    dangling_punctuation = nil
-
-    # Do the dirty deed
     sentences.each do |sentence|
       if sentence.is_a?(Array) and sentence.first.is_a?(Token)
         tokens = sentence
@@ -231,13 +231,11 @@ module ApplicationHelper
         tokens = sentence.tokens
       end
 
-      i_tokens = tokens + [nil]  # Append an extra nil token so that each_cons works to our advantage
-
-      i_tokens.each_cons(2) do |token, next_token|
-        next if token.empty?
-
-        # Check if the next token is bound and we should fuse it
-        next if next_token and (next_token.sort == :fused_morpheme and not options[:ignore_fusing])
+      tokens.reject(&:is_empty?).each do |token|
+        if skip_tokens > 0
+          skip_tokens -= 1
+          next
+        end
 
         # Add book name
         if options[:book_names] and token.sentence.book and n_book != token.sentence.book
@@ -268,67 +266,55 @@ module ApplicationHelper
         # Determine the appropriate CSS classes for the tokens to be emitted
         token_class = (token.sentence_id == options[:focused_sentence]) ? 'token focused' : 'token'
 
-        # Determine how to actually treat the presentation of the token
-        present_as_sort = token.sort
-        present_as_sort = :word if options[:ignore_fusing] and token.sort == :fused_morpheme
-        present_as_sort = :word if options[:ignore_clitic_ordering] and token.sort = :enclitic
+        next if token.sort == :punctuation and options[:ignore_punctuation]
 
-        case present_as_sort
-        when :nonspacing_punctuation, :right_bracketing_punctuation
-          if t.empty?
-            # We do actually permit "sentences" to start with nonspacing punctuation
-            # in the case of concordances where the search word is split off and
-            # treated separately
-            t << format_token_form(token)
+        case token.sort
+        when :punctuation
+          el = format_token_form(token)
+
+        when :text
+          el = ''
+
+          if token.presentation_form and not options[:ignore_presentation_forms]
+            el = link_to(format_token_presentation_form(token), annotation_path(token.sentence), 
+                        :class => token_class)
+
+            skip_tokens = token.presentation_span - 1
+          elsif options[:tooltip] == :morphtags
+            el = link_to(format_token_form(token), annotation_path(token.sentence), :class => token_class, :title => readable_lemma_morphology(token))
           else
-            t.last << format_token_form(token)
+            el = link_to(format_token_form(token), annotation_path(token.sentence), :class => token_class)
           end
+        end
 
-        when :left_bracketing_punctuation
-          dangling_punctuation = token
-
-        when :spacing_punctuation
-          t << format_token_form(token)
-
-        when :enclitic
-          clitic = token
-
-        when :fused_morpheme
-          s = link_to(format_token_composed_form(token), annotation_path(token.sentence), :class => token_class + ' bad')
-          s << content_tag(:span, "#{token.token_number - 1}-#{token.token_number}", 
-                           :class => 'token-number') if options[:token_numbers]
-          t << s
-
-        when :word
-          s = ''
-
-          if dangling_punctuation
-            s << format_token_form(dangling_punctuation)
-            dangling_punctuation = nil
-          end
-
-          if options[:tooltip] == :morphtags
-            s << link_to(format_token_form(token), annotation_path(token.sentence), :class => token_class, :title => readable_lemma_morphology(token))
+        if options[:no_spacing]
+          t << el
+        else
+          case token.nospacing
+          when :both
+            t << el
+          when :before
+            t << "#{el}¤"
+          when :after
+            t << "¤#{el}"
           else
-            s << link_to(format_token_form(token), annotation_path(token.sentence), :class => token_class)
+            t << "¤#{el}¤"
           end
-          s << content_tag(:span, token.token_number, :class => 'token-number') if options[:token_numbers]
+        end
 
-          if clitic
-            if options[:tooltip] == :morphtags
-              s << link_to(format_token_form(clitic), annotation_path(clitic.sentence), :class => token_class, :title => readable_lemma_morphology(clitic))
-            else
-              s << link_to(format_token_form(clitic), annotation_path(clitic.sentence), :class => token_class)
-            end
-            s << content_tag(:span, clitic.token_number, :class => 'token-number') if options[:token_numbers]
-            clitic = nil
-          end
-          t << s
+        if token.presentation_span
+          t << content_tag(:span, "#{token.token_number}-#{token.token_number + token.presentation_span.to_i}", :class => 'token-number') if options[:token_numbers]
+        else
+          t << content_tag(:span, token.token_number, :class => 'token-number') if options[:token_numbers]
         end
       end
     end
 
-    options[:no_spacing] ? t : t.join(' ')
+    if options[:no_spacing]
+      t
+    else
+      t.join(' ').gsub(/[¤](?![¤])/, '').sub(/¤/, ' ') # remove single spaces, reduce double spaces to single
+    end
   end
 
   # Makes an information box intended for display of meta-data and navigational
@@ -576,9 +562,9 @@ module ApplicationHelper
     LangString.new(token.form, token.language).to_h
   end
 
-  # Formats a token composed_form with HTML language attributes.
-  def format_token_composed_form(token)
-    LangString.new(token.composed_form, token.language).to_h
+  # Formats a token presentation form with HTML language attributes.
+  def format_token_presentation_form(token)
+    LangString.new(token.presentation_form, token.language).to_h
   end
 
   # Formats a lemma form with HTML language attributes.

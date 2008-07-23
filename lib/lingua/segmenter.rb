@@ -68,15 +68,15 @@ module Lingua
     def process_word_segment(word_segment)
       if @spacing_punctuation_pattern.include?(word_segment)
         punctuation = word_segment
-        r = [{ :form => punctuation, :sort => :spacing_punctuation }]
+        r = [{ :form => punctuation, :sort => :punctuation }]
       elsif m = @punctuation_pattern.match(word_segment)
         dummy, lbr, word, rbr, punctuation = m.to_a
 
         r = []
-        r << { :form => lbr, :sort => :left_bracketing_punctuation} if lbr and lbr != ''
+        r << { :form => lbr, :sort => :punctuation, :nospacing => :after } if lbr and lbr != ''
         r += process_word(word) if word and word != ''
-        r << { :form => rbr, :sort => :right_bracketing_punctuation} if rbr and rbr != ''
-        r << { :form => punctuation, :sort => :nonspacing_punctuation } if punctuation and punctuation != ''
+        r << { :form => rbr, :sort => :punctuation, :nospacing => :before } if rbr and rbr != ''
+        r << { :form => punctuation, :sort => :punctuation, :nospacing => :before } if punctuation and punctuation != ''
         r
       else
         STDERR.puts "Error matching punctuation pattern"
@@ -88,8 +88,9 @@ module Lingua
       if c = @contractions[word]
         host_word, bound_word = c
         
-        [{ :form => host_word,  :sort => :word }, 
-         { :form => bound_word, :sort => :fused_morpheme, :composed_form => word }]
+        [{ :form => host_word,  :sort => :text, :contraction => true, :presentation_form => word,
+           :presentation_span => 2 },
+         { :form => bound_word, :sort => :text }]
       else
         process_uncontracted_word(word)
       end
@@ -119,15 +120,10 @@ module Lingua
       end
 
       if bound
-        if d[:enclitic]
-          [{ :form => morpheme, :sort => :enclitic }, 
-           { :form => base,     :sort => :word }]
-        else
-          [{ :form => base,     :sort => :word }, 
-           { :form => morpheme, :sort => :fused_morpheme, :composed_form => base + morpheme }]
-        end
+        [{ :form => base, :sort => :text, :contraction => true, :presentation_form => base + morpheme, :presentation_span => 2 }, 
+         { :form => morpheme, :sort => :text }]
       else
-        [{ :form => word, :sort => :word }]
+        [{ :form => word, :sort => :text }]
       end
     end
   end

@@ -17,7 +17,7 @@ class TaggerTagTestCase < Test::Unit::TestCase
 
   def test_unambiguous
     tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
-    assert_equal [:unambiguous, MorphLemmaTag.new("C:et"), [MorphLemmaTag.new("C:et"), 1.0]], tagger.tag_token(:la, 'et', :word)
+    assert_equal [:unambiguous, MorphLemmaTag.new("C:et"), [MorphLemmaTag.new("C:et"), 1.0]], tagger.tag_token(:la, 'et')
   end
 
   def test_instance_frequency
@@ -27,14 +27,14 @@ class TaggerTagTestCase < Test::Unit::TestCase
     assert_equal [:ambiguous, MorphLemmaTag.new("G:cum"), 
       [MorphLemmaTag.new("G:cum"), 1.4], 
       [MorphLemmaTag.new("R:cum"), 1.1],
-      [MorphLemmaTag.new("Dq:cum"), 1.0]], tagger.tag_token(:la, 'cum', :word)
+      [MorphLemmaTag.new("Dq:cum"), 1.0]], tagger.tag_token(:la, 'cum')
 
     # Then do it the other way around
     tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS.merge({:statistics_retriever => lambda { |language, form| [[ "R----------", "cum", 300 ], [ "G----------", "cum", 100 ]] }}))
     assert_equal [:ambiguous, MorphLemmaTag.new("R:cum"), 
       [MorphLemmaTag.new("R:cum"), 1.375], 
       [MorphLemmaTag.new("G:cum"), 1.125],
-      [MorphLemmaTag.new("Dq:cum"), 1.0]], tagger.tag_token(:la, 'cum', :word)
+      [MorphLemmaTag.new("Dq:cum"), 1.0]], tagger.tag_token(:la, 'cum')
   end
 
   def test_source_tag_influence
@@ -45,13 +45,13 @@ class TaggerTagTestCase < Test::Unit::TestCase
       [MorphLemmaTag.new("R:cum"), 1.0], 
       [MorphLemmaTag.new("G:cum"), 0.5],
       [MorphLemmaTag.new("Dq:cum"), 0.5],
-    ], tagger.tag_token(:la, 'cum', :word, MorphLemmaTag.new('R:cum'))
+    ], tagger.tag_token(:la, 'cum', MorphLemmaTag.new('R:cum'))
 
     assert_equal [:ambiguous, MorphLemmaTag.new("G:cum"), 
       [MorphLemmaTag.new("G:cum"), 1.0], 
       [MorphLemmaTag.new("Dq:cum"), 0.5],
       [MorphLemmaTag.new("R:cum"), 0.5],
-    ], tagger.tag_token(:la, 'cum', :word, MorphLemmaTag.new('G:cum'))
+    ], tagger.tag_token(:la, 'cum', MorphLemmaTag.new('G:cum'))
   end
 
   def test_existing_tag_influence_incomplete_tag
@@ -62,7 +62,7 @@ class TaggerTagTestCase < Test::Unit::TestCase
       [MorphLemmaTag.new("Dn:ne"), 1.0], 
       [MorphLemmaTag.new("G:ne"), 0.5], 
       [MorphLemmaTag.new("I:ne"), 0.5],
-    ], tagger.tag_token(:la, 'ne', :word, MorphLemmaTag.new('D'))
+    ], tagger.tag_token(:la, 'ne', MorphLemmaTag.new('D'))
   end
 
   def test_existing_tag_influence_complete_tag_but_contradictory_lemma
@@ -73,7 +73,7 @@ class TaggerTagTestCase < Test::Unit::TestCase
       [MorphLemmaTag.new("Dn:ne"), 0.5], 
       [MorphLemmaTag.new("G:ne"), 0.5],
       [MorphLemmaTag.new("I:ne"), 0.5], 
-    ], tagger.tag_token(:la, 'ne', :word, MorphLemmaTag.new('Df:neo'))
+    ], tagger.tag_token(:la, 'ne', MorphLemmaTag.new('Df:neo'))
   end
 
   def test_draw
@@ -82,7 +82,7 @@ class TaggerTagTestCase < Test::Unit::TestCase
       [MorphLemmaTag.new("Dq:cum"), 1.0],
       [MorphLemmaTag.new("G:cum"), 1.0],
       [MorphLemmaTag.new("R:cum"), 1.0],
-    ], tagger.tag_token(:la, 'cum', :word)
+    ], tagger.tag_token(:la, 'cum')
   end
 
   def test_generated_lookup
@@ -92,18 +92,18 @@ class TaggerTagTestCase < Test::Unit::TestCase
       [MorphLemmaTag.new("Ne-s---mn:Herodes"), 0.2],
       [MorphLemmaTag.new("Ne-p---ma:Herodes"), 0.2],
       [MorphLemmaTag.new("Ne-p---mn:Herodes"), 0.2],
-    ], tagger.tag_token(:la, 'Herodes', :word)
+    ], tagger.tag_token(:la, 'Herodes')
   end
 
   def test_failed_tagging
     tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
-    assert_equal [:failed, nil], tagger.tag_token(:la, 'fjotleik', :word)
+    assert_equal [:failed, nil], tagger.tag_token(:la, 'fjotleik')
   end
 
   def test_sfst_lookup
     tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
     assert_equal [:ambiguous, nil, 
       [MorphLemmaTag.new("Nb-p---fg:ioka"), 0.2],
-    ], tagger.tag_token(:cu, 'отецъ', :word)
+    ], tagger.tag_token(:cu, 'отецъ')
   end
 end

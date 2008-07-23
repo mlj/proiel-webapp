@@ -115,7 +115,7 @@ class Sentence < ActiveRecord::Base
         # will not have its verse number set as the sentence may cross
         # verse boundaries. The verse number of the empty token is therefore
         # undefined.
-        t = Token.new(:sentence_id => id, :token_number => @new_token_number, :sort => :empty)
+        t = Token.new(:sentence_id => id, :token_number => @new_token_number, :sort => :empty_dependency_token)
         @new_token_number += 1
       else
         # Perform some extra sanity checking here. All token IDs in the structure
@@ -328,7 +328,7 @@ class Sentence < ActiveRecord::Base
       s[token.id].merge!({ 
         :relation => token.relation, 
         :found => true, 
-        :empty => token.empty?,
+        :empty => token.is_empty?,
         :slashes => token.slashees.collect(&:id)
       })
 
@@ -347,7 +347,7 @@ class Sentence < ActiveRecord::Base
     PROIEL::ValidatingDependencyGraph.new do |g|
       dependency_tokens.each { |t| g.badd_node(t.id, t.relation, t.head ? t.head.id : nil, 
                                                t.slashees.collect(&:id), 
-                                               { :empty => t.empty?, 
+                                               { :empty => t.is_empty?, 
                                                  :token_number => t.token_number,
                                                  :morphtag => PROIEL::MorphTag.new(t.morphtag),
                                                  :form => t.form }) }

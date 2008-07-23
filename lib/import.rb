@@ -79,15 +79,25 @@ class PROIELXMLImport < SourceImport
       # validation.
       morphtag = attributes[:morphtag] ? PROIEL::MorphTag.new(attributes[:morphtag]).to_s : nil
 
-      sentence.tokens.create!(
-                   :token_number => attributes[:token_number], 
-                   :source_morphtag => morphtag,
-                   :source_lemma => attributes[:lemma],
-                   :form => form, 
-                   :verse => attributes[:verse], 
-                   :composed_form => attributes[:composed_form],
-                   :sort => attributes[:sort],
-                   :foreign_ids => attributes[:foreign_ids])
+      begin
+        sentence.tokens.create!(
+                     :token_number => attributes[:token_number], 
+                     :source_morphtag => morphtag,
+                     :source_lemma => attributes[:lemma],
+                     :form => attributes[:form],
+                     :verse => attributes[:verse],
+                     :sort => attributes[:sort],
+                     :contraction => attributes[:contraction] || false,
+                     :emendation => attributes[:emendation] || false,
+                     :abbreviation => attributes[:abbreviation] || false,
+                     :capitalisation => attributes[:capitalisation] || false,
+                     :nospacing => attributes[:nospacing],
+                     :presentation_form => attributes[:presentation_form],
+                     :presentation_span => attributes[:presentation_span],
+                     :foreign_ids => attributes[:foreign_ids])
+      rescue Exception => e
+        raise "Error creating token for #{form} in #{attributes[:book]} #{attributes[:chapter]}:#{attributes[:verse]}: #{e}"
+      end
 
       if (attributes[:relation] or attributes[:head]) and not dependency_warned
         STDERR.puts "Dependency structures cannot be imported. Ignoring."

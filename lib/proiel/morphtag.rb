@@ -24,6 +24,8 @@ module PROIEL
 
         super(morphtag, lemma, variant ? variant.to_i : nil)
       end
+
+      raise ArgumentError, "invalid variant. Must be nil or a positive integer" unless self.variant.nil? or self.variant > 0
     end
 
     def lemma_to_s
@@ -56,13 +58,14 @@ module PROIEL
 
     # Returns an integer, -1, 0 or 1, suitable for sorting the tag.
     def <=>(o)
-      s = self.morphtag.to_s <=> o.morphtag.to_s
-      return s unless s.zero?
+      s = self.morphtag <=> o.morphtag
+      s = (self.lemma || '') <=> (o.lemma || '') if s.zero?
+      s = (self.variant || 0) <=> (o.variant || 0) if s.zero?
+      s
+    end
 
-      s = self.lemma <=> o.lemma
-      return s unless s.zero?
-
-      0
+    def contradicts?(o)
+      morphtag.contradicts?(o.morphtag) || (lemma and o.lemma and lemma != o.lemma) || (variant and o.variant and variant != o.variant)
     end
   end
 
@@ -96,6 +99,11 @@ module PROIEL
     # Returns the part-of-speech part of the morphtag as a string.
     def pos_to_s
       "#{self[:major]}#{self[:minor]}"
+    end
+
+    # Returns the non-part-of-speech part of the morphtag as a string.
+    def non_pos_to_s
+      to_s[2, fields.length - 2]
     end
 
     # Returns descriptions for one or more fields in a tag. If
@@ -154,11 +162,6 @@ module PROIEL
 
     def to_features
       PROIEL::MorphtagConstraints.instance.to_features(self.to_s)
-    end
-
-    # Returns +true+ if the tag is empty, i.e. uninitialised.
-    def empty?
-      keys.length == 0
     end
 
     # DEPRECATED

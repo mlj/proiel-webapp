@@ -7,10 +7,10 @@ class User < ActiveRecord::Base
   has_many :reviewed_sentences, :class_name => 'Sentence', :foreign_key => :reviewed_by
   # More efficient alternative to 
   #   annotated_sentences.to_a.sum { |sentence| sentence.dependency_tokens.count } %
-  has_many :annotated_tokens, :class_name => 'Token', :counter_sql => 'SELECT count(*) FROM tokens LEFT JOIN sentences ON sentence_id = sentences.id WHERE annotated_by = #{id} AND sort != "nonspacing_punctuation"' 
+  has_many :annotated_tokens, :class_name => 'Token', :counter_sql => 'SELECT count(*) FROM tokens LEFT JOIN sentences ON sentence_id = sentences.id WHERE annotated_by = #{id} AND sort != "punctuation"' 
   # More efficient alternative to 
   #   reviewed_sentences.to_a.sum { |sentence| sentence.dependency_tokens.count } %
-  has_many :reviewed_tokens, :class_name => 'Token', :counter_sql => 'SELECT count(*) FROM tokens LEFT JOIN sentences ON sentence_id = sentences.id WHERE reviewed_by = #{id} AND sort != "nonspacing_punctuation"' 
+  has_many :reviewed_tokens, :class_name => 'Token', :counter_sql => 'SELECT count(*) FROM tokens LEFT JOIN sentences ON sentence_id = sentences.id WHERE reviewed_by = #{id} AND sort != "punctuation"' 
 
   # Virtual attribute for the unencrypted password
   attr_accessor :password

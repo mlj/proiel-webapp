@@ -98,4 +98,25 @@ class PositionalTagTestCase < Test::Unit::TestCase
     assert_equal true,  MyPositionalTag.new('xyz-').contradicts?('xz-v')
     assert_equal false, MyPositionalTag.new('xyz-').contradicts?('xy-v')
   end
+
+  def test_comparison
+    x = MyPositionalTag.new('Px--')
+    y = MyPositionalTag.new('A---')
+    assert_equal 1, x <=> y
+    assert_equal 0, x <=> x
+    assert_equal -1, y <=> x
+  end
+
+  def test_empty?
+    x = MyPositionalTag.new('Px--')
+    y = MyPositionalTag.new('----')
+    assert_equal false, x.empty?
+    assert_equal true, y.empty?
+
+    x[:a], x[:b] = nil, nil
+    assert_equal true, x.empty?
+
+    y[:a], y[:b] = 'x', 'y'
+    assert_equal false, y.empty?
+  end
 end
