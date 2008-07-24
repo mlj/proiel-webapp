@@ -8,6 +8,9 @@ class MorphtagsController < ApplicationController
     if "cu" == params[:morphtags][:language] # FIXME: only enabled for cu now
       xliterator = Logos::TransliteratorFactory::get_transliterator("cu-ascii") # FIXME: only one xliterator available for now
       @results = xliterator.transliterate_string(search)
+    elsif "got" == params[:morphtags][:language] # FIXME: only enabled for cu now
+      xliterator = Logos::TransliteratorFactory::get_transliterator("got-ascii-word") # FIXME: only one xliterator available for now
+      @results = xliterator.transliterate_string(search)
     else
       @results = []
     end

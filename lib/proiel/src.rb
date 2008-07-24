@@ -92,7 +92,7 @@ module PROIEL
               when 'contraction', 'emendation', 'abbreviation', 'capitalisation'
                 a[k.to_sym] = (v == 'true' ? true : false)
               when 'sort', 'nospacing'
-                a[:sort] = v.gsub(/-/, '_').to_sym
+                a[k.to_sym] = v.gsub(/-/, '_').to_sym
               when 'foreign-ids'
                 a[:foreign_ids] = v
               else

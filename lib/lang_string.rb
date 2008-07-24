@@ -7,6 +7,6 @@ class LangString < String
   end
 
   def to_h
-    "<span lang=\"#{@lang}\">#{self.to_s}</span>"
+    "<span lang=\"#{@lang}\">#{self.to_s.gsub('<', '&lt;').gsub('>', '&gt;').gsub('\'', '&quot;')}</span>"
   end
 end
