@@ -425,3 +425,18 @@
     вⷧ҇мъ:
     - въ
     - иероусалимъ
+:got:
+  :nonspacing_punctuation:
+  - "·"
+  - ","
+  - ";"
+  - ":"
+  - "?"
+  :right_bracketing_punctuation:
+  - ")"
+  - "]"
+  - ">"
+  :left_bracketing_punctuation:
+  - "("
+  - "["
+  - "<"
