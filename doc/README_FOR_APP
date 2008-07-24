@@ -36,7 +36,6 @@ In order to rebuild the data sources, you will, in addition to the above, need
 * sqlite3
 and the following gems
 * ruby-xslt
-* memoize
 
 == Overview
 
