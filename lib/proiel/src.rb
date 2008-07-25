@@ -7,8 +7,31 @@
 require 'unicode'
 require 'open-uri'
 require 'hpricot'
+require 'builder'
 
 module PROIEL
+  class Dictionary
+    def initialize(uri)
+      doc = Hpricot.XML(open(uri))
+
+      t = doc.at("dictionary")
+      @id = t.attributes["id"]
+      @language = t.attributes["lang"].to_sym
+
+      @entries = Hash[*(doc/:entries/:entry).collect { |b| [b.attributes["lemma"], b] }.flatten]
+    end
+
+    # Reads entries from a source.
+    def read_lemmata(options = {})
+      @entries.values.each do |entry|
+        references = (entry/:references/:reference).collect(&:attributes)
+        attributes = Hash[*entry.attributes.collect { |k, v| [k.gsub('-', '_').to_sym, v] }.flatten]
+        
+        yield attributes.merge({ :language => @language }), references
+      end
+    end
+  end
+
   # FIXME: moronic Rails (documentation). This clashes with ::Source
   # in the webapp and causes all sorts of weird problems. Why?
   class XSource
@@ -194,8 +217,104 @@ module PROIEL
 
   public
 
-  # A PROIEL source writer.
   class Writer
+    protected
+
+    def sym_to_attr(sym)
+      sym.to_s.gsub('_', '-')
+    end
+
+    def hash_to_sorted_key_value_list(hash)
+      if hash.empty?
+        nil
+      else
+        hash.sort { |x, y| x.to_s <=> y.to_s }.collect { |k, v| v.nil? ? nil : "#{k}=#{v.gsub(',', '\\,')}" }.compact.join(',')
+      end
+    end
+
+    def hash_sym_to_attr(hash)
+      Hash[*hash.collect { |k, v| [sym_to_attr(k), v] }.flatten]
+    end
+  end
+
+  # A PROIEL XML dictionary writer.
+  class DictionaryWriter < Writer
+    def initialize(file, dictionary_id, language, metadata = {})
+      builder = Builder::XmlMarkup.new(:target=> file, :indent => 2)
+      builder.instruct! :xml, :version => "1.0", :encoding => "utf-8"
+      builder.dictionary :id => dictionary_id, :lang => language do |b|
+        b.metadata do |m|
+          [:short_title, :long_title, :base_source_editor, :base_source_year, :electronic_source_editor, :electronic_source_version, :electronic_source_url].each { |k| m.tag!(sym_to_attr(k), metadata[k]) if metadata[k] }
+        end
+
+        b.entries do |e|
+          @entries = e
+
+          yield self
+        end
+      end
+    end
+
+    def write_entry(attributes = {})
+      attributes, sub_elements = translate_attributes(attributes)
+      @entries.entry(attributes) do |entry|
+        entry.senses do |senses|
+          sub_elements[:senses].each { |n| senses.sense({ :lang => n[:lang] }, n[:text]) }
+        end if sub_elements[:senses]
+
+        entry.notes do |notes|
+          sub_elements[:notes].each { |n| notes.note({ :origin => n[:origin] }, n[:text]) }
+        end if sub_elements[:notes]
+
+        entry.references do |references|
+          sub_elements[:references].each { |n| references.reference(n) }
+        end if sub_elements[:references]
+      end
+    end
+
+    private
+
+    def translate_attributes(attributes = {})
+      r = {}
+      sub_elements = {}
+
+      attributes.each_pair do |k, v|
+        next if v.nil?
+
+        case k
+        when :lemma
+          raise ArgumentError, "invalid value for attribute #{k}" unless v.is_a?(String)
+          r[k] = Unicode.normalize_C(v)
+        when :pos
+          raise ArgumentError, "invalid value for attribute #{k}" unless v.is_a?(PROIEL::MorphTag)
+          r[k] = v.to_abbrev_s unless v.empty?
+        when :sort_key
+          raise ArgumentError, "invalid value for attribute #{k}" unless v.is_a?(String)
+          r[k] = v
+        when :variant
+          raise ArgumentError, "invalid value for attribute #{k}" unless v.is_a?(Integer)
+          r[k] = v
+        when :unclear, :reconstructed, :conjecture, :inflected
+          raise ArgumentError, "invalid value for attribute #{k}" unless v.is_a?(TrueClass) or v.is_a?(FalseClass)
+          r[k] = 'true' if v
+        when :references, :notes, :senses
+          raise ArgumentError, "invalid value for attribute #{k}" unless v.is_a?(Array)
+          sub_elements[k] = v unless v.empty?
+        when :foreign_ids
+          raise ArgumentError, "invalid value for attribute #{k}" unless v.is_a?(Hash)
+          v = hash_to_sorted_key_value_list(v)
+          r[k] = v if v
+        else
+          raise ArgumentError, "invalid attribute #{k}"
+        end
+      end
+
+      [hash_sym_to_attr(r), sub_elements]
+    end
+  end
+
+  # A PROIEL XML text writer.
+  class TextWriter < Writer
     def initialize(file, text_id, language, metadata = {})
       metadata.keys.each do |k|
         unless [:title, :edition, :source, :editor, :url].include?(k.to_sym)
@@ -225,8 +344,6 @@ module PROIEL
       @file.puts '</text>'
     end
 
-    public
-
     # Writes a token to the source. The function also takes care of tracking
     # book, chapter and verse identifiers and may do automatic reencoding and
     # normalisation of the token string. If +sentence_dividers+ is set,
@@ -250,7 +367,7 @@ module PROIEL
 
       track_references(book, chapter, verse) if book and chapter
       form = reencoder.call(form) if reencoder
-      emit_word(form, other_attributes.merge({ :sort => sort }), notes)
+      emit_word(other_attributes.merge({ :sort => sort, :form => form }), notes)
 
       if (sentence_dividers and sentence_dividers.include?(form)) or sort == :lacuna_start
         @seen_sentence_divider = true
@@ -286,27 +403,26 @@ module PROIEL
       s.gsub(/</, '&lt;').gsub(/>/, '&gt;').gsub(/'/, '&quot;')
     end
 
-    def emit_word(form, attrs = {}, notes = nil)
+    def emit_word(attrs = {}, notes = nil)
       @file.puts "    <sentence>" if @first_token
       @first_token = false
 
       xattrs = { :chapter => @last_chapter, :verse   => @last_verse }
-      xattrs[:form] = Unicode.normalize_C(escape_string(form)) unless form.nil? or form == ''
 
       attrs.each_pair do |key, value|
         next if value.nil? or value == ''
 
         case key
-        when :lemma, :presentation_form # text
-          xattrs[key] = Unicode.normalize_C(value)
+        when :lemma, :presentation_form, :form
+          xattrs[key] = Unicode.normalize_C(value) unless value.nil? or value == ''
 
         when :morphtag # morphtag
           value = MorphTag.new(value) unless value.is_a?(MorphTag)
           xattrs[key] = value.to_s unless value.empty?
 
         when :foreign_ids # key-value lists
-          raise ArgumentError, "invalid value for token attribute 'foreign_ids'" unless value.is_a?(Hash) and !value.values.any? { |x| x and x[/,/] }
-          xattrs[key] = value.sort { |x, y| x.to_s <=> y.to_s }.collect { |k, v| v.nil? ? nil : "#{k}=#{v}" }.compact.join(',') unless value.empty?
+          raise ArgumentError, "invalid value for token attribute 'foreign_ids'" unless value.is_a?(Hash)
+          xattrs[key] = value.sort { |x, y| x.to_s <=> y.to_s }.collect { |k, v| v.nil? ? nil : "#{k}=#{v.gsub(',', '\\,')}" }.compact.join(',') unless value.empty?
 
         when :sort, :nospacing # symbols
           xattrs[key] = value.to_s.gsub(/_/, '-')
@@ -324,10 +440,6 @@ module PROIEL
         when :id, :head, :slashes, :relation, :presentation_span # strings and integers
           xattrs[key] = value.to_s
 
-        when :form
-          # Ignore form if it is given here.
-          # FIXME: Redo this so that form is actually given here?
-          raise "Form inconsistency" unless value == xattrs[:form]
         else
           raise ArgumentError, "invalid token attribute '#{key}'"
         end
@@ -363,9 +475,12 @@ module PROIEL
       sentence_number = nil
 
       tokens.each do |token|
+        token = token.dup
+        token[:form] = token[:token]
+        token.delete(:token)
+
         track_references(token[:book], token[:chapter], token[:verse])
-        emit_word(token[:token], token.except(:token, :book, :chapter, :verse, 
-                                              :sentence_number, :token_number))
+        emit_word(token.except(:book, :chapter, :verse, :sentence_number, :token_number))
 
         if options[:track_sentence_numbers]
           sentence_number ||= token[:sentence_number]

@@ -37,6 +37,16 @@ namespace :proiel do
     e.read(ENV['FILE'])
   end
 
+  namespace :import do
+    desc "Import a PROIEL dictionary. Options: FILE=data_file" 
+    task(:dictionary => :environment) do
+      require 'import'
+
+      raise "Filename required" unless ENV['FILE']
+      PROIELXMLDictionaryImport.new.read(ENV['FILE'])
+    end
+  end
+
   desc "Export a PROIEL source text. Options: ID=source_identifier"
   task(:export => :environment) do
     require 'export'
