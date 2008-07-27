@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 7) do
+ActiveRecord::Schema.define(:version => 8) do
 
   create_table "audits", :force => true do |t|
     t.integer "auditable_id"
@@ -173,6 +173,7 @@ ActiveRecord::Schema.define(:version => 7) do
     t.boolean  "emendation",                                                                                                                                                                                                                                                                  :default => false, :null => false
     t.boolean  "abbreviation",                                                                                                                                                                                                                                                                :default => false, :null => false
     t.boolean  "capitalisation",                                                                                                                                                                                                                                                              :default => false, :null => false
+    t.enum     "info_status",          :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old]
   end
 
   add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true
