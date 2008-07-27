@@ -10,6 +10,7 @@ ActionController::Routing::Routes.draw do |map|
     annotation.resource :alignments
     annotation.resource :morphtags
     annotation.resource :dependencies
+    annotation.resource :info_status
   end
 
   map.resource :statistics
@@ -40,5 +41,5 @@ ActionController::Routing::Routes.draw do |map|
   map.site 'site/:name', :controller => 'page', :action => 'show'
 
   # Default page
-  map.root :controller => 'browse', :action => 'view', :source => 1, :book => 1, :chapter => 1 
+  map.root :controller => 'browse', :action => 'view', :source => 1, :book => 1, :chapter => 1
 end
