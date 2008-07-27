@@ -4,7 +4,7 @@ class AnnotationsController < ApplicationController
   # GET /annotations
   # GET /annotations.xml
   def index
-    @sentences = Sentence.search(params.slice(:completion, :source, :book, :chapter, 
+    @sentences = Sentence.search(params.slice(:completion, :source, :book, :chapter,
                                               :sentence_number), params[:page])
 
     respond_to do |format|
