@@ -50,7 +50,7 @@ class PROIELXMLExport < SourceExport
   protected
 
   def do_export(file)
-    PROIEL::Writer.new(file, identifier, @source.language, 
+    PROIEL::TextWriter.new(file, identifier, @source.language, 
                        @source.attributes.slice("title", "edition", "source", "editor", "url")) do |w|
       filtered_sentences.each do |sentence|
         sentence.tokens.each do |token|

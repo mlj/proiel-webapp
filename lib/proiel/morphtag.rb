@@ -24,6 +24,8 @@ module PROIEL
 
         super(morphtag, lemma, variant ? variant.to_i : nil)
       end
+
+      raise ArgumentError, "invalid variant. Must be nil or a positive integer" unless self.variant.nil? or self.variant > 0
     end
 
     def lemma_to_s
@@ -57,8 +59,8 @@ module PROIEL
     # Returns an integer, -1, 0 or 1, suitable for sorting the tag.
     def <=>(o)
       s = self.morphtag <=> o.morphtag
-      s = self.lemma <=> o.lemma if s.zero?
-      s = self.variant <=> o.variant if s.zero?
+      s = (self.lemma || '') <=> (o.lemma || '') if s.zero?
+      s = (self.variant || 0) <=> (o.variant || 0) if s.zero?
       s
     end
 

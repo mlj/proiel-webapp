@@ -7,16 +7,16 @@ class AddPresentationLayer < ActiveRecord::Migration
     add_column :tokens, :emendation, :boolean, :null => false, :default => false
     add_column :tokens, :abbreviation, :boolean, :null => false, :default => false
     add_column :tokens, :capitalisation, :boolean, :null => false, :default => false
-    change_column :tokens, :sort, :enum, :limit => [:text, :punctuation, :empty_dependency_token, :lacuna, :word, :empty, :fused_morpheme, :enclitic, :nonspacing_punctuation, :spacing_punctuation, :left_bracketing_punctuation, :right_bracketing_punctuation], :default     => :word, :null => false
+    change_column :tokens, :sort, :enum, :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :word, :empty, :fused_morpheme, :enclitic, :nonspacing_punctuation, :spacing_punctuation, :left_bracketing_punctuation, :right_bracketing_punctuation], :default     => :word, :null => false
 
     swap_tokens = []
 
     # Do this directly using SQL otherwise it will take forever.
     ActiveRecord::Base.connection.execute('UPDATE tokens SET sort = "text" WHERE sort = "word"')
     ActiveRecord::Base.connection.execute('UPDATE tokens SET sort = "empty_dependency_token" WHERE sort = "empty"')
-    ActiveRecord::Base.connection.execute('UPDATE tokens SET nospacing = "left" WHERE sort = "nonspacing_punctuation"')
-    ActiveRecord::Base.connection.execute('UPDATE tokens SET nospacing = "left" WHERE sort = "right_bracketing_punctuation"')
-    ActiveRecord::Base.connection.execute('UPDATE tokens SET nospacing = "right" WHERE sort = "left_bracketing_punctuation"')
+    ActiveRecord::Base.connection.execute('UPDATE tokens SET nospacing = "before" WHERE sort = "nonspacing_punctuation"')
+    ActiveRecord::Base.connection.execute('UPDATE tokens SET nospacing = "before" WHERE sort = "right_bracketing_punctuation"')
+    ActiveRecord::Base.connection.execute('UPDATE tokens SET nospacing = "after" WHERE sort = "left_bracketing_punctuation"')
     ActiveRecord::Base.connection.execute('UPDATE tokens SET sort = "punctuation" WHERE sort IN ("nonspacing_punctuation", "right_bracketing_punctuation", "spacing_punctuation", "left_bracketing_punctuation")')
 
     Token.transaction do
@@ -70,7 +70,7 @@ class AddPresentationLayer < ActiveRecord::Migration
       end
     end
 
-    change_column :tokens, :sort, :enum, :limit => [:text, :punctuation, :empty_dependency_token, :lacuna], :default     => :text, :null => false
+    change_column :tokens, :sort, :enum, :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end], :default     => :text, :null => false
     remove_column :tokens, :composed_form
   end
 

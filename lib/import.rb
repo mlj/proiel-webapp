@@ -6,6 +6,28 @@
 #
 require 'proiel/src'
 
+class PROIELXMLDictionaryImport
+  # Creates a new importer.
+  def initialize(options = {})
+  end
+
+  # Reads import data. The data source +file+ may be any URI supported
+  # by open-uri.
+  def read(file)
+    import = PROIEL::Dictionary.new(file)
+    import.read_lemmata do |attributes, references|
+      begin
+        lemma = Lemma.create!(attributes)
+        references.each do |reference|
+          lemma.dictionary_references.create!(reference)
+        end
+      rescue Exception => e
+        raise "Error creating lemma #{attributes["lemma"]}: #{e}"
+      end
+    end
+  end
+end
+
 class SourceImport
   # Creates a new importer.
   #

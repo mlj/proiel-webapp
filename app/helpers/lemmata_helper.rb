@@ -428,16 +428,7 @@ module LemmataHelper
   end
 
   def format_abbreviated_sentence(tokens, limit = 5)
-    words = format_sentence(tokens, :no_spacing => true)
-    if words.length > limit.abs
-      if limit < 0
-        '...' + words.last(-limit).join(' ')
-      else
-        words.first(limit).join(' ') + '...'
-      end
-    else
-      words.join(' ')
-    end
+    format_sentence(tokens, :length_limit => limit)
   end
 
   def link_to_relation(value, options = {})

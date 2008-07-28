@@ -149,6 +149,10 @@ class Hash
 end
 
 module Enumerable
+  def find_repetitions
+    select { |e| index(e) != rindex(e) }.uniq
+  end
+
   #FIXME: incompatible with Ruby 1.8.7!
   def count
     inject(Hash.new(0)) { |k, e| k[e] += 1; k }
@@ -284,6 +288,12 @@ end
 
 if $0 == __FILE__
   require 'test/unit'
+
+  class EnumerableExtensionTestCase < Test::Unit::TestCase
+    def test_find_repetitions
+      assert_equal ['x', 'y'], %w'a b c d e x f g x h i j k l y y m n'.find_repetitions
+    end
+  end
 
   class TestExtensionsCase < Test::Unit::TestCase
     def test_to_proc
