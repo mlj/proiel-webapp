@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 6) do
+ActiveRecord::Schema.define(:version => 9) do
 
   create_table "audits", :force => true do |t|
     t.integer "auditable_id"
@@ -60,9 +60,9 @@ ActiveRecord::Schema.define(:version => 6) do
   end
 
   create_table "dictionary_references", :force => true do |t|
-    t.integer  "lemma_id",              :default => 0,  :null => false
-    t.string   "dictionary_identifier", :default => "", :null => false
-    t.string   "entry_identifier",      :default => "", :null => false
+    t.integer  "lemma_id",            :default => 0, :null => false
+    t.string   "dictionary"
+    t.string   "entry"
     t.integer  "dictionary_entry_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -83,15 +83,22 @@ ActiveRecord::Schema.define(:version => 6) do
   end
 
   create_table "lemmata", :force => true do |t|
-    t.string   "lemma",       :limit => 64, :default => "",    :null => false
-    t.string   "variant",     :limit => 16
-    t.string   "language",    :limit => 3
+    t.string   "lemma",         :limit => 64, :default => "",    :null => false
+    t.string   "variant",       :limit => 16
+    t.string   "language",      :limit => 3
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "pos",         :limit => 2,  :default => "",    :null => false
-    t.string   "short_gloss", :limit => 64
+    t.string   "pos",           :limit => 2,  :default => "",    :null => false
+    t.string   "short_gloss",   :limit => 64
     t.text     "full_gloss"
-    t.boolean  "fixed",                     :default => false, :null => false
+    t.boolean  "fixed",                       :default => false, :null => false
+    t.string   "sort_key",      :limit => 16
+    t.text     "foreign_ids"
+    t.boolean  "conjecture"
+    t.boolean  "unclear"
+    t.boolean  "reconstructed"
+    t.boolean  "nonexistant"
+    t.boolean  "inflected"
   end
 
   add_index "lemmata", ["lemma"], :name => "index_lemmata_on_lemma"
@@ -150,29 +157,30 @@ ActiveRecord::Schema.define(:version => 6) do
   end
 
   create_table "tokens", :force => true do |t|
-    t.integer  "sentence_id",                                                                                                                                                                                                                                                       :default => 0,     :null => false
+    t.integer  "sentence_id",                                                                                                                                                                                                                                                                 :default => 0,     :null => false
     t.integer  "verse",                :limit => 2
-    t.integer  "token_number",         :limit => 3,                                                                                                                                                                                                                                 :default => 0,     :null => false
+    t.integer  "token_number",         :limit => 3,                                                                                                                                                                                                                                           :default => 0,     :null => false
     t.string   "morphtag",             :limit => 17
     t.string   "form",                 :limit => 64
     t.integer  "lemma_id"
     t.string   "relation",             :limit => 20
     t.integer  "head_id",              :limit => 3
     t.enum     "morphtag_source",      :limit => [:source_ambiguous, :source_unambiguous, :auto_ambiguous, :auto_unambiguous, :manual]
-    t.enum     "sort",                 :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :word, :empty, :fused_morpheme, :enclitic, :nonspacing_punctuation, :spacing_punctuation, :left_bracketing_punctuation, :right_bracketing_punctuation], :default => :word, :null => false
+    t.enum     "sort",                 :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :word, :empty, :fused_morpheme, :enclitic, :nonspacing_punctuation, :spacing_punctuation, :left_bracketing_punctuation, :right_bracketing_punctuation, :prodrop], :default => :word, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.enum     "morphtag_performance", :limit => [:failed, :overridden, :suggested, :picked]
     t.string   "source_morphtag",      :limit => 17
     t.string   "source_lemma",         :limit => 32
     t.text     "foreign_ids"
-    t.boolean  "contraction",                                                                                                                                                                                                                                                       :default => false, :null => false
+    t.boolean  "contraction",                                                                                                                                                                                                                                                                 :default => false, :null => false
     t.enum     "nospacing",            :limit => [:before, :after, :both]
     t.string   "presentation_form",    :limit => 128
     t.integer  "presentation_span"
-    t.boolean  "emendation",                                                                                                                                                                                                                                                        :default => false, :null => false
-    t.boolean  "abbreviation",                                                                                                                                                                                                                                                      :default => false, :null => false
-    t.boolean  "capitalisation",                                                                                                                                                                                                                                                    :default => false, :null => false
+    t.boolean  "emendation",                                                                                                                                                                                                                                                                  :default => false, :null => false
+    t.boolean  "abbreviation",                                                                                                                                                                                                                                                                :default => false, :null => false
+    t.boolean  "capitalisation",                                                                                                                                                                                                                                                              :default => false, :null => false
+    t.enum     "info_status",          :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old]
   end
 
   add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true
