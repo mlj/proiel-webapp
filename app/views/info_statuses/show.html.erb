@@ -11,6 +11,7 @@
 
   <% layer("info-status", :title => "Information status", :actions => [
     link_to_if(is_annotator?, "Edit", edit_annotation_info_status_url(@sentence))]) do -%>
+    <%= render :partial => 'info_statuses/legend' %>
     <%= render :partial => 'info_statuses/show' %>
   <% end %>
 

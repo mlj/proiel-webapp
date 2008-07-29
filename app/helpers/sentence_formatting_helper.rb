@@ -108,7 +108,7 @@ module SentenceFormattingHelper
     end
   end
 
-  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text, :info_status)
+  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text, :nominal, :info_status)
 
   class FormattedToken
     include ActionView::Helpers::TagHelper
@@ -139,7 +139,15 @@ module SentenceFormattingHelper
       when :text
         if link
           klass = 'token'
-          klass += ' ' + info_status if options[:information_status] && info_status
+          if options[:information_status]
+            klass += ' ' + if info_status
+                             info_status.to_s
+                           elsif nominal
+                             'nominal'
+                           else
+                             'non-nominal'
+                           end
+          end
           link_to(LangString.new(text, language).to_h, link, :class => klass)
         else
           text
@@ -214,12 +222,12 @@ module SentenceFormattingHelper
       t << check_reference_update(state, :verse, token.verse, token.verse.to_i)
 
       if token.presentation_form and not options[:ignore_presentation_forms]
-        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, token.info_status)
+        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, token.nominal?, token.info_status)
         skip_tokens = token.presentation_span - 1
       elsif options[:tooltip] == :morphtags
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token), token.info_status)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token), token.nominal?, token.info_status)
       else
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, token.info_status)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, token.nominal?, token.info_status)
       end
 
       if token.presentation_span and token.presentation_span - 1 > 0

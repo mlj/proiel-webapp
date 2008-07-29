@@ -184,8 +184,7 @@ class Token < ActiveRecord::Base
   end
 
   def nominal?
-    @nominal ||= marked_as_nominal || PROIEL::MORPHOLOGY.include?(morphtag) ||
-      PROIEL::RELATIONS.include?(relation)
+    @nominal ||= PROIEL::MORPHOLOGY.nominals.include?(morph[:major]) || PROIEL::RELATIONS.include?(relation)
   end
 
   protected

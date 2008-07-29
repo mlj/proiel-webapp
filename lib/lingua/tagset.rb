@@ -15,6 +15,7 @@ module Lingua
     attr_reader :code
     attr_reader :summary
     attr_reader :abbreviation
+    attr_reader :nominal
 
     # Creates a new tag identified by a given code +code+ and optional descriptive
     # information.
@@ -22,10 +23,12 @@ module Lingua
     # ==== Options
     # summary:: A summary of the purpose of the tag, e.g. "nominative.
     # abbreviation:: A human-readable abbreviation for the tag, e.g. "nom.".
+    # nominal:: Whether the tag represents a nominal category
     def initialize(code, options = {})
       @code = code
       @summary = options[:summary]
       @abbreviation = options[:abbreviation]
+      @nominal = options[:nominal]
     end
 
     # Returns a description of tag using a specified style.
@@ -69,15 +72,12 @@ module Lingua
       !code.nil? and code != '' and has_key?(code.to_sym)
     end
 
-      # Returns the set of tags that are considered nominal
-    def nominals
-      @nominals ||= self[:major].select { |key, value| value[:nominal] }
-    end
 end
 
   # A definition of positional tag set.
   class PositionalTagSet < Hash
     attr_reader :fields
+    attr_reader :nominals
 
     def initialize(data_file, klass = Tag)
       file_name = data_file
@@ -89,6 +89,9 @@ end
       end
 
       @fields = c['order'][0]['position'].collect { |f| f['ref'].to_sym }
+
+      # Define the set of tags that are considered nominal
+      @nominals = self[:major].inject([]) { |res, kv| res << kv[0] if kv[1].nominal; res }
     end
 
     # Returns a hash with descriptions for the field +field+ in the tag set.

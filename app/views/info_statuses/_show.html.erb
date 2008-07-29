@@ -1,4 +1,5 @@
 <% stylesheet 'sentence_divisions' %>
+<% stylesheet 'info_statuses' %>
 
 <div class="sentence-divisions">
   <%= format_sentence(@sentence.previous_sentences.last(5) + [@sentence] + @sentence.next_sentences.first(5),
