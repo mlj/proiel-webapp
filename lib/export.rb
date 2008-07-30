@@ -58,9 +58,10 @@ class PROIELXMLExport < SourceExport
           attributes[:relation] = token.relation if token.relation
           attributes[:head] = token.head_id if token.head
           attributes[:slashes] = token.slashees.collect { |s| s.id }.join(' ') unless token.slashees.empty?
-          [:morphtag, :lemma, :presentation_form, :presentation_span, :nospacing, :contraction, :emendation, :abbreviation, :capitalisation].each do |attr|
+          attributes[:lemma] = token.morph_lemma_tag.lemma if token.morph_lemma_tag
+          [:morphtag, :presentation_form, :presentation_span, :nospacing, :contraction, :emendation, :abbreviation, :capitalisation].each do |attr|
             value = token.send(attr)
-            attributes[attr.to_s..gsub(/_/, '-')] = value if value
+            attributes[attr] = value if value
           end
 
           w.write_token(token.form, token.sort.to_s.gsub(/_/, '-'), sentence.book.code, sentence.chapter,
