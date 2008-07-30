@@ -11,6 +11,10 @@ require 'xmlsimple'
 require 'extensions'
 
 module Lingua
+  def self.find_nominals_in(hash)
+    hash.inject([]) { |res, kv| res << kv[0] if kv[1].nominal; res }
+  end
+
   class Tag
     attr_reader :code
     attr_reader :summary
@@ -50,6 +54,8 @@ module Lingua
   end
 
   class TagSet < Hash
+    attr_reader :nominals
+
     def initialize(data, klass = Tag)
       c = (data.class == Hash ? data :
         XmlSimple.xml_in(data, {
@@ -59,6 +65,9 @@ module Lingua
           self[key.to_sym] = klass.new(key.to_sym, value.rekey { |k| k.to_sym })
         end
       end
+
+      # Define the set of tags that are considered nominal
+      @nominals = Lingua::find_nominals_in(self)
     end
 
     #FIXME: eliminate this
@@ -91,7 +100,7 @@ end
       @fields = c['order'][0]['position'].collect { |f| f['ref'].to_sym }
 
       # Define the set of tags that are considered nominal
-      @nominals = self[:major].inject([]) { |res, kv| res << kv[0] if kv[1].nominal; res }
+      @nominals = Lingua::find_nominals_in(self[:major])
     end
 
     # Returns a hash with descriptions for the field +field+ in the tag set.
