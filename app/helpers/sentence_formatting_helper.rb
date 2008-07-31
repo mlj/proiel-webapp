@@ -237,7 +237,6 @@ module SentenceFormattingHelper
       end
     end
 
-    logger.info(t)
     t.compact
   end
 end
