@@ -1,4 +1,4 @@
-<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Information status', :edit_url => :annotation_url } %>
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Information status', :edit_url => :annotation_info_status_url } %>
 
 <% if is_annotator? or @sentence.is_reviewed? %>
   <% layer_if(is_reviewer?, "completion", :actions => [
