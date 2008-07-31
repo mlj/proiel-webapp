@@ -3,19 +3,23 @@
 }
 .acc {
   background-color: blue;
+  color: white;
 }
 .acc-gen {
   background-color: green;
+  color: white;
 }
 .acc-disc {
   background-color: red;
+  color: white;
 }
 .acc-inf {
   background-color: magenta;
 }
 .old {
   background-color: brown;
+  color: white;
 }
-.nominal {
+.annotatable {
   background-color: #c1c1c1;
 }
