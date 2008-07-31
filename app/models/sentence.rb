@@ -7,12 +7,16 @@ class Sentence < ActiveRecord::Base
   belongs_to :reviewer, :class_name => 'User', :foreign_key => 'reviewed_by'
 
   has_and_belongs_to_many :aligned_with, :class_name => 'Sentence', :join_table => 'sentence_alignments', :foreign_key => 'primary_sentence_id', :association_foreign_key => 'secondary_sentence_id'
-  
+
   # All tokens
   has_many :tokens, :order => 'token_number'
 
+  # All tokens with dependents included
+  has_many :tokens_with_dependents, :class_name => 'Token',
+     :include => :dependents, :order => 'tokens.token_number'
+
   # Tokens that can be tagged with dependency relations.
-  has_many :dependency_tokens, :class_name => 'Token', :foreign_key => 'sentence_id', 
+  has_many :dependency_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
     :conditions => { "sort" => PROIEL::DEPENDENCY_TOKEN_SORTS }, :order => 'token_number'
 
   # Tokens that can be tagged with morphology and lemma.
@@ -24,12 +28,12 @@ class Sentence < ActiveRecord::Base
     :conditions => { "sort" => PROIEL::NON_EMPTY_TOKEN_SORTS }, :order => 'token_number'
 
   # General schema-defined validations
- 
+
   validates_presence_of :source_id
   validates_presence_of :book_id
   validates_presence_of :chapter
   validates_presence_of :sentence_number
-  validates_inclusion_of :bad_alignment_flag, :in => [true, false] 
+  validates_inclusion_of :bad_alignment_flag, :in => [true, false]
 
   validate :check_invariants
 
@@ -38,30 +42,30 @@ class Sentence < ActiveRecord::Base
   #FIXME:DRY generalise < token
 
   def previous_sentences
-    self.source.sentences.find(:all, 
-                               :conditions => [ "sentence_number < ? and book_id = ?", self.sentence_number, self.book_id ], 
+    self.source.sentences.find(:all,
+                               :conditions => [ "sentence_number < ? and book_id = ?", self.sentence_number, self.book_id ],
                                :order => "sentence_number ASC")
   end
 
   def next_sentences
-    self.source.sentences.find(:all, 
-                               :conditions => [ "sentence_number > ? and book_id = ?", self.sentence_number, self.book_id ], 
+    self.source.sentences.find(:all,
+                               :conditions => [ "sentence_number > ? and book_id = ?", self.sentence_number, self.book_id ],
                                :order => "sentence_number ASC")
   end
 
   # Returns the previous sentence in the linearisation sequence. Returns +nil+
   # if there is no previous sentence.
   def previous_sentence
-    self.source.sentences.find(:first, 
-                               :conditions => [ "sentence_number < ? and book_id = ?", self.sentence_number, self.book_id ], 
+    self.source.sentences.find(:first,
+                               :conditions => [ "sentence_number < ? and book_id = ?", self.sentence_number, self.book_id ],
                                :order => "sentence_number DESC")
   end
 
   # Returns the next sentence in the linearisation sequence. Returns +nil+
   # if there is no next sentence.
   def next_sentence
-    self.source.sentences.find(:first, 
-                               :conditions => [ "sentence_number > ? and book_id = ?", self.sentence_number, self.book_id ], 
+    self.source.sentences.find(:first,
+                               :conditions => [ "sentence_number > ? and book_id = ?", self.sentence_number, self.book_id ],
                                :order => "sentence_number ASC")
   end
 
@@ -86,7 +90,7 @@ class Sentence < ActiveRecord::Base
   def language
     # FIXME: eliminate to_sym
     source.language.to_sym
-  end 
+  end
 
   # Remove all dependency annotation from a sentence and save the changes.
   # This will also do away with any empty tokens in the sentence.
@@ -101,7 +105,7 @@ class Sentence < ActiveRecord::Base
   end
 
   # Updates the dependency structure of a sentence from a hash. This
-  # sets the relation and head columns of all affected tokens in the 
+  # sets the relation and head columns of all affected tokens in the
   # sentence and saves them.
   def update_dependencies!(structure, new_ids, parent = nil)
     # We will append new empty nodes at the end of the token sequence. Establish
@@ -142,7 +146,7 @@ class Sentence < ActiveRecord::Base
     current_slashes = []
 
     tokens.each do |token|
-      token.slashees.each do |slashee| 
+      token.slashees.each do |slashee|
         current_slashes << [token, slashee]
       end
     end
@@ -156,7 +160,7 @@ class Sentence < ActiveRecord::Base
   def update_slashes!(slashes)
     current_slashes = []
     tokens.each do |token|
-      token.slash_out_edges.each do |edge| 
+      token.slash_out_edges.each do |edge|
         # Read this by using slash_out_edges and the IDs directly, as
         # the target nodes may very well be gone by now.
         current_slashes << [edge.slasher_id, edge.slashee_id]
@@ -202,8 +206,8 @@ class Sentence < ActiveRecord::Base
       Sentence.transaction do
         # We need to shift all sentence numbers after this one first. Do it in reverse order
         # just to be cool.
-        ses = Sentence.find(:all, :conditions => [ 
-          "source_id = ? and book_id = ? and sentence_number > ?", 
+        ses = Sentence.find(:all, :conditions => [
+          "source_id = ? and book_id = ? and sentence_number > ?",
           source.id, book.id, sentence_number
         ])
         ses.sort { |x, y| y.sentence_number <=> x.sentence_number }.each do |s|
@@ -214,7 +218,7 @@ class Sentence < ActiveRecord::Base
         # Copy all attributes
         # FIXME: update this
         new_s = Sentence.create(:source_id => source.id, :book_id => book.id, :chapter => chapter)
-        new_s.sentence_number = sentence_number + 1 
+        new_s.sentence_number = sentence_number + 1
         new_s.save!
 
         # Finally, shuffle our last token over to the new sentence.
@@ -227,7 +231,7 @@ class Sentence < ActiveRecord::Base
   # and save the affected record.
   def append_tokens!(tokens)
     tokens.each do |t|
-      t.sentence_id = id 
+      t.sentence_id = id
       t.token_number = self.max_token_number + 1
       t.save!
     end
@@ -236,7 +240,7 @@ class Sentence < ActiveRecord::Base
   # Prepend tokens to this sentence by reassigning sentence and token numbers
   # and save the affected records.
   def prepend_tokens!(ts)
-    m = self.min_token_number 
+    m = self.min_token_number
 
     if m.nil?
       # No tokens in the sentence? Curious, must be a new one.
@@ -262,7 +266,7 @@ class Sentence < ActiveRecord::Base
   # Reassign the +n+ first token of the next sentence to the end of
   # this sentence and save the affected record.
   def append_first_tokens_from_next_sentence!(n = 1)
-    if self.has_next_sentence? 
+    if self.has_next_sentence?
       append_tokens!(self.next_sentence.tokens.first(n))
     else
       raise "No next sentence"
@@ -272,7 +276,7 @@ class Sentence < ActiveRecord::Base
   # Reassign the +n+ last token of the previous sentence to the
   # beginning of this sentence and save the affected record.
   def prepend_last_tokens_from_previous_sentence!(n = 1)
-    if self.has_previous_sentence? 
+    if self.has_previous_sentence?
       prepend_tokens!(self.previous_sentence.tokens.last(n))
     else
       raise "No previous sentence"
@@ -313,8 +317,8 @@ class Sentence < ActiveRecord::Base
   # "Unflags" the sentence as reviewed and saves the sentence.
   def unset_reviewed!(user)
     if is_reviewed?
-      self.reviewed_by = nil 
-      self.reviewed_at = nil 
+      self.reviewed_by = nil
+      self.reviewed_at = nil
       save!
     end
   end
@@ -325,29 +329,29 @@ class Sentence < ActiveRecord::Base
     dependency_tokens.each do |token|
       # Merge data about this token into the result structure
       s[token.id] ||= { :dependents => {} }
-      s[token.id].merge!({ 
-        :relation => token.relation, 
-        :found => true, 
+      s[token.id].merge!({
+        :relation => token.relation,
+        :found => true,
         :empty => token.is_empty?,
         :slashes => token.slashees.collect(&:id)
       })
 
       # Attach this token to its head's list of dependents
-      head = token.head ? token.head_id : :root 
+      head = token.head ? token.head_id : :root
       s[head] ||= { :dependents => {} }
       s[head][:dependents][token.id] = s[token.id]
     end
 
     # Return the dependents of the ficticious root node
-    s[:root][:dependents] 
+    s[:root][:dependents]
   end
 
   # Returns the dependency graph for the sentence.
   def dependency_graph
     PROIEL::ValidatingDependencyGraph.new do |g|
-      dependency_tokens.each { |t| g.badd_node(t.id, t.relation, t.head ? t.head.id : nil, 
-                                               t.slashees.collect(&:id), 
-                                               { :empty => t.is_empty?, 
+      dependency_tokens.each { |t| g.badd_node(t.id, t.relation, t.head ? t.head.id : nil,
+                                               t.slashees.collect(&:id),
+                                               { :empty => t.is_empty?,
                                                  :token_number => t.token_number,
                                                  :morphtag => PROIEL::MorphTag.new(t.morphtag),
                                                  :form => t.form }) }
@@ -356,7 +360,7 @@ class Sentence < ActiveRecord::Base
 
   # Returns the tokens that are immediate descendants of the root node
   # in the dependency structure of the sentence.
-  def root_tokens 
+  def root_tokens
     dependency_tokens.reject { |t| t.head }
   end
 
@@ -377,15 +381,15 @@ class Sentence < ActiveRecord::Base
 
   def self.search(search, page)
     search ||= {}
-    conditions = [] 
-    clauses = [] 
+    conditions = []
+    clauses = []
     includes = []
 
     if search[:source] and search[:source] != ''
       clauses << "source_id = ?"
       conditions << search[:source]
     end
-    
+
     if search[:completion] and search[:completion] != ''
       case search[:completion].to_sym
       when :none
@@ -399,7 +403,7 @@ class Sentence < ActiveRecord::Base
 
     conditions = [clauses.join(' and ')] + conditions
 
-    paginate(:page => page, :per_page => 50, :conditions => conditions, 
+    paginate(:page => page, :per_page => 50, :conditions => conditions,
              :include => includes)
   end
 

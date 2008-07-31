@@ -183,9 +183,15 @@ class Token < ActiveRecord::Base
     self
   end
 
+  # Returns true if the token has a nominal POS or a nominal syntactic relation,
+  # or if one of its dependents is an article.
   def nominal?
-    @nominal ||= PROIEL::MORPHOLOGY.nominals.include?(morph[:major]) ||
-                 (relation && PROIEL::RELATIONS.nominals.include?(relation.to_sym))
+    if @nominal.nil?
+      @nominal = PROIEL::MORPHOLOGY.nominals.include?(morph[:major]) ||
+                 (relation && PROIEL::RELATIONS.nominals.include?(relation.to_sym)) ||
+                            dependents.any? { |dep| dep.morph[:major] == :S }
+    end
+    @nominal
   end
 
   protected

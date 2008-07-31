@@ -45,12 +45,12 @@ module SentenceFormattingHelper
     x = nil
 
     if value.is_a?(Sentence)
-      x = value.tokens
+      x = value.tokens_with_dependents
     elsif value.is_a?(Array)
       if value.empty?
         return []
       elsif value.first.is_a?(Sentence)
-        x = value.map { |sentence| sentence.tokens }.flatten
+        x = value.map { |sentence| sentence.tokens_with_dependents }.flatten
       elsif value.first.is_a?(Token)
         x = value
       end
