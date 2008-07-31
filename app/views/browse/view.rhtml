@@ -1,9 +1,5 @@
 <% javascript "view" %>
 
-<%= make_information_box [
-  [ 'Location', @source.title + " " + @book.title + " " + @chapter.to_s]
-] %>
-
 <p>
   <%= source_paginate(Source.find(:all), @source, @book, @chapter) %>
   <%= book_paginate(@source, @book, @chapter) %>
