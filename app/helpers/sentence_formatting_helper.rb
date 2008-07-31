@@ -108,7 +108,7 @@ module SentenceFormattingHelper
     end
   end
 
-  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text, :nominal, :info_status)
+  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text, :nominal, :info_status, :sentence_id)
 
   class FormattedToken
     include ActionView::Helpers::TagHelper
@@ -139,7 +139,7 @@ module SentenceFormattingHelper
       when :text
         if link
           klass = 'token'
-          if options[:information_status]
+          if options[:information_status] && options[:focused_sentence] == sentence_id
             klass += ' ' + if info_status
                              info_status.to_s
                            elsif nominal
@@ -222,12 +222,12 @@ module SentenceFormattingHelper
       t << check_reference_update(state, :verse, token.verse, token.verse.to_i)
 
       if token.presentation_form and not options[:ignore_presentation_forms]
-        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, token.nominal?, token.info_status)
+        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, token.annotatable?, token.info_status, token.sentence_id)
         skip_tokens = token.presentation_span - 1
       elsif options[:tooltip] == :morphtags
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token), token.nominal?, token.info_status)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token), token.annotatable?, token.info_status, token.sentence_id)
       else
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, token.nominal?, token.info_status)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, token.annotatable?, token.info_status, token.sentence_id)
       end
 
       if token.presentation_span and token.presentation_span - 1 > 0

@@ -2,6 +2,6 @@
 <% stylesheet 'info_statuses' %>
 
 <div class="sentence-divisions">
-  <%= format_sentence(@sentence.previous_sentences.last(5) + [@sentence] + @sentence.next_sentences.first(5),
-    { :verse_numbers => :all, :information_status => true }) %>
+  <%= format_sentence(@sentence.previous_sentences.last(7) + [@sentence] + @sentence.next_sentences.first(1),
+    { :verse_numbers => :all, :information_status => true, :focused_sentence => @sentence.id }) %>
 </div>
