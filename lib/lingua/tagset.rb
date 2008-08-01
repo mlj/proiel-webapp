@@ -6,25 +6,29 @@
 #
 # $Id: $
 #
+require 'rubygems'
 require 'xmlsimple'
 require 'extensions'
 
 module Lingua
-  class Tag 
+  class Tag
     attr_reader :code
     attr_reader :summary
     attr_reader :abbreviation
+    attr_reader :nominal
 
-    # Creates a new tag identified by a given code +code+ and optional descriptive 
+    # Creates a new tag identified by a given code +code+ and optional descriptive
     # information.
     #
     # ==== Options
     # summary:: A summary of the purpose of the tag, e.g. "nominative.
     # abbreviation:: A human-readable abbreviation for the tag, e.g. "nom.".
+    # nominal:: Whether the tag represents a nominal category
     def initialize(code, options = {})
       @code = code
       @summary = options[:summary]
       @abbreviation = options[:abbreviation]
+      @nominal = options[:nominal]
     end
 
     # Returns a description of tag using a specified style.
@@ -45,10 +49,10 @@ module Lingua
     end
   end
 
-  class TagSet < Hash 
+  class TagSet < Hash
     def initialize(data, klass = Tag)
-      c = (data.class == Hash ? data : 
-        XmlSimple.xml_in(data, { 
+      c = (data.class == Hash ? data :
+        XmlSimple.xml_in(data, {
           'KeyToSymbol' => true, 'KeyAttr' => 'code' }))
       if c[:tag]
         c[:tag].each_pair do |key, value|
@@ -67,22 +71,27 @@ module Lingua
     def valid?(code)
       !code.nil? and code != '' and has_key?(code.to_sym)
     end
-  end
+
+end
 
   # A definition of positional tag set.
   class PositionalTagSet < Hash
     attr_reader :fields
+    attr_reader :nominals
 
     def initialize(data_file, klass = Tag)
       file_name = data_file
 
-      c = XmlSimple.xml_in(file_name, { 
+      c = XmlSimple.xml_in(file_name, {
         'KeyAttr' => { 'field' => 'id', 'tag' => 'code' }})
       c['field'].each_pair do |key, value|
         self[key.to_sym] = TagSet.new(value.rekey { |k| k.to_sym })
       end
 
       @fields = c['order'][0]['position'].collect { |f| f['ref'].to_sym }
+
+      # Define the set of tags that are considered nominal
+      @nominals = self[:major].inject([]) { |res, kv| res << kv[0] if kv[1].nominal; res }
     end
 
     # Returns a hash with descriptions for the field +field+ in the tag set.
@@ -96,7 +105,7 @@ module Lingua
     end
 
     # Returns a hash with descriptions for all fields in the tag set.
-    # 
+    #
     # ==== Options
     # style:: The style the description should be returned in, one of
     # +:abbreviation+ or +:summary+. Default is +:summary+.
@@ -107,6 +116,7 @@ module Lingua
       keys.each { |field| r[field] = descriptions(field, options) }
       r
     end
+
   end
 
 end

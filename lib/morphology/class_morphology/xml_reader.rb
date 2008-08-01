@@ -4,6 +4,7 @@
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
+require 'rubygems'
 require 'hpricot'
 require 'open-uri'
 
@@ -20,7 +21,7 @@ module Logos
 
     # An abstract definition. The namespace for definitions is global
     # but distinct for variables, constants and classes.
-    class Definition 
+    class Definition
       def self.assert_unique_element(e, element_name, optional = false)
         l = (e/element_name.to_sym)
         raise DefinitionError, "Multiple '#{element_name}' elements" if l.length > 1
@@ -30,7 +31,7 @@ module Logos
 
       def self.assert_text_attribute(e, attribute_name, optional = false)
         value = e.attributes[attribute_name.to_s]
-        raise DefinitionError, "Element without attribute '#{attribute_name}'" unless value or optional 
+        raise DefinitionError, "Element without attribute '#{attribute_name}'" unless value or optional
         case value
         when NilClass
           nil
@@ -41,7 +42,7 @@ module Logos
 
       def self.assert_boolean_attribute(e, attribute_name, optional = false)
         value = e.attributes[attribute_name.to_s]
-        raise DefinitionError, "Element without attribute '#{attribute_name}'" unless value or optional 
+        raise DefinitionError, "Element without attribute '#{attribute_name}'" unless value or optional
         case value
         when NilClass
           nil
@@ -65,7 +66,7 @@ module Logos
         @name = name
 
         @variables = {}
-        (body/:variable).each do |e| 
+        (body/:variable).each do |e|
           name = Definition.assert_text_attribute(e, "name")
           @variables[name] = VariableDefinition.new(name, e.inner_html)
         end
@@ -135,13 +136,13 @@ module Logos
         @tags = Definition.assert_text_attribute(body, "tags", true)
 
         @constants = {}
-        (body/:symbols/:symbol).each do |e| 
+        (body/:symbols/:symbol).each do |e|
           name = Definition.assert_text_attribute(e, "name")
           @constants[name] = ConstantDefinition.new(name, e.inner_html)
         end
 
         @classes = {}
-        (body/:classes/:class).each do |e| 
+        (body/:classes/:class).each do |e|
           name = Definition.assert_text_attribute(e, "name")
           @classes[name] = ClassDefinition.new(name, e)
         end

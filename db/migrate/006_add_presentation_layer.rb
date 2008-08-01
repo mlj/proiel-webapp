@@ -26,7 +26,7 @@ class AddPresentationLayer < ActiveRecord::Migration
         when :fused_morpheme
           previous = t.previous_token
           unless previous
-            STDERR.puts "I'm confused: #{t.id}: fused_morpheme has no previous_token!" 
+            STDERR.puts "I'm confused: #{t.id}: fused_morpheme has no previous_token!"
             next
           end
 
@@ -41,7 +41,7 @@ class AddPresentationLayer < ActiveRecord::Migration
         when :enclitic
           nxt = t.next_token
           unless nxt
-            STDERR.puts "I'm confused: #{t.id}: enclitic has no next_token!" 
+            STDERR.puts "I'm confused: #{t.id}: enclitic has no next_token!"
             next
           end
 
@@ -75,7 +75,7 @@ class AddPresentationLayer < ActiveRecord::Migration
   end
 
   def self.down
-    change_column :tokens, :sort, :limit => [:word, :empty, :fused_morpheme, :enclitic, :nonspacing_punctuation, :spacing_punctuation, :left_bracketing_punctuation, :right_bracketing_punctuation], :default     => :word, :null => false
+    change_column :tokens, :sort, :enum, :limit => [:word, :empty, :fused_morpheme, :enclitic, :nonspacing_punctuation, :spacing_punctuation, :left_bracketing_punctuation, :right_bracketing_punctuation], :default     => :word, :null => false
     remove_column :tokens, :enclisis
     remove_column :tokens, :contraction
     remove_column :tokens, :emendation

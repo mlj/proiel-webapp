@@ -1,0 +1,21 @@
+.new {
+  background-color: yellow;
+}
+.acc {
+  background-color: blue;
+}
+.acc-gen {
+  background-color: green;
+}
+.acc-disc {
+  background-color: red;
+}
+.acc-inf {
+  background-color: magenta;
+}
+.old {
+  background-color: brown;
+}
+.nominal {
+  background-color: #c1c1c1;
+}

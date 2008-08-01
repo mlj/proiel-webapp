@@ -38,6 +38,9 @@ module SentenceFormattingHelper
   # sentence to the given number of words and append an ellipsis if the
   # sentence exceeds that limit. If a negative number is given, the
   # ellipis is prepended to the sentence.
+  #
+  # information_status:: If +true+, will put each token inside a span with a
+  # class named as "info-status-#{token.info_status}"
   def format_sentence(value, options = {})
     x = nil
 
@@ -100,12 +103,12 @@ module SentenceFormattingHelper
       end
     end
 
-    def to_html(language)
+    def to_html(language, options)
       content_tag(:span, reference_value, :class => FORMATTED_REFERENCE_CLASSES[reference_type])
     end
   end
 
-  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text)
+  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text, :nominal, :info_status)
 
   class FormattedToken
     include ActionView::Helpers::TagHelper
@@ -127,7 +130,7 @@ module SentenceFormattingHelper
       end
     end
 
-    def to_html(language)
+    def to_html(language, options)
       case token_type
       when :lacuna_start, :lacuna_end
         content_tag(:span, UNICODE_HORIZONTAL_ELLIPSIS, :class => 'lacuna')
@@ -135,7 +138,17 @@ module SentenceFormattingHelper
         text
       when :text
         if link
-          link_to(LangString.new(text, language).to_h, link, :class => :token)
+          klass = 'token'
+          if options[:information_status]
+            klass += ' ' + if info_status
+                             info_status.to_s
+                           elsif nominal
+                             'nominal'
+                           else
+                             'non-nominal'
+                           end
+          end
+          link_to(LangString.new(text, language).to_h, link, :class => klass)
         else
           text
         end
@@ -151,7 +164,7 @@ module SentenceFormattingHelper
     def spacing_before?; false end
     def spacing_after?; false end
     def selected?(options); true end
-    def to_html(language); '' end
+    def to_html(language, options); '' end
   end
 
   def format_tokens(tokens, language, options)
@@ -163,20 +176,20 @@ module SentenceFormattingHelper
 
     if length_limit and sequence.length > length_limit
       if length_limit < 0
-        UNICODE_HORIZONTAL_ELLIPSIS + join_sequence(sequence.last(-length_limit), language)
+        UNICODE_HORIZONTAL_ELLIPSIS + join_sequence(sequence.last(-length_limit), language, options)
       else
-        join_sequence(sequence.first(length_limit), language) + UNICODE_HORIZONTAL_ELLIPSIS
+        join_sequence(sequence.first(length_limit), language, options) + UNICODE_HORIZONTAL_ELLIPSIS
       end
     else
-      join_sequence(sequence, language)
+      join_sequence(sequence, language, options)
     end
   end
 
-  def join_sequence(sequence, language)
+  def join_sequence(sequence, language, options)
     result = ''
 
     sequence.each_cons(2) do |x, y|
-      result += x.to_html(language)
+      result += x.to_html(language, options)
       result += "\n" if x.spacing_after? and y.spacing_before?
     end
 
@@ -194,7 +207,7 @@ module SentenceFormattingHelper
 
   def convert_to_presentation_sequence(tokens, options)
     state = {}
-    t = [] 
+    t = []
     skip_tokens = 0
 
     tokens.reject(&:is_empty?).each do |token|
@@ -209,12 +222,12 @@ module SentenceFormattingHelper
       t << check_reference_update(state, :verse, token.verse, token.verse.to_i)
 
       if token.presentation_form and not options[:ignore_presentation_forms]
-        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil)
+        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, token.nominal?, token.info_status)
         skip_tokens = token.presentation_span - 1
       elsif options[:tooltip] == :morphtags
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token))
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token), token.nominal?, token.info_status)
       else
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, token.nominal?, token.info_status)
       end
 
       if token.presentation_span and token.presentation_span - 1 > 0
@@ -224,6 +237,7 @@ module SentenceFormattingHelper
       end
     end
 
+    logger.info(t)
     t.compact
   end
 end
