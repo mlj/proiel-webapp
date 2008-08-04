@@ -10,6 +10,7 @@ var InfoStatus = function() {
     var menu_dimensions = null;
     var annotatables = null;
     var selected_token = null;
+    const FIRST_NUMERICAL_CODE = 49; // keycode for the 1 key
 
     // private functions
 
@@ -20,27 +21,12 @@ var InfoStatus = function() {
         });
     }
 
-    function setEventHandlingForInfoStatusMenu() {
-        $$('div.info-menu-item').invoke('observe', 'click', function() {
-            classes.each(function(klass) {
-                selected_token.removeClassName(klass);
-            });
-            selected_token.addClassName($w(this.className).last());
-        });
-    }
-
-    function setEventHandlingForDocument() {
-        document.observe('click', function() {
-            menu.hide();
-        });
-    }
-
     function selectToken(elm) {
         selected_token = elm;
         annotatables.invoke('removeClassName', 'info-selected');
         selected_token.addClassName('info-selected');
         showInfoStatusMenuFor(elm);
-    };
+    }
 
     function showInfoStatusMenuFor(elm) {
         var offset = elm.cumulativeOffset();
@@ -49,7 +35,33 @@ var InfoStatus = function() {
             left: (offset['left'] - ((menu_dimensions['width'] - elm.getWidth()) / 2) - 2) + 'px'
         });
         menu.show();
-    };
+    }
+
+    function setEventHandlingForInfoStatusMenu() {
+        $$('div.info-menu-item').invoke('observe', 'click', function() {
+            setInfoStatusClass($w(this.className).last());
+        });
+    }
+
+    function setInfoStatusClass(klass) {
+        classes.each(function(removed_class) {
+            selected_token.removeClassName(removed_class);
+        });
+        selected_token.addClassName(klass);
+    }
+
+    function setEventHandlingForDocument() {
+        document.observe('click', function() {
+            menu.hide();
+        });
+
+        document.observe('keydown', function(event) {
+            if(selected_token && menu.visible() &&
+               event.keyCode >= FIRST_NUMERICAL_CODE && event.keyCode < FIRST_NUMERICAL_CODE + classes.length) {
+                setInfoStatusClass(classes[event.keyCode - FIRST_NUMERICAL_CODE]);
+            }
+        });
+    }
 
     return {
 
