@@ -6,6 +6,7 @@
 #
 require 'singleton'
 require 'logos'
+require 'sfst'
 
 module PROIEL
   # Definition and test functions for constraints on PROIEL morphtags.
@@ -46,7 +47,7 @@ module PROIEL
     private
 
     def initialize
-      @fst = Logos::SFST::RegularTransducer.new(File.join(File.dirname(__FILE__), "morphtag_constraints.a"))
+      @fst = SFST::RegularTransducer.new(File.join(File.dirname(__FILE__), "morphtag_constraints.a"))
       @tag_spaces = {}
     end
 
