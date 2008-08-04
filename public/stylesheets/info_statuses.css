@@ -1,25 +1,38 @@
+/* Classes for information status values */
 .new {
-  background-color: yellow;
+   background-color: yellow;
 }
 .acc {
-  background-color: blue;
-  color: white;
+   background-color: blue;
+   color: white;
 }
 .acc-gen {
-  background-color: green;
-  color: white;
+   background-color: green;
+   color: white;
 }
 .acc-disc {
-  background-color: red;
-  color: white;
+   background-color: red;
+   color: white;
 }
 .acc-inf {
-  background-color: magenta;
+   background-color: magenta;
 }
 .old {
-  background-color: brown;
-  color: white;
+   background-color: brown;
+   color: white;
 }
-.annotatable {
-  background-color: #c1c1c1;
+
+/* Other stuff */
+.info-annotatable {
+   border: 2px solid white;
+}
+.info-menu-item {
+   padding-left: 3px;
+   font-size: 75%;
+}
+.info-selected {
+   border: 2px solid black;
+}
+.no-info-status {
+   background-color: #c1c1c1;
 }

@@ -154,9 +154,9 @@ module SentenceFormattingHelper
 
     def info_status_css_class
       @info_status_css_class ||= if info_status
-                                   info_status.to_s.gsub('_', '-')
+                                   'info-annotatable ' + info_status.to_s.gsub('_', '-')
                                  elsif annotatable
-                                   'annotatable'
+                                   'info-annotatable no-info-status'
                                  else
                                    nil
                                  end
