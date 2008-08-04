@@ -10,6 +10,7 @@ var InfoStatus = function() {
     var menu_dimensions = null;
     var annotatables = null;
     var selected_token = null;
+    var selected_token_index = null;
     const FIRST_NUMERICAL_CODE = 49; // keycode for the 1 key
 
     // private functions
@@ -26,6 +27,13 @@ var InfoStatus = function() {
         annotatables.invoke('removeClassName', 'info-selected');
         selected_token.addClassName('info-selected');
         showInfoStatusMenuFor(elm);
+
+        annotatables.each(function(annotatable, i) {
+            if(annotatables[i] === selected_token) {
+                selected_token_index = i;
+                throw $break;
+            }
+        });
     }
 
     function showInfoStatusMenuFor(elm) {
@@ -56,9 +64,24 @@ var InfoStatus = function() {
         });
 
         document.observe('keydown', function(event) {
-            if(selected_token && menu.visible() &&
+            if(!selected_token) return;
+
+            if(menu.visible() &&
                event.keyCode >= FIRST_NUMERICAL_CODE && event.keyCode < FIRST_NUMERICAL_CODE + classes.length) {
                 setInfoStatusClass(classes[event.keyCode - FIRST_NUMERICAL_CODE]);
+                event.stop();
+            }
+            else if(event.keyCode === Event.KEY_TAB) {
+                var index;
+
+                if(event.shiftKey) {
+                    index = selected_token_index === 0 ? annotatables.length - 1 : selected_token_index - 1;
+                }
+                else {
+                    index = selected_token_index === annotatables.length - 1 ? 0 : selected_token_index + 1;
+                }
+                selectToken(annotatables[index]);
+                event.stop();
             }
         });
     }
@@ -68,9 +91,8 @@ var InfoStatus = function() {
         // public functions
 
         init: function() {
-            if(annotatables != null) {
-                return;  // because the script may be included several times on the same page
-            }
+            if(annotatables != null) return;  // because the script may be included several times on the same page
+
             menu = $('info-menu');
             annotatables = $$('span.info-annotatable');
 
@@ -79,6 +101,8 @@ var InfoStatus = function() {
             setEventHandlingForDocument();
 
             menu_dimensions = menu.getDimensions();
+
+            selectToken(annotatables[0]);
         }
     }
 }();
