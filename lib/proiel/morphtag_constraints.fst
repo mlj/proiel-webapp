@@ -49,11 +49,12 @@ $indeclinable$ =                $e$     $e$     $e$     $e$    $e$    $e$     $e
 % Verbs are complex and need more detailed attention
 $verb$ = ( \
   % Person  Number  Tense    Mood   Voice  Gender  Case  Degree  Animacy  Strength
-  $e$       $e$     [pra]    n      $n$    $e$     $e$   $e$     $e$      $e$ | \ % ininitive
+  $e$       $e$     [praf]   n      $n$    $e$     $e$   $e$     $e$      $e$ | \ % ininitive
   $e$       $n$     [prafsu] p      $n$    $n$     $n$   $e$     $n$      $n$ | \ % participle
   $e$       $e$     $e$      [du]   $e$    $e$     $n$   $e$     $e$      $e$ | \ % gerund & supine
   $e$       $n$     $e$      g      $e$    $n$     $n$   $e$     $n$      $n$ | \ % gerundive
-  $n$       $n$     $n$      [miso] $n$    $e$     $e$   $e$     $e$      $e$   \ % other finite forms
+  $n$       $n$     [pf]     m      $n$    $e$     $e$   $e$     $e$      $e$ | \ % imperative
+  $n$       $n$     $n$      [iso]  $n$    $e$     $e$   $e$     $e$      $e$   \ % other finite forms
 )
 
 $legal_tags$ = ( \
