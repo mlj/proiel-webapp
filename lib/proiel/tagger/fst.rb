@@ -6,6 +6,7 @@
 #
 require 'proiel/tagger/analysis_method'
 require 'logos'
+require 'sfst'
 
 module PROIEL
   module Tagger
@@ -57,7 +58,7 @@ module PROIEL
       private
 
       def load_fst(file_name)
-        Logos::SFST::CompactTransducer.new(file_name)
+        SFST::CompactTransducer.new(file_name)
       end
 
       PROIEL_FEATURE_MAP = {
