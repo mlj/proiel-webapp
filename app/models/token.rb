@@ -206,19 +206,6 @@ class Token < ActiveRecord::Base
         conditions << "%#{search[:form]}%"
       end
     end
-    
-    morphtag_fields = {}
-    PROIEL::MorphTag.fields.each do |field|
-      if search[field] and search[field] != ''
-        morphtag_fields[field] = search[field]
-      end
-    end
-
-    unless morphtag_fields.empty?
-      morphtag = PROIEL::MorphTag.new(morphtag_fields)
-      clauses << "morphtag like ?"
-      conditions << morphtag.to_s.gsub('-', '_')
-    end
 
     conditions = [clauses.join(' and ')] + conditions
 
