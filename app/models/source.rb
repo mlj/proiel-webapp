@@ -13,6 +13,14 @@ class Source < ActiveRecord::Base
   belongs_to :aligned_with, :class_name => 'Source', :foreign_key => 'alignment_id' 
   has_many :bookmarks
 
+  # FIXME: this should be an instance method on Book (or its equivalence), when
+  # Book has been changed to a first order object.
+  # Returns the perecentage of annotated senteces to unannotated sentences the
+  # book +book_id+ in the source.
+  def book_completion_ratio(book_id)
+    Sentence.count_by_sql("SELECT count(annotated_by) * 100 / count(*) FROM sentences WHERE source_id = #{id} AND book_id = #{book_id}")
+  end
+
   # FIXME: These don't really belong here, do they? But where should
   # they go instead?
   class << self
