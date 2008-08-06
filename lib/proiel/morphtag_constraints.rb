@@ -6,6 +6,7 @@
 #
 require 'singleton'
 require 'logos'
+require 'sfst'
 
 module PROIEL
   # Definition and test functions for constraints on PROIEL morphtags.
@@ -31,22 +32,25 @@ module PROIEL
       :perfect =>       /^....r/,
       :pluperfect =>    /^....l/,
       :futperfect =>    /^....t/,
+
+      :fut_inf =>       /^....fn/,
+      :past_part =>     /^....up/,
     }
 
     # A specification of feature sets that should be treated as invalid
     # in specific languages
     LANGUAGE_BLACK_LISTS = {
-      :la =>  [ :art, :dual,             :ins,       :aorist, :resultative, :past, :optative, :middle, :gen_dat, ],
-      :grc => [       :dual,       :abl, :ins, :loc,          :resultative, :past,                     :gen_dat, ],
-      :hy  => [ :art, :dual, :voc, :abl, :ins,                :resultative, :past, :optative, :middle, :gen_dat, ],
-      :got => [ :art,              :abl, :ins, :loc, :aorist, :resultative,                   :middle, :gen_dat, ],
-      :cu  => [ :art,              :abl,                                           :optative, :middle,           :pluperfect, :futperfect, :perfect, ],
+      :la =>  [ :art, :dual,             :ins,       :aorist, :resultative, :past,             :optative, :middle, :gen_dat, :fut_inf, ],
+      :grc => [       :dual,       :abl, :ins, :loc,          :resultative, :past,                                 :gen_dat,           ],
+      :hy  => [ :art, :dual, :voc, :abl, :ins,                :resultative, :past,             :optative, :middle, :gen_dat, :fut_inf, ],
+      :got => [ :art,              :abl, :ins, :loc, :aorist, :resultative,        :past_part,            :middle, :gen_dat, :fut_inf, ],
+      :cu  => [ :art,              :abl,                                                       :optative, :middle,           :fut_inf, :pluperfect, :futperfect, :perfect, ],
     }
 
     private
 
     def initialize
-      @fst = Logos::SFST::RegularTransducer.new(File.join(File.dirname(__FILE__), "morphtag_constraints.a"))
+      @fst = SFST::RegularTransducer.new(File.join(File.dirname(__FILE__), "morphtag_constraints.a"))
       @tag_spaces = {}
     end
 
