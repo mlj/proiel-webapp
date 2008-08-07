@@ -6,12 +6,24 @@ class MorphtagsController < ApplicationController
   def auto_complete_for_morphtags_lemma
     search = params[:morphtags][:lemma]
 
+    # Perform transliteration
     if !params[:morphtags][:language].blank? and TRANSLITERATORS.has_key?(params[:morphtags][:language].to_sym)
       xliterator = Logos::TransliteratorFactory::get_transliterator(TRANSLITERATORS[params[:morphtags][:language].to_sym])
       @results = xliterator.transliterate_string(search)
+
+      completion_candidates = @results
     else
       @results = []
+
+      completion_candidates = [params[:morphtags][:lemma]]
     end
+
+    # Auto-complete lemmata
+    completions = completion_candidates.collect do |result|
+      Lemma.find_completions(result, params[:morphtags][:language]).map(&:presentation_form)
+    end.flatten
+
+    @results += completions
 
     render :partial => "transliterations/input"
   end

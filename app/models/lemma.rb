@@ -109,4 +109,17 @@ class Lemma < ActiveRecord::Base
     paginate(:page => page, :per_page => limit, :order => 'lemma', 
              :include => includes, :conditions => conditions)
   end
+
+  # Returns lemmata that are possible completions of the lemma +q+ in the language
+  # +language+. The lemma should be given on presentation form, i.e. "lemma" or
+  # "lemma#variant". If no variant is given, both completion with and without
+  # variant numbers will be returned.
+  def self.find_completions(q, language)
+    lemma, variant = q.split(/#/)
+    unless variant.blank?
+      Lemma.find(:all, :conditions => ["language = ? AND lemma LIKE ? AND variant = ?", language, "#{lemma}%", variant])
+    else
+      Lemma.find(:all, :conditions => ["language = ? AND lemma LIKE ?", language, "#{lemma}%"])
+    end
+  end
 end
