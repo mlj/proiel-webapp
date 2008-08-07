@@ -23,7 +23,8 @@ class MorphtagsController < ApplicationController
       Lemma.find_completions(result, params[:morphtags][:language]).map(&:presentation_form)
     end.flatten
 
-    @results += completions
+    @completions = completions.sort.uniq
+    @transliterations = @results.sort.uniq
 
     render :partial => "transliterations/input"
   end
