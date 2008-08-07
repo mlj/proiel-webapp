@@ -3,7 +3,7 @@ class LemmataController < ResourceController::Base
   actions :all, :except => [ :destroy ]
 
   show.before do
-    @tokens = @lemma.tokens.search(params.slice(:source, :form, :exact, :major, :minor, :person, :number, :tense, :mood, :voice, :gender, :case, :degree, :extra), params[:page])
+    @tokens = @lemma.tokens.search(params.slice(:source, :form, :exact), params[:page])
   end
 
   update.before do
