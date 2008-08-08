@@ -123,7 +123,7 @@ class MorphtagTestCase < Test::Unit::TestCase
         t = PROIEL::MorphTag.new(tag)
         l = language.to_sym
         v = (validity == 'true') ? true : false
-        puts t.descriptions(t.fields), l, v unless v == t.is_valid?(l)
+        puts tag, t.descriptions(t.fields), l, v unless v == t.is_valid?(l)
 
         assert_equal v, t.is_valid?(l)
       end
