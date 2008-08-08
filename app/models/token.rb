@@ -21,10 +21,9 @@ class Token < ActiveRecord::Base
   validates_presence_of :token_number
   validates_presence_of :sort
 
-  # If the token has a lemma, it must also have a morphtag (this does
-  # not, however, apply to source_morphtag and source_lemma).
-#  validates_presence_of :lemma, :if => lambda { |t| t.morphtag }
-#  validates_presence_of :morphtag, :if => lambda { |t| t.lemma }
+  # If the token has a lemma, it must also have a morphtag.
+  validates_presence_of :lemma, :if => lambda { |t| t.morphtag }
+  validates_presence_of :morphtag, :if => lambda { |t| t.lemma }
 
   # Invariant constraint: t.head_id => t.relation
   validates_presence_of :relation, :if => lambda { |t| !t.head_id.nil? }
@@ -216,19 +215,6 @@ class Token < ActiveRecord::Base
         clauses << "form like ?"
         conditions << "%#{search[:form]}%"
       end
-    end
-
-    morphtag_fields = {}
-    PROIEL::MorphTag.fields.each do |field|
-      if search[field] and search[field] != ''
-        morphtag_fields[field] = search[field]
-      end
-    end
-
-    unless morphtag_fields.empty?
-      morphtag = PROIEL::MorphTag.new(morphtag_fields)
-      clauses << "morphtag like ?"
-      conditions << morphtag.to_s.gsub('-', '_')
     end
 
     conditions = [clauses.join(' and ')] + conditions

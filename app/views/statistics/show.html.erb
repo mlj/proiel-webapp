@@ -9,6 +9,9 @@
                         :width => 350, :height => 150) %>
   <%= render_tabular @sources, :partial => 'statistics/source_stats',
     :fields => [ 'Source', 'Annotated (sentences)', 'Reviewed (sentences)', 'Total (sentences/tokens)' ] %>
+
+  <%= render_tabular @book_completion_ratios, :partial => 'statistics/book_completion_ratio',
+    :fields => [ 'Source', 'Book', 'Completion' ] %>
 <% end %>
   
 <% layer("tagger_performance") do -%>

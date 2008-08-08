@@ -17,7 +17,7 @@ class TaggerTagTestCase < Test::Unit::TestCase
 
   def test_unambiguous
     tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
-    assert_equal [:unambiguous, MorphLemmaTag.new("C:et"), [MorphLemmaTag.new("C:et"), 1.0]], tagger.tag_token(:la, 'et')
+    assert_equal [:unambiguous, MorphLemmaTag.new("I:amen"), [MorphLemmaTag.new("I:amen"), 1.0]], tagger.tag_token(:la, 'amen')
   end
 
   def test_instance_frequency
@@ -97,13 +97,13 @@ class TaggerTagTestCase < Test::Unit::TestCase
 
   def test_failed_tagging
     tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
-    assert_equal [:failed, nil], tagger.tag_token(:la, 'fjotleik')
+    assert_equal [:failed, nil], tagger.tag_token(:la, 'fjotleik', :text)
   end
 
   def test_sfst_lookup
-    tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
-    assert_equal [:ambiguous, nil, 
-      [MorphLemmaTag.new("Nb-p---fg:ioka"), 0.2],
-    ], tagger.tag_token(:cu, 'отецъ')
+#    tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
+#    assert_equal [:ambiguous, nil, 
+#      [MorphLemmaTag.new("Nb-p---fg:ioka"), 0.2],
+#    ], tagger.tag_token(:cu, 'отецъ')
   end
 end

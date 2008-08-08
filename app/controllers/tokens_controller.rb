@@ -6,7 +6,7 @@ class TokensController < ResourceController::Base # ApplicationController
   private
 
   def collection
-    @tokens = Token.search(params.slice(:source, :form, :exact, :major, :minor, :person, :number, :tense, :mood, :voice, :gender, :case, :degree, :extra), params[:page])
+    @tokens = Token.search(params.slice(:source, :form, :exact), params[:page])
   end
 
   update.before do

@@ -141,7 +141,7 @@ module PROIEL
       #
       # Options:
       # ignore_instances:: Ignore any instance matches.
-      def tag_token(language, form, sort, existing = nil, options = {})
+      def tag_token(language, form, existing = nil, options = {})
         language = language.to_sym
         raise "Undefined language #{language}" unless @methods.has_key?(language) 
 

@@ -1,6 +1,8 @@
 class StatisticsController < ApplicationController
   before_filter :is_annotator?
 
+  BookCompletionRatio = Struct.new(:source, :book, :ratio)
+
   # GET /statistics
   def show
     @completion = Source.completion
@@ -29,6 +31,13 @@ class StatisticsController < ApplicationController
     @recent_reviewed = Sentence.find(:all, :limit => limit, 
                                 :conditions => [ 'annotated_by = ? and reviewed_by is not null', user ],
                                 :order => 'reviewed_at DESC')
+
+    @book_completion_ratios = []
+    Source.find(:all).each do |source|
+      source.books.each do |book|
+        @book_completion_ratios << BookCompletionRatio.new(source, book, source.book_completion_ratio(book.id))
+      end
+    end
   end
 
 #  def monthly

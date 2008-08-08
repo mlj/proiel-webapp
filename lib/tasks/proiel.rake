@@ -70,6 +70,18 @@ namespace :proiel do
       end
     end
 
+    namespace :tigerxml do
+      require 'export'
+
+      desc "Export a PROIEL source text as TigerXML. Options: ID=source_identifier"
+      task(:all => :myenvironment) do
+        source = Source.find_by_code(ENV['ID'])
+        raise "Source not found" unless source
+        e = TigerXMLExport.new(source)
+        e.write("#{source.code}-tiger.xml")
+      end
+    end
+
     namespace :all do
       require 'export'
 
