@@ -3,9 +3,9 @@ one:
   id: 1
   lemma: MyText
   variant: MyText
-  lang: MyText
+  language: MyText
 two:
   id: 2
   lemma: MyText
   variant: MyText
-  lang: MyText
+  language: MyText

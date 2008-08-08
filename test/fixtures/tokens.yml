@@ -1,29 +1,21 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 one:
   id: 1
-  text_id: 1
-  book_id: 1
-  chapter: 1
   verse: 1
-  sentence: 1
-  word: 1
-  morph: MyText
+  token_number: 1
+  sentence_id: 1
+  morphtag: MyText
   form: MyText
   lemma_id: 1
   relation: MyText
   head: 1
-  clitic: false
 two:
   id: 2
-  text_id: 1
-  book_id: 1
-  chapter: 1
   verse: 1
-  sentence: 1
-  word: 1
-  morph: MyText
+  token_number: 2
+  sentence_id: 1
+  morphtag: MyText
   form: MyText
   lemma_id: 1
   relation: MyText
   head: 1
-  clitic: false
