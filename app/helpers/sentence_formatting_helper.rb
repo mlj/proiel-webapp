@@ -209,7 +209,7 @@ module SentenceFormattingHelper
       t << check_reference_update(state, :sentence, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
       t << check_reference_update(state, :verse, token.verse, token.verse.to_i)
 
-      highlighting = options[:highlight].include?(token)
+      highlighting = options[:highlight].include?(token) if options[:highlight]
 
       if token.presentation_form and not options[:ignore_presentation_forms]
         t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, highlighting)
