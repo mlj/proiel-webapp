@@ -38,6 +38,8 @@ module SentenceFormattingHelper
   # sentence exceeds that limit. If a negative number is given, the
   # ellipis is prepended to the sentence.
   def format_sentence(value, options = {})
+    options.reverse_merge! :highlight => []
+
     x = nil
 
     if value.is_a?(Sentence)
@@ -209,13 +211,13 @@ module SentenceFormattingHelper
       t << check_reference_update(state, :sentence, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
       t << check_reference_update(state, :verse, token.verse, token.verse.to_i)
 
-      highlighting = options[:highlight].include?(token) if options[:highlight]
+      highlighting = options[:highlight].include?(token)
 
       if token.presentation_form and not options[:ignore_presentation_forms]
         t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, highlighting)
         skip_tokens = token.presentation_span - 1
       elsif options[:tooltip] == :morphtags
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token), hightlighting)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token), highlighting)
       else
         t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, highlighting)
       end
