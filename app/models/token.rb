@@ -21,11 +21,14 @@ class Token < ActiveRecord::Base
   validates_presence_of :token_number
   validates_presence_of :sort
 
-  # If the token has a lemma, it must also have a morphtag.
+  # Constraint: t.sentence.reviewed_by => t.lemma_id
+  validates_presence_of :lemma, :if => lambda { |t| t.sentence.reviewed_by }
+
+  # Constraint: t.lemma_id <=> t.morphtag
   validates_presence_of :lemma, :if => lambda { |t| t.morphtag }
   validates_presence_of :morphtag, :if => lambda { |t| t.lemma }
 
-  # Invariant constraint: t.head_id => t.relation
+  # Constraint: t.head_id => t.relation
   validates_presence_of :relation, :if => lambda { |t| !t.head_id.nil? }
 
   validate do |t|

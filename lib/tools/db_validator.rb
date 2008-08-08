@@ -136,14 +136,6 @@ class Validator < Task
       o.destroy if @fix
     end
 
-    logger.info { "Checking that each reviewed token has a valid lemma..." }
-    bad_ones = Token.find(:all, 
-                          :include => [ :sentence ], 
-                          :conditions => [ "sort not in ('empty_dependency_token', 'punctuation') and sentences.reviewed_by is not null and lemma_id is null" ])
-    bad_ones.each do |o| 
-      logger.error { "Token #{o.id} [#{o.sort}]: Reviewed but no lemma" } 
-    end
-
     logger.info { "Checking that lemmata with variant numbers do not also occur without variant numbers..." }
     candidates = Lemma.find(:all, :conditions => [ "variant is not null" ])
     candidates.each do |o|
@@ -220,12 +212,6 @@ class Validator < Task
     Source.find(:all).each do |source|
       source.annotated_sentences.each do |sentence|
         sentence.morphtaggable_tokens.each do |token|
-          #FIXME: at some point move to validation
-          if (token.morphtag and not token.lemma_id) or (not token.morphtag and token.lemma_id)
-            logger.error { "Token #{token.id}: Token has morphtag or lemma but not both" }
-            next
-          end
-
           ml = token.morph_lemma_tag
 
           if ml and ml.morphtag.is_closed?
