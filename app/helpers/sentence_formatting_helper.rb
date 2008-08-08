@@ -23,8 +23,7 @@ module SentenceFormattingHelper
   # token_numbers:: If +true+, will insert token numbers after each token.
   # Each number will be contained within a +span+ of class +token_number+.
   #
-  # focused_sentence:: If set to a sentence ID, will focus that sentence by
-  # giving it an appropriate form of emphasis.
+  # highlight:: If set to an array of tokens, will highlight those tokens.
   #
   # tooltip:: If +morphtags+, will add a tool-tip for each word with its
   # POS and morphology.
@@ -105,7 +104,7 @@ module SentenceFormattingHelper
     end
   end
 
-  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text)
+  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text, :highlighting)
 
   class FormattedToken
     include ActionView::Helpers::TagHelper
@@ -128,20 +127,22 @@ module SentenceFormattingHelper
     end
 
     def to_html(language)
-      case token_type
-      when :lacuna_start, :lacuna_end
-        content_tag(:span, UNICODE_HORIZONTAL_ELLIPSIS, :class => 'lacuna')
-      when :punctuation
-        text
-      when :text
-        if link
-          link_to(LangString.new(text, language).to_h, link, :class => :token)
-        else
-          text
-        end
-      else
-        raise "Invalid token type"
-      end
+      t = case token_type
+          when :lacuna_start, :lacuna_end
+            content_tag(:span, UNICODE_HORIZONTAL_ELLIPSIS, :class => 'lacuna')
+          when :punctuation
+            text
+          when :text
+            if link
+              link_to(LangString.new(text, language).to_h, link, :class => :token)
+            else
+              text
+            end
+          else
+            raise "Invalid token type"
+          end
+
+      highlighting ? content_tag(:span, t, :class => 'highlight') : t
     end
   end
 
@@ -208,13 +209,15 @@ module SentenceFormattingHelper
       t << check_reference_update(state, :sentence, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
       t << check_reference_update(state, :verse, token.verse, token.verse.to_i)
 
+      highlighting = options[:highlight].include?(token)
+
       if token.presentation_form and not options[:ignore_presentation_forms]
-        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil)
+        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, highlighting)
         skip_tokens = token.presentation_span - 1
       elsif options[:tooltip] == :morphtags
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token))
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token), hightlighting)
       else
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, highlighting)
       end
 
       if token.presentation_span and token.presentation_span - 1 > 0
