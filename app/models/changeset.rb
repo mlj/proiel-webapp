@@ -1,12 +1,8 @@
 class Changeset < ActiveRecord::Base
-  belongs_to :changer, :polymorphic => true
+  belongs_to :user
   has_many :changes, :class_name => 'Audit'
 
 #  validates_presence_of :changes, :message => 'is empty'
-
-  def user
-    self.changer.is_a?(User) ? self.changer : self.changer.user
-  end
 
   protected
 
@@ -17,7 +13,7 @@ class Changeset < ActiveRecord::Base
     includes = []
 
     if search[:user] and search[:user] != ''
-      clauses << "(changer_type = 'User' and changer_id = ?)"
+      clauses << "user_id = ?)"
       conditions << search[:user] 
     end
 

@@ -57,7 +57,7 @@ here[link:../controllers.svg].
 === Rake tasks
 
 The Ruby on Rails application includes a set of rake tasks for importing and
-exporting data and for running various forms of validation jobs. Run
+exporting data and for running validations. Run
 
     rake --tasks proiel
     

@@ -178,14 +178,10 @@ module CollectiveIdea #:nodoc:
           open = Thread.current['open_transactions'] ||= 0
 
           raise "Versioned object modified outside transaction" if open.zero?
-          raise "Versioned object modified without user or job ID" unless Thread.current['user_id'] or Thread.current['job_id']
+          raise "Versioned object modified without user or job ID" unless Thread.current['user_id']
 
           if Thread.current['changeset_id'].nil?
-            if Thread.current['job_id']
-              Thread.current['changeset_id'] = Changeset.create(:changer_id => Thread.current['job_id'], :changer_type => 'Job').id
-            else
-              Thread.current['changeset_id'] = Changeset.create(:changer_id => Thread.current['user_id'], :changer_type => 'User').id
-            end
+            Thread.current['changeset_id'] = Changeset.create(:user_id => Thread.current['user_id']).id
           end
 
           self.audits.create :changes => @changed_attributes, :action => action.to_s, 

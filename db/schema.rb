@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 9) do
+ActiveRecord::Schema.define(:version => 10) do
 
   create_table "audits", :force => true do |t|
     t.integer "auditable_id"
@@ -39,9 +39,8 @@ ActiveRecord::Schema.define(:version => 9) do
   end
 
   create_table "changesets", :force => true do |t|
-    t.datetime "created_at",                                 :null => false
-    t.integer  "changer_id",                 :default => 0,  :null => false
-    t.string   "changer_type", :limit => 16, :default => "", :null => false
+    t.datetime "created_at", :null => false
+    t.integer  "user_id"
   end
 
   add_index "changesets", ["created_at"], :name => "index_changesets_on_created_at"
@@ -66,20 +65,6 @@ ActiveRecord::Schema.define(:version => 9) do
     t.integer  "dictionary_entry_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "jobs", :force => true do |t|
-    t.string   "name",        :limit => 64,                               :default => "",    :null => false
-    t.text     "parameters"
-    t.integer  "user_id",                                                 :default => 0,     :null => false
-    t.datetime "started_at"
-    t.datetime "finished_at"
-    t.enum     "result",      :limit => [:successful, :failed, :aborted]
-    t.integer  "source_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "audited",                                                 :default => false, :null => false
-    t.text     "log"
   end
 
   create_table "lemmata", :force => true do |t|
