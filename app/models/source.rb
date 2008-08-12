@@ -4,7 +4,7 @@ class Source < ActiveRecord::Base
 
   has_many :books, :class_name => 'Book', :finder_sql => 'SELECT books.* FROM books AS books LEFT JOIN sentences AS sentences ON book_id = books.id WHERE source_id = #{id} GROUP BY book_id'
   has_many :sentences
-  has_many :tokens, :class_name => 'Token', :finder_sql => 'SELECT * FROM tokens LEFT JOIN sentences ON sentence_id = sentences.id WHERE source_id = #{id}', :counter_sql => 'SELECT count(*) FROM tokens LEFT JOIN sentences ON sentence_id = sentences.id WHERE source_id = #{id}' 
+  has_many :tokens, :through => :sentences
 
   has_many :unannotated_sentences, :class_name => 'Sentence', :foreign_key => 'source_id', :conditions => 'annotated_by is null'
   has_many :annotated_sentences, :class_name => 'Sentence', :foreign_key => 'source_id', :conditions => 'annotated_by is not null'
@@ -58,13 +58,9 @@ class Source < ActiveRecord::Base
 
   protected
 
-  def self.search(search, page)
-    search ||= {}
-    conditions = [] 
-    clauses = [] 
-    includes = []
+  def self.search(query, options)
+    options[:conditions] ||= ["title LIKE ?", "%#{query}%"] unless query.blank?
 
-    paginate(:page => page, :per_page => 50, :conditions => conditions, 
-             :include => includes)
+    paginate options
   end
 end

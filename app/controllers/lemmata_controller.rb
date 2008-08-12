@@ -3,26 +3,26 @@ class LemmataController < ResourceController::Base
   actions :all, :except => [ :destroy ]
 
   show.before do
-    @tokens = @lemma.tokens.search(params.slice(:source, :form, :exact), params[:page])
+    @tokens = @lemma.tokens.search(params[:query], :page => current_page)
   end
 
   update.before do
     if params[:lemma]
-      params[:lemma][:variant] = nil if params[:lemma][:variant] == ''
-      params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss] == ''
+      params[:lemma][:variant] = nil if params[:lemma][:variant].blank?
+      params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss].blank?
     end
   end
 
   create.before do
     if params[:lemma]
-      params[:lemma][:variant] = nil if params[:lemma][:variant] == ''
-      params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss] == ''
+      params[:lemma][:variant] = nil if params[:lemma][:variant].blank?
+      params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss].blank?
     end
   end
 
   private
 
   def collection
-    @lemmata = Lemma.search(params.slice(:lemma, :exact, :language, :major, :minor), params[:page])
+    @lemmata = Lemma.search(params[:query], :page => current_page)
   end
 end

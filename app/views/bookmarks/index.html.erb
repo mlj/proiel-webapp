@@ -1,2 +1,6 @@
+<% search_form_tag bookmarks_path do %>
+  <label>User</label><%= user_select_tag :user_id, params[:user_id], :include_blank => true %>
+<% end %>
+
 <%= render_tabular @bookmarks, :new => new_bookmark_path,
-  :fields => [ 'User', 'Source', '&nbsp;' ] %>
+  :fields => [ 'User', 'Type', '&nbsp;' ] %>

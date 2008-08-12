@@ -3,15 +3,17 @@
     <% stylesheet 'concordance' %>
 
     <td class="reference">
-      <%= link_to(readable_reference(annotation.reference), annotation_url(annotation.sentence)) %>&nbsp;<%= readable_completion(annotation.sentence, :checkmark => :only) %>
+      <%= readable_reference(annotation.reference) %>&nbsp;<%= readable_completion(annotation.sentence, :checkmark => :only) %>
     </td>
     <td class="left"><%= format_abbreviated_sentence(annotation.previous_tokens, -5) %></td>
-    <td class="centre"><%= format_token_form(annotation) %></td>
+    <td class="centre highlight"><%= format_token_form(annotation) %></td>
     <td class="right"><%= format_abbreviated_sentence(annotation.next_tokens, 5) %></td>
+    <td><%= link_to 'Details', annotation_url(annotation.sentence) %></td>
   <% else %>
     <td class="reference">
-      <%= link_to(readable_reference(annotation.reference), annotation_url(annotation)) %>&nbsp;<%= readable_completion(annotation, :checkmark => :only) %>
+      <%= readable_reference(annotation.reference) %>&nbsp;<%= readable_completion(annotation, :checkmark => :only) %>
     </td>
     <td class="left"><%= format_abbreviated_sentence(annotation.tokens, 10) %></td>
+    <td><%= link_to 'Details', annotation_url(annotation) %></td>
   <% end %>
 </tr>

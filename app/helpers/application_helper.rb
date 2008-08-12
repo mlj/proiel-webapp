@@ -151,14 +151,6 @@ module ApplicationHelper
     _select_tag name, value, option_tags, options
   end
 
-  # Returns a select tag for users.
-  #
-  # ==== Options
-  # +:include_blank+:: If +true+, includes an empty value first.
-  def user_select_tag(name, value, options = {})
-    _select_tag_db(name, User, :login, value, options)
-  end
-
   # Makes an information box intended for display of meta-data and navigational
   # aids.
   def make_information_box(entries, nav_actions = nil)

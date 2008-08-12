@@ -43,11 +43,9 @@ class HomeController < ApplicationController
       # Must be a lemma/token lookup
       case params[:mode]
       when 'tokens'
-        @tokens = Token.search({ :form => query, :exact => params[:exact] }, params[:page])
+        @tokens = Token.search(params[:query], :page => current_page)
       when 'lemmata'
-        base_form, variant = query.split('#')
-        @lemmata = Lemma.search({ :lemma => base_form, :variant => variant,
-                                  :exact => params[:exact] }, params[:page])
+        @lemmata = Lemma.search(params[:query], :page => current_page)
       else
         flash[:error] = 'Invalid query'
       end

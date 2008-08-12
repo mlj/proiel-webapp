@@ -381,7 +381,10 @@ a.token {
   text-decoration: none;
 }
 
-.focused { font-weight: bold; }
+.highlight { 
+  font-weight: bold;
+  color: orange;
+}
 
 .chapter-number { font-weight: bold; }
 

@@ -2,8 +2,6 @@
 # and may additionally be differentiated from other lemmata in the same language
 # with the same base form using a integer variant identifier.
 class Lemma < ActiveRecord::Base
-  set_table_name :lemmata
-
   has_many :tokens
   has_many :dictionary_references
 
@@ -26,11 +24,6 @@ class Lemma < ActiveRecord::Base
   # Returns the human-readable presentation for for the lemma.
   def to_s
     self.variant ? "#{self.lemma}##{self.variant}" : self.lemma 
-  end
-
-  # Returns the frequency of this lemma in the sources.
-  def frequency
-    tokens.count
   end
 
   def presentation_form
@@ -65,36 +58,23 @@ class Lemma < ActiveRecord::Base
 
   protected
 
-  def self.search(search, page, limit = 50)
-    search ||= {}
+  def self.search(query, options = {})
     conditions = []
     clauses = []
-    includes = []
 
-    if search[:lemma] and search[:lemma] != ''
-      if search[:exact] == 'yes'
-        clauses << "lemma = ?"
-        conditions << "#{search[:lemma]}"
+    unless query.blank?
+      lemma, variant = query.split('#')
+
+      if variant
+        options[:conditions] ||= ['lemma LIKE ? AND variant = ?', "%#{lemma}%", variant]
       else
-        clauses << "lemma like ?"
-        conditions << "%#{search[:lemma]}%"
+        options[:conditions] ||= ['lemma LIKE ?', "%#{lemma}%"]
       end
     end
 
-    if search[:variant] and search[:variant] != ''
-      clauses << "variant = ?"
-      conditions << "#{search[:variant]}"
-    end
+    options[:order] ||= 'language ASC, sort_key ASC, lemma ASC, variant ASC, pos ASC'
 
-    if search[:language] and search[:language] != ''
-      clauses << "language = ?"
-      conditions << search[:language]
-    end
-
-    conditions = [clauses.join(' and ')] + conditions
-
-    paginate(:page => page, :per_page => limit, :order => 'lemma', 
-             :include => includes, :conditions => conditions)
+    paginate options
   end
 
   # Returns lemmata that are possible completions of the lemma +q+ in the language

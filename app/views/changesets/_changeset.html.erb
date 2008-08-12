@@ -1,7 +1,6 @@
 <tr>
-  <td><%= changeset.user.login %></td>
-  <td><%= changeset.changes.length %></td>
-  <td><%= changeset.created_at %></td>
+  <td class="user"><%= link_to_user(changeset.user) %></td>
+  <td class="timestamp"><%= changeset.created_at %></td>
 
   <td><%= link_to 'Details', changeset %></td>
 </tr>

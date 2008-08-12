@@ -379,32 +379,8 @@ class Sentence < ActiveRecord::Base
 
   protected
 
-  def self.search(search, page)
-    search ||= {}
-    conditions = []
-    clauses = []
-    includes = []
-
-    if search[:source] and search[:source] != ''
-      clauses << "source_id = ?"
-      conditions << search[:source]
-    end
-
-    if search[:completion] and search[:completion] != ''
-      case search[:completion].to_sym
-      when :none
-        clauses << "annotated_by is null and reviewed_by is null"
-      when :annotated
-        clauses << "annotated_by is not null and reviewed_by is null"
-      when :reviewed
-        clauses << "reviewed_by is not null"
-      end
-    end
-
-    conditions = [clauses.join(' and ')] + conditions
-
-    paginate(:page => page, :per_page => 50, :conditions => conditions,
-             :include => includes)
+  def self.search(query, options = {})
+    paginate options
   end
 
   private

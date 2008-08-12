@@ -23,4 +23,10 @@ class Bookmark < ActiveRecord::Base
       false
     end
   end
+
+  protected
+
+  def self.search(query, options = {})
+    paginate options
+  end
 end

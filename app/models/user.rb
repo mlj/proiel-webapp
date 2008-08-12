@@ -144,19 +144,11 @@ class User < ActiveRecord::Base
     end
 
   protected
-    def self.search(search, page)
-      search ||= {}
-      conditions = []
-      clauses = []
+    def self.search(query, options = {})
+      options[:conditions] = ["login LIKE ?", "%#{query}%"] unless query.blank?
+      options[:order] = 'login ASC'
 
-      if search[:login] and search[:login] != ''
-        clauses << "login like ?"
-        conditions << "%#{search[:login]}%"
-      end
-
-      conditions = [clauses.join(' and ')] + conditions
-
-      paginate(:page => page, :per_page => 50, :order => 'login', :conditions => conditions)
+      paginate options
     end
 
   public

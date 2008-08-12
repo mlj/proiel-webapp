@@ -1,2 +1,5 @@
-<%= render_tabular @sources, :pagination => true,
-  :fields => [ 'Source', 'Title', 'Language', '&nbsp;' ] %>
+<% search_form_tag sources_path do %>
+  <label>Title</label><%= text_field_tag :query, params[:query] %>
+<% end %>
+
+<%= render_tabular @sources, :pagination => true, :fields => [ 'Title', 'Language', '&nbsp;' ] %>

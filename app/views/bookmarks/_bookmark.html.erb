@@ -1,6 +1,6 @@
 <tr>
-  <td><%= link_to bookmark.user.login, bookmark.user %></td>
-  <td><%=h bookmark.flow %></td>
+  <td class="user"><%= link_to_user bookmark.user %></td>
+  <td class="tag"><%=h bookmark.flow %></td>
   <td>
     <%= link_to 'Details', bookmark %>
     <%= link_to 'Remove', bookmark, :confirm => 'Are you sure?', :method => :delete %></td>

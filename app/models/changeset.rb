@@ -6,20 +6,9 @@ class Changeset < ActiveRecord::Base
 
   protected
 
-  def self.search(search, page)
-    search ||= {}
-    conditions = []
-    clauses = []
-    includes = []
+  def self.search(query, options = {})
+    options[:order] ||= 'created_at DESC'
 
-    if search[:user] and search[:user] != ''
-      clauses << "user_id = ?)"
-      conditions << search[:user] 
-    end
-
-    conditions = [clauses.join(' and ')] + conditions
-
-    paginate(:page => page, :per_page => 50, :order => 'created_at DESC', 
-             :include => includes, :conditions => conditions)
+    paginate options
   end
 end

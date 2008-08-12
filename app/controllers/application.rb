@@ -24,4 +24,11 @@ class ApplicationController < ActionController::Base
   def user_is_reviewer?
     current_user.has_role?(:reviewer)
   end
+
+  helper_method :current_page
+
+  # Returns the current page for will_paginate based actions.
+  def current_page
+    @page ||= params[:page].blank? ? 1 : params[:page].to_i
+  end
 end

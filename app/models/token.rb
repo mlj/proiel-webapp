@@ -195,32 +195,10 @@ class Token < ActiveRecord::Base
 
   protected
 
-  def self.search(search, page, limit = 50)
-    search ||= {}
-    conditions = []
-    clauses = []
-    includes = []
+  def self.search(query, options = {})
+    options[:conditions] ||= ["form LIKE ?", "%#{query}%"] unless query.blank?
 
-    if search[:source] and search[:source] != ''
-      clauses << "sentences.source_id = ?"
-      conditions << search[:source]
-      includes << :sentence
-    end
-
-    if search[:form] and search[:form] != ''
-      if search[:exact] == 'yes'
-        clauses << "form = ?"
-        conditions << "#{search[:form]}"
-      else
-        clauses << "form like ?"
-        conditions << "%#{search[:form]}%"
-      end
-    end
-
-    conditions = [clauses.join(' and ')] + conditions
-
-    paginate(:page => page, :per_page => limit, :conditions => conditions,
-             :include => includes)
+    paginate options
   end
 
   private

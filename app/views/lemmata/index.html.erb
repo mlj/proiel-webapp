@@ -1,8 +1,8 @@
 <% search_form_tag lemmata_path do %>
-  <label>Language</label><%= language_select_tag :language, params[:language], :include_blank => true %>
-  <label>Lemma</label><%= text_field_tag :lemma, params[:lemma] %>
-  <label>Exact match</label><%= check_box_tag :exact, 'yes', params[:exact] %>
+  <!-- label>Language</label><%= language_select_tag :language, params[:language], :include_blank => true %> -->
+  <label>Lemma</label><%= text_field_tag :query, params[:query] %>
+  <!-- label>Exact match</label><%= check_box_tag :exact, 'yes', params[:exact] %> -->
 <% end %>
 
 <%= render_tabular @lemmata, :partial => 'lemmata/lemma', :pagination => true,
-  :fields => [ 'Lemma', 'Language', 'Translation', 'Frequency' ] %>
+  :fields => [ 'Lemma', 'Language', 'Translation', 'Frequency', '&nbsp;' ] %>

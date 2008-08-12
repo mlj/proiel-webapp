@@ -4,42 +4,10 @@
   <% if @lemma.pos %>
     <dt>Part of speech:</dt><dd><%= PROIEL::MorphTag.new(@lemma.pos).descriptions([:major, :minor], true).join(", ").capitalize %></dd>
   <% end %>
-  <dt>Frequency:</dt><dd><span class="language"><%= pluralize(@lemma.frequency, 'occurrence') %></span></dd>
+  <dt>Frequency:</dt><dd><%= pluralize(@lemma.tokens.count, 'tokens') %></dd>
   <% if @lemma.short_gloss %>
     <dt>Translation:</dt><dd><q><%= @lemma.short_gloss %></q></dd>
   <% end %>
 <% end %>
   
-<%= render_tabular @tokens, :partial => 'annotations/annotation', :pagination => true,
-    :class => 'concordance' %>
-
-  <!--
-<% layer("dictionary-references", :title => 'Dictionary references') do -%>
-  <ol>
-    <% if perseus_url(@lemma) %>
-      <li><%= link_to 'Perseus', perseus_url(@lemma), :class => 'external' %></li>
-    <% end %>
-  </ol>
-<% end %>
--->
-<!-- 
-<div id="actions">
-  <%= link_to_remote('Morphology',
-                     :update => "extras",
-                     :url => { :action => 'morphology', :id => @lemma },
-                     :before => "Element.show('spinner')",
-                     :success => "Element.hide('spinner')") %>
-
-  <%= link_to_remote('Dependencies',
-                     :update => "extras",
-                     :url => { :action => 'dependencies', :id => @lemma },
-                     :before => "Element.show('spinner')",
-                     :success => "Element.hide('spinner')") %>
-
-  <%= image_tag("loading.gif",
-                :align => "absmiddle",
-                :border => 0,
-                :id => "spinner",
-                :style =>"display: none;") %>
-              </div>
-              -->
+<%= render_tabular @tokens, :partial => 'annotations/annotation', :pagination => true, :class => 'concordance' %>

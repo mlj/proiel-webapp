@@ -1,28 +1,24 @@
-class AnnotationsController < ApplicationController
+class AnnotationsController < ReadOnlyController
   before_filter :is_reviewer?, :only => [:flag_as_reviewed, :flag_as_not_reviewed]
+  before_filter :find_parents
 
-  # GET /annotations
-  # GET /annotations.xml
-  def index
-    @sentences = Sentence.search(params.slice(:completion, :source, :book, :chapter,
-                                              :sentence_number), params[:page])
+  protected
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @sentences }
-    end
+  def find_parents
+    @parent = @source = Source.find(params[:source_id]) if params[:source_id]
   end
 
-  # GET /annotation/1
-  # GET /annotation/1.xml
-  def show
+  private
+
+  def object
     @sentence = Sentence.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @sentence }
-    end
   end
+
+  def collection
+    @sentences = (@parent ? @parent.sentences : Sentence).search(params[:query], :page => current_page)
+  end
+
+  public
 
   def flag_as_reviewed
     @sentence = Sentence.find(params[:id])

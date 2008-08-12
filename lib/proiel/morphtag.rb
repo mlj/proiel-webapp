@@ -241,5 +241,9 @@ module PROIEL
     def is_compatible?(o)
       self == o or self.is_subtag?(o) or o.is_subtag?(self)
     end
+
+    def blank?
+      values.all? { |v| v.nil? }
+    end
   end
 end

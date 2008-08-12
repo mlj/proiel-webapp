@@ -1,7 +1,8 @@
 <dl>
-  <dt>Title:</dt><dd><%=h @source.title %></dd>
-  <dt>Abbreviation:</dt><dd><%=h @source.abbreviation %></dd>
-  <dt>Language:</dt><dd><%= readable_language(@source.language) %></dd>
+  <dt>Title:</dt><dd class="title"><%=h @source.title %></dd>
+  <dt>Abbreviation:</dt><dd class="title"><%=h @source.abbreviation %></dd>
+  <dt>Code:</dt><dd class="tag"><%=h @source.code %></dd>
+  <dt>Language:</dt><dd class="language"><%= readable_language(@source.language) %></dd>
   <dt>Edition:</dt><dd><%=h @source.edition %></dd>
   <dt>Electronic source:</dt><dd><%= @source.url ? link_to(@source.source, @source.url) : @source.source %></dd>
   <dt>Editor of electronic version:</dt><dd><%=h @source.editor %></dd>
