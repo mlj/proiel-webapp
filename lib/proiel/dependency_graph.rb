@@ -518,15 +518,6 @@ module PROIEL
       end
     end
 
-    # FIXME
-    def interpret_sentence_status
-    end
-
-    # FIXME
-    def has_predicate_identity_slash?
-      false
-    end
-
     # Returns an interpretation of an empty node.
     def interpret_empty_node
       raise "Not an empty node" unless is_empty?
