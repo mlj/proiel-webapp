@@ -186,9 +186,9 @@ module PROIEL
       end
     end
 
-    private
+    OPEN_MAJOR = [:V, :A, :N]
 
-    CLOSED_MAJOR = [:V, :A, :N]
+    private
 
     def self.fields_with_inheritance
       [:gender]
@@ -204,7 +204,7 @@ module PROIEL
     #  MorphTag.new('A').is_closed?  #-> false
     #  MorphTag.new('-').is_closed?  #-> false
     def is_closed?
-      self.has_key?(:major) and not CLOSED_MAJOR.include?(self[:major])
+      self.has_key?(:major) and not OPEN_MAJOR.include?(self[:major])
     end
 
     # Returns +true+ if the tag is a subtag of another tag +o+.
