@@ -22,6 +22,18 @@ wulfila.be. A couple of conventions of Streitberg's are important to keep in min
   * The notation _†Aai_ indicates a conjecture (_besserungsbedürftig_). (The dagger
     symbol, when reproduced by PROIEL, is mapped to `U+2020`.)
 
+##### Lemma choice policy
+
+  * If Streitberg gives multiple lemmata, e.g.
+
+      __diabaulus__ _u._ diabulus
+      __laian*__ _o._ lauan
+      __Klemaintau__ B _u._ Klaimaintau A
+
+    the first form, in bold type, is always to be used.
+
+##### Difficulties
+
 wulfila.be has opted to use a different lemma than Streitberg for roughly 100
 lemmata. These can be found by comparing `Lemma.lemma` and `Lemma.WSLemma` in wulfila.be's
 database. Below are listed all such lemmata, divided into classes according to how
@@ -89,54 +101,65 @@ electronic version. Again the Streitberg form has been used.
   * hlutrei, &lt;hlūtrei&gt;
   * hlutriþa, &lt;hlūtriþa&gt;
 
-##### Various
+##### Alternatives given
 
-  * laian, &lt;multi&gt;o. lauan* → laian*
+For these alternatives are given, but the wulfila.be form matches the first, bold type headword
+in Streitberg, so no change is required.
 
-    Streitberg and electronic dictionary: _laian* o. lauan_
-
-##### Unresolved
-
-TODO: dunno what to do about these yet and have not verified them
-
-  * Ananias, Ananias* u. Ananeias*
+  * laian, &lt;multi&gt;o. lauan* → laian* (Streitberg actually has:  _laian* o. lauan_)
+  * Ananias, Ananias* u. Ananeias* → Ananias*
   * diabaulus, diabaulus u. diabulus
   * paska, paska u. pasxa
   * paurpura, paurpura u. paurpaura
   * Iudaius, Iudaius u. Judaius
-
   * Klemaintau, Klemaintau B u. Klaimaintau A
   * swartiza, swartiza (A) u. swartizla (B)
-
-  * alamans, alamans* o. alamannans
+  * alamans, alamans* o. alamannans → alamans*
   * izei, izei o. ize
-
   * Alul, [Alul] Αλουλ oder [Ailul] Ελουλ
-  * ams, &lt;multi&gt;oder amsa* Mn
+  * ams, &lt;multi&gt;oder amsa* Mn → ams*
+  * ibnaskauns, &lt;multi&gt;oder -skauneis* ia(182 II) → ibnaskauns*
+  * reikeis,  &lt;multi&gt;o. reiks* i/ja (183) → reikeis*
+  * riureis,  &lt;multi&gt;o. riurs* Adj.i/ja (183) → riureis*
+  * uf-saggqjan,  uf-saggqjan A und uf-saggqjan B (28b)
+  * skauns,  &lt;multi&gt;oder skauneis* (182II) → skauns*
+  * skeirs,  &lt;multi&gt;o. i/ja (183(2))
+  * sleiþs,  &lt;multi&gt;o. sleideis* (182 II) → sleiþs*
+  * sutis,  &lt;multi&gt;o. ia (182 II)
+  * suþjan,  &lt;multi&gt;o. suþjon sw.V.2
+  * unriureis,  &lt;multi&gt;o. unriurs* Adj.i/ja (183)
+  * auþeis, &lt;multi&gt;oder auþs* → auþeis*
+
+##### 'Multiple forms in headword'
+
+Some entries have the following note in the XML dictionary
+
+    <note resp="TDH" scope="internal" tags="schema multiform" xml:lang="en">Multiple forms in headword.</note>
+
+and unfortunately, the whole headword is kept in the `form` element, e.g.
+
+    <form>is M, si F, ita N</form>
+
+while in Streitberg's dictionary, only the first form is in fact in bold type. This applies to
+
   * Antiaukia, Antiaukia*, Antiokia*
   * Ater, Ater*, Ateir*
+  * Iaireiko, Iaireiko*, Iairiko*
+  * is, is M, si F, ita N
+  * nibai,  nibai, niba
+
+TODO: this is unresolved
+
+##### Corrected
+
   * aurkje, &lt;multi&gt;aurkjus oder aurkeis* Mia
-  * auþeis, &lt;multi&gt;oder auþs*
   * bistugq, bistug(g)q
   * faus, fawai
   * af-giban, af-giban sik
   * hnasqus, hnasqjaim
-  * Iaireiko, Iaireiko*, Iairiko*
-  * ibnaskauns, &lt;multi&gt;oder -skauneis* ia(182 II)
-  * is, is M, si F, ita N
-  * nibai,  nibai, niba
-  * reikeis,  &lt;multi&gt;o. reiks* i/ja (183)
-  * riureis,  &lt;multi&gt;o. riurs* Adj.i/ja (183)
-  * uf-saggqjan,  uf-saggqjan A und uf-saggqjan B (28b)
   * seins, *seins
   * dis-sigqan,dis-sig(g)qan
-  * skauns,  &lt;multi&gt;oder skauneis* (182II)
-  * skeirs,  &lt;multi&gt;o. i/ja (183(2))
-  * sleiþs,  &lt;multi&gt;o. sleideis* (182 II)
   * ga-stigqan,ga-stiggqan
-  * sutis,  &lt;multi&gt;o. ia (182 II)
-  * suþjan,  &lt;multi&gt;o. suþjon sw.V.2
-  * unriureis,  &lt;multi&gt;o. unriurs* Adj.i/ja (183)
   * usbloteins, us-bloteins
   * war, warai
   * and-weihan, and-waihan*
