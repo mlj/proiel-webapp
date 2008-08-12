@@ -226,10 +226,7 @@ class Token < ActiveRecord::Base
     end
 
     # if morphtag is set, is it valid?
-    if morphtag
-      errors.add_to_base("Morphological annotation #{morphtag.inspect} is invalid") unless PROIEL::MorphTag.new(morphtag).is_valid?(self.language)
-      errors.add_to_base("Morphological annotation is invalid: no lemma") unless lemma
-    end
+    errors.add_to_base("Morphological annotation #{morphtag.inspect} is invalid") if morphtag and !PROIEL::MorphTag.new(morphtag).is_valid?(self.language)
 
     # if morphtag is set, is it actually a morphtag or just a blank?
     if morphtag
