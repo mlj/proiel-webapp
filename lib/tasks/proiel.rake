@@ -10,9 +10,9 @@ namespace :proiel do
 
   desc "Validate PROIEL database"
   task(:validator => :myenvironment) do
-    require 'tools/db_validator'
+    require 'validation'
 
-    v = Validator.new(false)
+    v = Validator.new
     v.execute!(USER_NAME)
   end
 
