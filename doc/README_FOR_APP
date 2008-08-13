@@ -16,6 +16,10 @@ The application depends on (at least) these gems:
 * treetop
 * ruby-sfst
 
+Use
+    rake gems:install
+to install all the gems automatically.
+
 In addition, you need the following gems that are part of the PROIEL Corpus
 * logos
 
