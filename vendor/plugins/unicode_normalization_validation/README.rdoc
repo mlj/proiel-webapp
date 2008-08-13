@@ -1,0 +1,33 @@
+= unicode_normalization_validation
+
+A Unicode Normalization Form validation plugin for Rails.
+
+== Installation
+
+  git clone --depth=1 git://github.com/mlj/unicode_normalization_validation.git vendor/plugins/unicode_normalization_validation
+
+== Usage
+
+  class Book < ActiveRecord::Base
+    validates_unicode_normalization_of :author
+    validates_unicode_normalization_of :editor, :form => :c
+    validates_unicode_normalization_of :title, :message => 'Title is not on Unicode Normalization Form KC'
+  end
+
+== Bugs/limitations
+
+This only works if you set
+
+  $KCODE = 'u'
+
+in your environment (at least as per Rails 2.0 and Ruby 1.8).
+
+== License
+
+MIT
+
+== Development
+
+The project is hosted on Github on http://github.com/mlj/unicode_normalization_validation.
+
+Copyright (c) 2008 Marius L. Jøhndal, released under the MIT license.

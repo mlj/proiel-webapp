@@ -139,14 +139,25 @@ module PROIEL
 
       # Generates a list of tags for a token.
       #
-      # Options:
-      # ignore_instances:: Ignore any instance matches.
+      # ==== Options
+      # <tt>:ignore_instances</tt> - If set, ignores all instance matches.
+      # <tt>:force_method</tt> - If set, forces the tagger to use a specific tagging method,
+      #                          e.g. <tt>:manual_rules</tt> for manual rules. All other
+      #                          methods are disabled.
       def tag_token(language, form, existing = nil, options = {})
         language = language.to_sym
         raise "Undefined language #{language}" unless @methods.has_key?(language) 
 
         begin
-          raw_candidates = @methods[language].collect { |method| method.call(form) }.flatten
+          raw_candidates = unless options[:force_method]
+                             @methods[language].collect { |method| method.call(form) }.flatten
+                           else
+                             # FIXME
+                             if options[:force_method] == :manual_rules
+                               form = normalise_form(language, form)
+                             end
+                             analyze_form(language, options[:force_method], form)
+                           end
         rescue Exception => e
           @logger.error { "Tagger method failed: #{e}" }
           return [:failed, nil]

@@ -518,15 +518,6 @@ module PROIEL
       end
     end
 
-    # FIXME
-    def interpret_sentence_status
-    end
-
-    # FIXME
-    def has_predicate_identity_slash?
-      false
-    end
-
     # Returns an interpretation of an empty node.
     def interpret_empty_node
       raise "Not an empty node" unless is_empty?
@@ -535,16 +526,14 @@ module PROIEL
         # This is the root node, which obviously has a special
         # interpretation.
         :root
-      elsif dependents.all? { |d| d.relation == self.relation }
+      elsif dependents.select { |d| d.relation == self.relation }.size >= 2
         # All dependents have the same relation to this node, as this
         # node has to its head. This indicates an asyndetic conjunction.
         :conjunction
-      elsif self.has_dependents?(:sub) or self.relation == :pred or self.has_dependents?(:comp)
+      else
         # We weren't a conjunction, but have a subject or comp depdenednt,
         # or a pred relation, and that means we're verbal.
         :verbal
-      else
-        :unknown # FIXME: catch in validation? or log as warning
       end
     end
 

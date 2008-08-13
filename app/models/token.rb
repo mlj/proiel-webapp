@@ -21,11 +21,14 @@ class Token < ActiveRecord::Base
   validates_presence_of :token_number
   validates_presence_of :sort
 
-  # If the token has a lemma, it must also have a morphtag.
+  # Constraint: t.sentence.reviewed_by => t.lemma_id
+  validates_presence_of :lemma, :if => lambda { |t| t.is_morphtaggable? and t.sentence.reviewed_by }
+
+  # Constraint: t.lemma_id <=> t.morphtag
   validates_presence_of :lemma, :if => lambda { |t| t.morphtag }
   validates_presence_of :morphtag, :if => lambda { |t| t.lemma }
 
-  # Invariant constraint: t.head_id => t.relation
+  # Constraint: t.head_id => t.relation
   validates_presence_of :relation, :if => lambda { |t| !t.head_id.nil? }
 
   validate do |t|
@@ -33,6 +36,9 @@ class Token < ActiveRecord::Base
       errors.add_to_base("Relation #{t.relation} is invalid")
     end
   end
+
+  validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
+  validates_unicode_normalization_of :presentation_form, :form => UNICODE_NORMALIZATION_FORM
 
   # Specific validations
   validate :validate_sort
@@ -212,10 +218,7 @@ class Token < ActiveRecord::Base
     end
 
     # if morphtag is set, is it valid?
-    if morphtag
-      errors.add_to_base("Morphological annotation #{morphtag.inspect} is invalid") unless PROIEL::MorphTag.new(morphtag).is_valid?(self.language)
-      errors.add_to_base("Morphological annotation is invalid: no lemma") unless lemma
-    end
+    errors.add_to_base("Morphological annotation #{morphtag.inspect} is invalid") if morphtag and !PROIEL::MorphTag.new(morphtag).is_valid?(self.language)
 
     # if morphtag is set, is it actually a morphtag or just a blank?
     if morphtag

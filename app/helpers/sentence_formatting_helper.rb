@@ -23,9 +23,6 @@ module SentenceFormattingHelper
   # token_numbers:: If +true+, will insert token numbers after each token.
   # Each number will be contained within a +span+ of class +token_number+.
   #
-  # focused_sentence:: If set to a sentence ID, will focus that sentence by
-  # giving it an appropriate form of emphasis.
-  #
   # tooltip:: If +morphtags+, will add a tool-tip for each word with its
   # POS and morphology.
   #
@@ -39,9 +36,16 @@ module SentenceFormattingHelper
   # sentence exceeds that limit. If a negative number is given, the
   # ellipis is prepended to the sentence.
   #
+  # highlight:: If set to an array of tokens, will highlight those tokens.
+  #
+  # custom_style:: If set to a hash of tokens, will apply custom styling
+  # to each of these tokens.
+  #
   # information_status:: If +true+, will put each token inside a span with a
   # class named as "info-status-#{token.info_status}"
   def format_sentence(value, options = {})
+    options.reverse_merge! :highlight => [], :custom_style => []
+
     x = nil
 
     if value.is_a?(Sentence)
@@ -108,7 +112,7 @@ module SentenceFormattingHelper
     end
   end
 
-  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text, :annotatable, :info_status, :sentence_id)
+  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text, :extra_css, :annotatable, :info_status, :sentence_id)
 
   class FormattedToken
     include ActionView::Helpers::TagHelper
@@ -131,19 +135,21 @@ module SentenceFormattingHelper
     end
 
     def to_html(language, options)
+      css = extra_css || []
+
       case token_type
       when :lacuna_start, :lacuna_end
-        content_tag(:span, UNICODE_HORIZONTAL_ELLIPSIS, :class => 'lacuna')
+        content_tag(:span, UNICODE_HORIZONTAL_ELLIPSIS, :class => (css << 'lacuna') * ' ')
       when :punctuation
-        text
+        content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ')
       when :text
         if link
-          link_to(LangString.new(text, language).to_h, link, :class => :token)
+          link_to(LangString.new(text, language).to_h, link, :class => (css << 'token') * ' ')
         elsif options[:information_status]
           css_class = options[:focused_sentence] == sentence_id ? info_status_css_class : nil
           LangString.new(text, language, css_class).to_h
         else
-          text
+          content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ')
         end
       else
         raise "Invalid token type"
@@ -226,15 +232,18 @@ module SentenceFormattingHelper
       t << check_reference_update(state, :sentence, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
       t << check_reference_update(state, :verse, token.verse, token.verse.to_i)
 
+      extra_css = []
+      extra_css << :highlight if options[:highlight].include?(token)
+
       if token.presentation_form and not options[:ignore_presentation_forms]
-        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil)
+        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, extra_css)
         skip_tokens = token.presentation_span - 1
       elsif options[:tooltip] == :morphtags
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token))
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token), extra_css)
       elsif options[:information_status]
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, nil, nil, token.annotatable?, token.info_status, token.sentence_id)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, nil, nil, extra_css, token.annotatable?, token.info_status, token.sentence_id)
       else
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, extra_css)
       end
 
       if token.presentation_span and token.presentation_span - 1 > 0
