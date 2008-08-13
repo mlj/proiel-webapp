@@ -22,7 +22,7 @@ class Token < ActiveRecord::Base
   validates_presence_of :sort
 
   # Constraint: t.sentence.reviewed_by => t.lemma_id
-  validates_presence_of :lemma, :if => lambda { |t| t.sentence.reviewed_by }
+  validates_presence_of :lemma, :if => lambda { |t| t.is_morphtaggable? and t.sentence.reviewed_by }
 
   # Constraint: t.lemma_id <=> t.morphtag
   validates_presence_of :lemma, :if => lambda { |t| t.morphtag }
