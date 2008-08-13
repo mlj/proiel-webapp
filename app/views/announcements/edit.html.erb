@@ -1,0 +1,8 @@
+<%= message_block :on => :announcement %>
+
+<div class="edit">
+  <% form_for(@announcement) do |form| %>
+    <%= render :partial => 'form', :object => form %>
+    <%= form.submit "Update" %>
+  <% end %>
+</div>

@@ -1,5 +1,5 @@
 # This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of ActiveRecord to incrementally modify your database, and
+# please use the migrations feature of Active Record to incrementally modify your database, and
 # then regenerate this schema definition.
 #
 # Note that this schema.rb definition is the authoritative source for your database schema. If you need
@@ -9,24 +9,33 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 10) do
+ActiveRecord::Schema.define(:version => 11) do
+
+  create_table "announcements", :force => true do |t|
+    t.text     "message"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.integer  "role_id",    :limit => 11
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "audits", :force => true do |t|
-    t.integer "auditable_id"
+    t.integer "auditable_id",   :limit => 11
     t.string  "auditable_type"
     t.string  "action"
     t.text    "changes"
-    t.integer "version",        :default => 0
-    t.integer "changeset_id"
+    t.integer "version",        :limit => 11, :default => 0
+    t.integer "changeset_id",   :limit => 11
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
   add_index "audits", ["changeset_id"], :name => "index_audits_on_changeset_id"
 
   create_table "bookmarks", :force => true do |t|
-    t.integer "user_id",                                                  :default => 0,         :null => false
-    t.integer "source_id",                                                :default => 0,         :null => false
-    t.integer "sentence_id",                                              :default => 0,         :null => false
+    t.integer "user_id",     :limit => 11,                                :default => 0,         :null => false
+    t.integer "source_id",   :limit => 11,                                :default => 0,         :null => false
+    t.integer "sentence_id", :limit => 11,                                :default => 0,         :null => false
     t.enum    "flow",        :limit => [:browsing, :annotation, :review], :default => :browsing, :null => false
   end
 
@@ -39,8 +48,8 @@ ActiveRecord::Schema.define(:version => 10) do
   end
 
   create_table "changesets", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.integer  "user_id"
+    t.datetime "created_at",               :null => false
+    t.integer  "user_id",    :limit => 11
   end
 
   add_index "changesets", ["created_at"], :name => "index_changesets_on_created_at"
@@ -53,16 +62,16 @@ ActiveRecord::Schema.define(:version => 10) do
   end
 
   create_table "dictionary_entries", :force => true do |t|
-    t.integer "dictionary_id",               :default => 0,  :null => false
+    t.integer "dictionary_id", :limit => 11, :default => 0,  :null => false
     t.string  "identifier",    :limit => 32, :default => "", :null => false
     t.text    "data",                                        :null => false
   end
 
   create_table "dictionary_references", :force => true do |t|
-    t.integer  "lemma_id",            :default => 0, :null => false
+    t.integer  "lemma_id",            :limit => 11, :default => 0, :null => false
     t.string   "dictionary"
     t.string   "entry"
-    t.integer  "dictionary_entry_id"
+    t.integer  "dictionary_entry_id", :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -96,9 +105,9 @@ ActiveRecord::Schema.define(:version => 10) do
   end
 
   create_table "sentence_alignments", :id => false, :force => true do |t|
-    t.integer  "primary_sentence_id",   :default => 0,   :null => false
-    t.integer  "secondary_sentence_id", :default => 0,   :null => false
-    t.float    "confidence",            :default => 0.0, :null => false
+    t.integer  "primary_sentence_id",   :limit => 11, :default => 0,   :null => false
+    t.integer  "secondary_sentence_id", :limit => 11, :default => 0,   :null => false
+    t.float    "confidence",                          :default => 0.0, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -106,16 +115,16 @@ ActiveRecord::Schema.define(:version => 10) do
   add_index "sentence_alignments", ["secondary_sentence_id"], :name => "index_sentence_alignments_on_secondary_sentence_id"
 
   create_table "sentences", :force => true do |t|
-    t.integer  "source_id",                       :default => 0,     :null => false
-    t.integer  "book_id",            :limit => 2, :default => 0,     :null => false
-    t.integer  "chapter",            :limit => 2, :default => 0,     :null => false
-    t.integer  "sentence_number",                 :default => 0,     :null => false
-    t.boolean  "bad_alignment_flag",              :default => false, :null => false
+    t.integer  "source_id",          :limit => 11, :default => 0,     :null => false
+    t.integer  "book_id",            :limit => 2,  :default => 0,     :null => false
+    t.integer  "chapter",            :limit => 2,  :default => 0,     :null => false
+    t.integer  "sentence_number",    :limit => 11, :default => 0,     :null => false
+    t.boolean  "bad_alignment_flag",               :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "annotated_by"
+    t.integer  "annotated_by",       :limit => 11
     t.datetime "annotated_at"
-    t.integer  "reviewed_by"
+    t.integer  "reviewed_by",        :limit => 11
     t.datetime "reviewed_at"
   end
 
@@ -123,8 +132,8 @@ ActiveRecord::Schema.define(:version => 10) do
   add_index "sentences", ["book_id"], :name => "index_sentences_on_book_id"
 
   create_table "slash_edges", :force => true do |t|
-    t.integer "slasher_id"
-    t.integer "slashee_id"
+    t.integer "slasher_id", :limit => 11
+    t.integer "slashee_id", :limit => 11
   end
 
   add_index "slash_edges", ["slasher_id", "slashee_id"], :name => "index_slash_edges_on_slasher_and_slashee", :unique => true
@@ -137,17 +146,17 @@ ActiveRecord::Schema.define(:version => 10) do
     t.text    "source"
     t.text    "editor"
     t.text    "url"
-    t.integer "alignment_id"
+    t.integer "alignment_id", :limit => 11
     t.string  "abbreviation", :limit => 64, :default => "", :null => false
   end
 
   create_table "tokens", :force => true do |t|
-    t.integer  "sentence_id",                                                                                                           :default => 0,     :null => false
+    t.integer  "sentence_id",          :limit => 11,                                                                                    :default => 0,     :null => false
     t.integer  "verse",                :limit => 2
     t.integer  "token_number",         :limit => 3,                                                                                     :default => 0,     :null => false
     t.string   "morphtag",             :limit => 17
     t.string   "form",                 :limit => 64
-    t.integer  "lemma_id"
+    t.integer  "lemma_id",             :limit => 11
     t.string   "relation",             :limit => 20
     t.integer  "head_id",              :limit => 3
     t.enum     "morphtag_source",      :limit => [:source_ambiguous, :source_unambiguous, :auto_ambiguous, :auto_unambiguous, :manual]
@@ -161,7 +170,7 @@ ActiveRecord::Schema.define(:version => 10) do
     t.boolean  "contraction",                                                                                                           :default => false, :null => false
     t.enum     "nospacing",            :limit => [:before, :after, :both]
     t.string   "presentation_form",    :limit => 128
-    t.integer  "presentation_span"
+    t.integer  "presentation_span",    :limit => 11
     t.boolean  "emendation",                                                                                                            :default => false, :null => false
     t.boolean  "abbreviation",                                                                                                          :default => false, :null => false
     t.boolean  "capitalisation",                                                                                                        :default => false, :null => false

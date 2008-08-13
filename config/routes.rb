@@ -14,6 +14,7 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.resource :statistics
+  map.resources :announcements
 
   # Authentication and authorisation
   map.resources :users, :member => { :suspend   => :put,
