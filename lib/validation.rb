@@ -24,8 +24,6 @@ class Validator < Task
   private
 
   def check_changesets_and_changes(logger)
-    logger.info { "Checking changesets and changes..." }
-
     failures = false
 
     # Check Audit first so that any fixes that lead to empty audits
@@ -83,7 +81,6 @@ class Validator < Task
   end
 
   def check_orphaned_tokens(logger)
-    logger.info { "Checking for orphaned tokens..." }
     orphans = Token.find(:all, :include => [ :sentence ], :conditions => [ "sentences.id is null" ])
     orphans.each { |o| logger.error { "Token #{o.id} is orphaned" } }
   end
@@ -99,14 +96,12 @@ class Validator < Task
   end
 
   def check_lemmata(logger)
-    logger.info { "Checking for orphaned lemmata..." }
     orphans = Lemma.find(:all, :include => [ :tokens ], :conditions => [ "fixed = 0 AND lemmata.foreign_ids IS NULL and tokens.id IS NULL" ])
     orphans.each do |o| 
       logger.error { "Lemma #{o.id} (#{o.presentation_form}) is orphaned. Destroying." }
       o.destroy
     end
 
-    logger.info { "Checking that lemmata with variant numbers do not also occur without variant numbers..." }
     candidates = Lemma.find(:all, :conditions => [ "variant IS NOT NULL" ])
     candidates.each do |o|
       if c = Lemma.find(:first, :conditions => [ "lemma = ? and language = ? and variant is null", o.lemma, o.language ])
