@@ -8,6 +8,7 @@ class Lemma < ActiveRecord::Base
   has_many :dictionary_references
 
   validates_presence_of :lemma
+  validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
 
   # Returns the Perseus lemma for this lemma or +nil+ if unknown.
   def perseus_lemma

@@ -37,6 +37,9 @@ class Token < ActiveRecord::Base
     end
   end
 
+  validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
+  validates_unicode_normalization_of :presentation_form, :form => UNICODE_NORMALIZATION_FORM
+
   # Specific validations
   validate :validate_sort
 

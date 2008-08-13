@@ -17,7 +17,6 @@ class Validator < Task
 #    check_manual_morphology(logger)
     check_lemmata(logger)
     check_orphaned_tokens(logger)
-    check_normalisation(logger)
     check_changesets_and_changes(logger)
     check_morphtag_validity(logger)
   end
@@ -116,37 +115,7 @@ class Validator < Task
     end
 
     Token.find_by_sql("select * from tokens left join lemmata on lemma_id = lemmata.id where substring(morphtag, 1, 2) != pos").each do |t|
-      log_token_error(logger, t, "Token POS #{t.morph.pos_to_s} does not match lemma POS #{t.lemma.pos}")
-    end
-  end
-
-  def check_normalisation(logger)
-    logger.info { "Checking Unicode normalisation..." }
-    Source.find(:all).each do |source|
-      source.sentences.each do |sentence|
-        sentence.tokens.each do |token|
-          unless token.form.nil?
-            normalisation = Unicode::normalize_C(token.form)
-            if normalisation != token.form
-              logger.error { "Token #{token.id}: Token form is not normalised" }
-            end
-          end
-
-          unless token.presentation_form.nil?
-            normalisation = Unicode::normalize_C(token.presentation_form)
-            if normalisation != token.presentation_form
-              logger.error { "Token #{token.id}: Token presentation_form is not normalised" }
-            end
-          end
-        end
-      end
-    end
-
-    Lemma.find(:all).each do |lemma|
-      normalisation = Unicode::normalize_C(lemma.lemma)
-      if normalisation != lemma.lemma 
-        logger.error { "Lemma #{lemma.id}: Lemma form is not normalised" }
-      end
+      logger.error { "#{t.id}/#{t.sentence.id}: Token POS #{t.morph.pos_to_s} does not match lemma POS #{t.lemma.pos}" }
     end
   end
 

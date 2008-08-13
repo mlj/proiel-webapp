@@ -10,6 +10,7 @@ class LemmataController < ResourceController::Base
     if params[:lemma]
       params[:lemma][:variant] = nil if params[:lemma][:variant] == ''
       params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss] == ''
+      params[:lemma][:lemma] = params[:lemma][:lemma].chars.normalize(UNICODE_NORMALIZATION_FORM)
     end
   end
 
@@ -17,6 +18,7 @@ class LemmataController < ResourceController::Base
     if params[:lemma]
       params[:lemma][:variant] = nil if params[:lemma][:variant] == ''
       params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss] == ''
+      params[:lemma][:lemma] = params[:lemma][:lemma].chars.normalize(UNICODE_NORMALIZATION_FORM)
     end
   end
 
