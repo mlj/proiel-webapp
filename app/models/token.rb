@@ -214,7 +214,6 @@ class Token < ActiveRecord::Base
     # if token is morphtaggable
     unless is_morphtaggable?
       errors.add(:morphtag, "not allowed on non-morphtaggable token") unless morphtag.nil?
-      errors.add(:morphtag_source, "not allowed on non-morphtaggable token") unless morphtag_source.nil?
     end
 
     # if morphtag is set, is it valid?
