@@ -11,7 +11,7 @@ class Token < ActiveRecord::Base
   has_many :slashees, :through => :slash_out_edges
   has_many :slashers, :through => :slash_in_edges
 
-  acts_as_audited :except => [ :morphtag_performance ]
+  acts_as_audited
   # Insanely slow! We use our own implementation instead.
   #acts_as_ordered :order => :token_number
 

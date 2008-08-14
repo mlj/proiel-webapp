@@ -50,9 +50,6 @@
              value='<%= ActiveSupport::JSON.encode(@tags[token.id][:suggestions]) %>'/>
 
       <input type="hidden" 
-             id="suggestions-<%= token.id %>" name="orig-suggestions-<%= token.id %>" 
-             value='<%= @tags[token.id][:suggestions].collect { |s, w| s.to_s }.join(',') %>'/>
-      <input type="hidden" 
              id="pick-<%= token.id %>" name="pick-<%= token.id %>" 
              value='<%= @tags[token.id][:set].to_s %>'/>
     <% end %>

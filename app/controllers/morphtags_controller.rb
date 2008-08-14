@@ -99,27 +99,8 @@ class MorphtagsController < ApplicationController
 
         ml = PROIEL::MorphLemmaTag.new("#{new_morphtag.to_s}:#{new_lemma}")
 
-        suggestions = params['orig-suggestions-' + token_id].split(',').collect { |s| PROIEL::MorphLemmaTag.new(s) }
-        pick = PROIEL::MorphLemmaTag.new(params['pick-' + token_id])
-
-        if ml == pick
-          performance = :picked
-        elsif suggestions.include?(ml)
-          performance = :suggested
-        elsif pick.nil? and suggestions.empty?
-          performance = :failed
-        else
-          performance = :overridden
-        end
-
         token = Token.find(token_id)
-
-        # We don't want to update morphtag_performance unnecessarily, so
-        # test if the morphtag actually changed before updating.
-        if token.morph_lemma_tag != ml
-          token.set_morph_lemma_tag!(ml)
-          token.update_attributes!(:morphtag_performance => performance)
-        end
+        token.set_morph_lemma_tag!(ml) if token.morph_lemma_tag != ml
       end
     end
 

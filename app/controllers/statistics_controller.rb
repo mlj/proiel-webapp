@@ -17,9 +17,6 @@ class StatisticsController < ApplicationController
       @user_activity = my_activity
     end
 
-    t = Token.count(:all, :conditions => 'morphtag_performance is not null', :group => 'morphtag_performance')
-    @tagger_performance = Hash[*t.flatten]
-
     user = User.find(session[:user_id])
     limit = 10
     @recent_annotations = Sentence.find(:all, :limit => limit, 

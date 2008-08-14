@@ -14,13 +14,6 @@
     :fields => [ 'Source', 'Book', 'Completion' ] %>
 <% end %>
   
-<% layer("tagger_performance") do -%>
-  <%= google_pie_chart([["Correct pick", @tagger_performance[:picked]],
-                        ["Suggested",    @tagger_performance[:suggested]],
-                        ["Failed",    @tagger_performance[:failed]],
-                        ["Overridden", @tagger_performance[:overridden]]]) %>
-<% end %>
-
 <% layer("user_activity") do -%>
   <% if is_reviewer? %>
     <%= google_pie_chart(@user_activity.collect(&:activity_index), :width => 626, :height => 300) %>
