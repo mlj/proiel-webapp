@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   DEFAULT_ROLE = Role.find_by_code('reader')
 
   def index
-    @users = User.search(params, :page => current_page)
+    @users = User.search(params[:query], :page => current_page)
   end
 
   def new
