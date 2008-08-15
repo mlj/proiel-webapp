@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+#
+# update_db - Update word list databases for the tagger
+#
+# Written by Marius L. Jøhndal, 2007, 2008.
+#
+require 'fastercsv'
+require 'proiel/tagger'
+require 'gdbm'
+
+csv_file_name, db_file_name = ARGV
+
+# GDBM doesn't seem to really clear the old database properly
+File.unlink(db_file_name) if File.exists?(db_file_name)
+
+db = GDBM::open(db_file_name, 0666)
+
+begin
+  FasterCSV.foreach(csv_file_name, :skip_blanks => true) do |e|
+    language, lemma, variant, form, *morphtags = e
+    
+    raise "Word list database Update aborted: invalid morphtag for form #{form} in rule file #{csv_file_name}" unless morphtags.all? { |m| PROIEL::MorphTag.new(m).is_valid?(language.to_sym) }
+
+    base_form = variant ? "#{lemma}##{variant}" : lemma
+    morphtags.collect! { |m| [PROIEL::MorphTag.new(m).to_s, base_form].join(':') }
+
+    morphtags += db[form].split(',') if db[form]
+    db[form] = morphtags.join(',')
+  end
+ensure
+  db.close
+end

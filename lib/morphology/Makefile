@@ -1,7 +1,18 @@
-TARGETS=cu-rules.csv grc-rules.csv la-rules.csv la-generated.csv cu-normalisation.ca cu-orthographics.ca cu.ca got-rules.csv got-generated.csv
+TARGETS=\
+  cu-rules.db \
+  grc-rules.db \
+  la-rules.db \
+  got-rules.db \
+  la-generated.db \
+  got-generated.db \
+  cu-normalisation.ca \
+  cu-orthographics.ca
 
 all: $(TARGETS)
 	make -C class_morphology
+
+%.db: %.csv
+	ruby -I.. update_db $< $@
 
 %.a: %.fst
 	fst-compiler-utf8 -q $< $@

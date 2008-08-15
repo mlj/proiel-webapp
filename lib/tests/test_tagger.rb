@@ -2,13 +2,15 @@
 
 require 'test/unit'
 require 'proiel/tagger'
+require 'log4r'
 
 class TaggerTagTestCase < Test::Unit::TestCase
   include PROIEL
 
   TEST_CONFIG_FILE = File.join(File.dirname(__FILE__), 'test_tagger.yml')
   TEST_DEFAULT_OPTIONS = {
-    :data_directory => File.join(File.dirname(__FILE__), '..', 'morphology')
+    :data_directory => File.join(File.dirname(__FILE__), '..', 'morphology'),
+    :logger => nil # If you want to test logging: Log4r::Logger.new('dummy_test_logger').tap { |t| t.add(Log4r::Outputter.stdout) },
   }
 
   def test_loading
