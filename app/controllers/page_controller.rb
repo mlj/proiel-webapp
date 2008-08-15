@@ -2,7 +2,7 @@
 #
 # Idea taken from http://giantrobots.thoughtbot.com/2008/4/2/static-pages-for-the-enterprise.
 class PageController < ApplicationController
-  PAGES = %w(help public_data searching short_cuts fonts)
+  PAGES = %w(help public_data searching short_cuts fonts attributions)
 
   verify :params => :name, :only => :show, :redirect_to => :root_url
   before_filter :ensure_valid, :only => :show
