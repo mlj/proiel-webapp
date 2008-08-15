@@ -38,6 +38,7 @@ class SentencesController < ApplicationController
       versioned_transaction do
         previous_sentence.append_first_tokens_from_next_sentence!(@sentence.tokens.length)
         @sentence.destroy
+        previous_sentence.clear_dependencies!
       end
 
       respond_to do |format|

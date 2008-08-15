@@ -7,6 +7,10 @@
     <dt>Time stamps:</dt><dd><%= @sentence.created_at ? @sentence.created_at : '?' %> (creation), <%= @sentence.updated_at %> (last update)</dd>
     <dt>Annotation completion:</dt><dd><%= link_to(readable_completion(@sentence), annotation_path(@sentence)) %></dd>
   </dl>
+  <%= link_to_if @sentence.has_previous_sentence?, 'Show previous', @sentence.previous_sentence, :class => :previous %>
+  <%= link_to_if @sentence.has_next_sentence?, 'Show next', @sentence.next_sentence, :class => :next %>
+  <%= link_to 'Index', sentences_url, :class => :index %>
+  <%= link_to_if @sentence.has_previous_sentence?, 'Remove', @sentence, :confirm => 'Are you sure? This will append all tokens to the previous sentence in the text and remove all syntactic annotation from the new merged sentence.', :method => :delete, :class => :delete %>
 </div>
 
 <% layer("revisions") do -%>
