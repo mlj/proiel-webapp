@@ -178,8 +178,6 @@ ul.tree li.last-child { background: #fff url(/images/lastnode.png) no-repeat; } 
 
 /* Tabular */
 
-.tabular .pagination { text-align: center; }
-
 .tabular form {
   text-align: center;
   padding: 0 0 0 0;
