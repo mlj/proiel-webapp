@@ -61,9 +61,6 @@ class Lemma < ActiveRecord::Base
   protected
 
   def self.search(query, options = {})
-    conditions = []
-    clauses = []
-
     unless query.blank?
       lemma, variant = query.split('#')
 
