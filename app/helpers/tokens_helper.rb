@@ -1,4 +1,9 @@
 module TokensHelper
+  # Create a link to a token.
+  def link_to_token(token)
+    link_to "Token #{token.id}", token
+  end
+
   # Formats the source morphtag of the token +t+. Unless
   # +element+ is overridden, the formatted data will be
   # contained within a span.

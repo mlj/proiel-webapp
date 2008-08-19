@@ -2,6 +2,7 @@ class Sentence < ActiveRecord::Base
   belongs_to :book
   belongs_to :source
   has_many :bookmarks
+  has_many :notes, :as => :notable, :dependent => :destroy
 
   belongs_to :annotator, :class_name => 'User', :foreign_key => 'annotated_by'
   belongs_to :reviewer, :class_name => 'User', :foreign_key => 'reviewed_by'

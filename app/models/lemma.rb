@@ -4,6 +4,7 @@
 class Lemma < ActiveRecord::Base
   has_many :tokens
   has_many :dictionary_references
+  has_many :notes, :as => :notable, :dependent => :destroy
 
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM

@@ -9,6 +9,10 @@
   </dl>
 </div>
 
+<% layer_unless @sentence.notes.empty?, "notes" do -%>
+  <%= notes_summary(@sentence.notes) %>
+<% end %>
+ 
 <% layer("revisions") do -%>
   <%= render :partial => 'changesets/legend' %>
   <%= render :partial => 'changesets/audits', :object => @sentence.audits %>
