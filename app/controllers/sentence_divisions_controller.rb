@@ -75,10 +75,7 @@ class SentenceDivisionsController < ApplicationController
       return
     end
 
-    versioned_transaction do
-      sentence.bad_alignment_flag = true
-      sentence.save!
-    end
+    Note.create! :originator => current_user, :notable => sentence, :contents => 'Bad sentence alignment'
 
     if params[:wizard]
       redirect_to :controller => :wizard, :action => "skip_sentence_divisions", :wizard => params[:wizard]

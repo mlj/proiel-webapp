@@ -34,7 +34,6 @@ class Sentence < ActiveRecord::Base
   validates_presence_of :book_id
   validates_presence_of :chapter
   validates_presence_of :sentence_number
-  validates_inclusion_of :bad_alignment_flag, :in => [true, false]
 
   validate :check_invariants
 
