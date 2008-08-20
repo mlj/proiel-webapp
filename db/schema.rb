@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080820085642) do
+ActiveRecord::Schema.define(:version => 20080820130605) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20080820085642) do
     t.integer  "changeset_id",   :limit => 11
     t.integer  "user_id",        :limit => 11,                :null => false
     t.datetime "created_at",                                  :null => false
+    t.string   "user_type",      :limit => 16,                :null => false
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"

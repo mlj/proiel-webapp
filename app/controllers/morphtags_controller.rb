@@ -89,7 +89,7 @@ class MorphtagsController < ApplicationController
       return
     end
 
-    versioned_transaction do
+    Token.transaction do
       # Cycle the parameters and check whether this one originated with us 
       # or with them...
       params.keys.reject { |key| !(key =~ /^morphtag-/) }.each do |key|

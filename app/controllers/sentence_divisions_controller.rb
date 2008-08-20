@@ -43,7 +43,7 @@ class SentenceDivisionsController < ApplicationController
     change = params[:change] || 0 
     change = change.to_i
 
-    versioned_transaction do
+    Sentence.transaction do
       # First flush dependencies from affected sentences so that we don't have to bother with them.
       # They won't make sense after this anyway.
       unless change.zero?

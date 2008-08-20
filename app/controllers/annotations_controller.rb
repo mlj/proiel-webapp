@@ -23,11 +23,9 @@ class AnnotationsController < ReadOnlyController
   def flag_as_reviewed
     @sentence = Sentence.find(params[:id])
 
-    versioned_transaction do
-      @sentence.set_reviewed!(User.find(session[:user_id]))
-      flash[:notice] = 'Annotation was successfully updated.'
-      redirect_to(annotation_path(@sentence))
-    end
+    @sentence.set_reviewed!(User.find(session[:user_id]))
+    flash[:notice] = 'Annotation was successfully updated.'
+    redirect_to(annotation_path(@sentence))
   rescue ActiveRecord::RecordInvalid => invalid
     flash[:error] = invalid.record.errors.full_messages.join('<br>')
     render :action => "show"
@@ -36,11 +34,9 @@ class AnnotationsController < ReadOnlyController
   def flag_as_not_reviewed
     @sentence = Sentence.find(params[:id])
 
-    versioned_transaction do
-      @sentence.unset_reviewed!(User.find(session[:user_id]))
-      flash[:notice] = 'Annotation was successfully updated.'
-      redirect_to(annotation_path(@sentence))
-    end
+    @sentence.unset_reviewed!(User.find(session[:user_id]))
+    flash[:notice] = 'Annotation was successfully updated.'
+    redirect_to(annotation_path(@sentence))
   rescue ActiveRecord::RecordInvalid => invalid
     flash[:error] = invalid.record.errors.full_messages.join('<br>')
     render :action => "show"

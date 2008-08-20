@@ -3,7 +3,10 @@
 <% else %>
   <table class="diff">
     <% diff.changes.each do |attribute, values| %>
-      <tr><%= format_change(attribute, *values) %></tr>
+      <tr>
+        <td><%= attribute %></td>
+        <%= format_change(attribute, *values) %>
+      </tr>
     <% end %>
   </table>
 <% end %>

@@ -73,7 +73,7 @@ class DependenciesController < ApplicationController
 
       removed_tokens = @sentence.tokens.collect(&:id) - affected_tokens
 
-      versioned_transaction do
+      Token.transaction do
         # Since the new analysis may overwrite an old one, we need to do some housekeeping
         # first. To ensure that the history appears atomic, each token must be updated only
         # once, and each token has to be touched.
