@@ -1,8 +1,0 @@
-<ul class="diff">
-  <% audits.each do |audit| %>
-    <li>
-      <%= link_to_if(false, "Version #{audit.version}", "TODO") %>
-      <%= render :partial => 'changesets/diff', :object => audit %>
-    </li>
-  <% end %>
-</ul>

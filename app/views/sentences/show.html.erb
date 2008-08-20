@@ -13,9 +13,8 @@
   <%= notes_summary(@sentence.notes) %>
 <% end %>
  
-<% layer("revisions") do -%>
-  <%= render :partial => 'changesets/legend' %>
-  <%= render :partial => 'changesets/audits', :object => @sentence.audits %>
+<% layer_unless @sentence.audits.empty?, "revisions" do -%>
+  <%= audits_summary @sentence.audits %>
 <% end %>
 
 <% layer("tokens") do -%>

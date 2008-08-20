@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080819201341) do
+ActiveRecord::Schema.define(:version => 20080820085642) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -21,12 +21,14 @@ ActiveRecord::Schema.define(:version => 20080819201341) do
   end
 
   create_table "audits", :force => true do |t|
-    t.integer "auditable_id",   :limit => 11
-    t.string  "auditable_type"
-    t.string  "action"
-    t.text    "changes"
-    t.integer "version",        :limit => 11, :default => 0
-    t.integer "changeset_id",   :limit => 11
+    t.integer  "auditable_id",   :limit => 11
+    t.string   "auditable_type"
+    t.string   "action"
+    t.text     "changes"
+    t.integer  "version",        :limit => 11, :default => 0
+    t.integer  "changeset_id",   :limit => 11
+    t.integer  "user_id",        :limit => 11,                :null => false
+    t.datetime "created_at",                                  :null => false
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
@@ -46,13 +48,6 @@ ActiveRecord::Schema.define(:version => 20080819201341) do
     t.string "abbreviation", :limit => 8
     t.string "code",         :limit => 8,  :default => "", :null => false
   end
-
-  create_table "changesets", :force => true do |t|
-    t.datetime "created_at",               :null => false
-    t.integer  "user_id",    :limit => 11
-  end
-
-  add_index "changesets", ["created_at"], :name => "index_changesets_on_created_at"
 
   create_table "dictionaries", :force => true do |t|
     t.string "identifier", :limit => 32,  :default => "", :null => false

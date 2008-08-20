@@ -36,7 +36,6 @@
   <%= notes_summary @token.notes %>
 <% end %>
 
-<% layer("revisions") do -%>
-  <%= render :partial => 'changesets/legend' %>
-  <%= render :partial => 'changesets/audits', :object => @token.audits %>
+<% layer_unless @token.audits.empty?, "revisions" do -%>
+  <%= audits_summary @token.audits %>
 <% end %>

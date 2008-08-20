@@ -9,6 +9,8 @@ class Lemma < ActiveRecord::Base
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
 
+  acts_as_audited
+
   # Returns the Perseus lemma for this lemma or +nil+ if unknown.
   def perseus_lemma
     if variant && m = variant.match(/^perseus=(\d+)$/)

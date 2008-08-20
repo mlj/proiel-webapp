@@ -2,7 +2,8 @@ require 'digest/sha1'
 class User < ActiveRecord::Base
   belongs_to :role
   has_many :bookmarks
-  has_many :changesets
+  has_many :audits
+
   has_many :notes, :as => :originator
   has_many :annotated_sentences, :class_name => 'Sentence', :foreign_key => :annotated_by
   has_many :reviewed_sentences, :class_name => 'Sentence', :foreign_key => :reviewed_by

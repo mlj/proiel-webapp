@@ -1,6 +1,6 @@
 class Audit < ActiveRecord::Base
   belongs_to :auditable, :polymorphic => true
-  belongs_to :changeset
+  belongs_to :user
 
 #  validates_length_of :changes, :minimum => 1, :message => 'is empty', :unless => Proc.new { |audit|
 #    audit.action == 'destroy'
@@ -58,5 +58,13 @@ private
         :auditable_type => auditable_type
       }) || 0
     self.version = max + 1
+  end
+
+  protected
+
+  def self.search(query, options = {})
+    options[:order] ||= 'created_at DESC'
+
+    paginate options
   end
 end

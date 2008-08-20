@@ -67,7 +67,7 @@ module CollectiveIdea #:nodoc:
           class_eval do
             extend CollectiveIdea::Acts::Audited::SingletonMethods
 
-            has_many :audits, :as => :auditable, :order => 'audits.version desc'
+            has_many :audits, :as => :auditable, :order => 'audits.version desc', :class_name => 'Audit'
             attr_protected :audit_ids
             Audit.audited_classes << self unless Audit.audited_classes.include?(self)
             

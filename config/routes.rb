@@ -1,5 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :changesets
+  map.resources :audits
   map.resources :sources
   map.resources :lemmata, :singular => 'lemma'
   map.resources :bookmarks

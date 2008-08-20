@@ -14,6 +14,10 @@
   <%= notes_summary(@lemma.notes) %>
 <% end %>
  
+<% layer_unless @lemma.audits.empty?, "revisions" do -%>
+  <%= audits_summary @lemma.audits %>
+<% end %>
+
 <% layer 'tokens' do -%>
   <%= render_tabular @tokens, :partial => 'annotations/annotation', :pagination => true, :class => 'concordance' %>
 <% end %>
