@@ -2,6 +2,7 @@ class Token < ActiveRecord::Base
   belongs_to :sentence
   belongs_to :book
   belongs_to :lemma
+  has_many :notes, :as => :notable, :dependent => :destroy
 
   belongs_to :head, :class_name => 'Token'
   has_many :dependents, :class_name => 'Token', :foreign_key => 'head_id'

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080814150433) do
+ActiveRecord::Schema.define(:version => 20080819201341) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -76,6 +76,13 @@ ActiveRecord::Schema.define(:version => 20080814150433) do
     t.datetime "updated_at"
   end
 
+  create_table "import_sources", :force => true do |t|
+    t.string   "tag",        :limit => 16,  :null => false
+    t.string   "summary",    :limit => 256, :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "lemmata", :force => true do |t|
     t.string   "lemma",         :limit => 64, :default => "",    :null => false
     t.string   "variant",       :limit => 16
@@ -99,6 +106,16 @@ ActiveRecord::Schema.define(:version => 20080814150433) do
   add_index "lemmata", ["variant"], :name => "index_lemmata_on_variant"
   add_index "lemmata", ["language"], :name => "index_lemmata_on_lang"
 
+  create_table "notes", :force => true do |t|
+    t.string   "notable_type",    :limit => 64, :null => false
+    t.integer  "notable_id",      :limit => 11, :null => false
+    t.string   "originator_type", :limit => 64, :null => false
+    t.integer  "originator_id",   :limit => 11, :null => false
+    t.text     "contents",                      :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "roles", :force => true do |t|
     t.string "code",        :limit => 16, :default => "", :null => false
     t.string "description", :limit => 64, :default => "", :null => false
@@ -115,16 +132,15 @@ ActiveRecord::Schema.define(:version => 20080814150433) do
   add_index "sentence_alignments", ["secondary_sentence_id"], :name => "index_sentence_alignments_on_secondary_sentence_id"
 
   create_table "sentences", :force => true do |t|
-    t.integer  "source_id",          :limit => 11, :default => 0,     :null => false
-    t.integer  "book_id",            :limit => 2,  :default => 0,     :null => false
-    t.integer  "chapter",            :limit => 2,  :default => 0,     :null => false
-    t.integer  "sentence_number",    :limit => 11, :default => 0,     :null => false
-    t.boolean  "bad_alignment_flag",               :default => false, :null => false
+    t.integer  "source_id",       :limit => 11, :default => 0, :null => false
+    t.integer  "book_id",         :limit => 2,  :default => 0, :null => false
+    t.integer  "chapter",         :limit => 2,  :default => 0, :null => false
+    t.integer  "sentence_number", :limit => 11, :default => 0, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "annotated_by",       :limit => 11
+    t.integer  "annotated_by",    :limit => 11
     t.datetime "annotated_at"
-    t.integer  "reviewed_by",        :limit => 11
+    t.integer  "reviewed_by",     :limit => 11
     t.datetime "reviewed_at"
   end
 

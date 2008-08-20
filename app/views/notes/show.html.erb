@@ -1,0 +1,13 @@
+<div class="roundedbox">
+  <dl>
+    <dt>Originator:</dt><dd><%= link_to_originator(@note.originator) %></dd>
+    <dt>Reference:</dt><dd><%= link_to_notable(@note.notable) %></dd>
+  </dl>
+  <%= link_to 'Index', notes_url, :class => :index %>
+  <%= link_to 'Edit', edit_note_url(@note), :class => :edit %>
+  <%= link_to 'Delete', @note, :method => :delete, :confirm => 'Are you sure?', :class => :delete %>
+</div>
+
+<% layer 'contents' do -%>
+  <%=h @note.contents %>
+<% end %>

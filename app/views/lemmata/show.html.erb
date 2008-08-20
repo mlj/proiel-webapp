@@ -9,5 +9,11 @@
     <dt>Translation:</dt><dd><q><%= @lemma.short_gloss %></q></dd>
   <% end %>
 <% end %>
-  
-<%= render_tabular @tokens, :partial => 'annotations/annotation', :pagination => true, :class => 'concordance' %>
+
+<% layer_unless @lemma.notes.empty?, "notes" do -%>
+  <%= notes_summary(@lemma.notes) %>
+<% end %>
+ 
+<% layer 'tokens' do -%>
+  <%= render_tabular @tokens, :partial => 'annotations/annotation', :pagination => true, :class => 'concordance' %>
+<% end %>

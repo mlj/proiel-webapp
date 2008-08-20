@@ -2,7 +2,7 @@ module TablesHelper
   def render_tabular(collection, options = {})
     fields = options[:fields]
     pg = if options[:pagination]
-           "<div class='page_info'>" + page_entries_info(collection) + "</div>" + will_paginate(collection)
+           "<div class='page_info'>" + page_entries_info(collection) + "</div>" + (will_paginate(collection) || "")
          else
            ''
          end

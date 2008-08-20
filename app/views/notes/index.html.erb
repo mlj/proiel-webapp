@@ -1,0 +1,5 @@
+<% search_form_tag notes_path do %>
+  <%= text_field_tag :query, params[:query] %>
+<% end %>
+
+<%= notes_table(@notes) %>

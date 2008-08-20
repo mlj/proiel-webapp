@@ -32,6 +32,10 @@
   <dt>Annotation completion:</dt><dd><%= link_to(readable_completion(@token.sentence), annotation_path(@token.sentence)) %></dd>
 <% end %>
 
+<% layer_unless @token.notes.empty?, "notes" do -%>
+  <%= notes_summary @token.notes %>
+<% end %>
+
 <% layer("revisions") do -%>
   <%= render :partial => 'changesets/legend' %>
   <%= render :partial => 'changesets/audits', :object => @token.audits %>

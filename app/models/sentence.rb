@@ -2,6 +2,7 @@ class Sentence < ActiveRecord::Base
   belongs_to :book
   belongs_to :source
   has_many :bookmarks
+  has_many :notes, :as => :notable, :dependent => :destroy
 
   belongs_to :annotator, :class_name => 'User', :foreign_key => 'annotated_by'
   belongs_to :reviewer, :class_name => 'User', :foreign_key => 'reviewed_by'
@@ -33,7 +34,6 @@ class Sentence < ActiveRecord::Base
   validates_presence_of :book_id
   validates_presence_of :chapter
   validates_presence_of :sentence_number
-  validates_inclusion_of :bad_alignment_flag, :in => [true, false]
 
   validate :check_invariants
 
