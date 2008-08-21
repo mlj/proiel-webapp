@@ -77,8 +77,8 @@ ActiveRecord::Schema.define(:version => 20080819201341) do
   end
 
   create_table "import_sources", :force => true do |t|
-    t.string   "tag",        :limit => 16,  :null => false
-    t.string   "summary",    :limit => 256, :null => false
+    t.string   "tag",        :limit => 16, :default => "", :null => false
+    t.text     "summary",                                  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -107,11 +107,11 @@ ActiveRecord::Schema.define(:version => 20080819201341) do
   add_index "lemmata", ["language"], :name => "index_lemmata_on_lang"
 
   create_table "notes", :force => true do |t|
-    t.string   "notable_type",    :limit => 64, :null => false
-    t.integer  "notable_id",      :limit => 11, :null => false
-    t.string   "originator_type", :limit => 64, :null => false
-    t.integer  "originator_id",   :limit => 11, :null => false
-    t.text     "contents",                      :null => false
+    t.string   "notable_type",    :limit => 64, :default => "", :null => false
+    t.integer  "notable_id",      :limit => 11, :default => 0,  :null => false
+    t.string   "originator_type", :limit => 64, :default => "", :null => false
+    t.integer  "originator_id",   :limit => 11, :default => 0,  :null => false
+    t.text     "contents",                                      :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -119,6 +119,10 @@ ActiveRecord::Schema.define(:version => 20080819201341) do
   create_table "roles", :force => true do |t|
     t.string "code",        :limit => 16, :default => "", :null => false
     t.string "description", :limit => 64, :default => "", :null => false
+  end
+
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version", :limit => 11
   end
 
   create_table "sentence_alignments", :id => false, :force => true do |t|
@@ -167,28 +171,30 @@ ActiveRecord::Schema.define(:version => 20080819201341) do
   end
 
   create_table "tokens", :force => true do |t|
-    t.integer  "sentence_id",       :limit => 11,                                                                                   :default => 0,     :null => false
-    t.integer  "verse",             :limit => 2
-    t.integer  "token_number",      :limit => 3,                                                                                    :default => 0,     :null => false
-    t.string   "morphtag",          :limit => 17
-    t.string   "form",              :limit => 64
-    t.integer  "lemma_id",          :limit => 11
-    t.string   "relation",          :limit => 20
-    t.integer  "head_id",           :limit => 3
-    t.enum     "sort",              :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :prodrop], :default => :text, :null => false
+    t.integer  "sentence_id",          :limit => 11,                                                                                    :default => 0,     :null => false
+    t.integer  "verse",                :limit => 2
+    t.integer  "token_number",         :limit => 3,                                                                                     :default => 0,     :null => false
+    t.string   "morphtag",             :limit => 17
+    t.string   "form",                 :limit => 64
+    t.integer  "lemma_id",             :limit => 11
+    t.string   "relation",             :limit => 20
+    t.integer  "head_id",              :limit => 3
+    t.enum     "morphtag_source",      :limit => [:source_ambiguous, :source_unambiguous, :auto_ambiguous, :auto_unambiguous, :manual]
+    t.enum     "sort",                 :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :prodrop],  :default => :text, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "source_morphtag",   :limit => 17
-    t.string   "source_lemma",      :limit => 32
+    t.enum     "morphtag_performance", :limit => [:failed, :overridden, :suggested, :picked]
+    t.string   "source_morphtag",      :limit => 17
+    t.string   "source_lemma",         :limit => 32
     t.text     "foreign_ids"
-    t.boolean  "contraction",                                                                                                       :default => false, :null => false
-    t.enum     "nospacing",         :limit => [:before, :after, :both]
-    t.string   "presentation_form", :limit => 128
-    t.integer  "presentation_span", :limit => 11
-    t.boolean  "emendation",                                                                                                        :default => false, :null => false
-    t.boolean  "abbreviation",                                                                                                      :default => false, :null => false
-    t.boolean  "capitalisation",                                                                                                    :default => false, :null => false
-    t.enum     "info_status",       :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old]
+    t.boolean  "contraction",                                                                                                           :default => false, :null => false
+    t.enum     "nospacing",            :limit => [:before, :after, :both]
+    t.string   "presentation_form",    :limit => 128
+    t.integer  "presentation_span",    :limit => 11
+    t.boolean  "emendation",                                                                                                            :default => false, :null => false
+    t.boolean  "abbreviation",                                                                                                          :default => false, :null => false
+    t.boolean  "capitalisation",                                                                                                        :default => false, :null => false
+    t.enum     "info_status",          :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old]
   end
 
   add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true
