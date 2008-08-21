@@ -146,7 +146,7 @@ module SentenceFormattingHelper
         if link
           link_to(LangString.new(text, language).to_h, link, :class => (css << 'token') * ' ')
         elsif options[:information_status]
-          css << (options[:highlight].include?(token) ? info_status_css_class : 'info-unannotatable')
+          css << info_status_css_class if options[:highlight].include?(token)
           LangString.new(text, language, css * ' ').to_h
         else
           content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ')
