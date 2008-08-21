@@ -85,23 +85,6 @@ the correct solution to the problem that you are attempting to solve!</p>
         <%= submit_tag 'Merge tokens' %>
       <% end %>
       </li>
-      <li><b>Merge linearly adjacent sentences.</b>
-      <p>
-      The ID of the first sentence should be provided, the ID of the second sentence
-      is inferred from the linearisation numbers. The second sentence is permanently
-      deleted from the database, while all tokens belonging to this sentence are
-      appended at the end of the first sentence. All syntactic
-      annotation is removed from both sentences.
-      The function will be ill-behaved if there is no next token in the source.
-      </p>
-      TODO
-      <!-- 
-      <% form_tag :action => 'merge_sentences' do -%> 
-        First sentence ID: <%= text_field_tag :id, params[:id] %>
-        <%= submit_tag 'Merge sentences' %>
-      <% end %>
-      -->
-      </li>
       <li><b>Split sentence.</b>
       <p></p>
       TODO

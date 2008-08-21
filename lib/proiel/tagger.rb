@@ -159,8 +159,12 @@ module PROIEL
                              analyze_form(language, options[:force_method], form)
                            end
         rescue Exception => e
-          @logger.error { "Tagger method failed: #{e}" }
-          return [:failed, nil]
+          if @logger
+            @logger.error { "Tagger method failed: #{e}" }
+            return [:failed, nil]
+          else
+            raise e
+          end
         end
 
         raw_candidates.sort!

@@ -110,7 +110,7 @@ class Validator < Task
     end
 
     Token.find_by_sql("select * from tokens left join lemmata on lemma_id = lemmata.id where substring(morphtag, 1, 2) != pos").each do |t|
-      logger.error { "#{t.id}/#{t.sentence.id}: Token POS #{t.morph.pos_to_s} does not match lemma POS #{t.lemma.pos}" }
+      logger.error { "#{t.sentence.id}: Token POS #{t.morph.pos_to_s} does not match lemma POS #{t.lemma.pos}" }
     end
   end
 

@@ -509,10 +509,10 @@ module PROIEL
     # Returns an interpretation of a slash -- existing or potential --
     # from the node to another node +slashee+.
     def interpret_slash(slashee)
-      if [:xadv, :piv, :xobj].include?(self.relation)
-        :subject
-      elsif self.is_empty? and self.is_verbal? and slashee.is_verbal?
+      if self.is_empty? and self.is_verbal? and slashee.is_verbal? and self.relation == slashee.relation
         :predicate_identity
+      elsif [:xadv, :piv, :xobj].include?(self.relation)
+        :subject
       else
         :shared_argument
       end

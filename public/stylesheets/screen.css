@@ -50,6 +50,44 @@ div#body {
   padding: 5px 5px 5px 5px;
 }
 
+/* Navigation and operation decorations */
+
+a.previous {
+  padding-left: 24px;
+  background: transparent url(/images/sweetie/24-arrow-previous.png) no-repeat center left;
+  margin-right: 1em;
+}
+
+a.next {
+  padding-left: 24px;
+  background: transparent url(/images/sweetie/24-arrow-next.png) no-repeat center left;
+  margin-right: 1em;
+}
+
+a.index {
+  padding-left: 24px;
+  background: transparent url(/images/sweetie/24-columns.png) no-repeat center left;
+  margin-right: 1em;
+}
+
+a.delete {
+  padding-left: 24px;
+  background: transparent url(/images/sweetie/24-em-cross.png) no-repeat center left;
+  margin-right: 1em;
+}
+
+a.remove {
+  padding-left: 16px;
+  background: transparent url(/images/sweetie/16-circle-red-remove.png) no-repeat center left;
+  margin-right: 1em;
+}
+
+a.add {
+  padding-left: 16px;
+  background: transparent url(/images/sweetie/16-circle-green-add.png) no-repeat center left;
+  margin-right: 1em;
+}
+
 /* Link target decorations */
 
 a[href $='.pdf'] { 

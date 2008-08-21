@@ -15,12 +15,12 @@
       "^Df":
       "^C":
     :manual_rules:
-      got-rules.csv
+      got-rules.db
     :generated_rules:
-      got-generated.csv
+      got-generated.db
   :cu:
     :manual_rules:
-      cu-rules.csv
+      cu-rules.db
     :fst:
       :normalisation:
         cu-normalisation.ca
@@ -34,7 +34,7 @@
       true
   :grc:
     :manual_rules:
-      grc-rules.csv
+      grc-rules.db
     :instance_frequencies:
       true
     :source_tag_pattern_filtering:
@@ -52,8 +52,8 @@
         "-"
   :la:    
     :manual_rules:
-      la-rules.csv
+      la-rules.db
     :generated_rules:
-      la-generated.csv
+      la-generated.db
     :instance_frequencies:
       true

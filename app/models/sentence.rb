@@ -227,20 +227,18 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  # Append tokens to this sentence by reassigning its sentence and token number
-  # and save the affected record.
-  def append_tokens!(tokens)
-    tokens.each do |t|
-      t.sentence_id = id
+  private
+
+  def append_tokens!(ts) #:nodoc:
+    ts.each do |t|
+      t.sentence_id = id 
       t.token_number = self.max_token_number + 1
       t.save!
     end
   end
 
-  # Prepend tokens to this sentence by reassigning sentence and token numbers
-  # and save the affected records.
-  def prepend_tokens!(ts)
-    m = self.min_token_number
+  def prepend_tokens!(ts) #:nodoc:
+    m = self.min_token_number 
 
     if m.nil?
       # No tokens in the sentence? Curious, must be a new one.
@@ -263,8 +261,10 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  # Reassign the +n+ first token of the next sentence to the end of
-  # this sentence and save the affected record.
+  public
+
+  # Move the +n+ first tokens from the next sentence to the end of
+  # this sentence and save the affected records.
   def append_first_tokens_from_next_sentence!(n = 1)
     if self.has_next_sentence?
       append_tokens!(self.next_sentence.tokens.first(n))
@@ -273,8 +273,8 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  # Reassign the +n+ last token of the previous sentence to the
-  # beginning of this sentence and save the affected record.
+  # Move the +n+ last token from the previous sentence to the
+  # beginning of this sentence and save the affected records.
   def prepend_last_tokens_from_previous_sentence!(n = 1)
     if self.has_previous_sentence?
       prepend_tokens!(self.previous_sentence.tokens.last(n))

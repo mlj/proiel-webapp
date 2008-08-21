@@ -1,7 +1,7 @@
 :languages:
   :cu:
     :manual_rules:
-      cu-rules.csv
+      cu-rules.db
     :fst:
       :normalisation:
         cu-normalisation.ca
@@ -15,9 +15,9 @@
       true
   :la:    
     :manual_rules:
-      la-rules.csv
+      la-rules.db
     :generated_rules:
-      la-generated.csv
+      la-generated.db
     :instance_frequencies:
       true
     :source_tag_pattern_filtering:
