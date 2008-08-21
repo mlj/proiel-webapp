@@ -33,16 +33,14 @@ module ResourceController
     def update
       load_object
       before :update
-      versioned_transaction do
-        if object.update_attributes object_params
-          after :update
-          set_flash :update
-          response_for :update
-        else
-          after :update_fails
-          set_flash :update_fails
-          response_for :update_fails
-        end
+      if object.update_attributes object_params
+        after :update
+        set_flash :update
+        response_for :update
+      else
+        after :update_fails
+        set_flash :update_fails
+        response_for :update_fails
       end
     end
 
