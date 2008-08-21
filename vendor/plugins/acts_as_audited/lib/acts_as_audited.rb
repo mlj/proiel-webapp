@@ -97,7 +97,8 @@ module CollectiveIdea #:nodoc:
       module InstanceMethods
         
         def changed_audited_attributes
-          attributes.slice(*changed_attributes.keys).except(*non_audited_columns)
+          #attributes.slice(*changed_attributes.keys).except(*non_audited_columns)
+          changes.except(*non_audited_columns)
         end
         
         # Returns the attributes that are audited
