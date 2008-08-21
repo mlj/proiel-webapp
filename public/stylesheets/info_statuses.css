@@ -29,15 +29,16 @@
 .info-annotatable {
    border: 2px solid white;
 }
+.info-unannotatable {
+   border: 2px solid white;
+   background-color: white;
+   color: black;
+}
 .info-changed {
    border: 2px solid black;
 }
 .info-selected {
    border: 2px dashed black;
-}
-.info-unannotatable {
-   background-color: white;
-   color: black;
 }
 .no-info-status {
    background-color: #c1c1c1;
