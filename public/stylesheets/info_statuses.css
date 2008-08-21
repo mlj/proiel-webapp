@@ -26,13 +26,18 @@
 .info-annotatable {
    border: 2px solid white;
 }
-.info-menu-item {
-   padding-left: 3px;
-   font-size: 75%;
+.info-changed {
+   border: 2px solid black;
 }
 .info-selected {
-   border: 2px solid black;
+   border: 2px dashed black;
+}
+.info-unannotatable {
+   background-color: white;
 }
 .no-info-status {
    background-color: #c1c1c1;
+}
+.sentence-divisions span {
+   padding: 1px;
 }
