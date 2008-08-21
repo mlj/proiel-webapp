@@ -1,6 +1,7 @@
 /* Classes for information status values */
 .new {
    background-color: yellow;
+   color: black;
 }
 .acc {
    background-color: blue;
@@ -16,6 +17,7 @@
 }
 .acc-inf {
    background-color: magenta;
+   color: black;
 }
 .old {
    background-color: brown;
@@ -23,6 +25,7 @@
 }
 
 /* Other stuff */
+
 .info-annotatable {
    border: 2px solid white;
 }
@@ -34,10 +37,13 @@
 }
 .info-unannotatable {
    background-color: white;
+   color: black;
 }
 .no-info-status {
    background-color: #c1c1c1;
+   color: black;
 }
 .sentence-divisions span {
    padding: 1px;
+   line-height: 190%
 }
