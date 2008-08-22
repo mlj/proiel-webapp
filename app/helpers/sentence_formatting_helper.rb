@@ -112,7 +112,7 @@ module SentenceFormattingHelper
     end
   end
 
-  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text, :extra_css, :annotatable, :info_status, :sentence_id)
+  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text, :extra_css, :token)
 
   class FormattedToken
     include ActionView::Helpers::TagHelper
@@ -146,8 +146,8 @@ module SentenceFormattingHelper
         if link
           link_to(LangString.new(text, language).to_h, link, :class => (css << 'token') * ' ')
         elsif options[:information_status]
-          css_class = options[:focused_sentence] == sentence_id ? info_status_css_class : nil
-          LangString.new(text, language, css_class).to_h
+          css << info_status_css_class if options[:highlight].include?(token)
+          LangString.new(text, language, css * ' ').to_h
         else
           content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ')
         end
@@ -159,12 +159,12 @@ module SentenceFormattingHelper
     private
 
     def info_status_css_class
-      @info_status_css_class ||= if info_status
-                                   'info-annotatable ' + info_status.to_s.gsub('_', '-')
-                                 elsif annotatable
+      @info_status_css_class ||= if token.info_status
+                                   'info-annotatable ' + token.info_status.to_s.gsub('_', '-')
+                                 elsif token.annotatable?
                                    'info-annotatable no-info-status'
                                  else
-                                   nil
+                                   'info-unannotatable'
                                  end
     end
   end
@@ -241,7 +241,7 @@ module SentenceFormattingHelper
       elsif options[:tooltip] == :morphtags
         t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token), extra_css)
       elsif options[:information_status]
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, nil, nil, extra_css, token.annotatable?, token.info_status, token.sentence_id)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, nil, nil, extra_css, token)
       else
         t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, extra_css)
       end

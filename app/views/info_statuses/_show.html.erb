@@ -3,5 +3,5 @@
 
 <div class="sentence-divisions">
   <%= format_sentence(@sentence.previous_sentences.last(7) + [@sentence] + @sentence.next_sentences.first(1),
-    { :verse_numbers => :all, :information_status => true, :focused_sentence => @sentence.id }) %>
+    { :verse_numbers => :all, :information_status => true, :highlight => @sentence.tokens }) %>
 </div>

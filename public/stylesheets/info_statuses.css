@@ -1,6 +1,7 @@
 /* Classes for information status values */
 .new {
    background-color: yellow;
+   color: black;
 }
 .acc {
    background-color: blue;
@@ -16,6 +17,7 @@
 }
 .acc-inf {
    background-color: magenta;
+   color: black;
 }
 .old {
    background-color: brown;
@@ -23,16 +25,26 @@
 }
 
 /* Other stuff */
+
 .info-annotatable {
    border: 2px solid white;
 }
-.info-menu-item {
-   padding-left: 3px;
-   font-size: 75%;
+.info-unannotatable {
+   border: 2px solid white;
+   background-color: white;
+   color: black;
+}
+.info-changed {
+   border: 2px solid black;
 }
 .info-selected {
-   border: 2px solid black;
+   border: 2px dashed black;
 }
 .no-info-status {
    background-color: #c1c1c1;
+   color: black;
+}
+.sentence-divisions span {
+   padding: 1px;
+   line-height: 190%
 }
