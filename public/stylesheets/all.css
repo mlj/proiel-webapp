@@ -119,7 +119,7 @@ a.sentence-number, .token-number { color: #F7A700; }
 
 /* Shared between multiple "widgets" */
 
-.unavailable, .consumed { background: #eeeeee; }
+.unavailable, .consumed { background: #cccccc; }
 .selected { background: #9999ff; }
 
 /* roundedbox */
