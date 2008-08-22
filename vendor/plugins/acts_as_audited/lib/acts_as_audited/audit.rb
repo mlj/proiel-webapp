@@ -11,6 +11,7 @@ require 'set'
 class Audit < ActiveRecord::Base
   belongs_to :auditable, :polymorphic => true
   belongs_to :user, :polymorphic => true
+  stampable :creator_attribute => :user_id
   
   before_create :set_version_number
   
@@ -18,23 +19,6 @@ class Audit < ActiveRecord::Base
   
   cattr_accessor :audited_classes
   self.audited_classes = Set.new
-  
-  # Allows user to be set to either a string or an ActiveRecord object
-  def user_as_string=(user) #:nodoc:
-    # reset both either way
-    self.user_as_model = self.username = nil
-    user.is_a?(ActiveRecord::Base) ?
-      self.user_as_model = user :
-      self.username = user
-  end
-  alias_method :user_as_model=, :user=
-  alias_method :user=, :user_as_string=
-
-  def user_as_string #:nodoc:
-    self.user_as_model || self.username
-  end
-  alias_method :user_as_model, :user
-  alias_method :user, :user_as_string
   
   def revision
     attributes = self.class.reconstruct_attributes(ancestors).merge({:version => version})
@@ -53,12 +37,12 @@ class Audit < ActiveRecord::Base
   def self.reconstruct_attributes(audits)
     changes = {}
     result = audits.collect do |audit|
-      changes.merge!((audit.changes || {}).merge!(:version => audit.version))
+      changes.merge!(Hash[*(audit.changes || {}).collect { |k, v| [k, v.first] }.flatten].merge!(:version => audit.version))
       yield changes if block_given?
     end
     block_given? ? result : changes
   end
-  
+
 private
 
   def set_version_number

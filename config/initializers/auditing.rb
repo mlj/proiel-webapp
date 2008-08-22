@@ -12,13 +12,12 @@ class Audit
 
   # Checks if this audit represents the auditable's lastest revision.
   def latest_revision_of_auditable?
-    true
-  end
-
-  # Checks if the auditable's current state is consistent with the changes
-  # in this audit.
-  def consistent_with_auditable?
-    true
+    max = self.class.maximum(:version,
+      :conditions => {
+        :auditable_id => auditable_id,
+        :auditable_type => auditable_type
+      })
+    max == version
   end
 
   # Reconstructs the auditable's state as per its previous revision.

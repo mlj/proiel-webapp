@@ -1,8 +1,10 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
+  model_stamper
+
   belongs_to :role
   has_many :bookmarks
-  has_many :audits
+  has_many :audits, :as => :user
 
   has_many :notes, :as => :originator
   has_many :annotated_sentences, :class_name => 'Sentence', :foreign_key => :annotated_by
