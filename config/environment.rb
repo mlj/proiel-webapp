@@ -5,6 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 $KCODE = 'u'
+require "rexml-expansion-fix"
 
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '1.2.4' unless defined? RAILS_GEM_VERSION
