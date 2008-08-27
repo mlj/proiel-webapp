@@ -121,4 +121,18 @@ namespace :proiel do
       end
     end
   end
+
+  namespace :history do
+    namespace :prune do
+      desc "Prune an attribute from history. Options: MODEL=model_name, ATTRIBUTE=attribute_name"
+      task(:attribute => :myenvironment) do
+        model_name, attribute_name = ENV['MODEL'], ENV['ATTRIBUTE']
+        raise "Missing argument" unless model_name and attribute_name
+
+        require 'mass_assignment'
+        at = MassAuditAssignment.new
+        at.remove_attribute!(model_name, attribute_name)
+      end
+    end
+  end
 end
