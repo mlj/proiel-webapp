@@ -11,20 +11,6 @@ class Lemma < ActiveRecord::Base
 
   acts_as_audited
 
-  # Returns the Perseus lemma for this lemma or +nil+ if unknown.
-  def perseus_lemma
-    if variant && m = variant.match(/^perseus=(\d+)$/)
-      lemma + m[1]
-    else
-      nil
-    end
-  end
-
-  # Returns +true+ if a Perseus lemme is known for this lemma, +false+ otherwise.
-  def perseus_lemma?
-    (!perseus_lemma.nil?)
-  end
-
   # Returns the human-readable presentation for for the lemma.
   def to_s
     self.variant ? "#{self.lemma}##{self.variant}" : self.lemma 
