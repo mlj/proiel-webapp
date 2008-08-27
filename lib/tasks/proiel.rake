@@ -107,4 +107,18 @@ namespace :proiel do
       end
     end
   end
+
+  namespace :reassign do
+    desc "Reassign a morphological field. Options: FIELD=field, FROM=from_value, TO=to_value"
+    task(:morphology => :myenvironment) do
+      field, from_value, to_value = ENV['FIELD'], ENV['FROM'], ENV['TO']
+      raise "Missing argument" unless field and from_value and to_value
+
+      require 'mass_assignment'
+      Token.transaction(User.find_by_login(USER_NAME)) do #FIXME
+        mt = MassTokenAssignment.new
+        mt.reassign_morphology!(field, from_value, to_value)
+      end
+    end
+  end
 end
