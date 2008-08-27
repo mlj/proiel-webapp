@@ -61,4 +61,10 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
 
   config.gem 'mislav-will_paginate', :version => '~> 2.3.2', :lib => 'will_paginate', :source => 'http://gems.github.com'
+  config.gem 'unicode'
+  config.gem 'fastercsv'
+  config.gem 'oniguruma'
+  config.gem 'builder'
+  config.gem 'hpricot'
+  config.gem 'treetop'
 end
