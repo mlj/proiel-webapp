@@ -39,11 +39,6 @@ module ApplicationHelper
     end
   end
 
-  # Generayes a link to a lemma.
-  def link_to_lemma(lemma)
-    link_to(lemma.variant ? "#{lemma.lemma}##{lemma.variant}" : lemma.lemma, lemma)
-  end
-
   # Returns the contents of +value+ unless +value+ is +nil+, in which case it
   # returns the HTML entity for non-breakable space.
   def make_nonblank(value)

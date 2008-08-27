@@ -11,17 +11,9 @@ class Lemma < ActiveRecord::Base
 
   acts_as_audited
 
-  # Returns the human-readable presentation for for the lemma.
-  def to_s
+  # Returns the export-form of the lemma.
+  def export_form
     self.variant ? "#{self.lemma}##{self.variant}" : self.lemma 
-  end
-
-  def presentation_form
-    if self.variant
-      [self.lemma, self.variant].join('#')
-    else
-      self.lemma
-    end
   end
 
   def Lemma.find_or_create_by_morph_and_lemma_tag_and_language(ml_tag, language)
