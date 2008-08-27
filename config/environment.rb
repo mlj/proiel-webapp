@@ -5,7 +5,6 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 $KCODE = 'u'
-require "rexml-expansion-fix"
 
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '1.2.4' unless defined? RAILS_GEM_VERSION
@@ -60,3 +59,5 @@ Rails::Initializer.run do |config|
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
 end
+
+require "rexml-expansion-fix"
