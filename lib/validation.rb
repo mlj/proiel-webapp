@@ -44,24 +44,24 @@ class Validator < Task
             end
           end
         end
+      end
 
-        # Remove empty changes
-        if change.action != 'destroy' and change.changes.empty?
-          others = Audit.find(:all, :conditions => [
-            "auditable_type = ? and auditable_id = ? and version > ?",
-            change.auditable_type,
-            change.auditable_id,
-            change.version ])
+      # Remove empty changes
+      if change.action != 'destroy' and change.changes.empty?
+        others = Audit.find(:all, :conditions => [
+          "auditable_type = ? and auditable_id = ? and version > ?",
+          change.auditable_type,
+          change.auditable_id,
+          change.version ])
 
-          if others.length == 0
-            logger.warn { "Audit #{change.id}: Removing empty change" }
-            change.destroy
-          else
-            logger.warn { "Audit #{change.id}: Removing empty change and moving version numbers" }
-            change.destroy
-            others.each do |v|
-              v.decrement!(:version)
-            end
+        if others.length == 0
+          logger.warn { "Audit #{change.id}: Removing empty diff" }
+          change.destroy
+        else
+          logger.warn { "Audit #{change.id}: Removing empty diff and rearranging version numbers" }
+          change.destroy
+          others.each do |v|
+            v.decrement!(:version)
           end
         end
       end
@@ -71,11 +71,9 @@ class Validator < Task
     changesets.each do |changeset|
       changeset.errors.each_full { |msg| logger.error { "Changeset #{changeset.id}: #{msg}" } } unless changeset.valid?
       
-      if @fix
-        if changeset.changes.length == 0
-          logger.warn { "Changeset #{changeset.id}: Removing empty changeset" }
-          changeset.destroy
-        end
+      if changeset.changes.length == 0
+        logger.warn { "Changeset #{changeset.id}: Removing empty changeset" }
+        changeset.destroy
       end
     end
   end
