@@ -6,7 +6,7 @@
 #number#         = sdp\-
 #tense#          = pilafrtsu\-
 #mood#           = ismonpdgu\-
-#voice#          = aempndoq\-
+#voice#          = aemp\-
 #gender#         = opqrmfn\-
 #case#           = nvagdbilc\-
 #degree#         = pcs\-
@@ -29,7 +29,7 @@ $feature_mapping$ = \
   (<SIN>:s | <DUA>:d | <PLU>:p | <>:\-) \
   (<PRESENT>:p | <IMPERFECT>:i | <PLUPERFECT>:l | <AORIST>:a | <FUTURE>:f | <PERFECT>:r | <FUTUREPERFECT>:t | <RESULTATIVE>:s | <PAST>:u | <>:\-) \
   (<INDICATIVE>:i | <SUBJUNCTIVE>:s | <IMPERATIVE>:m | <OPTATIVE>:o | <INFINITIVE>:n | <PARTICIPLE>:p | <GERUND>:d | <GERUNDIVE>:g | <SUPINE>:u | <>:\-) \
-  (<ACTIVE>:a | <MIDDLEPASSIVE>:e | <MIDDLE>:m | <PASSIVE>:p | <MIDDLEPASSIVEDEPONENT>:n | <MIDDLEDEPONENT>:d | <PASSIVEDEPONENT>:o | <IMPERSONALACTIVE>:q | <>:\-) \
+  (<ACTIVE>:a | <MIDDLEPASSIVE>:e | <MIDDLE>:m | <PASSIVE>:p | <>:\-) \
   (<MASCULINENEUTER>:o | <MASCULINEFEMININE>:p | <MASCULINEFEMININENEUTER>:q | <FEMININENEUTER>:r | <MASCULINE>:m | <FEMININE>:f | <NEUTER>:n | <>:\-) \
   (<NOM>:n | <VOC>:v | <ACC>:a | <GEN>:g | <DAT>:d | <ABL>:b | <INS>:i | <LOC>:l | <GEN/DAT>:c | <>:\-) \
   (<POSITIVE>:p | <COMPARATIVE>:c | <SUPERLATIVE>:s | <>:\-) \
