@@ -67,8 +67,8 @@ class MorphtagTestCase < Test::Unit::TestCase
     assert_equal false, PROIEL::MorphTag.new('A--s---na--').is_valid?(:la)
     assert_equal false, PROIEL::MorphTag.new('A--s---na--').is_valid?(:grc)
     assert_equal true, PROIEL::MorphTag.new('A--p---mdp-').is_valid?(:la)
-    assert_equal false, PROIEL::MorphTag.new('V-3piin----').is_valid?(:la)
-    assert_equal true, PROIEL::MorphTag.new('V-3piin----').is_valid?(:grc)
+    assert_equal false, PROIEL::MorphTag.new('V-3piie----').is_valid?(:la)
+    assert_equal true, PROIEL::MorphTag.new('V-3piie----').is_valid?(:grc)
     assert_equal true, PROIEL::MorphTag.new('Pd-p---nd--').is_valid?(:la)
     assert_equal true, PROIEL::MorphTag.new('Pi-p---mn--').is_valid?(:la)
     assert_equal true, PROIEL::MorphTag.new('Pk3p---mb--').is_valid?(:la) # personal reflexive
