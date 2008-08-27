@@ -102,7 +102,7 @@ class PROIELXMLImport < SourceImport
       morphtag = attributes[:morphtag] ? PROIEL::MorphTag.new(attributes[:morphtag]).to_s : nil
 
       begin
-        sentence.tokens.create!(
+        n = sentence.tokens.create!(
                      :token_number => attributes[:token_number], 
                      :source_morphtag => morphtag,
                      :source_lemma => attributes[:lemma],
@@ -117,6 +117,10 @@ class PROIELXMLImport < SourceImport
                      :presentation_form => attributes[:presentation_form],
                      :presentation_span => attributes[:presentation_span],
                      :foreign_ids => attributes[:foreign_ids])
+
+        attributes[:notes].each do |note|
+          n.notes.create! :originator => ImportSource.find_or_create_by_tag(:tag => note[:origin], :summary => note[:origin]), :contents => note[:contents]
+        end
       rescue Exception => e
         raise "Error creating token for #{form} in #{attributes[:book]} #{attributes[:chapter]}:#{attributes[:verse]}: #{e}"
       end

@@ -101,7 +101,12 @@ module PROIEL
 
             a = { :book => b.attributes["name"], 
                   :sentence_number => sentence_number, 
-                  :token_number => token_number }
+                  :token_number => token_number,
+                  :notes => [] }
+            (t/:notes/:note).each do |n|
+              a[:notes] << { :origin => n.attributes['origin'], :contents => n.inner_html }
+            end
+
             t.attributes.each_pair do |k, v|
               case k
               when 'form', 'references', 'lemma', 'morphtag'
