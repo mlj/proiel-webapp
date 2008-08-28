@@ -4,8 +4,6 @@
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
-# $Id: $
-#
 require 'yaml'
 require 'unicode'
 require 'oniguruma'
@@ -86,11 +84,10 @@ module Lingua
     def process_word(word)
       # Check for a verbatim match in the list of `contractions'
       if c = @contractions[word]
-        host_word, bound_word = c
+        host_word, *bound_words = c
         
         [{ :form => host_word,  :sort => :text, :contraction => true, :presentation_form => word,
-           :presentation_span => 2 },
-         { :form => bound_word, :sort => :text }]
+           :presentation_span => bound_words.length + 1 }] + bound_words.map { |b| { :form => b, :sort => :text } }
       else
         process_uncontracted_word(word)
       end
