@@ -374,10 +374,10 @@ module PROIEL
       end
     end
 
-    def tokenise_and_write_string(s, segmenter, book, chapter, verse, other_attributes = {}, reencoder = nil, sentence_dividers = nil)
+    def tokenise_and_write_string(s, segmenter, book, chapter, verse, other_attributes = {}, reencoder = nil, sentence_dividers = nil, notes = nil)
       segmenter.segmenter(reencoder ? reencoder.call(s) : s) do |t|
         write_token(t[:form], t[:sort], book, chapter, verse, t.merge(other_attributes),
-                    nil, sentence_dividers || [])
+                    nil, sentence_dividers || [], notes)
       end
     end
 
@@ -447,7 +447,7 @@ module PROIEL
 
       formatted_attrs = xattrs.keys.collect(&:to_s).sort.collect { |k| "#{k.gsub(/_/, '-')}='#{escape_string(xattrs[k.to_sym].to_s)}'" }.join(' ')
 
-      if notes
+      if notes and !notes.empty?
         @file.puts "      <token #{formatted_attrs}>"
         @file.puts "        <notes>"
         notes.each do |note|
