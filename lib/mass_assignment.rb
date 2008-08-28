@@ -18,11 +18,16 @@ class MassAssignment
 
   protected
 
+  # Iterates all objects in chunks. The function handles modification of the data during
+  # iteration by constantly checking for the total number of matching rows.
   def chunked_each(options = {}, &block)
     total = @klass.count(options)
-    (total / CHUNK_SIZE + 1).times do |i|
-      options.merge!({ :offset => i * CHUNK_SIZE, :limit => CHUNK_SIZE })
-      @klass.find(:all, options).each(&block)
+    n = total / CHUNK_SIZE + 1 # go +1 rounds to grab the fractional part as well
+    n.times do |i|
+      @klass.find(:all, options.merge({ :offset => i * CHUNK_SIZE, :limit => CHUNK_SIZE })).each(&block)
+
+      # The data set may have changed. If so, start over from scratch.
+      chunked_each(options, &block) if @klass.count(options) != total
     end
   end
 end
