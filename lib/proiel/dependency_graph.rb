@@ -15,6 +15,7 @@ module Lingua
     attr_reader :head
     attr_reader :identifier
     attr_accessor :data
+    attr_reader :slashes
 
     def initialize(identifier, relation, head, data = {})
       @identifier = identifier
@@ -22,6 +23,7 @@ module Lingua
       @data = data
       @head = head
       @dependents = {}
+      @slashes = []
     end
 
     def add_dependent(node)
@@ -92,15 +94,6 @@ module Lingua
         d.each_dependent(&block)
       end
     end
-  end
-
-  class SlashedDependencyGraphNode < DependencyGraphNode
-    attr_reader :slashes
-
-    def initialize(identifier, relation, head, data = {})
-      super
-      @slashes = []
-    end
 
     def add_slash(slash)
       @slashes << slash
@@ -139,11 +132,11 @@ module Lingua
       end
     end
 
-    protected
+    private
 
     def add_postponed_subgraph(identifier = :root, head_identifier = nil)
       node = @postponed_nodes[identifier]
-      add_node(identifier, node[:relation], head_identifier, node[:data]) unless identifier == :root
+      add_node(identifier, node[:relation], head_identifier, [], node[:data]) unless identifier == :root 
       node[:dependent_ids].each { |dependent_id| add_postponed_subgraph(dependent_id, identifier) }
     end
 
@@ -185,8 +178,7 @@ module Lingua
       nodes.map(&:identifier)
     end
 
-    #FIXME: merge with add_node and use method aliasing
-    def badd_node(identifier, relation, head_identifier = nil, data = {})
+    def badd_node(identifier, relation, head_identifier = nil, slash_ids = [], data = {})
       # Merge data about this token into the result structure
       @postponed_nodes[identifier] ||= { :dependent_ids => [] }
       @postponed_nodes[identifier].merge!({ :relation => relation, :data => data })
@@ -196,10 +188,12 @@ module Lingua
       @postponed_nodes[head_identifier] ||= { :dependent_ids => [] }
       @postponed_nodes[head_identifier][:dependent_ids] << identifier
 
-      @postponed_nodes[identifier]
+      returning @postponed_nodes[identifier] do |n|
+        n[:slash_ids] = slash_ids
+      end
     end
 
-    def add_node(identifier, relation, head_identifier = nil, data = {})
+    def add_node(identifier, relation, head_identifier = nil, slash_ids = [], data = {})
       if @nodes[identifier]
         raise "Node with ID #{identifier} already exists"
       else
@@ -212,6 +206,12 @@ module Lingua
           @root.add_dependent(@nodes[identifier])
         end
       end
+
+      slash_ids.each do |i| 
+        raise "Slash node with ID #{i} does not exist" unless @nodes[i]
+        @nodes[identifier].add_slash(@nodes[i])
+      end
+
       @nodes[identifier]
     end
 
@@ -223,10 +223,9 @@ module Lingua
     def inspect
       root.inspect_subgraph
     end
-  end
 
-  # FIXME: Move to PROIEL?
-  module Graphviz
+    public
+
     # Produces an image visualising the dependency graph.
     #
     # ==== Options
@@ -370,43 +369,10 @@ module Lingua
       attrs.collect { |attr, value| "#{attr}=\"#{value}\"" }.join(',')
     end
   end
-
-  class SlashedDependencyGraph < DependencyGraph
-    include Graphviz
-
-    def initialize
-      @node_class ||= SlashedDependencyGraphNode
-      super
-    end
-
-    def badd_node(identifier, relation, head_identifier = nil, slash_ids = [], data = {})
-      returning super(identifier, relation, head_identifier, data) do |n|
-        n[:slash_ids] = slash_ids
-      end
-    end
-
-    def add_node(identifier, relation, head_identifier = nil, slash_ids = [], data = {})
-      super(identifier, relation, head_identifier, data)
-      slash_ids.each do |i| 
-        raise "Slash node with ID #{i} does not exist" unless @nodes[i]
-        @nodes[identifier].add_slash(@nodes[i])
-      end
-      @nodes[identifier]
-    end
-
-    protected
-
-    #FIXME: inherit
-    def add_postponed_subgraph(identifier = :root, head_identifier = nil)
-      node = @postponed_nodes[identifier]
-      add_node(identifier, node[:relation], head_identifier, [], node[:data]) unless identifier == :root 
-      node[:dependent_ids].each { |dependent_id| add_postponed_subgraph(dependent_id, identifier) }
-    end
-  end
 end
 
 module PROIEL
-  class ValidatingDependencyGraphNode < Lingua::SlashedDependencyGraphNode
+  class ValidatingDependencyGraphNode < Lingua::DependencyGraphNode
     def is_empty?
       @data[:empty] or identifier == :root
     end
@@ -546,7 +512,7 @@ module PROIEL
     end
   end
 
-  class ValidatingDependencyGraph < Lingua::SlashedDependencyGraph
+  class ValidatingDependencyGraph < Lingua::DependencyGraph
     def initialize
       @node_class = ValidatingDependencyGraphNode 
       super
