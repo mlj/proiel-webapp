@@ -45,7 +45,7 @@ module Lingua
     # Returns all the dependents of the node that have a particular
     # relation +relation+.
     def dependents_by_relation(*relations)
-      dependents.select { |n| relations.include?(n.relation) } 
+      dependents.select { |n| relations.include?(n.relation) }
     end
 
     # Returns the siblings of the node.
@@ -75,11 +75,28 @@ module Lingua
       dependents.empty? ? depth : dependents.collect(&:max_depth).max
     end
 
+    # Returns +true+ if this node dominates another node +x+,
+    # including if +x+ is identical to this node.
+    def dominates?(x)
+      if x == self
+        true
+      elsif x.head.nil?
+        false
+      else
+        dominates?(x.head)
+      end
+    end
+
+    # Returns +true+ if this node is a daughter of the root node.
+    def is_daughter_of_root?
+      head and head.is_root?
+    end
+
     def inspect_subgraph(indentation = 0)
       unless dependents.empty?
         s = ' ' * indentation + "[#{identifier}: #{relation.inspect}, #{data.inspect}] -> {\n"
         dependents.each { |d| s += d.inspect_subgraph(indentation + 2) }
-        s += ' ' * indentation + "}\n" 
+        s += ' ' * indentation + "}\n"
         s
       else
         ' ' * indentation + "[#{identifier}: #{relation.inspect}, #{data.inspect}]\n"
@@ -111,7 +128,7 @@ module Lingua
 
     def initialize(options = {})
       @node_class ||= DependencyGraphNode
-      @nodes = {} 
+      @nodes = {}
       @root = @node_class.new(:root, nil, nil)
 
       if block_given?
@@ -136,12 +153,12 @@ module Lingua
 
     def add_postponed_subgraph(identifier = :root, head_identifier = nil)
       node = @postponed_nodes[identifier]
-      add_node(identifier, node[:relation], head_identifier, [], node[:data]) unless identifier == :root 
+      add_node(identifier, node[:relation], head_identifier, [], node[:data]) unless identifier == :root
       node[:dependent_ids].each { |dependent_id| add_postponed_subgraph(dependent_id, identifier) }
     end
 
     public
-    
+
     def [](identifier)
       @nodes[identifier]
     end
@@ -161,7 +178,7 @@ module Lingua
 
     def select(&block)
       r = []
-      self.each do |n| 
+      self.each do |n|
         r << n if block.call(n)
       end
       r
@@ -182,7 +199,7 @@ module Lingua
       # Merge data about this token into the result structure
       @postponed_nodes[identifier] ||= { :dependent_ids => [] }
       @postponed_nodes[identifier].merge!({ :relation => relation, :data => data })
- 
+
       # Attach this token to its head's list of dependents
       head_identifier ||= :root
       @postponed_nodes[head_identifier] ||= { :dependent_ids => [] }
@@ -207,7 +224,7 @@ module Lingua
         end
       end
 
-      slash_ids.each do |i| 
+      slash_ids.each do |i|
         raise "Slash node with ID #{i} does not exist" unless @nodes[i]
         @nodes[identifier].add_slash(@nodes[i])
       end
@@ -217,156 +234,11 @@ module Lingua
 
     def valid?
       # FIXME: check for cycles
-      true 
+      true
     end
 
     def inspect
       root.inspect_subgraph
-    end
-
-    public
-
-    # Produces an image visualising the dependency graph.
-    #
-    # ==== Options
-    # font_name:: Forces the use of a particular font.
-    # font_size:: Forces the use of a particular font size.
-    # linearised:: Visualises the graph in a linearised fashion.
-    def visualise(format = :png, options = {})
-      raise ArgumentError, "Invalid format #{format}" unless format == :png || format == :svg 
-
-      node_options = {}
-      node_options[:fontname] = options[:font_name] if options[:font_name]
-      node_options[:fontsize] = options[:font_size] if options[:font_size]
-
-      Open3.popen3("dot -T#{format}") do |dot, img, err|
-        if options[:linearised]
-          self.linearisation_dot(dot, node_options)
-        else
-          self.regular_dot(dot, node_options)
-        end
-
-        @image = img.read
-      end
-      @image
-    end
-
-    alias :visualize :visualise
-
-    protected
-
-    def regular_dot(dot, node_options)
-      @f = dot
-      @f.puts "digraph G {"
-      @f.puts "  charset=\"UTF-8\";"
-
-      make_node(:root, node_options.merge({ :label => '', :shape => 'circle' }))
-
-      @nodes.values.each do |node|
-        identifier, relation, head, slashes = node.identifier, node.relation, node.head, node.slashes
-        form, empty = node.data.values_at(:form, :empty)
-
-        if node.is_empty?
-          label, shape, colour = case node.interpret_empty_node
-                  when :root
-                    ['',  'circle', 'black']
-                  when :conjunction
-                    ['C', 'diamond', 'black']
-                  when :verbal
-                    ['V', 'circle', 'black']
-                  else
-                    ['?', 'box', 'red']
-                  end
-          make_node(identifier, node_options.merge({ :label => label, :shape => shape,
-                                                     :fontcolor => colour }))
-        else
-          if node.is_coordinator? and node.has_dependents?
-            make_node(identifier, node_options.merge({ :label => form, :shape => 'diamond' }))
-          else
-            make_node(identifier, node_options.merge({ :label => form, :shape => 'box' }))
-          end
-        end
-
-        rel_colour = 'black'
-        if head and relation
-          make_edge(head.identifier, identifier, 
-                    node_options.merge({ :color => 'orange', :weight => 1.0, 
-                                         :label => relation.to_s.upcase, :fontcolor => rel_colour }))
-        end
-
-        slashes.each do |slashee|
-          make_edge(identifier, slashee.identifier, 
-                    node_options.merge({ :label => node.interpret_slash(slashee).capitalize, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dashed" }))
-        end
-      end
-
-      @f.puts "}"
-      @f.close
-    end
-
-    def linearisation_dot(dot, node_options)
-      @f = dot
-      @f.puts "digraph G {"
-      @f.puts "  charset=\"UTF-8\"; rankdir=TD; ranksep=.0005; nodesep=.05;"
-
-      @f.puts "node [shape=none]; {"
-      x = (0..self.max_depth).to_a
-      @f.puts x.collect { |d| "depth#{d}" }.join(' -> ')
-      @f.puts "-> WORDS [style=invis]; }"
-      @f.puts "node [shape=point]; { rank = same; depth0 [label=\"\"]; root; }"
-
-      nodes_by_depth = @nodes.values.classify(&:depth)
-      nodes_by_depth.sort.each do |depth, nodes|
-        @f.puts "node [shape=point]; { rank = same; "
-        make_node("depth#{depth}", { :label => '' })
-        nodes.each do |node|
-          make_node("#{node.identifier}", { })
-        end
-        @f.puts "}"
-      end
-
-      @f.puts "node [shape=none]; { rank = same; WORDS [label=\"\"]; "
-      @nodes.values.reject { |n| n.is_empty? }.sort_by { |n| n.token_number }.each do |node|
-        make_node("f#{node.identifier}", { :label => node.data[:form] })
-      end
-      @f.puts "}"
-
-      @nodes.values.each do |node|
-        identifier, relation, head, slashes = node.identifier, node.relation, node.head, node.slashes
-        form, empty = node.data.values_at(:form, :empty)
-
-        if head and relation
-          make_edge(head.identifier, identifier, 
-                    { :label => relation.to_s.upcase, :fontcolor => 'black', :fontsize => 10 })
-        end
-
-        # Hook up the word forms with their nodes
-        make_edge("f#{node.identifier}", node.identifier, { :arrowhead => 'none', :color => 'lightgrey' }) unless node.is_empty?
-
-        slashes.each do |slashee|
-          make_edge(identifier, slashee.identifier, 
-                    node_options.merge({ :label => node.interpret_slash(slashee).capitalize, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dotted" }))
-        end
-      end
-
-      @nodes.values.reject { |n| n.is_empty? }.sort_by { |n| n.token_number }.each_cons(2) do |n1, n2|
-        make_edge("f#{n1.identifier}", "f#{n2.identifier}", { :weight => 10.0, :style => 'invis' })
-      end
-
-      @f.puts "}"
-      @f.close
-    end
-
-    def make_node(obj, attrs)
-      @f.puts "  #{obj} [#{join_attributes(attrs)}];"
-    end
-
-    def make_edge(obj1, obj2, attrs)
-      @f.puts "  #{obj1} -> #{obj2} [#{join_attributes(attrs)}];"
-    end
-
-    def join_attributes(attrs)
-      attrs.collect { |attr, value| "#{attr}=\"#{value}\"" }.join(',')
     end
   end
 end
@@ -377,7 +249,7 @@ module PROIEL
       @data[:empty] or identifier == :root
     end
 
-    def token_number 
+    def token_number
       @data[:token_number]
     end
 
@@ -385,20 +257,8 @@ module PROIEL
       @data[:morphtag] ? @data[:morphtag].pos_to_s : nil
     end
 
-    # Returns +true+ if this node dominates another node +x+, 
-    # including if +x+ is identical to this node.
-    def dominates?(x)
-      if x == self
-        true
-      elsif x.head.nil?
-        false
-      else
-        dominates?(x.head)
-      end
-    end
-
     # Returns +true+ if this node is a coordination node or
-    # a potential coordination node, i.e. a conjunction or an 
+    # a potential coordination node, i.e. a conjunction or an
     # empty node (which might be an asyndetic conjunction).
     def is_coordinator?
       pos == 'C-' or is_empty?
@@ -422,11 +282,6 @@ module PROIEL
     # to its parent as this token has to the coordinator.
     def is_coordinated?
       head and head.is_coordinator? and relation == head.relation
-    end
-
-    # Returns +true+ if this node is a daughter of the root node.
-    def is_daughter_of_root?
-      head and head.is_root?
     end
 
     # Returns the slashes for the node, either on the node itself
@@ -455,7 +310,7 @@ module PROIEL
       c.empty? ? nil : c.max
     end
 
-    # Returns +true+ if this node and its dependents linearly precede 
+    # Returns +true+ if this node and its dependents linearly precede
     # another node +x+ and its dependents.
     # Empty nodes are ignored since these do not have any linearisation.
     def linearly_precedes?(x)
@@ -514,7 +369,7 @@ module PROIEL
 
   class ValidatingDependencyGraph < Lingua::DependencyGraph
     def initialize
-      @node_class = ValidatingDependencyGraphNode 
+      @node_class = ValidatingDependencyGraphNode
       super
     end
 
@@ -534,32 +389,179 @@ module PROIEL
       g
     end
 
+    public
+
+    # Produces an image visualising the dependency graph.
+    #
+    # ==== Options
+    # font_name:: Forces the use of a particular font.
+    # font_size:: Forces the use of a particular font size.
+    # linearised:: Visualises the graph in a linearised fashion.
+    def visualise(format = :png, options = {})
+      raise ArgumentError, "Invalid format #{format}" unless format == :png || format == :svg
+
+      node_options = {}
+      node_options[:fontname] = options[:font_name] if options[:font_name]
+      node_options[:fontsize] = options[:font_size] if options[:font_size]
+
+      Open3.popen3("dot -T#{format}") do |dot, img, err|
+        if options[:linearised]
+          self.linearisation_dot(dot, node_options)
+        else
+          self.regular_dot(dot, node_options)
+        end
+
+        @image = img.read
+      end
+      @image
+    end
+
+    alias :visualize :visualise
+
+    protected
+
+    def regular_dot(dot, node_options)
+      @f = dot
+      @f.puts "digraph G {"
+      @f.puts "  charset=\"UTF-8\";"
+
+      make_node(:root, node_options.merge({ :label => '', :shape => 'circle' }))
+
+      @nodes.values.each do |node|
+        identifier, relation, head, slashes = node.identifier, node.relation, node.head, node.slashes
+        form, empty = node.data.values_at(:form, :empty)
+
+        if node.is_empty?
+          label, shape, colour = case node.interpret_empty_node
+                  when :root
+                    ['',  'circle', 'black']
+                  when :conjunction
+                    ['C', 'diamond', 'black']
+                  when :verbal
+                    ['V', 'circle', 'black']
+                  else
+                    ['?', 'box', 'red']
+                  end
+          make_node(identifier, node_options.merge({ :label => label, :shape => shape,
+                                                     :fontcolor => colour }))
+        else
+          if node.is_coordinator? and node.has_dependents?
+            make_node(identifier, node_options.merge({ :label => form, :shape => 'diamond' }))
+          else
+            make_node(identifier, node_options.merge({ :label => form, :shape => 'box' }))
+          end
+        end
+
+        rel_colour = 'black'
+        if head and relation
+          make_edge(head.identifier, identifier,
+                    node_options.merge({ :color => 'orange', :weight => 1.0,
+                                         :label => relation.to_s.upcase, :fontcolor => rel_colour }))
+        end
+
+        slashes.each do |slashee|
+          make_edge(identifier, slashee.identifier,
+                    node_options.merge({ :label => node.interpret_slash(slashee).capitalize, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dashed" }))
+        end
+      end
+
+      @f.puts "}"
+      @f.close
+    end
+
+    def linearisation_dot(dot, node_options)
+      @f = dot
+      @f.puts "digraph G {"
+      @f.puts "  charset=\"UTF-8\"; rankdir=TD; ranksep=.0005; nodesep=.05;"
+
+      @f.puts "node [shape=none]; {"
+      x = (0..self.max_depth).to_a
+      @f.puts x.collect { |d| "depth#{d}" }.join(' -> ')
+      @f.puts "-> WORDS [style=invis]; }"
+      @f.puts "node [shape=point]; { rank = same; depth0 [label=\"\"]; root; }"
+
+      nodes_by_depth = @nodes.values.classify(&:depth)
+      nodes_by_depth.sort.each do |depth, nodes|
+        @f.puts "node [shape=point]; { rank = same; "
+        make_node("depth#{depth}", { :label => '' })
+        nodes.each do |node|
+          make_node("#{node.identifier}", { })
+        end
+        @f.puts "}"
+      end
+
+      @f.puts "node [shape=none]; { rank = same; WORDS [label=\"\"]; "
+      @nodes.values.reject { |n| n.is_empty? }.sort_by { |n| n.token_number }.each do |node|
+        make_node("f#{node.identifier}", { :label => node.data[:form] })
+      end
+      @f.puts "}"
+
+      @nodes.values.each do |node|
+        identifier, relation, head, slashes = node.identifier, node.relation, node.head, node.slashes
+        form, empty = node.data.values_at(:form, :empty)
+
+        if head and relation
+          make_edge(head.identifier, identifier,
+                    { :label => relation.to_s.upcase, :fontcolor => 'black', :fontsize => 10 })
+        end
+
+        # Hook up the word forms with their nodes
+        make_edge("f#{node.identifier}", node.identifier, { :arrowhead => 'none', :color => 'lightgrey' }) unless node.is_empty?
+
+        slashes.each do |slashee|
+          make_edge(identifier, slashee.identifier,
+                    node_options.merge({ :label => node.interpret_slash(slashee).capitalize, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dotted" }))
+        end
+      end
+
+      @nodes.values.reject { |n| n.is_empty? }.sort_by { |n| n.token_number }.each_cons(2) do |n1, n2|
+        make_edge("f#{n1.identifier}", "f#{n2.identifier}", { :weight => 10.0, :style => 'invis' })
+      end
+
+      @f.puts "}"
+      @f.close
+    end
+
+    def make_node(obj, attrs)
+      @f.puts "  #{obj} [#{join_attributes(attrs)}];"
+    end
+
+    def make_edge(obj1, obj2, attrs)
+      @f.puts "  #{obj1} -> #{obj2} [#{join_attributes(attrs)}];"
+    end
+
+    def join_attributes(attrs)
+      attrs.collect { |attr, value| "#{attr}=\"#{value}\"" }.join(',')
+    end
+
+    public
+
     def relinearise
       @root.relinearise
     end
 
     def valid?(msg_handler = lambda { |token_ids, msg| })
       #FIXME
-      @valid = true 
+      @valid = true
       @msg_handler = msg_handler
 
       test_token('Must have or inherit one outgoing slash edge', :is_open?) do |t|
         t.all_slashes.length == 1
       end
 
-      # Root daughters may be 
+      # Root daughters may be
       #   i. A single PRED or a single coordination of PREDs,
       #   ii. A single VOC or a single coordination of VOCs,
       #   iii. Multiple PARPREDs or coordinations of PARPREDs
-      #   iv. Multiple VOCs, PREDs or coordinations of such, but only if 
+      #   iv. Multiple VOCs, PREDs or coordinations of such, but only if
       #       for each VOC or PRED subgraph
       #       a. the subgraph does not overlap with any other subgraph, and
-      #       b. any slashes target only nodes in the subgraph. 
+      #       b. any slashes target only nodes in the subgraph.
       test_token('May not be a daughter of the root node', :is_daughter_of_root?) do |t|
         [:pred, :parpred, :voc].include?(t.relation)
       end
 
-      test_tokens('Subgraphs overlap', 
+      test_tokens('Subgraphs overlap',
                   lambda { |t| t.is_daughter_of_root? and t.relation == :pred }) do |ts|
         # We order the PRED nodes by the maximum token number in their subgraph, then
         # look for any overlap. We cannot simply order them by their own token numbers, as they may,
@@ -568,7 +570,7 @@ module PROIEL
         x.flatten # Report both part-takers as in violation of constraint
       end
 
-      test_token('Slashes are not contained by subgraph', 
+      test_token('Slashes are not contained by subgraph',
                  lambda { |t| t.is_daughter_of_root? and [:pred, :voc].include?(t.relation) }) do |t|
         t.all_slashes_contained?
       end
@@ -582,7 +584,7 @@ module PROIEL
       end
 
       test_token('The head of an XOBJ, XADV or PIV relation must be a verbal node or a valid coordination',
-                 :is_open?) do |t| 
+                 :is_open?) do |t|
         # If we have a verbal head, we're alright. If not, see if we're coordinated, in which
         # case our head will have the same relation to its head as us, and will thus
         # be tested for validity on its own.
@@ -590,22 +592,22 @@ module PROIEL
       end
 
       # Slashes on X* and PIV must target its head or a node dominated by the head.
-      test_token("Slash must target the node's head or a node dominated by the head", 
+      test_token("Slash must target the node's head or a node dominated by the head",
                  :is_open?) do |t|
         not t.has_slashes? or (t.head and t.head.dominates?(t.slashes.first))
       end
 
-      test_token_by_relation("The head of a PRED relation must be the root node, a subjunction or a valid coordination", 
-                    :pred) do |t| 
+      test_token_by_relation("The head of a PRED relation must be the root node, a subjunction or a valid coordination",
+                    :pred) do |t|
         t.is_daughter_of_root? or t.head.pos == 'G-' or t.is_coordinated?
       end
 
-      test_token("A subjunction may only be the dependent in a COMP, ADV or APOS relation", 
+      test_token("A subjunction may only be the dependent in a COMP, ADV or APOS relation",
                  lambda { |t| t.pos == 'G-' }) do |t|
         t.relation == :comp or t.relation == :adv or t.relation == :apos
       end
 
-      test_token("An infinitive may not be the dependent in an ADV relation", 
+      test_token("An infinitive may not be the dependent in an ADV relation",
                  lambda { |t| t.data[:morphtag][:mood] == :n }) do |t|
         t.relation != :adv
       end
@@ -614,9 +616,9 @@ module PROIEL
 
       #FIXME: special handling of non-part. vs. part.
       #FIXME: empty nodes can be verbs, but have to be excluded for now
-      test_head_dependent('V----p', :adv, :ag, :apos, :arg, :aux, :comp, :nonsub, :obj, :obl, 
+      test_head_dependent('V----p', :adv, :ag, :apos, :arg, :aux, :comp, :nonsub, :obj, :obl,
                           :per, :piv, :sub, :xadv, :xobj, :atr) # participles
-      test_head_dependent('V', :adv, :ag, :apos, :arg, :aux, :comp, :nonsub, :obj, :obl, 
+      test_head_dependent('V', :adv, :ag, :apos, :arg, :aux, :comp, :nonsub, :obj, :obl,
                           :per, :piv, :sub, :xadv, :xobj, :atr) # other verbs FIXME: no ATR
       test_head_dependent('N', :adnom, :apos, :atr, :aux, :comp, :narg, :part, :rel)
       test_head_dependent('A', :adv, :apos, :atr, :aux, :comp, :obl, :part)
@@ -631,7 +633,7 @@ module PROIEL
     # Verifies that all tokens that match the morphtag mask only have dependents related
     # to it by one of the given relations.
     def test_head_dependent(morphtag_mask, *dependent_relations)
-      test_token("may only be the head in a #{dependent_relations.to_sentence(:connector => "or", :skip_last_comma => true)} relation", 
+      test_token("may only be the head in a #{dependent_relations.to_sentence(:connector => "or", :skip_last_comma => true)} relation",
                  lambda { |t| !t.is_empty? and !t.data[:morphtag].contradicts?(MorphTag.new(morphtag_mask)) }) do |t|
         t.dependents.all? { |t| dependent_relations.include?(t.relation) }
       end
