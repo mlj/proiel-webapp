@@ -4,8 +4,6 @@
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
-# $Id: $
-#
 require 'extensions'
 require 'enumerator'
 require 'open3'
@@ -182,6 +180,11 @@ module Lingua
       r
     end
 
+    # Returns an array with all the node identifiers.
+    def identifiers
+      nodes.map(&:identifier)
+    end
+
     #FIXME: merge with add_node and use method aliasing
     def badd_node(identifier, relation, head_identifier = nil, data = {})
       # Merge data about this token into the result structure
@@ -294,7 +297,7 @@ module Lingua
 
         slashes.each do |slashee|
           make_edge(identifier, slashee.identifier, 
-                    node_options.merge({ :label => node.interpret_slash(slashee).humanise.capitalize, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dashed" }))
+                    node_options.merge({ :label => node.interpret_slash(slashee).capitalize, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dashed" }))
         end
       end
 
@@ -343,7 +346,7 @@ module Lingua
 
         slashes.each do |slashee|
           make_edge(identifier, slashee.identifier, 
-                    node_options.merge({ :label => node.interpret_slash(slashee).humanise.capitalize, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dotted" }))
+                    node_options.merge({ :label => node.interpret_slash(slashee).capitalize, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dotted" }))
         end
       end
 
@@ -400,7 +403,6 @@ module Lingua
       node[:dependent_ids].each { |dependent_id| add_postponed_subgraph(dependent_id, identifier) }
     end
   end
-
 end
 
 module PROIEL
@@ -510,11 +512,11 @@ module PROIEL
     # from the node to another node +slashee+.
     def interpret_slash(slashee)
       if self.is_empty? and self.is_verbal? and slashee.is_verbal? and self.relation == slashee.relation
-        :predicate_identity
+        "predicate-identity"
       elsif [:xadv, :piv, :xobj].include?(self.relation)
-        :subject
+        "subject"
       else
-        :shared_argument
+        "shared-argument"
       end
     end
 
@@ -542,13 +544,28 @@ module PROIEL
       n = [self] + dependents
       n.sort_by { |t| t.token_number || -1 }.collect { |t| t == self ? self : t.relinearise }.flatten
     end
-
   end
 
   class ValidatingDependencyGraph < Lingua::SlashedDependencyGraph
     def initialize
       @node_class = ValidatingDependencyGraphNode 
       super
+    end
+
+    def self.new_from_editor(editor_output)
+      g = ValidatingDependencyGraph.new
+
+      (rec = lambda do |subtree, head_id|
+        unless subtree.nil?
+          subtree.each_pair do |id, values|
+            data = { :empty => values['empty'] }
+            g.add_node(id.to_i, values['relation'], head_id, (values['slashes'] || []).map(&:to_i), data)
+            rec[values['dependents'], id.to_i]
+          end
+        end
+      end)[editor_output, nil]
+
+      g
     end
 
     def relinearise
@@ -672,6 +689,5 @@ module PROIEL
     def test_token_by_relation(msg, *relations, &block)
       test_token(msg, lambda { |t| relations.include?(t.relation) }, &block)
     end
-
   end
 end

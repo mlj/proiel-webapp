@@ -143,9 +143,15 @@ ActiveRecord::Schema.define(:version => 20080821123455) do
   add_index "sentences", ["source_id", "book_id", "sentence_number"], :name => "sentence_number_index", :unique => true
   add_index "sentences", ["book_id"], :name => "index_sentences_on_book_id"
 
+  create_table "slash_edge_interpretations", :force => true do |t|
+    t.string "tag",     :limit => 64,  :null => false
+    t.string "summary", :limit => 128, :null => false
+  end
+
   create_table "slash_edges", :force => true do |t|
-    t.integer "slasher_id", :limit => 11
-    t.integer "slashee_id", :limit => 11
+    t.integer "slasher_id",                   :limit => 11
+    t.integer "slashee_id",                   :limit => 11
+    t.integer "slash_edge_interpretation_id", :limit => 11, :null => false
   end
 
   add_index "slash_edges", ["slasher_id", "slashee_id"], :name => "index_slash_edges_on_slasher_and_slashee", :unique => true
