@@ -138,23 +138,6 @@ a.sentence-number, .token-number { color: #F7A700; }
 .roundedbox dl { margin-left: 0px; }
 .roundedbox dt { font-weight: bold; }
 
-/* Palette */
- 
-ul.palette { margin: 0; padding: 0; border: 1px solid #999; overflow: hidden; height: auto !important; height: 1%; padding: 4px 5px 0; }
-*:first-child+html ul.palette { padding-bottom: 2px; } * html ul.holder { padding-bottom: 2px; } /* ie7 and below */
-ul.palette li { float: left; list-style-type: none; margin: 0 5px 4px 0; }
-ul.palette li.box { -moz-border-radius: 6px; border: 1px solid #CAD8F3; background: #DEE7F8; padding: 1px 5px 2px; }
-ul.palette li.selected { border-color: #598BEC; background: #598BEC; color: white; }
-ul.palette abbr { border: none; } /* the dotted abbr default does not look good in palettes */
-
-/* Tree */
-
-ul.tree, ul.tree ul { list-style-type: none; background: url(/images/vline.png) repeat-y; margin: 0; padding: 0; } 
-ul.tree ul { margin-left: 10px; } 
-ul.tree li { margin: 0; padding: 0 12px; line-height: 20px; background: url(/images/node.png) no-repeat; } 
-ul.tree li:last-child { background: #fff url(/images/lastnode.png) no-repeat; }
-ul.tree li.last-child { background: #fff url(/images/lastnode.png) no-repeat; } /* IE only */
-
 /* Text view */
 
 .text-view { 

@@ -1,4 +1,4 @@
-<% javascript "relations", "tree", "dependencies" %>
+<% javascript "utils", "relations", "tree", "dependencies" %>
 <% stylesheet "dependencies" %>
 
 <%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Dependency structure', :edit_url => :edit_annotation_dependencies_url } %>
@@ -27,20 +27,22 @@
   </div>
 
   <div id="palette">
-    <ul class="palette">
-      <% @relations.each do |v| %>
-        <li id="<%= v.code %>" class="box"><%= readable_relation(v.code) %></li>
-      <% end %>
-    </ul>
+    <% @relations.each do |v| %>
+      <label for="<%= v.code %>">
+        <input type="radio" name="relation-palette" id="<%= v.code %>" value="<%= v.code %>"></input>
+        <span><%= readable_relation(v.code) %></span>
+      </label>
+    <% end %>
   </div>
 
-  <ul id="words" style="text-align: center"> 
+  <div id="words">
     <% @sentence.morphtaggable_tokens.each do |t| %>
-      <li id="word-<%= t.id %>" class="word">
-        <span class="form"><%= format_token_form(t) %></span><span class="token-number"><%= t.token_number %></span>
-      </li>
+      <label for="word-<%= t.id %>">
+        <input type="radio" name="token-palette" id="word-<%= t.id %>" value="<%= t.id %>"></input>
+        <span><span class="form"><%= format_token_form(t) %></span><span class="token-number"><%= t.token_number %></span></span>
+      </label>
     <% end %>
-  </ul>
+  </div>
 
   <!-- FIXME: the lang attribute here is a work-around. This will break if
        LangText is ever extended beyond simple language attribute handling. -->

@@ -1,5 +1,5 @@
 // Globals 
-var palette_widget = null;
+var palette = null;
 var sentence_widget = null;
 var tree_widget = null;
 var controller = null; 
@@ -288,9 +288,7 @@ var DependencyStructureWidget = Class.create(Widget, {
   }
 });
 
-var SentenceWidget = Class.create(Widget, {
-  initialize: function($super, id) { $super(id, 'word-'); },
-
+var SentenceWidget = Class.create(RadioGroup, {
   setConsumed: function(id) { this.find(id).addClassName("consumed"); },
 
   setUnconsumed: function(id) { this.find(id).removeClassName("consumed"); },
@@ -298,10 +296,6 @@ var SentenceWidget = Class.create(Widget, {
   clear: function() { this.widget.descendants().invoke('removeClassName', 'consumed'); },
 
   isConsumed: function(id) { return this.find(id).hasClassName("consumed"); }
-});
-
-var PaletteWidget = Class.create(Widget, {
-  initialize: function($super, id) { $super(id, ''); }
 });
 
 function getRecommendedRelation(head_relation, head, dependent) {
@@ -323,7 +317,7 @@ function onDependencyStructureClick(ev) {
 }
 
 function onSentenceClick(ev) {
-  var id = findAffectedID(ev, 'li', 'word-');
+  var id = sentence_widget.selection();
 
   if (id)
     controller.select(id);
@@ -354,12 +348,10 @@ function findAffectedID(ev, name, prefix) {
 function onSlashSelect() { tree_widget._updateJSON(); }
 
 function onPaletteClick(ev) {
-  var element = findAffectedElement(ev, 'li');
+  var element = findAffectedElement(ev, 'input');
 
-  if (element) {
-    if (palette_widget.select(element))
-      controller.changeRelation(element.identify());
-  }
+  if (element)
+    controller.changeRelation(element.identify());
 }
 
 function onChangeDirectionClick() { controller.toggleBuildDirection(); }
@@ -377,13 +369,13 @@ var Controller = Class.create({
 
   setSelection: function(token_id) {
     if (this.selection) {
-      // Do de-selections and disable buttons and palette_widget
+      // Do de-selections and disable buttons and palette
       sentence_widget.deselect();
       tree_widget.deselect();
     }
 
     if (token_id) {
-      // Do selections and enable buttons and palette_widget
+      // Do selections and enable buttons and palette
       if (!model.isEmpty(token_id))
         sentence_widget.select(token_id);
       tree_widget.select(token_id);
@@ -391,8 +383,8 @@ var Controller = Class.create({
       r = tree_widget.getRelation(token_id);
 
       if (isValidRelation(r)) {
-        palette_widget.enable();
-        palette_widget.select(r);
+        palette.enable();
+        palette.select(r);
       }
     }
 
@@ -659,7 +651,7 @@ var Controller = Class.create({
 
     this.buildDownwards();
 
-    palette_widget.disable();
+    palette.disable();
 
     this.setSelection('ROOT');
   },
@@ -693,9 +685,9 @@ var Controller = Class.create({
     }
 
     if (no_actionable_element)
-      palette_widget.disable(); 
+      palette.disable(); 
     else 
-      palette_widget.enable();
+      palette.enable();
 
     // IE hacks
     updateTreeLast();
@@ -773,11 +765,12 @@ Event.observe(window, 'load', function() {
   // Create widgets
   sentence_widget = new SentenceWidget('words');
   tree_widget = new DependencyStructureWidget('relations');
-  palette_widget = new PaletteWidget('palette');
+  palette = new RadioGroup('palette');
+  palette.disable();
 
   // Connect event handlers
-  $('palette').observe('click', onPaletteClick);
-  $('words').observe('click', onSentenceClick);
+  $('palette').observe('change', onPaletteClick);
+  $('words').observe('change', onSentenceClick);
   $('relations').observe('click', onDependencyStructureClick);
   $('button-delete').observe('click', function(ev) { controller.removeEntry(); });
   $('button-clear').observe('click', function(ev) { controller.clear(); });
@@ -822,12 +815,11 @@ Event.observe(window, 'load', function() {
       stop_event = true;
     }
     else {
-      //TODO: More key-stroke handling here?
       var character = String.fromCharCode(code);
+
       if (character in hotkeys) {
-        var element = $(hotkeys[character]);
-        palette_widget.select(element);
-        controller.changeRelation(element.identify());
+        palette.select(hotkeys[character]);
+        controller.changeRelation(hotkeys[character]);
         stop_event = true;
       }
     }

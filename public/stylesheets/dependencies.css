@@ -5,8 +5,10 @@ div.dependencies-image { text-align: center; }
 .dependencies .head-dependent-relation-bg { background-color: orange; }
 .dependencies .slash-relation-bg { background-color: blue; }
 
-#palette li, #words li { display: inline; }
-#words .word { padding: .15em .15em .15em .15em; }
+div#words input { display: none; }
+div#words input + span { padding: .2em .2em .2em .2em; }
+div#words input.consumed + span { border-color: #ccc; background: #ccc; color: white; }
+div#words input:checked + span { border-color: #598BEC; background: #598BEC; color: white; }
 
 /* The proper rule: does not work in IE 6 */
 #relations .selected > .user-value { background: #9999ff; }
@@ -15,3 +17,16 @@ div.dependencies-image { text-align: center; }
 #relations .selected * .user-value { background: white; }
 
 #cut-buffer { display: none; }
+
+div#palette input { display: none; }
+div#palette input + span { -moz-border-radius: 6px; border: 1px solid #CAD8F3; background: #DEE7F8; padding: 6px; color: black; }
+div#palette input:checked + span { border-color: #598BEC; background: #598BEC; color: white; }
+div#palette input:disabled + span { border-color: #ccc; background: #ccc; color: white; }
+
+/* Tree */
+
+ul.tree, ul.tree ul { list-style-type: none; background: url(/images/vline.png) repeat-y; margin: 0; padding: 0; } 
+ul.tree ul { margin-left: 10px; } 
+ul.tree li { margin: 0; padding: 0 12px; line-height: 20px; background: url(/images/node.png) no-repeat; } 
+ul.tree li:last-child { background: #fff url(/images/lastnode.png) no-repeat; }
+ul.tree li.last-child { background: #fff url(/images/lastnode.png) no-repeat; } /* IE only */
