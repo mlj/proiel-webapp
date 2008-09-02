@@ -4,7 +4,7 @@
   <% if @lemma.pos %>
     <dt>Part of speech:</dt><dd><%= PROIEL::MorphTag.new(@lemma.pos).descriptions([:major, :minor], true).join(", ").capitalize %></dd>
   <% end %>
-  <dt>Frequency:</dt><dd><%= pluralize(@lemma.tokens.count, 'tokens') %></dd>
+  <dt>Frequency:</dt><dd><%= pluralize(@lemma.tokens.count, 'token') %></dd>
   <% if @lemma.short_gloss %>
     <dt>Translation:</dt><dd><q><%= @lemma.short_gloss %></q></dd>
   <% end %>
