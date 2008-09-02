@@ -38,3 +38,29 @@ Example:
     Removing attribute Token.morphtag_source from audit 17702
     Removing attribute Token.morphtag_source from audit 17703
     ...
+
+Import and export tasks
+=======================
+
+`proiel:semantic_tags:import` and `proiel:semantic_tags:export`
+---------------------------------------------------------------
+
+These tasks can be used for mass-import and -export of semantic tags. The data file is 
+expected to be a comma-separated file with the following fields:
+
+  * Taggable type (string, either `Token` or `Lemma`)
+  * Taggable ID (integer)
+  * Attribute tag (string)
+  * Attribute value tag (string)
+
+All attributes and attribute values must already have been defined; so must any
+referred token or lemmma.
+
+Example:
+
+    $ rake proiel:semantic_tags:export FILE=tags.csv
+    $ cat tags.csv
+    Token,266690,animacy,-
+    Lemma,2256,animacy,+
+    ...
+    $ rake proiel:semantic_tags:import FILE=tags.csv

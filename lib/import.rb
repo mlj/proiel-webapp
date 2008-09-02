@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #
-# import.rb - Import functions for PROIEL sources
+# import.rb - Import functions
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #

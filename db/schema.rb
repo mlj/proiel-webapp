@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080821123455) do
+ActiveRecord::Schema.define(:version => 20080902082755) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -26,14 +26,12 @@ ActiveRecord::Schema.define(:version => 20080821123455) do
     t.string   "action"
     t.text     "changes"
     t.integer  "version",        :limit => 11, :default => 0
-    t.integer  "changeset_id",   :limit => 11
     t.integer  "user_id",        :limit => 11
-    t.datetime "created_at",                                       :null => false
-    t.string   "user_type",                    :default => "User"
+    t.datetime "created_at",                                  :null => false
+    t.string   "user_type"
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
-  add_index "audits", ["changeset_id"], :name => "index_audits_on_changeset_id"
 
   create_table "bookmarks", :force => true do |t|
     t.integer "user_id",     :limit => 11,                                :default => 0,         :null => false
@@ -115,6 +113,27 @@ ActiveRecord::Schema.define(:version => 20080821123455) do
   create_table "roles", :force => true do |t|
     t.string "code",        :limit => 16, :default => "", :null => false
     t.string "description", :limit => 64, :default => "", :null => false
+  end
+
+  create_table "semantic_attribute_values", :force => true do |t|
+    t.integer  "semantic_attribute_id", :limit => 11, :null => false
+    t.string   "tag",                   :limit => 64, :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "semantic_attributes", :force => true do |t|
+    t.string   "tag",        :limit => 64, :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "semantic_tags", :force => true do |t|
+    t.integer  "taggable_id",                 :limit => 11, :null => false
+    t.string   "taggable_type",               :limit => 64, :null => false
+    t.integer  "semantic_attribute_value_id", :limit => 11, :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sentence_alignments", :id => false, :force => true do |t|
