@@ -23,12 +23,9 @@ class BrowseController < ApplicationController
     @subsection = @source.title
     @subsubsection = @book.title
 
-    # Harvest the actual text
-    @sentences = Sentence.find(:all, :order => 'sentence_number', :conditions => { 
-      :source_id => @source, 
-      :book_id => @book, 
-      :chapter => @chapter
-    })
+    @tokens = @source.tokens.find(:all,
+                                  :conditions => [ "sentences.book_id = ? AND sentences.chapter = ?", @book,  @chapter ],
+                                  :include => [:sentence, :lemma])
 
     render :layout => false if request.xhr?
   end
