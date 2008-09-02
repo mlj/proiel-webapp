@@ -4,9 +4,9 @@
 <%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Dependency structure', :edit_url => :edit_annotation_dependencies_url } %>
 
 <div id="annotation" class="annotation">
-  <%= hidden_field_tag 'input-tokens', @tokens %>
-  <%= hidden_field_tag 'input-structure', @structure %>
-  <%= hidden_field_tag 'input-relations', [] %>
+  <%= hidden_field_tag 'input-tokens', @tokens.to_json %>
+  <%= hidden_field_tag 'input-structure', @structure.to_json %>
+  <%= hidden_field_tag 'input-relations', @relations.to_json %>
 
   <div class="actions">
     <%= button_to_function "Delete subtree", :id => 'button-delete', :disabled => true %>
@@ -14,7 +14,8 @@
     <%= button_to_function "Paste subtree", :id => 'button-paste', :disabled => true %>
     <%= button_to_function "Clear", :id => "button-clear" %>
     <%= button_to_function "Reset", :id => "button-reset" %>
-    <%= button_to_function "Add empty node", :id => "button-insert-empty-node" %>
+    <%= button_to_function "Add asyndetic conjunction", :id => "button-insert-empty-conjunction-node" %>
+    <%= button_to_function "Add empty verbal node", :id => "button-insert-empty-verbal-node" %>
     <%= button_to_function "Add slash", :id => 'button-add-slash', :disabled => true %>
     <%= button_to_function "Remove slashes", :id => 'button-remove-slashes', :disabled => true %>
   </div>
@@ -26,11 +27,11 @@
   </div>
 
   <div id="palette">
-      <ul class="palette">
-        <% PROIEL::RELATIONS.values.sort_by { |v| v.code.to_s }.each do |v| %>
-          <li id="<%= v.code %>" class="box"><%= readable_relation(v.code) %></li>
-        <% end %>
-      </ul>
+    <ul class="palette">
+      <% @relations.each do |v| %>
+        <li id="<%= v.code %>" class="box"><%= readable_relation(v.code) %></li>
+      <% end %>
+    </ul>
   </div>
 
   <ul id="words" style="text-align: center"> 

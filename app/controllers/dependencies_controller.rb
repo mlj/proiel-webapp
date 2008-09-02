@@ -20,30 +20,30 @@ class DependenciesController < ApplicationController
   def edit 
     @sentence = Sentence.find(params[:annotation_id])
 
-    @tokens = ActiveSupport::JSON.encode(Hash[*@sentence.tokens.collect do |token| 
+    @tokens = Hash[*@sentence.tokens.collect do |token|
       [token.id, { 
         :morphtag => Hash[token.morph].merge({
           :language => @sentence.source.language,
           :finite => [:i, :s, :m, :o].include?(token.morph[:mood]),
-          :form => token.form, #FIXME: eliminate when lemmata more stable
+          :form => token.form,
           :lemma => token.lemma ? token.lemma.lemma : nil,
         }),
-        :empty => token.is_empty?,
+        :empty => token.is_empty? ? token.empty_token_sort : false,
         :form => token.form,
         :token_number => token.token_number
       } ] 
-    end.flatten])
+    end.flatten]
 
     # If the sentence hasn't been flagged as "annotated", and none of the tokens have 
     # any relation set, it is likely to be a "pristine" sentence, so we'd be better
     # off not sending any information about structure at all.
     if @sentence.is_annotated? || @sentence.tokens.any? { |token| !token.relation.nil? }
-      @structure = params[:output]
-      @structure ||= ActiveSupport::JSON.encode(@sentence.dependency_structure)
+      @structure = params[:output] || @sentence.dependency_structure
     else
-      @structure = params[:output]
-      @structure ||= ActiveSupport::JSON.encode({})
+      @structure = params[:output] || {}
     end
+
+    @relations = PROIEL::RELATIONS.values.sort_by { |v| v.code.to_s }
   end
 
   # Saves changes to relations and has the user review the new structure.

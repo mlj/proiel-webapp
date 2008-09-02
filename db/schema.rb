@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080902082755) do
+ActiveRecord::Schema.define(:version => 20080902100218) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -210,6 +210,7 @@ ActiveRecord::Schema.define(:version => 20080902082755) do
     t.boolean  "abbreviation",                                                                                                      :default => false, :null => false
     t.boolean  "capitalisation",                                                                                                    :default => false, :null => false
     t.enum     "info_status",       :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old]
+    t.string   "empty_token_sort",  :limit => 1
   end
 
   add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true

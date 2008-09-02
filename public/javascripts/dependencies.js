@@ -471,18 +471,18 @@ var Controller = Class.create({
     tree_widget._updateJSON();
   },
 
-  addEmptyEntry: function() {
+  addEmptyEntry: function(sort) {
     var new_id;
 
     // Add new token to the model.
-    new_id = model.createEmptyToken();
+    new_id = model.createEmptyToken(sort);
 
     // Add a new entry to the tree widget.
     if (this.top_down)
-      tree_widget.addEntry(this.selection, new_id, null, '-', null);
+      tree_widget.addEntry(this.selection, new_id, null, sort, null);
     else {
       var h = tree_widget.getParentEntry(this.selection);
-      tree_widget.addEntry(h, new_id, this.selection, '-', null);
+      tree_widget.addEntry(h, new_id, this.selection, sort, null);
     }
 
     // Ensure that all slash select boxes are updated
@@ -609,7 +609,7 @@ var Controller = Class.create({
 
         //FIXME
         var values = new Hash;
-        values.set('empty', true);
+        values.set('empty', empty);
         values.set('token_number', token_number);
         model.tokens.set(token_id, values);
         if (model.new_token_number >= token_number)
@@ -617,7 +617,7 @@ var Controller = Class.create({
       }
 
       if (empty)
-        tree_widget.addEntry(parent_id, token_id, null, '-', relation);
+        tree_widget.addEntry(parent_id, token_id, null, empty, relation);
       else {
         sentence_widget.setConsumed(token_id);
         tree_widget.addEntry(parent_id, token_id, null, 
@@ -652,7 +652,8 @@ var Controller = Class.create({
     $('button-cut').disable();
     $('button-paste').disable();
     $('button-clear').enable();
-    $('button-insert-empty-node').enable();
+    $('button-insert-empty-conjunction-node').enable();
+    $('button-insert-empty-verbal-node').enable();
     $('button-add-slash').disable();
     $('button-remove-slashes').disable();
 
@@ -733,13 +734,13 @@ var Model = Class.create({
   getTokenIDs: function() { return this.tokens.keys(); },
 
   // Create new empty token
-  createEmptyToken: function() {
+  createEmptyToken: function(sort) {
     var id = 'new' + this.new_token_number;
     var token_number = this.new_token_number;
     this.new_token_number++;
 
     var values = new Hash;
-    values.set('empty', true);
+    values.set('empty', sort);
     values.set('token_number', token_number);
     this.tokens.set(id, values);
 
@@ -781,7 +782,8 @@ Event.observe(window, 'load', function() {
   $('button-delete').observe('click', function(ev) { controller.removeEntry(); });
   $('button-clear').observe('click', function(ev) { controller.clear(); });
   $('button-reset').observe('click', function(ev) { controller.reset(); });
-  $('button-insert-empty-node').observe('click', function(ev) { controller.addEmptyEntry(); });
+  $('button-insert-empty-conjunction-node').observe('click', function(ev) { controller.addEmptyEntry("C"); });
+  $('button-insert-empty-verbal-node').observe('click', function(ev) { controller.addEmptyEntry("V"); });
   $('button-add-slash').observe('click', function(ev) { controller.addSlash(); });
   $('button-remove-slashes').observe('click', function(ev) { controller.removeSlashes(); });
   $('button-cut').observe('click', function(ev) { controller.cut(); });

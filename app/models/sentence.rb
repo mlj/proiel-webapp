@@ -324,7 +324,7 @@ class Sentence < ActiveRecord::Base
       s[token.id].merge!({
         :relation => token.relation,
         :found => true,
-        :empty => token.is_empty?,
+        :empty => token.is_empty? ? token.empty_token_sort : false,
         :slashes => token.slashees.collect(&:id)
       })
 
