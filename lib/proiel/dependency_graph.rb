@@ -341,25 +341,6 @@ module PROIEL
       end
     end
 
-    # Returns an interpretation of an empty node.
-    def interpret_empty_node
-      raise "Not an empty node" unless is_empty?
-
-      if identifier == :root
-        # This is the root node, which obviously has a special
-        # interpretation.
-        :root
-      elsif dependents.select { |d| d.relation == self.relation }.size >= 2
-        # All dependents have the same relation to this node, as this
-        # node has to its head. This indicates an asyndetic conjunction.
-        :conjunction
-      else
-        # We weren't a conjunction, but have a subject or comp depdenednt,
-        # or a pred relation, and that means we're verbal.
-        :verbal
-      end
-    end
-
     # Returns a `relinearisation' of the subgraph constituted by this node and its dependents.
     def relinearise
       n = [self] + dependents
@@ -397,18 +378,19 @@ module PROIEL
     # font_name:: Forces the use of a particular font.
     # font_size:: Forces the use of a particular font size.
     # linearised:: Visualises the graph in a linearised fashion.
-    def visualise(format = :png, options = {})
+    def visualize(format = :png, options = {})
       raise ArgumentError, "Invalid format #{format}" unless format == :png || format == :svg
 
       node_options = {}
-      node_options[:fontname] = options[:font_name] if options[:font_name]
-      node_options[:fontsize] = options[:font_size] if options[:font_size]
+      node_options[:fontname] = options[:fontname] if options[:fontname]
+      node_options[:fontsize] = options[:fontsize] if options[:fontsize]
 
       Open3.popen3("dot -T#{format}") do |dot, img, err|
         if options[:linearised]
           self.linearisation_dot(dot, node_options)
         else
-          self.regular_dot(dot, node_options)
+          self.linearisation_dot(dot, node_options)
+          #self.regular_dot(dot, node_options)
         end
 
         @image = img.read
@@ -416,9 +398,13 @@ module PROIEL
       @image
     end
 
-    alias :visualize :visualise
-
     protected
+
+    EMPTY_NODE_STYLES = {
+      'V' => { :label => 'V', :shape => 'circle', :fontcolor => 'black', },
+      'C' => { :label => 'C', :shape => 'diamond', :fontcolor => 'black', },
+      :root => { :label => '', :shape => 'circle', :fontcolor => 'black', },
+    }
 
     def regular_dot(dot, node_options)
       @f = dot
@@ -431,25 +417,12 @@ module PROIEL
         identifier, relation, head, slashes = node.identifier, node.relation, node.head, node.slashes
         form, empty = node.data.values_at(:form, :empty)
 
-        if node.is_empty?
-          label, shape, colour = case node.interpret_empty_node
-                  when :root
-                    ['',  'circle', 'black']
-                  when :conjunction
-                    ['C', 'diamond', 'black']
-                  when :verbal
-                    ['V', 'circle', 'black']
-                  else
-                    ['?', 'box', 'red']
-                  end
-          make_node(identifier, node_options.merge({ :label => label, :shape => shape,
-                                                     :fontcolor => colour }))
+        if empty
+          make_node(identifier, node_options.merge(EMPTY_NODE_STYLES[empty]))
+        elsif node.is_coordinator? and node.has_dependents?
+          make_node(identifier, node_options.merge({ :label => form, :shape => 'diamond' }))
         else
-          if node.is_coordinator? and node.has_dependents?
-            make_node(identifier, node_options.merge({ :label => form, :shape => 'diamond' }))
-          else
-            make_node(identifier, node_options.merge({ :label => form, :shape => 'box' }))
-          end
+          make_node(identifier, node_options.merge({ :label => form, :shape => 'box' }))
         end
 
         rel_colour = 'black'
@@ -514,7 +487,7 @@ module PROIEL
         end
       end
 
-      @nodes.values.reject { |n| n.is_empty? }.sort_by { |n| n.token_number }.each_cons(2) do |n1, n2|
+      @nodes.values.reject(&:is_empty?).sort_by(&:token_number).each_cons(2) do |n1, n2|
         make_edge("f#{n1.identifier}", "f#{n2.identifier}", { :weight => 10.0, :style => 'invis' })
       end
 

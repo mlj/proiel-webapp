@@ -6,14 +6,10 @@ class DependenciesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.svg  { send_data @sentence.dependency_graph.visualise(:svg),
-        :filename => "#{params[:id]}.svg",
-        :disposition => 'inline',
-        :type => "image/svg+xml" }
-      format.png  { send_data @sentence.dependency_graph.visualise(:png, :font_name => 'Legendum'),
-        :filename => "#{params[:id]}.png",
-        :disposition => 'inline',
-        :type => "image/png" }
+      format.svg  { send_data @sentence.dependency_graph.visualize(:svg),
+        :filename => "#{params[:id]}.svg", :disposition => 'inline', :type => "image/svg+xml" }
+      format.png  { send_data @sentence.dependency_graph.visualize(:png, :fontname => 'Legendum'),
+        :filename => "#{params[:id]}.png", :disposition => 'inline', :type => "image/png" }
     end
   end
   

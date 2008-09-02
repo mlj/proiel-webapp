@@ -343,7 +343,7 @@ class Sentence < ActiveRecord::Base
     PROIEL::ValidatingDependencyGraph.new do |g|
       dependency_tokens.each { |t| g.badd_node(t.id, t.relation, t.head ? t.head.id : nil,
                                                t.slashees.collect(&:id),
-                                               { :empty => t.is_empty?,
+                                               { :empty => t.empty_token_sort || false,
                                                  :token_number => t.token_number,
                                                  :morphtag => PROIEL::MorphTag.new(t.morphtag),
                                                  :form => t.form }) }
