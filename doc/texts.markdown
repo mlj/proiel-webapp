@@ -686,3 +686,55 @@ source with the original text and then be retrofitted into a TEI header -- mlj]
   * _John_ 3:36
 
     ...τοῦ θεοῦ μένει ἐπ’ αὐτόν, → ...τοῦ θεοῦ μένει ἐπ’ αὐτόν.
+
+Old Church Slavonic
+-------------------
+
+### Text corrections
+
+The base text here unfortunately has a significant number of errors whose origin is
+probably in the OCR process. This is complicated by the fact that the morphological
+annotation that the USC project has added is encoded in a way that in part inherits
+these errors and in part introduces numerous inconsistencies.
+
+These errors and inconsistencies have been corrected in the base USC text, included
+in the source tree as a number of patches, as they became apparent during transcoding,
+compilation of word lists and later review of the accompanying notes to each verse.
+
+Frequently the USC annotators have made notes about suspicious spelling or word forms, but
+apparently not consulted Jagic' edition to correct them. Whenever this occurs,
+we have made the necessary corrections and removed the accompanying note.
+
+Some of these changes break the annotation system that the USC project employed, in that
+separate tokens are joined, hyphens or editorial symbols are inserted etc. In such cases,
+the analysis part of each token has simply been dropped, as these will be reannotated in
+our project in any case.
+
+As a further complication, Jagic' edition has an appendix with a number of corrections --
+including instances of bad verse numbering. These corrections have also been applied, but
+in these cases a note have been _inserted_ as a reminder that in these cases the actual
+electronic text is not supposed to match the printed text. These corrections are not
+numerous and are kept in a separate patch file so that they can easily be used to decorate
+the text with more advanced mark-up in the future.
+
+### Tokenisation and USC annotation
+
+The USC annotators have frequently added notes about tokenisation difficulties, e.g.
+
+    ###	!snbse - s^P 'from' and nebese^N^sg^G 'heaven' are merged into one word
+
+These come in a number of varieties, but since the text is retokenised later, such
+notes are of little value to us. Therefore, for all more or less 'regular' or
+completely isolated instances of contractions or abbreviations that we would expand,
+the notes have been removed. This is the case for the following character sequences
+in the text -- all of which are resolved by the tokeniser:
+
+USC encoding  PROIEL encoding (raw and retokenised)
+------------  -------------------------------------
+!snbe         с҃нбе → съ небесе
+!snbse        с҃нбсе → съ небесе
+!nnbse        н҃нбсе → на небесе
+!nnbsx&       н҃нбсхъ → на небесьхъ
+!vli          в҃ли → въ издраили
+!vlm&         в҃лмъ → въ иероусалимъ
+!sm&          с҃мъ → съ исусомъ

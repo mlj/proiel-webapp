@@ -118,6 +118,7 @@ namespace :proiel do
       Token.transaction(User.find_by_login(USER_NAME)) do #FIXME
         mt = MassTokenAssignment.new
         mt.reassign_morphology!(field, from_value, to_value)
+        mt.reassign_morphology!(field, from_value, to_value, 'source_morphtag')
       end
     end
   end
