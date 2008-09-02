@@ -5,7 +5,6 @@
 # Written by Marius L. Jøhndal, 2008.
 #
 require 'fastercsv'
-require 'gdbm'
 
 module PROIEL
   module Tagger

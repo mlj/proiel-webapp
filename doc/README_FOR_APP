@@ -12,7 +12,6 @@ The application depends on (at least) these gems:
 * hpricot
 * railroad
 * gchartrb
-* gdbm
 * treetop
 * ruby-sfst
 
