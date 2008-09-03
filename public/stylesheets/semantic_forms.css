@@ -124,8 +124,9 @@ form div.submit-field {
     form div.collection-select-field label span.help,
     form div.submit-field label span.help {
       display: block;
-      font-size: 60%;
-      font-weight: normal;
+      font-size: x-small;
+      font-style: italic;
+      color: black;
       margin-top: 5px;
       line-height: 100%; }
 form div.submit-field {
