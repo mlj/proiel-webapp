@@ -333,6 +333,8 @@ a.token {
 
 .chart { text-align: center; }
 
+.tag { font-family: Courier, monospace; }
+
 /* Documentation */
 
 p.doc-img { 
