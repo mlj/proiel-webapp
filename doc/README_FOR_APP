@@ -10,7 +10,7 @@ the above, you need the following gems
 * xml-simple
 * diff-lcs
 * gchartrb
-* gdbm
+* treetop
 * ruby-sfst
 
 In addition, you need the following gem, which is part of the PROIEL Corpus
