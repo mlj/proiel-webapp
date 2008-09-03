@@ -1,8 +1,6 @@
 <%= error_messages_for :bookmark %>
 
-<div class="new">
-  <% form_for(@bookmark) do |form| %>
-    <%= render :partial => 'form', :object => form %>
-    <%= form.submit "Create" %>
-  <% end %>
-</div>
+<% form_for(@bookmark) do |form| %>
+  <%= render :partial => 'form', :object => form %>
+  <%= form.submit "Create" %>
+<% end %>

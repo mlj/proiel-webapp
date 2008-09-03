@@ -8,6 +8,7 @@
   <% if @lemma.short_gloss %>
     <dt>Translation:</dt><dd><q><%= @lemma.short_gloss %></q></dd>
   <% end %>
+  <%= link_to_resources @lemma, :index, :edit %>
 <% end %>
 
 <% layer_unless @lemma.notes.empty?, "notes" do -%>

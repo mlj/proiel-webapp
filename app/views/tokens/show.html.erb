@@ -30,6 +30,7 @@
     <dt>Dependency relation:</dt><dd><%= readable_dependency(@token.relation, @token.head ? link_to(@token.head.id, @token.head) : nil) %></dd>
   <% end %>
   <dt>Annotation completion:</dt><dd><%= link_to(readable_completion(@token.sentence), annotation_path(@token.sentence)) %></dd>
+  <%= link_to_resources @token, :index, :edit %>
 <% end %>
 
 <% layer_unless @token.notes.empty?, "notes" do -%>

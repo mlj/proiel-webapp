@@ -1,8 +1,6 @@
 <%= error_messages_for :lemma %>
 
-<div class="edit">
-  <% form_for(@lemma) do |form| %>
-    <%= render :partial => 'form', :object => form %>
-    <%= form.submit "Update" %>
-  <% end %>
-</div>
+<% form_for(@lemma) do |form| %>
+  <%= render :partial => 'form', :object => form %>
+  <%= form.submit "Update" %>
+<% end %>
