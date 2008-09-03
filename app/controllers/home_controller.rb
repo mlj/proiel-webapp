@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   before_filter :is_annotator?, :only => [ :annotation ]
-  before_filter :is_reviewer?, :except => [ :search, :help, :annotation, :preferences, :index ]
+  before_filter :is_reviewer?, :except => [ :search, :help, :annotation, :index ]
 
   LOCATION_SEARCH_PATTERN = Regexp.new(/^\s*(\w+)\s+([A-Za-z]+)\s+(\d+)\s*$/).freeze
   ANNOTATION_SEARCH_PATTERN = Regexp.new(/^\s*(\d+)\s*$/).freeze

@@ -18,6 +18,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :import_sources
   map.resources :notes
   map.resources :semantic_tags
+  map.resource :preferences
 
   # Authentication and authorisation
   map.resources :users, :member => { :suspend   => :put,

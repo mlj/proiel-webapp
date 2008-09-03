@@ -4,11 +4,14 @@ class DependenciesController < ApplicationController
   def show 
     @sentence = Sentence.find(params[:annotation_id])
 
+    graph_options = { :fontname => 'Legendum' }
+    graph_options[:linearized] = user_preferences[:graph_method] == "linearized"
+
     respond_to do |format|
       format.html # show.html.erb
-      format.svg  { send_data @sentence.dependency_graph.visualize(:svg),
+      format.svg  { send_data @sentence.dependency_graph.visualize(:svg, graph_options),
         :filename => "#{params[:id]}.svg", :disposition => 'inline', :type => "image/svg+xml" }
-      format.png  { send_data @sentence.dependency_graph.visualize(:png, :fontname => 'Legendum'),
+      format.png  { send_data @sentence.dependency_graph.visualize(:png, graph_options),
         :filename => "#{params[:id]}.png", :disposition => 'inline', :type => "image/png" }
     end
   end

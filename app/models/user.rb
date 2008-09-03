@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
   #   reviewed_sentences.to_a.sum { |sentence| sentence.dependency_tokens.count } %
   has_many :reviewed_tokens, :class_name => 'Token', :counter_sql => 'SELECT count(*) FROM tokens LEFT JOIN sentences ON sentence_id = sentences.id WHERE reviewed_by = #{id} AND sort != "punctuation"' 
 
+  serialize :preferences
+
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 

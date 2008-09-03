@@ -375,9 +375,9 @@ module PROIEL
     # Produces an image visualising the dependency graph.
     #
     # ==== Options
-    # font_name:: Forces the use of a particular font.
-    # font_size:: Forces the use of a particular font size.
-    # linearised:: Visualises the graph in a linearised fashion.
+    # fontname:: Forces the use of a particular font.
+    # fontsize:: Forces the use of a particular font size.
+    # linearized:: Visualises the graph in a linearized fashion.
     def visualize(format = :png, options = {})
       raise ArgumentError, "Invalid format #{format}" unless format == :png || format == :svg
 
@@ -386,13 +386,7 @@ module PROIEL
       node_options[:fontsize] = options[:fontsize] if options[:fontsize]
 
       Open3.popen3("dot -T#{format}") do |dot, img, err|
-        if options[:linearised]
-          self.linearisation_dot(dot, node_options)
-        else
-          self.linearisation_dot(dot, node_options)
-          #self.regular_dot(dot, node_options)
-        end
-
+        options[:linearized] ? self.linearisation_dot(dot, node_options) : self.regular_dot(dot, node_options)
         @image = img.read
       end
       @image

@@ -2,7 +2,11 @@
 
 <div class="dependencies-image">
   <% if @sentence.has_dependency_annotation? %>
-    <img src="<%= annotation_dependencies_url(@sentence, :format => :png) %>" />
+    <% if user_preferences[:graph_format] == "svg" %>
+      <object data="<%= annotation_dependencies_url(@sentence, :format => :svg) %>" type="image/svg+xml" />
+    <% else %>
+      <img src="<%= annotation_dependencies_url(@sentence, :format => :png) %>" />
+    <% end %>
   <% else %>
     No dependency annotation
   <% end %>
