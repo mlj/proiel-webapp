@@ -76,6 +76,12 @@ a.delete {
   margin-right: 1em;
 }
 
+a.edit {
+  padding-left: 24px;
+  background: transparent url(/images/sweetie/24-settings-silver.png) no-repeat center left;
+  margin-right: 1em;
+}
+
 a.remove {
   padding-left: 16px;
   background: transparent url(/images/sweetie/16-circle-red-remove.png) no-repeat center left;
