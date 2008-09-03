@@ -1,6 +1,5 @@
-<span class="warning">Experimental feature: Use with caution!</span>
-<%= form.text_field :form %>
+<%= form.text_field :form, :required => true %>
 <%= form.text_field :presentation_form %>
-<%= form.text_field :sort %>
+<%= form.text_field :sort, :required => true %>
 <%= form.text_field :morphtag %>
-<%= form.collection_select :lemma_id, Lemma.find(:all, :conditions => [ "language = ? ", @token.language], :order => [ "lemma ASC" ]), :id, :presentation_form %>
+<%= form.collection_select :lemma_id, Lemma.find(:all, :conditions => [ "language = ? ", @token.language], :order => [ "lemma ASC" ]), :id, :export_form, :include_blank => true, :label => 'Lemma' %>

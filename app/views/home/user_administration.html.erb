@@ -28,6 +28,7 @@ the correct solution to the problem that you are attempting to solve!</p>
   <li><%= link_to 'Sentences', :controller => :sentences %></li>
   <li><%= link_to 'Tokens', :controller => :tokens %></li>
   <li><%= link_to 'Lemmata', :controller => :lemmata %></li>
+  <li><%= link_to 'Notes', :controller => :notes %></li>
   <li>Morphological tagger
       <% form_tag :action => 'tagger' do -%> 
         Language: <%= language_select_tag :language, params[:language] %>

@@ -3,12 +3,13 @@ class Token < ActiveRecord::Base
   belongs_to :book
   belongs_to :lemma
   has_many :notes, :as => :notable, :dependent => :destroy
+  has_many :semantic_tags, :as => :taggable, :dependent => :destroy
 
   belongs_to :head, :class_name => 'Token'
   has_many :dependents, :class_name => 'Token', :foreign_key => 'head_id'
 
-  has_many :slash_out_edges, :class_name => 'SlashEdge', :foreign_key => 'slasher_id'
-  has_many :slash_in_edges, :class_name => 'SlashEdge', :foreign_key => 'slashee_id'
+  has_many :slash_out_edges, :class_name => 'SlashEdge', :foreign_key => 'slasher_id', :dependent => :destroy
+  has_many :slash_in_edges, :class_name => 'SlashEdge', :foreign_key => 'slashee_id', :dependent => :destroy
   has_many :slashees, :through => :slash_out_edges
   has_many :slashers, :through => :slash_in_edges
 
@@ -136,13 +137,6 @@ class Token < ActiveRecord::Base
                       :sentence => sentence.sentence_number.to_i,
                       :token => token_number.to_i })
     end
-  end
-
-  # Updates dependency annotation for the token and saves the record.
-  def update_dependencies!(head, relation)
-    self.head_id = head
-    self.relation = relation
-    save!
   end
 
   # Clears dependency annotation for the token and saves the record.

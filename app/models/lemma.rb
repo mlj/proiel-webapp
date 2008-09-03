@@ -5,37 +5,16 @@ class Lemma < ActiveRecord::Base
   has_many :tokens
   has_many :dictionary_references
   has_many :notes, :as => :notable, :dependent => :destroy
+  has_many :semantic_tags, :as => :taggable, :dependent => :destroy
 
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
 
   acts_as_audited
 
-  # Returns the Perseus lemma for this lemma or +nil+ if unknown.
-  def perseus_lemma
-    if variant && m = variant.match(/^perseus=(\d+)$/)
-      lemma + m[1]
-    else
-      nil
-    end
-  end
-
-  # Returns +true+ if a Perseus lemme is known for this lemma, +false+ otherwise.
-  def perseus_lemma?
-    (!perseus_lemma.nil?)
-  end
-
-  # Returns the human-readable presentation for for the lemma.
-  def to_s
+  # Returns the export-form of the lemma.
+  def export_form
     self.variant ? "#{self.lemma}##{self.variant}" : self.lemma 
-  end
-
-  def presentation_form
-    if self.variant
-      [self.lemma, self.variant].join('#')
-    else
-      self.lemma
-    end
   end
 
   def Lemma.find_or_create_by_morph_and_lemma_tag_and_language(ml_tag, language)

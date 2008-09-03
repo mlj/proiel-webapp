@@ -1,7 +1,7 @@
 <div class="roundedbox">
   <dl>
     <dt>Audit ID:</dt><dd><%= @audit.id %></dd>
-    <dt>User:</dt><dd><%= link_to_user(@audit.user) %></dd>
+    <dt>User:</dt><dd><%= link_to_audit_user(@audit.user) %></dd>
     <dt>Changed object:</dt><dd><%= link_to_auditable(@audit.auditable) %></dd>
     <dt>Created at:</dt><dd><%= @audit.created_at %></dd>
   </dl>

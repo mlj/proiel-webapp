@@ -20,7 +20,7 @@ class MorphtagsController < ApplicationController
 
     # Auto-complete lemmata
     completions = completion_candidates.collect do |result|
-      Lemma.find_completions(result, params[:morphtags][:language]).map(&:presentation_form)
+      Lemma.find_completions(result, params[:morphtags][:language]).map(&:export_form)
     end.flatten
 
     @completions = completions.sort.uniq

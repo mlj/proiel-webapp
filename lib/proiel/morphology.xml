@@ -104,16 +104,8 @@
     <tag code="m" summary="middle" abbreviation="mid."/>
     <tag code="p" summary="passive" abbreviation="pass."/>
 
-    <tag code="n" summary="middle or passive deponent"/>
-    <tag code="d" summary="middle deponent"/>
-    <tag code="o" summary="passive deponent" abbreviation="pass. dep."/>
-
-    <tag code="q" summary="impersonal active"/>
-
     <equivalence ref="m" isa="e"/>
     <equivalence ref="p" isa="e"/>
-    <equivalence ref="d" isa="n"/>
-    <equivalence ref="o" isa="n"/>
   </field>
 
   <field id="gender">

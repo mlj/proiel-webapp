@@ -7,6 +7,7 @@ class RemoveChangesets < ActiveRecord::Migration
     execute("UPDATE audits LEFT JOIN changesets ON changeset_id = changesets.id SET audits.created_at = changesets.created_at")
 
     drop_table :changesets
+    remove_column :audits, :changeset_id
   end
 
   def self.down

@@ -14,7 +14,7 @@ class Validator < Task
   protected
 
   def run!(logger)
-#    check_manual_morphology(logger)
+    check_manual_morphology(logger)
     check_lemmata(logger)
     check_orphaned_tokens(logger)
     check_changesets_and_changes(logger)
@@ -32,36 +32,34 @@ class Validator < Task
     changes.each do |change|
       change.errors.each_full { |msg| logger.error { "Audit #{change.id}: #{msg}" } } unless change.valid?
 
-      if @fix
-        # Remove changes from "X" to "X"
-        if change.action != 'destroy'
-          change.changes.each_pair do |key, values|
-            old_value, new_value = values
-            if old_value == new_value
-              logger.warn { "Audit #{change.id}: Removing redundant diff element #{key}: #{old_value} -> #{new_value}" }
-              change.changes.delete(key)
-              change.save!
-            end
+      # Remove changes from "X" to "X"
+      if change.action != 'destroy'
+        change.changes.each_pair do |key, values|
+          old_value, new_value = values
+          if old_value == new_value
+            logger.warn { "Audit #{change.id}: Removing redundant diff element #{key}: #{old_value} -> #{new_value}" }
+            change.changes.delete(key)
+            change.save!
           end
         end
+      end
 
-        # Remove empty changes
-        if change.action != 'destroy' and change.changes.empty?
-          others = Audit.find(:all, :conditions => [
-            "auditable_type = ? and auditable_id = ? and version > ?",
-            change.auditable_type,
-            change.auditable_id,
-            change.version ])
+      # Remove empty changes
+      if change.action != 'destroy' and change.changes.empty?
+        others = Audit.find(:all, :conditions => [
+          "auditable_type = ? and auditable_id = ? and version > ?",
+          change.auditable_type,
+          change.auditable_id,
+          change.version ])
 
-          if others.length == 0
-            logger.warn { "Audit #{change.id}: Removing empty change" }
-            change.destroy
-          else
-            logger.warn { "Audit #{change.id}: Removing empty change and moving version numbers" }
-            change.destroy
-            others.each do |v|
-              v.decrement!(:version)
-            end
+        if others.length == 0
+          logger.warn { "Audit #{change.id}: Removing empty diff" }
+          change.destroy
+        else
+          logger.warn { "Audit #{change.id}: Removing empty diff and rearranging version numbers" }
+          change.destroy
+          others.each do |v|
+            v.decrement!(:version)
           end
         end
       end
@@ -71,11 +69,9 @@ class Validator < Task
     changesets.each do |changeset|
       changeset.errors.each_full { |msg| logger.error { "Changeset #{changeset.id}: #{msg}" } } unless changeset.valid?
       
-      if @fix
-        if changeset.changes.length == 0
-          logger.warn { "Changeset #{changeset.id}: Removing empty changeset" }
-          changeset.destroy
-        end
+      if changeset.changes.length == 0
+        logger.warn { "Changeset #{changeset.id}: Removing empty changeset" }
+        changeset.destroy
       end
     end
   end
@@ -98,7 +94,7 @@ class Validator < Task
   def check_lemmata(logger)
     orphans = Lemma.find(:all, :include => [ :tokens ], :conditions => [ "fixed = 0 AND lemmata.foreign_ids IS NULL and tokens.id IS NULL" ])
     orphans.each do |o| 
-      logger.error { "Lemma #{o.id} (#{o.presentation_form}) is orphaned. Destroying." }
+      logger.error { "Lemma #{o.id} (#{o.export_form}) is orphaned. Destroying." }
       o.destroy
     end
 
@@ -129,10 +125,10 @@ class Validator < Task
 
           case result
           when :failed
-            log_token_error(logger, token, "Tagged with closed class morphology #{ml.morphtag} but not found in definition.")
+            log_token_error(logger, token, "Closed class morphological annotation #{ml.morphtag} but no rule entry")
           else
             unless manual_tags.any? { |m| token.morph_lemma_tag.morphtag.is_compatible?(m.morphtag) }
-              log_token_error(logger, token, "Closed class morphology does not match: #{token.morphtag} (actual) != #{manual_tags.collect { |m| m.morphtag.to_s }.join(' | ')} (expected)")
+              log_token_error(logger, token, "Closed class morphological annotation #{token.morphtag} does not match expected #{manual_tags.collect { |m| m.morphtag.to_s }.join(', ')}")
             end
           end
         end

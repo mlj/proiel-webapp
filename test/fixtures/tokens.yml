@@ -1,11 +1,10 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 one:
   id: 1
   verse: 1
   token_number: 1
   sentence_id: 1
-  morphtag: MyText
-  form: MyText
+  morphtag: R-----------
+  form: cum
   lemma_id: 1
   relation: MyText
   head: 1
@@ -14,8 +13,28 @@ two:
   verse: 1
   token_number: 2
   sentence_id: 1
-  morphtag: MyText
-  form: MyText
-  lemma_id: 1
+  morphtag: G-----------
+  form: cum
+  lemma_id: 2 
+  relation: MyText
+  head: 1
+three:
+  id: 3
+  verse: 1
+  token_number: 3
+  sentence_id: 1
+  morphtag: G-----------
+  form: cum
+  lemma_id: 2
+  relation: MyText
+  head: 1
+four:
+  id: 4
+  verse: 1
+  token_number: 4
+  sentence_id: 1
+  morphtag: G-----------
+  form: cum
+  lemma_id: 2
   relation: MyText
   head: 1

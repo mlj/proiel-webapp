@@ -2,25 +2,18 @@
 
 == Installation
 
-The application depends on (at least) these gems:
+You need Rails 2.1 installed as a RubyGem for this application to work.
+Most Ruby dependencies should be handled automatically. Use
+    rake gems
+to get a list of dependencies and their installation status. In addition to
+the above, you need the following gems
 * xml-simple
-* unicode
 * diff-lcs
-* fastercsv
-* oniguruma
-* builder
-* hpricot
-* railroad
 * gchartrb
-* gdbm
 * treetop
 * ruby-sfst
 
-Use
-    rake gems:install
-to install all the gems automatically.
-
-In addition, you need the following gems that are part of the PROIEL Corpus
+In addition, you need the following gem, which is part of the PROIEL Corpus
 * logos
 
 You will also need a installations of the following tools with binaries
@@ -29,10 +22,10 @@ in a path accessible to the application:
 * SFST
 
 Before starting the application for the first time, run
-
-  make -C lib
-
+    make -C lib
 to build the morphological rule databases.
+
+To build all of the documentation, the `railroad` gem is also required.
 
 === Rebuilding the data sources
 

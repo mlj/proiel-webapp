@@ -1,4 +1,4 @@
 <li>
-  <%= link_to "Revision #{summary.version}", summary %> by <%= link_to_user(summary.user) %> at <%= summary.created_at %>
+  <%= link_to "Revision #{summary.version}", summary %> by <%= link_to_audit_user(summary.user) %> at <%= summary.created_at %>
   <%= render(:partial => 'audits/diff', :object => summary)%>
 </li>

@@ -1,6 +1,6 @@
-<%= form.text_field :lemma %>
-<%= form.text_field :variant %>
-<%= form.text_field :language %>
-<%= form.text_field :pos %>
+<%= form.text_field :lemma, :required => true, :help => 'The base form of the lemma.' %>
+<%= form.text_field :pos, :required => true, :label => 'Part of speech' %>
+<%= form.text_field :variant, :label => 'Variant number', :help => 'An integer number differentiating this lemma from other lemmata with the same base form and part of speech.' %>
+<%= form.text_field :language, :required => true %>
 <%= form.text_field :short_gloss %>
 <%= form.check_box :fixed %>

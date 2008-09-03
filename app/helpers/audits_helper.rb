@@ -15,6 +15,15 @@ module AuditsHelper
     link_to "Audit #{audit.id}", audit
   end
 
+  # Creates a link to an audit user.
+  def link_to_audit_user(user)
+    if user
+      link_to_user(user)
+    else
+      'System'
+    end
+  end
+
   # Creates a link to an auditable.
   def link_to_auditable(auditable)
     if auditable

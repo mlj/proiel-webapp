@@ -119,7 +119,7 @@ a.sentence-number, .token-number { color: #F7A700; }
 
 /* Shared between multiple "widgets" */
 
-.unavailable, .consumed { background: #eeeeee; }
+.unavailable, .consumed { background: #cccccc; }
 .selected { background: #9999ff; }
 
 /* roundedbox */
@@ -137,23 +137,6 @@ a.sentence-number, .token-number { color: #F7A700; }
 
 .roundedbox dl { margin-left: 0px; }
 .roundedbox dt { font-weight: bold; }
-
-/* Palette */
- 
-ul.palette { margin: 0; padding: 0; border: 1px solid #999; overflow: hidden; height: auto !important; height: 1%; padding: 4px 5px 0; }
-*:first-child+html ul.palette { padding-bottom: 2px; } * html ul.holder { padding-bottom: 2px; } /* ie7 and below */
-ul.palette li { float: left; list-style-type: none; margin: 0 5px 4px 0; }
-ul.palette li.box { -moz-border-radius: 6px; border: 1px solid #CAD8F3; background: #DEE7F8; padding: 1px 5px 2px; }
-ul.palette li.selected { border-color: #598BEC; background: #598BEC; color: white; }
-ul.palette abbr { border: none; } /* the dotted abbr default does not look good in palettes */
-
-/* Tree */
-
-ul.tree, ul.tree ul { list-style-type: none; background: url(/images/vline.png) repeat-y; margin: 0; padding: 0; } 
-ul.tree ul { margin-left: 10px; } 
-ul.tree li { margin: 0; padding: 0 12px; line-height: 20px; background: url(/images/node.png) no-repeat; } 
-ul.tree li:last-child { background: #fff url(/images/lastnode.png) no-repeat; }
-ul.tree li.last-child { background: #fff url(/images/lastnode.png) no-repeat; } /* IE only */
 
 /* Text view */
 
@@ -197,72 +180,6 @@ form.search label {
   float: none; /* reset */
   margin-left: 0.2em;
   margin-right: 0.5em;
-}
-
-/* Standard form */
-
-.standard_form {
-  background-color: white;
-  font: 13.34px helvetica, arial, clean, sans-serif;
-  margin: .5em auto 0 auto;
-  background-color: #eaf2f5;
-  padding: 2em 2em 1em 2em;
-  border: 2px solid #ddd;
-}
-
-.standard_form h1 {
-  font-size: 160%;
-  margin-bottom: 1em;
-}
-
-.standard_form h1 a {
-  font-size: 70%;
-  font-weight: normal;
-}
-
-.standard_form p { margin: .5em 0; }
-
-.standard_form p.note { color: #a00; }
-
-.standard_form form label, .standard_form form .label {
-  font-size: 110%;
-  color: #666;
-  display: block;
-  margin: 0;
-  margin-top: 1em;
-}
-
-.standard_form form label a { font-size: 90%; }
-
-.standard_form form label.error { color: #a00; }
-
-.standard_form form .label label {
-  margin: 0;
-  color: black;
-  font-size: 95%;
-}
-
-.standard_form form .label span {
-  font-size: 90%;
-  color: #888;
-}
-
-.standard_form form input.text, .standard_form form textarea {
-  padding: 5px;
-  border: 1px solid #888;
-}
-
-.standard_form form input.text { font-size: 110%; }
-
-.standard_form form input.submit {
-  font-size: 120%;
-  padding: .1em 1em;
-}
-
-.standard_form form label.error input.text,
-.standard_form form label.error textarea {
-  border: 1px solid #a00;
-  background-color: #f2e1e1;
 }
 
 /* Diffs */

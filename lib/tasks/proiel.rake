@@ -107,4 +107,55 @@ namespace :proiel do
       end
     end
   end
+
+  namespace :reassign do
+    desc "Reassign a morphological field. Options: FIELD=field, FROM=from_value, TO=to_value"
+    task(:morphology => :myenvironment) do
+      field, from_value, to_value = ENV['FIELD'], ENV['FROM'], ENV['TO']
+      raise "Missing argument" unless field and from_value and to_value
+
+      require 'mass_assignment'
+      Token.transaction(User.find_by_login(USER_NAME)) do #FIXME
+        mt = MassTokenAssignment.new
+        mt.reassign_morphology!(field, from_value, to_value)
+        mt.reassign_morphology!(field, from_value, to_value, 'source_morphtag')
+      end
+    end
+  end
+
+  namespace :history do
+    namespace :prune do
+      desc "Prune an attribute from history. Options: MODEL=model_name, ATTRIBUTE=attribute_name"
+      task(:attribute => :myenvironment) do
+        model_name, attribute_name = ENV['MODEL'], ENV['ATTRIBUTE']
+        raise "Missing argument" unless model_name and attribute_name
+
+        require 'mass_assignment'
+        at = MassAuditAssignment.new
+        at.remove_attribute!(model_name, attribute_name)
+      end
+    end
+  end
+
+  namespace :semantic_tags do
+    desc "Import semantic tags. Options: FILE=csv_file"
+    task(:import => :myenvironment) do
+      require 'import_export'
+      file_name = ENV['FILE']
+      raise "Missing argument" unless file_name
+
+      i = SemanticTagImportExport.new
+      i.read(file_name)
+    end
+
+    desc "Export semantic tags. Options: FILE=csv_file"
+    task(:export => :myenvironment) do
+      require 'import_export'
+      file_name = ENV['FILE']
+      raise "Missing argument" unless file_name
+
+      i = SemanticTagImportExport.new
+      i.write(file_name)
+    end
+  end
 end

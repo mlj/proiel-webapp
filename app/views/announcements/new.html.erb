@@ -1,8 +1,6 @@
 <%= message_block :on => :announcement %>
 
-<div class="standard_form">
-  <% form_for(@announcement) do |form| %>
-    <%= render :partial => 'form', :object => form %>
-    <%= form.submit "Create" %>
-  <% end %>
-</div>
+<% form_for(@announcement) do |form| %>
+  <%= render :partial => 'form', :object => form %>
+  <%= form.submit "Create" %>
+<% end %>

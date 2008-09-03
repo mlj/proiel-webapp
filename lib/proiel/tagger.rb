@@ -61,22 +61,16 @@ module PROIEL
       CONTRADICTION_RATIO = 0.5
 
       attr_accessor :logger
-      attr_reader :statistics_retriever
 
       # Creates a new tagger.
       #
       # ==== Options
       # logger:: Specifies a logger object.
       #
-      # statistics_retriever:: Specifies a function that returns the frequency of aleady tagged
-      # forms, e.g. lambda { |language, form| [[ "C-", "cum", 30 ], [ "G-", "cum", 40 ]] }. All tags in the
-      # returned data must be valid.
-      #
       # data_directory:: Specifies the directory in which to look for data files. The default
       # is the current directory. 
       def initialize(configuration_file, options = {})
         @logger = options[:logger]
-        @statistics_retriever = options[:statistics_retriever]
         @data_directory = options[:data_directory] || '.'
 
         @analysis_methods = {}
@@ -103,16 +97,13 @@ module PROIEL
               when :manual_rules
                 @analysis_methods[language][method] = 
                   WordListMethod.new(language, File.join(@data_directory, args))
-
                 @methods[language] << lambda { |form| analyze_form(language, method, normalise_form(language, form)) }
 
               # Includes candidates from existing annotation.
               when :instance_frequencies
-                if args == true and @statistics_retriever
-                  @analysis_methods[language][method] = 
-                    InstanceFrequencyMethod.new(language, @statistics_retriever)
-                  @methods[language] << lambda { |form| analyze_form(language, method, form) }
-                end
+                @analysis_methods[language][method] =
+                  InstanceFrequencyMethod.new(language)
+                @methods[language] << lambda { |form| analyze_form(language, method, form) }
               
               # Includes candidates from an FST guesser/analyzer.
               when :fst

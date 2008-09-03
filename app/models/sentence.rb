@@ -104,39 +104,57 @@ class Sentence < ActiveRecord::Base
     Token.delete_all :sentence_id => self.id, :form => nil
   end
 
-  # Updates the dependency structure of a sentence from a hash. This
-  # sets the relation and head columns of all affected tokens in the
-  # sentence and saves them.
-  def update_dependencies!(structure, new_ids, parent = nil)
-    # We will append new empty nodes at the end of the token sequence. Establish
-    # which token_number to start at.
-    @new_token_number ||= max_token_number + 1
+  def syntactic_annotation=(dependency_graph)
+    # This is a two step process: first figure out if any tokens have been added or
+    # removed (this only applies to empty dependency tokens). Then update each token
+    # in the sentence with new dependency information.
+    #
+    # Since by validation constraints all tokens in the sentence have to be annotated
+    # if any single one is, we do not have to bother with partial annotations.
+    
+    # Work inside a transaction since we have lots of small pieces that must go together.
+    Token.transaction do
+      removed_token_ids = tokens.map(&:id) - dependency_graph.nodes.map(&:identifier)
+      added_token_ids = dependency_graph.nodes.map(&:identifier) - tokens.map(&:id)
 
-    structure.each_pair do |token_id, value|
-      t = nil
-      if token_id[/^new/]
+      removed_tokens = tokens.select { |token| removed_token_ids.include?(token.id) }
+      removed_tokens.each { |token| token.destroy }
+
+      # We will append new empty nodes at the end of the token sequence. Establish
+      # which token_number to start at.
+      @new_token_number ||= max_token_number + 1
+      id_map = Hash[*tokens.map { |token| [token.id, token.id] }.flatten] # new tokens will have "fake" token IDs on the form "newX"
+
+      added_token_ids.each do |added_token_id|
         # Append an empty token at the end of the sentence. The token
         # will not have its verse number set as the sentence may cross
         # verse boundaries. The verse number of the empty token is therefore
         # undefined.
-        t = Token.new(:sentence_id => id, :token_number => @new_token_number, :sort => :empty_dependency_token)
+        t = self.tokens.create(:token_number => @new_token_number, :sort => :empty_dependency_token)
         @new_token_number += 1
-      else
-        # Perform some extra sanity checking here. All token IDs in the structure
-        # should match our records. Otherwise we have been given bad token IDs
-        # by the UI or the database has changed underneath us.
-        if Token.exists?(token_id)
-          t = Token.find(token_id)
-        else
-          raise "Invalid token ID #{token_id} in when updating dependencies"
-        end
+        id_map[added_token_id] = t.id
       end
-      t.update_dependencies!(parent ? parent.id : nil, value['relation'])
 
-      # Keep track of the new IDs for later use
-      new_ids[token_id] = t.id if token_id[/^new/]
+      # Now the graph should contain the same number of tokens as the sentence, and
+      # their IDs should, if id_map is taken into account, add up.
+      raise "Dependency graph ID inconsistency" unless tokens.map(&:id).sort != dependency_graph.identifiers.map { |i| id_map[i] }.sort
 
-      update_dependencies!(value['dependents'], new_ids, t) if value['dependents']
+      # Now we can iterate the sentence and update all tokens with new annotation
+      # and secondary edges.
+      dependency_graph.nodes.each do |node|
+        token = tokens.find(id_map[node.identifier])
+        token.head_id = id_map[node.head.identifier]
+        token.relation = node.relation
+
+        # Slash edges are marked as dependent on the association level, so when we destroyed
+        # empty tokens, the orphaned slashes should also have gone away. The remaining slashes
+        # will however have to be updated "manually".
+        token.slash_out_edges.each { |edge| edge.destroy }
+        node.slashes.each { |slashee| SlashEdge.create(:slasher => token,
+                                                       :slashee_id => id_map[slashee.identifier],
+                                                       :slash_edge_interpretation => SlashEdgeInterpretation.find_by_tag(node.interpret_slash(slashee))) }
+        token.save!
+      end
     end
   end
 
@@ -152,32 +170,6 @@ class Sentence < ActiveRecord::Base
     end
 
     current_slashes
-  end
-
-  # Updates the slash structure for the sentence. The slashes are given as
-  # an array of slasher and slashees. Any existing slashes not in the new
-  # list will be destroyed.
-  def update_slashes!(slashes)
-    current_slashes = []
-    tokens.each do |token|
-      token.slash_out_edges.each do |edge|
-        # Read this by using slash_out_edges and the IDs directly, as
-        # the target nodes may very well be gone by now.
-        current_slashes << [edge.slasher_id, edge.slashee_id]
-      end
-    end
-
-    remove = (current_slashes - slashes).compact
-    add = (slashes - current_slashes).compact
-
-    remove.each do |slasher_id, slashee_id|
-      s = SlashEdge.find_by_slasher_id_and_slashee_id(slasher_id, slashee_id)
-      s.destroy
-    end
-
-    add.each do |slasher_id, slashee_id|
-      SlashEdge.add_edge(slasher_id, slashee_id)
-    end
   end
 
   # Returns the maximum token number in the sentence.
@@ -332,7 +324,7 @@ class Sentence < ActiveRecord::Base
       s[token.id].merge!({
         :relation => token.relation,
         :found => true,
-        :empty => token.is_empty?,
+        :empty => token.is_empty? ? token.empty_token_sort : false,
         :slashes => token.slashees.collect(&:id)
       })
 
@@ -351,7 +343,7 @@ class Sentence < ActiveRecord::Base
     PROIEL::ValidatingDependencyGraph.new do |g|
       dependency_tokens.each { |t| g.badd_node(t.id, t.relation, t.head ? t.head.id : nil,
                                                t.slashees.collect(&:id),
-                                               { :empty => t.is_empty?,
+                                               { :empty => t.empty_token_sort || false,
                                                  :token_number => t.token_number,
                                                  :morphtag => PROIEL::MorphTag.new(t.morphtag),
                                                  :form => t.form }) }

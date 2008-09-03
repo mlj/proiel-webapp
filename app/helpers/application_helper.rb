@@ -39,11 +39,6 @@ module ApplicationHelper
     end
   end
 
-  # Generayes a link to a lemma.
-  def link_to_lemma(lemma)
-    link_to(lemma.variant ? "#{lemma.lemma}##{lemma.variant}" : lemma.lemma, lemma)
-  end
-
   # Returns the contents of +value+ unless +value+ is +nil+, in which case it
   # returns the HTML entity for non-breakable space.
   def make_nonblank(value)
@@ -420,5 +415,34 @@ module ApplicationHelper
   # Formats a language-dependent string with HTML language attributes.
   def format_language_string(s, language)
     LangString.new(s, language).to_h
+  end
+
+  # Creates resource links for an object.
+  def link_to_resources(object, *actions)
+    actions.map do |action|
+      case action
+      when :index
+        link_to_index(object)
+      when :edit
+        link_to_edit(object)
+      when :delete
+        link_to_delete(object)
+      end
+    end.join(' ')
+  end
+
+  # Creates a resource index link for an object.
+  def link_to_index(object)
+    link_to('Index', send("#{object.class.to_s.underscore.pluralize}_url"), :class => :index)
+  end
+
+  # Creates a resource edit link for an object.
+  def link_to_edit(object)
+    link_to('Edit', send("edit_#{object.class.to_s.underscore}_url"), :class => :edit)
+  end
+
+  # Creates a resource delete link for an object.
+  def link_to_delete(object)
+    link_to('Delete', object, :method => :delete, :confirm => 'Are you sure?', :class => :delete)
   end
 end

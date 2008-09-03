@@ -1,9 +1,8 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 one:
   id: 1
-  title: MyText
-  language: MyText
+  title: Vulgate
+  language: la
 two:
   id: 2
-  title: MyText
-  language: MyText
+  title: Greek New Testament
+  language: grc

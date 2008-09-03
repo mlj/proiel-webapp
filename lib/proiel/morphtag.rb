@@ -106,6 +106,12 @@ module PROIEL
       to_s[2, fields.length - 2]
     end
 
+    # Returns the morphtag as a pattern suitable for matching using SQL's LIKE
+    # operator.
+    def to_sql_pattern
+      to_abbrev_s.gsub('-', '_') + '%'
+    end
+
     # Returns descriptions for one or more fields in a tag. If
     # +inclusive+ is +true+, +fields+ is an array of fields to
     # include in the description. If +fields+ is +false+, +fields+

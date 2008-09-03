@@ -5,15 +5,15 @@
     <td class="reference">
       <%= readable_reference(annotation.reference) %>&nbsp;<%= readable_completion(annotation.sentence, :checkmark => :only) %>
     </td>
-    <td class="left"><%= format_abbreviated_sentence(annotation.previous_tokens, -5) %></td>
+    <td class="left"><%= format_sentence(annotation.previous_tokens, :length_limit => -5) %></td>
     <td class="centre highlight"><%= format_token_form(annotation) %></td>
-    <td class="right"><%= format_abbreviated_sentence(annotation.next_tokens, 5) %></td>
+    <td class="right"><%= format_sentence(annotation.next_tokens, :length_limit => 5) %></td>
     <td><%= link_to 'Details', annotation_url(annotation.sentence) %></td>
   <% else %>
     <td class="reference">
       <%= readable_reference(annotation.reference) %>&nbsp;<%= readable_completion(annotation, :checkmark => :only) %>
     </td>
-    <td class="left"><%= format_abbreviated_sentence(annotation.tokens, 10) %></td>
+    <td class="left"><%= format_sentence(annotation.tokens, :length_limit => 10) %></td>
     <td><%= link_to 'Details', annotation_url(annotation) %></td>
   <% end %>
 </tr>

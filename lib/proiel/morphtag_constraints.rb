@@ -42,7 +42,7 @@ module PROIEL
     # A specification of feature sets that should be treated as invalid
     # in specific languages
     LANGUAGE_BLACK_LISTS = {
-      :la =>  [ :art, :dual,             :ins,       :aorist, :resultative, :past,             :optative, :middle, :gen_dat, :fut_inf,                                     :aorist_imp, ],
+      :la =>  [ :art, :dual,             :ins, :loc, :aorist, :resultative, :past,             :optative, :middle, :gen_dat, :fut_inf,                                     :aorist_imp, ],
       :grc => [       :dual,       :abl, :ins, :loc,          :resultative, :past,                                 :gen_dat,                                                            :fut_imp, ],
       :hy  => [ :art, :dual, :voc, :abl, :ins,                :resultative, :past,             :optative, :middle, :gen_dat, :fut_inf,                                                  :fut_imp, ],
       :got => [ :art,              :abl, :ins, :loc, :aorist, :resultative,        :past_part,            :middle, :gen_dat, :fut_inf,                                     :aorist_imp, :fut_imp, ],

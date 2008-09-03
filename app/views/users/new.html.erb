@@ -1,11 +1,9 @@
 <%= message_block :on => :user %>  
 
-<div class="standard_form">
-  <% form_for(@user) do |form| %>
-    <%= render :partial => 'form', :object => form %>
-    <%= form.text_field :login %>
-    <%= form.password_field :password %>
-    <%= form.password_field :password_confirmation %>
-    <%= form.submit "Sign up" %>
-  <% end %>
-</div>
+<% form_for(@user) do |form| %>
+  <%= render :partial => 'form', :object => form %>
+  <%= form.text_field :login %>
+  <%= form.password_field :password %>
+  <%= form.password_field :password_confirmation %>
+  <%= form.submit "Sign up" %>
+<% end %>

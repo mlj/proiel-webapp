@@ -173,18 +173,18 @@ module CollectiveIdea #:nodoc:
           end
         end
         
-        def audit_create(user = nil)
-          write_audit(:action => 'create', :changes => audited_attributes, :user => user)
+        def audit_create
+          write_audit(:action => 'create', :changes => audited_attributes)
         end
 
-        def audit_update(user = nil)
+        def audit_update
           unless (changes = changed_audited_attributes).empty?
-            write_audit(:action => 'update', :changes => changes, :user => user)
+            write_audit(:action => 'update', :changes => changes)
           end
         end
 
-        def audit_destroy(user = nil)
-          write_audit(:action => 'destroy', :user => user)
+        def audit_destroy
+          write_audit(:action => 'destroy')
         end
       
         def write_audit(attrs)

@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include Userstamp
+
   helper :all
 
   # See ActionController::RequestForgeryProtection for details
@@ -17,6 +19,13 @@ class ApplicationController < ActionController::Base
 
   def user_is_reviewer?
     current_user.has_role?(:reviewer)
+  end
+
+  helper_method :user_preferences
+
+  # Returns the current user's preference settings.
+  def user_preferences
+    current_user.preferences || DEFAULT_USER_PREFERENCES
   end
 
   helper_method :current_page

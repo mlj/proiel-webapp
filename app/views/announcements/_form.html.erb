@@ -1,4 +1,4 @@
-<%= form.text_area :message %>
-<%= form.datetime_select :starts_at %>
-<%= form.datetime_select :ends_at %>
-<%= form.collection_select :role_id, Role.find(:all), :id, :description %>
+<%= form.text_area :message, :required => true, :label => 'Announcement message' %>
+<%= form.datetime_select :starts_at, :required => true, :label => 'Starting time', :help => 'The time at which the announcement should start to be shown' %>
+<%= form.datetime_select :ends_at, :required => true, :label => 'Ending time', :help => 'The time at which the announcement should not longer be shown' %>
+<%= form.collection_select :role_id, Role.find(:all), :id, :description, :required => true, :label => 'Role', :help => 'The role a user must have for this announcement to be shown' %>

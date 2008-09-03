@@ -5,11 +5,10 @@ class AuditsController < ResourceController::Base
 
   destroy.before do
     raise "Object has been modified after this revision" unless @audit.latest_revision_of_auditable?
-    raise "Object has been modified without revisioning" unless @audit.consistent_with_auditable?
 
     o = @audit.previous_revision_of_auditable
     raise "Unable to revert: resulting object state is invalid" unless o.valid?
-    o.save!
+    o.without_auditing { o.save! }
   end
 
   private

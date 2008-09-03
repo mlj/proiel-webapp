@@ -1,6 +1,7 @@
 <tr>
-  <td><%= link_to user.login, user %></td>
-  <td><%= user.first_name %> <%= user.last_name %></td>
+  <td><%= user.login %></td>
+  <td><%= user.full_name %></td>
   <td><%= user.role.description %></td>
   <td><%= user.state.humanize %></td>
+  <td><%= link_to 'Details', user %></td>
 </tr>
