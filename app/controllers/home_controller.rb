@@ -55,24 +55,6 @@ class HomeController < ApplicationController
   def user_administration
   end
 
-  def tagger
-    state, pick, *suggestions = TAGGER.tag_token(params[:language], params[:form],
-                                                 (params[:existing] and params[:existing] != '') ? PROIEL::MorphLemmaTag.new(params[:existing]) : nil)
-    render :text => "result = #{state}<br>pick = #{pick}<br>suggestions = <ul>#{suggestions.collect { |s, w| "<li>tag = #{s}, weight = #{w}</li>" }}</ul>"
-  end
-
-  def tag_token_test
-    if Token.exists?(params[:id]) 
-      token = Token.find(params[:id])
-
-      state, pick, *suggestions = token.invoke_tagger
-
-      render :text => "result = #{state}<br>pick = #{pick}<br>suggestions = <ul>#{suggestions.collect { |s, w| "<li>tag = #{s}, weight = #{w}</li>" }}</ul>"
-    else
-      render :text => 'No such token'
-    end
-  end
-
   def merge_tokens
     token = Token.find(params[:id])
     token.merge!

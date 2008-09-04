@@ -29,18 +29,6 @@ the correct solution to the problem that you are attempting to solve!</p>
   <li><%= link_to 'Tokens', :controller => :tokens %></li>
   <li><%= link_to 'Lemmata', :controller => :lemmata %></li>
   <li><%= link_to 'Notes', :controller => :notes %></li>
-  <li>Morphological tagger
-      <% form_tag :action => 'tagger' do -%> 
-        Language: <%= language_select_tag :language, params[:language] %>
-        Form: <%= text_field_tag :form, params[:form] %>
-        Source tag: <%= text_field_tag :existing, params[:existing] %>
-        <%= submit_tag 'Query' %>
-      <% end %>
-      <% form_tag :action => 'tag_token_test' do -%> 
-        Token ID: <%= text_field_tag :id, params[:id] %>
-        <%= submit_tag 'Query' %>
-      <% end %>
-  </li>
   <li>Lemmatiser
     <ul>
       <li><b>Merge two lemmata.</b>
