@@ -101,9 +101,9 @@ module PROIEL
 
             a = { :book => b.attributes["name"], 
                   :sentence_number => sentence_number, 
-                  :token_number => token_number,
-                  :notes => [] }
+                  :token_number => token_number, }
             (t/:notes/:note).each do |n|
+              a[:notes] ||= []
               a[:notes] << { :origin => n.attributes['origin'], :contents => n.inner_html }
             end
 
