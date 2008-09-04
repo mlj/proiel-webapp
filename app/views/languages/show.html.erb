@@ -1,0 +1,8 @@
+<% roundedbox do -%>
+  <dl>
+    <dt>Language</dt><dd class="language"><%= @language.name %></dd>
+    <dt>ISO code</dt><dd class="tag"><%= @language.iso_code %></dd>
+    <dt>Sources</dt><dd><%= link_to_sources(@language.sources) %></dd>
+    <%= link_to_resources @language, :index %>
+  </dl>
+<% end %>

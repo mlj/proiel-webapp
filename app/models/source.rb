@@ -2,6 +2,7 @@ class Source < ActiveRecord::Base
   validates_presence_of :title
   validates_uniqueness_of :title
 
+  belongs_to :language
   has_many :books, :class_name => 'Book', :finder_sql => 'SELECT books.* FROM books AS books LEFT JOIN sentences AS sentences ON book_id = books.id WHERE source_id = #{id} GROUP BY book_id'
   has_many :sentences, :order => 'sentence_number ASC'
   has_many :tokens, :through => :sentences, :order => 'sentences.sentence_number ASC, token_number ASC'

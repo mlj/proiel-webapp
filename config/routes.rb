@@ -4,6 +4,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :lemmata, :singular => 'lemma'
   map.resources :bookmarks
   map.resources :tokens, :sentences
+  map.resources :languages
 
   map.resources :annotations do |annotation|
     annotation.resource :sentence_division

@@ -58,23 +58,6 @@ module ApplicationHelper
     end
   end
 
-  # Returns a select tag for languages.
-  #
-  # ==== Options
-  # +:include_blank+:: If +true+, includes an empty value first.
-  def language_select_tag(name, value = nil, options = {})
-    value = value.to_sym unless value.nil? or value == '' 
-    option_tags = PROIEL::LANGUAGES.collect do |code, values| 
-      if code == value
-        "<option value='#{code}' selected='selected'>#{values.summary}</option>"
-      else
-        "<option value='#{code}'>#{values.summary}</option>"
-      end
-    end.join
-
-    _select_tag name, value, option_tags, options
-  end
-
   # Returns a select tag for relations. 
   #
   # ==== Options
@@ -207,16 +190,6 @@ module ApplicationHelper
   # Generates human readable morphology information for a morphtag. 
   def readable_morphology(morphtag)
     make_nonblank(morphtag ? morphtag.descriptions([:major, :minor], false).join(', ').capitalize : nil)
-  end
-
-  # Generates a human readable representation of a language code.
-  #
-  # ==== Example
-  #  c = readable_language(:la)
-  #  c # => "Latin"
-  #
-  def readable_language(code)
-    make_nonblank(PROIEL::LANGUAGES[code].summary)
   end
 
   # Generates a human readable representation of a completion rate for a sentence.

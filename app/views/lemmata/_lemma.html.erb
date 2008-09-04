@@ -1,6 +1,6 @@
 <tr class="<%= cycle('even', 'odd') %>">
   <td class="lemma" lang="<%= lemma.language %>"><%= highlight(lemma.lemma, params[:query]) %></td>
-  <td class="language"><%= readable_language(lemma.language) %></td>
+  <td class="language"><%= link_to_language lemma.language %></td>
   <td><% if lemma.short_gloss %><q><%= lemma.short_gloss %></q><% else %>&nbsp;<% end %></td>
   <td><%= pluralize(lemma.tokens.count, 'token') %></td>
   <td><%= link_to 'Details', lemma %></td>

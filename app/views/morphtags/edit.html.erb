@@ -1,5 +1,5 @@
 <% stylesheet 'morphtags' %>
-<% javascript "dynamic_pos/#{@language}", 'morphtags', 'morphtag_presentation' %>
+<% javascript "dynamic_pos/#{@language.iso_code}", 'morphtags', 'morphtag_presentation' %>
 
 <%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Morphology', :edit_url => :edit_annotation_morphtags_url } %>
 

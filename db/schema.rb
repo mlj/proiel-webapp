@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080902100218) do
+ActiveRecord::Schema.define(:version => 20080904075104) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -77,10 +77,16 @@ ActiveRecord::Schema.define(:version => 20080902100218) do
     t.datetime "updated_at"
   end
 
+  create_table "languages", :force => true do |t|
+    t.string "iso_code", :limit => 3,  :null => false
+    t.string "name",     :limit => 32, :null => false
+  end
+
+  add_index "languages", ["iso_code"], :name => "index_languages_on_iso_code", :unique => true
+
   create_table "lemmata", :force => true do |t|
     t.string   "lemma",         :limit => 64, :default => "",    :null => false
     t.string   "variant",       :limit => 16
-    t.string   "language",      :limit => 3
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "pos",           :limit => 2,  :default => "",    :null => false
@@ -94,11 +100,12 @@ ActiveRecord::Schema.define(:version => 20080902100218) do
     t.boolean  "reconstructed"
     t.boolean  "nonexistant"
     t.boolean  "inflected"
+    t.integer  "language_id",   :limit => 11,                    :null => false
   end
 
   add_index "lemmata", ["lemma"], :name => "index_lemmata_on_lemma"
   add_index "lemmata", ["variant"], :name => "index_lemmata_on_variant"
-  add_index "lemmata", ["language"], :name => "index_lemmata_on_lang"
+  add_index "lemmata", ["language_id"], :name => "index_lemmata_on_language_id"
 
   create_table "notes", :force => true do |t|
     t.string   "notable_type",    :limit => 64, :null => false
@@ -178,13 +185,13 @@ ActiveRecord::Schema.define(:version => 20080902100218) do
   create_table "sources", :force => true do |t|
     t.string  "code",         :limit => 64, :default => "", :null => false
     t.text    "title"
-    t.string  "language",     :limit => 3,  :default => "", :null => false
     t.text    "edition"
     t.text    "source"
     t.text    "editor"
     t.text    "url"
     t.integer "alignment_id", :limit => 11
     t.string  "abbreviation", :limit => 64, :default => "", :null => false
+    t.integer "language_id",  :limit => 11,                 :null => false
   end
 
   create_table "tokens", :force => true do |t|

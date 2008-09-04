@@ -1,0 +1,5 @@
+<tr class="<%= cycle('even', 'odd') %>">
+  <td class="tag"><%= language.iso_code %></td>
+  <td class="language"><%= highlight(language.name, params[:q]) %></td>
+  <td><%= link_to 'Details', language %></td>
+</tr>

@@ -6,6 +6,7 @@ class Lemma < ActiveRecord::Base
   has_many :dictionary_references
   has_many :notes, :as => :notable, :dependent => :destroy
   has_many :semantic_tags, :as => :taggable, :dependent => :destroy
+  belongs_to :language
 
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
@@ -52,7 +53,7 @@ class Lemma < ActiveRecord::Base
       end
     end
 
-    options[:order] ||= 'language ASC, sort_key ASC, lemma ASC, variant ASC, pos ASC'
+    options[:order] ||= 'language_id ASC, sort_key ASC, lemma ASC, variant ASC, pos ASC'
 
     paginate options
   end

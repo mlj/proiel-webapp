@@ -1,6 +1,6 @@
 <% roundedbox do -%>
   <dt>Lemma:</dt><dd><span class="lemma"><%= format_lemma_form(@lemma) %></span></dd>
-  <dt>Language:</dt><dd><span class="language"><%= readable_language(@lemma.language) %></span></dd>
+  <dt>Language:</dt><dd class="language"><%= link_to_language @lemma.language %></dd>
   <% if @lemma.pos %>
     <dt>Part of speech:</dt><dd><%= PROIEL::MorphTag.new(@lemma.pos).descriptions([:major, :minor], true).join(", ").capitalize %></dd>
   <% end %>

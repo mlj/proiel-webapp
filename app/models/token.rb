@@ -45,6 +45,10 @@ class Token < ActiveRecord::Base
   # Specific validations
   validate :validate_sort
 
+  def language
+    sentence.language
+  end
+
   def previous_tokens
     self.sentence.tokens.find(:all,
                               :conditions => [ "token_number < ?", self.token_number ],
@@ -114,12 +118,12 @@ class Token < ActiveRecord::Base
 
   # Returns true if the morphtag is valid.
   def morphtag_is_valid?
-    PROIEL::MorphTag.new(morphtag).is_valid?(language)
+    PROIEL::MorphTag.new(morphtag).is_valid?(language.iso_code)
   end
 
   # Returns true if the source morphtag is valid.
   def source_morphtag_is_valid?
-    PROIEL::MorphTag.new(source_morphtag).is_valid?(language)
+    PROIEL::MorphTag.new(source_morphtag).is_valid?(language.iso_code)
   end
 
   def reference
@@ -160,14 +164,8 @@ class Token < ActiveRecord::Base
   # of the same token form.
   def invoke_tagger
     TAGGER.logger = logger
-    TAGGER.tag_token(self.language, self.form,
+    TAGGER.tag_token(self.language.iso_code, self.form,
                      self.morph_lemma_tag || self.source_morph_lemma_tag)
-  end
-
-  # Returns the language of the token.
-  def language
-    # FIXME: eliminate to_sym
-    sentence.source.language.to_sym
   end
 
   # Merges the token with the token linearly subsequent to it. The succeding
@@ -212,7 +210,7 @@ class Token < ActiveRecord::Base
     end
 
     # if morphtag is set, is it valid?
-    errors.add_to_base("Morphological annotation #{morphtag.inspect} is invalid") if morphtag and !PROIEL::MorphTag.new(morphtag).is_valid?(self.language)
+    errors.add_to_base("Morphological annotation #{morphtag.inspect} is invalid") if morphtag and !PROIEL::MorphTag.new(morphtag).is_valid?(self.language.iso_code)
 
     # if morphtag is set, is it actually a morphtag or just a blank?
     if morphtag

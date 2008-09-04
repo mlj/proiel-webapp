@@ -2,7 +2,7 @@ class LangString < String
   attr_reader :lang
 
   def initialize(s, lang, css_class=nil)
-    @lang = lang
+    @lang = lang.is_a?(Language) ? lang.iso_code : lang
     @css_class = css_class
     super s
   end

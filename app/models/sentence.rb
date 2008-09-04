@@ -39,6 +39,10 @@ class Sentence < ActiveRecord::Base
 
   acts_as_audited :except => [ :annotated_by, :annotated_at, :reviewed_by, :reviewed_at ]
 
+  def language
+    source.language
+  end
+
   #FIXME:DRY generalise < token
 
   def previous_sentences
@@ -84,12 +88,6 @@ class Sentence < ActiveRecord::Base
     PROIEL::Reference.new(source.abbreviation, source.id, book.code, book.id,
                   { :chapter => chapter, :verse => nonempty_tokens.first.verse..nonempty_tokens.last.verse,
                     :sentence => sentence_number })
-  end
-
-  # Returns the language of the sentence.
-  def language
-    # FIXME: eliminate to_sym
-    source.language.to_sym
   end
 
   # Remove all dependency annotation from a sentence and save the changes.
