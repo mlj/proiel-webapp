@@ -26,9 +26,9 @@ ActiveRecord::Schema.define(:version => 20080902100218) do
     t.string   "action"
     t.text     "changes"
     t.integer  "version",        :limit => 11, :default => 0
-    t.integer  "user_id",        :limit => 11
-    t.datetime "created_at",                                  :null => false
-    t.string   "user_type"
+    t.integer  "user_id",        :limit => 11, :default => 0
+    t.datetime "created_at",                                   :null => false
+    t.string   "user_type",                    :default => ""
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
@@ -71,8 +71,8 @@ ActiveRecord::Schema.define(:version => 20080902100218) do
   end
 
   create_table "import_sources", :force => true do |t|
-    t.string   "tag",        :limit => 16,  :null => false
-    t.string   "summary",    :limit => 256, :null => false
+    t.string   "tag",        :limit => 16, :default => "", :null => false
+    t.text     "summary",                                  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -101,11 +101,11 @@ ActiveRecord::Schema.define(:version => 20080902100218) do
   add_index "lemmata", ["language"], :name => "index_lemmata_on_lang"
 
   create_table "notes", :force => true do |t|
-    t.string   "notable_type",    :limit => 64, :null => false
-    t.integer  "notable_id",      :limit => 11, :null => false
-    t.string   "originator_type", :limit => 64, :null => false
-    t.integer  "originator_id",   :limit => 11, :null => false
-    t.text     "contents",                      :null => false
+    t.string   "notable_type",    :limit => 64, :default => "", :null => false
+    t.integer  "notable_id",      :limit => 11, :default => 0,  :null => false
+    t.string   "originator_type", :limit => 64, :default => "", :null => false
+    t.integer  "originator_id",   :limit => 11, :default => 0,  :null => false
+    t.text     "contents",                                      :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -116,22 +116,22 @@ ActiveRecord::Schema.define(:version => 20080902100218) do
   end
 
   create_table "semantic_attribute_values", :force => true do |t|
-    t.integer  "semantic_attribute_id", :limit => 11, :null => false
-    t.string   "tag",                   :limit => 64, :null => false
+    t.integer  "semantic_attribute_id", :limit => 11, :default => 0,  :null => false
+    t.string   "tag",                   :limit => 64, :default => "", :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "semantic_attributes", :force => true do |t|
-    t.string   "tag",        :limit => 64, :null => false
+    t.string   "tag",        :limit => 64, :default => "", :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "semantic_tags", :force => true do |t|
-    t.integer  "taggable_id",                 :limit => 11, :null => false
-    t.string   "taggable_type",               :limit => 64, :null => false
-    t.integer  "semantic_attribute_value_id", :limit => 11, :null => false
+    t.integer  "taggable_id",                 :limit => 11, :default => 0,  :null => false
+    t.string   "taggable_type",               :limit => 64, :default => "", :null => false
+    t.integer  "semantic_attribute_value_id", :limit => 11, :default => 0,  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -163,14 +163,14 @@ ActiveRecord::Schema.define(:version => 20080902100218) do
   add_index "sentences", ["book_id"], :name => "index_sentences_on_book_id"
 
   create_table "slash_edge_interpretations", :force => true do |t|
-    t.string "tag",     :limit => 64,  :null => false
-    t.string "summary", :limit => 128, :null => false
+    t.string "tag",     :limit => 64,  :default => "", :null => false
+    t.string "summary", :limit => 128, :default => "", :null => false
   end
 
   create_table "slash_edges", :force => true do |t|
     t.integer "slasher_id",                   :limit => 11
     t.integer "slashee_id",                   :limit => 11
-    t.integer "slash_edge_interpretation_id", :limit => 11, :null => false
+    t.integer "slash_edge_interpretation_id", :limit => 11, :default => 0, :null => false
   end
 
   add_index "slash_edges", ["slasher_id", "slashee_id"], :name => "index_slash_edges_on_slasher_and_slashee", :unique => true
