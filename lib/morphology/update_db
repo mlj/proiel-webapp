@@ -4,7 +4,6 @@
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
-require 'fastercsv'
 require 'proiel/tagger'
 require 'pstore'
 
@@ -15,15 +14,17 @@ File.unlink(db_file_name) if File.exists?(db_file_name)
 db = PStore.new(db_file_name)
 
 db.transaction do
-  FasterCSV.foreach(csv_file_name, :skip_blanks => true) do |e|
-    language, lemma, variant, form, *morphtags = e
+  File.open(csv_file_name) do |f|
+    f.each_line do |l|
+      language, lemma, variant, form, *morphtags = l.split(',')
 
-    raise "Word list database Update aborted: invalid morphtag for form #{form} in rule file #{csv_file_name}" unless morphtags.all? { |m| PROIEL::MorphTag.new(m).is_valid?(language.to_sym) }
+      raise "Word list database Update aborted: invalid morphtag for form #{form} in rule file #{csv_file_name}" unless morphtags.all? { |m| PROIEL::MorphTag.new(m).is_valid?(language.to_sym) }
 
-    base_form = variant ? "#{lemma}##{variant}" : lemma
-    morphtags.collect! { |m| [PROIEL::MorphTag.new(m).to_s, base_form].join(':') }
+      base_form = variant ? "#{lemma}##{variant}" : lemma
+      morphtags.collect! { |m| [PROIEL::MorphTag.new(m).to_s, base_form].join(':') }
 
-    morphtags += db[form] if db[form]
-    db[form] = morphtags
+      morphtags += db[form] if db[form]
+      db[form] = morphtags
+    end
   end
 end
