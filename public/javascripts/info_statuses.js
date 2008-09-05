@@ -87,7 +87,7 @@ var InfoStatus = function() {
             return;
         }
         elm.removeClassName('info-unannotatable');
-        elm.addClassName('info-annotatable no-info-status');
+        elm.addClassName('info-annotatable no-info-status info-changed');
         setAnnotatablesAndUnannotatables();
         selectToken(elm);
     }
@@ -150,9 +150,9 @@ var InfoStatus = function() {
         btn.observe('click', function(event) {
 
             var changed = $$('.info-changed');
-            var hash1 = {};  // The Prototype docs seem to encourage using a named hash to avoid cloning of hashes
+            var params = []
 
-            changed.inject(hash1, function(hash, elm) {
+            changed.each(function(elm) {
                 var category = null;
                 // Find the class name that denotes an information structure category
                 $w(elm.className).each(function(klass) {
@@ -164,10 +164,29 @@ var InfoStatus = function() {
                 // Extract the numerical part of the element id
                 var id = elm.id.slice('token-'.length);
 
-                hash[id] = category;
-                return hash;
+                params.push('tokens['+ id + ']=' + category);
             });
-            //new Ajax.request(document.location.href.match(/.+\/
+            new Ajax.Request(document.location.href.match(url_without_last_part)[0],
+                             {
+                                 method: 'put',
+                                 parameters: params.join('&') +
+                                     '&authenticity_token=' + authenticity_token,
+                                 onSuccess: function() {
+                                     var elm = $('server-message');
+                                     elm.update('Changes saved');
+                                     elm.show();
+                                     elm.highlight();
+                                     elm.fade({delay: 2.0});
+                                 },
+                                 onFailure: function() {
+                                     var elm = $('server-message');
+                                     elm.show();
+                                     elm.update('Changes could not be saved!');
+                                     elm.highlight({startcolor: 'ff0000'});
+                                     elm.fade({delay: 2.0});
+                                 },
+                             }
+                            );
             event.stop();
         });
     }

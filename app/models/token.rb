@@ -187,9 +187,11 @@ class Token < ActiveRecord::Base
   # or if one of its dependents is an article.
   def annotatable?
     if @annotatable.nil?
-      @annotatable = PROIEL::MORPHOLOGY.nominals.include?(morph[:major]) ||
-                     (relation && PROIEL::RELATIONS.nominals.include?(relation.to_sym)) ||
-                                dependents.any? { |dep| dep.morph[:major] == :S }
+      @annotatable = info_status == :no_info_status ||  # manually marked as annotatable
+                     (info_status != :info_unannotatable && \
+                      (PROIEL::MORPHOLOGY.nominals.include?(morph[:major]) || \
+                       (relation && PROIEL::RELATIONS.nominals.include?(relation.to_sym)) || \
+                       dependents.any? { |dep| dep.morph[:major] == :S }))
     end
     @annotatable
   end
