@@ -8,6 +8,14 @@ class Language < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
+  # Returns inferred morphology for a word form in the language.
+  def guess_morphology(form, existing_tags)
+    TAGGER.tag_token(iso_code, form, existing_tags)
+  rescue Exception => e
+    logger.error { "Tagger failed: #{e}" }
+    [:failed, nil]
+  end
+
   protected
 
   def self.search(query, options)

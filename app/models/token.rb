@@ -14,8 +14,6 @@ class Token < ActiveRecord::Base
   has_many :slashers, :through => :slash_in_edges
 
   acts_as_audited
-  # Insanely slow! We use our own implementation instead.
-  #acts_as_ordered :order => :token_number
 
   # General schema-defined validations
   validates_presence_of :sentence_id
@@ -163,9 +161,7 @@ class Token < ActiveRecord::Base
   # account, be it already existing morph+lemma tags or previous instances
   # of the same token form.
   def invoke_tagger
-    TAGGER.logger = logger
-    TAGGER.tag_token(self.language.iso_code, self.form,
-                     self.morph_lemma_tag || self.source_morph_lemma_tag)
+    language.guess_morphology(form, morph_lemma_tag || source_morph_lemma_tag)
   end
 
   # Merges the token with the token linearly subsequent to it. The succeding

@@ -45,13 +45,6 @@ class Source < ActiveRecord::Base
     end
   end
 
-  # Invokes the PROIEL morphology tagger. Takes any already set morphology
-  # as well as any source morph+lemma tag into account.
-  def invoke_tagger(form, existing_morph_lemma_tag = nil, options = {})
-    TAGGER.logger = logger
-    TAGGER.tag_token(self.language, form, existing_morph_lemma_tag, options)
-  end
-
   # Returns the human-readable presentation form of the name of the source.
   def presentation_form
     self.title

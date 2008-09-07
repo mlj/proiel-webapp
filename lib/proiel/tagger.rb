@@ -60,17 +60,12 @@ module PROIEL
       # The weight ratio for contradictory, incomplete, existing tags
       CONTRADICTION_RATIO = 0.5
 
-      attr_accessor :logger
-
       # Creates a new tagger.
       #
       # ==== Options
-      # logger:: Specifies a logger object.
-      #
       # data_directory:: Specifies the directory in which to look for data files. The default
       # is the current directory. 
       def initialize(configuration_file, options = {})
-        @logger = options[:logger]
         @data_directory = options[:data_directory] || '.'
 
         @analysis_methods = {}
@@ -139,25 +134,15 @@ module PROIEL
         language = language.to_sym
         raise "Undefined language #{language}" unless @methods.has_key?(language) 
 
-        begin
-          raw_candidates = unless options[:force_method]
-                             @methods[language].collect { |method| method.call(form) }.flatten
-                           else
-                             # FIXME
-                             if options[:force_method] == :manual_rules
-                               form = normalise_form(language, form)
-                             end
-                             analyze_form(language, options[:force_method], form)
+        raw_candidates = unless options[:force_method]
+                           @methods[language].collect { |method| method.call(form) }.flatten
+                         else
+                           # FIXME
+                           if options[:force_method] == :manual_rules
+                             form = normalise_form(language, form)
                            end
-        rescue Exception => e
-          if @logger
-            @logger.error { "Tagger method failed: #{e}" }
-            return [:failed, nil]
-          else
-            raise e
-          end
-        end
-
+                           analyze_form(language, options[:force_method], form)
+                         end
         raw_candidates.sort!
 
         # Try to make sense of any existing information that we have
