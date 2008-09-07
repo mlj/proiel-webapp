@@ -93,7 +93,7 @@ class Sentence < ActiveRecord::Base
   # Remove all dependency annotation from a sentence and save the changes.
   # This will also do away with any empty tokens in the sentence.
   def clear_dependencies!
-    tokens.each { |token| token.clear_dependencies! }
+    tokens.each { |token| token.update_attributes!(:relation => nil, :head => nil) }
     delete_all_empty_tokens!
   end
 

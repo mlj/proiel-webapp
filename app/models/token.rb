@@ -141,11 +141,6 @@ class Token < ActiveRecord::Base
     end
   end
 
-  # Clears dependency annotation for the token and saves the record.
-  def clear_dependencies!
-    update_dependencies!(nil, nil)
-  end
-
   # Returns true if this is an empty token, i.e. a token used for empty nodes
   # in dependency structures.
   def is_empty?
