@@ -128,7 +128,7 @@ class Sentence < ActiveRecord::Base
         # will not have its verse number set as the sentence may cross
         # verse boundaries. The verse number of the empty token is therefore
         # undefined.
-        t = self.tokens.create(:token_number => @new_token_number, :sort => :empty_dependency_token)
+        t = tokens.create(:token_number => @new_token_number, :sort => :empty_dependency_token)
         @new_token_number += 1
         id_map[added_token_id] = t.id
       end
@@ -143,6 +143,7 @@ class Sentence < ActiveRecord::Base
         token = tokens.find(id_map[node.identifier])
         token.head_id = id_map[node.head.identifier]
         token.relation = node.relation
+        token.empty_token_sort = node.data[:empty] if node.is_empty?
 
         # Slash edges are marked as dependent on the association level, so when we destroyed
         # empty tokens, the orphaned slashes should also have gone away. The remaining slashes
