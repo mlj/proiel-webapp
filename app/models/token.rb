@@ -31,12 +31,14 @@ class Token < ActiveRecord::Base
   # Constraint: t.head_id => t.relation
   validates_presence_of :relation, :if => lambda { |t| !t.head_id.nil? }
 
-  validate do |t|
-    if t.relation and not PROIEL::RELATIONS.valid?(t.relation)
-      errors.add_to_base("Relation #{t.relation} is invalid")
-    end
-  end
+  # If set, relation must be valid.
+  validates_inclusion_of :relation, :allow_nil => true, :in => PROIEL::RELATIONS.keys.map(&:to_s)
 
+  # If set, morphtag and source_morphtag must have the correct length.
+  validates_length_of :morphtag, :is => PROIEL::MorphTag.fields.length
+  validates_length_of :source_morphtag, :is => PROIEL::MorphTag.fields.length
+
+  # form and presentation_form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
   validates_unicode_normalization_of :presentation_form, :form => UNICODE_NORMALIZATION_FORM
 
@@ -204,12 +206,6 @@ class Token < ActiveRecord::Base
 
     # if morphtag is set, is it valid?
     errors.add_to_base("Morphological annotation #{morphtag.inspect} is invalid") if morphtag and !PROIEL::MorphTag.new(morphtag).is_valid?(self.language.iso_code)
-
-    # if morphtag is set, is it actually a morphtag or just a blank?
-    if morphtag
-      errors.add(:morphtag, "is blank (probably should be NULL)") if morphtag == ''
-      errors.add(:morphtag, "is blank (probably should be NULL)") if morphtag == PROIEL::MorphTag.new().to_s
-    end
 
     # sort :empty_dependency_token <=> form.nil?
     if sort == :empty_dependency_token or sort == :lacuna_start or sort == :lacuna_end or form.nil?
