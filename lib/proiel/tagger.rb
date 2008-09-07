@@ -113,6 +113,8 @@ module PROIEL
         end
       end
 
+      private
+
       def analyze_form(language, method, form)
         @analysis_methods[language][method].analyze(form).collect do |t|
           if t.is_a?(Array)
@@ -122,6 +124,8 @@ module PROIEL
           end
         end
       end
+
+      public
 
       # Generates a list of tags for a token.
       #
@@ -200,6 +204,8 @@ module PROIEL
         end
       end
 
+      private
+
       def normalise_form(language, form)
         case language
         when :grc
@@ -209,14 +215,6 @@ module PROIEL
         else
           form
         end
-      end
-
-      # Generate the complete tag space using any known tag and language as a constraint.
-      # +limit+ ensures that the generated space will not exceed a certain number of
-      # members and instead return nil.
-      def generate_tag_space(language, known_tag, limit = 10)
-        morphtags = MorphTag.new(known_tag).completions(language)
-        morphtags.length > limit ? nil : morphtags 
       end
     end
   end
