@@ -4,5 +4,4 @@
   <!-- label>Exact match</label><%= check_box_tag :exact, 'yes', params[:exact] %> -->
 <% end %>
 
-<%= render_tabular @tokens, :pagination => true,
-  :fields => [ 'Form', 'Sort', 'Morphology and lemma', '&nbsp;' ] %>
+<%= tokens_table @tokens %>

@@ -22,6 +22,5 @@
 <% end %>
 
 <% layer("tokens") do -%>
-  <%= render_tabular @sentence.tokens, :partial => 'tokens/token',
-  :fields => [ 'Form', 'Sort', 'Location', 'Morphology and lemma', '&nbsp;' ] %>
+  <%= tokens_table @tokens %>
 <% end %>
