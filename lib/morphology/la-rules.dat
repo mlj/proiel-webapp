@@ -25,7 +25,8 @@ Ma-s---:A3P {
 
 #FIXME:A3x->A3P with stemmer
 Ma-p---:A3x {
- ducenti
+ ducenti,
+ mille sescenti,
 }
 
 Ma-p--- {
@@ -50,7 +51,8 @@ Mg {
  tredecim, quattuordecim, quindecim, sedecim, septendecim, duodeviginti,
  undeviginti, viginti, triginta, quadraginta, quinquaginta, sexaginta,
  septuaginta, octoginta, octoginta quattuor, nonaginta, nonaginta novem, centum, mille, 
- viginti quattuor,
+ viginti quattuor, centum quadraginta quattuor, sescenti sexaginta sex,
+ mille ducentis sexaginta,
 }
 
 # Ordinal numbers
@@ -109,6 +111,7 @@ Dn {
  demum, denuo, deorsum, dolose, eadem, enim, eo, eodem,
  ergo, etenim, etiam, extrinsecus, fatue, fere, foras,
  foris, forte, forsitan, frustra, gentiliter, germane, hac, haud, haud:haut,
+ hebraice,
  heri, hic, hinc, hodie, huc, huc:hoc, iam, ibi, idcirco, ideo, igitur,
  ilico, illa, illic, illuc, illuc:illic, illuc:illo, immo, impie,
  inportune, inaniter, inde, indesinenter, inordinate, inquiete,

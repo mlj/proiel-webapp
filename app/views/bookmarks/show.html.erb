@@ -2,6 +2,6 @@
   <dt>User name:</dt><dd><%=h @bookmark.user.login %></dd>
   <dt>Flow:</dt><dd><%=h @bookmark.flow %></dd>
   <dt>Source:</dt><dd><%= link_to_source @bookmark.source %></dd>
-  <dt>Sentence ID:</dt><dd><%= link_to @bookmark.sentence.id, @bookmark.sentence %></dd>
+  <dt>Sentence ID:</dt><dd><%= @bookmark.sentence ? link_to(@bookmark.sentence.id, @bookmark.sentence) : 'Invalid' %></dd>
   <%= link_to_resources(@bookmark, :index, :edit, :delete) %>
 <% end %>
