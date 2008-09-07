@@ -1,4 +1,7 @@
-<%= javascript 'info_statuses.js' %>
+<%= javascript 'info_statuses' %>
+<% javascript_tag do -%>
+  var authenticity_token = '<%= form_authenticity_token %>';
+<% end -%>
 
 <div id="info-menu" style="position: absolute; width: 100px; border: 2px solid black; display:none">
   <div class="info-menu-item new">1 new</div>
@@ -10,7 +13,7 @@
   <div class="info-menu-item no-info-status">7 unannotated</div>
 </div>
 
-<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Information status', :edit_url => :annotation_info_status_url } %>
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Information status', :edit_url => :edit_annotation_info_status_url } %>
 
 <% if is_annotator? or @sentence.is_reviewed? %>
   <% layer_if(is_reviewer?, "completion", :actions => [
@@ -34,4 +37,5 @@
   <form>
     <%= submit_tag "Save", :id => 'save' %>
   </form>
+  <span id="server-message" style="width: 300px; margin-top: 5px; padding-left: 10px; padding-right: 10px"></span>
 </div>

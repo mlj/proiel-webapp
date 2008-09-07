@@ -147,7 +147,7 @@ module SentenceFormattingHelper
           link_to(LangString.new(text, language).to_h, link, :class => (css << 'token') * ' ')
         elsif options[:information_status]
           css << info_status_css_class if options[:highlight].include?(token)
-          LangString.new(text, language, css * ' ').to_h
+          LangString.new(text, language, :id => 'token-' + token.id.to_s, :css => css * ' ').to_h
         else
           content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ')
         end
@@ -159,7 +159,7 @@ module SentenceFormattingHelper
     private
 
     def info_status_css_class
-      @info_status_css_class ||= if token.info_status
+      @info_status_css_class ||= if token.info_status && token.info_status != :info_unannotatable
                                    'info-annotatable ' + token.info_status.to_s.gsub('_', '-')
                                  elsif token.annotatable?
                                    'info-annotatable no-info-status'

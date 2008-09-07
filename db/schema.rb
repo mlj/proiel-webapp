@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080905125010) do
+ActiveRecord::Schema.define(:version => 20080905130310) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -195,28 +195,28 @@ ActiveRecord::Schema.define(:version => 20080905125010) do
   end
 
   create_table "tokens", :force => true do |t|
-    t.integer  "sentence_id",       :limit => 11,                                                                                   :default => 0,     :null => false
+    t.integer  "sentence_id",       :limit => 11,                                                                                      :default => 0,     :null => false
     t.integer  "verse",             :limit => 2
-    t.integer  "token_number",      :limit => 3,                                                                                    :default => 0,     :null => false
+    t.integer  "token_number",      :limit => 3,                                                                                       :default => 0,     :null => false
     t.string   "morphtag",          :limit => 17
     t.string   "form",              :limit => 64
     t.integer  "lemma_id",          :limit => 11
     t.string   "relation",          :limit => 20
     t.integer  "head_id",           :limit => 3
-    t.enum     "sort",              :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :prodrop], :default => :text, :null => false
+    t.enum     "sort",              :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :prodrop],    :default => :text, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "source_morphtag",   :limit => 17
     t.string   "source_lemma",      :limit => 32
     t.text     "foreign_ids"
-    t.boolean  "contraction",                                                                                                       :default => false, :null => false
+    t.boolean  "contraction",                                                                                                          :default => false, :null => false
     t.enum     "nospacing",         :limit => [:before, :after, :both]
     t.string   "presentation_form", :limit => 128
     t.integer  "presentation_span", :limit => 11
-    t.boolean  "emendation",                                                                                                        :default => false, :null => false
-    t.boolean  "abbreviation",                                                                                                      :default => false, :null => false
-    t.boolean  "capitalisation",                                                                                                    :default => false, :null => false
-    t.enum     "info_status",       :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old]
+    t.boolean  "emendation",                                                                                                           :default => false, :null => false
+    t.boolean  "abbreviation",                                                                                                         :default => false, :null => false
+    t.boolean  "capitalisation",                                                                                                       :default => false, :null => false
+    t.enum     "info_status",       :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :no_info_status, :info_unannotatable]
     t.string   "empty_token_sort",  :limit => 1
   end
 

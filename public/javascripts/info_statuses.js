@@ -5,12 +5,13 @@ var InfoStatus = function() {
 
     // private variables
 
-    var classes = new Array('new', 'acc', 'acc-gen', 'acc-disc', 'acc-inf', 'old', 'no-info-status', 'info-unannotatable');
+    var categories = new Array('new', 'acc', 'acc-gen', 'acc-disc', 'acc-inf', 'old', 'no-info-status', 'info-unannotatable');
     var annotatables = null;
     var unannotatables = null;
     var selected_token = null;
     var selected_token_index = null;
-    const FIRST_NUMERICAL_CODE = 49; // keycode for the 1 key
+    var first_numerical_code = 49; // keycode for the 1 key
+    var url_without_last_part = new RegExp(/.+\//);
 
     // private functions
 
@@ -86,7 +87,7 @@ var InfoStatus = function() {
             return;
         }
         elm.removeClassName('info-unannotatable');
-        elm.addClassName('info-annotatable no-info-status');
+        elm.addClassName('info-annotatable no-info-status info-changed');
         setAnnotatablesAndUnannotatables();
         selectToken(elm);
     }
@@ -98,7 +99,7 @@ var InfoStatus = function() {
     /////////////////////////////////////
 
     function setInfoStatusClass(klass) {
-        classes.each(function(removed_class) {
+        categories.each(function(removed_class) {
             selected_token.removeClassName(removed_class);
         });
         selected_token.addClassName(klass);
@@ -109,8 +110,8 @@ var InfoStatus = function() {
         document.observe('keydown', function(event) {
             if(!selected_token) return;
 
-            if(event.keyCode >= FIRST_NUMERICAL_CODE && event.keyCode < FIRST_NUMERICAL_CODE + classes.length) {
-                var css = classes[event.keyCode - FIRST_NUMERICAL_CODE];
+            if(event.keyCode >= first_numerical_code && event.keyCode < first_numerical_code + categories.length) {
+                var css = categories[event.keyCode - first_numerical_code];
                 setInfoStatusClass(css);
 
                 if(css == 'info-unannotatable') {
@@ -122,6 +123,9 @@ var InfoStatus = function() {
                     // This will select the next token, since we have just removed the current one
                     // from the annotatables
                     selectToken(annotatables[selected_token_index === annotatables.length ? 0 : selected_token_index]);
+                }
+                else {
+                    selectToken(annotatables[selected_token_index === annotatables.length - 1 ? 0 : selected_token_index + 1]);
                 }
 
                 event.stop();
@@ -144,7 +148,45 @@ var InfoStatus = function() {
     function setEventHandlingForSaveButton() {
         var btn = $('save');
         btn.observe('click', function(event) {
-            alert('hei');
+
+            var changed = $$('.info-changed');
+            var params = []
+
+            changed.each(function(elm) {
+                var category = null;
+                // Find the class name that denotes an information structure category
+                $w(elm.className).each(function(klass) {
+                    if(categories.include(klass)) {
+                        category = klass;
+                        throw $break;
+                    }
+                });
+                // Extract the numerical part of the element id
+                var id = elm.id.slice('token-'.length);
+
+                params.push('tokens['+ id + ']=' + category);
+            });
+            new Ajax.Request(document.location.href.match(url_without_last_part)[0],
+                             {
+                                 method: 'put',
+                                 parameters: params.join('&') +
+                                     '&authenticity_token=' + authenticity_token,
+                                 onSuccess: function() {
+                                     var elm = $('server-message');
+                                     elm.update('Changes saved');
+                                     elm.show();
+                                     elm.highlight();
+                                     elm.fade({delay: 2.0});
+                                 },
+                                 onFailure: function() {
+                                     var elm = $('server-message');
+                                     elm.show();
+                                     elm.update('Changes could not be saved!');
+                                     elm.highlight({startcolor: 'ff0000'});
+                                     elm.fade({delay: 2.0});
+                                 },
+                             }
+                            );
             event.stop();
         });
     }
