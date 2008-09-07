@@ -3,4 +3,4 @@
 <%= form.text_field :sort, :required => true %>
 <%= form.text_field :empty_token_sort %>
 <%= form.text_field :morphtag %>
-<%= form.collection_select :lemma_id, Lemma.find(:all, :conditions => [ "language = ? ", @token.language], :order => [ "lemma ASC" ]), :id, :export_form, :include_blank => true, :label => 'Lemma' %>
+<%= form.collection_select :lemma_id, @token.language.lemmata.find(:all, :order => [ "lemma ASC" ]), :id, :export_form, :include_blank => true, :label => 'Lemma' %>
