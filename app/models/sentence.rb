@@ -112,10 +112,11 @@ class Sentence < ActiveRecord::Base
     
     # Work inside a transaction since we have lots of small pieces that must go together.
     Token.transaction do
-      removed_token_ids = tokens.map(&:id) - dependency_graph.nodes.map(&:identifier)
-      added_token_ids = dependency_graph.nodes.map(&:identifier) - tokens.map(&:id)
+      ts = tokens.dependency_annotatable
+      removed_token_ids = ts.map(&:id) - dependency_graph.nodes.map(&:identifier)
+      added_token_ids = dependency_graph.nodes.map(&:identifier) - ts.map(&:id)
 
-      removed_tokens = tokens.select { |token| removed_token_ids.include?(token.id) }
+      removed_tokens = ts.select { |token| removed_token_ids.include?(token.id) }
       removed_tokens.each { |token| token.destroy }
 
       # We will append new empty nodes at the end of the token sequence. Establish
@@ -135,7 +136,7 @@ class Sentence < ActiveRecord::Base
 
       # Now the graph should contain the same number of tokens as the sentence, and
       # their IDs should, if id_map is taken into account, add up.
-      raise "Dependency graph ID inconsistency" unless tokens.map(&:id).sort != dependency_graph.identifiers.map { |i| id_map[i] }.sort
+      raise "Dependency graph ID inconsistency: #{tokens.dependency_annotatable.map(&:id).sort.join(', ')} != #{dependency_graph.identifiers.map { |i| id_map[i] }.sort.join(', ')}" unless tokens.dependency_annotatable.map(&:id).sort == dependency_graph.identifiers.map { |i| id_map[i] }.sort
 
       # Now we can iterate the sentence and update all tokens with new annotation
       # and secondary edges.
