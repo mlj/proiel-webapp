@@ -2,6 +2,10 @@ class SentencesController < ReadOnlyController
   before_filter :find_parents
   before_filter :is_reviewer?, :only => [:destroy]
 
+  show.before do
+    @tokens = @sentence.tokens.search(params[:query], :page => current_page)
+  end
+
   protected
 
   def find_parents

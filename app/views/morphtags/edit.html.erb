@@ -1,5 +1,5 @@
 <% stylesheet 'morphtags' %>
-<% javascript "dynamic_pos/#{@language.iso_code}", 'morphtags', 'morphtag_presentation' %>
+<% javascript "dynamic_pos/#{@language_code}", 'morphtags', 'morphtag_presentation' %>
 
 <%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Morphology', :edit_url => :edit_annotation_morphtags_url } %>
 
@@ -10,7 +10,7 @@
       <% PROIEL::MorphTag::PRESENTATION_SEQUENCE.each do |field| -%>
         <select id="<%= field %>_field" name="<%= field %>_field"></select>
       <% end %>
-      <%= text_field_with_auto_complete :morphtags, :lemma, { :size => 15 }, :with => "'morphtags[lemma]=' + encodeURIComponent(element.value) + '&morphtags[language]=#{@language}'" %>
+      <%= text_field_with_auto_complete :morphtags, :lemma, { :size => 15 }, :with => "'morphtags[lemma]=' + encodeURIComponent(element.value) + '&morphtags[language]=#{@language_code}'" %>
     </span>
     <%= button_to_function "Update", "onPaletteUpdate()" %>
   </div>

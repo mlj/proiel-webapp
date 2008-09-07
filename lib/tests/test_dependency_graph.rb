@@ -295,12 +295,6 @@ class ValidatingDependencyGraphTestCase < Test::Unit::TestCase
     assert_equal false, g.valid?
   end
 
-  def test_visualise
-    g = setup_ok_graph
-    g.visualize
-    g.visualise
-  end
-
   def test_relinearisation
     g = ValidatingDependencyGraph.new
     g.add_node(1, :pred, nil, [], { :empty => false, :token_number => 2})
