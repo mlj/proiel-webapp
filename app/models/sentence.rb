@@ -143,7 +143,7 @@ class Sentence < ActiveRecord::Base
       dependency_graph.nodes.each do |node|
         token = tokens.find(id_map[node.identifier])
         token.head_id = id_map[node.head.identifier]
-        token.relation = node.relation
+        token.relation = node.relation.to_s
         token.empty_token_sort = node.data[:empty] if node.is_empty?
 
         # Slash edges are marked as dependent on the association level, so when we destroyed
