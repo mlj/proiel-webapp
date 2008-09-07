@@ -11,6 +11,7 @@ class TaggerTest < ActiveSupport::TestCase
   fixtures :sources
   fixtures :sentences
   fixtures :tokens
+  fixtures :languages
 
   def test_loading
     tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)

@@ -35,7 +35,7 @@ class MorphtagsController < ApplicationController
 
   def edit
     @sentence = Sentence.find(params[:annotation_id])
-    @language = @sentence.language
+    @language_code = @sentence.language.iso_code
 
     @tags = @sentence.morphtaggable_tokens.inject({}) do |tags, token|
       tags[token.id] = {}

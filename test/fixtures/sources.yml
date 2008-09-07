@@ -1,8 +1,8 @@
 one:
   id: 1
   title: Vulgate
-  language: la
+  language_id: 1
 two:
   id: 2
   title: Greek New Testament
-  language: grc
+  language_id: 2
