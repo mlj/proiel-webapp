@@ -302,29 +302,6 @@ class Sentence < ActiveRecord::Base
   end
 
   # Returns the dependency graph for the sentence.
-  def dependency_structure
-    s = {}
-    dependency_tokens.each do |token|
-      # Merge data about this token into the result structure
-      s[token.id] ||= { :dependents => {} }
-      s[token.id].merge!({
-        :relation => token.relation,
-        :found => true,
-        :empty => token.is_empty? ? token.empty_token_sort : false,
-        :slashes => token.slashees.collect(&:id)
-      })
-
-      # Attach this token to its head's list of dependents
-      head = token.head ? token.head_id : :root
-      s[head] ||= { :dependents => {} }
-      s[head][:dependents][token.id] = s[token.id]
-    end
-
-    # Return the dependents of the ficticious root node
-    s[:root][:dependents]
-  end
-
-  # Returns the dependency graph for the sentence.
   def dependency_graph
     PROIEL::ValidatingDependencyGraph.new do |g|
       dependency_tokens.each { |t| g.badd_node(t.id, t.relation, t.head ? t.head.id : nil,

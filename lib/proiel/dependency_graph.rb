@@ -346,12 +346,24 @@ module PROIEL
       n = [self] + dependents
       n.sort_by { |t| t.token_number || -1 }.collect { |t| t == self ? self : t.relinearise }.flatten
     end
+
+    def to_h
+      { :dependents => Hash[*dependents.collect { |d| [d.identifier, d.to_h] }.flatten],
+        :relation => @relation,
+        :empty => @data[:empty],
+        :slashes => slashes.map(&:identifier),
+      }
+    end
   end
 
   class ValidatingDependencyGraph < Lingua::DependencyGraph
     def initialize
       @node_class = ValidatingDependencyGraphNode
       super
+    end
+
+    def to_h
+      @root.to_h[:dependents]
     end
 
     def self.new_from_editor(editor_output)

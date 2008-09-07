@@ -33,14 +33,7 @@ class DependenciesController < ApplicationController
       } ] 
     end.flatten]
 
-    # If the sentence hasn't been flagged as "annotated", and none of the tokens have 
-    # any relation set, it is likely to be a "pristine" sentence, so we'd be better
-    # off not sending any information about structure at all.
-    if @sentence.is_annotated? || @sentence.tokens.any? { |token| !token.relation.nil? }
-      @structure = params[:output] || @sentence.dependency_structure
-    else
-      @structure = params[:output] || {}
-    end
+    @structure = (params[:output] and ActiveSupport::JSON.decode(params[:output])) || (@sentence.is_annotated? ? @sentence.dependency_graph.to_h : {})
 
     @relations = PROIEL::RELATIONS.values.sort_by { |v| v.code.to_s }
   end
