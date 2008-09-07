@@ -3,6 +3,9 @@
   <dt>Sentence ID:</dt><dd><%= link_to @token.sentence.id, @token.sentence %></dd>
   <dt>Linearisation index:</dt><dd><%= @token.token_number %></dd>
   <dt>Sort:</dt><dd><%= readable_token_sort(@token.sort) %></dd>
+  <% if @token.is_empty? %>
+    <dt>Empty token sort:</dt><dd><%= @token.empty_token_sort %></dd>
+  <% end %>
   <% if @token.form %>
     <dt>Form:</dt><dd class="foreign-word"><%= format_token_form(@token) %></dd>
   <% end %>
