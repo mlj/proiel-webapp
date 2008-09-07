@@ -38,8 +38,8 @@ class Token < ActiveRecord::Base
   validates_inclusion_of :relation, :allow_nil => true, :in => PROIEL::RELATIONS.keys.map(&:to_s)
 
   # If set, morphtag and source_morphtag must have the correct length.
-  validates_length_of :morphtag, :is => PROIEL::MorphTag.fields.length
-  validates_length_of :source_morphtag, :is => PROIEL::MorphTag.fields.length
+  validates_length_of :morphtag, :allow_nil => true, :is => PROIEL::MorphTag.fields.length
+  validates_length_of :source_morphtag, :allow_nil => true, :is => PROIEL::MorphTag.fields.length
 
   # form and presentation_form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
