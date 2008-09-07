@@ -143,7 +143,7 @@ class TigerXMLExport < SourceExport
             builder.nonterminals do
               # Emit the empty root node
               builder.nt(:id => root_node_id, :form => '', :morphtag => '', :lemma => '') do
-                s.root_tokens.each do |t|
+                s.dependency_tokens.reject(&:head).each do |t|
                   builder.edge(:idref => "p#{t.id}", :label => t.relation)
                 end
               end

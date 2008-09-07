@@ -158,20 +158,6 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  # Returns the slash structure for the sentence. The slashes are given
-  # as an array of slasher and slashee tokens.
-  def slashes
-    current_slashes = []
-
-    tokens.each do |token|
-      token.slashees.each do |slashee|
-        current_slashes << [token, slashee]
-      end
-    end
-
-    current_slashes
-  end
-
   # Returns the maximum token number in the sentence.
   def max_token_number
     self.tokens.maximum(:token_number)
@@ -348,12 +334,6 @@ class Sentence < ActiveRecord::Base
                                                  :morphtag => PROIEL::MorphTag.new(t.morphtag),
                                                  :form => t.form }) }
     end
-  end
-
-  # Returns the tokens that are immediate descendants of the root node
-  # in the dependency structure of the sentence.
-  def root_tokens
-    dependency_tokens.reject { |t| t.head }
   end
 
   # Returns +true+ if sentence has dependency annotation.
