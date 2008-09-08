@@ -19,6 +19,10 @@
   <%= audits_summary @lemma.audits %>
 <% end %>
 
+<% layer 'semantic_tags' do -%>
+  <%= semantic_tags_summary(@semantic_tags) %>
+<% end %>
+
 <% layer 'tokens' do -%>
   <%= render_tabular @tokens, :partial => 'annotations/annotation', :pagination => true, :class => 'concordance' %>
 <% end %>

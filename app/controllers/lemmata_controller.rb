@@ -3,6 +3,7 @@ class LemmataController < ResourceController::Base
   actions :all, :except => [ :destroy ]
 
   show.before do
+    @semantic_tags = @lemma.semantic_tags
     @tokens = @lemma.tokens.search(params[:query], :page => current_page)
   end
 

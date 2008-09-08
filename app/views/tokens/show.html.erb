@@ -40,6 +40,10 @@
   <%= notes_summary @token.notes %>
 <% end %>
 
+<% layer 'semantic_tags' do -%>
+  <%= semantic_tags_summary(@semantic_tags) %>
+<% end %>
+
 <% layer_unless @token.audits.empty?, "revisions" do -%>
   <%= audits_summary @token.audits %>
 <% end %>

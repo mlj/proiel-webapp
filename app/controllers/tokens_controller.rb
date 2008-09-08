@@ -16,6 +16,12 @@ class TokensController < ResourceController::Base
     @tokens = (@parent ? @parent.tokens : Token).search(params[:query], :page => current_page, :include => [:lemma])
   end
 
+  show.before do
+    @semantic_tags = @token.semantic_tags
+    # Add semantic tags from lemma not present in the token's semantic tags.
+    @semantic_tags += @token.lemma.semantic_tags.reject { |tag| @semantic_tags.map(&:semantic_attribute).include?(tag.semantic_attribute) } if @token.lemma
+  end
+
   update.before do
     if params[:token]
       if params[:token][:presentation_form].blank?
