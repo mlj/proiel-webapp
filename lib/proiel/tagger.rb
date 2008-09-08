@@ -135,7 +135,6 @@ module PROIEL
       #                          e.g. <tt>:manual_rules</tt> for manual rules. All other
       #                          methods are disabled.
       def tag_token(language, form, existing = nil, options = {})
-        language = language.to_sym
         raise "Undefined language #{language}" unless @methods.has_key?(language) 
 
         raw_candidates = unless options[:force_method]
