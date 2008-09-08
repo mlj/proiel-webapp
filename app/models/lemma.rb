@@ -65,9 +65,11 @@ class Lemma < ActiveRecord::Base
   def self.find_completions(q, language)
     lemma, variant = q.split(/#/)
     unless variant.blank?
-      Lemma.find(:all, :conditions => ["language = ? AND lemma LIKE ? AND variant = ?", language, "#{lemma}%", variant])
+      Lemma.find(:all, :include => :language,
+                 :conditions => ["languages.iso_code = ? AND lemma LIKE ? AND variant = ?", language, "#{lemma}%", variant])
     else
-      Lemma.find(:all, :conditions => ["language = ? AND lemma LIKE ?", language, "#{lemma}%"])
+      Lemma.find(:all, :include => :language,
+                 :conditions => ["languages.iso_code = ? AND lemma LIKE ?", language, "#{lemma}%"])
     end
   end
 end
