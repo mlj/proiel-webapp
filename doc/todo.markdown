@@ -1,36 +1,16 @@
-New in release 20080908
------------------------
-
-  * Removed Latin locative
-  * Removed Rails 2.1 blocker caused by hacked `acts_as_audited`
-  * Make change sets revertible
-  * Make imported sentence, token and lemma notes available + join with `flag as bad sentence division`
-  * Killed impersonal active and deponent tags
-  * Updated USC text with new presentational features.
-  * Re-enabled full validation 
-  * Avoid orphaned slashes
-  * Add 'unflag bad sentence division' function [obsoleted by new interface to notes]
-  * SVG graph drawing and alternative visualisations
-  * Enabled editing of tokens and lemmata
-
-Partially completed in release 20080908
----------------------------------------
-
-  * Write secondary edge labels to database [lacking: visualization still based on interpretation;
-    edge labels not exported as XML]
-  * Semantic features [lacking: no online edititing of tags; create/edit/delete of As and AVs
-    must be done in SQL]
-  * Differentiate empty dependency tokens [lacking: no export]
-
-Completed, but postponed
-------------------------
-
-  * Generalised `indeclinable` field [too unstable]
-
-  * Refactoring of morphtag and lemma + part of speech [too unstable]
-
 For next iteration
 ------------------
+
+  * Generalised `indeclinable` field [complete, but too unstable]
+
+  * Refactoring of morphtag and lemma + part of speech [complete, but too unstable]
+
+  * Export slash edge labels; fix visualization which is still based on interpretation
+
+  * More UI stuff for semantic features [currently no online edititing of tags; create/edit/delete of 
+    As and AVs must be done in SQL]
+
+  * Export of empty dependency token sorts
 
   * Non-numeric chapter number support
 
@@ -52,9 +32,10 @@ For next iteration
 
   * Source meta-data and licensing → TODO-dokument
 
-  * Compose all notes on text production into a coherent document
-
-  * Compose all notes on morphology into a coherent document
+  * Gather all documentation in one location
+    - include notes on text production
+    - include morphology notes
+    - include app doc
 
   * Full sentence alignment 
 
