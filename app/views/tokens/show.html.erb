@@ -25,12 +25,12 @@
     <% if @token.source_lemma %>
       <dt>Source lemma:</dt><dd class="lemma"><%= format_language_string(@token.source_lemma, @token.language) %></dd>
     <% end %>
-    <% if @token.foreign_ids %>
-      <dt>Foreign IDs:</dt><dd><%= @token.foreign_ids %></dd>
-    <% end %>
   <% end %>
   <% if @token.relation %>
     <dt>Dependency relation:</dt><dd><%= readable_dependency(@token.relation, @token.head ? link_to(@token.head.id, @token.head) : nil) %></dd>
+  <% end %>
+  <% if @token.foreign_ids %>
+    <dt>Foreign IDs:</dt><dd class="tag"><%= @token.foreign_ids %></dd>
   <% end %>
   <dt>Annotation completion:</dt><dd><%= link_to(readable_completion(@token.sentence), annotation_path(@token.sentence)) %></dd>
   <%= link_to_resources @token, :index, :edit %>
@@ -40,7 +40,7 @@
   <%= notes_summary @token.notes %>
 <% end %>
 
-<% layer 'semantic_tags' do -%>
+<% layer_unless @semantic_tags.empty?, 'semantic_tags' do -%>
   <%= semantic_tags_summary(@semantic_tags) %>
 <% end %>
 

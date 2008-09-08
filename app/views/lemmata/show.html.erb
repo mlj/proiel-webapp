@@ -8,6 +8,9 @@
   <% if @lemma.short_gloss %>
     <dt>Translation:</dt><dd><q><%= @lemma.short_gloss %></q></dd>
   <% end %>
+  <% if @lemma.foreign_ids %>
+    <dt>Foreign IDs:</dt><dd class="tag"><%= @lemma.foreign_ids %></dd>
+  <% end %>
   <%= link_to_resources @lemma, :index, :edit %>
 <% end %>
 
@@ -19,7 +22,7 @@
   <%= audits_summary @lemma.audits %>
 <% end %>
 
-<% layer 'semantic_tags' do -%>
+<% layer_unless @semantic_tags.empty?, 'semantic_tags' do -%>
   <%= semantic_tags_summary(@semantic_tags) %>
 <% end %>
 
