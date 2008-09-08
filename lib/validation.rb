@@ -86,7 +86,7 @@ class Validator < Task
     sentences.each do |s|
       s.morphtaggable_tokens.find(:all, :conditions => [ "morphtag is not null and sentences.reviewed_by is not null" ], :include => :sentence).each do |t|
         m = PROIEL::MorphTag.new(t.morphtag)
-        logger.warn { "Token #{t.id} (#{t.form} in #{t.sentence.id}): Morphtag #{m} is invalid." } unless m.is_valid?(t.language)
+        logger.warn { "Token #{t.id} (#{t.form} in #{t.sentence.id}): Morphtag #{m} is invalid." } unless m.is_valid?(t.language.iso_code.to_sym)
       end
     end
   end
@@ -100,7 +100,7 @@ class Validator < Task
 
     candidates = Lemma.find(:all, :conditions => [ "variant IS NOT NULL" ])
     candidates.each do |o|
-      if c = Lemma.find(:first, :conditions => [ "lemma = ? and language = ? and variant is null", o.lemma, o.language ])
+      if c = o.language.lemmata.find(:first, :conditions => [ "lemma = ? and variant is null", o.lemma ])
         logger.error { "Lemma base form #{o.lemma} occurs both with and without variant numbers" }
       end
     end
@@ -118,9 +118,9 @@ class Validator < Task
           ml = token.morph_lemma_tag
           raise "Inconsistency! #{ml}" unless ml.morphtag.is_closed?
 
-          next unless ml.morphtag.is_valid?(token.language)  # FIXME: at some point eliminate
+          next unless ml.morphtag.is_valid?(token.language.iso_code.to_sym)  # FIXME: at some point eliminate
 
-          result, pick, *manual_tags = TAGGER.tag_token(token.language, token.form, nil, :force_method => :manual_rules)
+          result, pick, *manual_tags = token.language.guess_morphology(token.form, nil, :force_method => :manual_rules)
           manual_tags = manual_tags ? manual_tags.map { |t| t[0] } : []
 
           case result
@@ -137,6 +137,6 @@ class Validator < Task
   end
 
   def log_token_error(logger, token, msg)
-    logger.error { "Token #{token.id} (sentence #{token.sentence.id}) '#{token.form}' (#{token.language}): #{msg}" }
+    logger.error { "Token #{token.id} (sentence #{token.sentence.id}) '#{token.form}' (#{token.language.name}): #{msg}" }
   end
 end

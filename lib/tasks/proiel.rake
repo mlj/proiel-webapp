@@ -6,7 +6,7 @@ namespace :proiel do
   end
 
   desc "Validate PROIEL database"
-  task(:validator => :myenvironment) do
+  task(:validate => ["db:validate", :myenvironment]) do
     require 'validation'
 
     v = Validator.new

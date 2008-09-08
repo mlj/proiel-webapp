@@ -103,7 +103,8 @@ module CollectiveIdea #:nodoc:
         
         # Returns the attributes that are audited
         def audited_attributes
-          attributes.except(*non_audited_columns)
+          #attributes.except(*non_audited_columns)
+          changes.except(*non_audited_columns)
         end
         
         # Temporarily turns off auditing while saving.

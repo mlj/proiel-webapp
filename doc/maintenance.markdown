@@ -55,8 +55,15 @@ Example:
     Removing attribute Token.morphtag_source from audit 17703
     ...
 
-Import and export tasks
-=======================
+`proiel:validate`
+-----------------
+
+This task validates the entire database, first using model validations for each, then
+using secondary constraints that have not been implemented in the models. Some of these
+are designed to be auto-correcting, e.g. orphaned lemmata are cleaned up by this task.
+
+The task is intended to be run whenever the annotation scheme is modified to ensure that
+all annotation remains valid.
 
 `proiel:semantic_tags:import` and `proiel:semantic_tags:export`
 ---------------------------------------------------------------
