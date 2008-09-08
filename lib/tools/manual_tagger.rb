@@ -59,4 +59,4 @@ class ManualTagger < Task
 end
 
 v = ManualTagger.new
-v.execute!('mlj')
+v.execute!

@@ -1,6 +1,3 @@
-#TODO
-USER_NAME='mlj'
-
 DEFAULT_EXPORT_DIRECTORY = File.join(RAILS_ROOT, 'public', 'exports')
 
 namespace :proiel do
@@ -115,7 +112,7 @@ namespace :proiel do
       raise "Missing argument" unless field and from_value and to_value
 
       require 'mass_assignment'
-      Token.transaction(User.find_by_login(USER_NAME)) do #FIXME
+      Token.transaction do
         mt = MassTokenAssignment.new
         mt.reassign_morphology!(field, from_value, to_value)
         mt.reassign_morphology!(field, from_value, to_value, 'source_morphtag')
