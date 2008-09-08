@@ -1,13 +1,13 @@
 Maintenance tasks
 =================
 
-`proiel:reassign:morphology`
+`proiel:morphology:reassign`
 ----------------------------
 
 This task is used to change all occurrences of a particular value of a morphological
 field to another value. For example
 
-    $ rake proiel:reassign:morphology FIELD=voice FROM=o TO=p
+    $ rake proiel:morphology:reassign FIELD=voice FROM=o TO=p
     Reassigning voice of attribute morphtag for token 102448: V--sapomn--- → V--sappmn---
     Reassigning voice of attribute morphtag for token 102522: V---pno----- → V---pnp-----
     Reassigning voice of attribute morphtag for token 103721: V--sapomn--- → V--sappmn---
@@ -24,6 +24,19 @@ keeping tag set and database synchronised.
 
 Note that this `rake` task also modifies the `source_morphtag` attribute of each token
 in the same way it modifies the `morphtag` attribute.
+
+`proiel:morphology:force_manual_tags`
+-------------------------------------
+
+This task will apply the morphology set out in manually crafted morpholgical rules
+to all tokens that match the criteria in the rules for given sources. This can be
+used to overwrite bad annotations once the manually crafted morphological rules are
+deemed to be entirely correct.
+
+    $ rake proiel:morphology:force_manual_tags SOURCES=perseus-vulgate-synth
+     INFO manual-tagger: Working on source perseus-vulgate-synth...
+    ERROR manual-tagger: Token 251733 (sentence 12871) 'in': Tagged with closed class morphology but not found in definition.
+    ERROR manual-tagger: Token 251782 (sentence 12878) 'quia': Tagged with closed class morphology but not found in definition.
 
 `proiel:history:prune:attribute`
 --------------------------------

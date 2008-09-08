@@ -10,19 +10,7 @@ namespace :proiel do
     require 'validation'
 
     v = Validator.new
-    v.execute!(USER_NAME)
-  end
-
-  desc "Force manual morphological rules. SOURCES=source_identifier[,..]"
-  task(:manual_tagger => :myenvironment) do
-    require 'tools/manual_tagger'
-  
-    raise "Source identifiers required" unless ENV['SOURCES']
-
-    source_ids = ENV['SOURCES'].split(',').collect { |s| Source.find_by_code(s) }
-
-    v = ManualTagger.new(source_ids)
-    v.execute!(USER_NAME)
+    v.execute!
   end
 
   desc "Import a PROIEL source text. Options: FILE=data_file BOOK=book_filter" 
@@ -105,9 +93,20 @@ namespace :proiel do
     end
   end
 
-  namespace :reassign do
+  namespace :morphology do
+    desc "Force manual morphological rules. Options: SOURCES=source_identifier[,..]"
+    task(:force_manual_tags => :myenvironment) do
+      sources = ENV['SOURCES']
+      raise "Source identifiers required" unless sources
+
+      require 'tools/manual_tagger'
+      source_ids = sources.split(',').collect { |s| Source.find_by_code(s) }
+      v = ManualTagger.new(source_ids)
+      v.execute!
+    end
+
     desc "Reassign a morphological field. Options: FIELD=field, FROM=from_value, TO=to_value"
-    task(:morphology => :myenvironment) do
+    task(:reassign => :myenvironment) do
       field, from_value, to_value = ENV['FIELD'], ENV['FROM'], ENV['TO']
       raise "Missing argument" unless field and from_value and to_value
 
