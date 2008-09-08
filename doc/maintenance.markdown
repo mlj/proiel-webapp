@@ -87,3 +87,31 @@ Example:
     Lemma,2256,animacy,+
     ...
     $ rake proiel:semantic_tags:import FILE=tags.csv
+
+`proiel:text:export`
+--------------------
+
+This task exports texts and per-sentence annotation to a number of different formats.
+The source to export is identified using the variable `ID`. If not provided, all available
+texts will be exported. The variable `FORMAT` serves to select which export format to
+use. By default, the PROIEL XML format is used. Other alternatives are `maltxml` and
+`tigerxml`.
+
+`MODE` is by default `all`, which will export all available data. Alternatively, the
+setting `reviewed` will only export sentences that have been reviewed. Finally, the
+variable `DIRECTORY` controls the export directory to use. By default, the default
+export path is used.
+
+`proiel:schemata:export`
+------------------------
+
+This task exports the schemata for all export formats. If no directory is supplied,
+the default export path is used.
+
+    $ rake proiel:schemata:export
+    $ ls -l public/exports/
+    total 20
+    -rw-r--r-- 1 mlj mlj 5850 2008-09-08 12:56 morphology.xml
+    -rw-r--r-- 1 mlj mlj 1666 2008-09-08 12:56 relations.xml
+    -rw-r--r-- 1 mlj mlj 5958 2008-09-08 12:56 text.xsd
+

@@ -13,18 +13,9 @@ namespace :proiel do
     v.execute!
   end
 
-  desc "Import a PROIEL source text. Options: FILE=data_file BOOK=book_filter" 
-  task(:import => :environment) do
-    require 'import'
-
-    raise "Filename required" unless ENV['FILE']
-    e = ENV['BOOK'] ? PROIELXMLImport.new(:book_filter => ENV['BOOK']) : PROIELXMLImport.new
-    e.read(ENV['FILE'])
-  end
-
-  namespace :import do
-    desc "Import a PROIEL dictionary. Options: FILE=data_file" 
-    task(:dictionary => :environment) do
+  namespace :dictionary do
+    desc "Import a PROIEL dictionary. Options: FILE=data_file"
+    task(:import => :environment) do
       require 'import'
 
       raise "Filename required" unless ENV['FILE']
@@ -32,64 +23,80 @@ namespace :proiel do
     end
   end
 
-  desc "Export a PROIEL source text. Options: ID=source_identifier"
-  task(:export => :environment) do
-    require 'export'
+  namespace :text do
+    desc "Import a PROIEL source text. Options: FILE=data_file BOOK=book_filter"
+    task(:import => :environment) do
+      require 'import'
 
-    source = Source.find_by_code(ENV['ID'])
-    raise "Source not found" unless source
-    e = PROIELXMLExport.new(source)
-    e.write("#{source.code}.xml")
+      raise "Filename required" unless ENV['FILE']
+      e = ENV['BOOK'] ? PROIELXMLImport.new(:book_filter => ENV['BOOK']) : PROIELXMLImport.new
+      e.read(ENV['FILE'])
+    end
+
+    desc "Export a PROIEL source text. Optional options: ID=source_identifier FORMAT={proiel|maltxml|tigerxml} MODE={all|reviewed} DIRECTORY=destination_directory"
+    task(:export => :environment) do
+      source = ENV['ID']
+      format = ENV['FORMAT']
+      format ||= 'proiel'
+      mode = ENV['MODE']
+      mode ||= 'all'
+      directory = ENV['DIRECTORY']
+      directory ||= DEFAULT_EXPORT_DIRECTORY
+      require 'export'
+
+      case format
+      when 'maltxml'
+        klass = MaltXMLExport
+        suffix = '-malt'
+      when 'tigerxml'
+        klass = TigerXMLExport
+        suffix = '-tiger'
+      when 'proiel'
+        klass = PROIELXMLExport
+        suffix = ''
+      else
+        raise "Invalid format"
+      end
+
+      case mode
+      when 'all'
+        options = {}
+      when 'reviewed'
+        options = { :reviewed_only => true }
+      else
+        raise "Invalid mode"
+      end
+
+      if source
+        sources = Source.find_by_code(source)
+      else
+        sources = Source.find(:all)
+      end
+
+      # Prepare destination directory and ancillary files
+      Dir::mkdir(directory) unless File::directory?(directory)
+
+
+      sources.each do |source|
+        e = klass.new(source, options)
+        e.write(File.join(directory, "#{source.code}#{suffix}.xml"))
+      end
+    end
   end
 
-  namespace :export do
-    namespace :maltxml do
-      require 'export'
+  namespace :schemata do
+    desc "Export PROIEL schemata. Optional options: DIRECTORY=destination_directory"
+    task(:export) do
+      directory = ENV['DIRECTORY']
+      directory ||= DEFAULT_EXPORT_DIRECTORY
 
-      desc "Export a PROIEL source text as MaltXML. Options: ID=source_identifier"
-      task(:all => :myenvironment) do
-        source = Source.find_by_code(ENV['ID'])
-        raise "Source not found" unless source
-        e = MaltXMLExport.new(source)
-        e.write("#{source.code}-malt.xml")
-      end
-    end
-
-    namespace :tigerxml do
-      require 'export'
-
-      desc "Export a PROIEL source text as TigerXML. Options: ID=source_identifier"
-      task(:all => :myenvironment) do
-        source = Source.find_by_code(ENV['ID'])
-        raise "Source not found" unless source
-        e = TigerXMLExport.new(source)
-        e.write("#{source.code}-tiger.xml")
-      end
-    end
-
-    namespace :all do
-      require 'export'
-
-      desc "Export all PROIEL source texts with all publicly available data (i.e. reviewed data)."
-      task(:public => :myenvironment) do
-        Dir::mkdir(DEFAULT_EXPORT_DIRECTORY) unless File::directory?(DEFAULT_EXPORT_DIRECTORY)
-        File::copy(File.join(RAILS_ROOT, 'data', 'text.xsd'), 
-                   File.join(DEFAULT_EXPORT_DIRECTORY, 'text.xsd'))
-        File::copy(File.join(RAILS_ROOT, 'lib', 'proiel', 'morphology.xml'), 
-                   File.join(DEFAULT_EXPORT_DIRECTORY, 'morphology.xml'))
-        File::copy(File.join(RAILS_ROOT, 'lib', 'proiel', 'relations.xml'), 
-                   File.join(DEFAULT_EXPORT_DIRECTORY, 'relations.xml'))
-        Source.find(:all).each do |source|
-          e = PROIELXMLExport.new(source, :reviewed_only => true)
-          e.write(File.join(DEFAULT_EXPORT_DIRECTORY, "#{source.code}.xml"))
-
-          e = TigerXMLExport.new(source, :reviewed_only => true)
-          e.write(File.join(DEFAULT_EXPORT_DIRECTORY, "#{source.code}-tiger.xml"))
-
-          e = MaltXMLExport.new(source, :reviewed_only => true)
-          e.write(File.join(DEFAULT_EXPORT_DIRECTORY, "#{source.code}-malt.xml"))
-        end
-      end
+      Dir::mkdir(directory) unless File::directory?(directory)
+      File::copy(File.join(RAILS_ROOT, 'data', 'text.xsd'),
+                 File.join(directory, 'text.xsd'))
+      File::copy(File.join(RAILS_ROOT, 'lib', 'proiel', 'morphology.xml'),
+                 File.join(directory, 'morphology.xml'))
+      File::copy(File.join(RAILS_ROOT, 'lib', 'proiel', 'relations.xml'),
+                 File.join(directory, 'relations.xml'))
     end
   end
 
