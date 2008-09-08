@@ -3,19 +3,18 @@ class StatisticsController < ApplicationController
 
   BookCompletionRatio = Struct.new(:source, :book, :ratio)
 
-  # GET /statistics
   def show
-    @completion = Source.completion
-    @sources = Source.find(:all)
-    @activity = Source.activity
-
-    all_user_activity = User.find(:all).collect { |u| UserActivity.new(u) }.select(&:is_active?)
-    if current_user.has_role?(:reviewer)
-      @user_activity = all_user_activity
-    else
-      my_activity, others_activity = all_user_activity.partition { |u| u.user == current_user }
-      @user_activity = my_activity
-    end
+    @completion_stats = {
+      :reviewed => Sentence.reviewed.count,
+      :annotated => Sentence.annotated.unreviewed.count,
+      :unannotated => Sentence.unannotated.count,
+    }
+    @annotated_by_stats = Sentence.annotated.count(:group => :annotator).map { |k, v| [k.full_name, v] }
+    @reviewed_by_stats = Sentence.reviewed.count(:group => :reviewer).map { |k, v| [k.full_name, v] }
+    @activity_stats = Sentence.annotated.count(:all, :conditions => { "annotated_at" => 1.month.ago..1.day.ago },
+                                               :group => "DATE_FORMAT(annotated_at, '%Y-%m-%d')",
+                                               :order => "annotated_at ASC")
+    @sources = Source.all
 
     user = User.find(session[:user_id])
     limit = 10
@@ -36,12 +35,4 @@ class StatisticsController < ApplicationController
       end
     end
   end
-
-#  def monthly
-#    data_set = Ruport::DataSet.new(self.column_names)
-#    self.find_all.each do |row|
-#    data_set << row.attributes
-  #    end
-#    data_set.to_csv
-#  end
 end

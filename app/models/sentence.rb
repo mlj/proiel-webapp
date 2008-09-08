@@ -28,6 +28,11 @@ class Sentence < ActiveRecord::Base
   has_many :nonempty_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
     :conditions => { "sort" => PROIEL::NON_EMPTY_TOKEN_SORTS }, :order => 'token_number'
 
+  named_scope :unannotated, :conditions => ["annotated_by IS NULL"]
+  named_scope :annotated, :conditions => ["annotated_by IS NOT NULL"]
+  named_scope :unreviewed, :conditions => ["reviewed_by IS NULL"]
+  named_scope :reviewed, :conditions => ["reviewed_by IS NOT NULL"]
+
   # General schema-defined validations
 
   validates_presence_of :source_id

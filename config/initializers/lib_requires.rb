@@ -1,6 +1,5 @@
 require 'google_chart'
 require 'logos'
 require 'lang_string'
-require 'stats'
 require 'statistics'
 require 'proiel'

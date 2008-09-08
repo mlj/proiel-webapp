@@ -1,4 +1,8 @@
-# Simple statistics. If you need anything more powerful, use GSL or R.
+#
+# statistics.rb - Simple statistics functions
+#
+# Written by Marius L. Jøhndal, 2007, 2008
+#
 class StatArray < Array
   def sum
     x = inject { |sum, x| sum + x }

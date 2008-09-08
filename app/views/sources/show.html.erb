@@ -8,3 +8,9 @@
   <dt>Editor of electronic version:</dt><dd><%=h @source.editor %></dd>
   <%= link_to_resources @source, :index, :edit %>
 <% end %>
+
+<% layer :statistics do -%>
+  <%= statistics "Completion", "sentence", @completion_stats %>
+  <%= statistics "Annotators", "sentence", @annotated_by_stats %>
+  <%= statistics "Reviewers", "sentence", @reviewed_by_stats %>
+<% end %>
