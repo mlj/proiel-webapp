@@ -367,19 +367,17 @@ module PROIEL
     end
 
     def self.new_from_editor(editor_output)
-      g = ValidatingDependencyGraph.new
-
-      (rec = lambda do |subtree, head_id|
-        unless subtree.nil?
-          subtree.each_pair do |id, values|
-            data = { :empty => values['empty'] }
-            g.add_node(id.to_i, values['relation'], head_id, (values['slashes'] || []).map(&:to_i), data)
-            rec[values['dependents'], id.to_i]
+      ValidatingDependencyGraph.new do |g|
+        (rec = lambda do |subtree, head_id|
+          unless subtree.nil?
+            subtree.each_pair do |id, values|
+              data = { :empty => values['empty'] }
+              g.badd_node(id.to_i, values['relation'], head_id, (values['slashes'] || []).map(&:to_i), data)
+              rec[values['dependents'], id.to_i]
+            end
           end
-        end
-      end)[editor_output, nil]
-
-      g
+        end)[editor_output, nil]
+      end
     end
 
     public
