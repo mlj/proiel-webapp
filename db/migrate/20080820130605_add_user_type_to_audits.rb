@@ -1,6 +1,6 @@
 class AddUserTypeToAudits < ActiveRecord::Migration
   def self.up
-    add_column :audits, :user_type, :string, :null => false, :limit => 16
+    add_column :audits, :user_type, :string, :null => false, :limit => 16, :default => nil
 
     execute("UPDATE audits SET user_type = 'User'");
   end
