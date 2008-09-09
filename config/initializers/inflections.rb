@@ -6,6 +6,6 @@
 #   inflect.uncountable %w( fish sheep )
 # end
 
-Inflector.inflections do |inflect|
+ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular "lemma", "lemmata"
 end
