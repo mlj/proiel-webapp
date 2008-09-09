@@ -102,7 +102,7 @@ class Token < ActiveRecord::Base
   # Sets morphology and lemma based on a morph+lemma tag. Saves the
   # token.
   def set_morph_lemma_tag!(ml_tag)
-    returning Lemma.find_or_create_by_morph_and_lemma_tag_and_language(ml_tag, self.language) do |l|
+    returning language.lemmata.find_or_create_by_morph_and_lemma_tag(ml_tag) do |l|
       self.morphtag = ml_tag.morphtag.to_s
       self.lemma_id = l.id
       self.save!
@@ -157,7 +157,7 @@ class Token < ActiveRecord::Base
     PROIEL::MORPHTAGGABLE_TOKEN_SORTS.include?(sort)
   end
 
-  # Invokes the PROIEL morphology tagger. Takes exitsing information into
+  # Invokes the PROIEL morphology tagger. Takes existing information into
   # account, be it already existing morph+lemma tags or previous instances
   # of the same token form.
   def invoke_tagger

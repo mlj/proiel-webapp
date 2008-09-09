@@ -18,9 +18,9 @@ class Lemma < ActiveRecord::Base
     self.variant ? "#{self.lemma}##{self.variant}" : self.lemma 
   end
 
-  def Lemma.find_or_create_by_morph_and_lemma_tag_and_language(ml_tag, language)
+  def Lemma.find_or_create_by_morph_and_lemma_tag(ml_tag)
     pos = ml_tag.morphtag.pos_to_s
-    find_or_create_by_lemma_and_variant_and_pos_and_language(ml_tag.lemma, ml_tag.variant, pos, language)
+    find_or_create_by_lemma_and_variant_and_pos(ml_tag.lemma, ml_tag.variant, pos)
   end
 
   # Merges another lemma into this lemma and saves the results. The two lemmata
