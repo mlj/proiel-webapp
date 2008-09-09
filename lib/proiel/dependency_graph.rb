@@ -372,12 +372,18 @@ module PROIEL
           unless subtree.nil?
             subtree.each_pair do |id, values|
               data = { :empty => values['empty'] }
-              g.badd_node(id.to_i, values['relation'], head_id, (values['slashes'] || []).map(&:to_i), data)
-              rec[values['dependents'], id.to_i]
+              g.badd_node(id_to_i(id), values['relation'], head_id, (values['slashes'] || []).map { |x| id_to_i(x) }, data)
+              rec[values['dependents'], id_to_i(id)]
             end
           end
         end)[editor_output, nil]
       end
+    end
+
+    private
+
+    def self.id_to_i(id)
+      id[/^new/] ? id : id.to_i
     end
 
     public
