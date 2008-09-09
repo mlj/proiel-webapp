@@ -33,7 +33,7 @@ class DependenciesController < ApplicationController
       } ] 
     end.flatten]
 
-    @structure = (params[:output] and ActiveSupport::JSON.decode(params[:output])) || (@sentence.is_annotated? ? @sentence.dependency_graph.to_h : {})
+    @structure = (params[:output] and ActiveSupport::JSON.decode(params[:output])) || (@sentence.has_dependency_annotation? ? @sentence.dependency_graph.to_h : {})
 
     @relations = PROIEL::RELATIONS.values.sort_by { |v| v.code.to_s }
   end
