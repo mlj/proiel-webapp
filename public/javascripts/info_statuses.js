@@ -178,10 +178,10 @@ var InfoStatus = function() {
                                      elm.highlight();
                                      elm.fade({delay: 2.0});
                                  },
-                                 onFailure: function() {
+                                 onFailure: function(response) {
                                      var elm = $('server-message');
                                      elm.show();
-                                     elm.update('Changes could not be saved!');
+                                     elm.update('Error: ' + response.responseText);
                                      elm.highlight({startcolor: 'ff0000'});
                                      elm.fade({delay: 2.0});
                                  },

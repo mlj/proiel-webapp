@@ -1,4 +1,6 @@
 class Token < ActiveRecord::Base
+  INFO_STATUSES = [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :no_info_status, :info_unannotatable]
+
   belongs_to :sentence
   belongs_to :book
   belongs_to :lemma
@@ -44,6 +46,8 @@ class Token < ActiveRecord::Base
   # form and presentation_form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
   validates_unicode_normalization_of :presentation_form, :form => UNICODE_NORMALIZATION_FORM
+
+  validates_inclusion_of :info_status, :in => INFO_STATUSES
 
   # Specific validations
   validate :validate_sort

@@ -24,11 +24,13 @@ class InfoStatusesController < ApplicationController
     # arguments to the ActiveRecord::Base.update method (like in the example in the
     # standard Rails documentation for the method). But can we...?
     ids, attributes = get_ids_and_attributes_from_params
-    Token.update(ids, attributes) unless ids.blank?
+    ids.zip(attributes).each do |id, attr|
+      Token.find(id).update_attributes!(attr)
+    end
   rescue
-    render :text => '', :status => :not_found
+    render :text => $!, :status => 500
   else
-    render :text => '', :status => :ok
+    render :text => ''
   end
 
 
@@ -43,7 +45,7 @@ class InfoStatusesController < ApplicationController
     if params[:tokens]
       params[:tokens].each_pair do |id, category|
         ids_ary << id
-        attributes_ary << {:info_status => category.tr('-', '_')}
+        attributes_ary << {:info_status => category.tr('-', '_').to_sym}
       end
     end
 
