@@ -122,6 +122,11 @@ class Sentence < ActiveRecord::Base
       added_token_ids = dependency_graph.nodes.map(&:identifier) - ts.map(&:id)
 
       removed_tokens = ts.select { |token| removed_token_ids.include?(token.id) }
+      # This list of "removed" tokens is actually not a list of tokens to be
+      # deleted, but all the tokens not included in the dependency graph. We need
+      # to make sure that only empty dependency nodes are actually deleted; if others
+      # are present, the user has given us an incomplete analysis.
+      raise "Incomplete depdendency graph" unless removed_tokens.all?(&:is_empty?)
       removed_tokens.each { |token| token.destroy }
 
       # We will append new empty nodes at the end of the token sequence. Establish
@@ -141,7 +146,7 @@ class Sentence < ActiveRecord::Base
 
       # Now the graph should contain the same number of tokens as the sentence, and
       # their IDs should, if id_map is taken into account, add up.
-      raise "Dependency graph ID inconsistency: #{tokens.dependency_annotatable.map(&:id).sort.join(', ')} != #{dependency_graph.identifiers.map { |i| id_map[i] }.sort.join(', ')}" unless tokens.dependency_annotatable.map(&:id).sort == dependency_graph.identifiers.map { |i| id_map[i] }.sort
+      raise "Dependency graph ID inconsistency" unless tokens.dependency_annotatable.map(&:id).sort == dependency_graph.identifiers.map { |i| id_map[i] }.sort
 
       # Now we can iterate the sentence and update all tokens with new annotation
       # and secondary edges.

@@ -295,7 +295,10 @@ var SentenceWidget = Class.create(RadioGroup, {
 
   clear: function() { this.widget.descendants().invoke('removeClassName', 'consumed'); },
 
-  isConsumed: function(id) { return this.find(id).hasClassName("consumed"); }
+  isConsumed: function(id) { return this.find(id).hasClassName("consumed"); },
+
+  // Returns all unconsumed tokens
+  getUnconsumedTokens: function() { return this.buttons().findAll(function(e) { return !e.hasClassName("consumed"); }); }
 });
 
 function getRecommendedRelation(head_relation, head, dependent) {
@@ -749,6 +752,21 @@ var Model = Class.create({
   }
 });
 
+function validate(ev) {
+  var errors = sentence_widget.getUnconsumedTokens();
+
+  if (errors.length > 0) {
+    alert("Annotation is incomplete. Please correct the indicated errors before saving.");
+
+    errors.each(function(e) {
+      // Go up to the label and colour that since the input element itself isn't displayed at all
+      new Effect.Highlight(e.up("label"), { startcolor: '#ff9999', endcolor: '#ffffff' });
+      e.addClassName("validation-error");
+    });
+    Event.stop(ev) // stop event propagation
+  }
+}
+
 // Document hooks
 
 Event.observe(window, 'load', function() {
@@ -781,6 +799,7 @@ Event.observe(window, 'load', function() {
   $('button-remove-slashes').observe('click', function(ev) { controller.removeSlashes(); });
   $('button-cut').observe('click', function(ev) { controller.cut(); });
   $('button-paste').observe('click', function(ev) { controller.paste(); });
+  $('dependencies-form').observe('submit', validate, false);
 
   // Set starting state.
   controller.reset();

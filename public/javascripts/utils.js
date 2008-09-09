@@ -79,8 +79,11 @@ var RadioGroup = Class.create({
 
   // Returns a radio button by value.
   find: function(value) {
-    return this.widget.getElementsBySelector('input').find(function(e) { return e.value == value; });
+    return this.buttons().find(function(e) { return e.value == value; });
   },
+
+  // Returns all radio buttons in group.
+  buttons: function() { return this.widget.getElementsBySelector('input'); },
 
   // Selects a radio button by value.
   select: function(value) {
@@ -90,17 +93,17 @@ var RadioGroup = Class.create({
   },
 
   // Deselects all radio buttons in a radio group.
-  deselect: function() { this.widget.getElementsBySelector('input').each(function(e) { e.checked = false; }); },
+  deselect: function() { this.buttons().each(function(e) { e.checked = false; }); },
 
   // Returns the current selection within this radio group.
   selection: function() { 
-    var selected = this.widget.getElementsBySelector('input').find(function(e) { return e.checked; });
+    var selected = this.buttons().find(function(e) { return e.checked; });
     return selected ? selected.value : null;
   },
 
   // Disables the radio group.
-  disable: function() { this.widget.getElementsBySelector('input').invoke('disable'); },
+  disable: function() { this.buttons().invoke('disable'); },
 
   // Enables the radio group.
-  enable: function() { this.widget.getElementsBySelector('input').invoke('enable'); }
+  enable: function() { this.buttons().invoke('enable'); }
 });
