@@ -32,6 +32,9 @@ class TokensController < ResourceController::Base
       params[:token][:morphtag] = nil if params[:token][:morphtag].blank?
       params[:token][:lemma_id] = nil if params[:token][:lemma_id].blank?
       params[:token][:form] = params[:token][:form].chars.normalize(UNICODE_NORMALIZATION_FORM)
+      [:foreign_ids, :empty_token_sort].each do |a|
+        params[:token][a] = nil if params[:token][a].blank?
+      end
     end
   end
 end
