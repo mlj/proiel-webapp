@@ -27,18 +27,6 @@ module ApplicationHelper
     content_tag(:div, content_tag(:b, header) + body, :id => level)
   end
 
-  # Generates a lemma and morphology description for a token.
-  def readable_lemma_morphology(token, options = {})
-    if token.lemma
-      popup = []
-      popup << "#{token.lemma.lemma}" if token.lemma
-      popup << "(#{token.morph.descriptions([], false).join(', ')})" if token.morphtag
-      popup.join(' ')
-    else
-      ''
-    end
-  end
-
   # Returns the contents of +value+ unless +value+ is +nil+, in which case it
   # returns the HTML entity for non-breakable space.
   def make_nonblank(value)
