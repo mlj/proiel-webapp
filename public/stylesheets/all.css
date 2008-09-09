@@ -396,3 +396,10 @@ div.statistics { margin-top: 2em; }
 div.statistics img { float: left; }
 div.statistics table { width: 50%; float: right; }
 div.statistics br { clear: both; }
+
+/* Announcement block */
+div#announcement {
+  margin: 0 0 0 0;
+  color: #9F6000;
+  background: #FEEFB3 url(/images/sweetie/24-tools.png) 10px center no-repeat;
+}
