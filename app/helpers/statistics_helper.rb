@@ -1,5 +1,6 @@
 module StatisticsHelper
   def statistics(title, unit, data)
+    data = data.sort_by { |k, v| v }.reverse
     content_tag(:div, pie_chart(title, data) + statistics_table(title, unit, data) + "<br/>", :class => "statistics")
   end
 
@@ -7,10 +8,14 @@ module StatisticsHelper
     content_tag(:table, data.map { |k, v| content_tag(:tr, content_tag(:td, k.is_a?(Symbol) ? k.humanize : k) + content_tag(:td, pluralize(v, unit)), :class => cycle('even', 'odd')) }.join)
   end
 
-  COLORS = %w(FABA32 FC694D F5DD7E D0DB2AC 704948 968144 C08FBC FC8D4D ADD97E)
+  # Veerle's top colour scheme from http://beta.dailycolorscheme.com/archive/2006/09/20
+  COLORS = %w(820F00 FF4A12 94B3C5 74C6F1 586B7A 3E4F4F ABC507)
 
   def pie_chart(title, data)
     image_tag(GoogleChart::PieChart.new('450x200', title, false) do |pc|
+      if data.length > COLORS.length # this assumes that the data is sorted
+        data = data.first(COLORS.length - 1) + [[:others, data.from(COLORS.length - 1).sum { |k, v| v }]]
+      end
       data.each_with_index do |data, i|
         k, v = *data
         pc.data k.is_a?(Symbol) ? k.humanize : k, v, COLORS[i]
