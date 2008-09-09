@@ -1,20 +1,12 @@
-= The PROIEL Corpus
+= The PROIEL web application
 
 == Installation
 
-You need Rails 2.1 installed as a RubyGem for this application to work.
+You need Rails 2.1.1 installed as a RubyGem for this application to work.
+
 Most Ruby dependencies should be handled automatically. Use
     rake gems
-to get a list of dependencies and their installation status. In addition to
-the above, you need the following gems
-* xml-simple
-* diff-lcs
-* gchartrb
-* treetop
-* ruby-sfst
-
-In addition, you need the following gem, which is part of the PROIEL Corpus
-* logos
+to get a list of dependencies and their installation status.
 
 You will also need a installations of the following tools with binaries
 in a path accessible to the application:

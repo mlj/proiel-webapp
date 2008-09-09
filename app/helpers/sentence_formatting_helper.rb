@@ -1,3 +1,5 @@
+require 'ucodes'
+
 module SentenceFormattingHelper
   # Formats one or more sentences as a legible sequence of words. +value+ may
   # either be an array of +Sentence+ objects, a single +Sentence+ object or an
