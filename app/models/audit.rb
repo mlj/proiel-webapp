@@ -10,7 +10,7 @@ require 'set'
 #
 class Audit < ActiveRecord::Base
   belongs_to :auditable, :polymorphic => true
-  belongs_to :user, :polymorphic => true
+  belongs_to :user
   stampable :creator_attribute => :user_id
   
   before_create :set_version_number
@@ -54,4 +54,28 @@ private
     self.version = max + 1
   end
   
+  protected
+
+  def self.search(query, options = {})
+    options[:order] ||= 'created_at DESC'
+
+    paginate options
+  end
+
+  public
+
+  # Checks if this audit represents the auditable's lastest revision.
+  def latest_revision_of_auditable?
+    max = self.class.maximum(:version,
+      :conditions => {
+        :auditable_id => auditable_id,
+        :auditable_type => auditable_type
+      })
+    max == version
+  end
+
+  # Reconstructs the auditable's state as per its previous revision.
+  def previous_revision_of_auditable
+    auditable.revision(:previous)
+  end
 end

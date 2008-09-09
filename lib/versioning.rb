@@ -247,3 +247,5 @@ module CollectiveIdea #:nodoc:
     end
   end
 end
+
+ActiveRecord::Base.send :include, CollectiveIdea::Acts::Audited

@@ -9,34 +9,33 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080905130310) do
+ActiveRecord::Schema.define(:version => 20080909130010) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
     t.datetime "starts_at"
     t.datetime "ends_at"
-    t.integer  "role_id",    :limit => 11
+    t.integer  "role_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "audits", :force => true do |t|
-    t.integer  "auditable_id",   :limit => 11
+    t.integer  "auditable_id"
     t.string   "auditable_type"
     t.string   "action"
     t.text     "changes"
-    t.integer  "version",        :limit => 11, :default => 0
-    t.integer  "user_id",        :limit => 11
-    t.datetime "created_at",                                  :null => false
-    t.string   "user_type"
+    t.integer  "version",        :default => 0
+    t.integer  "user_id",        :default => 0
+    t.datetime "created_at",                    :null => false
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
 
   create_table "bookmarks", :force => true do |t|
-    t.integer "user_id",     :limit => 11,                                :default => 0,         :null => false
-    t.integer "source_id",   :limit => 11,                                :default => 0,         :null => false
-    t.integer "sentence_id", :limit => 11,                                :default => 0,         :null => false
+    t.integer "user_id",                                                  :default => 0,         :null => false
+    t.integer "source_id",                                                :default => 0,         :null => false
+    t.integer "sentence_id",                                              :default => 0,         :null => false
     t.enum    "flow",        :limit => [:browsing, :annotation, :review], :default => :browsing, :null => false
   end
 
@@ -56,30 +55,30 @@ ActiveRecord::Schema.define(:version => 20080905130310) do
   end
 
   create_table "dictionary_entries", :force => true do |t|
-    t.integer "dictionary_id", :limit => 11, :default => 0,  :null => false
+    t.integer "dictionary_id",               :default => 0,  :null => false
     t.string  "identifier",    :limit => 32, :default => "", :null => false
     t.text    "data",                                        :null => false
   end
 
   create_table "dictionary_references", :force => true do |t|
-    t.integer  "lemma_id",            :limit => 11, :default => 0, :null => false
+    t.integer  "lemma_id",            :default => 0, :null => false
     t.string   "dictionary"
     t.string   "entry"
-    t.integer  "dictionary_entry_id", :limit => 11
+    t.integer  "dictionary_entry_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "import_sources", :force => true do |t|
-    t.string   "tag",        :limit => 16,  :null => false
-    t.string   "summary",    :limit => 256, :null => false
+    t.string   "tag",        :limit => 16, :default => "", :null => false
+    t.text     "summary",                                  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "languages", :force => true do |t|
-    t.string "iso_code", :limit => 3,  :null => false
-    t.string "name",     :limit => 32, :null => false
+    t.string "iso_code", :limit => 3,  :default => "", :null => false
+    t.string "name",     :limit => 32, :default => "", :null => false
   end
 
   add_index "languages", ["iso_code"], :name => "index_languages_on_iso_code", :unique => true
@@ -100,7 +99,7 @@ ActiveRecord::Schema.define(:version => 20080905130310) do
     t.boolean  "reconstructed"
     t.boolean  "nonexistant"
     t.boolean  "inflected"
-    t.integer  "language_id",   :limit => 11,                    :null => false
+    t.integer  "language_id",                 :default => 0,     :null => false
   end
 
   add_index "lemmata", ["lemma"], :name => "index_lemmata_on_lemma"
@@ -108,11 +107,11 @@ ActiveRecord::Schema.define(:version => 20080905130310) do
   add_index "lemmata", ["language_id"], :name => "index_lemmata_on_language_id"
 
   create_table "notes", :force => true do |t|
-    t.string   "notable_type",    :limit => 64, :null => false
-    t.integer  "notable_id",      :limit => 11, :null => false
-    t.string   "originator_type", :limit => 64, :null => false
-    t.integer  "originator_id",   :limit => 11, :null => false
-    t.text     "contents",                      :null => false
+    t.string   "notable_type",    :limit => 64, :default => "", :null => false
+    t.integer  "notable_id",                    :default => 0,  :null => false
+    t.string   "originator_type", :limit => 64, :default => "", :null => false
+    t.integer  "originator_id",                 :default => 0,  :null => false
+    t.text     "contents",                                      :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -123,30 +122,30 @@ ActiveRecord::Schema.define(:version => 20080905130310) do
   end
 
   create_table "semantic_attribute_values", :force => true do |t|
-    t.integer  "semantic_attribute_id", :limit => 11, :null => false
-    t.string   "tag",                   :limit => 64, :null => false
+    t.integer  "semantic_attribute_id",               :default => 0,  :null => false
+    t.string   "tag",                   :limit => 64, :default => "", :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "semantic_attributes", :force => true do |t|
-    t.string   "tag",        :limit => 64, :null => false
+    t.string   "tag",        :limit => 64, :default => "", :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "semantic_tags", :force => true do |t|
-    t.integer  "taggable_id",                 :limit => 11, :null => false
-    t.string   "taggable_type",               :limit => 64, :null => false
-    t.integer  "semantic_attribute_value_id", :limit => 11, :null => false
+    t.integer  "taggable_id",                               :default => 0,  :null => false
+    t.string   "taggable_type",               :limit => 64, :default => "", :null => false
+    t.integer  "semantic_attribute_value_id",               :default => 0,  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "sentence_alignments", :id => false, :force => true do |t|
-    t.integer  "primary_sentence_id",   :limit => 11, :default => 0,   :null => false
-    t.integer  "secondary_sentence_id", :limit => 11, :default => 0,   :null => false
-    t.float    "confidence",                          :default => 0.0, :null => false
+    t.integer  "primary_sentence_id",   :default => 0,   :null => false
+    t.integer  "secondary_sentence_id", :default => 0,   :null => false
+    t.float    "confidence",            :default => 0.0, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -154,15 +153,15 @@ ActiveRecord::Schema.define(:version => 20080905130310) do
   add_index "sentence_alignments", ["secondary_sentence_id"], :name => "index_sentence_alignments_on_secondary_sentence_id"
 
   create_table "sentences", :force => true do |t|
-    t.integer  "source_id",       :limit => 11, :default => 0, :null => false
-    t.integer  "book_id",         :limit => 2,  :default => 0, :null => false
-    t.integer  "chapter",         :limit => 2,  :default => 0, :null => false
-    t.integer  "sentence_number", :limit => 11, :default => 0, :null => false
+    t.integer  "source_id",       :default => 0, :null => false
+    t.integer  "book_id",         :default => 0, :null => false
+    t.integer  "chapter",         :default => 0, :null => false
+    t.integer  "sentence_number", :default => 0, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "annotated_by",    :limit => 11
+    t.integer  "annotated_by"
     t.datetime "annotated_at"
-    t.integer  "reviewed_by",     :limit => 11
+    t.integer  "reviewed_by"
     t.datetime "reviewed_at"
   end
 
@@ -170,14 +169,14 @@ ActiveRecord::Schema.define(:version => 20080905130310) do
   add_index "sentences", ["book_id"], :name => "index_sentences_on_book_id"
 
   create_table "slash_edge_interpretations", :force => true do |t|
-    t.string "tag",     :limit => 64,  :null => false
-    t.string "summary", :limit => 128, :null => false
+    t.string "tag",     :limit => 64,  :default => "", :null => false
+    t.string "summary", :limit => 128, :default => "", :null => false
   end
 
   create_table "slash_edges", :force => true do |t|
-    t.integer "slasher_id",                   :limit => 11
-    t.integer "slashee_id",                   :limit => 11
-    t.integer "slash_edge_interpretation_id", :limit => 11, :null => false
+    t.integer "slasher_id"
+    t.integer "slashee_id"
+    t.integer "slash_edge_interpretation_id", :default => 0, :null => false
   end
 
   add_index "slash_edges", ["slasher_id", "slashee_id"], :name => "index_slash_edges_on_slasher_and_slashee", :unique => true
@@ -189,20 +188,20 @@ ActiveRecord::Schema.define(:version => 20080905130310) do
     t.text    "source"
     t.text    "editor"
     t.text    "url"
-    t.integer "alignment_id", :limit => 11
+    t.integer "alignment_id"
     t.string  "abbreviation", :limit => 64, :default => "", :null => false
-    t.integer "language_id",  :limit => 11,                 :null => false
+    t.integer "language_id",                :default => 0,  :null => false
   end
 
   create_table "tokens", :force => true do |t|
-    t.integer  "sentence_id",       :limit => 11,                                                                                      :default => 0,     :null => false
-    t.integer  "verse",             :limit => 2
-    t.integer  "token_number",      :limit => 3,                                                                                       :default => 0,     :null => false
+    t.integer  "sentence_id",                                                                                                          :default => 0,     :null => false
+    t.integer  "verse"
+    t.integer  "token_number",                                                                                                         :default => 0,     :null => false
     t.string   "morphtag",          :limit => 17
     t.string   "form",              :limit => 64
-    t.integer  "lemma_id",          :limit => 11
+    t.integer  "lemma_id"
     t.string   "relation",          :limit => 20
-    t.integer  "head_id",           :limit => 3
+    t.integer  "head_id"
     t.enum     "sort",              :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :prodrop],    :default => :text, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -212,7 +211,7 @@ ActiveRecord::Schema.define(:version => 20080905130310) do
     t.boolean  "contraction",                                                                                                          :default => false, :null => false
     t.enum     "nospacing",         :limit => [:before, :after, :both]
     t.string   "presentation_form", :limit => 128
-    t.integer  "presentation_span", :limit => 11
+    t.integer  "presentation_span"
     t.boolean  "emendation",                                                                                                           :default => false, :null => false
     t.boolean  "abbreviation",                                                                                                         :default => false, :null => false
     t.boolean  "capitalisation",                                                                                                       :default => false, :null => false
@@ -240,7 +239,7 @@ ActiveRecord::Schema.define(:version => 20080905130310) do
     t.string   "last_name",                 :limit => 60, :default => "",        :null => false
     t.string   "first_name",                :limit => 60, :default => "",        :null => false
     t.string   "preferences"
-    t.integer  "role_id",                   :limit => 3,  :default => 1,         :null => false
+    t.integer  "role_id",                                 :default => 1,         :null => false
     t.string   "state",                                   :default => "passive", :null => false
     t.datetime "deleted_at"
   end
