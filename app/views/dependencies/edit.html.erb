@@ -46,7 +46,7 @@
 
   <!-- FIXME: the lang attribute here is a work-around. This will break if
        LangText is ever extended beyond simple language attribute handling. -->
-  <ul id="relations" lang="<%= @sentence.language %>" class="tree"></ul>
+  <ul id="relations" lang="<%= @sentence.language.iso_code %>" class="tree"></ul>
 
   <div class="actions">
     <% form_tag({ :controller => 'dependencies', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :method => :put, :id => 'dependencies-form') do -%>
