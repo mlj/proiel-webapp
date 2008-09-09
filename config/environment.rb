@@ -81,5 +81,3 @@ Rails::Initializer.run do |config|
   config.gem 'ruby-sfst', :lib => 'sfst'
   config.gem 'logos'
 end
-
-require "rexml-expansion-fix"
