@@ -27,23 +27,6 @@ module ApplicationHelper
     content_tag(:div, content_tag(:b, header) + body, :id => level)
   end
 
-  # Generates a lemma and morphology description for a token.
-  def readable_lemma_morphology(token, options = {})
-    if token.lemma
-      popup = []
-      popup << "#{token.lemma.lemma}" if token.lemma
-      popup << "(#{token.morph.descriptions([], false).join(', ')})" if token.morphtag
-      popup.join(' ')
-    else
-      ''
-    end
-  end
-
-  # Generayes a link to a lemma.
-  def link_to_lemma(lemma)
-    link_to(lemma.variant ? "#{lemma.lemma}##{lemma.variant}" : lemma.lemma, lemma)
-  end
-
   # Returns the contents of +value+ unless +value+ is +nil+, in which case it
   # returns the HTML entity for non-breakable space.
   def make_nonblank(value)
@@ -61,23 +44,6 @@ module ApplicationHelper
     else
       select_tag name, option_tags, options
     end
-  end
-
-  # Returns a select tag for languages.
-  #
-  # ==== Options
-  # +:include_blank+:: If +true+, includes an empty value first.
-  def language_select_tag(name, value = nil, options = {})
-    value = value.to_sym unless value.nil? or value == '' 
-    option_tags = PROIEL::LANGUAGES.collect do |code, values| 
-      if code == value
-        "<option value='#{code}' selected='selected'>#{values.summary}</option>"
-      else
-        "<option value='#{code}'>#{values.summary}</option>"
-      end
-    end.join
-
-    _select_tag name, value, option_tags, options
   end
 
   # Returns a select tag for relations. 
@@ -151,22 +117,25 @@ module ApplicationHelper
     _select_tag name, value, option_tags, options
   end
 
-  # Returns a select tag for users.
-  #
-  # ==== Options
-  # +:include_blank+:: If +true+, includes an empty value first.
-  def user_select_tag(name, value, options = {})
-    _select_tag_db(name, User, :login, value, options)
+  # Enters Markaby "mode"; actually just a wrapper for the-semi ugly Markaby + helper hack.
+  # Borrowed from http://railscasts.com/episodes/69.
+  def markaby(&block)
+    Markaby::Builder.new({}, self, &block)
   end
 
   # Makes an information box intended for display of meta-data and navigational
   # aids.
-  def make_information_box(entries, nav_actions = nil)
-    entries = entries.collect { |e| "<dt>#{e[0]}:</dt><dd>#{e[1]}</dd>" }
-    content = ''
-    content += content_tag(:dl, entries)
-    content += content_tag(:p, nav_actions.join) if nav_actions 
-    content_tag(:div, content, :class => :roundedbox)
+  def make_information_box(entries)
+    markaby do
+      div.roundedbox do
+        dl do
+          entries.each do |title, data|
+            dt "#{title}:"
+            dd data
+          end
+        end
+      end
+    end
   end
 
   # Returns a radio button with a function as onclick handler.
@@ -209,16 +178,6 @@ module ApplicationHelper
   # Generates human readable morphology information for a morphtag. 
   def readable_morphology(morphtag)
     make_nonblank(morphtag ? morphtag.descriptions([:major, :minor], false).join(', ').capitalize : nil)
-  end
-
-  # Generates a human readable representation of a language code.
-  #
-  # ==== Example
-  #  c = readable_language(:la)
-  #  c # => "Latin"
-  #
-  def readable_language(code)
-    make_nonblank(PROIEL::LANGUAGES[code].summary)
   end
 
   # Generates a human readable representation of a completion rate for a sentence.
@@ -417,5 +376,34 @@ module ApplicationHelper
   # Formats a language-dependent string with HTML language attributes.
   def format_language_string(s, language)
     LangString.new(s, language).to_h
+  end
+
+  # Creates resource links for an object.
+  def link_to_resources(object, *actions)
+    actions.map do |action|
+      case action
+      when :index
+        link_to_index(object)
+      when :edit
+        link_to_edit(object)
+      when :delete
+        link_to_delete(object)
+      end
+    end.join(' ')
+  end
+
+  # Creates a resource index link for an object.
+  def link_to_index(object)
+    link_to('Index', send("#{object.class.to_s.underscore.pluralize}_url"), :class => :index)
+  end
+
+  # Creates a resource edit link for an object.
+  def link_to_edit(object)
+    link_to('Edit', send("edit_#{object.class.to_s.underscore}_url"), :class => :edit)
+  end
+
+  # Creates a resource delete link for an object.
+  def link_to_delete(object)
+    link_to('Delete', object, :method => :delete, :confirm => 'Are you sure?', :class => :delete)
   end
 end

@@ -1,6 +1,7 @@
-<%= form.text_field :lemma %>
-<%= form.text_field :variant %>
-<%= form.text_field :language %>
-<%= form.text_field :pos %>
+<%= form.text_field :lemma, :required => true, :help => 'The base form of the lemma.' %>
+<%= form.text_field :pos, :required => true, :label => 'Part of speech' %>
+<%= form.text_field :variant, :label => 'Variant number', :help => 'An integer number differentiating this lemma from other lemmata with the same base form and part of speech.' %>
+<%= form.collection_select :language_id, Language.find(:all), :id, :name, :required => true, :label => 'Language' %>
 <%= form.text_field :short_gloss %>
-<%= form.check_box :fixed %>
+<%= form.text_field :foreign_ids, :help => 'A comma-separated list of key-value pairs that link the lemma to some external resource.' %>
+<%= form.check_box :fixed, :help => 'If true, will ensure that the lemma is not deleted even when no tokens reference it.' %>

@@ -5,7 +5,7 @@
 
 <div class="sentence-divisions">
   <%= format_sentence(@sentence.previous_sentences.last(5) + [@sentence] + @sentence.next_sentences.first(5),
-                      { :verse_numbers => :all, :focused_sentence => @sentence.id, :sentence_numbers => true }) %>
+                      { :verse_numbers => :all, :highlight => @sentence.tokens, :sentence_numbers => true }) %>
 </div>
 
 <div class="adjustment-area">
@@ -18,8 +18,9 @@
   <% @expand.each_with_index do |token, i| %>
     <span class="adjustable" id="change<%= i + 1 %>"><%= token.form %><span class="token-number"><%= token.token_number %></span></span>
   <% end %>
-  <%= link_to_function(image_tag('delete.png', :alt => 'Shorten sentence', :border => 'none'), "shortenAfter()"); %>
-  <%= link_to_function(image_tag('add.png', :alt => 'Expand sentence', :border => 'none'), "expandAfter()"); %>
+  &nbsp;
+  <%= link_to_function('Shorten sentence', "shortenAfter()", :class => :remove) %>
+  <%= link_to_function('Expand sentence', "expandAfter()", :class => :add) %>
   <br/>
 </div>
 

@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+#
+# update_db - Update word list databases for the tagger
+#
+# Written by Marius L. Jøhndal, 2007, 2008.
+#
+require 'pstore'
+require 'proiel/morphtag'
+
+csv_file_name, db_file_name = ARGV
+
+File.unlink(db_file_name) if File.exists?(db_file_name)
+
+db = PStore.new(db_file_name)
+
+db.transaction do
+  File.open(csv_file_name) do |f|
+    f.each_line do |l|
+      language, lemma, variant, form, *morphtags = l.chomp.split(',')
+
+      raise "Word list database update aborted: invalid morphtag for form #{form} in rule file #{csv_file_name}" unless morphtags.all? { |m| PROIEL::MorphTag.new(m).is_valid?(language.to_sym) }
+
+      base_form = variant ? "#{lemma}##{variant}" : lemma
+      morphtags.collect! { |m| [PROIEL::MorphTag.new(m).to_s, base_form].join(':') }
+
+      morphtags += db[form] if db[form]
+      db[form] = morphtags
+    end
+  end
+end

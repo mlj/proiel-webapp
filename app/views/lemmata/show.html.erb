@@ -1,45 +1,35 @@
 <% roundedbox do -%>
   <dt>Lemma:</dt><dd><span class="lemma"><%= format_lemma_form(@lemma) %></span></dd>
-  <dt>Language:</dt><dd><span class="language"><%= readable_language(@lemma.language) %></span></dd>
+  <dt>Language:</dt><dd class="language"><%= link_to_language @lemma.language %></dd>
   <% if @lemma.pos %>
     <dt>Part of speech:</dt><dd><%= PROIEL::MorphTag.new(@lemma.pos).descriptions([:major, :minor], true).join(", ").capitalize %></dd>
   <% end %>
-  <dt>Frequency:</dt><dd><span class="language"><%= pluralize(@lemma.frequency, 'occurrence') %></span></dd>
+  <dt>Frequency:</dt><dd><%= pluralize(@lemma.tokens.count, 'token') %></dd>
   <% if @lemma.short_gloss %>
     <dt>Translation:</dt><dd><q><%= @lemma.short_gloss %></q></dd>
   <% end %>
+  <% if @lemma.foreign_ids %>
+    <dt>Foreign IDs:</dt><dd class="tag"><%= @lemma.foreign_ids %></dd>
+  <% end %>
+  <%= link_to_resources @lemma, :index, :edit %>
 <% end %>
-  
-<%= render_tabular @tokens, :partial => 'annotations/annotation', :pagination => true,
-    :class => 'concordance' %>
 
-  <!--
-<% layer("dictionary-references", :title => 'Dictionary references') do -%>
-  <ol>
-    <% if perseus_url(@lemma) %>
-      <li><%= link_to 'Perseus', perseus_url(@lemma), :class => 'external' %></li>
-    <% end %>
-  </ol>
+<% layer_unless @lemma.notes.empty?, "notes" do -%>
+  <%= notes_summary(@lemma.notes) %>
 <% end %>
--->
-<!-- 
-<div id="actions">
-  <%= link_to_remote('Morphology',
-                     :update => "extras",
-                     :url => { :action => 'morphology', :id => @lemma },
-                     :before => "Element.show('spinner')",
-                     :success => "Element.hide('spinner')") %>
+ 
+<% layer_unless @lemma.audits.empty?, "revisions" do -%>
+  <%= audits_summary @lemma.audits %>
+<% end %>
 
-  <%= link_to_remote('Dependencies',
-                     :update => "extras",
-                     :url => { :action => 'dependencies', :id => @lemma },
-                     :before => "Element.show('spinner')",
-                     :success => "Element.hide('spinner')") %>
+<% layer_unless @semantic_tags.empty?, 'semantic_tags' do -%>
+  <%= semantic_tags_summary(@semantic_tags) %>
+<% end %>
 
-  <%= image_tag("loading.gif",
-                :align => "absmiddle",
-                :border => 0,
-                :id => "spinner",
-                :style =>"display: none;") %>
-              </div>
-              -->
+<% layer_if @morphology_stats, 'morphology' do -%>
+  <%= statistics "Morphology", "token", @morphology_stats %>
+<% end %>
+
+<% layer 'tokens' do -%>
+  <%= render_tabular @tokens, :partial => 'annotations/annotation', :pagination => true, :class => 'concordance' %>
+<% end %>

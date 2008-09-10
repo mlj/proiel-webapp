@@ -2,18 +2,22 @@ class Token < ActiveRecord::Base
   belongs_to :sentence
   belongs_to :book
   belongs_to :lemma
+  has_many :notes, :as => :notable, :dependent => :destroy
+  has_many :semantic_tags, :as => :taggable, :dependent => :destroy
 
   belongs_to :head, :class_name => 'Token'
   has_many :dependents, :class_name => 'Token', :foreign_key => 'head_id'
 
-  has_many :slash_out_edges, :class_name => 'SlashEdge', :foreign_key => 'slasher_id'
-  has_many :slash_in_edges, :class_name => 'SlashEdge', :foreign_key => 'slashee_id'
+  has_many :slash_out_edges, :class_name => 'SlashEdge', :foreign_key => 'slasher_id', :dependent => :destroy
+  has_many :slash_in_edges, :class_name => 'SlashEdge', :foreign_key => 'slashee_id', :dependent => :destroy
   has_many :slashees, :through => :slash_out_edges
   has_many :slashers, :through => :slash_in_edges
 
-  acts_as_audited :except => [ :morphtag_performance ]
-  # Insanely slow! We use our own implementation instead.
-  #acts_as_ordered :order => :token_number
+  named_scope :word, :conditions => { :sort => :text }
+  named_scope :morphology_annotatable, :conditions => { :sort => PROIEL::MORPHTAGGABLE_TOKEN_SORTS }
+  named_scope :dependency_annotatable, :conditions => { :sort => PROIEL::DEPENDENCY_TOKEN_SORTS }
+
+  acts_as_audited
 
   # General schema-defined validations
   validates_presence_of :sentence_id
@@ -21,48 +25,59 @@ class Token < ActiveRecord::Base
   validates_presence_of :token_number
   validates_presence_of :sort
 
-  # If the token has a lemma, it must also have a morphtag (this does
-  # not, however, apply to source_morphtag and source_lemma).
-#  validates_presence_of :lemma, :if => lambda { |t| t.morphtag }
-#  validates_presence_of :morphtag, :if => lambda { |t| t.lemma }
+  # Constraint: t.sentence.reviewed_by => t.lemma_id
+  validates_presence_of :lemma, :if => lambda { |t| t.is_morphtaggable? and t.sentence.reviewed_by }
 
-  # Invariant constraint: t.head_id => t.relation
+  # Constraint: t.lemma_id <=> t.morphtag
+  validates_presence_of :lemma, :if => lambda { |t| t.morphtag }
+  validates_presence_of :morphtag, :if => lambda { |t| t.lemma }
+
+  # Constraint: t.head_id => t.relation
   validates_presence_of :relation, :if => lambda { |t| !t.head_id.nil? }
 
-  validate do |t|
-    if t.relation and not PROIEL::RELATIONS.valid?(t.relation)
-      errors.add_to_base("Relation #{t.relation} is invalid")
-    end
-  end
+  # If set, relation must be valid.
+  validates_inclusion_of :relation, :allow_nil => true, :in => PROIEL::RELATIONS.keys.map(&:to_s)
+
+  # If set, morphtag and source_morphtag must have the correct length.
+  validates_length_of :morphtag, :allow_nil => true, :is => PROIEL::MorphTag.fields.length
+  validates_length_of :source_morphtag, :allow_nil => true, :is => PROIEL::MorphTag.fields.length
+
+  # form and presentation_form must be on the appropriate Unicode normalization form
+  validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
+  validates_unicode_normalization_of :presentation_form, :form => UNICODE_NORMALIZATION_FORM
 
   # Specific validations
   validate :validate_sort
 
+  def language
+    sentence.language
+  end
+
   def previous_tokens
-    self.sentence.tokens.find(:all, 
-                              :conditions => [ "token_number < ?", self.token_number ], 
+    self.sentence.tokens.find(:all,
+                              :conditions => [ "token_number < ?", self.token_number ],
                               :order => "token_number ASC")
   end
 
   def next_tokens
-    self.sentence.tokens.find(:all, 
-                              :conditions => [ "token_number > ?", self.token_number ], 
+    self.sentence.tokens.find(:all,
+                              :conditions => [ "token_number > ?", self.token_number ],
                               :order => "token_number ASC")
   end
 
   # Returns the previous token in the linearisation sequence. Returns +nil+
   # if there is no previous token.
   def previous_token
-    self.sentence.tokens.find(:first, 
-                              :conditions => [ "token_number < ?", self.token_number ], 
+    self.sentence.tokens.find(:first,
+                              :conditions => [ "token_number < ?", self.token_number ],
                               :order => "token_number DESC")
   end
 
   # Returns the next token in the linearisation sequence. Returns +nil+
   # if there is no next token.
   def next_token
-    self.sentence.tokens.find(:first, 
-                              :conditions => [ "token_number > ?", self.token_number ], 
+    self.sentence.tokens.find(:first,
+                              :conditions => [ "token_number > ?", self.token_number ],
                               :order => "token_number ASC")
   end
 
@@ -75,7 +90,7 @@ class Token < ActiveRecord::Base
   def morph_lemma_tag
     if self.morphtag
       if lemma
-        PROIEL::MorphLemmaTag.new(PROIEL::MorphTag.new(morphtag), 
+        PROIEL::MorphLemmaTag.new(PROIEL::MorphTag.new(morphtag),
                                   lemma.lemma, lemma.variant)
       else
         PROIEL::MorphLemmaTag.new(morphtag)
@@ -88,7 +103,7 @@ class Token < ActiveRecord::Base
   # Sets morphology and lemma based on a morph+lemma tag. Saves the
   # token.
   def set_morph_lemma_tag!(ml_tag)
-    returning Lemma.find_or_create_by_morph_and_lemma_tag_and_language(ml_tag, self.language) do |l|
+    returning language.lemmata.find_or_create_by_morph_and_lemma_tag(ml_tag) do |l|
       self.morphtag = ml_tag.morphtag.to_s
       self.lemma_id = l.id
       self.save!
@@ -107,41 +122,29 @@ class Token < ActiveRecord::Base
 
   # Returns true if the morphtag is valid.
   def morphtag_is_valid?
-    PROIEL::MorphTag.new(morphtag).is_valid?(language)
+    PROIEL::MorphTag.new(morphtag).is_valid?(language.iso_code)
   end
 
   # Returns true if the source morphtag is valid.
   def source_morphtag_is_valid?
-    PROIEL::MorphTag.new(source_morphtag).is_valid?(language)
+    PROIEL::MorphTag.new(source_morphtag).is_valid?(language.iso_code)
   end
 
   def reference
     if verse
       PROIEL::Reference.new(sentence.source.abbreviation, sentence.source.id,
                     sentence.book.code, sentence.book.id,
-                    { :chapter => sentence.chapter.to_i, 
-                      :verse => verse.to_i, 
-                      :sentence => sentence.sentence_number.to_i, 
+                    { :chapter => sentence.chapter.to_i,
+                      :verse => verse.to_i,
+                      :sentence => sentence.sentence_number.to_i,
                       :token => token_number.to_i })
     else
       PROIEL::Reference.new(sentence.source.abbreviation, sentence.source.id,
                     sentence.book.code, sentence.book.id,
-                    { :chapter => sentence.chapter.to_i, 
-                      :sentence => sentence.sentence_number.to_i, 
+                    { :chapter => sentence.chapter.to_i,
+                      :sentence => sentence.sentence_number.to_i,
                       :token => token_number.to_i })
     end
-  end
-
-  # Updates dependency annotation for the token and saves the record.
-  def update_dependencies!(head, relation)
-    self.head_id = head
-    self.relation = relation
-    save!
-  end
-
-  # Clears dependency annotation for the token and saves the record.
-  def clear_dependencies!
-    update_dependencies!(nil, nil)
   end
 
   # Returns true if this is an empty token, i.e. a token used for empty nodes
@@ -155,20 +158,12 @@ class Token < ActiveRecord::Base
     PROIEL::MORPHTAGGABLE_TOKEN_SORTS.include?(sort)
   end
 
-  # Invokes the PROIEL morphology tagger. Takes exitsing information into
+  # Invokes the PROIEL morphology tagger. Takes existing information into
   # account, be it already existing morph+lemma tags or previous instances
   # of the same token form.
   def invoke_tagger
-    TAGGER.logger = logger
-    TAGGER.tag_token(self.language, self.form,
-                     self.morph_lemma_tag || self.source_morph_lemma_tag)
+    language.guess_morphology(form, morph_lemma_tag || source_morph_lemma_tag)
   end
-
-  # Returns the language of the token.
-  def language
-    # FIXME: eliminate to_sym
-    sentence.source.language.to_sym
-  end 
 
   # Merges the token with the token linearly subsequent to it. The succeding
   # token is destroyed, and the original token's word form is updated. All
@@ -183,70 +178,38 @@ class Token < ActiveRecord::Base
     self
   end
 
+  # Returns true if the token has a nominal POS or a nominal syntactic relation,
+  # or if one of its dependents is an article.
+  def annotatable?
+    if @annotatable.nil?
+      @annotatable = info_status == :no_info_status ||  # manually marked as annotatable
+                     (info_status != :info_unannotatable && \
+                      (PROIEL::MORPHOLOGY.nominals.include?(morph[:major]) || \
+                       (relation && PROIEL::RELATIONS.nominals.include?(relation.to_sym)) || \
+                       dependents.any? { |dep| dep.morph[:major] == :S }))
+    end
+    @annotatable
+  end
+
   protected
 
-  def self.search(search, page, limit = 50)
-    search ||= {}
-    conditions = [] 
-    clauses = [] 
-    includes = []
+  def self.search(query, options = {})
+    options[:conditions] ||= ["form LIKE ?", "%#{query}%"] unless query.blank?
 
-    if search[:source] and search[:source] != ''
-      clauses << "sentences.source_id = ?"
-      conditions << search[:source]
-      includes << :sentence
-    end
-    
-    if search[:form] and search[:form] != ''
-      if search[:exact] == 'yes'
-        clauses << "form = ?"
-        conditions << "#{search[:form]}"
-      else
-        clauses << "form like ?"
-        conditions << "%#{search[:form]}%"
-      end
-    end
-    
-    morphtag_fields = {}
-    PROIEL::MorphTag.fields.each do |field|
-      if search[field] and search[field] != ''
-        morphtag_fields[field] = search[field]
-      end
-    end
-
-    unless morphtag_fields.empty?
-      morphtag = PROIEL::MorphTag.new(morphtag_fields)
-      clauses << "morphtag like ?"
-      conditions << morphtag.to_s.gsub('-', '_')
-    end
-
-    conditions = [clauses.join(' and ')] + conditions
-
-    paginate(:page => page, :per_page => limit, :conditions => conditions, 
-             :include => includes)
+    paginate options
   end
 
   private
 
   def validate_sort
-    # morphtag and morphtag source may only be set 
+    # morphtag and morphtag source may only be set
     # if token is morphtaggable
     unless is_morphtaggable?
       errors.add(:morphtag, "not allowed on non-morphtaggable token") unless morphtag.nil?
-      errors.add(:morphtag_source, "not allowed on non-morphtaggable token") unless morphtag_source.nil?
     end
 
     # if morphtag is set, is it valid?
-    if morphtag
-      errors.add_to_base("Morphological annotation #{morphtag.inspect} is invalid") unless PROIEL::MorphTag.new(morphtag).is_valid?(self.language)
-      errors.add_to_base("Morphological annotation is invalid: no lemma") unless lemma
-    end
-
-    # if morphtag is set, is it actually a morphtag or just a blank?
-    if morphtag
-      errors.add(:morphtag, "is blank (probably should be NULL)") if morphtag == ''
-      errors.add(:morphtag, "is blank (probably should be NULL)") if morphtag == PROIEL::MorphTag.new().to_s 
-    end
+    errors.add_to_base("Morphological annotation #{morphtag.inspect} is invalid") if morphtag and !PROIEL::MorphTag.new(morphtag).is_valid?(self.language.iso_code)
 
     # sort :empty_dependency_token <=> form.nil?
     if sort == :empty_dependency_token or sort == :lacuna_start or sort == :lacuna_end or form.nil?

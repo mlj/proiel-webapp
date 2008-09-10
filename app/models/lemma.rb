@@ -2,48 +2,25 @@
 # and may additionally be differentiated from other lemmata in the same language
 # with the same base form using a integer variant identifier.
 class Lemma < ActiveRecord::Base
-  set_table_name :lemmata
-
   has_many :tokens
   has_many :dictionary_references
+  has_many :notes, :as => :notable, :dependent => :destroy
+  has_many :semantic_tags, :as => :taggable, :dependent => :destroy
+  belongs_to :language
 
   validates_presence_of :lemma
+  validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
 
-  # Returns the Perseus lemma for this lemma or +nil+ if unknown.
-  def perseus_lemma
-    if variant && m = variant.match(/^perseus=(\d+)$/)
-      lemma + m[1]
-    else
-      nil
-    end
-  end
+  acts_as_audited
 
-  # Returns +true+ if a Perseus lemme is known for this lemma, +false+ otherwise.
-  def perseus_lemma?
-    (!perseus_lemma.nil?)
-  end
-
-  # Returns the human-readable presentation for for the lemma.
-  def to_s
+  # Returns the export-form of the lemma.
+  def export_form
     self.variant ? "#{self.lemma}##{self.variant}" : self.lemma 
   end
 
-  # Returns the frequency of this lemma in the sources.
-  def frequency
-    tokens.count
-  end
-
-  def presentation_form
-    if self.variant
-      [self.lemma, self.variant].join('#')
-    else
-      self.lemma
-    end
-  end
-
-  def Lemma.find_or_create_by_morph_and_lemma_tag_and_language(ml_tag, language)
+  def Lemma.find_or_create_by_morph_and_lemma_tag(ml_tag)
     pos = ml_tag.morphtag.pos_to_s
-    find_or_create_by_lemma_and_variant_and_pos_and_language(ml_tag.lemma, ml_tag.variant, pos, language)
+    find_or_create_by_lemma_and_variant_and_pos(ml_tag.lemma, ml_tag.variant, pos)
   end
 
   # Merges another lemma into this lemma and saves the results. The two lemmata
@@ -65,48 +42,34 @@ class Lemma < ActiveRecord::Base
 
   protected
 
-  def self.search(search, page, limit = 50)
-    search ||= {}
-    conditions = []
-    clauses = []
-    includes = []
+  def self.search(query, options = {})
+    unless query.blank?
+      lemma, variant = query.split('#')
 
-    if search[:lemma] and search[:lemma] != ''
-      if search[:exact] == 'yes'
-        clauses << "lemma = ?"
-        conditions << "#{search[:lemma]}"
+      if variant
+        options[:conditions] ||= ['lemma LIKE ? AND variant = ?', "%#{lemma}%", variant]
       else
-        clauses << "lemma like ?"
-        conditions << "%#{search[:lemma]}%"
+        options[:conditions] ||= ['lemma LIKE ?', "%#{lemma}%"]
       end
     end
 
-    if search[:variant] and search[:variant] != ''
-      clauses << "variant = ?"
-      conditions << "#{search[:variant]}"
+    options[:order] ||= 'language_id ASC, sort_key ASC, lemma ASC, variant ASC, pos ASC'
+
+    paginate options
+  end
+
+  # Returns lemmata that are possible completions of the lemma +q+ in the language
+  # +language+. The lemma should be given on presentation form, i.e. "lemma" or
+  # "lemma#variant". If no variant is given, both completion with and without
+  # variant numbers will be returned.
+  def self.find_completions(q, language)
+    lemma, variant = q.split(/#/)
+    unless variant.blank?
+      Lemma.find(:all, :include => :language,
+                 :conditions => ["languages.iso_code = ? AND lemma LIKE ? AND variant = ?", language, "#{lemma}%", variant])
+    else
+      Lemma.find(:all, :include => :language,
+                 :conditions => ["languages.iso_code = ? AND lemma LIKE ?", language, "#{lemma}%"])
     end
-
-    morphtag = PROIEL::MorphTag.new
-    [:major, :minor, :person, :number, :tense, :mood, :voice, :gender, :case, :degree, :extra].each do |field|
-      if search[field] and search[field] != ''
-        morphtag[field] = search[field]
-      end
-    end
-
-    if morphtag.to_s != '-----------'
-      clauses << "tokens.morphtag like ?"
-      conditions << morphtag.to_s.gsub('-', '_')
-      includes << :tokens
-    end
-
-    if search[:language] and search[:language] != ''
-      clauses << "language = ?"
-      conditions << search[:language]
-    end
-
-    conditions = [clauses.join(' and ')] + conditions
-
-    paginate(:page => page, :per_page => limit, :order => 'lemma', 
-             :include => includes, :conditions => conditions)
   end
 end

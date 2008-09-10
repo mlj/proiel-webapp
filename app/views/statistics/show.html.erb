@@ -1,31 +1,12 @@
-<% layer("activity") do -%>
-  <%= render :partial => 'statistics/activity' %>
+<% layer :recent_activity do -%>
+  <%= line_chart "Recent activity", @activity_stats %>
 <% end %>
 
 <% layer("completion") do -%>
-  <%= google_pie_chart([["Reviewed", @completion[:reviewed]],
-                        ["Annotated", @completion[:annotated] - @completion[:reviewed]], 
-                        ["Unannotated", @completion[:unannotated]]], 
-                        :width => 350, :height => 150) %>
-  <%= render_tabular @sources, :partial => 'statistics/source_stats',
-    :fields => [ 'Source', 'Annotated (sentences)', 'Reviewed (sentences)', 'Total (sentences/tokens)' ] %>
+  <%= render_tabular @book_completion_ratios, :partial => 'statistics/book_completion_ratio',
+    :fields => [ 'Source', 'Book', 'Completion' ] %>
 <% end %>
   
-<% layer("tagger_performance") do -%>
-  <%= google_pie_chart([["Correct pick", @tagger_performance[:picked]],
-                        ["Suggested",    @tagger_performance[:suggested]],
-                        ["Failed",    @tagger_performance[:failed]],
-                        ["Overridden", @tagger_performance[:overridden]]]) %>
-<% end %>
-
-<% layer("user_activity") do -%>
-  <% if is_reviewer? %>
-    <%= google_pie_chart(@user_activity.collect(&:activity_index), :width => 626, :height => 300) %>
-  <% end %>
-  <%= render_tabular @user_activity, :partial => 'user_stats',
-    :fields => [ 'User', 'Annotated (sentences/tokens)', 'Reviewed (sentences/tokens)' ] %>
-<% end %>
-
 <% reset_cycle %>
 <% layer_unless(@recent_annotations.empty?, "recent-annotations", 
                 :title => 'Your recent sentence annotations',

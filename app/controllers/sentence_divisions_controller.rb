@@ -43,7 +43,7 @@ class SentenceDivisionsController < ApplicationController
     change = params[:change] || 0 
     change = change.to_i
 
-    versioned_transaction do
+    Sentence.transaction do
       # First flush dependencies from affected sentences so that we don't have to bother with them.
       # They won't make sense after this anyway.
       unless change.zero?
@@ -75,10 +75,7 @@ class SentenceDivisionsController < ApplicationController
       return
     end
 
-    versioned_transaction do
-      sentence.bad_alignment_flag = true
-      sentence.save!
-    end
+    Note.create! :originator => current_user, :notable => sentence, :contents => 'Bad sentence alignment'
 
     if params[:wizard]
       redirect_to :controller => :wizard, :action => "skip_sentence_divisions", :wizard => params[:wizard]

@@ -1,0 +1,41 @@
+<%= javascript 'info_statuses' %>
+<% javascript_tag do -%>
+  var authenticity_token = '<%= form_authenticity_token %>';
+<% end -%>
+
+<div id="info-menu" style="position: absolute; width: 100px; border: 2px solid black; display:none">
+  <div class="info-menu-item new">1 new</div>
+  <div class="info-menu-item acc">2 acc</div>
+  <div class="info-menu-item acc-gen">3 acc-gen</div>
+  <div class="info-menu-item acc-disc">4 acc-disc</div>
+  <div class="info-menu-item acc-inf">5 acc-inf</div>
+  <div class="info-menu-item old">6 old</div>
+  <div class="info-menu-item no-info-status">7 unannotated</div>
+</div>
+
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Information status', :edit_url => :edit_annotation_info_status_url } %>
+
+<% if is_annotator? or @sentence.is_reviewed? %>
+  <% layer_if(is_reviewer?, "completion", :actions => [
+                            link_to_unless(@sentence.is_reviewed?, "Flag as reviewed", :action => 'flag_as_reviewed', :id => @sentence),
+                            link_to_if(@sentence.is_reviewed?, "Flag as not reviewed", :action => 'flag_as_not_reviewed', :id => @sentence),
+    ] ) do -%>
+    <%= format_annotator(@sentence, :time => true) %><br/>
+    <%= format_reviewer(@sentence, :time => true) %>
+  <% end %>
+
+  <% layer("info-status", :title => "Information status") do -%>
+    <%= render :partial => 'info_statuses/legend' %>
+    <%= render :partial => 'info_statuses/show' %>
+  <% end %>
+
+<% else %>
+  Sentence not yet annotated and reviewed.
+<% end %>
+
+<div class="annotation-actions">
+  <form>
+    <%= submit_tag "Save", :id => 'save' %>
+  </form>
+  <span id="server-message" style="width: 300px; margin-top: 5px; padding-left: 10px; padding-right: 10px"></span>
+</div>

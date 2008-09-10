@@ -1,3 +1,5 @@
+require 'ucodes'
+
 module SentenceFormattingHelper
   # Formats one or more sentences as a legible sequence of words. +value+ may
   # either be an array of +Sentence+ objects, a single +Sentence+ object or an
@@ -23,12 +25,6 @@ module SentenceFormattingHelper
   # token_numbers:: If +true+, will insert token numbers after each token.
   # Each number will be contained within a +span+ of class +token_number+.
   #
-  # focused_sentence:: If set to a sentence ID, will focus that sentence by
-  # giving it an appropriate form of emphasis.
-  #
-  # tooltip:: If +morphtags+, will add a tool-tip for each word with its
-  # POS and morphology.
-  #
   # ignore_punctuation:: If +true+, will ignore any punctuation.
   #
   # ignore_presentation_forms:: If +true+, will preserve the token form of
@@ -38,16 +34,26 @@ module SentenceFormattingHelper
   # sentence to the given number of words and append an ellipsis if the
   # sentence exceeds that limit. If a negative number is given, the
   # ellipis is prepended to the sentence.
+  #
+  # highlight:: If set to an array of tokens, will highlight those tokens.
+  #
+  # custom_style:: If set to a hash of tokens, will apply custom styling
+  # to each of these tokens.
+  #
+  # information_status:: If +true+, will put each token inside a span with a
+  # class named as "info-status-#{token.info_status}"
   def format_sentence(value, options = {})
+    options.reverse_merge! :highlight => [], :custom_style => []
+
     x = nil
 
     if value.is_a?(Sentence)
-      x = value.tokens
+      x = value.tokens_with_dependents
     elsif value.is_a?(Array)
       if value.empty?
         return []
       elsif value.first.is_a?(Sentence)
-        x = value.map { |sentence| sentence.tokens }.flatten
+        x = value.map { |sentence| sentence.tokens_with_dependents }.flatten
       elsif value.first.is_a?(Token)
         x = value
       end
@@ -100,12 +106,12 @@ module SentenceFormattingHelper
       end
     end
 
-    def to_html(language)
+    def to_html(language, options)
       content_tag(:span, reference_value, :class => FORMATTED_REFERENCE_CLASSES[reference_type])
     end
   end
 
-  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text)
+  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :title, :extra_css, :token)
 
   class FormattedToken
     include ActionView::Helpers::TagHelper
@@ -127,21 +133,38 @@ module SentenceFormattingHelper
       end
     end
 
-    def to_html(language)
+    def to_html(language, options)
+      css = extra_css || []
+
       case token_type
       when :lacuna_start, :lacuna_end
-        content_tag(:span, UNICODE_HORIZONTAL_ELLIPSIS, :class => 'lacuna')
+        content_tag(:span, UNICODE_HORIZONTAL_ELLIPSIS, :class => (css << 'lacuna') * ' ', :title => title)
       when :punctuation
-        text
+        content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ', :title => title)
       when :text
         if link
-          link_to(LangString.new(text, language).to_h, link, :class => :token)
+          link_to(LangString.new(text, language).to_h, link, :class => (css << 'token') * ' ', :title => title)
+        elsif options[:information_status]
+          css << info_status_css_class if options[:highlight].include?(token)
+          LangString.new(text, language, :id => 'token-' + token.id.to_s, :css => css * ' ', :title => title).to_h
         else
-          text
+          content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ', :title => title)
         end
       else
         raise "Invalid token type"
       end
+    end
+
+    private
+
+    def info_status_css_class
+      @info_status_css_class ||= if token.info_status && token.info_status != :info_unannotatable
+                                   'info-annotatable ' + token.info_status.to_s.gsub('_', '-')
+                                 elsif token.annotatable?
+                                   'info-annotatable no-info-status'
+                                 else
+                                   'info-unannotatable'
+                                 end
     end
   end
 
@@ -151,7 +174,7 @@ module SentenceFormattingHelper
     def spacing_before?; false end
     def spacing_after?; false end
     def selected?(options); true end
-    def to_html(language); '' end
+    def to_html(language, options); '' end
   end
 
   def format_tokens(tokens, language, options)
@@ -163,20 +186,20 @@ module SentenceFormattingHelper
 
     if length_limit and sequence.length > length_limit
       if length_limit < 0
-        UNICODE_HORIZONTAL_ELLIPSIS + join_sequence(sequence.last(-length_limit), language)
+        UNICODE_HORIZONTAL_ELLIPSIS + join_sequence(sequence.last(-length_limit), language, options)
       else
-        join_sequence(sequence.first(length_limit), language) + UNICODE_HORIZONTAL_ELLIPSIS
+        join_sequence(sequence.first(length_limit), language, options) + UNICODE_HORIZONTAL_ELLIPSIS
       end
     else
-      join_sequence(sequence, language)
+      join_sequence(sequence, language, options)
     end
   end
 
-  def join_sequence(sequence, language)
+  def join_sequence(sequence, language, options)
     result = ''
 
     sequence.each_cons(2) do |x, y|
-      result += x.to_html(language)
+      result += x.to_html(language, options)
       result += "\n" if x.spacing_after? and y.spacing_before?
     end
 
@@ -194,7 +217,7 @@ module SentenceFormattingHelper
 
   def convert_to_presentation_sequence(tokens, options)
     state = {}
-    t = [] 
+    t = []
     skip_tokens = 0
 
     tokens.reject(&:is_empty?).each do |token|
@@ -208,13 +231,16 @@ module SentenceFormattingHelper
       t << check_reference_update(state, :sentence, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
       t << check_reference_update(state, :verse, token.verse, token.verse.to_i)
 
+      extra_css = []
+      extra_css << :highlight if options[:highlight].include?(token)
+
       if token.presentation_form and not options[:ignore_presentation_forms]
-        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil)
+        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, extra_css)
         skip_tokens = token.presentation_span - 1
-      elsif options[:tooltip] == :morphtags
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token))
+      elsif options[:information_status]
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, nil, nil, extra_css, token)
       else
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), token.lemma ? "#{token.morph.descriptions([], false) * ', '} (#{token.lemma.export_form})" : nil, extra_css)
       end
 
       if token.presentation_span and token.presentation_span - 1 > 0

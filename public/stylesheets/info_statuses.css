@@ -1,0 +1,50 @@
+/* Classes for information status values */
+.new {
+   background-color: yellow;
+   color: black;
+}
+.acc {
+   background-color: blue;
+   color: white;
+}
+.acc-gen {
+   background-color: green;
+   color: white;
+}
+.acc-disc {
+   background-color: red;
+   color: white;
+}
+.acc-inf {
+   background-color: magenta;
+   color: black;
+}
+.old {
+   background-color: brown;
+   color: white;
+}
+
+/* Other stuff */
+
+.info-annotatable {
+   border: 2px solid white;
+}
+.info-unannotatable {
+   border: 2px solid white;
+   background-color: white;
+   color: black;
+}
+.info-changed {
+   border: 2px solid black;
+}
+.info-selected {
+   border: 2px dashed black;
+}
+.no-info-status {
+   background-color: #c1c1c1;
+   color: black;
+}
+.sentence-divisions span {
+   padding: 1px;
+   line-height: 190%
+}

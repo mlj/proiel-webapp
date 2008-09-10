@@ -9,7 +9,7 @@
           <p class="pos">&nbsp;<%= morphtag_pos(token) %></p>
           <p class="morphology">&nbsp;<%= morphtag_non_pos(token) %></p>
           <% if token.lemma %>
-            <p>(<%= link_to(token.lemma.to_s, lemma_path(token.lemma) )%><% if token.lemma.short_gloss %> <q><%= token.lemma.short_gloss %></q><% end %>)</p>
+            <p>(<%= link_to_lemma(token.lemma) %><% if token.lemma.short_gloss %> <q><%= token.lemma.short_gloss %></q><% end %>)</p>
           <% else %>
             <p>&nbsp;</p>
           <% end %>

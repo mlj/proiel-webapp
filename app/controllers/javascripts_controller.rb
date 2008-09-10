@@ -28,4 +28,9 @@ class JavascriptsController < ApplicationController
     @relations = PROIEL::RELATIONS
     @inferences = PROIEL::INFERENCES
   end
+
+  # Hides the currently active announcement messages in this session.
+  def hide_announcement
+    session[:announcement_hide_time] = Time.now
+  end
 end

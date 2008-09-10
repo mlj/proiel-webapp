@@ -1,6 +1,7 @@
-<%= form.text_field :title %>
-<%= form.text_field :edition %>
-<%= form.text_field :source %>
-<%= form.text_field :editor %>
-<%= form.text_field :url %>
-<%= form.text_field :abbreviation %>
+<%= form.text_field :title, :help => 'Full title of source' %>
+<%= form.text_field :edition, :help => 'Text edition on which electronic version is based' %>
+<%= form.text_field :source, :help => 'Source for electronic version' %>
+<%= form.text_field :editor, :help => 'Editor of electronic version' %>
+<%= form.text_field :url, :label => 'URL', :help => 'URL associated with electronic version' %>
+<%= form.text_field :abbreviation, :help => 'Abbreviated title to be used in references' %>
+<%= form.collection_select :language_id, Language.find(:all), :id, :name, :required => true, :label => 'Language' %>

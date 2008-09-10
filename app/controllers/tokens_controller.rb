@@ -1,19 +1,40 @@
-class TokensController < ResourceController::Base # ApplicationController
+class TokensController < ResourceController::Base
+  actions :all, :except => [ :new, :create, :destroy ]
   before_filter :is_reviewer?
   before_filter :is_administrator?, :only => [ :edit, :update ]
-  actions :all, :except => [ :new, :create, :destroy ]
+  before_filter :find_parents
+
+  protected
+
+  def find_parents
+    @parent = @source = Source.find(params[:source_id]) unless params[:source_id].blank?
+  end
 
   private
 
   def collection
-    @tokens = Token.search(params.slice(:source, :form, :exact, :major, :minor, :person, :number, :tense, :mood, :voice, :gender, :case, :degree, :extra), params[:page])
+    @tokens = (@parent ? @parent.tokens : Token).search(params[:query], :page => current_page, :include => [:lemma])
+  end
+
+  show.before do
+    @semantic_tags = @token.semantic_tags
+    # Add semantic tags from lemma not present in the token's semantic tags.
+    @semantic_tags += @token.lemma.semantic_tags.reject { |tag| @semantic_tags.map(&:semantic_attribute).include?(tag.semantic_attribute) } if @token.lemma
   end
 
   update.before do
     if params[:token]
-      params[:token][:presentation_form] = nil if params[:token][:presentation_form] == ''
-      params[:token][:morphtag] = nil if params[:token][:morphtag] == ''
-      params[:token][:lemma_id] = nil if params[:token][:lemma_id] == ''
+      if params[:token][:presentation_form].blank?
+        params[:token][:presentation_form] = nil
+      else
+        params[:token][:presentation_form] = params[:token][:presentation_form].chars.normalize(UNICODE_NORMALIZATION_FORM)
+      end
+      params[:token][:morphtag] = nil if params[:token][:morphtag].blank?
+      params[:token][:lemma_id] = nil if params[:token][:lemma_id].blank?
+      params[:token][:form] = params[:token][:form].chars.normalize(UNICODE_NORMALIZATION_FORM)
+      [:foreign_ids, :empty_token_sort].each do |a|
+        params[:token][a] = nil if params[:token][a].blank?
+      end
     end
   end
 end

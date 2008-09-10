@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include Userstamp
+
   helper :all
 
   # See ActionController::RequestForgeryProtection for details
@@ -15,13 +17,21 @@ class ApplicationController < ActionController::Base
 
   layout 'proiel' 
 
-  def versioned_transaction
-    Sentence.transaction(User.find(session[:user_id])) do
-      yield
-    end
-  end
-
   def user_is_reviewer?
     current_user.has_role?(:reviewer)
+  end
+
+  helper_method :user_preferences
+
+  # Returns the current user's preference settings.
+  def user_preferences
+    current_user.preferences || DEFAULT_USER_PREFERENCES
+  end
+
+  helper_method :current_page
+
+  # Returns the current page for will_paginate based actions.
+  def current_page
+    @page ||= params[:page].blank? ? 1 : params[:page].to_i
   end
 end

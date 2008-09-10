@@ -1,4 +1,4 @@
-<%= form.collection_select :user_id, User.find(:all), :id, :login %>
-<%= form.collection_select :source_id, Source.find(:all), :id, :code %>
-<%= form.text_field :sentence_id %>
-<%= form.text_field :flow %>
+<%= form.collection_select :user_id, User.find(:all), :id, :full_name, :required => true, :label => 'User' %>
+<%= form.collection_select :source_id, Source.find(:all), :id, :title, :required => true, :label => 'Source' %>
+<%= form.text_field :sentence_id, :required => 'true' %>
+<%= form.text_field :flow, :required => 'true' %>

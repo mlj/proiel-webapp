@@ -1,18 +1,25 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :changesets, :jobs
+  map.resources :audits
   map.resources :sources
   map.resources :lemmata, :singular => 'lemma'
   map.resources :bookmarks
   map.resources :tokens, :sentences
+  map.resources :languages
 
   map.resources :annotations do |annotation|
     annotation.resource :sentence_division
     annotation.resource :alignments
     annotation.resource :morphtags
     annotation.resource :dependencies
+    annotation.resource :info_status
   end
 
   map.resource :statistics
+  map.resources :announcements
+  map.resources :import_sources
+  map.resources :notes
+  map.resources :semantic_tags
+  map.resource :preferences
 
   # Authentication and authorisation
   map.resources :users, :member => { :suspend   => :put,
@@ -40,5 +47,5 @@ ActionController::Routing::Routes.draw do |map|
   map.site 'site/:name', :controller => 'page', :action => 'show'
 
   # Default page
-  map.root :controller => 'browse', :action => 'view', :source => 1, :book => 1, :chapter => 1 
+  map.root :controller => 'browse', :action => 'view', :source => 1, :book => 1, :chapter => 1
 end

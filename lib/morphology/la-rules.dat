@@ -25,7 +25,8 @@ Ma-s---:A3P {
 
 #FIXME:A3x->A3P with stemmer
 Ma-p---:A3x {
- ducenti
+ ducenti,
+ mille sescenti,
 }
 
 Ma-p--- {
@@ -50,7 +51,8 @@ Mg {
  tredecim, quattuordecim, quindecim, sedecim, septendecim, duodeviginti,
  undeviginti, viginti, triginta, quadraginta, quinquaginta, sexaginta,
  septuaginta, octoginta, octoginta quattuor, nonaginta, nonaginta novem, centum, mille, 
- viginti quattuor,
+ viginti quattuor, centum quadraginta quattuor, sescenti sexaginta sex,
+ mille ducentis sexaginta,
 }
 
 # Ordinal numbers
@@ -109,6 +111,7 @@ Dn {
  demum, denuo, deorsum, dolose, eadem, enim, eo, eodem,
  ergo, etenim, etiam, extrinsecus, fatue, fere, foras,
  foris, forte, forsitan, frustra, gentiliter, germane, hac, haud, haud:haut,
+ hebraice,
  heri, hic, hinc, hodie, huc, huc:hoc, iam, ibi, idcirco, ideo, igitur,
  ilico, illa, illic, illuc, illuc:illic, illuc:illo, immo, impie,
  inportune, inaniter, inde, indesinenter, inordinate, inquiete,
@@ -205,6 +208,7 @@ Df------- {
  luxuriose/p,
  manifeste/p, mature:maturius/c, merito/p, mundate/p, mute/p,
  nequam/p, novissime/s, orbe/p, parce/p, 
+ occulte/p,
  pius:pie/p, plene/p, plene:plenissime/s,
  pretiose:pretiosius/c, prolixius/c, prope/p, recte/p, remissius/c, saepe/p, secus/p,
  sero/p,
@@ -624,10 +628,10 @@ Ne- {
 # Indeclinable proper nouns
 Nj {
  Abiud, Achaz, Acheldemach, Achim, Aminadab, Amon, Aram, Asa, Aser,
- Azor, Beelzebub, Bethleem, Booz, Capharnaum, David, Eleazar, Elisabeth, Eliud,
- Esrom, Gabrihel, Hierusalem, Iacob, Iesse, Ioatham, Ioram, Ioseph, Isaac,
- Israhel, Nasson, Nazareth, Objed, Phares, Phanuel, Rachab, Roboam, Ruth, Salmon,
- Thamar, Zara, Golgotha, Arimathia, Symeon, Iared, Eliachim, 
+ Azor, Beelzebub, Bethleem, Booz, Capharnaum, David, Eleazar, Eliezer, Elisabeth, Eliud,
+ Esrom, Gabrihel, Heli, Helmadam, Her, Hierusalem, Iacob, Iannae, Ioda, Iorim, Iosech, Iesse, Ioatham, Ioram, Ioseph, Isaac,
+ Israhel, Malelehel, Matthan, Matthat, Matthata, Melea, Menna, Nachor, Nasson, Nazareth, Objed, Phares, Phanuel, Rachab, Roboam, Ruth,
+ Sale, Salmon, Sem, Seruch, Seth, Thamar, Zara, Golgotha, Arimathia, Symeon, Iared, Eliachim,
  Levi, Gennesareth, Iohanna, Loth, Noe, Nathanahel, Corazain, Abel,
  Abiathar,
 }

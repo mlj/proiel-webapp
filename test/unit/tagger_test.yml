@@ -1,0 +1,10 @@
+:languages:
+  :la:    
+    :manual_rules:
+      la-rules.db
+    :generated_rules:
+      la-generated.db
+    :instance_frequencies:
+      false
+    :source_tag_pattern_filtering:
+      true

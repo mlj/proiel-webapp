@@ -34,7 +34,7 @@ class SourceExport
 
   # Returns the sentences to be exported by the exporter.
   def filtered_sentences
-    @options[:reviewed_only] ? @source.reviewed_sentences : @source.sentences
+    @options[:reviewed_only] ? @source.sentences.reviewed : @source.sentences
   end
 
   protected
@@ -50,8 +50,8 @@ class PROIELXMLExport < SourceExport
   protected
 
   def do_export(file)
-    PROIEL::TextWriter.new(file, identifier, @source.language, 
-                       @source.attributes.slice("title", "edition", "source", "editor", "url")) do |w|
+    PROIEL::TextWriter.new(file, identifier, @source.language.iso_code,
+                           @source.attributes.slice("title", "edition", "source", "editor", "url").symbolize_keys) do |w|
       filtered_sentences.each do |sentence|
         sentence.tokens.each do |token|
           attributes = { :id => token.id }
@@ -144,7 +144,7 @@ class TigerXMLExport < SourceExport
             builder.nonterminals do
               # Emit the empty root node
               builder.nt(:id => root_node_id, :form => '', :morphtag => '', :lemma => '') do
-                s.root_tokens.each do |t|
+                s.dependency_tokens.reject(&:head).each do |t|
                   builder.edge(:idref => "p#{t.id}", :label => t.relation)
                 end
               end

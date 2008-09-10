@@ -17,7 +17,7 @@ class ManualTagger < Task
   def run!(logger)
     Source.find(@source_ids).each do |source|
       logger.info { "Working on source #{source.code}..." }
-      source.annotated_sentences.each do |sentence|
+      source.sentences.annotated.each do |sentence|
         sentence.morphtaggable_tokens.each do |token|
           if (token.morphtag and not token.lemma_id) or (not token.morphtag and token.lemma_id)
             next
@@ -26,9 +26,10 @@ class ManualTagger < Task
           ml = token.morph_lemma_tag
 
           if ml and ml.morphtag.is_closed?
-            next unless ml.morphtag.is_valid?(token.language)
+            next unless ml.morphtag.is_valid?(token.language.iso_code.to_sym)
 
-            manual_tags = TAGGER.get_manual_rule_matches(token.language, token.form)
+            result, pick, *manual_tags = token.language.guess_morphology(token.form, nil, :force_method => :manual_rules)
+            manual_tags.collect!(&:first) # ditch the weights
 
             if manual_tags.length == 0
               log_token_error(logger, token, "Tagged with closed class morphology but not found in definition.")
@@ -54,9 +55,9 @@ class ManualTagger < Task
   end
 
   def log_token_error(logger, token, msg)
-    logger.error { "Token #{token.id} (sentence #{token.sentence.id}) '#{token.form}' (#{token.language}): #{msg}" }
+    logger.error { "Token #{token.id} (sentence #{token.sentence.id}) '#{token.form}': #{msg}" }
   end
 end
 
 v = ManualTagger.new
-v.execute!('mlj')
+v.execute!

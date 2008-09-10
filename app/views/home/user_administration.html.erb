@@ -1,8 +1,7 @@
-<% layer('history', :title => 'History and activity reports') do -%>
+<% layer('history', :title => 'History') do -%>
 
 <ul style="list-style: lower-greek">
-  <li><%= link_to 'Changesets', changesets_url %></li>
-  <li><%= link_to 'Jobs', jobs_url %></li>
+  <li><%= link_to 'History', audits_url %></li>
 </ul>
 
 <% end %>
@@ -29,18 +28,7 @@ the correct solution to the problem that you are attempting to solve!</p>
   <li><%= link_to 'Sentences', :controller => :sentences %></li>
   <li><%= link_to 'Tokens', :controller => :tokens %></li>
   <li><%= link_to 'Lemmata', :controller => :lemmata %></li>
-  <li>Morphological tagger
-      <% form_tag :action => 'tagger' do -%> 
-        Language: <%= language_select_tag :language, params[:language] %>
-        Form: <%= text_field_tag :form, params[:form] %>
-        Source tag: <%= text_field_tag :existing, params[:existing] %>
-        <%= submit_tag 'Query' %>
-      <% end %>
-      <% form_tag :action => 'tag_token_test' do -%> 
-        Token ID: <%= text_field_tag :id, params[:id] %>
-        <%= submit_tag 'Query' %>
-      <% end %>
-  </li>
+  <li><%= link_to 'Notes', :controller => :notes %></li>
   <li>Lemmatiser
     <ul>
       <li><b>Merge two lemmata.</b>
@@ -85,23 +73,6 @@ the correct solution to the problem that you are attempting to solve!</p>
         First token ID: <%= text_field_tag :id, params[:id] %>
         <%= submit_tag 'Merge tokens' %>
       <% end %>
-      </li>
-      <li><b>Merge linearly adjacent sentences.</b>
-      <p>
-      The ID of the first sentence should be provided, the ID of the second sentence
-      is inferred from the linearisation numbers. The second sentence is permanently
-      deleted from the database, while all tokens belonging to this sentence are
-      appended at the end of the first sentence. All syntactic
-      annotation is removed from both sentences.
-      The function will be ill-behaved if there is no next token in the source.
-      </p>
-      TODO
-      <!-- 
-      <% form_tag :action => 'merge_sentences' do -%> 
-        First sentence ID: <%= text_field_tag :id, params[:id] %>
-        <%= submit_tag 'Merge sentences' %>
-      <% end %>
-      -->
       </li>
       <li><b>Split sentence.</b>
       <p></p>

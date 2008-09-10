@@ -1,0 +1,12 @@
+one:
+  id: 1
+  lemma: cum
+  variant:
+  language: la
+  pos: R-
+two:
+  id: 2
+  lemma: cum
+  variant:
+  language: la
+  pos: G-

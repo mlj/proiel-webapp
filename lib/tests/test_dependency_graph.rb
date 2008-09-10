@@ -295,12 +295,6 @@ class ValidatingDependencyGraphTestCase < Test::Unit::TestCase
     assert_equal false, g.valid?
   end
 
-  def test_visualise
-    g = setup_ok_graph
-    g.visualize
-    g.visualise
-  end
-
   def test_relinearisation
     g = ValidatingDependencyGraph.new
     g.add_node(1, :pred, nil, [], { :empty => false, :token_number => 2})
@@ -377,5 +371,12 @@ class ValidatingDependencyGraphTestCase < Test::Unit::TestCase
     assert_equal g[122].all_slashes.length, 1
     assert_equal g[1221].all_slashes.length, 1
     assert_equal g[1222].all_slashes.length, 1 
+  end
+
+  def test_editor_to_dg_conversion
+    output = {"287650"=>{"empty"=>true, "relation"=>"pred", "dependents"=>{"266690"=>{"slashes"=>["287650"], "empty"=>false, "relation"=>"piv", "dependents"=>{"266691"=>{"empty"=>false, "relation"=>"atr", "dependents"=>{"266692"=>{"empty"=>false, "relation"=>"atr", "dependents"=>{"266693"=>{"empty"=>false, "relation"=>"apos"}, "266694"=>{"empty"=>false, "relation"=>"apos", "dependents"=>{"266695"=>{"empty"=>false, "relation"=>"atr", "dependents"=>{"266696"=>{"empty"=>false, "relation"=>"apos", "dependents"=>{"266697"=>{"empty"=>false, "relation"=>"atr"}}}}}}}}}}}}}}}}
+    g = ValidatingDependencyGraph.new_from_editor(output)
+    assert_equal 1, g[266690].slashes.length
+    assert_equal [287650], g[266690].slashes.map(&:identifier)
   end
 end

@@ -106,6 +106,12 @@ module PROIEL
       to_s[2, fields.length - 2]
     end
 
+    # Returns the morphtag as a pattern suitable for matching using SQL's LIKE
+    # operator.
+    def to_sql_pattern
+      to_abbrev_s.gsub('-', '_') + '%'
+    end
+
     # Returns descriptions for one or more fields in a tag. If
     # +inclusive+ is +true+, +fields+ is an array of fields to
     # include in the description. If +fields+ is +false+, +fields+
@@ -186,9 +192,9 @@ module PROIEL
       end
     end
 
-    private
+    OPEN_MAJOR = [:V, :A, :N]
 
-    CLOSED_MAJOR = [:V, :A, :N]
+    private
 
     def self.fields_with_inheritance
       [:gender]
@@ -204,7 +210,7 @@ module PROIEL
     #  MorphTag.new('A').is_closed?  #-> false
     #  MorphTag.new('-').is_closed?  #-> false
     def is_closed?
-      self.has_key?(:major) and not CLOSED_MAJOR.include?(self[:major])
+      self.has_key?(:major) and not OPEN_MAJOR.include?(self[:major])
     end
 
     # Returns +true+ if the tag is a subtag of another tag +o+.
@@ -240,6 +246,10 @@ module PROIEL
     #   MorphTag.new('-----------').is_compatible?(MorphTag.new('-------n---'))  #-> false
     def is_compatible?(o)
       self == o or self.is_subtag?(o) or o.is_subtag?(self)
+    end
+
+    def blank?
+      values.all? { |v| v.nil? }
     end
   end
 end

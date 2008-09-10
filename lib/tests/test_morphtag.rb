@@ -67,8 +67,8 @@ class MorphtagTestCase < Test::Unit::TestCase
     assert_equal false, PROIEL::MorphTag.new('A--s---na--').is_valid?(:la)
     assert_equal false, PROIEL::MorphTag.new('A--s---na--').is_valid?(:grc)
     assert_equal true, PROIEL::MorphTag.new('A--p---mdp-').is_valid?(:la)
-    assert_equal false, PROIEL::MorphTag.new('V-3piin----').is_valid?(:la)
-    assert_equal true, PROIEL::MorphTag.new('V-3piin----').is_valid?(:grc)
+    assert_equal false, PROIEL::MorphTag.new('V-3piie----').is_valid?(:la)
+    assert_equal true, PROIEL::MorphTag.new('V-3piie----').is_valid?(:grc)
     assert_equal true, PROIEL::MorphTag.new('Pd-p---nd--').is_valid?(:la)
     assert_equal true, PROIEL::MorphTag.new('Pi-p---mn--').is_valid?(:la)
     assert_equal true, PROIEL::MorphTag.new('Pk3p---mb--').is_valid?(:la) # personal reflexive
@@ -123,7 +123,7 @@ class MorphtagTestCase < Test::Unit::TestCase
         t = PROIEL::MorphTag.new(tag)
         l = language.to_sym
         v = (validity == 'true') ? true : false
-        puts t.descriptions(t.fields), l, v unless v == t.is_valid?(l)
+        puts tag, t.descriptions(t.fields), l, v unless v == t.is_valid?(l)
 
         assert_equal v, t.is_valid?(l)
       end

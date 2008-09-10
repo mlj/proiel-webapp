@@ -1,10 +1,10 @@
 module UsersHelper
-  # Returns a user's full name.
+  # Returns a select tag for users.
   #
   # ==== Options
-  # role:: Includes the user's role.
-  def readable_name(user, options = {})
-    user.full_name + (options[:role] ? " (#{user.role.description})" : '')
+  # +:include_blank+:: If +true+, includes an empty value first.
+  def user_select_tag(name, value, options = {})
+    _select_tag_db(name, User, :full_name, value, options)
   end
 
   # Returns a link to a user.
@@ -12,7 +12,7 @@ module UsersHelper
   # ==== Options
   # role:: Includes the user's role.
   def link_to_user(user, options = {})
-    link_to(readable_name(user), user) + (options[:role] ? " (#{user.role.description})" : '')
+    link_to(user.full_name, user) + (options[:role] ? " (#{user.role.description})" : '')
   end
 
   # Returns true if the current user is an administrator.

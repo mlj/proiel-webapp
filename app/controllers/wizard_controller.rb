@@ -81,9 +81,7 @@ class WizardController < ApplicationController
           render_state(bm, :annotation, :dependencies, :edit)
         when 4:
           begin
-            versioned_transaction do
-              bm.sentence.set_annotated!(User.find(session[:user_id]))
-            end
+            bm.sentence.set_annotated!(User.find(session[:user_id]))
             render_state(bm, :annotation, :dependencies, :verify_or_modify)
           rescue ActiveRecord::RecordInvalid => invalid
             flash[:error] = invalid.record.errors.full_messages.join('<br>')
@@ -104,9 +102,7 @@ class WizardController < ApplicationController
           render_state(bm, :review, :dependencies, :verify_or_modify)
         when 4:
           begin
-            versioned_transaction do
-              bm.sentence.set_reviewed!(User.find(session[:user_id]))
-            end
+            bm.sentence.set_reviewed!(User.find(session[:user_id]))
             next_sentence(bm, :review)
           rescue ActiveRecord::RecordInvalid => invalid
             flash[:error] = invalid.record.errors.full_messages.join('<br>')

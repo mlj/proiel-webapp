@@ -60,23 +60,12 @@ module PROIEL
       # The weight ratio for contradictory, incomplete, existing tags
       CONTRADICTION_RATIO = 0.5
 
-      attr_accessor :logger
-      attr_reader :statistics_retriever
-
       # Creates a new tagger.
       #
       # ==== Options
-      # logger:: Specifies a logger object.
-      #
-      # statistics_retriever:: Specifies a function that returns the frequency of aleady tagged
-      # forms, e.g. lambda { |language, form| [[ "C-", "cum", 30 ], [ "G-", "cum", 40 ]] }. All tags in the
-      # returned data must be valid.
-      #
       # data_directory:: Specifies the directory in which to look for data files. The default
       # is the current directory. 
       def initialize(configuration_file, options = {})
-        @logger = options[:logger]
-        @statistics_retriever = options[:statistics_retriever]
         @data_directory = options[:data_directory] || '.'
 
         @analysis_methods = {}
@@ -103,16 +92,13 @@ module PROIEL
               when :manual_rules
                 @analysis_methods[language][method] = 
                   WordListMethod.new(language, File.join(@data_directory, args))
-
                 @methods[language] << lambda { |form| analyze_form(language, method, normalise_form(language, form)) }
 
               # Includes candidates from existing annotation.
               when :instance_frequencies
-                if args == true and @statistics_retriever
-                  @analysis_methods[language][method] = 
-                    InstanceFrequencyMethod.new(language, @statistics_retriever)
-                  @methods[language] << lambda { |form| analyze_form(language, method, form) }
-                end
+                @analysis_methods[language][method] =
+                  InstanceFrequencyMethod.new(language)
+                @methods[language] << lambda { |form| analyze_form(language, method, form) }
               
               # Includes candidates from an FST guesser/analyzer.
               when :fst
@@ -127,6 +113,8 @@ module PROIEL
         end
       end
 
+      private
+
       def analyze_form(language, method, form)
         @analysis_methods[language][method].analyze(form).collect do |t|
           if t.is_a?(Array)
@@ -137,21 +125,27 @@ module PROIEL
         end
       end
 
+      public
+
       # Generates a list of tags for a token.
       #
-      # Options:
-      # ignore_instances:: Ignore any instance matches.
-      def tag_token(language, form, sort, existing = nil, options = {})
-        language = language.to_sym
+      # ==== Options
+      # <tt>:ignore_instances</tt> - If set, ignores all instance matches.
+      # <tt>:force_method</tt> - If set, forces the tagger to use a specific tagging method,
+      #                          e.g. <tt>:manual_rules</tt> for manual rules. All other
+      #                          methods are disabled.
+      def tag_token(language, form, existing = nil, options = {})
         raise "Undefined language #{language}" unless @methods.has_key?(language) 
 
-        begin
-          raw_candidates = @methods[language].collect { |method| method.call(form) }.flatten
-        rescue Exception => e
-          @logger.error { "Tagger method failed: #{e}" }
-          return [:failed, nil]
-        end
-
+        raw_candidates = unless options[:force_method]
+                           @methods[language].collect { |method| method.call(form) }.flatten
+                         else
+                           # FIXME
+                           if options[:force_method] == :manual_rules
+                             form = normalise_form(language, form)
+                           end
+                           analyze_form(language, options[:force_method], form)
+                         end
         raw_candidates.sort!
 
         # Try to make sense of any existing information that we have
@@ -209,6 +203,8 @@ module PROIEL
         end
       end
 
+      private
+
       def normalise_form(language, form)
         case language
         when :grc
@@ -218,14 +214,6 @@ module PROIEL
         else
           form
         end
-      end
-
-      # Generate the complete tag space using any known tag and language as a constraint.
-      # +limit+ ensures that the generated space will not exceed a certain number of
-      # members and instead return nil.
-      def generate_tag_space(language, known_tag, limit = 10)
-        morphtags = MorphTag.new(known_tag).completions(language)
-        morphtags.length > limit ? nil : morphtags 
       end
     end
   end

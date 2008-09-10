@@ -1,2 +1,12 @@
-<%= render_tabular @sources, :pagination => true,
-  :fields => [ 'Source', 'Title', 'Language', '&nbsp;' ] %>
+<% search_form_tag sources_path do %>
+  <label>Title</label><%= text_field_tag :query, params[:query] %>
+<% end %>
+
+<%= render_tabular @sources, :pagination => true, :fields => [ 'Title', 'Language', '&nbsp;' ] %>
+
+<% if is_reviewer? %>
+  <%= statistics "Completion (sentences)", "sentence", @sentence_completion_stats %>
+  <%= statistics "Completion (words/text tokens)", "tokens", @text_token_completion_stats %>
+  <%= statistics "Annotators", "sentence", @annotated_by_stats %>
+  <%= statistics "Reviewers", "sentence", @reviewed_by_stats %>
+<% end %>

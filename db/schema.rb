@@ -1,5 +1,5 @@
 # This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of ActiveRecord to incrementally modify your database, and
+# please use the migrations feature of Active Record to incrementally modify your database, and
 # then regenerate this schema definition.
 #
 # Note that this schema.rb definition is the authoritative source for your database schema. If you need
@@ -9,19 +9,28 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 7) do
+ActiveRecord::Schema.define(:version => 20080909130010) do
+
+  create_table "announcements", :force => true do |t|
+    t.text     "message"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.integer  "role_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "audits", :force => true do |t|
-    t.integer "auditable_id"
-    t.string  "auditable_type"
-    t.string  "action"
-    t.text    "changes"
-    t.integer "version",        :default => 0
-    t.integer "changeset_id"
+    t.integer  "auditable_id"
+    t.string   "auditable_type"
+    t.string   "action"
+    t.text     "changes"
+    t.integer  "version",        :default => 0
+    t.integer  "user_id",        :default => 0
+    t.datetime "created_at",                    :null => false
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
-  add_index "audits", ["changeset_id"], :name => "index_audits_on_changeset_id"
 
   create_table "bookmarks", :force => true do |t|
     t.integer "user_id",                                                  :default => 0,         :null => false
@@ -37,14 +46,6 @@ ActiveRecord::Schema.define(:version => 7) do
     t.string "abbreviation", :limit => 8
     t.string "code",         :limit => 8,  :default => "", :null => false
   end
-
-  create_table "changesets", :force => true do |t|
-    t.datetime "created_at",                                 :null => false
-    t.integer  "changer_id",                 :default => 0,  :null => false
-    t.string   "changer_type", :limit => 16, :default => "", :null => false
-  end
-
-  add_index "changesets", ["created_at"], :name => "index_changesets_on_created_at"
 
   create_table "dictionaries", :force => true do |t|
     t.string "identifier", :limit => 32,  :default => "", :null => false
@@ -68,24 +69,23 @@ ActiveRecord::Schema.define(:version => 7) do
     t.datetime "updated_at"
   end
 
-  create_table "jobs", :force => true do |t|
-    t.string   "name",        :limit => 64,                               :default => "",    :null => false
-    t.text     "parameters"
-    t.integer  "user_id",                                                 :default => 0,     :null => false
-    t.datetime "started_at"
-    t.datetime "finished_at"
-    t.enum     "result",      :limit => [:successful, :failed, :aborted]
-    t.integer  "source_id"
+  create_table "import_sources", :force => true do |t|
+    t.string   "tag",        :limit => 16, :default => "", :null => false
+    t.text     "summary",                                  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "audited",                                                 :default => false, :null => false
-    t.text     "log"
   end
+
+  create_table "languages", :force => true do |t|
+    t.string "iso_code", :limit => 3,  :default => "", :null => false
+    t.string "name",     :limit => 32, :default => "", :null => false
+  end
+
+  add_index "languages", ["iso_code"], :name => "index_languages_on_iso_code", :unique => true
 
   create_table "lemmata", :force => true do |t|
     t.string   "lemma",         :limit => 64, :default => "",    :null => false
     t.string   "variant",       :limit => 16
-    t.string   "language",      :limit => 3
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "pos",           :limit => 2,  :default => "",    :null => false
@@ -99,15 +99,47 @@ ActiveRecord::Schema.define(:version => 7) do
     t.boolean  "reconstructed"
     t.boolean  "nonexistant"
     t.boolean  "inflected"
+    t.integer  "language_id",                 :default => 0,     :null => false
   end
 
   add_index "lemmata", ["lemma"], :name => "index_lemmata_on_lemma"
   add_index "lemmata", ["variant"], :name => "index_lemmata_on_variant"
-  add_index "lemmata", ["language"], :name => "index_lemmata_on_lang"
+  add_index "lemmata", ["language_id"], :name => "index_lemmata_on_language_id"
+
+  create_table "notes", :force => true do |t|
+    t.string   "notable_type",    :limit => 64, :default => "", :null => false
+    t.integer  "notable_id",                    :default => 0,  :null => false
+    t.string   "originator_type", :limit => 64, :default => "", :null => false
+    t.integer  "originator_id",                 :default => 0,  :null => false
+    t.text     "contents",                                      :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "roles", :force => true do |t|
     t.string "code",        :limit => 16, :default => "", :null => false
     t.string "description", :limit => 64, :default => "", :null => false
+  end
+
+  create_table "semantic_attribute_values", :force => true do |t|
+    t.integer  "semantic_attribute_id",               :default => 0,  :null => false
+    t.string   "tag",                   :limit => 64, :default => "", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "semantic_attributes", :force => true do |t|
+    t.string   "tag",        :limit => 64, :default => "", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "semantic_tags", :force => true do |t|
+    t.integer  "taggable_id",                               :default => 0,  :null => false
+    t.string   "taggable_type",               :limit => 64, :default => "", :null => false
+    t.integer  "semantic_attribute_value_id",               :default => 0,  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sentence_alignments", :id => false, :force => true do |t|
@@ -121,11 +153,10 @@ ActiveRecord::Schema.define(:version => 7) do
   add_index "sentence_alignments", ["secondary_sentence_id"], :name => "index_sentence_alignments_on_secondary_sentence_id"
 
   create_table "sentences", :force => true do |t|
-    t.integer  "source_id",                       :default => 0,     :null => false
-    t.integer  "book_id",            :limit => 2, :default => 0,     :null => false
-    t.integer  "chapter",            :limit => 2, :default => 0,     :null => false
-    t.integer  "sentence_number",                 :default => 0,     :null => false
-    t.boolean  "bad_alignment_flag",              :default => false, :null => false
+    t.integer  "source_id",       :default => 0, :null => false
+    t.integer  "book_id",         :default => 0, :null => false
+    t.integer  "chapter",         :default => 0, :null => false
+    t.integer  "sentence_number", :default => 0, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "annotated_by"
@@ -137,9 +168,15 @@ ActiveRecord::Schema.define(:version => 7) do
   add_index "sentences", ["source_id", "book_id", "sentence_number"], :name => "sentence_number_index", :unique => true
   add_index "sentences", ["book_id"], :name => "index_sentences_on_book_id"
 
+  create_table "slash_edge_interpretations", :force => true do |t|
+    t.string "tag",     :limit => 64,  :default => "", :null => false
+    t.string "summary", :limit => 128, :default => "", :null => false
+  end
+
   create_table "slash_edges", :force => true do |t|
     t.integer "slasher_id"
     t.integer "slashee_id"
+    t.integer "slash_edge_interpretation_id", :default => 0, :null => false
   end
 
   add_index "slash_edges", ["slasher_id", "slashee_id"], :name => "index_slash_edges_on_slasher_and_slashee", :unique => true
@@ -147,39 +184,39 @@ ActiveRecord::Schema.define(:version => 7) do
   create_table "sources", :force => true do |t|
     t.string  "code",         :limit => 64, :default => "", :null => false
     t.text    "title"
-    t.string  "language",     :limit => 3,  :default => "", :null => false
     t.text    "edition"
     t.text    "source"
     t.text    "editor"
     t.text    "url"
     t.integer "alignment_id"
     t.string  "abbreviation", :limit => 64, :default => "", :null => false
+    t.integer "language_id",                :default => 0,  :null => false
   end
 
   create_table "tokens", :force => true do |t|
-    t.integer  "sentence_id",                                                                                                           :default => 0,     :null => false
-    t.integer  "verse",                :limit => 2
-    t.integer  "token_number",         :limit => 3,                                                                                     :default => 0,     :null => false
-    t.string   "morphtag",             :limit => 17
-    t.string   "form",                 :limit => 64
+    t.integer  "sentence_id",                                                                                                          :default => 0,     :null => false
+    t.integer  "verse"
+    t.integer  "token_number",                                                                                                         :default => 0,     :null => false
+    t.string   "morphtag",          :limit => 17
+    t.string   "form",              :limit => 64
     t.integer  "lemma_id"
-    t.string   "relation",             :limit => 20
-    t.integer  "head_id",              :limit => 3
-    t.enum     "morphtag_source",      :limit => [:source_ambiguous, :source_unambiguous, :auto_ambiguous, :auto_unambiguous, :manual]
-    t.enum     "sort",                 :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end],            :default => :text, :null => false
+    t.string   "relation",          :limit => 20
+    t.integer  "head_id"
+    t.enum     "sort",              :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :prodrop],    :default => :text, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.enum     "morphtag_performance", :limit => [:failed, :overridden, :suggested, :picked]
-    t.string   "source_morphtag",      :limit => 17
-    t.string   "source_lemma",         :limit => 32
+    t.string   "source_morphtag",   :limit => 17
+    t.string   "source_lemma",      :limit => 32
     t.text     "foreign_ids"
-    t.boolean  "contraction",                                                                                                           :default => false, :null => false
-    t.enum     "nospacing",            :limit => [:before, :after, :both]
-    t.string   "presentation_form",    :limit => 128
+    t.boolean  "contraction",                                                                                                          :default => false, :null => false
+    t.enum     "nospacing",         :limit => [:before, :after, :both]
+    t.string   "presentation_form", :limit => 128
     t.integer  "presentation_span"
-    t.boolean  "emendation",                                                                                                            :default => false, :null => false
-    t.boolean  "abbreviation",                                                                                                          :default => false, :null => false
-    t.boolean  "capitalisation",                                                                                                        :default => false, :null => false
+    t.boolean  "emendation",                                                                                                           :default => false, :null => false
+    t.boolean  "abbreviation",                                                                                                         :default => false, :null => false
+    t.boolean  "capitalisation",                                                                                                       :default => false, :null => false
+    t.enum     "info_status",       :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :no_info_status, :info_unannotatable]
+    t.string   "empty_token_sort",  :limit => 1
   end
 
   add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true
@@ -202,7 +239,7 @@ ActiveRecord::Schema.define(:version => 7) do
     t.string   "last_name",                 :limit => 60, :default => "",        :null => false
     t.string   "first_name",                :limit => 60, :default => "",        :null => false
     t.string   "preferences"
-    t.integer  "role_id",                   :limit => 3,  :default => 1,         :null => false
+    t.integer  "role_id",                                 :default => 1,         :null => false
     t.string   "state",                                   :default => "passive", :null => false
     t.datetime "deleted_at"
   end

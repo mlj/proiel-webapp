@@ -1,47 +1,40 @@
-class SourcesController < ApplicationController
-  before_filter :is_administrator?, :only => [:edit, :update]
+class SourcesController < ResourceController::Base
+  before_filter :is_administrator?, :except => [:index, :show]
+  actions :all, :except => [:new, :create, :destroy]
 
-  # GET /sources
-  # GET /sources.xml
-  def index
-    @sources = Source.search(params.slice(), params[:page])
+  private
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @sources }
-    end
+  def collection
+    @sources = Source.search(params[:query], :page => current_page)
   end
 
-  # GET /sources/1
-  # GET /sources/1.xml
-  def show
-    @source = Source.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @source }
-    end
+  index.before do
+    @sentence_completion_stats = {
+      :reviewed => Sentence.reviewed.count,
+      :annotated => Sentence.annotated.unreviewed.count,
+      :unannotated => Sentence.unannotated.count,
+    }
+    @text_token_completion_stats = {
+      :reviewed => Token.word.count(:conditions => { :sentence_id => Sentence.reviewed }),
+      :annotated => Token.word.count(:conditions => { :sentence_id => Sentence.annotated.unreviewed }),
+      :unannotated => Token.word.count(:conditions => { :sentence_id => Sentence.unannotated }),
+    }
+    @annotated_by_stats = Sentence.annotated.count(:group => :annotator).map { |k, v| [k.full_name, v] }
+    @reviewed_by_stats = Sentence.reviewed.count(:group => :reviewer).map { |k, v| [k.full_name, v] }
   end
 
-  # GET /sources/1/edit
-  def edit 
-    @source = Source.find(params[:id])
-  end
-
-  # PUT /sources/1
-  # PUT /sources/1.xml
-  def update
-    @source = Source.find(params[:id])
-
-    respond_to do |format|
-      if @source.update_attributes(params[:source])
-        flash[:notice] = 'Source was successfully updated.'
-        format.html { redirect_to(@source) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @source.errors, :status => :unprocessable_entity }
-      end
-    end
+  show.before do
+    @sentence_completion_stats = {
+      :reviewed => @source.sentences.reviewed.count,
+      :annotated => @source.sentences.annotated.unreviewed.count,
+      :unannotated => @source.sentences.unannotated.count,
+    }
+    @text_token_completion_stats = {
+      :reviewed => @source.tokens.word.count(:conditions => { :sentence_id => @source.sentences.reviewed }),
+      :annotated => @source.tokens.word.count(:conditions => { :sentence_id => @source.sentences.annotated.unreviewed }),
+      :unannotated => @source.tokens.word.count(:conditions => { :sentence_id => @source.sentences.unannotated }),
+    }
+    @annotated_by_stats = @source.sentences.annotated.count(:group => :annotator).map { |k, v| [k.full_name, v] }
+    @reviewed_by_stats = @source.sentences.reviewed.count(:group => :reviewer).map { |k, v| [k.full_name, v] }
   end
 end

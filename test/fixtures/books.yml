@@ -2,10 +2,8 @@
 one:
   id: 1
   title: MyText
-  abbrev: MyText
   code: MyText
 two:
   id: 2
   title: MyText
-  abbrev: MyText
   code: MyText

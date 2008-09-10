@@ -1,22 +1,12 @@
-= The PROIEL Corpus
+= The PROIEL web application
 
 == Installation
 
-The application depends on (at least) these gems:
-* xml-simple
-* unicode
-* diff-lcs
-* fastercsv
-* oniguruma
-* builder
-* hpricot
-* railroad
-* gchartrb
-* gdbm
-* treetop
+You need Rails 2.1.1 installed as a RubyGem for this application to work.
 
-In addition, you need the following gems that are part of the PROIEL Corpus
-* logos
+Most Ruby dependencies should be handled automatically. Use
+    rake gems
+to get a list of dependencies and their installation status.
 
 You will also need a installations of the following tools with binaries
 in a path accessible to the application:
@@ -24,10 +14,10 @@ in a path accessible to the application:
 * SFST
 
 Before starting the application for the first time, run
+    make -C lib
+to build support files.
 
-  make -C lib
-
-to build the morphological rule databases.
+To build all of the documentation, the `railroad` gem is also required.
 
 === Rebuilding the data sources
 
@@ -36,91 +26,3 @@ In order to rebuild the data sources, you will, in addition to the above, need
 * sqlite3
 and the following gems
 * ruby-xslt
-
-== Overview
-
-The PROIEL application consists of four components
-* General utilities for corpus linguistics. This is kept within the Logos
-namespace and resides in the gem <tt>logos</tt>.
-* Generic PROIEL-specific functionality. This comprises all the logic that
-is specific to the data model used by the PROIEL corpus, but not tied to
-the web-application or database. This resides in <tt>lib/proiel</tt> and is
-accessible through modules in the PROIEL namespace.
-* Original source data and pre-processing scripts. This iskept in the 
-<tt>data</tt> directory.
-* The web-application and database specific data model. This is laid out
-as a regular Ruby on Rails application. An overview of the models can be 
-found here[link:../models.svg] and for the controllers 
-here[link:../controllers.svg].
-
-=== Rake tasks
-
-The Ruby on Rails application includes a set of rake tasks for importing and
-exporting data and for running various forms of validation jobs. Run
-
-    rake --tasks proiel
-    
-for an overview.
-
-== Data sources 
-
-=== PROIEL ad hoc XML format
-
-The schema for the PROIEL ad hoc XML format is found in the +data+ directory
-and called +text.xsd+.
-  :include:../data/text.xsd
-
-==== Language tags
-
-The language tags used are the ones listed in 
-IANA's language subtag registry[http://www.iana.org/assignments/language-subtag-registry]
-as per RFC 4646 and recommended by the W3C[http://www.w3.org/International/articles/language-tags/]. 
-The tags are the following:
-
-cu::  Old Church Slavonic (ISO 639-1: cu; ISO 639-2: chu; ISO/FDIS 639-3: chu) 
-la::  Latin (ISO 639-1: la; ISO 639-2: lat; ISO/FDIS 639-3: lat)
-grc:: Ancient Greek (ISO 639-1: none; ISO 639-2: grc; ISO/FDIS 639-3: grc)
-hy::  Armenian (ISO 639-1: hy; ISO 639-2: hye; ISO/FDIS 639-3: hye)
-got:: Gothic (ISO 639-1: none; ISO 639-2: got; ISO/FDIS 639-3: got)
-
-In the PROIEL ad hoc XML format the xml:lang attribute is not used.
-Instead an attribute lang is used, as xml:lang will fail
-validation with the current combination of language tags and schemata.
-
-==== Morphological tagset
-
-The definition for the morphological tagset is found in +lib/proiel/morphology.xml+.
-  :include:../lib/proiel/morphology.xml
-
-== Text sources 
-
-The PROIEL base texts were derived from a number of sources:
-* MorphGNT.org[http://morphgnt.org]
-* Perseus
-* vulsearch
-* TITUS
-
-=== TITUS
-
-The Church Slavonic, Gothic and Armenian texts are derived from the texts
-prepared by the TITUS project. The TITUS files are available as HTML and
-a proprietary format. While the HTML files are UTF-8 encoded, they cannot
-be parsed reliably by an HTML parser.  The proprietary format, on the 
-other hand, is parsable, but not standardly encoded. The PROIEL texts were 
-therefore derived from the proprietary format, and the encoding reverse 
-engineered by manual comparison with the HTML text, and may be the source
-of occasional encoding errors.
-
-= Known issues
-
-* Dependency structure graphs occasionally appear jagged in
-  Internet Explorer 6 (and perhaps 7).
-
-  The graphs are served as PNG images, and IE has a history
-  of issues in dealing with this image format. Unfortunately,
-  using a different image format is not an option at the moment
-  as the graphing program, graphviz, cannot generate images
-  with non-Latin characters in any other reasonable image
-  format than PNG. The issue may be resolved by using a more
-  recent version of graphviz that supports GIF images and
-  the correct fonts.

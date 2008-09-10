@@ -1,12 +1,12 @@
-<% javascript "relations", "tree", "dependencies" %>
+<% javascript "utils", "relations", "tree", "dependencies" %>
 <% stylesheet "dependencies" %>
 
 <%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Dependency structure', :edit_url => :edit_annotation_dependencies_url } %>
 
 <div id="annotation" class="annotation">
-  <%= hidden_field_tag 'input-tokens', @tokens %>
-  <%= hidden_field_tag 'input-structure', @structure %>
-  <%= hidden_field_tag 'input-relations', [] %>
+  <%= hidden_field_tag 'input-tokens', @tokens.to_json %>
+  <%= hidden_field_tag 'input-structure', @structure.to_json %>
+  <%= hidden_field_tag 'input-relations', @relations.to_json %>
 
   <div class="actions">
     <%= button_to_function "Delete subtree", :id => 'button-delete', :disabled => true %>
@@ -14,7 +14,8 @@
     <%= button_to_function "Paste subtree", :id => 'button-paste', :disabled => true %>
     <%= button_to_function "Clear", :id => "button-clear" %>
     <%= button_to_function "Reset", :id => "button-reset" %>
-    <%= button_to_function "Add empty node", :id => "button-insert-empty-node" %>
+    <%= button_to_function "Add asyndetic conjunction", :id => "button-insert-empty-conjunction-node" %>
+    <%= button_to_function "Add empty verbal node", :id => "button-insert-empty-verbal-node" %>
     <%= button_to_function "Add slash", :id => 'button-add-slash', :disabled => true %>
     <%= button_to_function "Remove slashes", :id => 'button-remove-slashes', :disabled => true %>
   </div>
@@ -26,27 +27,29 @@
   </div>
 
   <div id="palette">
-      <ul class="palette">
-        <% PROIEL::RELATIONS.values.sort_by { |v| v.code.to_s }.each do |v| %>
-          <li id="<%= v.code %>" class="box"><%= readable_relation(v.code) %></li>
-        <% end %>
-      </ul>
+    <% @relations.each do |v| %>
+      <label for="<%= v.code %>">
+        <input type="radio" name="relation-palette" id="<%= v.code %>" value="<%= v.code %>"></input>
+        <span><%= readable_relation(v.code) %></span>
+      </label>
+    <% end %>
   </div>
 
-  <ul id="words" style="text-align: center"> 
+  <div id="words">
     <% @sentence.morphtaggable_tokens.each do |t| %>
-      <li id="word-<%= t.id %>" class="word">
-        <span class="form"><%= format_token_form(t) %></span><span class="token-number"><%= t.token_number %></span>
-      </li>
+      <label for="word-<%= t.id %>">
+        <input type="radio" name="token-palette" id="word-<%= t.id %>" value="<%= t.id %>"></input>
+        <span><span class="form"><%= format_token_form(t) %></span><span class="token-number"><%= t.token_number %></span></span>
+      </label>
     <% end %>
-  </ul>
+  </div>
 
   <!-- FIXME: the lang attribute here is a work-around. This will break if
        LangText is ever extended beyond simple language attribute handling. -->
-  <ul id="relations" lang="<%= @sentence.language %>" class="tree"></ul>
+  <ul id="relations" lang="<%= @sentence.language.iso_code %>" class="tree"></ul>
 
   <div class="actions">
-    <% form_tag({ :controller => 'dependencies', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :method => :put) do -%>
+    <% form_tag({ :controller => 'dependencies', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :method => :put, :id => 'dependencies-form') do -%>
       <%= hidden_field_tag 'output', '' %>
       <%= submit_tag 'Save' %>
     <% end %>

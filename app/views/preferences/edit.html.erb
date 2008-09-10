@@ -1,0 +1,23 @@
+<h1>Preferences</h2>
+
+<% form_tag("/preferences", :method => "put") do -%>
+  <ul>
+    <li>Image format for dependency graphs:
+      <p>
+        <!-- SVG offers superior quality but do not work well with all browsers. If you are uncertain, stick with PNG. -->
+        <label for="preferences_graph_format_png"><%= radio_button_tag("preferences[graph_format]", "png", @preferences[:graph_format] == "png") %>PNG (bitmap)</label>
+        <label for="preferences_graph_format_svg"><%= radio_button_tag("preferences[graph_format]", "svg", @preferences[:graph_format] == "svg") %>SVG (vectorized)</label>
+      </p>
+    </li>
+
+    <li>Visualization method for dependency graphs:
+    <p>
+      <!-- Dependency graphs can be visualized either in such a way that the nodes are sorted so that
+      edges between the nodes never intersect, or sorted so that the nodes occur in the same order as when the
+      graph is linearized. -->
+      <label for="preferences_graph_method_unsorted"><%= radio_button_tag("preferences[graph_method]", "unsorted", @preferences[:graph_method] == "unsorted") %>Unsorted</label>
+      <label for="preferences_graph_method_linearized"><%= radio_button_tag("preferences[graph_method]", "linearized", @preferences[:graph_method] == "linearized") %>Sorted by linearization</label>
+    </p> 
+  </ul>
+  <%= submit_tag('Save') %>
+<% end %>

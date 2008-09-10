@@ -3,6 +3,9 @@
   <dt>Sentence ID:</dt><dd><%= link_to @token.sentence.id, @token.sentence %></dd>
   <dt>Linearisation index:</dt><dd><%= @token.token_number %></dd>
   <dt>Sort:</dt><dd><%= readable_token_sort(@token.sort) %></dd>
+  <% if @token.is_empty? %>
+    <dt>Empty token sort:</dt><dd><%= @token.empty_token_sort %></dd>
+  <% end %>
   <% if @token.form %>
     <dt>Form:</dt><dd class="foreign-word"><%= format_token_form(@token) %></dd>
   <% end %>
@@ -16,26 +19,31 @@
     <dt>Part of speech:</dt><dd><%= readable_pos(@token.morph) %></dd>
     <dt>Morphology:</dt><dd><%= readable_morphology(@token.morph) %></dd>
     <dt>Lemma:</dt><dd class="foreign-word"><%= @token.lemma ? link_to(format_lemma_form(@token.lemma), @token.lemma) : '&nbsp;' %></dd>
-    <% if @token.morphtag_performance %>
-      <dt>Tagger performance:</dt><dd><%= @token.morphtag_performance %></dd>
-    <% end %>
     <% if @token.source_morphtag %>
       <dt>Source morphtag:</dt><%= fmt_source_morphtag(@token, 'dd') %>
     <% end %>
     <% if @token.source_lemma %>
       <dt>Source lemma:</dt><dd class="lemma"><%= format_language_string(@token.source_lemma, @token.language) %></dd>
     <% end %>
-    <% if @token.foreign_ids %>
-      <dt>Foreign IDs:</dt><dd><%= @token.foreign_ids %></dd>
-    <% end %>
   <% end %>
   <% if @token.relation %>
     <dt>Dependency relation:</dt><dd><%= readable_dependency(@token.relation, @token.head ? link_to(@token.head.id, @token.head) : nil) %></dd>
   <% end %>
+  <% if @token.foreign_ids %>
+    <dt>Foreign IDs:</dt><dd class="tag"><%= @token.foreign_ids %></dd>
+  <% end %>
   <dt>Annotation completion:</dt><dd><%= link_to(readable_completion(@token.sentence), annotation_path(@token.sentence)) %></dd>
+  <%= link_to_resources @token, :index, :edit %>
 <% end %>
 
-<% layer("revisions") do -%>
-  <%= render :partial => 'changesets/legend' %>
-  <%= render :partial => 'changesets/audits', :object => @token.audits %>
+<% layer_unless @token.notes.empty?, "notes" do -%>
+  <%= notes_summary @token.notes %>
+<% end %>
+
+<% layer_unless @semantic_tags.empty?, 'semantic_tags' do -%>
+  <%= semantic_tags_summary(@semantic_tags) %>
+<% end %>
+
+<% layer_unless @token.audits.empty?, "revisions" do -%>
+  <%= audits_summary @token.audits %>
 <% end %>

@@ -13,8 +13,10 @@
     <!--[if IE]>
     <script type="text/javascript">ie = true;</script>
     <![endif]-->
-    <%= javascript_include_tag "prototype", "utils", "effects", "controls" %>
+    <%= javascript_include_tag "prototype", "scriptaculous", "utils", "effects", "controls" %>
     <%= stylesheet_link_tag "all" %>
+    <%= stylesheet_link_tag "pagination" %>
+    <%= stylesheet_link_tag "semantic_forms" %>
     <%= stylesheet_link_tag "screen",     :media => "screen" %>
 
     <%= stylesheet_link_tag "print",      :media => "print" %>
@@ -23,6 +25,9 @@
   </head>
 
   <body>
+    <div id>
+      <%= announcement_block %>
+    </div>
     <div id="headline">
     </div>
     <div id="navbar">
@@ -40,7 +45,7 @@
             <%= link_to 'Statistics', statistics_path %>
           <% end %>
           <%= link_to 'Search', { :controller => :home, :action => :search }, :accesskey => 's', :style => 'display: none' %>
-          <%= link_to 'Preferences', { :controller => :home, :action => :preferences }, :accesskey => 'r' %>
+          <%= link_to 'Preferences', edit_preferences_path %>
         </span>
         <span style="float:right">
           <% form_tag({ :controller => "home", :action => "search" }, { :style => 'display: inline; padding: 0 0 0 0;' }) do -%>
@@ -62,14 +67,7 @@
       <%= yield %>
     </div>
     <div id="footer">
-      University of Oslo, 2007, 2008
       <% if ENV['RAILS_ENV'] == 'development' %>(Running in development mode)<% end %>
-      <p>
-        <small>
-          This site uses the <a href="http://www.famfamfam.com/lab/icons/silk/">Silk Icon Set</a> by Mark James and
-          and <a href="http://pooliestudios.com/projects/iconize/">Iconize</a> by Alexander Kaiser and Mark James.
-        </small>
-      </p>
     </div>
   </body>
 </html>

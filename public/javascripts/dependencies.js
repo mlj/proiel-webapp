@@ -1,5 +1,5 @@
 // Globals 
-var palette_widget = null;
+var palette = null;
 var sentence_widget = null;
 var tree_widget = null;
 var controller = null; 
@@ -288,20 +288,17 @@ var DependencyStructureWidget = Class.create(Widget, {
   }
 });
 
-var SentenceWidget = Class.create(Widget, {
-  initialize: function($super, id) { $super(id, 'word-'); },
-
+var SentenceWidget = Class.create(RadioGroup, {
   setConsumed: function(id) { this.find(id).addClassName("consumed"); },
 
   setUnconsumed: function(id) { this.find(id).removeClassName("consumed"); },
 
   clear: function() { this.widget.descendants().invoke('removeClassName', 'consumed'); },
 
-  isConsumed: function(id) { return this.find(id).hasClassName("consumed"); }
-});
+  isConsumed: function(id) { return this.find(id).hasClassName("consumed"); },
 
-var PaletteWidget = Class.create(Widget, {
-  initialize: function($super, id) { $super(id, ''); }
+  // Returns all unconsumed tokens
+  getUnconsumedTokens: function() { return this.buttons().findAll(function(e) { return !e.hasClassName("consumed"); }); }
 });
 
 function getRecommendedRelation(head_relation, head, dependent) {
@@ -323,7 +320,7 @@ function onDependencyStructureClick(ev) {
 }
 
 function onSentenceClick(ev) {
-  var id = findAffectedID(ev, 'li', 'word-');
+  var id = sentence_widget.selection();
 
   if (id)
     controller.select(id);
@@ -354,12 +351,10 @@ function findAffectedID(ev, name, prefix) {
 function onSlashSelect() { tree_widget._updateJSON(); }
 
 function onPaletteClick(ev) {
-  var element = findAffectedElement(ev, 'li');
+  var element = findAffectedElement(ev, 'input');
 
-  if (element) {
-    if (palette_widget.select(element))
-      controller.changeRelation(element.identify());
-  }
+  if (element)
+    controller.changeRelation(element.identify());
 }
 
 function onChangeDirectionClick() { controller.toggleBuildDirection(); }
@@ -377,13 +372,13 @@ var Controller = Class.create({
 
   setSelection: function(token_id) {
     if (this.selection) {
-      // Do de-selections and disable buttons and palette_widget
+      // Do de-selections and disable buttons and palette
       sentence_widget.deselect();
       tree_widget.deselect();
     }
 
     if (token_id) {
-      // Do selections and enable buttons and palette_widget
+      // Do selections and enable buttons and palette
       if (!model.isEmpty(token_id))
         sentence_widget.select(token_id);
       tree_widget.select(token_id);
@@ -391,8 +386,8 @@ var Controller = Class.create({
       r = tree_widget.getRelation(token_id);
 
       if (isValidRelation(r)) {
-        palette_widget.enable();
-        palette_widget.select(r);
+        palette.enable();
+        palette.select(r);
       }
     }
 
@@ -471,18 +466,18 @@ var Controller = Class.create({
     tree_widget._updateJSON();
   },
 
-  addEmptyEntry: function() {
+  addEmptyEntry: function(sort) {
     var new_id;
 
     // Add new token to the model.
-    new_id = model.createEmptyToken();
+    new_id = model.createEmptyToken(sort);
 
     // Add a new entry to the tree widget.
     if (this.top_down)
-      tree_widget.addEntry(this.selection, new_id, null, '-', null);
+      tree_widget.addEntry(this.selection, new_id, null, sort, null);
     else {
       var h = tree_widget.getParentEntry(this.selection);
-      tree_widget.addEntry(h, new_id, this.selection, '-', null);
+      tree_widget.addEntry(h, new_id, this.selection, sort, null);
     }
 
     // Ensure that all slash select boxes are updated
@@ -609,7 +604,7 @@ var Controller = Class.create({
 
         //FIXME
         var values = new Hash;
-        values.set('empty', true);
+        values.set('empty', empty);
         values.set('token_number', token_number);
         model.tokens.set(token_id, values);
         if (model.new_token_number >= token_number)
@@ -617,7 +612,7 @@ var Controller = Class.create({
       }
 
       if (empty)
-        tree_widget.addEntry(parent_id, token_id, null, '-', relation);
+        tree_widget.addEntry(parent_id, token_id, null, empty, relation);
       else {
         sentence_widget.setConsumed(token_id);
         tree_widget.addEntry(parent_id, token_id, null, 
@@ -652,13 +647,14 @@ var Controller = Class.create({
     $('button-cut').disable();
     $('button-paste').disable();
     $('button-clear').enable();
-    $('button-insert-empty-node').enable();
+    $('button-insert-empty-conjunction-node').enable();
+    $('button-insert-empty-verbal-node').enable();
     $('button-add-slash').disable();
     $('button-remove-slashes').disable();
 
     this.buildDownwards();
 
-    palette_widget.disable();
+    palette.disable();
 
     this.setSelection('ROOT');
   },
@@ -692,9 +688,9 @@ var Controller = Class.create({
     }
 
     if (no_actionable_element)
-      palette_widget.disable(); 
+      palette.disable(); 
     else 
-      palette_widget.enable();
+      palette.enable();
 
     // IE hacks
     updateTreeLast();
@@ -733,13 +729,13 @@ var Model = Class.create({
   getTokenIDs: function() { return this.tokens.keys(); },
 
   // Create new empty token
-  createEmptyToken: function() {
+  createEmptyToken: function(sort) {
     var id = 'new' + this.new_token_number;
     var token_number = this.new_token_number;
     this.new_token_number++;
 
     var values = new Hash;
-    values.set('empty', true);
+    values.set('empty', sort);
     values.set('token_number', token_number);
     this.tokens.set(id, values);
 
@@ -755,6 +751,21 @@ var Model = Class.create({
     this.tokens.unset(id);
   }
 });
+
+function validate(ev) {
+  var errors = sentence_widget.getUnconsumedTokens();
+
+  if (errors.length > 0) {
+    alert("Annotation is incomplete. Please correct the indicated errors before saving.");
+
+    errors.each(function(e) {
+      // Go up to the label and colour that since the input element itself isn't displayed at all
+      new Effect.Highlight(e.up("label"), { startcolor: '#ff9999', endcolor: '#ffffff' });
+      e.addClassName("validation-error");
+    });
+    Event.stop(ev) // stop event propagation
+  }
+}
 
 // Document hooks
 
@@ -772,20 +783,23 @@ Event.observe(window, 'load', function() {
   // Create widgets
   sentence_widget = new SentenceWidget('words');
   tree_widget = new DependencyStructureWidget('relations');
-  palette_widget = new PaletteWidget('palette');
+  palette = new RadioGroup('palette');
+  palette.disable();
 
   // Connect event handlers
-  $('palette').observe('click', onPaletteClick);
-  $('words').observe('click', onSentenceClick);
+  $('palette').observe('change', onPaletteClick);
+  $('words').observe('change', onSentenceClick);
   $('relations').observe('click', onDependencyStructureClick);
   $('button-delete').observe('click', function(ev) { controller.removeEntry(); });
   $('button-clear').observe('click', function(ev) { controller.clear(); });
   $('button-reset').observe('click', function(ev) { controller.reset(); });
-  $('button-insert-empty-node').observe('click', function(ev) { controller.addEmptyEntry(); });
+  $('button-insert-empty-conjunction-node').observe('click', function(ev) { controller.addEmptyEntry("C"); });
+  $('button-insert-empty-verbal-node').observe('click', function(ev) { controller.addEmptyEntry("V"); });
   $('button-add-slash').observe('click', function(ev) { controller.addSlash(); });
   $('button-remove-slashes').observe('click', function(ev) { controller.removeSlashes(); });
   $('button-cut').observe('click', function(ev) { controller.cut(); });
   $('button-paste').observe('click', function(ev) { controller.paste(); });
+  $('dependencies-form').observe('submit', validate, false);
 
   // Set starting state.
   controller.reset();
@@ -820,12 +834,11 @@ Event.observe(window, 'load', function() {
       stop_event = true;
     }
     else {
-      //TODO: More key-stroke handling here?
       var character = String.fromCharCode(code);
+
       if (character in hotkeys) {
-        var element = $(hotkeys[character]);
-        palette_widget.select(element);
-        controller.changeRelation(element.identify());
+        palette.select(hotkeys[character]);
+        controller.changeRelation(hotkeys[character]);
         stop_event = true;
       }
     }

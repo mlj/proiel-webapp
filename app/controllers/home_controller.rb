@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   before_filter :is_annotator?, :only => [ :annotation ]
-  before_filter :is_reviewer?, :except => [ :search, :help, :annotation, :preferences, :index ]
+  before_filter :is_reviewer?, :except => [ :search, :help, :annotation, :index ]
 
   LOCATION_SEARCH_PATTERN = Regexp.new(/^\s*(\w+)\s+([A-Za-z]+)\s+(\d+)\s*$/).freeze
   ANNOTATION_SEARCH_PATTERN = Regexp.new(/^\s*(\d+)\s*$/).freeze
@@ -43,11 +43,9 @@ class HomeController < ApplicationController
       # Must be a lemma/token lookup
       case params[:mode]
       when 'tokens'
-        @tokens = Token.search({ :form => query, :exact => params[:exact] }, params[:page])
+        @tokens = Token.search(params[:query], :page => current_page)
       when 'lemmata'
-        base_form, variant = query.split('#')
-        @lemmata = Lemma.search({ :lemma => base_form, :variant => variant,
-                                  :exact => params[:exact] }, params[:page])
+        @lemmata = Lemma.search(params[:query], :page => current_page)
       else
         flash[:error] = 'Invalid query'
       end
@@ -57,36 +55,16 @@ class HomeController < ApplicationController
   def user_administration
   end
 
-  def tagger
-    state, pick, *suggestions = TAGGER.tag_token(params[:language], params[:form],
-                                                 (params[:existing] and params[:existing] != '') ? PROIEL::MorphLemmaTag.new(params[:existing]) : nil)
-    render :text => "result = #{state}<br>pick = #{pick}<br>suggestions = <ul>#{suggestions.collect { |s, w| "<li>tag = #{s}, weight = #{w}</li>" }}</ul>"
-  end
-
-  def tag_token_test
-    if Token.exists?(params[:id]) 
-      token = Token.find(params[:id])
-
-      state, pick, *suggestions = token.invoke_tagger
-
-      render :text => "result = #{state}<br>pick = #{pick}<br>suggestions = <ul>#{suggestions.collect { |s, w| "<li>tag = #{s}, weight = #{w}</li>" }}</ul>"
-    else
-      render :text => 'No such token'
-    end
-  end
-
   def merge_tokens
     token = Token.find(params[:id])
-    versioned_transaction { token.merge! }
+    token.merge!
     redirect_to token_url(token)
   end
 
   def merge_lemmata
-    versioned_transaction do
-      from = Lemma.find(params[:first_id])
-      to = Lemma.find(params[:second_id])
-      to.merge!(from)
-      redirect_to lemma_url(to)
-    end
+    from = Lemma.find(params[:first_id])
+    to = Lemma.find(params[:second_id])
+    to.merge!(from)
+    redirect_to lemma_url(to)
   end
 end

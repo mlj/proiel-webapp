@@ -5,15 +5,26 @@ class MorphtagsController < ApplicationController
   # Returns potential renderings of transliterated lemmata.
   def auto_complete_for_morphtags_lemma
     search = params[:morphtags][:lemma]
-    if "cu" == params[:morphtags][:language] # FIXME: only enabled for cu now
-      xliterator = Logos::TransliteratorFactory::get_transliterator("cu-ascii") # FIXME: only one xliterator available for now
+
+    # Perform transliteration
+    if !params[:morphtags][:language].blank? and TRANSLITERATORS.has_key?(params[:morphtags][:language].to_sym)
+      xliterator = Logos::TransliteratorFactory::get_transliterator(TRANSLITERATORS[params[:morphtags][:language].to_sym])
       @results = xliterator.transliterate_string(search)
-    elsif "got" == params[:morphtags][:language] # FIXME: only enabled for cu now
-      xliterator = Logos::TransliteratorFactory::get_transliterator("got-ascii-word") # FIXME: only one xliterator available for now
-      @results = xliterator.transliterate_string(search)
+
+      completion_candidates = @results
     else
       @results = []
+
+      completion_candidates = [params[:morphtags][:lemma]]
     end
+
+    # Auto-complete lemmata
+    completions = completion_candidates.collect do |result|
+      Lemma.find_completions(result, params[:morphtags][:language]).map(&:export_form)
+    end.flatten
+
+    @completions = completions.sort.uniq
+    @transliterations = @results.sort.uniq
 
     render :partial => "transliterations/input"
   end
@@ -24,7 +35,7 @@ class MorphtagsController < ApplicationController
 
   def edit
     @sentence = Sentence.find(params[:annotation_id])
-    @language = @sentence.language
+    @language_code = @sentence.language.iso_code
 
     @tags = @sentence.morphtaggable_tokens.inject({}) do |tags, token|
       tags[token.id] = {}
@@ -78,7 +89,7 @@ class MorphtagsController < ApplicationController
       return
     end
 
-    versioned_transaction do
+    Token.transaction do
       # Cycle the parameters and check whether this one originated with us 
       # or with them...
       params.keys.reject { |key| !(key =~ /^morphtag-/) }.each do |key|
@@ -88,27 +99,8 @@ class MorphtagsController < ApplicationController
 
         ml = PROIEL::MorphLemmaTag.new("#{new_morphtag.to_s}:#{new_lemma}")
 
-        suggestions = params['orig-suggestions-' + token_id].split(',').collect { |s| PROIEL::MorphLemmaTag.new(s) }
-        pick = PROIEL::MorphLemmaTag.new(params['pick-' + token_id])
-
-        if ml == pick
-          performance = :picked
-        elsif suggestions.include?(ml)
-          performance = :suggested
-        elsif pick.nil? and suggestions.empty?
-          performance = :failed
-        else
-          performance = :overridden
-        end
-
         token = Token.find(token_id)
-
-        # We don't want to update morphtag_performance unnecessarily, so
-        # test if the morphtag actually changed before updating.
-        if token.morph_lemma_tag != ml
-          token.set_morph_lemma_tag!(ml)
-          token.update_attributes!(:morphtag_performance => performance)
-        end
+        token.set_morph_lemma_tag!(ml) if token.morph_lemma_tag != ml
       end
     end
 

@@ -1,0 +1,7 @@
+<% roundedbox do -%>
+  <dt>Message:</dt><dd><%=h @announcement.message %></dd>
+  <dt>Starts at:</dt><dd><%=h @announcement.starts_at %></dd>
+  <dt>Ends at:</dt><dd><%=h @announcement.ends_at %></dd>
+  <dt>Visible to users with role:</dt><dd><%=h @announcement.role.description %> or higher</dd>
+  <%= link_to_resources(@announcement, :index, :edit, :delete) %>
+<% end %>

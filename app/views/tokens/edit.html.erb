@@ -1,8 +1,6 @@
 <%= error_messages_for :token %>
 
-<div class="edit">
-  <% form_for(@token) do |form| %>
-    <%= render :partial => 'form', :object => form %>
-    <%= form.submit "Update" %>
-  <% end %>
-</div>
+<% form_for(@token) do |form| %>
+  <%= render :partial => 'form', :object => form %>
+  <%= form.submit "Update" %>
+<% end %>

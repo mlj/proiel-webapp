@@ -6,8 +6,18 @@
 
 $KCODE = 'u'
 
+# Unicode normalization form for normalised text columns. Choices are :kc, :c, :kd, :d
+# (see http://unicode.org/reports/tr15/ for details). The default choice is :c, and it is
+# recommended that you stick with that unless you have good reasons not to. If you do change
+# it, remeber to take into consideration how your database engine deals with queries that
+# contain sequences of potentially decomposed characters.
+UNICODE_NORMALIZATION_FORM = :c
+
+# Default user preferences.
+DEFAULT_USER_PREFERENCES = { :graph_format => "png", :graph_method => "unsorted" }
+
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '1.2.4' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.1.1' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -26,6 +36,7 @@ Rails::Initializer.run do |config|
   # in vendor/plugins are loaded in alphabetical order.
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
+  config.plugins = [ :userstamp, :all ] 
 
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
@@ -58,4 +69,15 @@ Rails::Initializer.run do |config|
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
+
+  config.gem 'mislav-will_paginate', :version => '~> 2.3.2', :lib => 'will_paginate', :source => 'http://gems.github.com'
+  config.gem 'unicode'
+  config.gem 'oniguruma'
+  config.gem 'builder'
+  config.gem 'hpricot'
+  config.gem 'gchartrb', :lib => 'google_chart'
+  config.gem 'treetop'
+  config.gem 'diff-lcs', :lib => 'diff/lcs'
+  config.gem 'ruby-sfst', :lib => 'sfst'
+  config.gem 'logos'
 end

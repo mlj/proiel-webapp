@@ -3,26 +3,38 @@ class LemmataController < ResourceController::Base
   actions :all, :except => [ :destroy ]
 
   show.before do
-    @tokens = @lemma.tokens.search(params.slice(:source, :form, :exact, :major, :minor, :person, :number, :tense, :mood, :voice, :gender, :case, :degree, :extra), params[:page])
+    @semantic_tags = @lemma.semantic_tags
+    @tokens = @lemma.tokens.search(params[:query], :page => current_page)
+    @morphology_stats = @lemma.tokens.count(:group => :morphtag).map { |k, v| [PROIEL::MorphTag.new(k).descriptions([:major, :minor], false, :style => :abbreviation).join(', ').capitalize, v] }
+    # FIXME: find a better way to skip this if impossible to inflect?
+    @morphology_stats = nil if @morphology_stats.length == 1 and @morphology_stats.first.first == ''
   end
 
   update.before do
     if params[:lemma]
-      params[:lemma][:variant] = nil if params[:lemma][:variant] == ''
-      params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss] == ''
+      params[:lemma][:variant] = nil if params[:lemma][:variant].blank?
+      params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss].blank?
+      params[:lemma][:lemma] = params[:lemma][:lemma].chars.normalize(UNICODE_NORMALIZATION_FORM)
+      [:foreign_ids].each do |a|
+        params[:lemma][a] = nil if params[:lemma][a].blank?
+      end
     end
   end
 
   create.before do
     if params[:lemma]
-      params[:lemma][:variant] = nil if params[:lemma][:variant] == ''
-      params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss] == ''
+      params[:lemma][:variant] = nil if params[:lemma][:variant].blank?
+      params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss].blank?
+      params[:lemma][:lemma] = params[:lemma][:lemma].chars.normalize(UNICODE_NORMALIZATION_FORM)
+      [:foreign_ids].each do |a|
+        params[:lemma][a] = nil if params[:lemma][a].blank?
+      end
     end
   end
 
   private
 
   def collection
-    @lemmata = Lemma.search(params.slice(:lemma, :exact, :language, :major, :minor), params[:page])
+    @lemmata = Lemma.search(params[:query], :page => current_page)
   end
 end

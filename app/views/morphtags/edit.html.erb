@@ -1,5 +1,5 @@
 <% stylesheet 'morphtags' %>
-<% javascript "dynamic_pos/#{@language}", 'morphtags', 'morphtag_presentation' %>
+<% javascript "dynamic_pos/#{@language_code}", 'morphtags', 'morphtag_presentation' %>
 
 <%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Morphology', :edit_url => :edit_annotation_morphtags_url } %>
 
@@ -10,7 +10,7 @@
       <% PROIEL::MorphTag::PRESENTATION_SEQUENCE.each do |field| -%>
         <select id="<%= field %>_field" name="<%= field %>_field"></select>
       <% end %>
-      <%= text_field_with_auto_complete :morphtags, :lemma, { :size => 15 }, :with => "'morphtags[lemma]=' + encodeURIComponent(element.value) + '&morphtags[language]=#{@language}'" %>
+      <%= text_field_with_auto_complete :morphtags, :lemma, { :size => 15 }, :with => "'morphtags[lemma]=' + encodeURIComponent(element.value) + '&morphtags[language]=#{@language_code}'" %>
     </span>
     <%= button_to_function "Update", "onPaletteUpdate()" %>
   </div>
@@ -49,9 +49,6 @@
              id="suggestions-<%= token.id %>" name="suggestions-<%= token.id %>" 
              value='<%= ActiveSupport::JSON.encode(@tags[token.id][:suggestions]) %>'/>
 
-      <input type="hidden" 
-             id="suggestions-<%= token.id %>" name="orig-suggestions-<%= token.id %>" 
-             value='<%= @tags[token.id][:suggestions].collect { |s, w| s.to_s }.join(',') %>'/>
       <input type="hidden" 
              id="pick-<%= token.id %>" name="pick-<%= token.id %>" 
              value='<%= @tags[token.id][:set].to_s %>'/>

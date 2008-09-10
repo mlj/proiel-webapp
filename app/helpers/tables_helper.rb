@@ -1,8 +1,11 @@
 module TablesHelper
   def render_tabular(collection, options = {})
     fields = options[:fields]
-    pagination = will_paginate(collection) if options[:pagination]
-    pg = (pagination ? will_paginate(collection) : '')
+    pg = if options[:pagination]
+           "<div class='page_info'>" + page_entries_info(collection) + "</div>" + (will_paginate(collection) || "")
+         else
+           ''
+         end
     hd = fields ? content_tag(:thead, content_tag(:tr, fields.map { |field| "<th>#{field}</th>" })) : ''
     if options[:partial]
       bd = content_tag(:tbody, render(:partial => options[:partial], :collection => collection))

@@ -14,7 +14,6 @@ module PROIEL
 
   MORPHOLOGY = Lingua::PositionalTagSet.new(File.join(DATADIR, 'morphology.xml')).freeze
   RELATIONS = Lingua::TagSet.new(File.join(DATADIR, 'relations.xml')).freeze
-  LANGUAGES = Lingua::TagSet.new(File.join(DATADIR, 'languages.xml')).freeze
 
   INFERENCES = YAML::load_file(File.join(DATADIR, 'inferences.yml')).freeze
 end
@@ -22,12 +21,6 @@ end
 if $0 == __FILE__
   require 'test/unit'
   include PROIEL
-
-  class LanguagesTestCase < Test::Unit::TestCase
-    def test_name
-      assert_equal 'Latin', LANGUAGES[:la].summary
-    end
-  end
 
   class RelationsTestCase < Test::Unit::TestCase
     def test_name

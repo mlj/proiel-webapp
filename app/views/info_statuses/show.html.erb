@@ -1,0 +1,20 @@
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Information status', :edit_url => :annotation_info_status_url } %>
+
+<% if is_annotator? or @sentence.is_reviewed? %>
+  <% layer_if(is_reviewer?, "completion", :actions => [
+                            link_to_unless(@sentence.is_reviewed?, "Flag as reviewed", :action => 'flag_as_reviewed', :id => @sentence),
+                            link_to_if(@sentence.is_reviewed?, "Flag as not reviewed", :action => 'flag_as_not_reviewed', :id => @sentence),
+    ] ) do -%>
+    <%= format_annotator(@sentence, :time => true) %><br/>
+    <%= format_reviewer(@sentence, :time => true) %>
+  <% end %>
+
+  <% layer("info-status", :title => "Information status", :actions => [
+    link_to_if(is_annotator?, "Edit", edit_annotation_info_status_url(@sentence))]) do -%>
+    <%= render :partial => 'info_statuses/legend' %>
+    <%= render :partial => 'info_statuses/show' %>
+  <% end %>
+
+<% else %>
+  Sentence not yet annotated and reviewed.
+<% end %>
