@@ -1,8 +1,0 @@
-<tr>
-  <td><%= link_to(source_stats.code, source_stats) %></td>
-  <td><%= source_stats.annotated_sentences.count %>
-    (<%= format_ratio(source_stats.annotated_sentences.count, source_stats.sentences.count) %>) </td>
-  <td><%= source_stats.reviewed_sentences.count %>
-    (<%= format_ratio(source_stats.reviewed_sentences.count, source_stats.sentences.count) %>) </td>
-  <td><%= source_stats.sentences.count %>/<%= source_stats.tokens.count %></td>
-</tr>

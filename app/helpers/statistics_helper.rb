@@ -1,11 +1,12 @@
 module StatisticsHelper
   def statistics(title, unit, data)
     data = data.sort_by { |k, v| v }.reverse
-    content_tag(:div, pie_chart(title, data) + statistics_table(title, unit, data) + "<br/>", :class => "statistics")
+    content_tag(:div, pie_chart(title, data) + statistics_table(title, unit, data, :percentage => true) + "<br/>", :class => "statistics")
   end
 
-  def statistics_table(title, unit, data)
-    content_tag(:table, data.map { |k, v| content_tag(:tr, content_tag(:td, k.is_a?(Symbol) ? k.humanize : k) + content_tag(:td, pluralize(v, unit)), :class => cycle('even', 'odd')) }.join)
+  def statistics_table(title, unit, data, options = {})
+    total = data.map { |k, v| v}.sum if options[:percentage]
+    content_tag(:table, data.map { |k, v| content_tag(:tr, content_tag(:td, k.is_a?(Symbol) ? k.humanize : k) + content_tag(:td, pluralize(v, unit)) + (total ? content_tag(:td, "#{(v * 100.0 / total).to_i}%") : ""), :class => cycle('even', 'odd')) }.join)
   end
 
   # Veerle's top colour scheme from http://beta.dailycolorscheme.com/archive/2006/09/20

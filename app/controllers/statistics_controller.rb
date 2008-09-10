@@ -4,13 +4,6 @@ class StatisticsController < ApplicationController
   BookCompletionRatio = Struct.new(:source, :book, :ratio)
 
   def show
-    @completion_stats = {
-      :reviewed => Sentence.reviewed.count,
-      :annotated => Sentence.annotated.unreviewed.count,
-      :unannotated => Sentence.unannotated.count,
-    }
-    @annotated_by_stats = Sentence.annotated.count(:group => :annotator).map { |k, v| [k.full_name, v] }
-    @reviewed_by_stats = Sentence.reviewed.count(:group => :reviewer).map { |k, v| [k.full_name, v] }
     @activity_stats = Sentence.annotated.count(:all, :conditions => { "annotated_at" => 1.month.ago..1.day.ago },
                                                :group => "DATE_FORMAT(annotated_at, '%Y-%m-%d')",
                                                :order => "annotated_at ASC")

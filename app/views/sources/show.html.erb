@@ -10,7 +10,8 @@
 <% end %>
 
 <% layer :statistics do -%>
-  <%= statistics "Completion", "sentence", @completion_stats %>
+  <%= statistics "Completion (sentences)", "sentence", @sentence_completion_stats %>
+  <%= statistics "Completion (words/text tokens)", "token", @text_token_completion_stats %>
   <%= statistics "Annotators", "sentence", @annotated_by_stats %>
   <%= statistics "Reviewers", "sentence", @reviewed_by_stats %>
 <% end %>

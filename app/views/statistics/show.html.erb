@@ -3,21 +3,10 @@
 <% end %>
 
 <% layer("completion") do -%>
-  <%= statistics "Completion", "sentence", @completion_stats %>
-  <%= render_tabular @sources, :partial => 'statistics/source_stats',
-    :fields => [ 'Source', 'Annotated (sentences)', 'Reviewed (sentences)', 'Total (sentences/tokens)' ] %>
-
   <%= render_tabular @book_completion_ratios, :partial => 'statistics/book_completion_ratio',
     :fields => [ 'Source', 'Book', 'Completion' ] %>
 <% end %>
   
-<% layer "user_activity" do -%>
-  <% if is_reviewer? %>
-    <%= statistics "Annotators", "sentence", @annotated_by_stats %>
-    <%= statistics "Reviewers", "sentence", @reviewed_by_stats %>
-  <% end %>
-<% end %>
-
 <% reset_cycle %>
 <% layer_unless(@recent_annotations.empty?, "recent-annotations", 
                 :title => 'Your recent sentence annotations',
