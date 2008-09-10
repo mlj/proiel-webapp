@@ -34,7 +34,7 @@ class SourcesController < ResourceController::Base
       :annotated => @source.tokens.word.count(:conditions => { :sentence_id => @source.sentences.annotated.unreviewed }),
       :unannotated => @source.tokens.word.count(:conditions => { :sentence_id => @source.sentences.unannotated }),
     }
-    @annotated_by_stats = @source.annotated_sentences.count(:group => :annotator).map { |k, v| [k.full_name, v] }
-    @reviewed_by_stats = @source.reviewed_sentences.count(:group => :reviewer).map { |k, v| [k.full_name, v] }
+    @annotated_by_stats = @source.sentences.annotated.count(:group => :annotator).map { |k, v| [k.full_name, v] }
+    @reviewed_by_stats = @source.sentences.reviewed.count(:group => :reviewer).map { |k, v| [k.full_name, v] }
   end
 end

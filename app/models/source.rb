@@ -7,9 +7,6 @@ class Source < ActiveRecord::Base
   has_many :sentences, :order => 'sentence_number ASC'
   has_many :tokens, :through => :sentences, :order => 'sentences.sentence_number ASC, token_number ASC'
 
-  has_many :annotated_sentences, :class_name => 'Sentence', :foreign_key => 'source_id', :conditions => 'annotated_by is not null'
-  has_many :reviewed_sentences, :class_name => 'Sentence', :foreign_key => 'source_id', :conditions => 'reviewed_by is not null'
-
   belongs_to :aligned_with, :class_name => 'Source', :foreign_key => 'alignment_id' 
   has_many :bookmarks
 

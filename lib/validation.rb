@@ -112,7 +112,7 @@ class Validator < Task
 
   def check_manual_morphology(logger)
     Source.find(:all).each do |source|
-      source.reviewed_sentences.each do |sentence|
+      source.sentences.reviewed.each do |sentence|
         closed = "^(#{PROIEL::MorphTag::OPEN_MAJOR.map(&:to_s).join('|')})"
         sentence.morphtaggable_tokens.find(:all, :conditions => [ "lemma_id is not null and morphtag not rlike ?", closed ]).each do |token|
           ml = token.morph_lemma_tag
