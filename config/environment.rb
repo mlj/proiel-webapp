@@ -6,6 +6,9 @@
 
 $KCODE = 'u'
 
+# Release number
+PROIEL_RELEASE = '20080911'
+
 # Unicode normalization form for normalised text columns. Choices are :kc, :c, :kd, :d
 # (see http://unicode.org/reports/tr15/ for details). The default choice is :c, and it is
 # recommended that you stick with that unless you have good reasons not to. If you do change
