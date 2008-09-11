@@ -67,7 +67,8 @@
       <%= yield %>
     </div>
     <div id="footer">
-      <% if ENV['RAILS_ENV'] == 'development' %>(Running in development mode)<% end %>
+      <span class="tag">proiel</span> release <%= PROIEL_RELEASE %>.
+      <% if ENV['RAILS_ENV'] == 'development' %>(Running in development mode.)<% end %>
     </div>
   </body>
 </html>
