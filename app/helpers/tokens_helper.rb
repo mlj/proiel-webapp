@@ -1,7 +1,7 @@
 module TokensHelper
   # Creates a table view of a collection of tokens.
   def tokens_table(tokens)
-    render_tabular tokens, :partial => 'tokens/token', :pagination => true, :fields => [ 'Form', 'Sort', 'Morphology and lemma', '&nbsp;' ]
+    render_tabular tokens, :partial => 'tokens/token', :pagination => true, :fields => [ 'Form', 'Linearisation index', 'Sort', 'Morphology and lemma', '&nbsp;' ]
   end
 
   # Create a link to a token.
