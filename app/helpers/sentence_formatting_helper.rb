@@ -1,3 +1,5 @@
+require 'ucodes'
+
 module SentenceFormattingHelper
   # Formats one or more sentences as a legible sequence of words. +value+ may
   # either be an array of +Sentence+ objects, a single +Sentence+ object or an
@@ -22,9 +24,6 @@ module SentenceFormattingHelper
   #
   # token_numbers:: If +true+, will insert token numbers after each token.
   # Each number will be contained within a +span+ of class +token_number+.
-  #
-  # tooltip:: If +morphtags+, will add a tool-tip for each word with its
-  # POS and morphology.
   #
   # ignore_punctuation:: If +true+, will ignore any punctuation.
   #
@@ -112,7 +111,7 @@ module SentenceFormattingHelper
     end
   end
 
-  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :alt_text, :extra_css, :token)
+  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :title, :extra_css, :token)
 
   class FormattedToken
     include ActionView::Helpers::TagHelper
@@ -139,17 +138,17 @@ module SentenceFormattingHelper
 
       case token_type
       when :lacuna_start, :lacuna_end
-        content_tag(:span, UNICODE_HORIZONTAL_ELLIPSIS, :class => (css << 'lacuna') * ' ')
+        content_tag(:span, UNICODE_HORIZONTAL_ELLIPSIS, :class => (css << 'lacuna') * ' ', :title => title)
       when :punctuation
-        content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ')
+        content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ', :title => title)
       when :text
         if link
-          link_to(LangString.new(text, language).to_h, link, :class => (css << 'token') * ' ')
+          link_to(LangString.new(text, language).to_h, link, :class => (css << 'token') * ' ', :title => title)
         elsif options[:information_status]
           css << info_status_css_class if options[:highlight].include?(token)
-          LangString.new(text, language, :id => 'token-' + token.id.to_s, :css => css * ' ').to_h
+          LangString.new(text, language, :id => 'token-' + token.id.to_s, :css => css * ' ', :title => title).to_h
         else
-          content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ')
+          content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ', :title => title)
         end
       else
         raise "Invalid token type"
@@ -238,12 +237,10 @@ module SentenceFormattingHelper
       if token.presentation_form and not options[:ignore_presentation_forms]
         t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, extra_css)
         skip_tokens = token.presentation_span - 1
-      elsif options[:tooltip] == :morphtags
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), readable_lemma_morphology(token), extra_css)
       elsif options[:information_status]
         t << FormattedToken.new(token.sort, token.form, token.nospacing, nil, nil, extra_css, token)
       else
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, extra_css)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), token.lemma ? "#{token.morph.descriptions([], false) * ', '} (#{token.lemma.export_form})" : nil, extra_css)
       end
 
       if token.presentation_span and token.presentation_span - 1 > 0

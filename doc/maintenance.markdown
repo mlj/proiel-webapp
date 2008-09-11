@@ -1,6 +1,16 @@
 Maintenance tasks
 =================
 
+A list of all the maintenance tasks can be obtained by running the command `rake -T proiel`:
+
+    $ rake -T proiel
+    rake proiel:dictionary:import             # Import a PROIEL dictionary.
+    rake proiel:history:prune:attribute       # Prune an attribute from history.
+    rake proiel:morphology:force_manual_tags  # Force manual morphological rules.
+    ...
+
+A number of these tasks are explained in more detail below.
+
 `proiel:morphology:reassign`
 ----------------------------
 

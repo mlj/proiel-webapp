@@ -234,38 +234,6 @@ div.legend {
  margin-right: .5em;
 }
 
-/* Fancy tool-tips */
-
-span.tool {
-  position: relative;
-  cursor: help;
-}
- 
-span.tool span.tip { display: none; }
- 
-span.tool:hover span.tip {
-  display: block;
-  z-index: 100;
-  position: absolute;
-  top: 2.5em;
-  left: 0;
-  width: auto;
-  line-height: 1.2em;
-  padding: 3px 7px 4px 6px;
-  border: 1px solid #336;
-  background-color: #f7f7ee;
-  font-family: arial, helvetica, sans-serif;
-  font-size: 12px;
-  font-weight: normal;
-  color: #000;
-  text-align: left;
-}
-
-#content span.tool::after {
-  padding-left: 2px;
-  content: url(/images/bubble.gif);
-}
-
 /* Rails kludges */
 
 .actions {

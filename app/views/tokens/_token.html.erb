@@ -1,5 +1,6 @@
 <tr>
   <td class="form" lang="<%= token.language %>"><%= highlight(token.form, params[:query]) || '&nbsp;' %></td>
+  <td><%= token.token_number %></td>
   <td class="tag"><%= token.sort %></td>
   <td class="tag"><%= token.morph_lemma_tag %></td>
   <td><%= link_to 'Details', token %></td>

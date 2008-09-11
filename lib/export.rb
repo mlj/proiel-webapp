@@ -34,7 +34,7 @@ class SourceExport
 
   # Returns the sentences to be exported by the exporter.
   def filtered_sentences
-    @options[:reviewed_only] ? @source.reviewed_sentences : @source.sentences
+    @options[:reviewed_only] ? @source.sentences.reviewed : @source.sentences
   end
 
   protected

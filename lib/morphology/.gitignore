@@ -1,6 +1,6 @@
 *.a
 *.ca
-*.csv
+*rules.csv
 cu.fst
 cu-symbols.fst
 cu.fst

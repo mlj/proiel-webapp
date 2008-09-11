@@ -2,6 +2,7 @@ class AuditsController < ResourceController::Base
   actions :all, :except => [:new, :create, :update]
   before_filter :is_annotator?
   before_filter :is_administrator?, :only => [:destroy]
+  before_filter :find_parents
 
   destroy.before do
     raise "Object has been modified after this revision" unless @audit.latest_revision_of_auditable?
@@ -18,6 +19,12 @@ class AuditsController < ResourceController::Base
   end
 
   def collection
-    @changes = Audit.search(params[:query], :page => current_page)
+    @changes = (@parent ? @parent.audits : Audit).search(params[:query], :page => current_page)
+  end
+
+  protected
+
+  def find_parents
+    @parent = @user = User.find(params[:user_id]) unless params[:user_id].blank?
   end
 end

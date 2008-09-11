@@ -17,7 +17,7 @@ class ManualTagger < Task
   def run!(logger)
     Source.find(@source_ids).each do |source|
       logger.info { "Working on source #{source.code}..." }
-      source.annotated_sentences.each do |sentence|
+      source.sentences.annotated.each do |sentence|
         sentence.morphtaggable_tokens.each do |token|
           if (token.morphtag and not token.lemma_id) or (not token.morphtag and token.lemma_id)
             next

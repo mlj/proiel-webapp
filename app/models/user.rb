@@ -4,17 +4,8 @@ class User < ActiveRecord::Base
 
   belongs_to :role
   has_many :bookmarks
-  has_many :audits, :as => :user
-
+  has_many :audits
   has_many :notes, :as => :originator
-  has_many :annotated_sentences, :class_name => 'Sentence', :foreign_key => :annotated_by
-  has_many :reviewed_sentences, :class_name => 'Sentence', :foreign_key => :reviewed_by
-  # More efficient alternative to 
-  #   annotated_sentences.to_a.sum { |sentence| sentence.dependency_tokens.count } %
-  has_many :annotated_tokens, :class_name => 'Token', :counter_sql => 'SELECT count(*) FROM tokens LEFT JOIN sentences ON sentence_id = sentences.id WHERE annotated_by = #{id} AND sort != "punctuation"' 
-  # More efficient alternative to 
-  #   reviewed_sentences.to_a.sum { |sentence| sentence.dependency_tokens.count } %
-  has_many :reviewed_tokens, :class_name => 'Token', :counter_sql => 'SELECT count(*) FROM tokens LEFT JOIN sentences ON sentence_id = sentences.id WHERE reviewed_by = #{id} AND sort != "punctuation"' 
 
   serialize :preferences
 

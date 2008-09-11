@@ -135,91 +135,6 @@ module PROIEL
     end
   end
 
-  # FIXME: migrate to PROIEL::Source?
-  
-  # Merges two sources +a+ and +b+. It invokes the block
-  # when it require normalisation and serialisation of a token
-  # to a form suitable for comparisons. The two sources are
-  # expected to be arrays of hashes; one hash per token. 
-  # The merged source will be an array of hashes containing
-  # all tokens from both +a+ and +b+, but for the tokens only
-  # in +a+, a key +:deleted+ is added to the token hash, and
-  # for the ones only in +b+, +added+ has been inserted.
-  #
-  # ==== Example
-  #
-  # merge_sources(a, b) do |source, token| 
-  #   if source == :a
-  #     token[:value].downcase
-  #   else
-  #     token[:value]
-  #   end
-  # end
-  def PROIEL.merge_sources(a, b, options = {})
-    # Compute difference
-    a_normalised = a.collect { |t| yield(:a, t) }
-    b_normalised = b.collect { |t| yield(:b, t) }
-
-    a_normalised.extend(Diff::LCS)
-
-    diffs = a_normalised.diff(b_normalised) 
-
-    # Compute the result as a patched with b but with lazy deletions and 
-    # flagged additions
-    x, y = a.dup, b.dup
-    xi, yi = 0, 0
-    res = []
-
-    diffs.each do |diff|
-      diff.each do |change|
-        case change.action
-        when '+'
-          while yi < change.position
-            raise "Unexpected difference during addition" unless x.first[:token].downcase == y.first[:token].downcase
-
-            res << x.shift
-            y.shift
-            xi += 1
-            yi += 1
-          end
-
-          raise "Unexpected value #{y.first[:token]}, expected #{change.element}" unless y.first[:token].downcase == change.element.downcase
-
-          # Perform the addition, and flag it
-          res << y.shift
-          res.last[:added] = true
-          yi += 1
-
-        when '-'
-          while xi < change.position
-            raise "Unexpected difference during removal" unless x.first[:token].downcase == y.first[:token].downcase
-
-            res << x.shift
-            y.shift
-            xi += 1
-            yi += 1
-          end
-
-          raise "Unexpected value #{x.first[:token]}, expected #{change.element}" unless x.first[:token].downcase == change.element.downcase
-
-          # Lazy delete the token 
-          res << x.shift
-          res.last[:deleted] = true
-          xi += 1
-        else
-          raise "Unknown change action #{change.action}"
-        end
-      end
-    end
-
-    # Verify the patching
-    patch_test_tokens = res.reject {|t| t[:deleted] }.collect { |t| yield(:a, t) }
-    raise "Patch failed" unless patch_test_tokens == b_normalised
-
-    # Return result
-    res
-  end
-
   public
 
   class Writer
@@ -379,15 +294,6 @@ module PROIEL
       end
     end
 
-    def tokenise_and_write_string(s, segmenter, book, chapter, verse, other_attributes = {}, reencoder = nil, sentence_dividers = nil, notes = nil)
-      segmenter.segmenter(reencoder ? reencoder.call(s) : s) do |t|
-        write_token(t[:form], t[:sort], book, chapter, verse, t.merge(other_attributes),
-                    nil, sentence_dividers || [], notes)
-      end
-    end
-
-    alias :tokenize_and_write_string :tokenise_and_write_string
-
     def track_references(book, chapter, verse = nil)
       if book != @last_book
         @file.puts '    </sentence>' unless @first_token
@@ -467,34 +373,6 @@ module PROIEL
 
     public
 
-    # Emits an array of tokens. Each token is a hash with the token
-    # form as the value for the key :token, the reference as the values
-    # of the keys :book, :chapter, and :verse. Any sentence number or
-    # token number given will be ignored, other attributes as for
-    # +emit_word+.
-    #
-    # ==== Options
-    # track_sentence_numbers:: Do not ignore sentence numbers, but track
-    # them and emit sentence divisions whenever they change.
-    def emit_tokens(tokens, options = {})
-      sentence_number = nil
-
-      tokens.each do |token|
-        token = token.dup
-        token[:form] = token[:token]
-        token.delete(:token)
-
-        track_references(token[:book], token[:chapter], token[:verse])
-        emit_word(token.except(:book, :chapter, :verse, :sentence_number, :token_number))
-
-        if options[:track_sentence_numbers]
-          sentence_number ||= token[:sentence_number]
-          next_sentence if sentence_number != token[:sentence_number]
-          sentence_number = token[:sentence_number]
-        end
-      end
-    end
-
     def next_sentence
       @file.puts '    </sentence>' unless @first_token
       @first_token = true
@@ -514,11 +392,4 @@ module PROIEL
   NON_EMPTY_TOKEN_SORTS = WORD_TOKEN_SORTS + PUNCTUATION_TOKEN_SORTS
   MORPHTAGGABLE_TOKEN_SORTS = WORD_TOKEN_SORTS
   DEPENDENCY_TOKEN_SORTS = WORD_TOKEN_SORTS + EMPTY_TOKEN_SORTS
-
-  # FIXME: where do these functions belong?
-
-  # Returns true if token represents punctuation.
-  def self.is_punctuation?(sort)
-    PUNCTUATION_TOKEN_SORTS.include?(sort)
-  end
 end
