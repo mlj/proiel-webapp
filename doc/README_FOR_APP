@@ -3,26 +3,23 @@
 == Installation
 
 You need Rails 2.1.1 installed as a RubyGem for this application to work.
-
-Most Ruby dependencies should be handled automatically. Use
+The application has a number of other dependencies that should be handled
+automatically by Rails' dependency tracker. Use
     rake gems
-to get a list of dependencies and their installation status.
+to get a list of dependencies and their installation status, and
+    rake gems:install
+to install any missing RubyGems.
 
-You will also need a installations of the following tools with binaries
-in a path accessible to the application:
-* graphviz
-* SFST
+You should also install +graphviz+ to get dependency graph visualisations.
+You can download it from link:http://www.graphviz.org/. Version 2.20.2 with
+Pango and Cairo support enabled is recommended for this release of the PROIEL
+application.
 
-Before starting the application for the first time, run
+For the morphological rules, you will also need to install the +SFST+
+toolkit from link:http://www.ims.uni-stuttgart.de/projekte/gramotron/SOFTWARE/SFST.html.
+This release of the application is designed to work with version 1.2 of
++SFST+, and will not work with version 1.3 without some tweaking.
+
+Before starting the application for the first time, you must run
     make -C lib
-to build support files.
-
-To build all of the documentation, the `railroad` gem is also required.
-
-=== Rebuilding the data sources
-
-In order to rebuild the data sources, you will, in addition to the above, need
-* mdbtools
-* sqlite3
-and the following gems
-* ruby-xslt
+to build the support files.
