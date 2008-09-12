@@ -184,15 +184,20 @@ class Token < ActiveRecord::Base
 
   # Returns true if the token has a nominal POS or a nominal syntactic relation,
   # or if one of its dependents is an article.
-  def annotatable?
-    if @annotatable.nil?
-      @annotatable = info_status == :no_info_status ||  # manually marked as annotatable
+  def is_annotatable?
+    if @is_annotatable.nil?
+      @is_annotatable = info_status == :no_info_status ||  # manually marked as annotatable
                      (info_status != :info_unannotatable && \
                       (PROIEL::MORPHOLOGY.nominals.include?(morph[:major]) || \
                        (relation && PROIEL::RELATIONS.nominals.include?(relation.to_sym)) || \
                        dependents.any? { |dep| dep.morph[:major] == :S }))
     end
-    @annotatable
+    @is_annotatable
+  end
+
+  def is_verb?
+    @is_verb = morph[:major].to_s.starts_with?('V') if @is_verb.nil?
+    @is_verb
   end
 
   protected
