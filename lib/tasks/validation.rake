@@ -2,7 +2,7 @@ namespace :db do
   desc "Run model validations on all model records in database"
   task :validate => :environment do
     puts "-- records - model --"
-    Dir.glob(RAILS_ROOT + '/app/models/**/*.rb').each { |file| require file unless file =~ /observer/ }
+    Dir.glob(RAILS_ROOT + '/app/models/**/*.rb').each { |file| require file unless file =~ /mailer|observer/ }
     Object.subclasses_of(ActiveRecord::Base).select { |c| c.base_class == c}.sort_by(&:name).each do |klass|
       next if klass == CGI::Session::ActiveRecordStore::Session
       total = klass.count
