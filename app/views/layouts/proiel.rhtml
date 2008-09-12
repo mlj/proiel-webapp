@@ -68,7 +68,7 @@
     </div>
     <div id="footer">
       <span class="tag">proiel</span> release <%= PROIEL_RELEASE %>.
-      <% if ENV['RAILS_ENV'] == 'development' %>(Running in development mode.)<% end %>
+      <% if Rails.env == 'development' %>(Running in development mode.)<% end %>
     </div>
   </body>
 </html>
