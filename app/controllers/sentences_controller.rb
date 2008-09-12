@@ -1,6 +1,7 @@
-class SentencesController < ReadOnlyController
+class SentencesController < ResourceController::Base
   before_filter :find_parents
   before_filter :is_reviewer?, :only => [:destroy]
+  actions :all, :except => [:new, :edit, :create, :update, :destroy] # we add our own destroy later
 
   show.before do
     @tokens = @sentence.tokens.search(params[:query], :page => current_page)
@@ -18,6 +19,8 @@ class SentencesController < ReadOnlyController
     @sentences = (@parent ? @parent.sentences : Sentence).search(params[:query], :page => current_page)
   end
 
+  public
+
   # DELETE /sentence/1
   # DELETE /sentence/1.xml
   #
@@ -30,7 +33,7 @@ class SentencesController < ReadOnlyController
     if @sentence.has_previous_sentence?
       previous_sentence = @sentence.previous_sentence
 
-      versioned_transaction do
+      Sentence.transaction do
         previous_sentence.append_first_tokens_from_next_sentence!(@sentence.tokens.length)
         @sentence.destroy
         previous_sentence.clear_dependencies!
