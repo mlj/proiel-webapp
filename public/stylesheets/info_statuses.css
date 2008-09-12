@@ -44,6 +44,13 @@
    background-color: #c1c1c1;
    color: black;
 }
+.prodrop-menu-item {
+   padding-left: 3px;
+   font-size: 75%;
+   background-color: grey;
+   border: 1px solid black;
+   cursor: pointer;
+}
 .sentence-divisions span {
    padding: 1px;
    line-height: 190%
