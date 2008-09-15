@@ -48,7 +48,7 @@
           <%= link_to 'Preferences', edit_preferences_path %>
         </span>
         <span style="float:right">
-          <% form_tag({ :controller => "home", :action => "search" }, { :style => 'display: inline; padding: 0 0 0 0;' }) do -%>
+          <% form_tag({ :controller => "home", :action => "quick_search" }, { :style => 'display: inline; padding: 0 0 0 0;' }) do -%>
             <%= text_field_tag :q, params[:q], :size => 15 %>
             <%= submit_tag 'Search' %>
           <% end %>
