@@ -1,4 +1,4 @@
-<% search_form_tag '/search' do -%>
+<% search_form_tag :controller => :home, :action => :search do -%>
   <%= text_field_tag :query, params[:query] %>
   <%= radio_button_tag :mode, 'tokens', params[:mode] == 'tokens' %>&nbsp;<label>Word forms</label>
   <%= radio_button_tag :mode, 'lemmata', params[:mode] == 'lemmata' %>&nbsp;<label>Lemmata</label>
