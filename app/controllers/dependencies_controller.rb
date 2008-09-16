@@ -48,7 +48,7 @@ class DependenciesController < ApplicationController
       return
     end
 
-    unless params[:output].blank?
+    unless params[:output].blank? || ActiveSupport::JSON.decode(params[:output]).blank?
       # Convert output to a more flexible representation. IDs will match those in
       # the database, except for any new empty dependency nodes, which will have
       # IDs on the form 'newX'.
