@@ -10,6 +10,23 @@ class HomeController < ApplicationController
     redirect_to :controller => 'browse', :action => 'view', :source => 1, :book => 1, :chapter => 1
   end
 
+  # Returns suggestions for Open Search suggesion queries
+  def quick_search_suggestions
+    query = params[:q] || ""
+    query.strip!
+
+    @results =
+      Token.find(:all, :conditions => [ "form LIKE ?", "#{query}%" ], :limit => 10).map(&:form) +
+      Lemma.find(:all, :conditions => [ "CONCAT(lemma, variant) LIKE ?", "#{query}%" ], :limit => 10).map(&:export_form)
+    @results.uniq!
+    @results.sort!
+
+    respond_to do |format|
+      format.html { render :partial => 'quick_search_suggestions' }
+      format.js { render :json => [query, @results].to_json }
+    end
+  end
+
   def quick_search
     query = params[:q] || ""
     query.strip!
