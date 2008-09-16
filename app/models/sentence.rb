@@ -126,7 +126,7 @@ class Sentence < ActiveRecord::Base
       # deleted, but all the tokens not included in the dependency graph. We need
       # to make sure that only empty dependency nodes are actually deleted; if others
       # are present, the user has given us an incomplete analysis.
-      raise "Incomplete depdendency graph" unless removed_tokens.all?(&:is_empty?)
+      raise "Incomplete dependency graph" unless removed_tokens.all?(&:is_empty?)
       removed_tokens.each { |token| token.destroy }
 
       # We will append new empty nodes at the end of the token sequence. Establish
