@@ -1,13 +1,8 @@
-<% form_tag :action => 'search' do -%>
-  <p style="text-align: center">
-    <%= text_field_tag :query, params[:query] %>
-    <%= submit_tag 'Search' %>
-  </p>
-  <p style="text-align: center">
-    <%= radio_button_tag :mode, 'tokens', params[:mode] == 'tokens' %>&nbsp;<label>Word forms</label>
-    <%= radio_button_tag :mode, 'lemmata', params[:mode] == 'lemmata' %>&nbsp;<label>Lemmata</label>
-    <!-- <%= check_box_tag :exact, 'yes', params[:exact] %>&nbsp;<label>Only exact matches</label> -->
-  </p>
+<% search_form_tag :controller => :home, :action => :search do -%>
+  <%= text_field_tag :query, params[:query] %>
+  <%= radio_button_tag :mode, 'tokens', params[:mode] == 'tokens' %>&nbsp;<label>Word forms</label>
+  <%= radio_button_tag :mode, 'lemmata', params[:mode] == 'lemmata' %>&nbsp;<label>Lemmata</label>
+  <!-- <%= check_box_tag :exact, 'yes', params[:exact] %>&nbsp;<label>Only exact matches</label> -->
 <% end %>
 
 <% if @tokens %>
@@ -16,5 +11,5 @@
 <% end %>
 
 <% if @lemmata %>
-  <%= render_tabular @lemmata, :partial => 'lemmata/lemma', :pagination => true %>
+  <%= lemmata_table @lemmata %>
 <% end %>

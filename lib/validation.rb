@@ -64,16 +64,6 @@ class Validator < Task
         end
       end
     end
-
-    changesets = Changeset.find(:all)
-    changesets.each do |changeset|
-      changeset.errors.each_full { |msg| logger.error { "Changeset #{changeset.id}: #{msg}" } } unless changeset.valid?
-      
-      if changeset.changes.length == 0
-        logger.warn { "Changeset #{changeset.id}: Removing empty changeset" }
-        changeset.destroy
-      end
-    end
   end
 
   def check_orphaned_tokens(logger)

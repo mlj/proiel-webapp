@@ -53,13 +53,14 @@ class PROIELXMLImport < SourceImport
     import = PROIEL::XSource.new(file)
     STDOUT.puts "Importing source #{import.metadata[:id]}..."
 
-    source = Source.find_by_code_and_language(import.metadata[:id], import.metadata[:language])
+    language = Language.find_by_iso_code(import.metadata[:language])
+    source = language.sources.find_by_code(import.metadata[:id])
 
     unless source
       # Create new source and set metadata
       STDOUT.puts "Creating new source"
-      source = Source.new(:code => import.metadata[:id])
-      [:title, :language, :edition, :source, :editor, :url].each { |e| source[e] = import.metadata[e] }
+      source = language.sources.new(:code => import.metadata[:id])
+      [:title, :edition, :source, :editor, :url].each { |e| source[e] = import.metadata[e] }
       source.save!
     end
 
@@ -101,28 +102,26 @@ class PROIELXMLImport < SourceImport
       # validation.
       morphtag = attributes[:morphtag] ? PROIEL::MorphTag.new(attributes[:morphtag]).to_s : nil
 
-      begin
-        n = sentence.tokens.create!(
-                     :token_number => attributes[:token_number], 
-                     :source_morphtag => morphtag,
-                     :source_lemma => attributes[:lemma],
-                     :form => attributes[:form],
-                     :verse => attributes[:verse],
-                     :sort => attributes[:sort],
-                     :contraction => attributes[:contraction] || false,
-                     :emendation => attributes[:emendation] || false,
-                     :abbreviation => attributes[:abbreviation] || false,
-                     :capitalisation => attributes[:capitalisation] || false,
-                     :nospacing => attributes[:nospacing],
-                     :presentation_form => attributes[:presentation_form],
-                     :presentation_span => attributes[:presentation_span],
-                     :foreign_ids => attributes[:foreign_ids])
+      n = sentence.tokens.create!(
+                   :token_number => attributes[:token_number], 
+                   :source_morphtag => morphtag,
+                   :source_lemma => attributes[:lemma],
+                   :form => attributes[:form],
+                   :verse => attributes[:verse],
+                   :sort => attributes[:sort],
+                   :contraction => attributes[:contraction] || false,
+                   :emendation => attributes[:emendation] || false,
+                   :abbreviation => attributes[:abbreviation] || false,
+                   :capitalisation => attributes[:capitalisation] || false,
+                   :nospacing => attributes[:nospacing],
+                   :presentation_form => attributes[:presentation_form],
+                   :presentation_span => attributes[:presentation_span],
+                   :foreign_ids => attributes[:foreign_ids])
 
+      if attributes[:notes]
         attributes[:notes].each do |note|
           n.notes.create! :originator => ImportSource.find_or_create_by_tag(:tag => note[:origin], :summary => note[:origin]), :contents => note[:contents]
         end
-      rescue Exception => e
-        raise "Error creating token for #{form} in #{attributes[:book]} #{attributes[:chapter]}:#{attributes[:verse]}: #{e}"
       end
 
       if (attributes[:relation] or attributes[:head]) and not dependency_warned

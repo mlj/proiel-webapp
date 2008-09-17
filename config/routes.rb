@@ -33,7 +33,10 @@ ActionController::Routing::Routes.draw do |map|
 
   # Permalinks
   map.connect 'permalinks/sentence/:id', :controller => 'annotations', :action => 'show'
-  map.connect 'search', :controller => 'home', :action => 'search'
+
+  # Quick search and search suggestions
+  map.connect 'search', :controller => 'home', :action => 'quick_search'
+  map.connect 'search_suggestions.:format', :controller => 'home', :action => 'quick_search_suggestions'
 
   # Legacy
   map.connect 'browse/:source/:book/:chapter', :controller => 'browse', :action => 'view'
