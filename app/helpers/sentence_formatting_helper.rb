@@ -243,7 +243,7 @@ module SentenceFormattingHelper
       elsif options[:information_status]
         t << FormattedToken.new(token.sort, token.form, token.nospacing, nil, nil, extra_css, token)
       else
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), token.lemma ? "#{token.morph.descriptions([], false) * ', '} (#{token.lemma.export_form})" : nil, extra_css)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, extra_css)
       end
 
       if token.presentation_span and token.presentation_span - 1 > 0
