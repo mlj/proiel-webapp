@@ -68,14 +68,13 @@ namespace :proiel do
       end
 
       if source
-        sources = Source.find_by_code(source)
+        sources = Source.find_all_by_code(source)
       else
         sources = Source.find(:all)
       end
 
       # Prepare destination directory and ancillary files
       Dir::mkdir(directory) unless File::directory?(directory)
-
 
       sources.each do |source|
         e = klass.new(source, options)
