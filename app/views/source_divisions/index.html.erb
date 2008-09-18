@@ -1,0 +1,5 @@
+<% search_form_tag source_divisions_path do %>
+  <%= text_field_tag :query, params[:query] %>
+<% end %>
+
+<%= source_divisions_table @source_divisions %>

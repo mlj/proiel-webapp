@@ -13,7 +13,7 @@ class TokensController < ResourceController::Base
   private
 
   def collection
-    @tokens = (@parent ? @parent.tokens : Token).search(params[:query], :page => current_page, :include => [:lemma])
+    @tokens = (@parent ? Token.by_source(@source) : Token).search(params[:query], :page => current_page, :include => [:lemma])
   end
 
   show.before do

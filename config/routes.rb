@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :audits
-  map.resources :sources
+  map.resources :sources, :source_divisions
   map.resources :lemmata, :singular => 'lemma'
   map.resources :bookmarks
   map.resources :tokens, :sentences
@@ -39,9 +39,6 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'search_suggestions.:format', :controller => 'home', :action => 'quick_search_suggestions'
 
   # Legacy
-  map.connect 'browse/:source/:book/:chapter', :controller => 'browse', :action => 'view'
-  map.connect 'browse/:source/:book/:chapter/:verse', :controller => 'browse', :action => 'view'
-
   map.connect ':controller/:action.:format'
   map.connect ':controller/:action/:id.:format'
   map.connect ':controller/:action/:id'
@@ -50,5 +47,5 @@ ActionController::Routing::Routes.draw do |map|
   map.site 'site/:name', :controller => 'page', :action => 'show'
 
   # Default page
-  map.root :controller => 'browse', :action => 'view', :source => 1, :book => 1, :chapter => 1
+  map.root :source_divisions
 end

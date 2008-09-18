@@ -5,7 +5,14 @@
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
 
-gem 'builder', '~> 2.0'
+require 'builder'
+
+# Monkeypatch builder with a less obtuse version of XML escaping
+class String
+  def to_xs
+    self.gsub(/'/, '&amp;').gsub(/</, '&lt;').gsub(/>/, '&gt;')
+  end
+end
 
 # Abstract source exporter.
 class SourceExport
@@ -33,8 +40,16 @@ class SourceExport
 
 
   # Returns the sentences to be exported by the exporter.
-  def filtered_sentences
-    @options[:reviewed_only] ? @source.sentences.reviewed : @source.sentences
+  def filtered_sentences(source_division = nil)
+    if source_division
+      if @options[:reviewed_only]
+        source_division.sentences.reviewed
+      else
+        source_division.sentences
+      end
+    else
+      @source.source_divisions.map { |d| filtered_sentences(d) }.flatten
+    end
   end
 
   protected
@@ -50,25 +65,49 @@ class PROIELXMLExport < SourceExport
   protected
 
   def do_export(file)
-    PROIEL::TextWriter.new(file, identifier, @source.language.iso_code,
-                           @source.attributes.slice("title", "edition", "source", "editor", "url").symbolize_keys) do |w|
-      filtered_sentences.each do |sentence|
-        sentence.tokens.each do |token|
-          attributes = { :id => token.id }
-          attributes[:relation] = token.relation if token.relation
-          attributes[:head] = token.head_id if token.head
-          attributes[:slashes] = token.slashees.collect { |s| s.id }.join(' ') unless token.slashees.empty?
-          attributes[:lemma] = token.morph_lemma_tag.lemma if token.morph_lemma_tag
-          [:morphtag, :presentation_form, :presentation_span, :nospacing, :contraction, :emendation, :abbreviation, :capitalisation].each do |attr|
-            value = token.send(attr)
-            attributes[attr] = value if value
-          end
-
-          w.write_token(token.form, token.sort.to_s.gsub(/_/, '-'), sentence.book.code, sentence.chapter,
-                        token.verse, attributes)
-        end
-        w.next_sentence
+    builder = Builder::XmlMarkup.new(:target => file, :indent => 2)
+    builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
+    builder.text(:id => identifier, :lang => @source.language.iso_code) do
+      builder.metadata { write_metadata(builder) }
+      @source.source_divisions.each do |source_division|
+        builder.book(:name => source_division.fields.sub(/^book=/, '')) { write_source_division(builder, source_division) }
       end
+    end
+  end
+
+  private
+
+  def write_metadata(builder)
+    builder.title @source.attributes["title"]
+    builder.edition @source.attributes["edition"]
+    builder.source @source.attributes["source"]
+    builder.editor @source.attributes["editor"]
+    builder.url @source.attributes["url"]
+  end
+
+  def write_source_division(builder, source_division)
+    filtered_sentences(source_division).each do |sentence|
+      builder.sentence { write_sentence(builder, sentence) }
+    end
+  end
+
+  VERBATIM_TOKEN_ATTRIBUTES = %w(morphtag presentation_form form presentation_span nospacing contraction
+    emendation abbreviation capitalisation verse relation) # foreign_ids contraction &c true/false
+
+  def write_sentence(builder, sentence)
+    sentence.tokens.each do |token|
+      attributes = { :id => token.id, :chapter => sentence.chapter, }
+      attributes[:head] = token.head_id if token.head
+      attributes[:slashes] = token.slashees.collect { |s| s.id }.join(' ') unless token.slashees.empty?
+      attributes[:lemma] = token.morph_lemma_tag.lemma if token.morph_lemma_tag
+      attributes[:sort] = token.sort.to_s.gsub('_', '-')
+
+      VERBATIM_TOKEN_ATTRIBUTES.each do |a|
+        value = token.send(a.to_sym)
+        attributes[a.gsub('_', '-')] = value unless value.blank?
+      end
+
+      builder.token attributes
     end
   end
 end

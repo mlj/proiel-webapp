@@ -6,9 +6,6 @@ module SentenceFormattingHelper
   # array of +Token+ objects.
   #
   # ==== Options
-  # book_names:: If +true+, will prepend book names in front of the sentences.
-  # The name will be contained within a +spann+ of class +book-name+.
-  #
   # chapter_numbers:: If +true+, will prepend chapter numbers in front of
   # the sentence. The number will be contained in a +span+ of class
   # +chapter-number+.
@@ -69,7 +66,6 @@ module SentenceFormattingHelper
   UNICODE_HORIZONTAL_ELLIPSIS = Unicode::U2026
 
   FORMATTED_REFERENCE_CLASSES = {
-    :book => 'book-name',
     :chapter => 'chapter-number',
     :verse => 'verse-number',
     :sentence => 'sentence-number',
@@ -91,8 +87,6 @@ module SentenceFormattingHelper
 
     def selected?(options)
       case reference_type
-      when :book
-        options[:book_names]
       when :chapter
         options[:chapter_numbers]
       when :sentence
@@ -229,7 +223,6 @@ module SentenceFormattingHelper
         next
       end
 
-      t << check_reference_update(state, :book, token.sentence.book, token.sentence.book.title)
       t << check_reference_update(state, :chapter, token.sentence.chapter, token.sentence.chapter.to_i)
       t << check_reference_update(state, :sentence, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
       t << check_reference_update(state, :verse, token.verse, token.verse.to_i)
@@ -243,7 +236,7 @@ module SentenceFormattingHelper
       elsif options[:information_status]
         t << FormattedToken.new(token.sort, token.form, token.nospacing, nil, nil, extra_css, token)
       else
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), token.lemma ? "#{token.morph.descriptions([], false) * ', '} (#{token.lemma.export_form})" : nil, extra_css)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, extra_css)
       end
 
       if token.presentation_span and token.presentation_span - 1 > 0

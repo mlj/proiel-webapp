@@ -2,11 +2,6 @@
   <%= line_chart "Recent activity", @activity_stats %>
 <% end %>
 
-<% layer("completion") do -%>
-  <%= render_tabular @book_completion_ratios, :partial => 'statistics/book_completion_ratio',
-    :fields => [ 'Source', 'Book', 'Completion' ] %>
-<% end %>
-  
 <% reset_cycle %>
 <% layer_unless(@recent_annotations.empty?, "recent-annotations", 
                 :title => 'Your recent sentence annotations',
