@@ -53,7 +53,7 @@ class Token < ActiveRecord::Base
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
   validates_unicode_normalization_of :presentation_form, :form => UNICODE_NORMALIZATION_FORM
 
-  validates_inclusion_of :info_status, :in => INFO_STATUSES
+  validates_inclusion_of :info_status, :allow_nil => true, :in => INFO_STATUSES
 
   # Specific validations
   validate :validate_sort
