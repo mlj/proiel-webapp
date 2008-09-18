@@ -38,9 +38,7 @@ class Sentence < ActiveRecord::Base
   }
 
   # General schema-defined validations
-
-  validates_presence_of :source_id
-  validates_presence_of :book_id
+  validates_presence_of :source_division_id
   validates_presence_of :chapter
   validates_presence_of :sentence_number
 
@@ -210,19 +208,16 @@ class Sentence < ActiveRecord::Base
       Sentence.transaction do
         # We need to shift all sentence numbers after this one first. Do it in reverse order
         # just to be cool.
-        ses = Sentence.find(:all, :conditions => [
-          "source_id = ? and book_id = ? and sentence_number > ?",
-          source.id, book.id, sentence_number
-        ])
+        ses = source_division.find(:all, :conditions => [ "sentence_number > ?", sentence_number ])
         ses.sort { |x, y| y.sentence_number <=> x.sentence_number }.each do |s|
           s.sentence_number += 1
           s.save!
         end
 
         # Copy all attributes
-        # FIXME: update this
-        new_s = Sentence.create(:source_id => source.id, :book_id => book.id, :chapter => chapter)
+        new_s = source_division.sentences.create
         new_s.sentence_number = sentence_number + 1
+        new_s.chapter = chapter
         new_s.save!
 
         # Finally, shuffle our last token over to the new sentence.

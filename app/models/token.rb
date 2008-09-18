@@ -2,7 +2,6 @@ class Token < ActiveRecord::Base
   INFO_STATUSES = [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :no_info_status, :info_unannotatable]
 
   belongs_to :sentence
-  belongs_to :book
   belongs_to :lemma
   has_many :notes, :as => :notable, :dependent => :destroy
   has_many :semantic_tags, :as => :taggable, :dependent => :destroy

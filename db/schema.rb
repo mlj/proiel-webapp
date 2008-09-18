@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080918100448) do
+ActiveRecord::Schema.define(:version => 20080918160133) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -153,7 +153,6 @@ ActiveRecord::Schema.define(:version => 20080918100448) do
   add_index "sentence_alignments", ["secondary_sentence_id"], :name => "index_sentence_alignments_on_secondary_sentence_id"
 
   create_table "sentences", :force => true do |t|
-    t.integer  "source_id",          :default => 0, :null => false
     t.integer  "chapter",            :default => 0, :null => false
     t.integer  "sentence_number",    :default => 0, :null => false
     t.datetime "created_at"
