@@ -46,24 +46,6 @@ module ApplicationHelper
     end
   end
 
-  # Returns a select tag for relations. 
-  #
-  # ==== Options
-  # +:include_blank+:: If +true+, includes an empty value first.
-  def relation_select_tag(name, value = nil, options = {})
-    relations = PROIEL::RELATIONS.values.collect { |r| r.code.to_s }
-
-    option_tags = relations.collect do |r| 
-      if r == value
-        "<option value='#{r}' selected='selected'>#{r.upcase}</option>"
-      else
-        "<option value='#{r}'>#{r.upcase}</option>"
-      end
-    end.join
-
-    _select_tag name, value, option_tags, options
-  end
-
   def _select_tag_db(name, model, value_field, value, options) #:nodoc:
     option_tags = options_from_collection_for_select(model.find(:all), :id, value_field, value.to_i)
     _select_tag name, value, option_tags, options
@@ -118,11 +100,6 @@ module ApplicationHelper
     concat(form_tag_html(html_options), block.binding)
     concat(content, block.binding)
     concat(submit_tag(options[:submit] || 'Search', :name => nil) + '</form>', block.binding)
-  end
-
-  # Generates a fancy tool-tip.
-  def tool_tip(tool, tip)
-    %Q{<span class="tool">#{tool}<span class="tip">#{tip}</span></span>}
   end
 
   # Generates a human readable representation of a token sort.
@@ -187,11 +164,6 @@ module ApplicationHelper
     '(' + readable_relation(relation) + (head ? ", #{head}" : '') + ')'
   end
 
-  # Generates a human readable 'yes'/'no' representation of a boolean value.
-  def readable_boolean(x)
-    x ? 'Yes' : 'No'
-  end
-
   # Returns links to external sites for a sentence.
   def external_text_links(sentence)
     fields = sentence.source_division.fields
@@ -252,10 +224,6 @@ module ApplicationHelper
   # +layer+.
   def layer_unless(condition, *args, &block)
     layer_if(!condition, *args, &block)
-  end
-
-  def format_ratio(part, total)
-    number_with_precision(part.to_i * 100 / total.to_f, 1) + '%'
   end
 
   # Creates hidden 'Previous' and 'Next' links for per-sentence annotation displays
