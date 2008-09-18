@@ -1,5 +1,5 @@
 <tr>
-  <td><%= readable_reference(sentence.reference) %></td>
+  <td><%= sentence.citation :internal => true, :abbreviated => true %></td>
   <td class="form" lang="<% sentence.language %>"><%= format_sentence(sentence, :length_limit => 5) %></td>
   <td><%= link_to 'Details', sentence %></td>
 </tr>

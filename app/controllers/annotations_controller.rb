@@ -15,7 +15,7 @@ class AnnotationsController < ReadOnlyController
   end
 
   def collection
-    @sentences = (@parent ? @parent.sentences : Sentence).search(params[:query], :page => current_page)
+    @sentences = (@parent ? Sentence.by_source(@parent) : Sentence).search(params[:query], :page => current_page)
   end
 
   public

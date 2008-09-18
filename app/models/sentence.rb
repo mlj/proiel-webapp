@@ -1,6 +1,5 @@
 class Sentence < ActiveRecord::Base
-  belongs_to :book
-  belongs_to :source
+  belongs_to :source_division
   has_many :bookmarks
   has_many :notes, :as => :notable, :dependent => :destroy
 
@@ -33,6 +32,11 @@ class Sentence < ActiveRecord::Base
   named_scope :unreviewed, :conditions => ["reviewed_by IS NULL"]
   named_scope :reviewed, :conditions => ["reviewed_by IS NOT NULL"]
 
+  # Sentences that belong to source +source+.
+  named_scope :by_source, lambda { |source|
+    { :conditions => { :source_division_id => source.source_divisions.map(&:id) } }
+  }
+
   # General schema-defined validations
 
   validates_presence_of :source_id
@@ -45,37 +49,37 @@ class Sentence < ActiveRecord::Base
   acts_as_audited :except => [ :annotated_by, :annotated_at, :reviewed_by, :reviewed_at ]
 
   def language
-    source.language
+    source_division.source.language
   end
 
   #FIXME:DRY generalise < token
 
   def previous_sentences
-    self.source.sentences.find(:all,
-                               :conditions => [ "sentence_number < ? and book_id = ?", self.sentence_number, self.book_id ],
-                               :order => "sentence_number ASC")
+    source_division.sentences.find(:all,
+                                   :conditions => [ "sentence_number < ?", sentence_number ],
+                                   :order => "sentence_number ASC")
   end
 
   def next_sentences
-    self.source.sentences.find(:all,
-                               :conditions => [ "sentence_number > ? and book_id = ?", self.sentence_number, self.book_id ],
-                               :order => "sentence_number ASC")
+    source_division.sentences.find(:all,
+                                   :conditions => [ "sentence_number > ?", sentence_number ],
+                                   :order => "sentence_number ASC")
   end
 
   # Returns the previous sentence in the linearisation sequence. Returns +nil+
   # if there is no previous sentence.
   def previous_sentence
-    self.source.sentences.find(:first,
-                               :conditions => [ "sentence_number < ? and book_id = ?", self.sentence_number, self.book_id ],
-                               :order => "sentence_number DESC")
+    source_division.sentences.find(:first,
+                                   :conditions => [ "sentence_number < ?", sentence_number ],
+                                   :order => "sentence_number DESC")
   end
 
   # Returns the next sentence in the linearisation sequence. Returns +nil+
   # if there is no next sentence.
   def next_sentence
-    self.source.sentences.find(:first,
-                               :conditions => [ "sentence_number > ? and book_id = ?", self.sentence_number, self.book_id ],
-                               :order => "sentence_number ASC")
+    source_division.sentences.find(:first,
+                                   :conditions => [ "sentence_number > ?", sentence_number ],
+                                   :order => "sentence_number ASC")
   end
 
   # Returns true if there is a previous sentence.
@@ -88,11 +92,23 @@ class Sentence < ActiveRecord::Base
     !next_sentence.nil?
   end
 
-  # Returns a reference for the sentence.
-  def reference
-    PROIEL::Reference.new(source.abbreviation, source.id, book.code, book.id,
-                  { :chapter => chapter, :verse => nonempty_tokens.first.verse..nonempty_tokens.last.verse,
-                    :sentence => sentence_number })
+  # Returns a citation-form reference for this sentence.
+  #
+  # ==== Options
+  # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
+  # <tt>:internal</tt> -- If true, will use the internal numbering system.
+  def citation(options = {})
+    sentence_citation = if options[:internal]
+                          sentence_number
+                        else
+                          verses = tokens.word.first.verse..tokens.word.last.verse
+                          if verses.first == verses.last
+                            [chapter, verses.first] * ':'
+                          else
+                            [chapter, "#{verses.first}-#{verses.last}"] * ':'
+                          end
+                        end
+    [source_division.citation(options), sentence_citation] * ' '
   end
 
   # Remove all dependency annotation from a sentence and save the changes.

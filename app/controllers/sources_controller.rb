@@ -25,16 +25,16 @@ class SourcesController < ResourceController::Base
 
   show.before do
     @sentence_completion_stats = {
-      :reviewed => @source.sentences.reviewed.count,
-      :annotated => @source.sentences.annotated.unreviewed.count,
-      :unannotated => @source.sentences.unannotated.count,
+      :reviewed => Sentence.by_source(@source).reviewed.count,
+      :annotated => Sentence.by_source(@source).annotated.unreviewed.count,
+      :unannotated => Sentence.by_source(@source).unannotated.count,
     }
     @text_token_completion_stats = {
-      :reviewed => @source.tokens.word.count(:conditions => { :sentence_id => @source.sentences.reviewed }),
-      :annotated => @source.tokens.word.count(:conditions => { :sentence_id => @source.sentences.annotated.unreviewed }),
-      :unannotated => @source.tokens.word.count(:conditions => { :sentence_id => @source.sentences.unannotated }),
+      :reviewed => Token.word.count(:conditions => { :sentence_id => Sentence.by_source(@source).reviewed }),
+      :annotated => Token.word.count(:conditions => { :sentence_id => Sentence.by_source(@source).annotated.unreviewed }),
+      :unannotated => Token.word.count(:conditions => { :sentence_id => Sentence.by_source(@source).unannotated }),
     }
-    @annotated_by_stats = @source.sentences.annotated.count(:group => :annotator).map { |k, v| [k.full_name, v] }
-    @reviewed_by_stats = @source.sentences.reviewed.count(:group => :reviewer).map { |k, v| [k.full_name, v] }
+    @annotated_by_stats = Sentence.by_source(@source).annotated.count(:group => :annotator).map { |k, v| [k.full_name, v] }
+    @reviewed_by_stats = Sentence.by_source(@source).reviewed.count(:group => :reviewer).map { |k, v| [k.full_name, v] }
   end
 end

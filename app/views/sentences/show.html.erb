@@ -1,8 +1,9 @@
 <div class="roundedbox">
   <dl>
     <dt>Sentence ID:</dt><dd><%= @sentence.id %></dd>
-    <dt>Source:</dt><dd><%= link_to_source(@sentence.source) %></dd>
-    <dt>PROIEL reference:</dt><dd class="reference"><%= @sentence.reference %></dd>
+    <dt>Source:</dt><dd><%= link_to_source(@sentence.source_division.source) %></dd>
+    <dt>Source part:</dt><dd><%= link_to_source_division(@sentence.source_division) %></dd>
+    <dt>Citation:</dt><dd class="reference"><%= @sentence.citation :internal => true %> (<%= @sentence.citation %>)</dd>
     <dt>Linearisation index:</dt><dd><%= @sentence.sentence_number %></dd>
     <dt>Time stamps:</dt><dd><%= @sentence.created_at ? @sentence.created_at : '?' %> (creation), <%= @sentence.updated_at %> (last update)</dd>
     <dt>Annotation completion:</dt><dd><%= link_to(readable_completion(@sentence), annotation_path(@sentence)) %></dd>

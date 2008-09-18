@@ -65,7 +65,7 @@ class PROIELXMLImport < SourceImport
     end
 
     book = nil
-    book_id = nil
+    source_division = nil
     sentence_number = nil
     sentence = nil
 
@@ -75,16 +75,15 @@ class PROIELXMLImport < SourceImport
     import.read_tokens(args) do |form, attributes|
       if book != attributes[:book]
         book = attributes[:book]
-        book_id = Book.find_by_code(book).id
+        source_division = SourceDivision.find_by_fields("book=#{book}").id
         sentence_number = nil
         STDOUT.puts "Importing book #{book} for source #{source.code}..."
       end
 
       if sentence_number != attributes[:sentence_number]
         sentence_number = attributes[:sentence_number]
-        sentence = source.sentences.create!(:sentence_number => sentence_number, 
-                                            :book_id => book_id,
-                                            :chapter => attributes[:chapter])
+        sentence = source_division.sentences.create!(:sentence_number => sentence_number, 
+                                                     :chapter => attributes[:chapter])
       end
 
 #FIXME: this should be moved somewhere else to allow for future extensions. 

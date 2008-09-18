@@ -1,0 +1,29 @@
+<div class="roundedbox">
+  <dl>
+    <dt>Source:</dt><dd><%= link_to_source(@source_division.source) %></dd>
+    <dt>Part:</dt><dd><%=h @source_division.title %></dd>
+  </dl>
+  <%= link_to 'Index', source_divisions_path, :class => :index %>
+</div>
+
+<% search_form_tag source_division_path(@source_division), :submit => 'Update' do %>
+  <%= radio_button_tag 'numbering', 'verses', params[:numbering] != 'sentences' %>
+  <label for="numbering_verses">Verse numbers</label>
+  <%= radio_button_tag 'numbering', 'sentences', params[:numbering] == 'sentences' %>
+  <label for="numbering_sentences">Sentence numbers</label>
+<% end %>
+
+<div class='page_info'><%= page_entries_info(@sentences) %></div><%= will_paginate(@sentences) %>
+<div class="text-view">
+  <%= format_sentence(@sentences, {
+    :chapter_numbers => true, 
+    :verse_numbers => params[:numbering] != 'sentences' ? :noninitial : false,
+    :sentence_numbers => params[:numbering] == 'sentences' }) %>
+</div>
+
+<% layer :statistics do -%>
+  <%= statistics "Completion (sentences)", "sentence", @sentence_completion_stats %>
+  <%= statistics "Completion (words/text tokens)", "token", @text_token_completion_stats %>
+  <%= statistics "Annotators", "sentence", @annotated_by_stats %>
+  <%= statistics "Reviewers", "sentence", @reviewed_by_stats %>
+<% end %>

@@ -19,6 +19,11 @@ class Token < ActiveRecord::Base
   named_scope :morphology_annotatable, :conditions => { :sort => PROIEL::MORPHTAGGABLE_TOKEN_SORTS }
   named_scope :dependency_annotatable, :conditions => { :sort => PROIEL::DEPENDENCY_TOKEN_SORTS }
 
+  # Tokens that belong to source +source+.
+  named_scope :by_source, lambda { |source|
+    { :conditions => { :sentence_id => source.source_divisions.map(&:sentences).flatten.map(&:id) } }
+  }
+
   acts_as_audited
 
   # General schema-defined validations
@@ -134,20 +139,17 @@ class Token < ActiveRecord::Base
     PROIEL::MorphTag.new(source_morphtag).is_valid?(language.iso_code)
   end
 
-  def reference
-    if verse
-      PROIEL::Reference.new(sentence.source.abbreviation, sentence.source.id,
-                    sentence.book.code, sentence.book.id,
-                    { :chapter => sentence.chapter.to_i,
-                      :verse => verse.to_i,
-                      :sentence => sentence.sentence_number.to_i,
-                      :token => token_number.to_i })
+  # Returns a citation-form reference for this token.
+  #
+  # ==== Options
+  # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
+  # <tt>:internal</tt> -- If true, will use the internal numbering system.
+  def citation(options = {})
+    if options[:internal]
+      [sentence.citation(options), token_number] * '.'
     else
-      PROIEL::Reference.new(sentence.source.abbreviation, sentence.source.id,
-                    sentence.book.code, sentence.book.id,
-                    { :chapter => sentence.chapter.to_i,
-                      :sentence => sentence.sentence_number.to_i,
-                      :token => token_number.to_i })
+      token_citation = [[sentence.chapter, verse] * ':', token_number] * '.'
+      [sentence.source_division.citation(options), token_citation] * ' '
     end
   end
 
