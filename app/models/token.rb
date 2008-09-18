@@ -1,4 +1,6 @@
 class Token < ActiveRecord::Base
+  INFO_STATUSES = [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :no_info_status, :info_unannotatable]
+
   belongs_to :sentence
   belongs_to :book
   belongs_to :lemma
@@ -45,6 +47,8 @@ class Token < ActiveRecord::Base
   # form and presentation_form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
   validates_unicode_normalization_of :presentation_form, :form => UNICODE_NORMALIZATION_FORM
+
+  validates_inclusion_of :info_status, :in => INFO_STATUSES
 
   # Specific validations
   validate :validate_sort
@@ -180,15 +184,20 @@ class Token < ActiveRecord::Base
 
   # Returns true if the token has a nominal POS or a nominal syntactic relation,
   # or if one of its dependents is an article.
-  def annotatable?
-    if @annotatable.nil?
-      @annotatable = info_status == :no_info_status ||  # manually marked as annotatable
+  def is_annotatable?
+    if @is_annotatable.nil?
+      @is_annotatable = info_status == :no_info_status ||  # manually marked as annotatable
                      (info_status != :info_unannotatable && \
                       (PROIEL::MORPHOLOGY.nominals.include?(morph[:major]) || \
                        (relation && PROIEL::RELATIONS.nominals.include?(relation.to_sym)) || \
                        dependents.any? { |dep| dep.morph[:major] == :S }))
     end
-    @annotatable
+    @is_annotatable
+  end
+
+  def is_verb?
+    @is_verb = morph[:major].to_s.starts_with?('V') if @is_verb.nil?
+    @is_verb
   end
 
   protected

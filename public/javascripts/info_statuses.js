@@ -15,22 +15,6 @@ var InfoStatus = function() {
 
     // private functions
 
-    function setAnnotatablesAndUnannotatables() {
-        // Make sure old event handling is removed before determining the two sets again
-        if(annotatables) {
-            removeEventHandlingForAnnotatables();
-        }
-        if(unannotatables) {
-            removeEventHandlingForUnannotatables();
-        }
-
-        annotatables = $$('span.info-annotatable');
-        unannotatables = $$('span.info-unannotatable');
-
-        setEventHandlingForAnnotatables();
-        setEventHandlingForUnannotatables();
-    }
-
     /////////////////////////////////////
     //
     // Event handling for annotatables
@@ -46,21 +30,8 @@ var InfoStatus = function() {
     }
 
     function annotatableClickHandler(event) {
-        selectToken(this);
+        InfoStatus.selectToken(this);
         event.stop();
-    }
-
-    function selectToken(elm) {
-        selected_token = elm;
-        annotatables.invoke('removeClassName', 'info-selected');
-        selected_token.addClassName('info-selected');
-
-        annotatables.each(function(annotatable, i) {
-            if(annotatables[i] === selected_token) {
-                selected_token_index = i;
-                throw $break;
-            }
-        });
     }
 
     /////////////////////////////////////
@@ -74,7 +45,9 @@ var InfoStatus = function() {
     }
 
     function setEventHandlingForUnannotatables() {
-        unannotatables.invoke('observe', 'click', unannotatableClickHandler);
+        unannotatables.reject(function(elm) {
+            return elm.hasClassName('verb');
+        }).invoke('observe', 'click', unannotatableClickHandler);
     }
 
     function unannotatableClickHandler(event) {
@@ -88,8 +61,8 @@ var InfoStatus = function() {
         }
         elm.removeClassName('info-unannotatable');
         elm.addClassName('info-annotatable no-info-status info-changed');
-        setAnnotatablesAndUnannotatables();
-        selectToken(elm);
+        InfoStatus.setAnnotatablesAndUnannotatables();
+        InfoStatus.selectToken(elm);
     }
 
     /////////////////////////////////////
@@ -118,14 +91,14 @@ var InfoStatus = function() {
                     selected_token.removeClassName('info-annotatable');
                     selected_token.removeClassName('info-selected');
 
-                    setAnnotatablesAndUnannotatables();
+                    InfoStatus.setAnnotatablesAndUnannotatables();
 
                     // This will select the next token, since we have just removed the current one
                     // from the annotatables
-                    selectToken(annotatables[selected_token_index === annotatables.length ? 0 : selected_token_index]);
+                    InfoStatus.selectToken(annotatables[selected_token_index === annotatables.length ? 0 : selected_token_index]);
                 }
                 else {
-                    selectToken(annotatables[selected_token_index === annotatables.length - 1 ? 0 : selected_token_index + 1]);
+                    InfoStatus.selectToken(annotatables[selected_token_index === annotatables.length - 1 ? 0 : selected_token_index + 1]);
                 }
 
                 event.stop();
@@ -139,7 +112,7 @@ var InfoStatus = function() {
                 else {
                     index = selected_token_index === annotatables.length - 1 ? 0 : selected_token_index + 1;
                 }
-                selectToken(annotatables[index]);
+                InfoStatus.selectToken(annotatables[index]);
                 event.stop();
             }
         });
@@ -178,10 +151,10 @@ var InfoStatus = function() {
                                      elm.highlight();
                                      elm.fade({delay: 2.0});
                                  },
-                                 onFailure: function() {
+                                 onFailure: function(response) {
                                      var elm = $('server-message');
                                      elm.show();
-                                     elm.update('Changes could not be saved!');
+                                     elm.update('Error: ' + response.responseText);
                                      elm.highlight({startcolor: 'ff0000'});
                                      elm.fade({delay: 2.0});
                                  },
@@ -198,11 +171,40 @@ var InfoStatus = function() {
         init: function() {
             if(annotatables != null) return;  // because the script may be included several times on the same page
 
-            setAnnotatablesAndUnannotatables();
+            this.setAnnotatablesAndUnannotatables();
             setEventHandlingForDocument();
             setEventHandlingForSaveButton();
 
-            selectToken(annotatables[0]);
+            this.selectToken(annotatables[0]);
+        },
+
+        setAnnotatablesAndUnannotatables: function() {
+            // Make sure old event handling is removed before determining the two sets again
+            if(annotatables) {
+                removeEventHandlingForAnnotatables();
+            }
+            if(unannotatables) {
+                removeEventHandlingForUnannotatables();
+            }
+
+            annotatables = $$('span.info-annotatable');
+            unannotatables = $$('span.info-unannotatable');
+
+            setEventHandlingForAnnotatables();
+            setEventHandlingForUnannotatables();
+        },
+
+        selectToken: function(elm) {
+            selected_token = elm;
+            annotatables.invoke('removeClassName', 'info-selected');
+            selected_token.addClassName('info-selected');
+
+            annotatables.each(function(annotatable, i) {
+                if(annotatables[i] === selected_token) {
+                    selected_token_index = i;
+                    throw $break;
+                }
+            });
         }
     }
 }();
