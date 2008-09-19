@@ -90,7 +90,7 @@ namespace :proiel do
       directory ||= DEFAULT_EXPORT_DIRECTORY
 
       Dir::mkdir(directory) unless File::directory?(directory)
-      File::copy(File.join(RAILS_ROOT, 'data', 'text.xsd'),
+      File::copy(File.join(RAILS_ROOT, 'lib', 'text.xsd'),
                  File.join(directory, 'text.xsd'))
       File::copy(File.join(RAILS_ROOT, 'lib', 'proiel', 'morphology.xml'),
                  File.join(directory, 'morphology.xml'))
