@@ -5,7 +5,7 @@ For next iteration
 
   * Refactoring of morphtag and lemma + part of speech [complete, but too unstable]
 
-  * Export slash edge labels; fix visualization which is still based on interpretation
+  * Fix visualization which is still based on interpretation
 
   * More UI stuff for semantic features [currently no online edititing of tags; create/edit/delete of 
     As and AVs must be done in SQL]
