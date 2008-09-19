@@ -277,8 +277,6 @@ Wishlist
 
   * Wiki
 
-  * Revise statistics functions
-
   * Re-write silly `bookmark` system as a true assignment system.
 
     Blocked by lack of first-order text division objects in the data model.
