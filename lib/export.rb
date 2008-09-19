@@ -92,7 +92,7 @@ class PROIELXMLExport < SourceExport
   end
 
   VERBATIM_TOKEN_ATTRIBUTES = %w(morphtag presentation_form form presentation_span nospacing contraction
-    emendation abbreviation capitalisation verse relation) # foreign_ids contraction &c true/false
+    emendation abbreviation capitalisation verse relation empty_token_sort foreign_ids)
 
   def write_sentence(builder, sentence)
     sentence.tokens.each do |token|

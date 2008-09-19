@@ -10,8 +10,6 @@ For next iteration
   * More UI stuff for semantic features [currently no online edititing of tags; create/edit/delete of 
     As and AVs must be done in SQL]
 
-  * Export of empty dependency token sorts
-
   * Non-numeric chapter number support
 
     Texts can have non-numeric chapter numbers. These have been set to 0 and 255
