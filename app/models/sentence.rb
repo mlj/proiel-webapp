@@ -6,7 +6,7 @@ class Sentence < ActiveRecord::Base
   belongs_to :annotator, :class_name => 'User', :foreign_key => 'annotated_by'
   belongs_to :reviewer, :class_name => 'User', :foreign_key => 'reviewed_by'
 
-  has_and_belongs_to_many :aligned_with, :class_name => 'Sentence', :join_table => 'sentence_alignments', :foreign_key => 'primary_sentence_id', :association_foreign_key => 'secondary_sentence_id'
+  belongs_to :sentence_alignment, :class_name => 'Sentence', :foreign_key => 'sentence_alignment_id'
 
   # All tokens
   has_many :tokens, :order => 'token_number'
@@ -27,15 +27,28 @@ class Sentence < ActiveRecord::Base
   has_many :nonempty_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
     :conditions => { "sort" => PROIEL::NON_EMPTY_TOKEN_SORTS }, :order => 'token_number'
 
+  # Sentences that have not been annotated.
   named_scope :unannotated, :conditions => ["annotated_by IS NULL"]
+
+  # Sentences that have been annotated.
   named_scope :annotated, :conditions => ["annotated_by IS NOT NULL"]
+
+  # Sentences that have not been reviewed.
   named_scope :unreviewed, :conditions => ["reviewed_by IS NULL"]
+
+  # Sentences that have been reviewed.
   named_scope :reviewed, :conditions => ["reviewed_by IS NOT NULL"]
 
   # Sentences that belong to source +source+.
   named_scope :by_source, lambda { |source|
     { :conditions => { :source_division_id => source.source_divisions.map(&:id) } }
   }
+
+  # Sentences in chapter +chapter+.
+  named_scope :by_chapter, lambda { |chapter| { :conditions => { :chapter => chapter } } }
+
+  # Sentences that have been black-listed in sentence alignment.
+  named_scope :unalignable, :conditions => { "unalignable" => true }
 
   # General schema-defined validations
   validates_presence_of :source_division_id

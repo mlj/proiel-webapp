@@ -142,26 +142,19 @@ ActiveRecord::Schema.define(:version => 20080918160133) do
     t.datetime "updated_at"
   end
 
-  create_table "sentence_alignments", :id => false, :force => true do |t|
-    t.integer  "primary_sentence_id",   :default => 0,   :null => false
-    t.integer  "secondary_sentence_id", :default => 0,   :null => false
-    t.float    "confidence",            :default => 0.0, :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "sentence_alignments", ["secondary_sentence_id"], :name => "index_sentence_alignments_on_secondary_sentence_id"
-
   create_table "sentences", :force => true do |t|
-    t.integer  "chapter",            :default => 0, :null => false
-    t.integer  "sentence_number",    :default => 0, :null => false
+    t.integer  "chapter",               :default => 0,     :null => false
+    t.integer  "sentence_number",       :default => 0,     :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "annotated_by"
     t.datetime "annotated_at"
     t.integer  "reviewed_by"
     t.datetime "reviewed_at"
-    t.integer  "source_division_id",                :null => false
+    t.integer  "source_division_id",                       :null => false
+    t.boolean  "unalignable",           :default => false, :null => false
+    t.boolean  "automatic_alignment",   :default => false
+    t.integer  "sentence_alignment_id"
   end
 
   add_index "sentences", ["source_division_id", "sentence_number"], :name => "index_sentences_on_source_division_id_and_sentence_number"

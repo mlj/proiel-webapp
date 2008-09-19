@@ -1,35 +1,28 @@
 module AlignmentsHelper
-  # Formats a sentence for the alignment views. If +value+ is +nil+,
-  # instead inserts a non-breaking space. If +klass+ is not +nil+,
-  # the sentence is presented in a +span+ of class +klass+.
-  def format_sentence_for_alignment(value, klass = nil)
-    if value.is_a?(Array)
-      value.collect do |s|
-        format_sentence(s, { :verse_numbers => :all, :tooltip => :morphtags })
-      end.join(' ')
-    elsif value.is_a?(NilClass)
+  def unanchor_button(sentence)
+    if sentence.sentence_alignment
+      link_to_remote(image_tag("sweetie/16-security-lock-open.png", :alt => 'Remove anchor'),
+        :url => { :controller => 'alignments', :action => 'set_unanchored', :id => sentence.id, })
     else
-      format_sentence(value, { :verse_numbers => :all, :tooltip => :morphtags })
+      ''
     end
   end
 
-  # Makes an "expand sentence" link for the alignment views.
-  def make_expand_sentence_link(action)
-    link_to_remote "+", :update => 'body', 
-      :url => { :action => 'edit', 
-        :id => @sentence, 
-        :modifications => @modifications + [action.to_s], 
-        :_context => params[:_context] },
-      :html => { :title => 'Expand sentence' }
+  def unalignable_button(sentence)
+    if sentence.unalignable or sentence.sentence_alignment
+      ''
+    else
+      link_to_remote(image_tag("sweetie/16-square-red-remove.png", :alt => 'Mark as unalignable'),
+        :url => { :controller => 'alignments', :action => 'set_unalignable', :id => sentence.id, })
+    end
   end
 
-  # Makes a "shorten sentence" link for the alignment views.
-  def make_shorten_sentence_link(action)
-    link_to_remote "-", :update => 'body', 
-      :url => { :action => 'edit', 
-        :id => @sentence, 
-        :modifications => @modifications + [action.to_s], 
-        :_context => params[:_context] }, 
-      :html => { :title => 'Shorten sentence' }
+  def alignable_button(sentence)
+    if sentence.unalignable
+      link_to_remote(image_tag("sweetie/16-square-green-add.png", :alt => 'Mark as alignable'),
+        :url => { :controller => 'alignments', :action => 'set_alignable', :id => sentence.id, })
+    else
+      ''
+    end
   end
 end

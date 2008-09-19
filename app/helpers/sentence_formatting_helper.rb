@@ -39,6 +39,9 @@ module SentenceFormattingHelper
   #
   # information_status:: If +true+, will put each token inside a span with a
   # class named as "info-status-#{token.info_status}"
+  #
+  # <tt>:ignore_links</tt> -- If +true+, will not produce links to other
+  # resources, e.g. to annotation views for sentences, in the sentence.
   def format_sentence(value, options = {})
     options.reverse_merge! :highlight => [], :custom_style => []
 
@@ -231,12 +234,12 @@ module SentenceFormattingHelper
       extra_css << :highlight if options[:highlight].include?(token)
 
       if token.presentation_form and not options[:ignore_presentation_forms]
-        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, extra_css)
+        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, options[:ignore_links] ? nil : annotation_path(token.sentence), nil, extra_css)
         skip_tokens = token.presentation_span - 1
       elsif options[:information_status]
         t << FormattedToken.new(token.sort, token.form, token.nospacing, nil, nil, extra_css, token)
       else
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), nil, extra_css)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, options[:ignore_links] ? nil : annotation_path(token.sentence), nil, extra_css)
       end
 
       if token.presentation_span and token.presentation_span - 1 > 0

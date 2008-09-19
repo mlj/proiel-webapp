@@ -35,11 +35,6 @@ For next iteration
     - include morphology notes
     - include app doc
 
-  * Full sentence alignment 
-
-    Full support for automated sentence alignment with manual adjustment of 
-    sentence alignment by insertion of anchors.
-
   * Subgraph alignment
 
     Semi-automated subgraph alignment with the option for manual, incremental

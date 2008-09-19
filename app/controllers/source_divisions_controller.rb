@@ -1,5 +1,6 @@
 class SourceDivisionsController < ResourceController::Base
-  actions :all, :except => [:new, :create, :edit, :update, :destroy]
+  before_filter :is_administrator?, :except => [:index, :show]
+  actions :all, :except => [:new, :create, :destroy]
 
   show.before do
     @sentences = @source_division.sentences.search("", :page => current_page, :per_page => 40)
