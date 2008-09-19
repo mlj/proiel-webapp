@@ -157,15 +157,6 @@ Wishlist
     one witness as 'unannotatable', or if we just include a subset of
     witnesses in our base text.
 
-  * Modularisation of the `proiel` tree
-
-    The system would benefit greatly from a three module architecture: 
-    proiel-webapp, proiel-lib and proiel-data. This is not difficult, but
-    has to be done at a point in time when the number of diverging branches
-    is minimal, i.e. when the next unstable version is promoted to stable.
-    This task must be completed before source code can be exported to
-    other projects.
-
   * Promote tags to first-order data objects
 
     The choice between enum-like tags with static interpretation (e.g.

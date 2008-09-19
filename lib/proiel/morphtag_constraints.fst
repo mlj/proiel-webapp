@@ -53,7 +53,7 @@ $verb$ = ( \
   $e$       $n$     [prafsu] p      $n$    $n$     $n$   $e$     $n$      $n$ | \ % participle
   $e$       $e$     $e$      [du]   $e$    $e$     $n$   $e$     $e$      $e$ | \ % gerund & supine
   $e$       $n$     $e$      g      $e$    $n$     $n$   $e$     $n$      $n$ | \ % gerundive
-  $n$       $n$     [paf]    m      $n$    $e$     $e$   $e$     $e$      $e$ | \ % imperative
+  $n$       $n$     [pafr]   m      $n$    $e$     $e$   $e$     $e$      $e$ | \ % imperative
   $n$       $n$     $n$      [iso]  $n$    $e$     $e$   $e$     $e$      $e$   \ % other finite forms
 )
 
