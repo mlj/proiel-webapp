@@ -14,6 +14,8 @@ class Token < ActiveRecord::Base
   has_many :slashees, :through => :slash_out_edges
   has_many :slashers, :through => :slash_in_edges
 
+  searchable_on :form
+
   named_scope :word, :conditions => { :sort => :text }
   named_scope :morphology_annotatable, :conditions => { :sort => PROIEL::MORPHTAGGABLE_TOKEN_SORTS }
   named_scope :dependency_annotatable, :conditions => { :sort => PROIEL::DEPENDENCY_TOKEN_SORTS }
@@ -204,9 +206,11 @@ class Token < ActiveRecord::Base
   protected
 
   def self.search(query, options = {})
-    options[:conditions] ||= ["form LIKE ?", "%#{query}%"] unless query.blank?
-
-    paginate options
+    if query.blank?
+      paginate options
+    else
+      search_on(query).paginate options
+    end
   end
 
   private

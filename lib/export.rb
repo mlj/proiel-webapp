@@ -92,13 +92,12 @@ class PROIELXMLExport < SourceExport
   end
 
   VERBATIM_TOKEN_ATTRIBUTES = %w(morphtag presentation_form form presentation_span nospacing contraction
-    emendation abbreviation capitalisation verse relation) # foreign_ids contraction &c true/false
+    emendation abbreviation capitalisation verse relation empty_token_sort foreign_ids)
 
   def write_sentence(builder, sentence)
     sentence.tokens.each do |token|
       attributes = { :id => token.id, :chapter => sentence.chapter, }
       attributes[:head] = token.head_id if token.head
-      attributes[:slashes] = token.slashees.collect { |s| s.id }.join(' ') unless token.slashees.empty?
       attributes[:lemma] = token.morph_lemma_tag.lemma if token.morph_lemma_tag
       attributes[:sort] = token.sort.to_s.gsub('_', '-')
 
@@ -107,7 +106,17 @@ class PROIELXMLExport < SourceExport
         attributes[a.gsub('_', '-')] = value unless value.blank?
       end
 
-      builder.token attributes
+      unless token.slashees.empty? # this extra test avoids <token></token> style XML
+        builder.token attributes do
+          builder.slashes do
+            token.slash_out_edges.each do |slash_out_edge|
+              builder.slash :target => slash_out_edge.slashee_id, :label => slash_out_edge.slash_edge_interpretation.tag
+            end
+          end
+        end
+      else
+        builder.token attributes
+      end
     end
   end
 end

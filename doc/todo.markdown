@@ -5,12 +5,10 @@ For next iteration
 
   * Refactoring of morphtag and lemma + part of speech [complete, but too unstable]
 
-  * Export slash edge labels; fix visualization which is still based on interpretation
+  * Fix visualization which is still based on interpretation
 
   * More UI stuff for semantic features [currently no online edititing of tags; create/edit/delete of 
     As and AVs must be done in SQL]
-
-  * Export of empty dependency token sorts
 
   * Non-numeric chapter number support
 
@@ -36,11 +34,6 @@ For next iteration
     - include notes on text production
     - include morphology notes
     - include app doc
-
-  * Full sentence alignment 
-
-    Full support for automated sentence alignment with manual adjustment of 
-    sentence alignment by insertion of anchors.
 
   * Subgraph alignment
 
@@ -159,15 +152,6 @@ Wishlist
     one witness as 'unannotatable', or if we just include a subset of
     witnesses in our base text.
 
-  * Modularisation of the `proiel` tree
-
-    The system would benefit greatly from a three module architecture: 
-    proiel-webapp, proiel-lib and proiel-data. This is not difficult, but
-    has to be done at a point in time when the number of diverging branches
-    is minimal, i.e. when the next unstable version is promoted to stable.
-    This task must be completed before source code can be exported to
-    other projects.
-
   * Promote tags to first-order data objects
 
     The choice between enum-like tags with static interpretation (e.g.
@@ -278,8 +262,6 @@ Wishlist
     Gothic and OCS
 
   * Wiki
-
-  * Revise statistics functions
 
   * Re-write silly `bookmark` system as a true assignment system.
 

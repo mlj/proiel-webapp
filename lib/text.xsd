@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+	     schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+
+  <xs:annotation>
+    <xs:documentation xml:lang="en">
+      Ad hoc schema for morphologically and syntactically annotated 
+      PROIEL texts.
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:complexType name="Text">
+    <xs:sequence>
+      <xs:element name="metadata" minOccurs="1" maxOccurs="1" type="MetaData"/>
+      <xs:element name="book" minOccurs="1" maxOccurs="unbounded" type="Book"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="lang" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="MetaData">
+    <xs:sequence>
+      <xs:element name="title" minOccurs="0" maxOccurs="1" type="xs:string"/>
+      <xs:element name="edition" minOccurs="0" maxOccurs="1" type="xs:string"/>
+      <xs:element name="source" minOccurs="0" maxOccurs="1" type="xs:string"/>
+      <xs:element name="editor" minOccurs="0" maxOccurs="1" type="xs:string"/>
+      <xs:element name="url" minOccurs="0" maxOccurs="1" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="BookID">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="MATT"/>
+      <xs:enumeration value="MARK"/>
+      <xs:enumeration value="LUKE"/>
+      <xs:enumeration value="JOHN"/>
+      <xs:enumeration value="ACTS"/>
+      <xs:enumeration value="ROM"/>
+      <xs:enumeration value="1COR"/>
+      <xs:enumeration value="2COR"/>
+      <xs:enumeration value="GAL"/>
+      <xs:enumeration value="EPH"/>
+      <xs:enumeration value="PHIL"/>
+      <xs:enumeration value="COL"/>
+      <xs:enumeration value="1THESS"/>
+      <xs:enumeration value="2THESS"/>
+      <xs:enumeration value="1TIM"/>
+      <xs:enumeration value="2TIM"/>
+      <xs:enumeration value="TIT"/>
+      <xs:enumeration value="PHILEM"/>
+      <xs:enumeration value="HEB"/>
+      <xs:enumeration value="JAS"/>
+      <xs:enumeration value="1PET"/>
+      <xs:enumeration value="2PET"/>
+      <xs:enumeration value="1JOHN"/>
+      <xs:enumeration value="2JOHN"/>
+      <xs:enumeration value="3JOHN"/>
+      <xs:enumeration value="JUDE"/>
+      <xs:enumeration value="REV"/>
+    </xs:restriction>
+  </xs:simpleType> 
+
+  <xs:complexType name="Book">
+    <xs:sequence>
+      <xs:element name="sentence" minOccurs="1" maxOccurs="unbounded" type="Sentence"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="BookID" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Sentence">
+    <xs:sequence>
+      <xs:element name="token" minOccurs="1" maxOccurs="unbounded" type="Token"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="TokenSort">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="text"/>
+      <xs:enumeration value="punctuation"/>
+      <xs:enumeration value="empty-dependency-token"/>
+      <xs:enumeration value="lacuna-start"/>
+      <xs:enumeration value="lacuna-end"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TokenNospacing">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="before"/>
+      <xs:enumeration value="after"/>
+      <xs:enumeration value="both"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="Token">
+    <xs:sequence>
+      <xs:element name="slashes" minOccurs="0" maxOccurs="1" type="Slashes"/>
+      <xs:element name="notes" minOccurs="0" maxOccurs="1" type="Notes"/>
+      <xs:element name="emendations" minOccurs="0" maxOccurs="1" type="Emendations"/>
+    </xs:sequence>
+
+    <xs:attribute name="chapter" type="xs:integer"/>
+    <xs:attribute name="verse" type="xs:integer"/>
+
+    <xs:attribute name="morphtag" type="xs:string"/>
+    <xs:attribute name="lemma" type="xs:string"/>
+    <xs:attribute name="form" type="xs:string"/>
+
+    <!-- Token semantics -->
+    <xs:attribute name="sort" type="TokenSort"/>
+    <xs:attribute name="empty-token-sort" type="xs:string" use="optional"/>
+    <xs:attribute name="contraction" type="xs:boolean" use="optional"/>
+    <xs:attribute name="emendation" type="xs:boolean" use="optional"/>
+    <xs:attribute name="abbreviation" type="xs:boolean" use="optional"/>
+    <xs:attribute name="capitalisation" type="xs:boolean" use="optional"/>
+
+    <!-- Presentation fields -->
+    <xs:attribute name="nospacing" type="TokenNospacing" use="optional"/>
+    <xs:attribute name="presentation-form" type="xs:string" use="optional"/>
+    <xs:attribute name="presentation-span" type="xs:integer" use="optional"/>
+
+    <xs:attribute name="id" type="xs:NMTOKEN" use="optional"/>
+    <xs:attribute name="head" type="xs:NMTOKEN" use="optional"/>
+    <xs:attribute name="slashes" type="xs:string" use="optional"/>
+    <xs:attribute name="relation" type="xs:string" use="optional"/>
+
+    <xs:attribute name="foreign-ids" type="xs:string" use="optional"/>
+  </xs:complexType>
+
+  <xs:complexType name="Slashes">
+    <xs:sequence>
+      <xs:element name="slash" minOccurs="1" maxOccurs="unbounded" type="Slash"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Slash">
+    <xs:attribute name="target" type="xs:integer"/>
+    <xs:attribute name="label" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Notes">
+    <xs:sequence>
+      <xs:element name="note" minOccurs="1" maxOccurs="unbounded" type="Note"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Note">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="origin" type="xs:string"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:simpleType name="EmendationSort">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="addition"/>
+      <xs:enumeration value="deletion"/>
+      <xs:enumeration value="unclear"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="Emendations">
+    <xs:sequence>
+      <xs:element name="emendation" minOccurs="1" maxOccurs="unbounded" type="Emendation"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Emendation">
+    <xs:attribute name="position" type="xs:integer"/>
+    <xs:attribute name="text" type="xs:string"/>
+    <xs:attribute name="sort" type="EmendationSort"/>
+    <xs:attribute name="original" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:element name='text' type='Text'/>
+</xs:schema>
