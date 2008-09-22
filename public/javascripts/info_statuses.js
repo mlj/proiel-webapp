@@ -127,16 +127,33 @@ var InfoStatus = function() {
 
             changed.each(function(elm) {
                 var category = null;
+
+                // Make sure we won't save the change more than once
+                elm.removeClassName('info-changed');
+
                 // Find the class name that denotes an information structure category
-                $w(elm.className).each(function(klass) {
+                var classes = $w(elm.className);
+                for(var i = 0; i < classes.length; i++) {
+                    var klass = classes[i];
                     if(categories.include(klass)) {
                         category = klass;
-                        throw $break;
+                        break;
                     }
-                });
+                };
                 // Extract the numerical part of the element id
                 var id = elm.id.slice('token-'.length);
 
+                // If this is a prodrop token, add info about the verb it is related to and
+                // the kind of relation it has
+                if(id.startsWith('new')) {
+                    for(var i = 0; i < classes.length; i++) {
+                        var klass = classes[i];
+                        if(klass.startsWith('prodrop')) {
+                            category += ';' + klass;
+                            break;
+                        }
+                    };
+                }
                 params.push('tokens['+ id + ']=' + category);
             });
             new Ajax.Request(document.location.href.match(url_without_last_part)[0],

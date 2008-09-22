@@ -161,7 +161,7 @@ ActiveRecord::Schema.define(:version => 20080918160133) do
     t.datetime "annotated_at"
     t.integer  "reviewed_by"
     t.datetime "reviewed_at"
-    t.integer  "source_division_id",                :null => false
+    t.integer  "source_division_id", :default => 0, :null => false
   end
 
   add_index "sentences", ["source_division_id", "sentence_number"], :name => "index_sentences_on_source_division_id_and_sentence_number"
@@ -180,11 +180,11 @@ ActiveRecord::Schema.define(:version => 20080918160133) do
   add_index "slash_edges", ["slasher_id", "slashee_id"], :name => "index_slash_edges_on_slasher_and_slashee", :unique => true
 
   create_table "source_divisions", :force => true do |t|
-    t.integer  "source_id",                                 :null => false
-    t.integer  "position",                                  :null => false
-    t.string   "title",                      :limit => 128, :null => false
-    t.string   "abbreviated_title",          :limit => 128, :null => false
-    t.string   "fields",                     :limit => 128, :null => false
+    t.integer  "source_id",                                 :default => 0,  :null => false
+    t.integer  "position",                                  :default => 0,  :null => false
+    t.string   "title",                      :limit => 128, :default => "", :null => false
+    t.string   "abbreviated_title",          :limit => 128, :default => "", :null => false
+    t.string   "fields",                     :limit => 128, :default => "", :null => false
     t.integer  "aligned_source_division_id"
     t.datetime "created_at"
     t.datetime "updated_at"

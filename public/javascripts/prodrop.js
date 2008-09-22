@@ -5,6 +5,7 @@ var Prodrop = function() {
 
     // private variables
 
+    var new_id = 0;
     var verbs = null;
     var selected_verb = null;
     var menu = null;
@@ -24,7 +25,9 @@ var Prodrop = function() {
         var insertion = $H();
         var prodrop_token = $(document.createElement('span'));
 
-        prodrop_token.addClassName('highlight info-annotatable old');
+        prodrop_token.writeAttribute('id', 'token-new' + new_id++);
+        prodrop_token.addClassName('highlight info-annotatable old info-changed prodrop-' +
+                                   relation + '-' + selected_verb.id);
         prodrop_token.update(prodrop_text[relation]);
         insertion.set(prodrop_positions[relation], prodrop_token);
         selected_verb.insert(insertion.toObject());

@@ -135,7 +135,7 @@ module SentenceFormattingHelper
         content_tag(:span, UNICODE_HORIZONTAL_ELLIPSIS, :class => (css << 'lacuna') * ' ', :title => title)
       when :punctuation
         content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ', :title => title)
-      when :text
+      when :text, :prodrop
         if link
           link_to(LangString.new(text, language).to_h, link, :class => (css << 'token') * ' ', :title => title)
         elsif options[:information_status]
