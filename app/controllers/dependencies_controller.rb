@@ -19,7 +19,7 @@ class DependenciesController < ApplicationController
   def edit 
     @sentence = Sentence.find(params[:annotation_id])
 
-    @tokens = Hash[*@sentence.tokens.collect do |token|
+    @tokens = Hash[*@sentence.dependency_tokens.collect do |token|
       [token.id, { 
         :morphtag => Hash[token.morph].merge({
           :language => @sentence.source.language,
