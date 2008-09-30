@@ -22,7 +22,7 @@
 
   <xs:complexType name="Text">
     <xs:sequence>
-      <xs:element name="metadata" minOccurs="1" maxOccurs="1" type="Metadata"/>
+      <xs:element name="metadata" minOccurs="0" maxOccurs="1" type="Metadata"/>
       <xs:element name="book" minOccurs="1" maxOccurs="unbounded" type="Book"/>
     </xs:sequence>
     <xs:attribute name="id" type="xs:string" use="required"/>
