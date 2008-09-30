@@ -13,8 +13,8 @@ div#words {
 }
 div#words input { display: none; }
 div#words input + span { padding: .2em .2em .2em .2em; }
-div#words input.consumed + span { background: #ccc; color: white; }
-div#words input:checked + span { background: #9999ff; color: white; }
+div#words input.consumed + span { background: #CCCCFF; color: black; }
+div#words input:checked + span { background: orange; color: white; }
 
 /* The proper rule: does not work in IE 6 */
 #relations .selected > .user-value { background: #9999ff; }
