@@ -23,3 +23,8 @@ This release of the application is designed to work with version 1.2 of
 Before starting the application for the first time, you must run
     make -C lib
 to build the support files.
+
+== License
+
+The PROIEL web application is Copyright FIXME and licensed under the terms
+of the GNU General Public License version 2. See the file +COPYING+ for details.

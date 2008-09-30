@@ -15,125 +15,106 @@
 <!-- TEI header TO XHTML conversion -->
 <!-- ========================================================================== -->
 <!--
-     This stylesheet extracts information from a TEI header and generates a detailed XHTML report.  
-     
+     This stylesheet extracts information from a TEI header and generates a detailed XHTML report.
+
      Given the complexity of the TEI DTD, it's not easy to write generic stylesheets that produce high-quality reports for every possible document. This stylesheet does NOT pretend to do that. It is a first draft, written for a specific set of documents. Not every single item in the header is supported and some templates expect a subset of what's allowed by the TEI DTD, reflecting local policies or choices. On the other hand, it might produce acceptable output for other documents and could easily be modified or extended.
-     
+
      Revision history:
      [2004-03-12] First draft
      [2004-03-17] Substantially revised draft
      [2006-09-26] Minor changes to the output HTML
-     
+
 		The stylesheet was developed for the Wulfila Project (http://www.wulfila.be) in March 2004 and is freely available for academic and non-commercial purposes. A link to the original file would of course be appreciated.
 		
 		(author: Tom De Herdt)
 
    This stylesheet was modified for the PROIEL web application by Marius L. Jøhndal. The changes made are the following:
      - modified for inclusion inside another document
-     - replaced footer contents with an attribution and link to the original stylesheet source
---> 
-<!-- ========================================================================== --> 
+     - removed footer; attribution and link to the original stylesheet source should be displayed
+       somewhere else
+     - changed styling so that it does not interfere with the rest of the page
+-->
+<!-- ========================================================================== -->
 
-<xsl:stylesheet 
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+<xsl:stylesheet
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns="http://www.w3.org/1999/xhtml"
 	version="1.0">
 
-<xsl:output 
+<xsl:output
 	method="xml"
 	encoding="UTF-8"
 	doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
 	doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
-	indent="yes"
-/>
+	indent="yes"/>
 	
 	<xsl:param name="timestamp"/>
 	<xsl:param name="doc"/><!-- URI of the TEI document -->
 	
 	<xsl:template match="/">
  <style type="text/css">
-body {
-	margin: 4%; 
-	font-family: Georgia, serif; 
-	line-height: 120%;}
-h1, h2, h3, h4 {
-	font-weight: normal;}
-h1 {
-	text-align: center;}
-h3 {
-	margin-bottom: 0em; 
-	background-color: #EEEEEE; 
-	padding: 0.2em;}
-h4 {
-	margin-bottom: 0em;}
+div#metadata h3 {
+  margin-bottom: 0em;
+  background-color: #EEEEEE;
+  padding: 0.2em;
+}
+div#metadata h4 { margin-bottom: 0em; }
 
-q {
-	font-style: italic;}
-span.title {
-	font-style: italic;}
-span.index {
-	color: #FF5200;}
-var.attribute {
-	font-style: normal; 
+div#metadata q { font-style: italic;}
+div#metadata span.title { font-style: italic;}
+div#metadata span.index { color: #FF5200;}
+div#metadata var.attribute {
+	font-style: normal;
 	font-weight: bold;}
 
-div p {
-	margin-left: 1em; 
+div#metadata div p {
+	margin-left: 1em;
 	margin-top: 0.5em;}
-td p {
-	margin-left: 0em; 
+div#metadata td p {
+	margin-left: 0em;
 	margin-top: 0.5em;}
-div div {
-	margin-bottom: 2em;}
-table {
-	width: 100%; }
-tr.head td {
-	border: none;}
-td {
-	border-bottom:	1px dashed #FF5200; 
-	vertical-align: top; 
-	text-align: justify; 
-	line-height: 120%; 
+div#metadata div div { margin-bottom: 2em;}
+div#metadata table { width: 100%; }
+div#metadata tr.head td { border: none;}
+div#metadata td {
+	vertical-align: top;
+	text-align: justify;
+	line-height: 120%;
 	padding: 0.4em;}
-td.label {
-	width: 25%; 
-	color: navy; 
+div#metadata td.label {
+	width: 25%;
+	color: navy;
 	text-align: left;}
-td p {
-	margin-top: 0em; 
-	margin-bottom: 0em; 
+div#metadata td p {
+	margin-top: 0em;
+	margin-bottom: 0em;
 	line-height: 120%;}
 
-p {
-	text-align: justify; 
+div#metadata p {
+	text-align: justify;
 	line-height: 120%;}
 
-a img {border: none;}
+div#metadata a img { border: none;}
 
-div#header {
+div#metadata div#header {
 	border-top: 1px solid #DDDDDD;
 	border-bottom: 1px solid #DDDDDD;
-	margin-left: 0; 
+	margin-left: 0;
 	margin-bottom: 1em;
 	padding-left: 0;}
-div#header p {
+div#metadata div#header p {
 	margin-left: 0;}
-div#footer, .small {
+div#metadata div#footer, div#metadata .small {
 	font-size: smaller;}
 
-a:link {text-decoration: none;}
-a:active {text-decoration: none;}
-a:visited {text-decoration: none;}
-a:hover {text-decoration: underline; color: navy;}
-
 @media print {
-	body {
-		margin-left: 5%; 
-		margin-top: 2%; 
-		margin-right: 2%; 
+	div#metadata body {
+		margin-left: 5%;
+		margin-top: 2%;
+		margin-right: 2%;
 		margin-bottom: 2%;
 		font-size: small;}
-	h3 {
+	div#metadata h3 {
 		margin-top: 0em;}
 }
 </style>
@@ -145,9 +126,6 @@ a:hover {text-decoration: underline; color: navy;}
 					</div>
 				</xsl:if>
 				<xsl:apply-templates select="TEI.2/teiHeader"/>
-				<div id="footer">
-					<p>This document was generated from the original TEI document with <a href="http://www.wulfila.be/res/style/xslt/teiheader.xsl">this XSLT stylesheet</a><xsl:if test="$timestamp"> on <xsl:value-of select="$timestamp"/></xsl:if>.</p>
-				</div>
 	</xsl:template>
 	
 	
@@ -404,8 +382,8 @@ a:hover {text-decoration: underline; color: navy;}
 		</div>
 	</xsl:template>
 
-<!-- <!ELEMENT encodingDesc %om.RR; (projectDesc*, samplingDecl*, editorialDecl*, 
-                                     tagsDecl?, refsDecl*, classDecl*, metDecl*, 
+<!-- <!ELEMENT encodingDesc %om.RR; (projectDesc*, samplingDecl*, editorialDecl*,
+                                     tagsDecl?, refsDecl*, classDecl*, metDecl*,
                                      fsdDecl*, variantEncoding*, p* )>  -->
 
 <!-- .......................................................................... -->
@@ -514,7 +492,7 @@ a:hover {text-decoration: underline; color: navy;}
 		<tr>
 			<td class="label">&tooltip;Normalization</td>
 			<td>
-				<p class="attributes"> 
+				<p class="attributes">
 					<xsl:if test="@source">
 						<var class="attribute">source</var>
 						<xsl:text> = </xsl:text>
@@ -847,7 +825,7 @@ a:hover {text-decoration: underline; color: navy;}
 	</xsl:template>
 	
 	<xsl:template match="cit">
-		<xsl:apply-templates select="quote"/> (<xsl:apply-templates select="bibl"/>) 
+		<xsl:apply-templates select="quote"/> (<xsl:apply-templates select="bibl"/>)
 	</xsl:template>
 	
 	<xsl:template match="quote">
@@ -948,9 +926,9 @@ a:hover {text-decoration: underline; color: navy;}
 	</xsl:template>
 	
 	<xsl:template match="biblStruct/monogr/imprint">
-		<xsl:apply-templates select="publisher"/>, 
-		<xsl:apply-templates select="pubPlace"/>, 
-		<xsl:apply-templates select="date"/>. 
+		<xsl:apply-templates select="publisher"/>,
+		<xsl:apply-templates select="pubPlace"/>,
+		<xsl:apply-templates select="date"/>.
 	</xsl:template>
 	
 	<xsl:template match="series">
