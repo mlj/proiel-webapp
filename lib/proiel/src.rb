@@ -43,15 +43,7 @@ module PROIEL
       t = doc.at("text")
       @metadata[:id] = t.attributes["id"]
       @metadata[:language] = t.attributes["lang"].to_sym
-
-      m = (doc/:text).at("metadata")
-      ["title", "edition", "source", "editor", "url"].collect { |k| [k, m.at(k)] }.each do |k, e|
-        @metadata[k.to_sym] = e.inner_html if e
-      end
-
-      raise "Invalid source: No metadata found" if @metadata.empty?
-
-      @metadata.merge!({ :filename => uri })
+      @metadata[:filename] = uri
 
       @sequence = []
       @books = Hash[*(doc/:text/:book).collect { |b| @sequence << b.attributes["name"]; [b.attributes["name"], b] }.flatten]

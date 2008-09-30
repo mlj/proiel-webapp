@@ -84,4 +84,6 @@ Rails::Initializer.run do |config|
   config.gem 'diff-lcs', :lib => 'diff/lcs'
   config.gem 'ruby-sfst', :lib => 'sfst'
   config.gem 'logos'
+  config.gem 'libxml-ruby', :lib => 'libxml'
+  config.gem 'libxslt-ruby', :lib => 'libxslt'
 end

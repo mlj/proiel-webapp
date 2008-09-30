@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080909130010) do
+ActiveRecord::Schema.define(:version => 20080929124518) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -184,13 +184,9 @@ ActiveRecord::Schema.define(:version => 20080909130010) do
   create_table "sources", :force => true do |t|
     t.string  "code",         :limit => 64, :default => "", :null => false
     t.text    "title"
-    t.text    "edition"
-    t.text    "source"
-    t.text    "editor"
-    t.text    "url"
-    t.integer "alignment_id"
     t.string  "abbreviation", :limit => 64, :default => "", :null => false
     t.integer "language_id",                :default => 0,  :null => false
+    t.text    "tei_header",                                 :null => false
   end
 
   create_table "tokens", :force => true do |t|

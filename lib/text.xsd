@@ -1,8 +1,11 @@
 <?xml version="1.0"?>
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tei="http://www.tei-c.org/ns/1.0">
   <xs:import namespace="http://www.w3.org/XML/1998/namespace"
 	     schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+  <xs:import namespace="http://www.tei-c.org/ns/1.0"
+             schemaLocation="http://www.tei-c.org/release/xml/tei/custom/schema/xsd/teilite.xsd"/>
 
   <xs:annotation>
     <xs:documentation xml:lang="en">
@@ -11,23 +14,19 @@
     </xs:documentation>
   </xs:annotation>
 
+  <xs:complexType name="Metadata">
+    <xs:sequence>
+      <xs:element ref="tei:teiHeader" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="Text">
     <xs:sequence>
-      <xs:element name="metadata" minOccurs="1" maxOccurs="1" type="MetaData"/>
+      <xs:element name="metadata" minOccurs="1" maxOccurs="1" type="Metadata"/>
       <xs:element name="book" minOccurs="1" maxOccurs="unbounded" type="Book"/>
     </xs:sequence>
     <xs:attribute name="id" type="xs:string" use="required"/>
     <xs:attribute name="lang" type="xs:string" use="required"/>
-  </xs:complexType>
-
-  <xs:complexType name="MetaData">
-    <xs:sequence>
-      <xs:element name="title" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="edition" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="source" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="editor" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="url" minOccurs="0" maxOccurs="1" type="xs:string"/>
-    </xs:sequence>
   </xs:complexType>
 
   <xs:simpleType name="BookID">

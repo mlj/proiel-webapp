@@ -118,10 +118,10 @@ export path is used.
 
 This task is used to import _new_ base texts. The import will look for the appropriate
 source in the database using the identifier in the XML file to be imported. If it does
-not exist, a new one is created with the meta data from the XML file. It is possible
-to import a subsection of the XML file by using the `BOOK` variable to filter on
-book identifiers. Once a book has been imported, it cannot be imported again, and
-an attempt to do is likely to lead to data corruption.
+not exist, an exception will be raised. It is possible to import a subsection of the
+XML file by using the `BOOK` variable to filter on book identifiers. Once a book has
+been imported, it cannot be imported again, and an attempt to do is likely to lead to
+data corruption.
 
 Example:
 

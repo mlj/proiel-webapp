@@ -55,14 +55,7 @@ class PROIELXMLImport < SourceImport
 
     language = Language.find_by_iso_code(import.metadata[:language])
     source = language.sources.find_by_code(import.metadata[:id])
-
-    unless source
-      # Create new source and set metadata
-      STDOUT.puts "Creating new source"
-      source = language.sources.new(:code => import.metadata[:id])
-      [:title, :edition, :source, :editor, :url].each { |e| source[e] = import.metadata[e] }
-      source.save!
-    end
+    raise "Source #{source.metadata[:id]} not found" unless source
 
     book = nil
     source_division = nil

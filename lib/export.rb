@@ -4,8 +4,8 @@
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
-
 require 'builder'
+require 'metadata'
 
 # Monkeypatch builder with a less obtuse version of XML escaping
 class String
@@ -25,6 +25,7 @@ class SourceExport
     options.reverse_merge! :reviewed_only => false
 
     @source = source
+    @metadata = source.metadata
     @options = options
   end
 
@@ -78,11 +79,7 @@ class PROIELXMLExport < SourceExport
   private
 
   def write_metadata(builder)
-    builder.title @source.attributes["title"]
-    builder.edition @source.attributes["edition"]
-    builder.source @source.attributes["source"]
-    builder.editor @source.attributes["editor"]
-    builder.url @source.attributes["url"]
+    @metadata.write(builder)
   end
 
   def write_source_division(builder, source_division)
