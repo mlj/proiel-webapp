@@ -30,6 +30,7 @@ var InfoStatus = function() {
     }
 
     function annotatableClickHandler(event) {
+        if(event.ctrlKey) return;      // we don't handle ctrl-clicks here
         InfoStatus.selectToken(this);
         event.stop();
     }
@@ -51,6 +52,7 @@ var InfoStatus = function() {
     }
 
     function unannotatableClickHandler(event) {
+        if(event.ctrlKey) return;      // we don't handle ctrl-clicks here
         makeAnnotatable(this);
         event.stop();
     }
@@ -141,7 +143,7 @@ var InfoStatus = function() {
                     }
                 };
                 // Extract the numerical part of the element id
-                var id = elm.id.slice('token-'.length);
+                var id = this.getTokenId(elm);
 
                 // If this is a prodrop token, add info about the verb it is related to and
                 // the kind of relation it has
@@ -222,6 +224,17 @@ var InfoStatus = function() {
                     throw $break;
                 }
             });
+
+            Anaphora.showAntecedentFor(elm);
+        },
+
+        getSelectedToken: function() {
+            return selected_token;
+        },
+
+        // Returns the numerical part of the element id
+        getTokenId: function(token) {
+            return token.id.slice('token-'.length);
         }
     }
 }();
