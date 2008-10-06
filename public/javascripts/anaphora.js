@@ -67,6 +67,11 @@ var Anaphora = function() {
     }
 
     function createAntecedentLink(anaphor, antecedent, antecedentClass) {
+        if(InfoStatus.getTokenId(antecedent) >= InfoStatus.getTokenId(anaphor)) {
+            alert('Antecedents must precede their anaphors!');
+            return;
+        }
+
         // Remove any antecedent style from all other tokens
         tokens.invoke('removeClassName', 'antecedent');
 
