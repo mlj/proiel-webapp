@@ -29,16 +29,7 @@ var Anaphora = function() {
     }
 
     function tokenClickHandler(event) {
-        if(!event.ctrlKey) {
-            // This is not a ctrl-click, so just clean up any antecedent-related stuff
-
-            // Remove any antecedent style from all tokens
-            tokens.invoke('removeClassName', 'antecedent');
-
-            // Remove all anaphor-antecedent lines
-            jg.clear();
-            return;
-        }
+        if(!event.ctrlKey) return;
 
         var selected_token = InfoStatus.getSelectedToken();
 
