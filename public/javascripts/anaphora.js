@@ -44,6 +44,7 @@ var Anaphora = function() {
         else {
             createAntecedentLink(selected_token, this, antecedentClass);
         }
+        selected_token.addClassName('info-changed');
     }
 
     function removeAntecedentLink(anaphor, antecedent, antecedentClass) {

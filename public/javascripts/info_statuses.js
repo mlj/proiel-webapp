@@ -133,8 +133,9 @@ var InfoStatus = function() {
                 // Make sure we won't save the change more than once
                 elm.removeClassName('info-changed');
 
-                // Find the class name that denotes an information structure category
                 var classes = $w(elm.className);
+
+                // Find the class name that denotes an information structure category
                 for(var i = 0; i < classes.length; i++) {
                     var klass = classes[i];
                     if(categories.include(klass)) {
@@ -142,8 +143,18 @@ var InfoStatus = function() {
                         break;
                     }
                 };
+
+                // Find the antecedent id (if any)
+                for(var i = 0; i < classes.length; i++) {
+                    var klass = classes[i];
+                    if(klass.startsWith('ant-')) {
+                        category += ';' + klass;
+                        break;
+                    }
+                }
+
                 // Extract the numerical part of the element id
-                var id = this.getTokenId(elm);
+                var id = InfoStatus.getTokenId(elm);
 
                 // If this is a prodrop token, add info about the verb it is related to and
                 // the kind of relation it has

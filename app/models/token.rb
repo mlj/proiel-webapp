@@ -14,6 +14,9 @@ class Token < ActiveRecord::Base
   has_many :slashees, :through => :slash_out_edges
   has_many :slashers, :through => :slash_in_edges
 
+  has_one :antecedent, :class_name => 'Token', :foreign_key => 'anaphor_id', :dependent => :nullify
+  belongs_to :anaphor, :class_name => 'Token'
+
   searchable_on :form
 
   named_scope :word, :conditions => { :sort => :text }

@@ -144,6 +144,7 @@ module SentenceFormattingHelper
         elsif options[:information_status]
           if options[:highlight].include?(token)
             css << info_status_css_class
+            css << 'ant-' + token.antecedent.id.to_s if token.antecedent
             css << 'verb' if token.is_verb?
           end
           LangString.new(text, language, :id => 'token-' + token.id.to_s, :css => css * ' ', :title => title).to_h

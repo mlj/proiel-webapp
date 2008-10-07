@@ -30,7 +30,22 @@ class InfoStatusesController < ApplicationController
       if(id.starts_with?('new'))
         create_prodrop_relation(id, attr)
       else
+        antecedent_id = attr.delete(:antecedent_id)
+        if antecedent_id
+          # Remove the anaphor from the old antecedent, if any
+          old_antecedent = Token.find(id).antecedent
+          if old_antecedent
+            old_antecedent.anaphor_id = nil
+            old_antecedent.save!
+          end
+
+          # Set the anaphor id on the new antecedent
+          Token.find(antecedent_id).update_attribute(:anaphor_id, id)
+        end
+
+        # Update the remaining attributes
         Token.find(id).update_attributes!(attr)
+
       end
     end
   rescue
@@ -52,7 +67,12 @@ class InfoStatusesController < ApplicationController
     if params[:tokens]
       params[:tokens].each_pair do |id, category|
         ids_ary << id
-        attributes_ary << {:info_status => category.tr('-', '_').to_sym}
+        category, antecedent_id = category.split(';')
+        antecedent_id.slice!('ant-') if antecedent_id
+        attributes_ary << {
+          :info_status => category.tr('-', '_').to_sym,
+          :antecedent_id => antecedent_id
+        }
       end
     end
 
