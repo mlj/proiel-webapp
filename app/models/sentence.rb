@@ -11,9 +11,9 @@ class Sentence < ActiveRecord::Base
   # All tokens
   has_many :tokens, :order => 'token_number'
 
-  # All tokens with dependents included
-  has_many :tokens_with_dependents, :class_name => 'Token',
-     :include => :dependents, :order => 'tokens.token_number'
+  # All tokens with dependents and information structure included
+  has_many :tokens_with_dependents_and_info_structure, :class_name => 'Token',
+     :include => [:dependents, :antecedent], :order => 'tokens.token_number'
 
   # Tokens that can be tagged with dependency relations.
   has_many :dependency_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
@@ -141,7 +141,7 @@ class Sentence < ActiveRecord::Base
     #
     # Since by validation constraints all tokens in the sentence have to be annotated
     # if any single one is, we do not have to bother with partial annotations.
-    
+
     # Work inside a transaction since we have lots of small pieces that must go together.
     Token.transaction do
       ts = tokens.dependency_annotatable
@@ -243,14 +243,14 @@ class Sentence < ActiveRecord::Base
 
   def append_tokens!(ts) #:nodoc:
     ts.each do |t|
-      t.sentence_id = id 
+      t.sentence_id = id
       t.token_number = self.max_token_number + 1
       t.save!
     end
   end
 
   def prepend_tokens!(ts) #:nodoc:
-    m = self.min_token_number 
+    m = self.min_token_number
 
     if m.nil?
       # No tokens in the sentence? Curious, must be a new one.

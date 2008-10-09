@@ -30,7 +30,7 @@ var InfoStatus = function() {
     }
 
     function annotatableClickHandler(event) {
-        if(event.ctrlKey) return;      // we don't handle ctrl-clicks here
+        if(event.ctrlKey || event.shiftKey) return;      // we don't handle ctrl-clicks or shift-clicks here
         InfoStatus.selectToken(this);
         event.stop();
     }
@@ -52,7 +52,7 @@ var InfoStatus = function() {
     }
 
     function unannotatableClickHandler(event) {
-        if(event.ctrlKey) return;      // we don't handle ctrl-clicks here
+        if(event.ctrlKey || event.shiftKey) return;      // we don't handle ctrl-clicks or shift-clicks here
         makeAnnotatable(this);
         event.stop();
     }
@@ -236,7 +236,7 @@ var InfoStatus = function() {
                 }
             });
 
-            Anaphora.showAntecedentFor(elm);
+            AnaphoraAndContrast.showAntecedentFor(elm);
         },
 
         getSelectedToken: function() {

@@ -63,3 +63,9 @@
 .antecedent {
    border: 2px solid blue !important;
 }
+.contrast1 {
+   border: 2px solid green !important;
+}
+.contrast2 {
+   border: 2px solid red !important;
+}

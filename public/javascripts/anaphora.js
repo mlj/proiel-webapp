@@ -3,11 +3,12 @@
 // Drawing of anaphor links inspired by code made for the BREDT demonstrator (http://bredt.uib.no) by Øystein Reigem.
 
 // Embed "private" variables and functions in an ExtJS-style object
-var Anaphora = function() {
+var AnaphoraAndContrast = function() {
 
     // private variables
 
     var tokens = null;
+    var group_no = 0;
 
     // jsGraphics object used to draw lines
     var jg = null;
@@ -25,11 +26,12 @@ var Anaphora = function() {
     // private functions
 
     function setEventHandlingForTokens() {
-        tokens.invoke('observe', 'click', tokenClickHandler);
+        tokens.invoke('observe', 'click', antecedentClickHandler);
+        tokens.invoke('observe', 'click', contrastClickHandler);
     }
 
-    function tokenClickHandler(event) {
-        if(!event.ctrlKey) return;
+    function antecedentClickHandler(event) {
+        if(!event.ctrlKey || event.altKey) return;
 
         var selected_token = InfoStatus.getSelectedToken();
 
@@ -45,6 +47,32 @@ var Anaphora = function() {
             createAntecedentLink(selected_token, this, antecedentClass);
         }
         selected_token.addClassName('info-changed');
+    }
+
+    function contrastClickHandler(event) {
+        if(!(event.altKey && (event.ctrlKey || event.shiftKey))) return;
+
+        var selected_token = InfoStatus.getSelectedToken();
+        var display_class_name = 'contrast' + (event.ctrlKey ? '1' : '2')
+
+        this.addClassName('info-changed');
+
+        if(this.hasClassName(display_class_name)) {
+            // The user has clicked a second time in order to remove the contrast item
+            this.removeClassName(display_class_name);
+            var group_class_name = $w(this.className).find(function(cls) {return cls.startsWith('con-')});
+            this.removeClassName(group_class_name);
+        }
+        else {
+            var group_class_name = $w(selected_token.className).find(function(cls) {return cls.startsWith('con-')});
+            if(!group_class_name) {
+                // Create a new contrast pair
+                group_class_name = 'con-' + ++group_no + (event.ctrlKey ? 'a' : 'b');
+                selected_token.addClassName(group_class_name);
+            }
+            this.addClassName(display_class_name);
+            this.addClassName(group_class_name);
+        }
     }
 
     function removeAntecedentLink(anaphor, antecedent, antecedentClass) {
@@ -203,5 +231,5 @@ var Anaphora = function() {
 }();
 
 document.observe('dom:loaded', function() {
-    Anaphora.init();
+    AnaphoraAndContrast.init();
 });
