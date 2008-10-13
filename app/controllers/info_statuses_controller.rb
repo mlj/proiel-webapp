@@ -14,6 +14,9 @@ class InfoStatusesController < ApplicationController
   # GET /annotations/1/info_status/edit
   def edit
     @sentence = Sentence.find(params[:annotation_id])
+    @contrast_options = ['<option></option>'] + Token.contrast_groups_for(@sentence.chapter).map(&:to_i).uniq.map do |contrast|
+      %Q(<option value="#{contrast}">#{contrast}</option>)
+    end
   end
 
 
@@ -65,14 +68,28 @@ class InfoStatusesController < ApplicationController
     attributes_ary = []
 
     if params[:tokens]
-      params[:tokens].each_pair do |id, category|
+      params[:tokens].each_pair do |id, values|
         ids_ary << id
-        category, antecedent_id = category.split(';')
-        antecedent_id.slice!('ant-') if antecedent_id
+
+        antecedent_id = nil
+        contrast_group = nil
+        category = nil
+        values.split(';').each do |part|
+          case part
+          when /^ant-/: antecedent_id = part.slice('ant-'.length..-1)
+          when /^con-/: contrast_group = part.slice('con-'.length..-1)
+          when 'null':  # the "category" of a member of a contrast group which is from a non-focussed sentence
+          else category = part
+          end
+        end
+
         attributes_ary << {
-          :info_status => category.tr('-', '_').to_sym,
-          :antecedent_id => antecedent_id
+          :antecedent_id => antecedent_id,
+          :contrast_group => contrast_group
         }
+        # Only set the info status category of the token unless it is null (which will happen if the
+        # token is not part of the focussed sentence but is nevertheless included in a contrast group)
+        attributes_ary.last[:info_status] = category.tr('-', '_').to_sym if category
       end
     end
 

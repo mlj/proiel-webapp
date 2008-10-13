@@ -144,10 +144,10 @@ var InfoStatus = function() {
                     }
                 };
 
-                // Find the antecedent id (if any)
+                // Find the antecedent id (if any) or contrast group (if any)
                 for(var i = 0; i < classes.length; i++) {
                     var klass = classes[i];
-                    if(klass.startsWith('ant-')) {
+                    if(klass.startsWith('ant-') || klass.startsWith('con-')) {
                         category += ';' + klass;
                         break;
                     }
@@ -237,6 +237,7 @@ var InfoStatus = function() {
             });
 
             AnaphoraAndContrast.showAntecedentFor(elm);
+            AnaphoraAndContrast.showContrastGroupsFor(elm);
         },
 
         getSelectedToken: function() {
