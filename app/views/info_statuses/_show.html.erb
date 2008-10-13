@@ -1,5 +1,8 @@
 <% stylesheet 'sentence_divisions', 'info_statuses' %>
 
+<div>
+  Contrast: <%= select_tag('contrast', @contrast_options, :onchange => "AnaphoraAndContrast.showContrastNo(this.value);") %> <input type="button" value="Create new" />
+</div>
 <div class="sentence-divisions">
   <%= format_sentence(@sentence.previous_sentences.last(7) + [@sentence] + @sentence.next_sentences.first(1),
     { :verse_numbers => :all, :information_status => true, :highlight => @sentence.tokens }) %>

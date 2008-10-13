@@ -145,8 +145,10 @@ module SentenceFormattingHelper
           if options[:highlight].include?(token)
             css << info_status_css_class
             css << 'ant-' + token.antecedent.id.to_s if token.antecedent
+            css << 'con-' + token.contrast_group if token.contrast_group
             css << 'verb' if token.is_verb?
           end
+          css << 'con-' + token.contrast_group if token.contrast_group
           LangString.new(text, language, :id => 'token-' + token.id.to_s, :css => css * ' ', :title => title).to_h
         else
           content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ', :title => title)

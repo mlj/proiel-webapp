@@ -206,6 +206,13 @@ class Token < ActiveRecord::Base
     @is_verb
   end
 
+  # Returns all contrast groups registered for the given chapter
+  def self.contrast_groups_for(chapter)
+    connection.select_all("SELECT DISTINCT contrast_group FROM tokens, sentences " + \
+                          "WHERE tokens.contrast_group IS NOT NULL AND tokens.sentence_id = sentences.id AND sentences.chapter = #{chapter}"
+                          ).map { |record| record['contrast_group'] }
+  end
+
   protected
 
   def self.search(query, options = {})

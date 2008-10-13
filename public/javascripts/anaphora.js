@@ -1,6 +1,6 @@
-// Functionality for creating and removing anaphoric links.
+// Functionality for creating and removing anaphoric links and contrast groups.
 // Created by Anders Nøklestad
-// Drawing of anaphor links inspired by code made for the BREDT demonstrator (http://bredt.uib.no) by Øystein Reigem.
+// Drawing of anaphor links inspired by code in the BREDT demonstrator (http://bredt.uib.no) by Øystein Reigem.
 
 // Embed "private" variables and functions in an ExtJS-style object
 var AnaphoraAndContrast = function() {
@@ -67,8 +67,12 @@ var AnaphoraAndContrast = function() {
             var group_class_name = $w(selected_token.className).find(function(cls) {return cls.startsWith('con-')});
             if(!group_class_name) {
                 // Create a new contrast pair
-                group_class_name = 'con-' + ++group_no + (event.ctrlKey ? 'a' : 'b');
+                group_class_name = 'con-' + ++group_no + 'a';
                 selected_token.addClassName(group_class_name);
+            }
+            if(event.shiftKey) {
+                // The clicked token belongs to the group that is in contrast to the selected annotatable
+                group_class_name = group_class_name.replace('a', 'b');
             }
             this.addClassName(display_class_name);
             this.addClassName(group_class_name);
@@ -193,6 +197,11 @@ var AnaphoraAndContrast = function() {
         }
     }
 
+    function clearContrasts() {
+        $$('.sentence-divisions .contrast1').invoke('removeClassName', 'contrast1');
+        $$('.sentence-divisions .contrast2').invoke('removeClassName', 'contrast2');
+    }
+
     return {
 
         // public functions
@@ -226,6 +235,25 @@ var AnaphoraAndContrast = function() {
                 antecedent.addClassName('antecedent');
                 drawLineBetweenElements(token, antecedent);
             }
+        },
+
+        showContrastGroupsFor: function(token) {
+            if(tokens === null) {
+                // Because this function may be called by another module before we get a chance to call init
+                this.init();
+            }
+
+            // Remove the display of contrast group for any previously selected annotatable
+            clearContrasts();
+        },
+
+        // Show the specified contrast number
+        showContrastNo: function(number) {
+            if(!number) return;
+
+            clearContrasts();
+            $$('.sentence-divisions .con-' + number + 'a').invoke('addClassName', 'contrast1');
+            $$('.sentence-divisions .con-' + number + 'b').invoke('addClassName', 'contrast2');
         }
     }
 }();

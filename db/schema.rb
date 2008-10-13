@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080929124518) do
+ActiveRecord::Schema.define(:version => 20081013160159) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -158,6 +158,7 @@ ActiveRecord::Schema.define(:version => 20080929124518) do
   end
 
   add_index "sentences", ["source_division_id", "sentence_number"], :name => "index_sentences_on_source_division_id_and_sentence_number"
+  add_index "sentences", ["chapter"], :name => "index_sentences_on_chapter"
 
   create_table "slash_edge_interpretations", :force => true do |t|
     t.string "tag",     :limit => 64,  :default => "", :null => false
@@ -215,13 +216,17 @@ ActiveRecord::Schema.define(:version => 20080929124518) do
     t.boolean  "capitalisation",                                                                                                       :default => false, :null => false
     t.enum     "info_status",       :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :no_info_status, :info_unannotatable]
     t.string   "empty_token_sort",  :limit => 1
+    t.integer  "anaphor_id"
+    t.string   "contrast_group"
   end
 
   add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true
+  add_index "tokens", ["anaphor_id"], :name => "index_tokens_on_anaphor_id", :unique => true
   add_index "tokens", ["lemma_id"], :name => "index_tokens_on_lemma_id"
   add_index "tokens", ["relation"], :name => "index_tokens_on_relation"
   add_index "tokens", ["morphtag"], :name => "index_tokens_on_morphtag"
   add_index "tokens", ["head_id"], :name => "index_tokens_on_head_id"
+  add_index "tokens", ["contrast_group"], :name => "index_tokens_on_contrast_group"
 
   create_table "users", :force => true do |t|
     t.string   "login",                                   :default => "",        :null => false
