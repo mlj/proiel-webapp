@@ -70,6 +70,10 @@ class InfoStatusesController < ApplicationController
     if params[:tokens]
       params[:tokens].each_pair do |id, values|
         ids_ary << id
+        if id.starts_with?('new')
+          attributes_ary << {:info_status => values.tr('-', '_')}
+          next
+        end
 
         antecedent_id = nil
         contrast_group = nil
