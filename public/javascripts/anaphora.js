@@ -241,7 +241,11 @@ var AnaphoraAndContrast = function() {
         createNewContrast: function() {
             clearContrasts();
             var options = $('contrast-select').options;
-            var new_contrast_no = parseInt(options[options.length - 1].value) + 1;
+            var highest_contrast_no = parseInt(options[options.length - 1].value);
+            if(isNaN(highest_contrast_no)) {
+                highest_contrast_no = 0;
+            }
+            var new_contrast_no = highest_contrast_no + 1;
             options[options.length] = new Option(new_contrast_no, new_contrast_no, false, true);
         }
     }
