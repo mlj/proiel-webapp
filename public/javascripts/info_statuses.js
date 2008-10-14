@@ -99,7 +99,7 @@ var InfoStatus = function() {
                     // from the annotatables
                     InfoStatus.selectToken(annotatables[selected_token_index === annotatables.length ? 0 : selected_token_index]);
                 }
-                else {
+                else if(css != 'old') {
                     InfoStatus.selectToken(annotatables[selected_token_index === annotatables.length - 1 ? 0 : selected_token_index + 1]);
                 }
 
