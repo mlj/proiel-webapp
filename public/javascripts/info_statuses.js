@@ -237,7 +237,6 @@ var InfoStatus = function() {
             });
 
             AnaphoraAndContrast.showAntecedentFor(elm);
-            AnaphoraAndContrast.showContrastGroupsFor(elm);
         },
 
         getSelectedToken: function() {

@@ -228,16 +228,6 @@ var AnaphoraAndContrast = function() {
             }
         },
 
-        showContrastGroupsFor: function(token) {
-            if(tokens === null) {
-                // Because this function may be called by another module before we get a chance to call init
-                this.init();
-            }
-
-            // Remove the display of contrast group for any previously selected annotatable
-            clearContrasts();
-        },
-
         // Show the specified contrast number
         showContrastNo: function(number) {
             clearContrasts();
