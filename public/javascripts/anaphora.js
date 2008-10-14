@@ -52,30 +52,21 @@ var AnaphoraAndContrast = function() {
     function contrastClickHandler(event) {
         if(!(event.altKey && (event.ctrlKey || event.shiftKey))) return;
 
-        var selected_token = InfoStatus.getSelectedToken();
         var display_class_name = 'contrast' + (event.ctrlKey ? '1' : '2')
+        var contrast_select = $('contrast-select');
+        var selected_contrast = contrast_select.options[contrast_select.selectedIndex].value;
+        var group_class_name = 'con-' + selected_contrast + (event.ctrlKey ? 'a' : 'b');
 
         this.addClassName('info-changed');
 
-        if(this.hasClassName(display_class_name)) {
+        if(this.hasClassName(group_class_name)) {
             // The user has clicked a second time in order to remove the contrast item
-            this.removeClassName(display_class_name);
-            var group_class_name = $w(this.className).find(function(cls) {return cls.startsWith('con-')});
             this.removeClassName(group_class_name);
+            this.removeClassName(display_class_name);
         }
         else {
-            var group_class_name = $w(selected_token.className).find(function(cls) {return cls.startsWith('con-')});
-            if(!group_class_name) {
-                // Create a new contrast pair
-                group_class_name = 'con-' + ++group_no + 'a';
-                selected_token.addClassName(group_class_name);
-            }
-            if(event.shiftKey) {
-                // The clicked token belongs to the group that is in contrast to the selected annotatable
-                group_class_name = group_class_name.replace('a', 'b');
-            }
-            this.addClassName(display_class_name);
             this.addClassName(group_class_name);
+            this.addClassName(display_class_name);
         }
     }
 
@@ -249,11 +240,19 @@ var AnaphoraAndContrast = function() {
 
         // Show the specified contrast number
         showContrastNo: function(number) {
+            clearContrasts();
+
             if(!number) return;
 
-            clearContrasts();
             $$('.sentence-divisions .con-' + number + 'a').invoke('addClassName', 'contrast1');
             $$('.sentence-divisions .con-' + number + 'b').invoke('addClassName', 'contrast2');
+        },
+
+        createNewContrast: function() {
+            clearContrasts();
+            var options = $('contrast-select').options;
+            var new_contrast_no = parseInt(options[options.length - 1].value) + 1;
+            options[options.length] = new Option(new_contrast_no, new_contrast_no, false, true);
         }
     }
 }();

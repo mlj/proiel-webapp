@@ -14,7 +14,7 @@ class InfoStatusesController < ApplicationController
   # GET /annotations/1/info_status/edit
   def edit
     @sentence = Sentence.find(params[:annotation_id])
-    @contrast_options = ['<option></option>'] + Token.contrast_groups_for(@sentence.chapter).map(&:to_i).uniq.map do |contrast|
+    @contrast_options = ['<option selected="selected"></option>'] + Token.contrast_groups_for(@sentence.chapter).map(&:to_i).uniq.map do |contrast|
       %Q(<option value="#{contrast}">#{contrast}</option>)
     end
   end
