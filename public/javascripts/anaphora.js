@@ -55,6 +55,11 @@ var AnaphoraAndContrast = function() {
         var display_class_name = 'contrast' + (event.ctrlKey ? '1' : '2')
         var contrast_select = $('contrast-select');
         var selected_contrast = contrast_select.options[contrast_select.selectedIndex].value;
+        if(!selected_contrast) {
+            alert('Please select or create a contrast.');
+            return;
+        }
+
         var group_class_name = 'con-' + selected_contrast + (event.ctrlKey ? 'a' : 'b');
 
         this.addClassName('info-changed');
