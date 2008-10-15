@@ -213,15 +213,17 @@ var AnaphoraAndContrast = function() {
             setEventHandlingForTokens();
         },
 
-        showAntecedentFor: function(token) {
+        showAntecedentFor: function(token, keep_others) {
             if(tokens === null) {
                 // Because this function may be called by another module before we get a chance to call init
                 this.init();
             }
 
-            // Stop showing any other antecedent
-            tokens.invoke('removeClassName', 'antecedent');
-            removeLines();
+            if(!keep_others) {
+                // Stop showing any other antecedent
+                tokens.invoke('removeClassName', 'antecedent');
+                removeLines();
+            }
 
             var antecedentId = getAntecedentIdFor(token);
             if(!antecedentId) return;
@@ -231,6 +233,14 @@ var AnaphoraAndContrast = function() {
                 antecedent.addClassName('antecedent');
                 drawLineBetweenElements(token, antecedent);
             }
+        },
+
+        showAntecedentsForAllAnaphors: function() {
+            $$('.sentence-divisions span[id][lang]').each(function(token) {
+                if(token.className.include('ant-')) {
+                    AnaphoraAndContrast.showAntecedentFor(token, true);
+                }
+            });
         },
 
         // Show the specified contrast number
