@@ -87,7 +87,7 @@ var AnaphoraAndContrast = function() {
     }
 
     function createAntecedentLink(anaphor, antecedent, antecedentClass) {
-        if(InfoStatus.getTokenId(antecedent) >= InfoStatus.getTokenId(anaphor)) {
+        if(InfoStatus.getTokenId(antecedent) >= InfoStatus.getTokenId(anaphor) && !antecedent.innerHTML.startsWith('PRO-')) {
             alert('Antecedents must precede their anaphors!');
             return;
         }
