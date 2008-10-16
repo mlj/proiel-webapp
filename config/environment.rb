@@ -79,7 +79,6 @@ Rails::Initializer.run do |config|
   config.gem 'builder'
   config.gem 'hpricot'
   config.gem 'gchartrb', :lib => 'google_chart'
-  config.gem 'treetop'
   config.gem 'diff-lcs', :lib => 'diff/lcs'
   config.gem 'ruby-sfst', :lib => 'sfst'
   config.gem 'logos'
