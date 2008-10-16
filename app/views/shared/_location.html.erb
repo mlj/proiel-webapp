@@ -7,4 +7,11 @@
   <% if is_reviewer? %>
     <%= link_to("Low-level sentence data", sentence_url(@sentence)) %>
   <% end %>
+  &nbsp;
+  <% if controller.class == InfoStatusesController %>
+    <%= link_to("Sentence divisions, morphology and dependency structure", annotation_url(@sentence)) %>
+  <% end %>
+  <% if is_administrator? && controller.class != InfoStatusesController %>
+    <%= link_to("Information structure", annotation_info_status_url(@sentence)) %>
+  <% end %>
 </div>

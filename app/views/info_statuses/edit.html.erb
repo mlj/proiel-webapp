@@ -20,8 +20,9 @@
     <%= format_reviewer(@sentence, :time => true) %>
   <% end %>
 
-  <% layer("info-status", :title => "Information status") do -%>
-    <%= render :partial => 'info_statuses/legend' %>
+  <% layer("info-status", :title => "Information structure", :actions => [
+    link_to("Show", annotation_info_status_url(@sentence))]) do -%>
+    <%= render :partial => 'info_statuses/legend_edit' %>
     <%= render :partial => 'info_statuses/show' %>
   <% end %>
 
