@@ -213,6 +213,38 @@ class Token < ActiveRecord::Base
                           ).map { |record| record['contrast_group'] }
   end
 
+  # Returns the distance between two tokens measured in number of sentences.
+  # first_token is supposed to precede second_token.
+  def self.sentence_distance_between(first_token, second_token)
+    second_token.sentence.sentence_number - first_token.sentence.sentence_number
+  end
+
+  # Returns the distance between two tokens measured in number of words (i.e., tokens with sort == 'text').
+  # first_token is supposed to precede second_token.
+  def self.word_distance_between(first_token, second_token)
+    if first_token.sentence.sentence_number == second_token.sentence.sentence_number
+      num_words = first_token.sentence.tokens.word.count(:conditions => [
+                                                           'token_number BETWEEN ? AND ?',
+                                                           first_token.token_number,
+                                                           second_token.token_number - 1
+                                                         ])
+    else
+      # Find the number of words following (and including) the first token in its sentence
+      num_words = first_token.sentence.tokens.word.count(:conditions => ['token_number >= ?', first_token.token_number])
+
+      # Find the number of words preceding the second token in its sentence
+      num_words += second_token.sentence.tokens.word.count(:conditions => ['token_number < ?', second_token.token_number])
+
+      # Find the number of words in intervening sentences
+      first_token.sentence.source_division.sentences.find(:all, :conditions => ['sentence_number BETWEEN ? AND ?',
+                                                                                first_token.sentence.sentence_number + 1,
+                                                                                second_token.sentence.sentence_number - 1]).each do |sentence|
+        num_words += sentence.tokens.word.count
+      end
+    end
+    num_words
+  end
+
   protected
 
   def self.search(query, options = {})

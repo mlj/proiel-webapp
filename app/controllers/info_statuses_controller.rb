@@ -32,22 +32,11 @@ class InfoStatusesController < ApplicationController
       if(id.starts_with?('new'))
         create_prodrop_relation(id, attr)
       else
+        token = Token.find(id)
         antecedent_id = attr.delete(:antecedent_id)
-        if antecedent_id
-          # Remove the anaphor from the old antecedent, if any
-          old_antecedent = Token.find(id).antecedent
-          if old_antecedent
-            old_antecedent.anaphor_id = nil
-            old_antecedent.save!
-          end
+        process_anaphor(token, antecedent_id, attr) if antecedent_id
 
-          # Set the anaphor id on the new antecedent
-          Token.find(antecedent_id).update_attribute(:anaphor_id, id)
-        end
-
-        # Update the remaining attributes
-        Token.find(id).update_attributes!(attr)
-
+        token.update_attributes!(attr)
       end
     end
   rescue
@@ -148,4 +137,19 @@ class InfoStatusesController < ApplicationController
     end
   end
 
+  def process_anaphor(anaphor, antecedent_id, attributes)
+    # Remove the anaphor from the old antecedent, if any
+    old_antecedent = anaphor.antecedent
+    if old_antecedent
+      old_antecedent.anaphor_id = nil
+      old_antecedent.save!
+    end
+
+    # Set the new antecedent
+    anaphor.antecedent = Token.find(antecedent_id)
+
+    # Set the distance to the antecedent in terms of tokens and sentences
+    anaphor.antecedent_dist_in_words = Token.word_distance_between(anaphor.antecedent, anaphor)
+    anaphor.antecedent_dist_in_sentences = Token.sentence_distance_between(anaphor.antecedent, anaphor)
+  end
 end
