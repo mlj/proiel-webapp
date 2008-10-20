@@ -28,13 +28,22 @@ class InfoStatusesController < ApplicationController
     # arguments to the ActiveRecord::Base.update method (like in the example in the
     # standard Rails documentation for the method). But can we...?
     ids, attributes = get_ids_and_attributes_from_params
+
+    new_token_ids = {}
     ids.zip(attributes).each do |id, attr|
       if id.starts_with?('new')
         token = create_prodrop_relation(id, attr)
+
+        # Map the fake new# id to the real id the token got after saving
+        new_token_ids[id] = token.id
       else
         token = Token.find(id)
       end
       antecedent_id = attr.delete(:antecedent_id)
+
+      # If the antecedent is a prodrop token, find the real id that has been created for it
+      antecedent_id = new_token_ids[antecedent_id] if antecedent_id && antecedent_id.starts_with?('new')
+
       process_anaphor(token, antecedent_id, attr) if antecedent_id
 
       attr.delete(:relation)
@@ -54,12 +63,19 @@ class InfoStatusesController < ApplicationController
   #########
 
   def get_ids_and_attributes_from_params
-    ids_ary = []
-    attributes_ary = []
+    # Put new and existing tokens into separate arrays to make sure new tokens are saved first
+    new_ids_ary = []
+    new_attributes_ary = []
+    existing_ids_ary = []
+    existing_attributes_ary = []
 
     if params[:tokens]
       params[:tokens].each_pair do |id, values|
-        ids_ary << id
+        if id.starts_with?('new')
+          new_ids_ary << id
+        else
+          existing_ids_ary << id
+        end
 
         relation = nil
         verb_id = nil
@@ -78,7 +94,7 @@ class InfoStatusesController < ApplicationController
           end
         end
 
-        attributes_ary << {
+        attr = {
           :relation => relation,
           :verb_id => verb_id,
           :antecedent_id => antecedent_id,
@@ -86,11 +102,17 @@ class InfoStatusesController < ApplicationController
         }
         # Only set the info status category of the token unless it is null (which will happen if the
         # token is not part of the focussed sentence but is nevertheless included in a contrast group)
-        attributes_ary.last[:info_status] = category.tr('-', '_').to_sym if category
+        attr[:info_status] = category.tr('-', '_').to_sym if category
+
+        if id.starts_with?('new')
+          new_attributes_ary << attr
+        else
+          existing_attributes_ary << attr
+        end
       end
     end
 
-    [ids_ary, attributes_ary]
+    [new_ids_ary + existing_ids_ary, new_attributes_ary + existing_attributes_ary]
   end
 
   def create_prodrop_relation(prodrop_id, prodrop_attr)
