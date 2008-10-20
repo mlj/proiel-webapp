@@ -31,6 +31,7 @@ var Prodrop = function() {
         prodrop_token.update(prodrop_text[relation]);
         insertion.set(prodrop_positions[relation], prodrop_token);
         selected_verb.insert(insertion.toObject());
+        AnaphoraAndContrast.addToken(prodrop_token);
 
         menu.hide();
         InfoStatus.setAnnotatablesAndUnannotatables();

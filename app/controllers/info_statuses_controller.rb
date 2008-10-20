@@ -29,15 +29,17 @@ class InfoStatusesController < ApplicationController
     # standard Rails documentation for the method). But can we...?
     ids, attributes = get_ids_and_attributes_from_params
     ids.zip(attributes).each do |id, attr|
-      if(id.starts_with?('new'))
-        create_prodrop_relation(id, attr)
+      if id.starts_with?('new')
+        token = create_prodrop_relation(id, attr)
       else
         token = Token.find(id)
-        antecedent_id = attr.delete(:antecedent_id)
-        process_anaphor(token, antecedent_id, attr) if antecedent_id
-
-        token.update_attributes!(attr)
       end
+      antecedent_id = attr.delete(:antecedent_id)
+      process_anaphor(token, antecedent_id, attr) if antecedent_id
+
+      attr.delete(:relation)
+      attr.delete(:verb_id)
+      token.update_attributes!(attr)
     end
   rescue
     render :text => $!, :status => 500
@@ -58,16 +60,17 @@ class InfoStatusesController < ApplicationController
     if params[:tokens]
       params[:tokens].each_pair do |id, values|
         ids_ary << id
-        if id.starts_with?('new')
-          attributes_ary << {:info_status => values.tr('-', '_')}
-          next
-        end
 
+        relation = nil
+        verb_id = nil
         antecedent_id = nil
         contrast_group = nil
         category = nil
         values.split(';').each do |part|
           case part
+          when /^prodrop-(.+?)-token-(\d+)/
+            relation = $1
+            verb_id = $2
           when /^ant-/: antecedent_id = part.slice('ant-'.length..-1)
           when /^con-/: contrast_group = part.slice('con-'.length..-1)
           when 'null':  # the "category" of a member of a contrast group which is from a non-focussed sentence
@@ -76,6 +79,8 @@ class InfoStatusesController < ApplicationController
         end
 
         attributes_ary << {
+          :relation => relation,
+          :verb_id => verb_id,
           :antecedent_id => antecedent_id,
           :contrast_group => contrast_group
         }
@@ -89,10 +94,8 @@ class InfoStatusesController < ApplicationController
   end
 
   def create_prodrop_relation(prodrop_id, prodrop_attr)
-    prodrop_attr[:info_status].to_s =~ /(.+?);prodrop_(.+?)_token_(\d+)/
-    info_status = $1
-    relation = $2
-    verb_id = $3.to_i
+    relation = prodrop_attr[:relation]
+    verb_id = prodrop_attr[:verb_id]
 
     graph = @sentence.dependency_graph
     verb_node = graph[verb_id]
@@ -104,12 +107,13 @@ class InfoStatusesController < ApplicationController
                                                :form => 'PRO-' + relation.upcase,
                                                :relation => relation,
                                                :sort => :prodrop,
-                                               :info_status => info_status
+                                               :info_status => prodrop_attr[:info_status]
                                              })
     adjust_token_numbers(prodrop_token, verb_token, relation)
     prodrop_node = graph.node_class
     graph.add_node(prodrop_token.id, relation, verb_token.id)
     @sentence.syntactic_annotation = graph
+    prodrop_token
   end
 
   # Moves a new prodrop token to the correct position in the token_number sequence

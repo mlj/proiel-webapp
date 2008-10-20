@@ -262,6 +262,13 @@ var AnaphoraAndContrast = function() {
             }
             var new_contrast_no = highest_contrast_no + 1;
             options[options.length] = new Option(new_contrast_no, new_contrast_no, false, true);
+        },
+
+        // Adds the given token, which should be a token-span, to the tokens array
+        addToken: function(token) {
+            token.observe('click', antecedentClickHandler);
+            token.observe('click', contrastClickHandler);
+            tokens.push(token);
         }
     }
 }();

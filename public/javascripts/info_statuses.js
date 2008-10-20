@@ -149,7 +149,6 @@ var InfoStatus = function() {
                     var klass = classes[i];
                     if(klass.startsWith('ant-') || klass.startsWith('con-')) {
                         category += ';' + klass;
-                        break;
                     }
                 }
 
