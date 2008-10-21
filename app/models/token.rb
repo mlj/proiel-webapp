@@ -216,7 +216,9 @@ class Token < ActiveRecord::Base
   # Returns the distance between two tokens measured in number of sentences.
   # first_token is supposed to precede second_token.
   def self.sentence_distance_between(first_token, second_token)
-    second_token.sentence.sentence_number - first_token.sentence.sentence_number
+    first_token.sentence.source_division.sentences.count(:all, :conditions => ['sentence_number BETWEEN ? AND ?',
+                                                                               first_token.sentence.sentence_number,
+                                                                               second_token.sentence.sentence_number]) - 1
   end
 
   # Returns the distance between two tokens measured in number of words (i.e., tokens with sort == 'text').
