@@ -7,7 +7,8 @@
 $KCODE = 'u'
 
 # Release number
-PROIEL_RELEASE = '20080911'
+PROIEL_RELEASE_FILE = File.join(RAILS_ROOT, "RELEASE")
+PROIEL_RELEASE = File.readable?(PROIEL_RELEASE_FILE) ? IO.read(PROIEL_RELEASE_FILE).strip : "unreleased"
 
 # Unicode normalization form for normalised text columns. Choices are :kc, :c, :kd, :d
 # (see http://unicode.org/reports/tr15/ for details). The default choice is :c, and it is
