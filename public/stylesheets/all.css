@@ -138,7 +138,7 @@ thead, tfoot { background-color: #f0f0f0; }
 
 /* Text view */
 
-.book-name, .chapter-number, .verse-number { color: #678090; }
+.book-name, .verse-number { color: #678090; }
 .sentence-number, .token-number { color: #F7A700; }
 
 .text-view { 
@@ -147,15 +147,6 @@ thead, tfoot { background-color: #f0f0f0; }
   text-align: justify;
   margin-left: 2em;
   margin-right: 2em;
-}
-
-.text-view .chapter-number {
-  float: left;
-  font-family: Georgia, serif;
-  font-size: 300%;
-  line-height: 0.97em;
-  margin-right: 0.07em;
-  margin-bottom: -0.25em;
 }
 
 .text-view a:link, .text-view a:visited { color: black; }
@@ -269,8 +260,6 @@ a.token {
   font-weight: bold;
   color: orange;
 }
-
-.chapter-number { font-weight: bold; }
 
 .verse-number {
   font-weight: bold;

@@ -44,15 +44,11 @@ class Sentence < ActiveRecord::Base
     { :conditions => { :source_division_id => source.source_divisions.map(&:id) } }
   }
 
-  # Sentences in chapter +chapter+.
-  named_scope :by_chapter, lambda { |chapter| { :conditions => { :chapter => chapter } } }
-
   # Sentences that have been black-listed in sentence alignment.
   named_scope :unalignable, :conditions => { "unalignable" => true }
 
   # General schema-defined validations
   validates_presence_of :source_division_id
-  validates_presence_of :chapter
   validates_presence_of :sentence_number
 
   validate :check_invariants
@@ -114,12 +110,12 @@ class Sentence < ActiveRecord::Base
                         else
                           verses = tokens.word.first.verse..tokens.word.last.verse
                           if verses.first == verses.last
-                            [chapter, verses.first] * ':'
+                            verses.first
                           else
-                            [chapter, "#{verses.first}-#{verses.last}"] * ':'
+                            "#{verses.first}-#{verses.last}"
                           end
                         end
-    [source_division.citation(options), sentence_citation] * ' '
+    [source_division.citation(options), sentence_citation] * ':'
   end
 
   # Remove all dependency annotation from a sentence and save the changes.
@@ -230,7 +226,6 @@ class Sentence < ActiveRecord::Base
         # Copy all attributes
         new_s = source_division.sentences.create
         new_s.sentence_number = sentence_number + 1
-        new_s.chapter = chapter
         new_s.save!
 
         # Finally, shuffle our last token over to the new sentence.

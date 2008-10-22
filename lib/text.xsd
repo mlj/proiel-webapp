@@ -23,49 +23,25 @@
   <xs:complexType name="Text">
     <xs:sequence>
       <xs:element name="metadata" minOccurs="0" maxOccurs="1" type="Metadata"/>
-      <xs:element name="book" minOccurs="1" maxOccurs="unbounded" type="Book"/>
+      <xs:element name="div" minOccurs="1" maxOccurs="unbounded" type="Div"/>
     </xs:sequence>
     <xs:attribute name="id" type="xs:string" use="required"/>
     <xs:attribute name="lang" type="xs:string" use="required"/>
   </xs:complexType>
 
-  <xs:simpleType name="BookID">
+  <xs:simpleType name="DivType">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="MATT"/>
-      <xs:enumeration value="MARK"/>
-      <xs:enumeration value="LUKE"/>
-      <xs:enumeration value="JOHN"/>
-      <xs:enumeration value="ACTS"/>
-      <xs:enumeration value="ROM"/>
-      <xs:enumeration value="1COR"/>
-      <xs:enumeration value="2COR"/>
-      <xs:enumeration value="GAL"/>
-      <xs:enumeration value="EPH"/>
-      <xs:enumeration value="PHIL"/>
-      <xs:enumeration value="COL"/>
-      <xs:enumeration value="1THESS"/>
-      <xs:enumeration value="2THESS"/>
-      <xs:enumeration value="1TIM"/>
-      <xs:enumeration value="2TIM"/>
-      <xs:enumeration value="TIT"/>
-      <xs:enumeration value="PHILEM"/>
-      <xs:enumeration value="HEB"/>
-      <xs:enumeration value="JAS"/>
-      <xs:enumeration value="1PET"/>
-      <xs:enumeration value="2PET"/>
-      <xs:enumeration value="1JOHN"/>
-      <xs:enumeration value="2JOHN"/>
-      <xs:enumeration value="3JOHN"/>
-      <xs:enumeration value="JUDE"/>
-      <xs:enumeration value="REV"/>
+      <xs:enumeration value="book"/>
+      <xs:enumeration value="chapter"/>
     </xs:restriction>
   </xs:simpleType> 
 
-  <xs:complexType name="Book">
+  <xs:complexType name="Div">
     <xs:sequence>
       <xs:element name="sentence" minOccurs="1" maxOccurs="unbounded" type="Sentence"/>
     </xs:sequence>
-    <xs:attribute name="name" type="BookID" use="required"/>
+    <xs:attribute name="type" type="TypeID" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="Sentence">
@@ -99,7 +75,6 @@
       <xs:element name="emendations" minOccurs="0" maxOccurs="1" type="Emendations"/>
     </xs:sequence>
 
-    <xs:attribute name="chapter" type="xs:integer"/>
     <xs:attribute name="verse" type="xs:integer"/>
 
     <xs:attribute name="morphtag" type="xs:string"/>

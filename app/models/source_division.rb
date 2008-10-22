@@ -13,14 +13,9 @@ class SourceDivision < ActiveRecord::Base
   end
 
   def sentence_alignments(options = {})
-    # FIXME: how is it best to determine where the main divisions should be? Edit the whole
-    # book at once with a paginated view and chapters used to insert default anchors? One
-    # editor view per chapter? Source divisions per chapter?
-    options[:chapter] = 3
-
     if aligned_source_division
-      base_sentences = sentences.by_chapter(options[:chapter])
-      aligned_sentences = aligned_source_division.sentences.by_chapter(options[:chapter])
+      base_sentences = sentences
+      aligned_sentences = aligned_source_division.sentences
 
       align_sentences(aligned_sentences, base_sentences)
     else

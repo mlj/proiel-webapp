@@ -67,7 +67,7 @@ class PROIELXMLImport < SourceImport
 
     import.read_tokens(args) do |form, attributes|
       if book != attributes[:book]
-        book = attributes[:book]
+        book = attributes[:book] #FIXME!!! now by book AND chapter!
         source_division = SourceDivision.find_by_fields("book=#{book}").id
         sentence_number = nil
         STDOUT.puts "Importing book #{book} for source #{source.code}..."

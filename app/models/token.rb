@@ -152,8 +152,8 @@ class Token < ActiveRecord::Base
     if options[:internal]
       [sentence.citation(options), token_number] * '.'
     else
-      token_citation = [[sentence.chapter, verse] * ':', token_number] * '.'
-      [sentence.source_division.citation(options), token_citation] * ' '
+      token_citation = [verse, token_number] * '.'
+      [sentence.source_division.citation(options), token_citation] * ':'
     end
   end
 

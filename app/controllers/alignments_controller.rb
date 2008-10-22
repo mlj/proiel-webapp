@@ -1,6 +1,5 @@
 class AlignmentsController < ApplicationController
   def edit
-    params[:chapter] ||= 1
     @source_division = SourceDivision.find(params[:id])
     @alignments = @source_division.sentence_alignments
   end

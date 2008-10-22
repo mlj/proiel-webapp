@@ -6,14 +6,8 @@ module SentenceFormattingHelper
   # array of +Token+ objects.
   #
   # ==== Options
-  # chapter_numbers:: If +true+, will prepend chapter numbers in front of
-  # the sentence. The number will be contained in a +span+ of class
-  # +chapter-number+.
-  #
-  # verse_numbers:: If +all+, will insert all verse numbers between the words
-  # of the sentence. Each number will be contained within a +span+ of class
-  # +verse-number+. If +noninitial+, will insert all verse numbers except
-  # the first.
+  # verse_numbers:: If +true+, will insert all verse numbers between the words
+  # of the sentence.
   #
   # sentence_numbers:: If +true+, will insert sentence numbers between the
   # words of the sentence. Each number will be contained within a +span+ of
@@ -69,7 +63,6 @@ module SentenceFormattingHelper
   UNICODE_HORIZONTAL_ELLIPSIS = Unicode::U2026
 
   FORMATTED_REFERENCE_CLASSES = {
-    :chapter => 'chapter-number',
     :verse => 'verse-number',
     :sentence => 'sentence-number',
     :token => 'token-number',
@@ -90,12 +83,10 @@ module SentenceFormattingHelper
 
     def selected?(options)
       case reference_type
-      when :chapter
-        options[:chapter_numbers]
       when :sentence
         options[:sentence_numbers]
       when :verse
-        options[:verse_numbers] == :all || (options[:verse_numbers] == :noninitial and reference_value != 1)
+        options[:verse_numbers]
       when :token
         options[:token_numbers]
       else
@@ -229,7 +220,6 @@ module SentenceFormattingHelper
         next
       end
 
-      t << check_reference_update(state, :chapter, token.sentence.chapter, token.sentence.chapter.to_i)
       t << check_reference_update(state, :sentence, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
       t << check_reference_update(state, :verse, token.verse, token.verse.to_i)
 

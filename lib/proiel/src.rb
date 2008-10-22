@@ -103,7 +103,7 @@ module PROIEL
               case k
               when 'form', 'references', 'lemma', 'morphtag'
                 a[k.to_sym] = v
-              when 'chapter', 'verse'
+              when 'verse'
                 a[k.to_sym] = v.to_i
               when 'presentation-span'
                 a[:presentation_span] = v.to_i

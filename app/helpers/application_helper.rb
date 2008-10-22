@@ -169,7 +169,9 @@ module ApplicationHelper
     fields = sentence.source_division.fields
     # FIXME: hard-coded for now. Change this when I figure out this is
     # really supposed to work.
-    keys = { :book => fields.sub(/^book=/, ''), :chapter => sentence.chapter, :verse => sentence.tokens.word.first.verse }
+    keys = { :book => fields.match(/book=([A-Z]+)/)[1],
+             :chapter => fields.match(/chapter=(\d+)/)[1],
+             :verse => sentence.tokens.word.first.verse }
 
     [ link_to('Biblos',     BiblosExternalLinkMapper.instance.to_url(keys), :class => 'external'),
       link_to('bibelen.no', BibelenNOExternalLinkMapper.instance.to_url(keys), :class => 'external'), ] * '&nbsp;';

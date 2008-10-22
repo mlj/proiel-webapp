@@ -71,7 +71,11 @@ class PROIELXMLExport < SourceExport
     builder.text(:id => identifier, :lang => @source.language.iso_code) do
       builder.metadata { write_metadata(builder) }
       @source.source_divisions.each do |source_division|
-        builder.book(:name => source_division.fields.sub(/^book=/, '')) { write_source_division(builder, source_division) }
+        builder.div(:type => 'book', :name => source_division.fields.match(/book=([A-Z]+)/)[1]) do
+          builder.div(:type => 'chapter', :name => source_division.fields.match(/chapter=(\d+)/)[1]) do
+            write_source_division(builder, source_division)
+          end
+        end
       end
     end
   end
@@ -93,7 +97,7 @@ class PROIELXMLExport < SourceExport
 
   def write_sentence(builder, sentence)
     sentence.tokens.each do |token|
-      attributes = { :id => token.id, :chapter => sentence.chapter, }
+      attributes = { :id => token.id }
       attributes[:head] = token.head_id if token.head
       attributes[:lemma] = token.morph_lemma_tag.lemma if token.morph_lemma_tag
       attributes[:sort] = token.sort.to_s.gsub('_', '-')

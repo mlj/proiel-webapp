@@ -5,7 +5,7 @@
 
 <div class="sentence-divisions">
   <%= format_sentence(@sentence.previous_sentences.last(5) + [@sentence] + @sentence.next_sentences.first(5),
-                      { :verse_numbers => :all, :highlight => @sentence.tokens, :sentence_numbers => true }) %>
+                      { :verse_numbers => true, :highlight => @sentence.tokens, :sentence_numbers => true }) %>
 </div>
 
 <div class="adjustment-area">
