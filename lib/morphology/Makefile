@@ -1,4 +1,5 @@
 TARGETS=\
+  cu.ca \
   cu-rules.db \
   grc-rules.db \
   la-rules.db \
