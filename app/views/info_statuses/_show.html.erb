@@ -7,6 +7,6 @@
   <% end %>
 </div>
 <div class="sentence-divisions">
-  <%= format_sentence(@sentence.previous_sentences.last(7) + [@sentence] + @sentence.next_sentences.first(1),
+  <%= format_sentence(@sentence.previous_sentences.last(num_previous_sentences) + [@sentence] + @sentence.next_sentences.first(num_next_sentences),
     { :verse_numbers => true, :information_status => true, :highlight => @sentence.tokens }) %>
 </div>
