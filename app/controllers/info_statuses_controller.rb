@@ -4,7 +4,7 @@ class InfoStatusesController < ApplicationController
   # GET /annotations/1/info_status
   def show
     @sentence = Sentence.find(params[:annotation_id])
-    set_contrast_options_for(@sentence.chapter)
+    set_contrast_options_for(@sentence.source_division)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -15,7 +15,7 @@ class InfoStatusesController < ApplicationController
   # GET /annotations/1/info_status/edit
   def edit
     @sentence = Sentence.find(params[:annotation_id])
-    set_contrast_options_for(@sentence.chapter)
+    set_contrast_options_for(@sentence.source_division)
   end
 
 
@@ -157,8 +157,8 @@ class InfoStatusesController < ApplicationController
     prodrop_token.save!
   end
 
-  def set_contrast_options_for(chapter)
-    @contrast_options = ['<option selected="selected"></option>'] + Token.contrast_groups_for(chapter).map(&:to_i).uniq.map do |contrast|
+  def set_contrast_options_for(source_division)
+    @contrast_options = ['<option selected="selected"></option>'] + Token.contrast_groups_for(source_division).map(&:to_i).uniq.map do |contrast|
       %Q(<option value="#{contrast}">#{contrast}</option>)
     end
   end
