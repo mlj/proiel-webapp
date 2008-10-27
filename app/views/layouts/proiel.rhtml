@@ -52,6 +52,7 @@
             <%= text_field_tag :q, params[:q], :size => 15 %>
             <%= submit_tag 'Search' %>
           <% end %>
+          <%= link_to 'Downloads', site_path('public_data') %>
           <%= link_to 'Help', site_path('help'), :accesskey => '6' %>
           <%= link_to 'Logout', logout_path %>
         </span>
