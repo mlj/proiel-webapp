@@ -7,8 +7,7 @@
 $KCODE = 'u'
 
 # Release number
-PROIEL_RELEASE_FILE = File.join(RAILS_ROOT, "RELEASE")
-PROIEL_RELEASE = File.readable?(PROIEL_RELEASE_FILE) ? IO.read(PROIEL_RELEASE_FILE).strip : "unreleased"
+PROIEL_RELEASE = '20080911'
 
 # Unicode normalization form for normalised text columns. Choices are :kc, :c, :kd, :d
 # (see http://unicode.org/reports/tr15/ for details). The default choice is :c, and it is
@@ -36,11 +35,11 @@ Rails::Initializer.run do |config|
   # To use Rails without a database, you must remove the Active Record framework
   config.frameworks -= [ :active_resource ]
 
-  # Only load the plugins named here, in the order given. By default, all plugins 
+  # Only load the plugins named here, in the order given. By default, all plugins
   # in vendor/plugins are loaded in alphabetical order.
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
-  config.plugins = [ :userstamp, :all ] 
+  config.plugins = [ :userstamp, :all ]
 
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
@@ -51,7 +50,7 @@ Rails::Initializer.run do |config|
 
   # Your secret key for verifying cookie session data integrity.
   # If you change this key, all old sessions will become invalid!
-  # Make sure the secret is at least 30 characters and all random, 
+  # Make sure the secret is at least 30 characters and all random,
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
     :session_key => '_proiel_session',
