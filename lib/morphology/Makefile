@@ -5,6 +5,7 @@ TARGETS=\
   got-rules.db \
   la-generated.db \
   got-generated.db \
+  xcl-generated.db \
   cu-normalisation.ca \
   cu-orthographics.ca
 

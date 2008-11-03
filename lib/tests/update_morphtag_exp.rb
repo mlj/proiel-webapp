@@ -5,7 +5,7 @@ require 'proiel'
 File.open(File.join(File.dirname(__FILE__), "update_morphtag_exp.txt")) do |f|
   f.each_line do |l|
     l.chomp!
-    [:la, :grc, :got, :hy, :cu].each do |n|
+    [:la, :grc, :got, :xcl, :cu].each do |n|
       m = PROIEL::MorphTag.new(l)
       puts [l, n, m.is_valid?(n)].join(',')
     end

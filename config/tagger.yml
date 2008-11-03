@@ -1,4 +1,11 @@
 :languages:
+  :xcl:
+    :instance_frequencies:
+      true
+    :generated_rules:
+      xcl-generated.db
+    :source_tag_pattern_filtering:
+      true
   :got:
     :instance_frequencies:
       true
