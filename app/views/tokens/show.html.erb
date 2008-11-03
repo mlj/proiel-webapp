@@ -18,7 +18,7 @@
     <dt>Morphtag:</dt><%= fmt_morphtag(@token, 'dd') %>
     <dt>Part of speech:</dt><dd><%= readable_pos(@token.morph) %></dd>
     <dt>Morphology:</dt><dd><%= readable_morphology(@token.morph) %></dd>
-    <dt>Lemma:</dt><dd class="foreign-word"><%= @token.lemma ? link_to(format_lemma_form(@token.lemma), @token.lemma) : '&nbsp;' %></dd>
+    <dt>Lemma:</dt><dd class="foreign-word"><%= @token.lemma ? link_to_lemma(@token.lemma) : '&nbsp;' %></dd>
     <% if @token.source_morphtag %>
       <dt>Source morphtag:</dt><%= fmt_source_morphtag(@token, 'dd') %>
     <% end %>

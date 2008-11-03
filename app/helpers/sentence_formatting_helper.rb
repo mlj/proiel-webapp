@@ -6,17 +6,8 @@ module SentenceFormattingHelper
   # array of +Token+ objects.
   #
   # ==== Options
-  # book_names:: If +true+, will prepend book names in front of the sentences.
-  # The name will be contained within a +spann+ of class +book-name+.
-  #
-  # chapter_numbers:: If +true+, will prepend chapter numbers in front of
-  # the sentence. The number will be contained in a +span+ of class
-  # +chapter-number+.
-  #
-  # verse_numbers:: If +all+, will insert all verse numbers between the words
-  # of the sentence. Each number will be contained within a +span+ of class
-  # +verse-number+. If +noninitial+, will insert all verse numbers except
-  # the first.
+  # verse_numbers:: If +true+, will insert all verse numbers between the words
+  # of the sentence.
   #
   # sentence_numbers:: If +true+, will insert sentence numbers between the
   # words of the sentence. Each number will be contained within a +span+ of
@@ -42,18 +33,21 @@ module SentenceFormattingHelper
   #
   # information_status:: If +true+, will put each token inside a span with a
   # class named as "info-status-#{token.info_status}"
+  #
+  # <tt>:ignore_links</tt> -- If +true+, will not produce links to other
+  # resources, e.g. to annotation views for sentences, in the sentence.
   def format_sentence(value, options = {})
     options.reverse_merge! :highlight => [], :custom_style => []
 
     x = nil
 
     if value.is_a?(Sentence)
-      x = value.tokens_with_dependents
+      x = value.tokens_with_dependents_and_info_structure
     elsif value.is_a?(Array)
       if value.empty?
         return []
       elsif value.first.is_a?(Sentence)
-        x = value.map { |sentence| sentence.tokens_with_dependents }.flatten
+        x = value.map { |sentence| sentence.tokens_with_dependents_and_info_structure }.flatten
       elsif value.first.is_a?(Token)
         x = value
       end
@@ -69,8 +63,6 @@ module SentenceFormattingHelper
   UNICODE_HORIZONTAL_ELLIPSIS = Unicode::U2026
 
   FORMATTED_REFERENCE_CLASSES = {
-    :book => 'book-name',
-    :chapter => 'chapter-number',
     :verse => 'verse-number',
     :sentence => 'sentence-number',
     :token => 'token-number',
@@ -91,14 +83,10 @@ module SentenceFormattingHelper
 
     def selected?(options)
       case reference_type
-      when :book
-        options[:book_names]
-      when :chapter
-        options[:chapter_numbers]
       when :sentence
         options[:sentence_numbers]
       when :verse
-        options[:verse_numbers] == :all || (options[:verse_numbers] == :noninitial and reference_value != 1)
+        options[:verse_numbers]
       when :token
         options[:token_numbers]
       else
@@ -141,11 +129,17 @@ module SentenceFormattingHelper
         content_tag(:span, UNICODE_HORIZONTAL_ELLIPSIS, :class => (css << 'lacuna') * ' ', :title => title)
       when :punctuation
         content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ', :title => title)
-      when :text
+      when :text, :prodrop
         if link
           link_to(LangString.new(text, language).to_h, link, :class => (css << 'token') * ' ', :title => title)
         elsif options[:information_status]
-          css << info_status_css_class if options[:highlight].include?(token)
+          if options[:highlight].include?(token)
+            css << info_status_css_class
+            css << 'ant-' + token.antecedent.id.to_s if token.antecedent
+            css << 'con-' + token.contrast_group if token.contrast_group
+            css << 'verb' if token.is_verb?
+          end
+          css << 'con-' + token.contrast_group if token.contrast_group
           LangString.new(text, language, :id => 'token-' + token.id.to_s, :css => css * ' ', :title => title).to_h
         else
           content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ', :title => title)
@@ -160,7 +154,7 @@ module SentenceFormattingHelper
     def info_status_css_class
       @info_status_css_class ||= if token.info_status && token.info_status != :info_unannotatable
                                    'info-annotatable ' + token.info_status.to_s.gsub('_', '-')
-                                 elsif token.annotatable?
+                                 elsif token.is_annotatable?
                                    'info-annotatable no-info-status'
                                  else
                                    'info-unannotatable'
@@ -226,8 +220,6 @@ module SentenceFormattingHelper
         next
       end
 
-      t << check_reference_update(state, :book, token.sentence.book, token.sentence.book.title)
-      t << check_reference_update(state, :chapter, token.sentence.chapter, token.sentence.chapter.to_i)
       t << check_reference_update(state, :sentence, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
       t << check_reference_update(state, :verse, token.verse, token.verse.to_i)
 
@@ -235,12 +227,12 @@ module SentenceFormattingHelper
       extra_css << :highlight if options[:highlight].include?(token)
 
       if token.presentation_form and not options[:ignore_presentation_forms]
-        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, annotation_path(token.sentence), nil, extra_css)
+        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, options[:ignore_links] ? nil : annotation_path(token.sentence), nil, extra_css)
         skip_tokens = token.presentation_span - 1
       elsif options[:information_status]
         t << FormattedToken.new(token.sort, token.form, token.nospacing, nil, nil, extra_css, token)
       else
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, annotation_path(token.sentence), token.lemma ? "#{token.morph.descriptions([], false) * ', '} (#{token.lemma.export_form})" : nil, extra_css)
+        t << FormattedToken.new(token.sort, token.form, token.nospacing, options[:ignore_links] ? nil : annotation_path(token.sentence), nil, extra_css)
       end
 
       if token.presentation_span and token.presentation_span - 1 > 0

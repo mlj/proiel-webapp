@@ -68,14 +68,15 @@ namespace :proiel do
       end
 
       if source
-        sources = Source.find_by_code(source)
+        sources = Source.find_all_by_code(source)
       else
         sources = Source.find(:all)
       end
 
+      raise "Unable to find any sources to export" if sources.empty?
+
       # Prepare destination directory and ancillary files
       Dir::mkdir(directory) unless File::directory?(directory)
-
 
       sources.each do |source|
         e = klass.new(source, options)
@@ -91,7 +92,7 @@ namespace :proiel do
       directory ||= DEFAULT_EXPORT_DIRECTORY
 
       Dir::mkdir(directory) unless File::directory?(directory)
-      File::copy(File.join(RAILS_ROOT, 'data', 'text.xsd'),
+      File::copy(File.join(RAILS_ROOT, 'lib', 'text.xsd'),
                  File.join(directory, 'text.xsd'))
       File::copy(File.join(RAILS_ROOT, 'lib', 'proiel', 'morphology.xml'),
                  File.join(directory, 'morphology.xml'))

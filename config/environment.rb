@@ -6,9 +6,6 @@
 
 $KCODE = 'u'
 
-# Release number
-PROIEL_RELEASE = '20080911'
-
 # Unicode normalization form for normalised text columns. Choices are :kc, :c, :kd, :d
 # (see http://unicode.org/reports/tr15/ for details). The default choice is :c, and it is
 # recommended that you stick with that unless you have good reasons not to. If you do change
@@ -74,13 +71,19 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
 
   config.gem 'mislav-will_paginate', :version => '~> 2.3.2', :lib => 'will_paginate', :source => 'http://gems.github.com'
+  config.gem 'resource_controller'
   config.gem 'unicode'
   config.gem 'oniguruma'
   config.gem 'builder'
   config.gem 'hpricot'
   config.gem 'gchartrb', :lib => 'google_chart'
-  config.gem 'treetop'
   config.gem 'diff-lcs', :lib => 'diff/lcs'
   config.gem 'ruby-sfst', :lib => 'sfst'
   config.gem 'logos'
+  config.gem 'libxml-ruby', :lib => 'libxml'
+  config.gem 'libxslt-ruby', :lib => 'libxslt'
 end
+
+# Release number
+PROIEL_RELEASE_FILE = File.join(RAILS_ROOT, "RELEASE")
+PROIEL_RELEASE = File.readable?(PROIEL_RELEASE_FILE) ? IO.read(PROIEL_RELEASE_FILE).strip : "unreleased"

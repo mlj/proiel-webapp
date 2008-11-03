@@ -46,47 +46,6 @@ module ApplicationHelper
     end
   end
 
-  # Returns a select tag for relations. 
-  #
-  # ==== Options
-  # +:include_blank+:: If +true+, includes an empty value first.
-  def relation_select_tag(name, value = nil, options = {})
-    relations = PROIEL::RELATIONS.values.collect { |r| r.code.to_s }
-
-    option_tags = relations.collect do |r| 
-      if r == value
-        "<option value='#{r}' selected='selected'>#{r.upcase}</option>"
-      else
-        "<option value='#{r}'>#{r.upcase}</option>"
-      end
-    end.join
-
-    _select_tag name, value, option_tags, options
-  end
-
-  # Returns a select tag for completion rates. 
-  #
-  # ==== Options
-  # +:include_blank+:: If +true+, includes an empty value first.
-  def completion_select_tag(name, value = nil, options = {})
-    value = value.to_sym unless value.nil? or value == ''
-    vals = {
-      :none => 'Not annotated', 
-      :annotated => 'Annotated',
-      :reviewed => 'Reviewed'
-    }
-
-    option_tags = vals.collect do |code, meaning| 
-      if code == value
-        "<option value='#{code}' selected='selected'>#{meaning}</option>"
-      else
-        "<option value='#{code}'>#{meaning}</option>"
-      end
-    end.join
-
-    _select_tag name, value, option_tags, options
-  end
-
   def _select_tag_db(name, model, value_field, value, options) #:nodoc:
     option_tags = options_from_collection_for_select(model.find(:all), :id, value_field, value.to_i)
     _select_tag name, value, option_tags, options
@@ -97,24 +56,7 @@ module ApplicationHelper
   # ==== Options
   # +:include_blank+:: If +true+, includes an empty value first.
   def source_select_tag(name, value, options = {})
-    _select_tag_db(name, Source, :presentation_form, value, options)
-  end
-
-  # Returns a select tag for books.
-  #
-  # ==== Options
-  # +:include_blank+:: If +true+, includes an empty value first.
-  def book_select_tag(name, value, options = {})
-    _select_tag_db(name, Book, :presentation_form, value, options)
-  end
-
-  # Returns a select tag for chapters. 
-  #
-  # ==== Options
-  # +:include_blank+:: If +true+, includes an empty value first.
-  def chapter_select_tag(name, value, options = {})
-    option_tags = options_from_collection_for_select(Sentence.find(:all, :group => 'chapter'), :chapter, :chapter, value.to_i)
-    _select_tag name, value, option_tags, options
+    _select_tag_db(name, Source, :citation, value, options)
   end
 
   # Enters Markaby "mode"; actually just a wrapper for the-semi ugly Markaby + helper hack.
@@ -152,17 +94,12 @@ module ApplicationHelper
   end
 
   # Generates a search form.
-  def search_form_tag(submit_path, &block)
+  def search_form_tag(submit_path, options = {}, &block)
     html_options = html_options_for_form(submit_path, :method => 'get', :class => 'search')
     content = capture(&block)
     concat(form_tag_html(html_options), block.binding)
     concat(content, block.binding)
-    concat(submit_tag('Search', :name => nil) + '</form>', block.binding)
-  end
-
-  # Generates a fancy tool-tip.
-  def tool_tip(tool, tip)
-    %Q{<span class="tool">#{tool}<span class="tip">#{tip}</span></span>}
+    concat(submit_tag(options[:submit] || 'Search', :name => nil) + '</form>', block.binding)
   end
 
   # Generates a human readable representation of a token sort.
@@ -227,20 +164,17 @@ module ApplicationHelper
     '(' + readable_relation(relation) + (head ? ", #{head}" : '') + ')'
   end
 
-  # Generates a human readable location reference.
-  def readable_reference(reference)
-    "#{reference} (#{reference.classical_reference})"
-  end
+  # Returns links to external sites for a sentence.
+  def external_text_links(sentence)
+    fields = sentence.source_division.fields
+    # FIXME: hard-coded for now. Change this when I figure out this is
+    # really supposed to work.
+    keys = { :book => fields.match(/book=([A-Z]+)/)[1],
+             :chapter => fields.match(/chapter=(\d+)/)[1],
+             :verse => sentence.tokens.word.first.verse }
 
-  # Generates a human readable 'yes'/'no' representation of a boolean value.
-  def readable_boolean(x)
-    x ? 'Yes' : 'No'
-  end
-
-  # Generates links to external Bible sites for a reference.
-  def external_text_links(reference)
-    [ link_to('Biblos', reference.external_url(:biblos), :class => 'external'),
-      link_to('bibelen.no', reference.external_url(:bibelen_no), :class => 'external'), ].join('&nbsp;');
+    [ link_to('Biblos',     BiblosExternalLinkMapper.instance.to_url(keys), :class => 'external'),
+      link_to('bibelen.no', BibelenNOExternalLinkMapper.instance.to_url(keys), :class => 'external'), ] * '&nbsp;';
   end
 
   def wizard_options(ignore, options)
@@ -292,10 +226,6 @@ module ApplicationHelper
   # +layer+.
   def layer_unless(condition, *args, &block)
     layer_if(!condition, *args, &block)
-  end
-
-  def format_ratio(part, total)
-    number_with_precision(part.to_i * 100 / total.to_f, 1) + '%'
   end
 
   # Creates hidden 'Previous' and 'Next' links for per-sentence annotation displays

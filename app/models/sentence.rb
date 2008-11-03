@@ -1,20 +1,19 @@
 class Sentence < ActiveRecord::Base
-  belongs_to :book
-  belongs_to :source
+  belongs_to :source_division
   has_many :bookmarks
   has_many :notes, :as => :notable, :dependent => :destroy
 
   belongs_to :annotator, :class_name => 'User', :foreign_key => 'annotated_by'
   belongs_to :reviewer, :class_name => 'User', :foreign_key => 'reviewed_by'
 
-  has_and_belongs_to_many :aligned_with, :class_name => 'Sentence', :join_table => 'sentence_alignments', :foreign_key => 'primary_sentence_id', :association_foreign_key => 'secondary_sentence_id'
+  belongs_to :sentence_alignment, :class_name => 'Sentence', :foreign_key => 'sentence_alignment_id'
 
   # All tokens
   has_many :tokens, :order => 'token_number'
 
-  # All tokens with dependents included
-  has_many :tokens_with_dependents, :class_name => 'Token',
-     :include => :dependents, :order => 'tokens.token_number'
+  # All tokens with dependents and information structure included
+  has_many :tokens_with_dependents_and_info_structure, :class_name => 'Token',
+     :include => [:dependents, :antecedent], :order => 'tokens.token_number'
 
   # Tokens that can be tagged with dependency relations.
   has_many :dependency_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
@@ -28,16 +27,28 @@ class Sentence < ActiveRecord::Base
   has_many :nonempty_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
     :conditions => { "sort" => PROIEL::NON_EMPTY_TOKEN_SORTS }, :order => 'token_number'
 
+  # Sentences that have not been annotated.
   named_scope :unannotated, :conditions => ["annotated_by IS NULL"]
+
+  # Sentences that have been annotated.
   named_scope :annotated, :conditions => ["annotated_by IS NOT NULL"]
+
+  # Sentences that have not been reviewed.
   named_scope :unreviewed, :conditions => ["reviewed_by IS NULL"]
+
+  # Sentences that have been reviewed.
   named_scope :reviewed, :conditions => ["reviewed_by IS NOT NULL"]
 
-  # General schema-defined validations
+  # Sentences that belong to source +source+.
+  named_scope :by_source, lambda { |source|
+    { :conditions => { :source_division_id => source.source_divisions.map(&:id) } }
+  }
 
-  validates_presence_of :source_id
-  validates_presence_of :book_id
-  validates_presence_of :chapter
+  # Sentences that have been black-listed in sentence alignment.
+  named_scope :unalignable, :conditions => { "unalignable" => true }
+
+  # General schema-defined validations
+  validates_presence_of :source_division_id
   validates_presence_of :sentence_number
 
   validate :check_invariants
@@ -45,37 +56,37 @@ class Sentence < ActiveRecord::Base
   acts_as_audited :except => [ :annotated_by, :annotated_at, :reviewed_by, :reviewed_at ]
 
   def language
-    source.language
+    source_division.source.language
   end
 
   #FIXME:DRY generalise < token
 
   def previous_sentences
-    self.source.sentences.find(:all,
-                               :conditions => [ "sentence_number < ? and book_id = ?", self.sentence_number, self.book_id ],
-                               :order => "sentence_number ASC")
+    source_division.sentences.find(:all,
+                                   :conditions => [ "sentence_number < ?", sentence_number ],
+                                   :order => "sentence_number ASC")
   end
 
   def next_sentences
-    self.source.sentences.find(:all,
-                               :conditions => [ "sentence_number > ? and book_id = ?", self.sentence_number, self.book_id ],
-                               :order => "sentence_number ASC")
+    source_division.sentences.find(:all,
+                                   :conditions => [ "sentence_number > ?", sentence_number ],
+                                   :order => "sentence_number ASC")
   end
 
   # Returns the previous sentence in the linearisation sequence. Returns +nil+
   # if there is no previous sentence.
   def previous_sentence
-    self.source.sentences.find(:first,
-                               :conditions => [ "sentence_number < ? and book_id = ?", self.sentence_number, self.book_id ],
-                               :order => "sentence_number DESC")
+    source_division.sentences.find(:first,
+                                   :conditions => [ "sentence_number < ?", sentence_number ],
+                                   :order => "sentence_number DESC")
   end
 
   # Returns the next sentence in the linearisation sequence. Returns +nil+
   # if there is no next sentence.
   def next_sentence
-    self.source.sentences.find(:first,
-                               :conditions => [ "sentence_number > ? and book_id = ?", self.sentence_number, self.book_id ],
-                               :order => "sentence_number ASC")
+    source_division.sentences.find(:first,
+                                   :conditions => [ "sentence_number > ?", sentence_number ],
+                                   :order => "sentence_number ASC")
   end
 
   # Returns true if there is a previous sentence.
@@ -88,11 +99,23 @@ class Sentence < ActiveRecord::Base
     !next_sentence.nil?
   end
 
-  # Returns a reference for the sentence.
-  def reference
-    PROIEL::Reference.new(source.abbreviation, source.id, book.code, book.id,
-                  { :chapter => chapter, :verse => nonempty_tokens.first.verse..nonempty_tokens.last.verse,
-                    :sentence => sentence_number })
+  # Returns a citation-form reference for this sentence.
+  #
+  # ==== Options
+  # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
+  # <tt>:internal</tt> -- If true, will use the internal numbering system.
+  def citation(options = {})
+    sentence_citation = if options[:internal]
+                          sentence_number
+                        else
+                          verses = tokens.word.first.verse..tokens.word.last.verse
+                          if verses.first == verses.last
+                            verses.first
+                          else
+                            "#{verses.first}-#{verses.last}"
+                          end
+                        end
+    [source_division.citation(options), sentence_citation] * ':'
   end
 
   # Remove all dependency annotation from a sentence and save the changes.
@@ -114,7 +137,7 @@ class Sentence < ActiveRecord::Base
     #
     # Since by validation constraints all tokens in the sentence have to be annotated
     # if any single one is, we do not have to bother with partial annotations.
-    
+
     # Work inside a transaction since we have lots of small pieces that must go together.
     Token.transaction do
       ts = tokens.dependency_annotatable
@@ -194,18 +217,14 @@ class Sentence < ActiveRecord::Base
       Sentence.transaction do
         # We need to shift all sentence numbers after this one first. Do it in reverse order
         # just to be cool.
-        ses = Sentence.find(:all, :conditions => [
-          "source_id = ? and book_id = ? and sentence_number > ?",
-          source.id, book.id, sentence_number
-        ])
+        ses = source_division.find(:all, :conditions => [ "sentence_number > ?", sentence_number ])
         ses.sort { |x, y| y.sentence_number <=> x.sentence_number }.each do |s|
           s.sentence_number += 1
           s.save!
         end
 
         # Copy all attributes
-        # FIXME: update this
-        new_s = Sentence.create(:source_id => source.id, :book_id => book.id, :chapter => chapter)
+        new_s = source_division.sentences.create
         new_s.sentence_number = sentence_number + 1
         new_s.save!
 
@@ -219,14 +238,14 @@ class Sentence < ActiveRecord::Base
 
   def append_tokens!(ts) #:nodoc:
     ts.each do |t|
-      t.sentence_id = id 
+      t.sentence_id = id
       t.token_number = self.max_token_number + 1
       t.save!
     end
   end
 
   def prepend_tokens!(ts) #:nodoc:
-    m = self.min_token_number 
+    m = self.min_token_number
 
     if m.nil?
       # No tokens in the sentence? Curious, must be a new one.

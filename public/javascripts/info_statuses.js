@@ -15,22 +15,6 @@ var InfoStatus = function() {
 
     // private functions
 
-    function setAnnotatablesAndUnannotatables() {
-        // Make sure old event handling is removed before determining the two sets again
-        if(annotatables) {
-            removeEventHandlingForAnnotatables();
-        }
-        if(unannotatables) {
-            removeEventHandlingForUnannotatables();
-        }
-
-        annotatables = $$('span.info-annotatable');
-        unannotatables = $$('span.info-unannotatable');
-
-        setEventHandlingForAnnotatables();
-        setEventHandlingForUnannotatables();
-    }
-
     /////////////////////////////////////
     //
     // Event handling for annotatables
@@ -46,21 +30,9 @@ var InfoStatus = function() {
     }
 
     function annotatableClickHandler(event) {
-        selectToken(this);
+        if(event.ctrlKey || event.shiftKey) return;      // we don't handle ctrl-clicks or shift-clicks here
+        InfoStatus.selectToken(this);
         event.stop();
-    }
-
-    function selectToken(elm) {
-        selected_token = elm;
-        annotatables.invoke('removeClassName', 'info-selected');
-        selected_token.addClassName('info-selected');
-
-        annotatables.each(function(annotatable, i) {
-            if(annotatables[i] === selected_token) {
-                selected_token_index = i;
-                throw $break;
-            }
-        });
     }
 
     /////////////////////////////////////
@@ -74,10 +46,13 @@ var InfoStatus = function() {
     }
 
     function setEventHandlingForUnannotatables() {
-        unannotatables.invoke('observe', 'click', unannotatableClickHandler);
+        unannotatables.reject(function(elm) {
+            return elm.hasClassName('verb');
+        }).invoke('observe', 'click', unannotatableClickHandler);
     }
 
     function unannotatableClickHandler(event) {
+        if(event.ctrlKey || event.shiftKey) return;      // we don't handle ctrl-clicks or shift-clicks here
         makeAnnotatable(this);
         event.stop();
     }
@@ -88,8 +63,8 @@ var InfoStatus = function() {
         }
         elm.removeClassName('info-unannotatable');
         elm.addClassName('info-annotatable no-info-status info-changed');
-        setAnnotatablesAndUnannotatables();
-        selectToken(elm);
+        InfoStatus.setAnnotatablesAndUnannotatables();
+        InfoStatus.selectToken(elm);
     }
 
     /////////////////////////////////////
@@ -118,14 +93,14 @@ var InfoStatus = function() {
                     selected_token.removeClassName('info-annotatable');
                     selected_token.removeClassName('info-selected');
 
-                    setAnnotatablesAndUnannotatables();
+                    InfoStatus.setAnnotatablesAndUnannotatables();
 
                     // This will select the next token, since we have just removed the current one
                     // from the annotatables
-                    selectToken(annotatables[selected_token_index === annotatables.length ? 0 : selected_token_index]);
+                    InfoStatus.selectToken(annotatables[selected_token_index === annotatables.length ? 0 : selected_token_index]);
                 }
-                else {
-                    selectToken(annotatables[selected_token_index === annotatables.length - 1 ? 0 : selected_token_index + 1]);
+                else if(css != 'old') {
+                    InfoStatus.selectToken(annotatables[selected_token_index === annotatables.length - 1 ? 0 : selected_token_index + 1]);
                 }
 
                 event.stop();
@@ -139,7 +114,7 @@ var InfoStatus = function() {
                 else {
                     index = selected_token_index === annotatables.length - 1 ? 0 : selected_token_index + 1;
                 }
-                selectToken(annotatables[index]);
+                InfoStatus.selectToken(annotatables[index]);
                 event.stop();
             }
         });
@@ -154,16 +129,43 @@ var InfoStatus = function() {
 
             changed.each(function(elm) {
                 var category = null;
+
+                // Make sure we won't save the change more than once
+                elm.removeClassName('info-changed');
+
+                var classes = $w(elm.className);
+
                 // Find the class name that denotes an information structure category
-                $w(elm.className).each(function(klass) {
+                for(var i = 0; i < classes.length; i++) {
+                    var klass = classes[i];
                     if(categories.include(klass)) {
                         category = klass;
-                        throw $break;
+                        break;
                     }
-                });
-                // Extract the numerical part of the element id
-                var id = elm.id.slice('token-'.length);
+                };
 
+                // Find the antecedent id (if any) or contrast group (if any)
+                for(var i = 0; i < classes.length; i++) {
+                    var klass = classes[i];
+                    if(klass.startsWith('ant-') || klass.startsWith('con-')) {
+                        category += ';' + klass;
+                    }
+                }
+
+                // Extract the numerical part of the element id
+                var id = InfoStatus.getTokenId(elm);
+
+                // If this is a prodrop token, add info about the verb it is related to and
+                // the kind of relation it has
+                if(id.startsWith('new')) {
+                    for(var i = 0; i < classes.length; i++) {
+                        var klass = classes[i];
+                        if(klass.startsWith('prodrop')) {
+                            category += ';' + klass;
+                            break;
+                        }
+                    };
+                }
                 params.push('tokens['+ id + ']=' + category);
             });
             new Ajax.Request(document.location.href.match(url_without_last_part)[0],
@@ -178,10 +180,10 @@ var InfoStatus = function() {
                                      elm.highlight();
                                      elm.fade({delay: 2.0});
                                  },
-                                 onFailure: function() {
+                                 onFailure: function(response) {
                                      var elm = $('server-message');
                                      elm.show();
-                                     elm.update('Changes could not be saved!');
+                                     elm.update('Error: ' + response.responseText);
                                      elm.highlight({startcolor: 'ff0000'});
                                      elm.fade({delay: 2.0});
                                  },
@@ -198,11 +200,51 @@ var InfoStatus = function() {
         init: function() {
             if(annotatables != null) return;  // because the script may be included several times on the same page
 
-            setAnnotatablesAndUnannotatables();
+            this.setAnnotatablesAndUnannotatables();
             setEventHandlingForDocument();
             setEventHandlingForSaveButton();
 
-            selectToken(annotatables[0]);
+            this.selectToken(annotatables[0]);
+        },
+
+        setAnnotatablesAndUnannotatables: function() {
+            // Make sure old event handling is removed before determining the two sets again
+            if(annotatables) {
+                removeEventHandlingForAnnotatables();
+            }
+            if(unannotatables) {
+                removeEventHandlingForUnannotatables();
+            }
+
+            annotatables = $$('span.info-annotatable');
+            unannotatables = $$('span.info-unannotatable');
+
+            setEventHandlingForAnnotatables();
+            setEventHandlingForUnannotatables();
+        },
+
+        selectToken: function(elm) {
+            selected_token = elm;
+            annotatables.invoke('removeClassName', 'info-selected');
+            selected_token.addClassName('info-selected');
+
+            annotatables.each(function(annotatable, i) {
+                if(annotatables[i] === selected_token) {
+                    selected_token_index = i;
+                    throw $break;
+                }
+            });
+
+            AnaphoraAndContrast.showAntecedentFor(elm);
+        },
+
+        getSelectedToken: function() {
+            return selected_token;
+        },
+
+        // Returns the numerical part of the element id
+        getTokenId: function(token) {
+            return token.id.slice('token-'.length);
         }
     }
 }();

@@ -26,25 +26,46 @@
 
 /* Other stuff */
 
+/*
 .info-annotatable {
    border: 2px solid white;
 }
+*/
 .info-unannotatable {
-   border: 2px solid white;
+/*   border: 2px solid white; */
    background-color: white;
    color: black;
 }
 .info-changed {
-   border: 2px solid black;
+   border: 2px solid black !important;
 }
 .info-selected {
-   border: 2px dashed black;
+   border: 2px dashed black !important;
 }
 .no-info-status {
    background-color: #c1c1c1;
    color: black;
 }
+.prodrop-menu-item {
+   padding-left: 3px;
+   font-size: 75%;
+   background-color: #e5dac8;
+   border: 1px solid black;
+   cursor: pointer;
+}
 .sentence-divisions span {
    padding: 1px;
-   line-height: 190%
+   line-height: 210%;
+}
+.sentence-divisions span[id][lang] {
+   border: 2px solid white;
+}
+.antecedent {
+   border: 2px solid blue !important;
+}
+.contrast1 {
+   border: 2px solid green !important;
+}
+.contrast2 {
+   border: 2px solid red !important;
 }

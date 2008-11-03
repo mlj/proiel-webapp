@@ -1,26 +1,22 @@
 class Source < ActiveRecord::Base
   validates_presence_of :title
   validates_uniqueness_of :title
-
-  belongs_to :language
-  has_many :books, :class_name => 'Book', :finder_sql => 'SELECT books.* FROM books AS books LEFT JOIN sentences AS sentences ON book_id = books.id WHERE source_id = #{id} GROUP BY book_id'
-  has_many :sentences, :order => 'sentence_number ASC'
-  has_many :tokens, :through => :sentences, :order => 'sentences.sentence_number ASC, token_number ASC'
-
-  belongs_to :aligned_with, :class_name => 'Source', :foreign_key => 'alignment_id' 
-  has_many :bookmarks
-
-  # FIXME: this should be an instance method on Book (or its equivalence), when
-  # Book has been changed to a first order object.
-  # Returns the perecentage of annotated senteces to unannotated sentences the
-  # book +book_id+ in the source.
-  def book_completion_ratio(book_id)
-    Sentence.count_by_sql("SELECT count(annotated_by) * 100 / count(*) FROM sentences WHERE source_id = #{id} AND book_id = #{book_id}")
+  validates_each :metadata do |record, attr, value|
+    record.errors.add :tei_header, "invalid: #{value.error_message}" unless value.valid?
   end
 
-  # Returns the human-readable presentation form of the name of the source.
-  def presentation_form
-    self.title
+  belongs_to :language
+  has_many :source_divisions, :order => [:position]
+  has_many :bookmarks
+
+  composed_of :metadata, :class_name => 'Metadata', :mapping => %w(tei_header)
+
+  # Returns a citation-form reference for this source.
+  #
+  # ==== Options
+  # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
+  def citation(options = {})
+    options[:abbreviated] ? abbreviation : title
   end
 
   protected

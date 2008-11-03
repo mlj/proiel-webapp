@@ -25,7 +25,7 @@
     <isa ref="adnom"/>
   </tag>
   <tag code="ag" summary="agens"/>
-  <tag code="adv" summary="adverbial" shortcut="d" nominal="true">
+  <tag code="adv" summary="adverbial" shortcut="d">
     <isa ref="per"/>
   </tag>
   <tag code="aux" summary="auxiliary" shortcut="x"/>

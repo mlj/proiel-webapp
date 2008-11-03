@@ -1,7 +1,12 @@
-<% stylesheet 'sentence_divisions' %>
-<% stylesheet 'info_statuses' %>
+<% stylesheet 'sentence_divisions', 'info_statuses' %>
 
+<div>
+  Contrast: <%= select_tag('contrast-select', @contrast_options, :onchange => "AnaphoraAndContrast.showContrastNo(this.value);") %>
+  <% if params[:action] == 'edit' %>
+  <input type="button" value="Create new" onclick="AnaphoraAndContrast.createNewContrast();" />
+  <% end %>
+</div>
 <div class="sentence-divisions">
-  <%= format_sentence(@sentence.previous_sentences.last(7) + [@sentence] + @sentence.next_sentences.first(1),
-    { :verse_numbers => :all, :information_status => true, :highlight => @sentence.tokens }) %>
+  <%= format_sentence(@sentence.previous_sentences.last(num_previous_sentences) + [@sentence] + @sentence.next_sentences.first(num_next_sentences),
+    { :verse_numbers => true, :information_status => true, :highlight => @sentence.tokens }) %>
 </div>

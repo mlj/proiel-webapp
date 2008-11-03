@@ -1,6 +1,5 @@
 require 'extensions'
 require 'proiel/tagsets'
-require 'proiel/reference'
 require 'proiel/morphtag'
 require 'proiel/src'
 require 'proiel/dependency_graph'

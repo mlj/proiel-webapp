@@ -2,12 +2,12 @@ class HomeController < ApplicationController
   before_filter :is_annotator?, :only => [ :annotation ]
   before_filter :is_reviewer?, :except => [ :quick_search, :quick_search_suggestions, :search, :help, :annotation, :index ]
 
-  LOCATION_SEARCH_PATTERN = Regexp.new(/^\s*(\w+)\s+([A-Za-z]+)\s+(\d+)\s*$/).freeze
+  LOCATION_SEARCH_PATTERN = Regexp.new(/^\s*(\w+)\s+([A-Za-z]+)\s*$/).freeze
   ANNOTATION_SEARCH_PATTERN = Regexp.new(/^\s*(\d+)\s*$/).freeze
 
   def index
     # FIXME: this is called from user_controller!
-    redirect_to :controller => 'browse', :action => 'view', :source => 1, :book => 1, :chapter => 1
+    redirect_to source_divisions_url
   end
 
   # Returns suggestions for Open Search suggesion queries
@@ -32,23 +32,16 @@ class HomeController < ApplicationController
     query.strip!
 
     if m = query.match(LOCATION_SEARCH_PATTERN) 
-      # A text location
-      all, source, book, chapter = m.to_a
-      source += '%'
-      source = Source.find(:first, :conditions => [ "code like ? or abbreviation like ?", source, source ])
-      book += '%'
-      book = Book.find(:first, :conditions => [ "title like ? or abbreviation like ? or code like ?", book, book, book ])
-
-      redirect_to :controller => 'browse', :action => 'view', :source => source.id, :book => book.id, :chapter => chapter
-    elsif m = query.match(ANNOTATION_SEARCH_PATTERN) 
-      # A sentence ID.
-      if Sentence.exists?($1)
-        sentence = Sentence.find($1)
-        redirect_to annotation_url(sentence)
+      all, source, book = m.to_a
+      source = Source.find(:first, :conditions => [ "code like ? or abbreviation like ?", "#{source}%", "#{source}%" ])
+      d = source.source_divisions.find(:first, :conditions => [ "title LIKE ? OR abbreviated_title LIKE ?", "#{book}%", "#{book}%" ])
+      if d
+        redirect_to source_division_url(d)
       else
-        flash[:error] = 'No such sentence ID'
-        redirect_to annotations_url
+        redirect_to source_divisions_url
       end
+    elsif m = query.match(ANNOTATION_SEARCH_PATTERN)
+      redirect_to annotation_url($1)
     else
       # A token or lemma.
       redirect_to :controller => 'home', :action => 'search', :query => query, :mode => 'tokens'

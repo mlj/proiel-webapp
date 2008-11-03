@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080909130010) do
+ActiveRecord::Schema.define(:version => 20081022135413) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -142,31 +142,21 @@ ActiveRecord::Schema.define(:version => 20080909130010) do
     t.datetime "updated_at"
   end
 
-  create_table "sentence_alignments", :id => false, :force => true do |t|
-    t.integer  "primary_sentence_id",   :default => 0,   :null => false
-    t.integer  "secondary_sentence_id", :default => 0,   :null => false
-    t.float    "confidence",            :default => 0.0, :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "sentence_alignments", ["secondary_sentence_id"], :name => "index_sentence_alignments_on_secondary_sentence_id"
-
   create_table "sentences", :force => true do |t|
-    t.integer  "source_id",       :default => 0, :null => false
-    t.integer  "book_id",         :default => 0, :null => false
-    t.integer  "chapter",         :default => 0, :null => false
-    t.integer  "sentence_number", :default => 0, :null => false
+    t.integer  "sentence_number",       :default => 0,     :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "annotated_by"
     t.datetime "annotated_at"
     t.integer  "reviewed_by"
     t.datetime "reviewed_at"
+    t.boolean  "unalignable",           :default => false, :null => false
+    t.boolean  "automatic_alignment",   :default => false
+    t.integer  "sentence_alignment_id"
+    t.integer  "source_division_id",                       :null => false
   end
 
-  add_index "sentences", ["source_id", "book_id", "sentence_number"], :name => "sentence_number_index", :unique => true
-  add_index "sentences", ["book_id"], :name => "index_sentences_on_book_id"
+  add_index "sentences", ["source_division_id", "sentence_number"], :name => "index_sentences_on_source_division_id_and_sentence_number"
 
   create_table "slash_edge_interpretations", :force => true do |t|
     t.string "tag",     :limit => 64,  :default => "", :null => false
@@ -181,49 +171,62 @@ ActiveRecord::Schema.define(:version => 20080909130010) do
 
   add_index "slash_edges", ["slasher_id", "slashee_id"], :name => "index_slash_edges_on_slasher_and_slashee", :unique => true
 
+  create_table "source_divisions", :force => true do |t|
+    t.integer  "source_id",                                 :null => false
+    t.integer  "position",                                  :null => false
+    t.string   "title",                      :limit => 128, :null => false
+    t.string   "abbreviated_title",          :limit => 128, :null => false
+    t.string   "fields",                     :limit => 128, :null => false
+    t.integer  "aligned_source_division_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "sources", :force => true do |t|
     t.string  "code",         :limit => 64, :default => "", :null => false
     t.text    "title"
-    t.text    "edition"
-    t.text    "source"
-    t.text    "editor"
-    t.text    "url"
-    t.integer "alignment_id"
     t.string  "abbreviation", :limit => 64, :default => "", :null => false
     t.integer "language_id",                :default => 0,  :null => false
+    t.text    "tei_header",                                 :null => false
   end
 
   create_table "tokens", :force => true do |t|
-    t.integer  "sentence_id",                                                                                                          :default => 0,     :null => false
+    t.integer  "sentence_id",                                                                                                                     :default => 0,     :null => false
     t.integer  "verse"
-    t.integer  "token_number",                                                                                                         :default => 0,     :null => false
-    t.string   "morphtag",          :limit => 17
-    t.string   "form",              :limit => 64
+    t.integer  "token_number",                                                                                                                    :default => 0,     :null => false
+    t.string   "morphtag",                     :limit => 17
+    t.string   "form",                         :limit => 64
     t.integer  "lemma_id"
-    t.string   "relation",          :limit => 20
+    t.string   "relation",                     :limit => 20
     t.integer  "head_id"
-    t.enum     "sort",              :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :prodrop],    :default => :text, :null => false
+    t.enum     "sort",                         :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :prodrop],    :default => :text, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "source_morphtag",   :limit => 17
-    t.string   "source_lemma",      :limit => 32
+    t.string   "source_morphtag",              :limit => 17
+    t.string   "source_lemma",                 :limit => 32
     t.text     "foreign_ids"
-    t.boolean  "contraction",                                                                                                          :default => false, :null => false
-    t.enum     "nospacing",         :limit => [:before, :after, :both]
-    t.string   "presentation_form", :limit => 128
+    t.boolean  "contraction",                                                                                                                     :default => false, :null => false
+    t.enum     "nospacing",                    :limit => [:before, :after, :both]
+    t.string   "presentation_form",            :limit => 128
     t.integer  "presentation_span"
-    t.boolean  "emendation",                                                                                                           :default => false, :null => false
-    t.boolean  "abbreviation",                                                                                                         :default => false, :null => false
-    t.boolean  "capitalisation",                                                                                                       :default => false, :null => false
-    t.enum     "info_status",       :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :no_info_status, :info_unannotatable]
-    t.string   "empty_token_sort",  :limit => 1
+    t.boolean  "emendation",                                                                                                                      :default => false, :null => false
+    t.boolean  "abbreviation",                                                                                                                    :default => false, :null => false
+    t.boolean  "capitalisation",                                                                                                                  :default => false, :null => false
+    t.enum     "info_status",                  :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :no_info_status, :info_unannotatable]
+    t.string   "empty_token_sort",             :limit => 1
+    t.integer  "anaphor_id"
+    t.string   "contrast_group"
+    t.integer  "antecedent_dist_in_words"
+    t.integer  "antecedent_dist_in_sentences"
   end
 
   add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true
+  add_index "tokens", ["anaphor_id"], :name => "index_tokens_on_anaphor_id", :unique => true
   add_index "tokens", ["lemma_id"], :name => "index_tokens_on_lemma_id"
   add_index "tokens", ["relation"], :name => "index_tokens_on_relation"
   add_index "tokens", ["morphtag"], :name => "index_tokens_on_morphtag"
   add_index "tokens", ["head_id"], :name => "index_tokens_on_head_id"
+  add_index "tokens", ["contrast_group"], :name => "index_tokens_on_contrast_group"
 
   create_table "users", :force => true do |t|
     t.string   "login",                                   :default => "",        :null => false

@@ -153,11 +153,6 @@ module Enumerable
     select { |e| index(e) != rindex(e) }.uniq
   end
 
-  #FIXME: incompatible with Ruby 1.8.7!
-  def count
-    inject(Hash.new(0)) { |k, e| k[e] += 1; k }
-  end
-
   def classify(&block)
     inject({}) { |k, e| (k[block.call(e)] ||= []) << e; k }
   end

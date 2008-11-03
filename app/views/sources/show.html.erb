@@ -3,10 +3,11 @@
   <dt>Abbreviation:</dt><dd class="title"><%=h @source.abbreviation %></dd>
   <dt>Code:</dt><dd class="tag"><%=h @source.code %></dd>
   <dt>Language:</dt><dd class="language"><%= link_to_language @source.language %></dd>
-  <dt>Edition:</dt><dd><%=h @source.edition %></dd>
-  <dt>Electronic source:</dt><dd><%= @source.url ? link_to(@source.source, @source.url) : @source.source %></dd>
-  <dt>Editor of electronic version:</dt><dd><%=h @source.editor %></dd>
   <%= link_to_resources @source, :index, :edit %>
+<% end %>
+
+<% layer :metadata do -%>
+  <%= @source.metadata.to_html %>
 <% end %>
 
 <% layer :statistics do -%>

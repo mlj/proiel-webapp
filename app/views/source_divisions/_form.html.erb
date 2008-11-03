@@ -1,0 +1,1 @@
+<%= form.collection_select :aligned_source_division_id, Source.find(:all).reject { |s| s == @source_division.source }.map(&:source_divisions).flatten, :id, :citation, :include_blank => true, :label => 'Aligned source division', :help => 'The source division this source division should be aligned with' %>

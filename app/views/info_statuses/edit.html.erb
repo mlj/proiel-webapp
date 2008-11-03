@@ -1,16 +1,12 @@
-<%= javascript 'info_statuses' %>
+<%= javascript 'info_statuses', 'prodrop', 'wz_jsgraphics', 'anaphora' %>
 <% javascript_tag do -%>
   var authenticity_token = '<%= form_authenticity_token %>';
 <% end -%>
 
-<div id="info-menu" style="position: absolute; width: 100px; border: 2px solid black; display:none">
-  <div class="info-menu-item new">1 new</div>
-  <div class="info-menu-item acc">2 acc</div>
-  <div class="info-menu-item acc-gen">3 acc-gen</div>
-  <div class="info-menu-item acc-disc">4 acc-disc</div>
-  <div class="info-menu-item acc-inf">5 acc-inf</div>
-  <div class="info-menu-item old">6 old</div>
-  <div class="info-menu-item no-info-status">7 unannotated</div>
+<div id="prodrop-menu" style="position: absolute; width: 150px; border: 2px solid black; display:none">
+  <div class="prodrop-menu-item sub">Insert pro-drop subject</div>
+  <div class="prodrop-menu-item obj">Insert pro-drop object</div>
+  <div class="prodrop-menu-item obl">Insert pro-drop oblique</div>
 </div>
 
 <%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Information status', :edit_url => :edit_annotation_info_status_url } %>
@@ -24,8 +20,9 @@
     <%= format_reviewer(@sentence, :time => true) %>
   <% end %>
 
-  <% layer("info-status", :title => "Information status") do -%>
-    <%= render :partial => 'info_statuses/legend' %>
+  <% layer("info-status", :title => "Information structure", :actions => [
+    link_to("Show", annotation_info_status_url(@sentence))]) do -%>
+    <%= render :partial => 'info_statuses/legend_edit' %>
     <%= render :partial => 'info_statuses/show' %>
   <% end %>
 

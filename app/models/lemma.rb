@@ -8,6 +8,10 @@ class Lemma < ActiveRecord::Base
   has_many :semantic_tags, :as => :taggable, :dependent => :destroy
   belongs_to :language
 
+  searchable_on :lemma
+
+  named_scope :by_variant, lambda { |variant| { :conditions => { :variant => variant } } }
+
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
 
@@ -43,19 +47,18 @@ class Lemma < ActiveRecord::Base
   protected
 
   def self.search(query, options = {})
-    unless query.blank?
-      lemma, variant = query.split('#')
-
-      if variant
-        options[:conditions] ||= ['lemma LIKE ? AND variant = ?', "%#{lemma}%", variant]
-      else
-        options[:conditions] ||= ['lemma LIKE ?', "%#{lemma}%"]
-      end
-    end
-
     options[:order] ||= 'language_id ASC, sort_key ASC, lemma ASC, variant ASC, pos ASC'
 
-    paginate options
+    if query.blank?
+      paginate options
+    else
+      lemma, variant = query.split('#')
+      if variant
+        by_variant(variant).search_on(lemma).paginate options
+      else
+        search_on(lemma).paginate options
+      end
+    end
   end
 
   # Returns lemmata that are possible completions of the lemma +q+ in the language

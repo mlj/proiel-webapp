@@ -1,6 +1,7 @@
 class Token < ActiveRecord::Base
+  INFO_STATUSES = [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :no_info_status, :info_unannotatable]
+
   belongs_to :sentence
-  belongs_to :book
   belongs_to :lemma
   has_many :notes, :as => :notable, :dependent => :destroy
   has_many :semantic_tags, :as => :taggable, :dependent => :destroy
@@ -13,9 +14,19 @@ class Token < ActiveRecord::Base
   has_many :slashees, :through => :slash_out_edges
   has_many :slashers, :through => :slash_in_edges
 
+  has_one :antecedent, :class_name => 'Token', :foreign_key => 'anaphor_id', :dependent => :nullify
+  belongs_to :anaphor, :class_name => 'Token'
+
+  searchable_on :form
+
   named_scope :word, :conditions => { :sort => :text }
   named_scope :morphology_annotatable, :conditions => { :sort => PROIEL::MORPHTAGGABLE_TOKEN_SORTS }
   named_scope :dependency_annotatable, :conditions => { :sort => PROIEL::DEPENDENCY_TOKEN_SORTS }
+
+  # Tokens that belong to source +source+.
+  named_scope :by_source, lambda { |source|
+    { :conditions => { :sentence_id => source.source_divisions.map(&:sentences).flatten.map(&:id) } }
+  }
 
   acts_as_audited
 
@@ -45,6 +56,8 @@ class Token < ActiveRecord::Base
   # form and presentation_form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
   validates_unicode_normalization_of :presentation_form, :form => UNICODE_NORMALIZATION_FORM
+
+  validates_inclusion_of :info_status, :allow_nil => true, :in => INFO_STATUSES
 
   # Specific validations
   validate :validate_sort
@@ -130,20 +143,17 @@ class Token < ActiveRecord::Base
     PROIEL::MorphTag.new(source_morphtag).is_valid?(language.iso_code)
   end
 
-  def reference
-    if verse
-      PROIEL::Reference.new(sentence.source.abbreviation, sentence.source.id,
-                    sentence.book.code, sentence.book.id,
-                    { :chapter => sentence.chapter.to_i,
-                      :verse => verse.to_i,
-                      :sentence => sentence.sentence_number.to_i,
-                      :token => token_number.to_i })
+  # Returns a citation-form reference for this token.
+  #
+  # ==== Options
+  # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
+  # <tt>:internal</tt> -- If true, will use the internal numbering system.
+  def citation(options = {})
+    if options[:internal]
+      [sentence.citation(options), token_number] * '.'
     else
-      PROIEL::Reference.new(sentence.source.abbreviation, sentence.source.id,
-                    sentence.book.code, sentence.book.id,
-                    { :chapter => sentence.chapter.to_i,
-                      :sentence => sentence.sentence_number.to_i,
-                      :token => token_number.to_i })
+      token_citation = [verse, token_number] * '.'
+      [sentence.source_division.citation(options), token_citation] * ':'
     end
   end
 
@@ -180,23 +190,71 @@ class Token < ActiveRecord::Base
 
   # Returns true if the token has a nominal POS or a nominal syntactic relation,
   # or if one of its dependents is an article.
-  def annotatable?
-    if @annotatable.nil?
-      @annotatable = info_status == :no_info_status ||  # manually marked as annotatable
+  def is_annotatable?
+    if @is_annotatable.nil?
+      @is_annotatable = info_status == :no_info_status ||  # manually marked as annotatable
                      (info_status != :info_unannotatable && \
                       (PROIEL::MORPHOLOGY.nominals.include?(morph[:major]) || \
                        (relation && PROIEL::RELATIONS.nominals.include?(relation.to_sym)) || \
                        dependents.any? { |dep| dep.morph[:major] == :S }))
     end
-    @annotatable
+    @is_annotatable
+  end
+
+  def is_verb?
+    @is_verb = morph[:major].to_s.starts_with?('V') if @is_verb.nil?
+    @is_verb
+  end
+
+  # Returns all contrast groups registered for the given source division
+  def self.contrast_groups_for(source_division)
+    connection.select_all("SELECT DISTINCT contrast_group FROM tokens, sentences " + \
+                          "WHERE tokens.contrast_group IS NOT NULL AND tokens.sentence_id = sentences.id AND sentences.source_division_id = #{source_division.id}"
+                          ).map { |record| record['contrast_group'] }
+  end
+
+  # Returns the distance between two tokens measured in number of sentences.
+  # first_token is supposed to precede second_token.
+  def self.sentence_distance_between(first_token, second_token)
+    first_token.sentence.source_division.sentences.count(:all, :conditions => ['sentence_number BETWEEN ? AND ?',
+                                                                               first_token.sentence.sentence_number,
+                                                                               second_token.sentence.sentence_number]) - 1
+  end
+
+  # Returns the distance between two tokens measured in number of words (i.e., tokens with sort == 'text').
+  # first_token is supposed to precede second_token.
+  def self.word_distance_between(first_token, second_token)
+    if first_token.sentence.sentence_number == second_token.sentence.sentence_number
+      num_words = first_token.sentence.tokens.word.count(:conditions => [
+                                                           'token_number BETWEEN ? AND ?',
+                                                           first_token.token_number,
+                                                           second_token.token_number - 1
+                                                         ])
+    else
+      # Find the number of words following (and including) the first token in its sentence
+      num_words = first_token.sentence.tokens.word.count(:conditions => ['token_number >= ?', first_token.token_number])
+
+      # Find the number of words preceding the second token in its sentence
+      num_words += second_token.sentence.tokens.word.count(:conditions => ['token_number < ?', second_token.token_number])
+
+      # Find the number of words in intervening sentences
+      first_token.sentence.source_division.sentences.find(:all, :conditions => ['sentence_number BETWEEN ? AND ?',
+                                                                                first_token.sentence.sentence_number + 1,
+                                                                                second_token.sentence.sentence_number - 1]).each do |sentence|
+        num_words += sentence.tokens.word.count
+      end
+    end
+    num_words
   end
 
   protected
 
   def self.search(query, options = {})
-    options[:conditions] ||= ["form LIKE ?", "%#{query}%"] unless query.blank?
-
-    paginate options
+    if query.blank?
+      paginate options
+    else
+      search_on(query).paginate options
+    end
   end
 
   private

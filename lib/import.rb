@@ -55,17 +55,10 @@ class PROIELXMLImport < SourceImport
 
     language = Language.find_by_iso_code(import.metadata[:language])
     source = language.sources.find_by_code(import.metadata[:id])
-
-    unless source
-      # Create new source and set metadata
-      STDOUT.puts "Creating new source"
-      source = language.sources.new(:code => import.metadata[:id])
-      [:title, :edition, :source, :editor, :url].each { |e| source[e] = import.metadata[e] }
-      source.save!
-    end
+    raise "Source #{source.metadata[:id]} not found" unless source
 
     book = nil
-    book_id = nil
+    source_division = nil
     sentence_number = nil
     sentence = nil
 
@@ -74,17 +67,16 @@ class PROIELXMLImport < SourceImport
 
     import.read_tokens(args) do |form, attributes|
       if book != attributes[:book]
-        book = attributes[:book]
-        book_id = Book.find_by_code(book).id
+        book = attributes[:book] #FIXME!!! now by book AND chapter!
+        source_division = SourceDivision.find_by_fields("book=#{book}").id
         sentence_number = nil
         STDOUT.puts "Importing book #{book} for source #{source.code}..."
       end
 
       if sentence_number != attributes[:sentence_number]
         sentence_number = attributes[:sentence_number]
-        sentence = source.sentences.create!(:sentence_number => sentence_number, 
-                                            :book_id => book_id,
-                                            :chapter => attributes[:chapter])
+        sentence = source_division.sentences.create!(:sentence_number => sentence_number, 
+                                                     :chapter => attributes[:chapter])
       end
 
 #FIXME: this should be moved somewhere else to allow for future extensions. 

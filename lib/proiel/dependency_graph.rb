@@ -357,6 +357,8 @@ module PROIEL
   end
 
   class ValidatingDependencyGraph < Lingua::DependencyGraph
+    attr_reader :node_class
+
     def initialize
       @node_class = ValidatingDependencyGraphNode
       super

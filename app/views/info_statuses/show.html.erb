@@ -1,4 +1,6 @@
-<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Information status', :edit_url => :annotation_info_status_url } %>
+<%= javascript 'wz_jsgraphics', 'anaphora' %>
+
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Information structure', :edit_url => :annotation_info_status_url } %>
 
 <% if is_annotator? or @sentence.is_reviewed? %>
   <% layer_if(is_reviewer?, "completion", :actions => [
@@ -9,12 +11,18 @@
     <%= format_reviewer(@sentence, :time => true) %>
   <% end %>
 
-  <% layer("info-status", :title => "Information status", :actions => [
+  <% layer("info-status", :title => "Information structure", :actions => [
     link_to_if(is_annotator?, "Edit", edit_annotation_info_status_url(@sentence))]) do -%>
-    <%= render :partial => 'info_statuses/legend' %>
+    <%= render :partial => 'info_statuses/legend_show' %>
     <%= render :partial => 'info_statuses/show' %>
   <% end %>
 
 <% else %>
   Sentence not yet annotated and reviewed.
 <% end %>
+
+<script type="text/javascript">
+  document.observe('dom:loaded', function() {
+    AnaphoraAndContrast.showAntecedentsForAllAnaphors();
+  });
+</script>
