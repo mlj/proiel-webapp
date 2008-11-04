@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081022135413) do
+ActiveRecord::Schema.define(:version => 20081104170004) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -218,6 +218,8 @@ ActiveRecord::Schema.define(:version => 20081022135413) do
     t.string   "contrast_group"
     t.integer  "antecedent_dist_in_words"
     t.integer  "antecedent_dist_in_sentences"
+    t.integer  "token_alignment_id"
+    t.boolean  "automatic_token_alignment",                                                                                                       :default => false
   end
 
   add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true

@@ -14,6 +14,8 @@ class Token < ActiveRecord::Base
   has_many :slashees, :through => :slash_out_edges
   has_many :slashers, :through => :slash_in_edges
 
+  belongs_to :token_alignment, :class_name => 'Token', :foreign_key => 'token_alignment_id'
+
   has_one :antecedent, :class_name => 'Token', :foreign_key => 'anaphor_id', :dependent => :nullify
   belongs_to :anaphor, :class_name => 'Token'
 
