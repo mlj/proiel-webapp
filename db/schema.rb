@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081104170004) do
+ActiveRecord::Schema.define(:version => 20081119153319) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -46,6 +46,14 @@ ActiveRecord::Schema.define(:version => 20081104170004) do
     t.string "abbreviation", :limit => 8
     t.string "code",         :limit => 8,  :default => "", :null => false
   end
+
+  create_table "dependency_alignment_terminations", :force => true do |t|
+    t.integer "token_id",  :null => false
+    t.integer "source_id", :null => false
+  end
+
+  add_index "dependency_alignment_terminations", ["token_id"], :name => "index_dependency_alignment_terminations_on_token_id"
+  add_index "dependency_alignment_terminations", ["source_id"], :name => "index_dependency_alignment_terminations_on_source_id"
 
   create_table "dictionaries", :force => true do |t|
     t.string "identifier", :limit => 32,  :default => "", :null => false
@@ -220,6 +228,7 @@ ActiveRecord::Schema.define(:version => 20081104170004) do
     t.integer  "antecedent_dist_in_sentences"
     t.integer  "token_alignment_id"
     t.boolean  "automatic_token_alignment",                                                                                                       :default => false
+    t.integer  "dependency_alignment_id"
   end
 
   add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true
@@ -229,6 +238,7 @@ ActiveRecord::Schema.define(:version => 20081104170004) do
   add_index "tokens", ["morphtag"], :name => "index_tokens_on_morphtag"
   add_index "tokens", ["head_id"], :name => "index_tokens_on_head_id"
   add_index "tokens", ["contrast_group"], :name => "index_tokens_on_contrast_group"
+  add_index "tokens", ["dependency_alignment_id"], :name => "index_tokens_on_dependency_alignment_id"
 
   create_table "users", :force => true do |t|
     t.string   "login",                                   :default => "",        :null => false
