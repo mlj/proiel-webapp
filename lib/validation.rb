@@ -68,7 +68,7 @@ class Validator < Task
 
   def check_orphaned_tokens(logger)
     orphans = Token.find(:all, :include => [ :sentence ], :conditions => [ "sentences.id is null" ])
-    orphans.each { |o| logger.error { "Token #{o.id} is orphaned" } }
+    orphans.each { |o| logger.warn { "Token #{o.id} is orphaned" } }
   end
 
   def check_morphtag_validity(logger)
@@ -84,19 +84,19 @@ class Validator < Task
   def check_lemmata(logger)
     orphans = Lemma.find(:all, :include => [ :tokens ], :conditions => [ "fixed = 0 AND lemmata.foreign_ids IS NULL and tokens.id IS NULL" ])
     orphans.each do |o| 
-      logger.error { "Lemma #{o.id} (#{o.export_form}) is orphaned. Destroying." }
+      logger.warn { "Lemma #{o.id} (#{o.export_form}) is orphaned. Destroying." }
       o.destroy
     end
 
     candidates = Lemma.find(:all, :conditions => [ "variant IS NOT NULL" ])
     candidates.each do |o|
       if c = o.language.lemmata.find(:first, :conditions => [ "lemma = ? and variant is null", o.lemma ])
-        logger.error { "Lemma base form #{o.lemma} occurs both with and without variant numbers" }
+        logger.warn { "Lemma base form #{o.lemma} occurs both with and without variant numbers" }
       end
     end
 
     Token.find_by_sql("select * from tokens left join lemmata on lemma_id = lemmata.id where substring(morphtag, 1, 2) != pos").each do |t|
-      logger.error { "#{t.sentence.id}: Token POS #{t.morph.pos_to_s} does not match lemma POS #{t.lemma.pos}" }
+      logger.warn { "#{t.sentence.id}: Token POS #{t.morph.pos_to_s} does not match lemma POS #{t.lemma.pos}" }
     end
   end
 
@@ -127,6 +127,6 @@ class Validator < Task
   end
 
   def log_token_error(logger, token, msg)
-    logger.error { "Token #{token.id} (sentence #{token.sentence.id}) '#{token.form}' (#{token.language.name}): #{msg}" }
+    logger.warn { "Token #{token.id} (sentence #{token.sentence.id}) '#{token.form}' (#{token.language.name}): #{msg}" }
   end
 end
