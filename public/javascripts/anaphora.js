@@ -264,6 +264,30 @@ var AnaphoraAndContrast = function() {
             options[options.length] = new Option(new_contrast_no, new_contrast_no, false, true);
         },
 
+        deleteContrast: function() {
+            var selected_contrast = parseInt($F('contrast-select'));
+            if(!(isFinite(selected_contrast) && selected_contrast > 0)) {
+                alert('Please select a contrast');
+            }
+            else {
+                if(confirm('Do you want to delete contrast number ' + selected_contrast + '?')) {
+                    var cls_a = 'con-' + selected_contrast + 'a';
+                    var cls_b = 'con-' + selected_contrast + 'b';
+
+                    // Sometimes an element contains more than one instance of e.g. con-1a in its class
+                    // attribute, so we have to do this the hard way :-\
+                    var elements = $$('.sentence-divisions .' + cls_a).invoke('removeClassName', 'contrast1');
+                    elements.each(function(element) {
+                        element.className = element.className.gsub(cls_a, '');
+                    });
+                    var elements = $$('.sentence-divisions .' + cls_b).invoke('removeClassName', 'contrast2');
+                    elements.each(function(element) {
+                        element.className = element.className.gsub(cls_b, '');
+                    });
+                }
+            }
+        },
+
         // Adds the given token, which should be a token-span, to the tokens array
         addToken: function(token) {
             token.observe('click', antecedentClickHandler);

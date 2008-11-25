@@ -4,6 +4,7 @@
   Contrast: <%= select_tag('contrast-select', @contrast_options, :onchange => "AnaphoraAndContrast.showContrastNo(this.value);") %>
   <% if params[:action] == 'edit' %>
   <input type="button" value="Create new" onclick="AnaphoraAndContrast.createNewContrast();" />
+  <input type="button" value="Delete" onclick="AnaphoraAndContrast.deleteContrast();" />
   <% end %>
 </div>
 <div class="sentence-divisions">
