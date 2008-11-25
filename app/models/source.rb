@@ -11,6 +11,8 @@ class Source < ActiveRecord::Base
 
   composed_of :metadata, :class_name => 'Metadata', :mapping => %w(tei_header)
 
+  has_many :dependency_alignment_terminations
+
   # Returns a citation-form reference for this source.
   #
   # ==== Options

@@ -150,3 +150,8 @@ form div.required sup, form div.required p, form div.required span {
 form div.required label span.help {
   margin-top: 0;
 }
+
+input[disabled] {
+  background-color: white;
+  border: none;
+}

@@ -73,6 +73,8 @@ namespace :proiel do
         sources = Source.find(:all)
       end
 
+      raise "Unable to find any sources to export" if sources.empty?
+
       # Prepare destination directory and ancillary files
       Dir::mkdir(directory) unless File::directory?(directory)
 

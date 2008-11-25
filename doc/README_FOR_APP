@@ -2,7 +2,12 @@
 
 == Installation
 
-You need Rails 2.1.1 installed as a RubyGem for this application to work.
+You need Rails 2.1.2 installed as a RubyGem for this application to work.
+
+Note that you may also need RubyGems >= 1.3 to run Rails >= 2.1.2 successfully.
+See link:http://afreshcup.com/2008/10/25/rails-212-and-22rc1-update-your-rubygems/
+for details on how to solve this issue.
+
 The application has a number of other dependencies that should be handled
 automatically by Rails' dependency tracker. Use
     rake gems

@@ -166,7 +166,8 @@ class TigerXMLExport < SourceExport
   def token_attrs(s, t)
     attrs = { :form => t.form || '' }
 
-    if s.has_morphological_annotation? and t.is_morphtaggable?
+    if t.morphtag and t.lemma #FIXME: temp workaround until invariant is OK
+#    if s.has_morphological_annotation? and t.is_morphtaggable?
       attrs.merge!({ :morphtag => t.morph_lemma_tag.morphtag.to_s, 
                      :lemma => t.morph_lemma_tag.lemma.to_s })
     else
@@ -272,7 +273,8 @@ class MaltXMLExport < SourceExport
                 attrs.merge!({ :deprel => t.relation })
               end
 
-              if s.has_morphological_annotation? and t.is_morphtaggable?
+    if t.morphtag and t.lemma #FIXME: temp workaround until invariant is OK
+#             if s.has_morphological_annotation? and t.is_morphtaggable?
                 attrs.merge!({ :morphtag => t.morph_lemma_tag.morphtag.to_s, 
                                :lemma => t.morph_lemma_tag.lemma.to_s })
               end

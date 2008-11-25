@@ -52,8 +52,12 @@ class PROIELXMLImport < SourceImport
 
     import = PROIEL::XSource.new(file)
     STDOUT.puts "Importing source #{import.metadata[:id]}..."
+    STDOUT.puts " * Identifier: #{import.metadata[:id]}"
+    STDOUT.puts " * Language: #{import.metadata[:language]}"
 
     language = Language.find_by_iso_code(import.metadata[:language])
+    raise "Language #{import.metadata[:language]} undefined" unless language
+
     source = language.sources.find_by_code(import.metadata[:id])
     raise "Source #{source.metadata[:id]} not found" unless source
 

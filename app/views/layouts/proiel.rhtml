@@ -13,6 +13,18 @@
     <!--[if IE]>
     <script type="text/javascript">ie = true;</script>
     <![endif]-->
+
+    <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+    <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
+
+    <meta name="DC.title" lang="en" content="Pragmatics in Indo-European Languages" />
+    <meta name="DC.subject" lang="en" content="Indo-European languages; PROIEL; linguistics; corpus linguistics; treebank; dependency grammar; Latin; Ancient Greek; Greek; Old Church Slavonic; Slavic; Slavonic; Gothic; Germanic; Armenian; New Testament" />
+    <meta name="DC.publisher" content="University of Oslo" />
+    <meta name="DC.type" scheme="DCTERMS.DCMIType" content="Text" />
+    <meta name="DC.format" content="text/html; charset=utf-8" />
+    <meta name="DC.identifier" scheme="DCTERMS.URI" content="http://foni.uio.no:3000" />
+    <meta name="DC.language" scheme="ISO639-3" content="lat;chu;grc;got;xcl" />
+
     <%= javascript_include_tag "prototype", "scriptaculous", "utils", "effects", "controls" %>
     <%= stylesheet_link_tag "all" %>
     <%= stylesheet_link_tag "pagination" %>
@@ -52,6 +64,7 @@
             <%= text_field_tag :q, params[:q], :size => 15 %>
             <%= submit_tag 'Search' %>
           <% end %>
+          <%= link_to 'Downloads', site_path('public_data') %>
           <%= link_to 'Help', site_path('help'), :accesskey => '6' %>
           <%= link_to 'Logout', logout_path %>
         </span>
