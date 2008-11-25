@@ -58,6 +58,12 @@ class InfoStatusesController < ApplicationController
   end
 
 
+  # POST /annotations/1/info_status/delete_contrast
+  def delete_contrast
+
+  end
+
+
   #########
   protected
   #########
@@ -158,7 +164,7 @@ class InfoStatusesController < ApplicationController
   end
 
   def set_contrast_options_for(source_division)
-    @contrast_options = ['<option selected="selected"></option>'] + Token.contrast_groups_for(source_division).map(&:to_i).uniq.map do |contrast|
+    @contrast_options = ['<option selected="selected"></option>'] + Token.contrast_groups_for(source_division).map(&:to_i).uniq.sort.map do |contrast|
       %Q(<option value="#{contrast}">#{contrast}</option>)
     end
   end
