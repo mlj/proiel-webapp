@@ -48,8 +48,8 @@ ActiveRecord::Schema.define(:version => 20081119153319) do
   end
 
   create_table "dependency_alignment_terminations", :force => true do |t|
-    t.integer "token_id",  :null => false
-    t.integer "source_id", :null => false
+    t.integer "token_id",  :default => 0, :null => false
+    t.integer "source_id", :default => 0, :null => false
   end
 
   add_index "dependency_alignment_terminations", ["token_id"], :name => "index_dependency_alignment_terminations_on_token_id"
