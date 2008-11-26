@@ -268,23 +268,50 @@ var AnaphoraAndContrast = function() {
             var selected_contrast = parseInt($F('contrast-select'));
             if(!(isFinite(selected_contrast) && selected_contrast > 0)) {
                 alert('Please select a contrast');
+                return;
             }
-            else {
-                if(confirm('Do you want to delete contrast number ' + selected_contrast + '?')) {
-                    var cls_a = 'con-' + selected_contrast + 'a';
-                    var cls_b = 'con-' + selected_contrast + 'b';
+            if(confirm('Do you want to delete contrast number ' + selected_contrast + '?')) {
+                new Ajax.Request(document.location.href.match(url_without_last_part)[0] + 'delete_contrast',
+                                 {
+                                     method: 'post',
+                                     parameters: {
+                                         contrast: selected_contrast,
+                                         authenticity_token: authenticity_token
+                                     },
+                                     onSuccess: function() {
+                                         var cls_a = 'con-' + selected_contrast + 'a';
+                                         var cls_b = 'con-' + selected_contrast + 'b';
 
-                    // Sometimes an element contains more than one instance of e.g. con-1a in its class
-                    // attribute, so we have to do this the hard way :-\
-                    var elements = $$('.sentence-divisions .' + cls_a).invoke('removeClassName', 'contrast1');
-                    elements.each(function(element) {
-                        element.className = element.className.gsub(cls_a, '');
-                    });
-                    var elements = $$('.sentence-divisions .' + cls_b).invoke('removeClassName', 'contrast2');
-                    elements.each(function(element) {
-                        element.className = element.className.gsub(cls_b, '');
-                    });
-                }
+                                         // Sometimes an element contains more than one instance of e.g. con-1a in its class
+                                         // attribute, so we have to do this the hard way :-\
+                                         var elements = $$('.sentence-divisions .' + cls_a).invoke('removeClassName', 'contrast1');
+                                         elements.each(function(element) {
+                                             element.className = element.className.gsub(cls_a, '');
+                                         });
+                                         var elements = $$('.sentence-divisions .' + cls_b).invoke('removeClassName', 'contrast2');
+                                         elements.each(function(element) {
+                                             element.className = element.className.gsub(cls_b, '');
+                                         });
+
+                                         // Remove the selected contrast from the contrast list
+                                         var cs = $('contrast-select');
+                                         cs.remove(cs.selectedIndex);
+
+                                         var elm = $('server-message');
+                                         elm.update('Changes saved');
+                                         elm.show();
+                                         elm.highlight();
+                                         elm.fade({delay: 2.0});
+                                     },
+                                     onFailure: function(response) {
+                                         var elm = $('server-message');
+                                         elm.show();
+                                         elm.update('Error: ' + response.responseText);
+                                         elm.highlight({startcolor: 'ff0000'});
+                                         elm.fade({delay: 2.0});
+                                     },
+                                 }
+                                );
             }
         },
 

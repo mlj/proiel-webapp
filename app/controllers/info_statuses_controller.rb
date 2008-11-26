@@ -1,9 +1,9 @@
 class InfoStatusesController < ApplicationController
+  before_filter :find_sentence
   before_filter :is_annotator?, :only => [:edit, :update]
 
   # GET /annotations/1/info_status
   def show
-    @sentence = Sentence.find(params[:annotation_id])
     set_contrast_options_for(@sentence.source_division)
 
     respond_to do |format|
@@ -14,15 +14,12 @@ class InfoStatusesController < ApplicationController
 
   # GET /annotations/1/info_status/edit
   def edit
-    @sentence = Sentence.find(params[:annotation_id])
     set_contrast_options_for(@sentence.source_division)
   end
 
 
   # PUT /annotations/1/info_status
   def update
-    @sentence = Sentence.find(params[:annotation_id])
-
     # If we could trust that Hash#keys and Hash#values always return values in the
     # same order, we could simply use params[:tokens].keys and params[:tokens].values as
     # arguments to the ActiveRecord::Base.update method (like in the example in the
@@ -60,13 +57,22 @@ class InfoStatusesController < ApplicationController
 
   # POST /annotations/1/info_status/delete_contrast
   def delete_contrast
-
+    Token.delete_contrast(params[:contrast], @sentence.source_division)
+  rescue
+    render :text => $!, :status => 500
+    raise
+  else
+    render :text => ''
   end
 
 
   #########
   protected
   #########
+
+  def find_sentence
+    @sentence = Sentence.find(params[:annotation_id])
+  end
 
   def get_ids_and_attributes_from_params
     # Put new and existing tokens into separate arrays to make sure new tokens are saved first

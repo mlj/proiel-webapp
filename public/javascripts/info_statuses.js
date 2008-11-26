@@ -1,5 +1,7 @@
 // Functionality for the information status editing view
 
+var url_without_last_part = new RegExp(/.+\//);
+
 // Embed "private" variables and functions in an ExtJS-style object
 var InfoStatus = function() {
 
@@ -11,7 +13,6 @@ var InfoStatus = function() {
     var selected_token = null;
     var selected_token_index = null;
     var first_numerical_code = 49; // keycode for the 1 key
-    var url_without_last_part = new RegExp(/.+\//);
 
     // private functions
 

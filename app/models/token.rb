@@ -260,6 +260,14 @@ class Token < ActiveRecord::Base
                           ).map { |record| record['contrast_group'] }
   end
 
+  def self.delete_contrast(contrast_number, source_division)
+    contrast_number = contrast_number.to_i
+    raise 'Invalid contrast number' unless contrast_number > 0  # in case we receive something strange as params[:contrast_number]
+
+    connection.update("UPDATE tokens, sentences SET tokens.contrast_group = NULL WHERE tokens.contrast_group LIKE '#{contrast_number}%' " + \
+                      "AND tokens.sentence_id = sentences.id AND sentences.source_division_id = #{source_division.id}")
+  end
+
   # Returns the distance between two tokens measured in number of sentences.
   # first_token is supposed to precede second_token.
   def self.sentence_distance_between(first_token, second_token)
