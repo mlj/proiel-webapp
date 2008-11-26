@@ -3,12 +3,15 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :sources, :source_divisions, :alignments
   map.resources :lemmata, :singular => 'lemma'
   map.resources :bookmarks
-  map.resources :tokens, :sentences
+  map.resources :tokens, :member => {
+    :dependency_alignment_group => :get,
+  }
+  map.resources :sentences
   map.resources :languages
 
   map.resources :annotations do |annotation|
     annotation.resource :sentence_division
-    annotation.resource :alignments
+    annotation.resource :dependency_alignments
     annotation.resource :morphtags
     annotation.resource :dependencies
     annotation.resource :info_status

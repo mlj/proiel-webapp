@@ -37,4 +37,12 @@ class TokensController < ResourceController::Base
       end
     end
   end
+
+  public
+
+  def dependency_alignment_group
+    @token = Token.find(params[:id])
+
+    render :json => @token.dependency_alignment_set.map(&:id)
+  end
 end

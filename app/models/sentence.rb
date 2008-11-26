@@ -355,6 +355,14 @@ class Sentence < ActiveRecord::Base
     @has_morphological_annotation ||= morphtaggable_tokens.first && !morphtaggable_tokens.first.morphtag.nil?
   end
 
+  # Returns the root token in the dependency graph or +nil+ if none
+  # exists.
+  def root_dependency_token
+    # TODO: add a validation rule that verifies that root_dependency_tokens only matches one
+    # token?
+    dependency_tokens.root_dependency_tokens.first
+  end
+
   protected
 
   def self.search(query, options = {})

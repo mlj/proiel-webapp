@@ -1,0 +1,32 @@
+<% javascript 'dependency_alignment' %>
+<% stylesheet 'dependency_alignment' %>
+
+<% javascript_tag do -%>
+  var authenticity_token = '<%= form_authenticity_token %>';
+<% end -%>
+
+<table id="texts">
+  <tr>
+    <td>
+      <div id="primary">
+        <table>
+          <tr><th><%= @aligned_sentence.citation %></th></tr>
+          <% @aligned_sentence.tokens.dependency_annotatable.each do |t| %>
+            <tr><td id="w<%= t.id %>" class="groupable"><%= t.form %></td></tr>
+          <% end %>
+        </table>
+      </div>
+    </td>
+
+    <td>
+      <div id="secondary">
+        <table>
+          <tr><th><%= @sentence.citation %></th></tr>
+          <% @sentence.tokens.dependency_annotatable.each do |t| %>
+            <tr><td id="w<%= t.id %>" class="selectable groupable"><%= t.form %></td></tr>
+          <% end %>
+        </table>
+      </div>
+    </td>
+  </tr>
+</table>

@@ -27,6 +27,9 @@ class Token < ActiveRecord::Base
   named_scope :morphology_annotatable, :conditions => { :sort => PROIEL::MORPHTAGGABLE_TOKEN_SORTS }
   named_scope :dependency_annotatable, :conditions => { :sort => PROIEL::DEPENDENCY_TOKEN_SORTS }
 
+  # Tokens that are candidate root nodes in dependency graphs.
+  named_scope :root_dependency_tokens, :conditions => [ "head_id IS NULL" ]
+
   # Tokens that belong to source +source+.
   named_scope :by_source, lambda { |source|
     { :conditions => { :sentence_id => source.source_divisions.map(&:sentences).flatten.map(&:id) } }
@@ -190,6 +193,46 @@ class Token < ActiveRecord::Base
       n.destroy
     end
     self
+  end
+
+  # Returns the dependency subgraph for the token as an unordered list.
+  def subgraph_set
+    [self] + dependents.map(&:subgraph_set).flatten
+  end
+
+  # Returns the dependency alignment set that the token is a member of, i.e.
+  # an unordered list of tokens that are members of two dependency aligned
+  # subgraphs.
+  def dependency_alignment_set
+    alignment = best_dependency_alignment
+
+    if alignment
+      primary, secondary = alignment
+
+      # Grab both subgraphs
+      primary.subgraph_set + secondary.subgraph_set
+    else
+      # No best dependency alignment, so return only ourself.
+      [self]
+    end
+  end
+
+  # Returns the best dependency alignment available. If none exists, the
+  # sentence alignment is returned. The alignment is returned as a pair
+  # of token IDs, or if none exists, +nil+.
+  def best_dependency_alignment
+    # Traverse the tree up until we find a dependency alignment edge or
+    # the root node.
+    t = self
+    t = t.head while t and not t.dependency_alignment
+
+    if t and t.dependency_alignment
+      [t, t.dependency_alignment]
+    elsif sentence.sentence_alignment
+      [sentence.root_dependency_token, sentence.sentence_alignment.root_dependency_token]
+    else
+      nil
+    end
   end
 
   # Returns true if the token has a nominal POS or a nominal syntactic relation,
