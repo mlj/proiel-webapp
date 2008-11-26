@@ -4,6 +4,7 @@
     <dt>Part:</dt><dd><%=h @source_division.title %></dd>
   </dl>
   <%= link_to_resources @source_division, :index, :edit %>
+  <%= link_to_if @source_division.aligned_source_division, "Sentence alignments", alignment_path(@source_division) %>
 </div>
 
 <% search_form_tag source_division_path(@source_division), :submit => 'Update' do %>

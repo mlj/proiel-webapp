@@ -1,3 +1,24 @@
+#--
+#
+# Copyright 2007, 2008 University of Oslo
+# Copyright 2007, 2008 Marius L. Jøhndal
+#
+# This file is part of the PROIEL web application.
+#
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+#++
 class SourceDivision < ActiveRecord::Base
   belongs_to :source
   has_many :sentences, :order => 'sentence_number ASC'
@@ -12,12 +33,17 @@ class SourceDivision < ActiveRecord::Base
     [source.citation(options), options[:abbreviated] ? abbreviated_title : title] * ' '
   end
 
+  # Returns sentence alignments for the source division.
+  #
+  # ==== Options
+  # <tt>:automatic</tt> -- If true, will automatically align sentences
+  # whose sentence alignment has not been set.
   def sentence_alignments(options = {})
     if aligned_source_division
       base_sentences = sentences
       aligned_sentences = aligned_source_division.sentences
 
-      align_sentences(aligned_sentences, base_sentences)
+      align_sentences(aligned_sentences, base_sentences, options[:automatic])
     else
       []
     end

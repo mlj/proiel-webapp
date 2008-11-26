@@ -1,1 +1,8 @@
+<div class="roundedbox">
+  <dl>
+    <dt>Sources:</dt><dd><%= link_to_source(@source_division.aligned_source_division.source) %> and <%= link_to_source(@source_division.source) %></dd>
+    <dt>Part:</dt><dd><%=h @source_division.title %></dd>
+  </dl>
+</div>
+
 <%= render :partial => 'alignment' %>

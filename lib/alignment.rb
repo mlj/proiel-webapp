@@ -1,32 +1,61 @@
+#--
 #
 # alignment.rb - Alignment support functions
 #
-# Written by Marius L. Jøhndal, 2007, 2008
+# Copyright 2007, 2008 University of Oslo
+# Copyright 2007, 2008 Marius L. Jøhndal
 #
+# This file is part of the PROIEL web application.
+#
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+#++
 
-# Returns a list of alignments of two lists of sentences. The alignment
-# is done automatically, but takes into account the +unalignable+ flag
-# on sentences, and any +sentence_alignment+ associations that already
-# exist. The +sentence_alignment+ associations make up a list of sentence
-# pairs which has to be monotonic for the function to function properly.
-# Also, sentences with a +sentence_alignment+ association are assumed
-# not to have +unalignable+ set.
+# Returns a list of alignments of two lists of sentences. If +automatic+
+# is true, the alignment is done automatically, but still takes into
+# account the +unalignable+ flag on sentences, and any +sentence_alignment+
+# associations that already exist. The +sentence_alignment+ associations
+# make up a list of sentence pairs which has to be monotonic for the
+# function to function properly. Also, sentences with a
+# +sentence_alignment+ association are assumed not to have +unalignable+ set.
 # 
 # +sentences1+ contains sentences from the primary source and +sentences2+
 # sentences from some secondary source that should be aligned with the primary
 # source. All sentences in both lists must be part of the final alignment, and
 # the start and end of the two lists represent a lower and upper bounds on the
 # alignment permutations.
-def align_sentences(sentences1, sentences2)
+def align_sentences(sentences1, sentences2, automatic = true)
   alignments = []
 
-  anchor_sentences(sentences1, sentences2) do |grouped_sentences1, grouped_sentences2|
-    alignables1 = generate_alignables(grouped_sentences1)
-    alignables2 = generate_alignables(grouped_sentences2)
-    alignments << Logos::Alignment::align_regions(alignables1, alignables2)
-  end
+  if automatic
+    anchor_sentences(sentences1, sentences2) do |grouped_sentences1, grouped_sentences2|
+      alignables1 = generate_alignables(grouped_sentences1)
+      alignables2 = generate_alignables(grouped_sentences2)
+      alignments << Logos::Alignment::align_regions(alignables1, alignables2)
+    end
 
-  alignments.flatten
+    alignments.flatten
+  else
+    anchor_sentences(sentences1, sentences2) do |grouped_sentences1, grouped_sentences2|
+      r = Logos::Alignment::AlignedRegions.new
+      r.left = grouped_sentences1
+      r.right = grouped_sentences2
+      alignments << r
+    end
+
+    alignments
+  end
 end
 
 private
@@ -48,6 +77,9 @@ def generate_alignables(sentences)
   end
 end
 
+# Accumulates sentences so that sentences are emitted in blocks
+# delimited by anchors. Each emitted block is intended for a separate
+# pass through the automatic aligner.
 def anchor_sentences(sentences1, sentences2, &block)
   # If we iterate both sentence lists one sentence at a time,
   # we will only fail if the anchor list is not monotonic.

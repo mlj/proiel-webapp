@@ -1,0 +1,26 @@
+<div class="roundedbox">
+  <dl>
+    <dt>Sources:</dt><dd><%= link_to_source(@source_division.aligned_source_division.source) %> and <%= link_to_source(@source_division.source) %></dd>
+    <dt>Part:</dt><dd><%=h @source_division.title %></dd>
+  </dl>
+  <%= link_to "Edit", edit_alignment_path(@source_division), :class => 'edit' %>
+</div>
+
+<% stylesheet 'alignment' %>
+
+<table class="alignment" id="alignment-view">
+  <% @alignments.each do |a| %>
+    <tr>
+      <td>
+        <% a.left.each do |sentence| %>
+          <%= format_sentence(sentence, { :verse_numbers => true, :sentence_numbers => true, } ) %>
+        <% end %>
+      </td>
+      <td>
+        <% a.right.each do |sentence| -%>
+          <%= format_sentence(sentence, { :verse_numbers => true, :sentence_numbers => true, } ) %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
