@@ -1,6 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :audits
-  map.resources :sources, :source_divisions, :alignments
+  map.resources :sources, :source_divisions
+  map.resources :alignments, :member => {
+    :commit => :post,
+    :uncommit => :post,
+  }
   map.resources :lemmata, :singular => 'lemma'
   map.resources :bookmarks
   map.resources :tokens, :member => {

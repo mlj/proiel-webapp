@@ -6,3 +6,10 @@
 </div>
 
 <%= render :partial => 'alignment' %>
+
+<div style="text-align: center">
+  <%= button_to "Save automatic alignments", commit_alignment_path(@source_division.id),
+    :id => 'button-commit', :disabled => false %>
+    <%= button_to "Remove automatic alignments", uncommit_alignment_path(@source_division.id),
+      :id => 'button-uncommit', :disabled => false %>
+</div>

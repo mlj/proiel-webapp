@@ -46,6 +46,7 @@ class AlignmentsController < ApplicationController
   def set_unanchored
     sentence = Sentence.find(params[:id])
     sentence.sentence_alignment = nil
+    sentence.automatic_alignment = false
     sentence.save!
 
     @alignments = sentence.source_division.sentence_alignments(:automatic => true)
@@ -77,5 +78,40 @@ class AlignmentsController < ApplicationController
     render :update do |page|
       page.replace('alignment-view', :partial => 'alignment')
     end
+  end
+
+  def commit
+    @source_division = SourceDivision.find(params[:id])
+    @alignments = @source_division.sentence_alignments(:automatic => true)
+
+    Sentence.transaction do
+      @alignments.each do |a|
+        if a.left.first and a.right.first
+          secondary_sentence = a.right.first.first
+          primary_sentence = a.left.first.first
+
+          unless secondary_sentence.sentence_alignment
+            secondary_sentence.sentence_alignment = primary_sentence
+            secondary_sentence.automatic_alignment = true
+            secondary_sentence.save!
+          end
+        end
+      end
+    end
+
+    redirect_to :action => "show"
+  end
+
+  def uncommit
+    @source_division = SourceDivision.find(params[:id])
+    Sentence.transaction do
+      @source_division.sentences.find(:all, :conditions => { :automatic_alignment => true }).each do |s|
+        s.sentence_alignment = nil
+        s.automatic_alignment = false
+        s.save!
+      end
+    end
+
+    redirect_to :action => "show"
   end
 end
