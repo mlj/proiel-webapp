@@ -1,1 +1,0 @@
-require 'assert_efficient_sql'  if RAILS_ENV == 'test'
