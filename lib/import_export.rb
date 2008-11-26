@@ -17,6 +17,7 @@ class CSVImportExport
       File.open(file_name) do |f|
         f.each_line do |l|
           values = l.chomp.gsub(/#.*$/, '').split(/\s*,\s*/, @fields.length)
+          next if values.length.zero? # skip empty lines and commented lines
           read_fields(*values)
         end
       end
@@ -31,6 +32,50 @@ class CSVImportExport
         raise "Invalid number of fields" unless values.length == @fields.length
         f.puts values.join(",")
       end
+    end
+  end
+end
+
+# Importer for dependency alignments
+class DependencyAlignmentImportExport < CSVImportExport
+  def initialize
+    super :operation, :primary_token, :secondary_token
+  end
+
+  protected
+
+  def read_fields(operation, primary_token, secondary_token)
+    case operation
+    when 'ALIGN'
+      t1 = Token.find(primary_token)
+      raise "Unable to find primary token with ID #{primary_token}" unless t1
+
+      t2 = Token.find(secondary_token)
+      raise "Unable to find secondary token with ID #{secondary_token}" unless t2
+
+      # FIXME: this is wrong. *Sentences* have to be aligned for this
+      # to work. Actually, it's even worse: the sentences that the two
+      # tokens belong to have to be part of the same sentence alignment
+      # group.
+
+      # t2 is the secondary source for alignment, thus the one with
+      # aligned_source_division set.
+      raise "Source division for tokens #{t1.id} and #{t2.id} are not aligned" unless t2.sentence.source_division.aligned_source_division == t1.sentence.source_division
+
+      t2.dependency_alignment = t1
+      t2.save!
+
+    when 'TERMINATE'
+      # This is an 'alignment termination'.
+      t = Token.find(primary_token)
+      raise "Unable to find termination token with ID #{primary_token}" unless t
+
+      s = Source.find(secondary_token)
+      raise "Unable to find termination target sourcewith ID #{secondary_token}" unless s
+
+      t.dependency_alignment_terminations.create!(:source => s)
+    else
+      raise "Invalid operation #{operation}"
     end
   end
 end
