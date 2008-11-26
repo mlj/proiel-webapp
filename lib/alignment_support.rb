@@ -1,6 +1,6 @@
 #--
 #
-# alignment.rb - Alignment support functions
+# alignment_support.rb - Alignment support functions
 #
 # Copyright 2007, 2008 University of Oslo
 # Copyright 2007, 2008 Marius L. Jøhndal
@@ -42,13 +42,13 @@ def align_sentences(sentences1, sentences2, automatic = true)
     anchor_sentences(sentences1, sentences2) do |grouped_sentences1, grouped_sentences2|
       alignables1 = generate_alignables(grouped_sentences1)
       alignables2 = generate_alignables(grouped_sentences2)
-      alignments << Logos::Alignment::align_regions(alignables1, alignables2)
+      alignments << Alignment::align_regions(alignables1, alignables2)
     end
 
     alignments.flatten
   else
     anchor_sentences(sentences1, sentences2) do |grouped_sentences1, grouped_sentences2|
-      r = Logos::Alignment::AlignedRegions.new
+      r = Alignment::AlignedRegions.new
       r.left = grouped_sentences1
       r.right = grouped_sentences2
       alignments << r
