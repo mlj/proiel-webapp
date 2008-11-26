@@ -17,6 +17,7 @@ class CSVImportExport
       File.open(file_name) do |f|
         f.each_line do |l|
           values = l.chomp.gsub(/#.*$/, '').split(/\s*,\s*/, @fields.length)
+          next if values.length.zero? # skip empty lines and commented lines
           read_fields(*values)
         end
       end
