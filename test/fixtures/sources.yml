@@ -2,7 +2,9 @@ one:
   id: 1
   title: Vulgate
   language_id: 1
+  tei_header: "<tei></tei>"
 two:
   id: 2
   title: Greek New Testament
   language_id: 2
+  tei_header: "<tei></tei>"
