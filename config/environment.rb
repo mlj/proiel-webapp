@@ -85,6 +85,7 @@ Rails::Initializer.run do |config|
   config.gem 'logos', :version => '0.0.3'
   config.gem 'libxml-ruby', :lib => 'libxml'
   config.gem 'libxslt-ruby', :lib => 'libxslt'
+  config.gem 'log4r'
 end
 
 # Release number
