@@ -202,9 +202,17 @@ class Token < ActiveRecord::Base
 
   # Returns the dependency alignment subgraph for the token as an unordered
   # list.
-  def dependency_alignment_subgraph_set
-    # FIXME
-    subgraph_set
+  def dependency_alignment_subgraph_set(aligned_source)
+    unless is_dependency_alignment_terminator?(aligned_source)
+      [self] + dependents.map { |d| d.dependency_alignment_subgraph_set(aligned_source) }.flatten
+    else
+      []
+    end
+  end
+
+  # Returns true if token is a terminator in dependency alignment.
+  def is_dependency_alignment_terminator?(aligned_source)
+    not dependency_alignment_terminations.count(:conditions => { :source_id => aligned_source.id }).zero?
   end
 
   # Returns the dependency alignment set that the token is a member of, i.e.
@@ -220,7 +228,8 @@ class Token < ActiveRecord::Base
       primary, secondary, edge_count = alignment
 
       # Grab both subgraphs
-      [primary.dependency_alignment_subgraph_set + secondary.dependency_alignment_subgraph_set, edge_count]
+      [primary.dependency_alignment_subgraph_set(secondary.sentence.source_division.source) +
+       secondary.dependency_alignment_subgraph_set(primary.sentence.source_division.source), edge_count]
     else
       # No best dependency alignment.
       [[], 0]
@@ -232,12 +241,17 @@ class Token < ActiveRecord::Base
   # of token IDs and the number of edges traversed before an alignment
   # was found, or if none exists, +nil+.
   def best_dependency_alignment
+    aligned_source = sentence.source_division.aligned_source_division.source
+
     # Traverse the tree up until we find a dependency alignment edge or
     # the root node.
     t = self
     edge_count = 0
 
     while t and not t.dependency_alignment
+      # If we've found a terminator we abort here.
+      return nil if t.is_dependency_alignment_terminator?(aligned_source)
+
       t = t.head
       edge_count += 1
     end
