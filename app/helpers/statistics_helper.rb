@@ -30,7 +30,7 @@ module StatisticsHelper
     # Now replace with empty entries except for roughly every skip'th entry
     x_labels.each_index { |i| x_labels[i] = nil unless i % skips == 0 }
  
-    average = (data.values.sum / data.length).to_i
+    average = data.length > 0 ? (data.values.sum / data.length).to_i : 0
     alfa, beta = least_squares((0..data.length-1).to_a, data.values)
     lsq = (0..data.length - 1).to_a.map { |x| alfa + beta * x }
 
