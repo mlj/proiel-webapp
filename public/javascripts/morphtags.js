@@ -1,4 +1,5 @@
 var morphtag_selection = new ExclusiveSelectionClass('selected', false);
+var palette;
 
 var PaletteWidget = Class.create({
   initialize: function(id, id_guesses) {
@@ -39,8 +40,6 @@ var PaletteWidget = Class.create({
     cascadedFieldUpdate('major', morphtags); 
   }
 });
-
-var palette = new PaletteWidget('palette', 'guesses');
 
 function onTokenSelect(token_id)
 {
@@ -175,6 +174,8 @@ function validate(ev) {
 }
 
 document.observe('dom:loaded', function() {
+  palette = new PaletteWidget('palette', 'guesses');
+
   $('morphtag-form').observe('submit', validate, false);
 
   palette.deactivate();
