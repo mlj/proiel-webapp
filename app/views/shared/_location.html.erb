@@ -11,7 +11,12 @@
   <% if controller.class == InfoStatusesController %>
     <%= link_to("Sentence divisions, morphology and dependency structure", annotation_url(@sentence)) %>
   <% end %>
+  &nbsp;
   <% if is_administrator? && controller.class != InfoStatusesController %>
     <%= link_to("Information structure", annotation_info_status_url(@sentence)) %>
+  <% end %>
+  &nbsp;
+  <% if controller.class != DependencyAlignmentsController %>
+    <%= link_to("Dependency alignment", edit_annotation_dependency_alignments_url(@sentence)) %>
   <% end %>
 </div>

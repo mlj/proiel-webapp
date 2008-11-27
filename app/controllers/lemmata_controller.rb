@@ -14,7 +14,7 @@ class LemmataController < ResourceController::Base
     if params[:lemma]
       params[:lemma][:variant] = nil if params[:lemma][:variant].blank?
       params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss].blank?
-      params[:lemma][:lemma] = params[:lemma][:lemma].chars.normalize(UNICODE_NORMALIZATION_FORM)
+      params[:lemma][:lemma] = params[:lemma][:lemma].mb_chars.normalize(UNICODE_NORMALIZATION_FORM)
       [:foreign_ids].each do |a|
         params[:lemma][a] = nil if params[:lemma][a].blank?
       end
@@ -25,7 +25,7 @@ class LemmataController < ResourceController::Base
     if params[:lemma]
       params[:lemma][:variant] = nil if params[:lemma][:variant].blank?
       params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss].blank?
-      params[:lemma][:lemma] = params[:lemma][:lemma].chars.normalize(UNICODE_NORMALIZATION_FORM)
+      params[:lemma][:lemma] = params[:lemma][:lemma].mb_chars.normalize(UNICODE_NORMALIZATION_FORM)
       [:foreign_ids].each do |a|
         params[:lemma][a] = nil if params[:lemma][a].blank?
       end

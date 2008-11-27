@@ -24,7 +24,7 @@ module ActiveRecord
         raise(ArgumentError, "Invalid normalization form") unless [:c, :kc, :d, :kd].include?(configuration[:form])
 
         validates_each(attr_names, configuration) do |record, attr_name, value|
-          record.errors.add(attr_name, configuration[:message] % configuration[:form].to_s.upcase) unless value.nil? or value.chars == value.chars.normalize(configuration[:form])
+          record.errors.add(attr_name, configuration[:message] % configuration[:form].to_s.upcase) unless value.nil? or value.mb_chars == value.mb_chars.normalize(configuration[:form])
         end
       end
     end

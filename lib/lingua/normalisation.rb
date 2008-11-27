@@ -127,16 +127,16 @@ module Lingua
     # final_only: Only changes a final vowel with an acute.
     def self.acute_to_grave(s, options = {})
       if options[:final_only]
-        s.chars.decompose.sub(FINAL_ACUTE_REGEXP, U_GRAVE).chars.normalize
+        s.mb_chars.decompose.sub(FINAL_ACUTE_REGEXP, U_GRAVE).mb_chars.normalize
       else
-        s.chars.decompose.sub(ACUTE_REGEXP, U_GRAVE).chars.normalize
+        s.mb_chars.decompose.sub(ACUTE_REGEXP, U_GRAVE).mb_chars.normalize
       end
     end
 
     # Removes all accents from a string +s+. Returns the new
     # string on Normalisation form C.
     def self.strip_accents(s)
-      s.chars.decompose.sub(ACCENTS_REGEXP, '').chars.normalize
+      s.mb_chars.decompose.sub(ACCENTS_REGEXP, '').mb_chars.normalize
     end
   end
 end
