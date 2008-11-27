@@ -60,7 +60,7 @@ class DependencyAlignmentImportExport < CSVImportExport
 
       # t2 is the secondary source for alignment, thus the one with
       # aligned_source_division set.
-      raise "Source division for tokens #{t1.id} and #{t2.id} are not aligned" unless t2.sentence.source_division.aligned_source_division == t1.sentence.source_division
+      raise "Source division #{t1.sentence.source_division.id} and #{t2.sentence.source_division.id} for tokens #{t1.id} and #{t2.id} are not aligned" unless t2.sentence.source_division.aligned_source_division == t1.sentence.source_division
 
       t2.dependency_alignment = t1
       t2.save!
