@@ -200,36 +200,52 @@ class Token < ActiveRecord::Base
     [self] + dependents.map(&:subgraph_set).flatten
   end
 
+  # Returns the dependency alignment subgraph for the token as an unordered
+  # list.
+  def dependency_alignment_subgraph_set
+    # FIXME
+    subgraph_set
+  end
+
   # Returns the dependency alignment set that the token is a member of, i.e.
   # an unordered list of tokens that are members of two dependency aligned
-  # subgraphs.
+  # subgraphs or an empty list if the token is unaligned. The total number
+  # of edges traversed before an alignment was identified is also returned.
+  # The results are returned as a pair consisting of the list and the
+  # edge count.
   def dependency_alignment_set
     alignment = best_dependency_alignment
 
     if alignment
-      primary, secondary = alignment
+      primary, secondary, edge_count = alignment
 
       # Grab both subgraphs
-      primary.subgraph_set + secondary.subgraph_set
+      [primary.dependency_alignment_subgraph_set + secondary.dependency_alignment_subgraph_set, edge_count]
     else
-      # No best dependency alignment, so return only ourself.
-      [self]
+      # No best dependency alignment.
+      [[], 0]
     end
   end
 
   # Returns the best dependency alignment available. If none exists, the
-  # sentence alignment is returned. The alignment is returned as a pair
-  # of token IDs, or if none exists, +nil+.
+  # sentence alignment is returned. The alignment is returned as a triple
+  # of token IDs and the number of edges traversed before an alignment
+  # was found, or if none exists, +nil+.
   def best_dependency_alignment
     # Traverse the tree up until we find a dependency alignment edge or
     # the root node.
     t = self
-    t = t.head while t and not t.dependency_alignment
+    edge_count = 0
+
+    while t and not t.dependency_alignment
+      t = t.head
+      edge_count += 1
+    end
 
     if t and t.dependency_alignment
-      [t, t.dependency_alignment]
+      [t, t.dependency_alignment, edge_count]
     elsif sentence.sentence_alignment
-      [sentence.root_dependency_token, sentence.sentence_alignment.root_dependency_token]
+      [sentence.root_dependency_token, sentence.sentence_alignment.root_dependency_token, edge_count]
     else
       nil
     end

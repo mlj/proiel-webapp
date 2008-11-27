@@ -42,7 +42,8 @@ class TokensController < ResourceController::Base
 
   def dependency_alignment_group
     @token = Token.find(params[:id])
+    alignment_set, edge_count = @token.dependency_alignment_set
 
-    render :json => @token.dependency_alignment_set.map(&:id)
+    render :json => { :alignment_set => alignment_set.map(&:id), :edge_count => edge_count }
   end
 end
