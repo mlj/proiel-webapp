@@ -76,6 +76,20 @@ are designed to be auto-correcting, e.g. orphaned lemmata are cleaned up by this
 The task is intended to be run whenever the annotation scheme is modified to ensure that
 all annotation remains valid.
 
+`proiel:dependency_alignments:import`
+-------------------------------------
+
+This task can be used for mass-import of dependency alignment. The data file should be
+a comma-separated file on the following format:
+
+    ALIGN,12345,67890
+    TERMINATE,12346,2
+
+This will align the dependency subgraph for token 67890 (in the secondary source)
+with the dependency subgraph for token 12345 (in the primary source). It will then
+terminate the dependency subgraph for token 12346 (in the primary source) with
+respect to the secondary source with ID 2.
+
 `proiel:semantic_tags:import` and `proiel:semantic_tags:export`
 ---------------------------------------------------------------
 

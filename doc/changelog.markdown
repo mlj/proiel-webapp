@@ -1,3 +1,4 @@
+  * Dependency alignment (Marius)
   * Added a proper, simple search language to most index pages (Marius)
   * TEI headers for metadata (Marius)
   * Sentence alignment (Marius)
