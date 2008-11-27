@@ -8,7 +8,7 @@ class MorphtagsController < ApplicationController
 
     # Perform transliteration
     if !params[:morphtags][:language].blank? and TRANSLITERATORS.has_key?(params[:morphtags][:language].to_sym)
-      xliterator = Logos::TransliteratorFactory::get_transliterator(TRANSLITERATORS[params[:morphtags][:language].to_sym])
+      xliterator = TransliteratorFactory::get_transliterator(TRANSLITERATORS[params[:morphtags][:language].to_sym])
       @results = xliterator.transliterate_string(search)
 
       completion_candidates = @results

@@ -82,7 +82,6 @@ Rails::Initializer.run do |config|
   config.gem 'diff-lcs', :lib => 'diff/lcs'
   config.gem 'ruby-sfst', :lib => 'sfst'
   config.gem 'mlj-alignment', :lib => 'alignment', :source => 'http://gems.github.com'
-  config.gem 'logos', :version => '0.0.3'
   config.gem 'libxml-ruby', :lib => 'libxml'
   config.gem 'libxslt-ruby', :lib => 'libxslt'
   config.gem 'log4r'

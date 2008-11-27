@@ -5,7 +5,6 @@
 # Written by Marius L. Jøhndal, 2008.
 #
 require 'proiel/tagger/analysis_method'
-require 'logos'
 require 'sfst'
 
 module PROIEL

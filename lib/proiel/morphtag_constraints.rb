@@ -5,7 +5,6 @@
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
 require 'singleton'
-require 'logos'
 require 'sfst'
 
 module PROIEL
