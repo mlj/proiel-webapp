@@ -5,6 +5,14 @@
   var authenticity_token = '<%= form_authenticity_token %>';
 <% end -%>
 
+<div class="roundedbox">
+  <dl>
+    <dt>Sentences:</dt><dd><%= link_to_sentence(@aligned_sentence, 'Primary') %> and <%= link_to_sentence(@sentence, 'Secondary') %></dd>
+  </dl>
+  <%= link_to_if @sentence.has_previous_sentence?, 'Show previous', annotation_dependency_alignments_path(@sentence.previous_sentence), :class => :previous %>
+  <%= link_to_if @sentence.has_next_sentence?, 'Show next', annotation_dependency_alignments_path(@sentence.next_sentence), :class => :next %>
+</div>
+
 <table id="texts">
   <tr>
     <td>

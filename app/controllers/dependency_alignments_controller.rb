@@ -1,5 +1,5 @@
 class DependencyAlignmentsController < ApplicationController
-  def edit
+  def show
     @sentence = Sentence.find(params[:annotation_id])
     @aligned_sentence = @sentence.sentence_alignment
 

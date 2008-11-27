@@ -12,6 +12,7 @@
   <%= link_to_if @sentence.has_next_sentence?, 'Show next', @sentence.next_sentence, :class => :next %>
   <%= link_to 'Index', sentences_url, :class => :index %>
   <%= link_to_if @sentence.has_previous_sentence?, 'Remove', @sentence, :confirm => 'Are you sure? This will append all tokens to the previous sentence in the text and remove all syntactic annotation from the new merged sentence.', :method => :delete, :class => :delete %>
+  <%= link_to_dependency_alignments @sentence, 'Dependency alignments' %>
 </div>
 
 <% layer_unless @sentence.notes.empty?, "notes" do -%>
