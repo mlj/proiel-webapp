@@ -69,3 +69,20 @@
 .contrast2 {
    border: 2px solid red !important;
 }
+
+/* Classes for contrast groups */
+.contrast1 {
+   border: 2px solid yellow !important;
+}
+.contrast2 {
+   border: 2px solid green !important;
+}
+.contrast3 {
+   border: 2px solid red !important;
+}
+.contrast4 {
+   border: 2px solid magenta !important;
+}
+.contrast5 {
+   border: 2px solid brown !important;
+}

@@ -2,6 +2,8 @@
 // Created by Anders Nøklestad
 // Drawing of anaphor links inspired by code in the BREDT demonstrator (http://bredt.uib.no) by Øystein Reigem.
 
+var current_contrast_group_letter_code;
+
 // Embed "private" variables and functions in an ExtJS-style object
 var AnaphoraAndContrast = function() {
 
@@ -9,6 +11,8 @@ var AnaphoraAndContrast = function() {
 
     var tokens = null;
     var group_no = 0;
+    var first_letter_code = 65; // keycode for the 'a' key
+    var max_contrast_groups = 5;
 
     // jsGraphics object used to draw lines
     var jg = null;
@@ -24,6 +28,12 @@ var AnaphoraAndContrast = function() {
     var colour = 'blue';
 
     // private functions
+
+    /////////////////////////////////////
+    //
+    // Event handling for tokens
+    //
+    /////////////////////////////////////
 
     function setEventHandlingForTokens() {
         tokens.invoke('observe', 'click', antecedentClickHandler);
@@ -50,17 +60,16 @@ var AnaphoraAndContrast = function() {
     }
 
     function contrastClickHandler(event) {
-        if(!(event.altKey && (event.ctrlKey || event.shiftKey))) return;
+        if(!current_contrast_group_letter_code) return;
 
-        var display_class_name = 'contrast' + (event.ctrlKey ? '1' : '2')
-        var contrast_select = $('contrast-select');
-        var selected_contrast = contrast_select.options[contrast_select.selectedIndex].value;
+        var selected_contrast = $F('contrast-select');
         if(!selected_contrast) {
             alert('Please select or create a contrast.');
             return;
         }
-
-        var group_class_name = 'con-' + selected_contrast + (event.ctrlKey ? 'a' : 'b');
+        var contrast_group = (current_contrast_group_letter_code - first_letter_code + 1);
+        var display_class_name = 'contrast' + contrast_group;
+        var group_class_name = 'con-' + selected_contrast + String.fromCharCode(current_contrast_group_letter_code).toLowerCase();
 
         this.addClassName('info-changed');
 
@@ -73,6 +82,25 @@ var AnaphoraAndContrast = function() {
             this.addClassName(group_class_name);
             this.addClassName(display_class_name);
         }
+    }
+
+    /////////////////////////////////////
+    //
+    // Miscellaneous functions
+    //
+    /////////////////////////////////////
+
+    function setEventHandlingForDocument() {
+        document.observe('keydown', function(event) {
+            if(event.keyCode >= first_letter_code && event.keyCode < first_letter_code + max_contrast_groups) {
+                // As long as this key is pressed, clicked-on tokens will be put in the contrast
+                // group with the letter given by event.keyCode
+                current_contrast_group_letter_code = event.keyCode;
+            }
+        });
+        document.observe('keyup', function(event) {
+            current_contrast_group_letter_code = null;
+        });
     }
 
     function removeAntecedentLink(anaphor, antecedent, antecedentClass) {
@@ -194,8 +222,9 @@ var AnaphoraAndContrast = function() {
     }
 
     function clearContrasts() {
-        $$('.sentence-divisions .contrast1').invoke('removeClassName', 'contrast1');
-        $$('.sentence-divisions .contrast2').invoke('removeClassName', 'contrast2');
+        $R(1, max_contrast_groups).each(function(number) {
+            $$('.sentence-divisions .contrast'+ number).invoke('removeClassName', 'contrast' + number);
+        });
     }
 
     return {
@@ -211,6 +240,7 @@ var AnaphoraAndContrast = function() {
             jg.setColor(colour);
 
             setEventHandlingForTokens();
+            setEventHandlingForDocument();
         },
 
         showAntecedentFor: function(token, keep_others) {
@@ -249,8 +279,9 @@ var AnaphoraAndContrast = function() {
 
             if(!number) return;
 
-            $$('.sentence-divisions .con-' + number + 'a').invoke('addClassName', 'contrast1');
-            $$('.sentence-divisions .con-' + number + 'b').invoke('addClassName', 'contrast2');
+            $R(1, max_contrast_groups).each(function(group_no) {
+                $$('.sentence-divisions .con-' + number + String.fromCharCode(first_letter_code + group_no - 1).toLowerCase()).invoke('addClassName', 'contrast' + group_no);
+            });
         },
 
         createNewContrast: function() {
@@ -279,18 +310,15 @@ var AnaphoraAndContrast = function() {
                                          authenticity_token: authenticity_token
                                      },
                                      onSuccess: function() {
-                                         var cls_a = 'con-' + selected_contrast + 'a';
-                                         var cls_b = 'con-' + selected_contrast + 'b';
+                                         $R(1, max_contrast_groups).each(function(group_no) {
+                                             var cls = 'con-' + selected_contrast + String.fromCharCode(first_letter_code + group_no - 1).toLowerCase();
+                                             var elements = $$('.sentence-divisions .' + cls).invoke('removeClassName', 'contrast' + group_no);
 
-                                         // Sometimes an element contains more than one instance of e.g. con-1a in its class
-                                         // attribute, so we have to do this the hard way :-\
-                                         var elements = $$('.sentence-divisions .' + cls_a).invoke('removeClassName', 'contrast1');
-                                         elements.each(function(element) {
-                                             element.className = element.className.gsub(cls_a, '');
-                                         });
-                                         var elements = $$('.sentence-divisions .' + cls_b).invoke('removeClassName', 'contrast2');
-                                         elements.each(function(element) {
-                                             element.className = element.className.gsub(cls_b, '');
+                                             // Sometimes an element contains more than one instance of e.g. con-1a in its class
+                                             // attribute, so we cannot simply use removeClassName :-\
+                                             elements.each(function(element) {
+                                                 element.className = element.className.gsub(cls, '');
+                                             });
                                          });
 
                                          // Remove the selected contrast from the contrast list
