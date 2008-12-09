@@ -44,7 +44,7 @@ var Prodrop = function() {
     }
 
     function verbClickHandler(event) {
-        if(event.ctrlKey || event.shiftKey) return;      // we don't handle ctrl-clicks or shift-clicks here
+        if(event.ctrlKey || event.metaKey || event.shiftKey) return;      // we don't handle ctrl-clicks or shift-clicks here
 
         selected_verb = this;
         showProdropMenuFor(this);

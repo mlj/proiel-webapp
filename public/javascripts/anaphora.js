@@ -41,7 +41,7 @@ var AnaphoraAndContrast = function() {
     }
 
     function antecedentClickHandler(event) {
-        if(!event.ctrlKey || event.altKey) return;
+        if(!(event.ctrlKey || event.metaKey) || event.altKey) return;
 
         var selected_token = InfoStatus.getSelectedToken();
 
