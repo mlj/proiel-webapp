@@ -337,7 +337,7 @@ module PROIEL
       elsif [:xadv, :piv, :xobj].include?(self.relation)
         "subject"
       else
-        "shared-argument"
+        slashee.relation
       end
     end
 
