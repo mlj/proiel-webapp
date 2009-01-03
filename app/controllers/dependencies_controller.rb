@@ -22,7 +22,7 @@ class DependenciesController < ApplicationController
     @tokens = Hash[*@sentence.dependency_tokens.collect do |token|
       [token.id, { 
         :morphtag => Hash[token.morph].merge({
-          :language => @sentence.source.language,
+          :language => @sentence.source_division.source.language,
           :finite => [:i, :s, :m, :o].include?(token.morph[:mood]),
           :form => token.form,
           :lemma => token.lemma ? token.lemma.lemma : nil,
