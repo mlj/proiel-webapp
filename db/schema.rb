@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081119153319) do
+ActiveRecord::Schema.define(:version => 20090113230909) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -136,6 +136,8 @@ ActiveRecord::Schema.define(:version => 20081119153319) do
     t.datetime "updated_at"
   end
 
+  add_index "semantic_attribute_values", ["semantic_attribute_id"], :name => "index_semantic_attribute_values_on_semantic_attribute_id"
+
   create_table "semantic_attributes", :force => true do |t|
     t.string   "tag",        :limit => 64, :default => "", :null => false
     t.datetime "created_at"
@@ -150,6 +152,9 @@ ActiveRecord::Schema.define(:version => 20081119153319) do
     t.datetime "updated_at"
   end
 
+  add_index "semantic_tags", ["taggable_id"], :name => "index_semantic_tags_on_taggable_id"
+  add_index "semantic_tags", ["taggable_type"], :name => "index_semantic_tags_on_taggable_type"
+
   create_table "sentences", :force => true do |t|
     t.integer  "sentence_number",       :default => 0,     :null => false
     t.datetime "created_at"
@@ -158,10 +163,10 @@ ActiveRecord::Schema.define(:version => 20081119153319) do
     t.datetime "annotated_at"
     t.integer  "reviewed_by"
     t.datetime "reviewed_at"
-    t.integer  "source_division_id",    :default => 0,     :null => false
     t.boolean  "unalignable",           :default => false, :null => false
     t.boolean  "automatic_alignment",   :default => false
     t.integer  "sentence_alignment_id"
+    t.integer  "source_division_id",    :default => 0,     :null => false
   end
 
   add_index "sentences", ["source_division_id", "sentence_number"], :name => "index_sentences_on_source_division_id_and_sentence_number"
