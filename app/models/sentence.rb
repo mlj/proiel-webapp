@@ -13,7 +13,47 @@ class Sentence < ActiveRecord::Base
 
   # All tokens with dependents and information structure included
   has_many :tokens_with_dependents_and_info_structure, :class_name => 'Token',
-     :include => [:dependents, :antecedent], :order => 'tokens.token_number'
+     :include => [:dependents, :antecedent], :order => 'tokens.token_number' do
+
+    def with_prodrops_in_place
+      prodrops, others = find(:all).partition { |token| token.form == 'PRO' }
+
+      prodrops.each do |prodrop|
+        head, head_index = others.each_with_index do |token, index|
+          break [token, index] if token.id == prodrop.head_id
+        end
+        raise "No head found for prodrop element with ID #{prodrop.id}!" unless head
+
+        relation = prodrop.relation.to_s
+        insertion_point = case relation
+                          when 'sub'
+                            # Position subjects before the verb
+                            head_index
+
+                          when 'obl'
+                            if others[head_index + 1].respond_to?(:relation) &&
+                                                      others[head_index + 1].relation == 'obj'
+                              # Position obliques after the object, if any,...
+                              head_index + 2
+                            else
+                              # ...or otherwise after the verb
+                              head_index + 1
+                            end
+
+                          when 'obj'
+                            # Position objects after the verb
+                            head_index + 1
+
+                          else
+                            raise "Unknown relation: #{relation}!"
+                          end
+
+        prodrop.form += '-' + relation.upcase
+        others.insert(insertion_point, prodrop)
+      end
+      others
+    end
+  end
 
   # Tokens that can be tagged with dependency relations.
   has_many :dependency_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
