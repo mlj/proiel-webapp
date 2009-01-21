@@ -141,7 +141,7 @@ class InfoStatusesController < ApplicationController
     # syntactic_annotation= will have created a token at the end of the sentence
     prodrop_token = Token.find(@sentence.tokens.last.id)
     prodrop_token.verse = verb_token.verse
-    prodrop_token.form = 'PRO-' + relation.upcase
+    prodrop_token.form = 'PRO'
     prodrop_token.info_status = prodrop_attr[:info_status]
     prodrop_token.empty_token_sort = 'P'
     prodrop_token.save!
