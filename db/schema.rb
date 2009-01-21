@@ -162,6 +162,8 @@ ActiveRecord::Schema.define(:version => 20090120184819) do
     t.datetime "updated_at"
   end
 
+  add_index "semantic_attribute_values", ["semantic_attribute_id"], :name => "index_semantic_attribute_values_on_semantic_attribute_id"
+
   create_table "semantic_attributes", :force => true do |t|
     t.string   "tag",        :limit => 64, :default => "", :null => false
     t.datetime "created_at"
@@ -175,6 +177,9 @@ ActiveRecord::Schema.define(:version => 20090120184819) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "semantic_tags", ["taggable_id"], :name => "index_semantic_tags_on_taggable_id"
+  add_index "semantic_tags", ["taggable_type"], :name => "index_semantic_tags_on_taggable_type"
 
   create_table "sentences", :force => true do |t|
     t.integer  "sentence_number",       :default => 0,     :null => false
