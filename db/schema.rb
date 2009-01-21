@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081119153319) do
+ActiveRecord::Schema.define(:version => 20090120184819) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -47,6 +47,14 @@ ActiveRecord::Schema.define(:version => 20081119153319) do
     t.string "code",         :limit => 8,  :default => "", :null => false
   end
 
+  create_table "changesets", :force => true do |t|
+    t.datetime "created_at",                                 :null => false
+    t.integer  "changer_id",                 :default => 0,  :null => false
+    t.string   "changer_type", :limit => 16, :default => "", :null => false
+  end
+
+  add_index "changesets", ["created_at"], :name => "index_changesets_on_created_at"
+
   create_table "dependency_alignment_terminations", :force => true do |t|
     t.integer "token_id",  :default => 0, :null => false
     t.integer "source_id", :default => 0, :null => false
@@ -82,6 +90,20 @@ ActiveRecord::Schema.define(:version => 20081119153319) do
     t.text     "summary",                                  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "jobs", :force => true do |t|
+    t.string   "name",        :limit => 64,                               :default => "",    :null => false
+    t.text     "parameters"
+    t.integer  "user_id",                                                 :default => 0,     :null => false
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.enum     "result",      :limit => [:successful, :failed, :aborted]
+    t.integer  "source_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "audited",                                                 :default => false, :null => false
+    t.text     "log"
   end
 
   create_table "languages", :force => true do |t|
@@ -129,6 +151,10 @@ ActiveRecord::Schema.define(:version => 20081119153319) do
     t.string "description", :limit => 64, :default => "", :null => false
   end
 
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version"
+  end
+
   create_table "semantic_attribute_values", :force => true do |t|
     t.integer  "semantic_attribute_id",               :default => 0,  :null => false
     t.string   "tag",                   :limit => 64, :default => "", :null => false
@@ -158,10 +184,10 @@ ActiveRecord::Schema.define(:version => 20081119153319) do
     t.datetime "annotated_at"
     t.integer  "reviewed_by"
     t.datetime "reviewed_at"
-    t.integer  "source_division_id",    :default => 0,     :null => false
     t.boolean  "unalignable",           :default => false, :null => false
     t.boolean  "automatic_alignment",   :default => false
     t.integer  "sentence_alignment_id"
+    t.integer  "source_division_id",    :default => 0,     :null => false
   end
 
   add_index "sentences", ["source_division_id", "sentence_number"], :name => "index_sentences_on_source_division_id_and_sentence_number"
@@ -207,7 +233,7 @@ ActiveRecord::Schema.define(:version => 20081119153319) do
     t.integer  "lemma_id"
     t.string   "relation",                     :limit => 20
     t.integer  "head_id"
-    t.enum     "sort",                         :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end, :prodrop],    :default => :text, :null => false
+    t.enum     "sort",                         :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end],              :default => :text, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "source_morphtag",              :limit => 17

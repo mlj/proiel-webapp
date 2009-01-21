@@ -135,18 +135,18 @@ class InfoStatusesController < ApplicationController
     verb_node = graph[verb_id]
 
     verb_token = Token.find(verb_id)
-    prodrop_token = @sentence.tokens.create!({
-                                               :verse => verb_token.verse,
-                                               :token_number => @sentence.max_token_number + 1,
-                                               :form => 'PRO-' + relation.upcase,
-                                               :relation => relation,
-                                               :sort => :prodrop,
-                                               :info_status => prodrop_attr[:info_status]
-                                             })
-    adjust_token_numbers(prodrop_token, verb_token, relation)
-    prodrop_node = graph.node_class
-    graph.add_node(prodrop_token.id, relation, verb_token.id)
+    graph.add_node(prodrop_id, relation, verb_token.id)
     @sentence.syntactic_annotation = graph
+
+    # syntactic_annotation= will have created a token at the end of the sentence
+    prodrop_token = Token.find(@sentence.tokens.last.id)
+    prodrop_token.verse = verb_token.verse
+    prodrop_token.form = 'PRO-' + relation.upcase
+    prodrop_token.info_status = prodrop_attr[:info_status]
+    prodrop_token.empty_token_sort = 'P'
+    prodrop_token.save!
+
+    adjust_token_numbers(prodrop_token, verb_token, relation)
     prodrop_token
   end
 
