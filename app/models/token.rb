@@ -309,6 +309,9 @@ class Token < ActiveRecord::Base
   # Returns the distance between two tokens measured in number of words (i.e., tokens with sort == 'text').
   # first_token is supposed to precede second_token.
   def self.word_distance_between(first_token, second_token)
+    first_token = first_token.head if first_token.empty_dependency_sort == 'P'
+    second_token = first_token.head if second_token.empty_dependency_sort == 'P'
+
     if first_token.sentence.sentence_number == second_token.sentence.sentence_number
       num_words = first_token.sentence.tokens.word.count(:conditions => [
                                                            'token_number BETWEEN ? AND ?',
