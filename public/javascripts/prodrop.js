@@ -30,7 +30,15 @@ var Prodrop = function() {
                                    relation + '-' + selected_verb.id);
         prodrop_token.update(prodrop_text[relation]);
         insertion.set(prodrop_positions[relation], prodrop_token);
-        selected_verb.insert(insertion.toObject());
+
+        var pivot = selected_verb;
+        if(relation === 'obl') {
+            var word_after_verb = selected_verb.nextSiblings().first();
+            if(word_after_verb && word_after_verb.innerHTML === 'PRO-OBJ') {
+                pivot = word_after_verb;
+            }
+        }
+        pivot.insert(insertion.toObject());
         AnaphoraAndContrast.addToken(prodrop_token);
 
         menu.hide();
