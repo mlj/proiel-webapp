@@ -146,28 +146,30 @@ class InfoStatusesController < ApplicationController
     prodrop_token.empty_token_sort = 'P'
     prodrop_token.save!
 
-    adjust_token_numbers(prodrop_token, verb_token, relation)
     prodrop_token
   end
 
-  # Moves a new prodrop token to the correct position in the token_number sequence
-  def adjust_token_numbers(prodrop_token, verb_token, relation)
-    new_token_number = verb_token.token_number + (relation == 'sub' ? 0 : 1)
+# We don't do this anymore, but it could come in handy as inspiration for positioning prodrop
+# elements correctly in view code, so don't delete it yet
+#
+#   # Moves a new prodrop token to the correct position in the token_number sequence
+#   def adjust_token_numbers(prodrop_token, verb_token, relation)
+#     new_token_number = verb_token.token_number + (relation == 'sub' ? 0 : 1)
 
-    # Move all later tokens one step to the right
-    @sentence.tokens.reverse.each do |token|
-      if token.token_number >= new_token_number
-        token.token_number += 1
-        token.save!
-      else
-        break
-      end
-    end
+#     # Move all later tokens one step to the right
+#     @sentence.tokens.reverse.each do |token|
+#       if token.token_number >= new_token_number
+#         token.token_number += 1
+#         token.save!
+#       else
+#         break
+#       end
+#     end
 
-    # Insert the prodrop token in the correct position
-    prodrop_token.token_number = new_token_number
-    prodrop_token.save!
-  end
+#     # Insert the prodrop token in the correct position
+#     prodrop_token.token_number = new_token_number
+#     prodrop_token.save!
+#   end
 
   def set_contrast_options_for(source_division)
     @contrast_options = ['<option selected="selected"></option>'] + Token.contrast_groups_for(source_division).map(&:to_i).uniq.sort.map do |contrast|
