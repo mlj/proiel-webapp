@@ -35,6 +35,21 @@ keeping tag set and database synchronised.
 Note that this `rake` task also modifies the `source_morphtag` attribute of each token
 in the same way it modifies the `morphtag` attribute.
 
+This task is intended for use when the morpholgical schema is changed, but may also be
+used in other situations. To facilitate this, it is possible to restrict the task's
+operation to tokens assigned to a specific lemma:
+
+    $ rake proiel:morphology:reassign FIELD=voice FROM=o TO=p LEMMA=1234
+
+`proiel:morphology:harmonize`
+----------------------------
+
+This task is used to change all the part of speech of all tokens belonging to a
+particular lemma so that it corresponds to the part of speech set for the lemma.
+For example
+
+    $ rake proiel:morphology:harmonize LEMMA=1234
+
 `proiel:morphology:force_manual_tags`
 -------------------------------------
 

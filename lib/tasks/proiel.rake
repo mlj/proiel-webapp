@@ -111,16 +111,30 @@ namespace :proiel do
       v.execute!
     end
 
-    desc "Reassign a morphological field. Options: FIELD=field, FROM=from_value, TO=to_value"
-    task(:reassign => :myenvironment) do
-      field, from_value, to_value = ENV['FIELD'], ENV['FROM'], ENV['TO']
-      raise "Missing argument" unless field and from_value and to_value
+    desc "Harmonize the POS of all tokens belonging to a lemma to the POS of the lemma. Options: LEMMA=lemma_id"
+    task(:harmonize => :myenvironment) do
+      lemma = ENV['LEMMA']
+      raise "Lemma identifier required" unless lemma
+      raise "Unable to find lemma" unless Lemma.exists?(lemma)
+      new_pos = Lemma.find(lemma).pos
+      raise "Lemma does not have a part of speech" if new_pos.blank?
+      require 'mass_assignment'
+      Token.transaction do
+	mt = MassTokenAssignment.new
+	mt.reassign_morphology!(:major, nil, new_pos.first, 'morphtag', lemma)
+	mt.reassign_morphology!(:minor, nil, new_pos.last, 'morphtag', lemma)
+      end
+    end
 
+    desc "Reassign a morphological field. Options: FIELD=field, FROM=from_value, TO=to_value. Optional options: LEMMA=lemma_id"
+    task(:reassign => :myenvironment) do
+      field, from_value, to_value, lemma = ENV['FIELD'], ENV['FROM'], ENV['TO'], ENV['LEMMA']
+      raise "Missing argument" unless field and from_value and to_value
       require 'mass_assignment'
       Token.transaction do
         mt = MassTokenAssignment.new
-        mt.reassign_morphology!(field, from_value, to_value)
-        mt.reassign_morphology!(field, from_value, to_value, 'source_morphtag')
+        mt.reassign_morphology!(field, from_value, to_value, 'morphtag', lemma)
+        mt.reassign_morphology!(field, from_value, to_value, 'source_morphtag', lemma)
       end
     end
   end
