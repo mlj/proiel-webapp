@@ -146,6 +146,12 @@ class InfoStatusesController < ApplicationController
     prodrop_token.empty_token_sort = 'P'
     prodrop_token.save!
 
+    # This is apparently needed after saving a new graph node to the database in order to make
+    # sure that the new node is included in the dependency_tokens collection. Otherwise,
+    # the node will be deleted the next time we run syntactic_annotation= (e.g., if we try to
+    # create more than one prodrop token as part of the same save operation).
+    @sentence.dependency_tokens.reload
+
     prodrop_token
   end
 
