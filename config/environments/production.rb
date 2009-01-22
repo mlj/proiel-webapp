@@ -22,4 +22,4 @@ config.action_mailer.delivery_method = :sendmail
 config.action_view.cache_template_loading = true
 
 SITE_CANONICAL_URL = 'http://foni.uio.no:3000'
-SITE_ADMINISTRATOR_EMAIL = 'mariuslj@ifi.uio.no'
+SITE_ADMINISTRATOR_EMAIL = ['mariuslj@ifi.uio.no', 'd.t.t.haug@ifikk.uio.no']
