@@ -412,41 +412,58 @@ module PROIEL
 
     protected
 
-    EMPTY_NODE_STYLES = {
-      'V' => { :label => 'V', :shape => 'circle', :fontcolor => 'black', },
-      'C' => { :label => 'C', :shape => 'diamond', :fontcolor => 'black', },
-      :root => { :label => '', :shape => 'circle', :fontcolor => 'black', },
-    }
+    DEFAULT_STYLE = {
+      :default => {
+        :nodes => { :fontcolor => 'black', },
+        :edges => { :color => 'orange', :fontcolor => 'black' },
+        :secondary_edges => { :color => 'blue', :fontcolor => 'blue', :style => 'dashed' },
+      },
+      :empty => {
+        'V' => { :nodes => { :label => 'V', :shape => 'circle', }, },
+        'C' => { :nodes => { :label => 'C', :shape => 'diamond', }, },
+        'P' => { :nodes => { :label => 'PRO', :shape => 'hexagon', }, :ignore => true },
+        :root => { :nodes => { :label => '', :shape => 'circle', }, },
+      },
+      :coordinator => { :nodes => { :shape => 'diamond' }, },
+      :others => { :nodes => { :shape => 'box' }, },
+    }.freeze
 
     def regular_dot(dot, node_options)
       @f = dot
       @f.puts "digraph G {"
       @f.puts "  charset=\"UTF-8\";"
 
-      make_node(:root, node_options.merge({ :label => '', :shape => 'circle' }))
+      default_edge_style = DEFAULT_STYLE[:default][:edges] || {}
+      default_edge_style.merge!(node_options)
+      default_secondary_edge_style = DEFAULT_STYLE[:default][:secondary_edges] || {}
+      default_secondary_edge_style.merge!(node_options)
+      default_node_style = DEFAULT_STYLE[:default][:nodes] || {}
+      default_node_style.merge!(node_options)
+
+      make_styled_node(:root, '', default_node_style, DEFAULT_STYLE[:empty][:root][:nodes]) unless DEFAULT_STYLE[:empty][:root][:ignore]
 
       @nodes.values.each do |node|
-        identifier, relation, head, slashes = node.identifier, node.relation, node.head, node.slashes
-        form, empty = node.data.values_at(:form, :empty)
+        identifier, relation, head, slashes, empty = node.identifier, node.relation, node.head, node.slashes, node.data[:empty]
 
-        if empty
-          make_node(identifier, node_options.merge(EMPTY_NODE_STYLES[empty]))
+        chosen_style = if empty
+          DEFAULT_STYLE[:empty][empty]
         elsif node.is_coordinator? and node.has_dependents?
-          make_node(identifier, node_options.merge({ :label => form, :shape => 'diamond' }))
+          DEFAULT_STYLE[:coordinator]
         else
-          make_node(identifier, node_options.merge({ :label => form, :shape => 'box' }))
+          DEFAULT_STYLE[:others]
         end
 
-        rel_colour = 'black'
-        if head and relation
-          make_edge(head.identifier, identifier,
-                    node_options.merge({ :color => 'orange', :weight => 1.0,
-                                         :label => relation.to_s.upcase, :fontcolor => rel_colour }))
-        end
+        make_styled_node(identifier, node.data[:form],
+                         default_node_style,
+                         chosen_style[:nodes]) unless chosen_style[:ignore]
+        make_styled_edge(head.identifier, identifier, relation.to_s.upcase,
+                         default_edge_style.merge({ :weight => 1.0, }),
+                         chosen_style[:edges]) if head and relation and not chosen_style[:ignore]
 
         slashes.each do |slashee|
-          make_edge(identifier, slashee.identifier,
-                    node_options.merge({ :label => node.interpret_slash(slashee).capitalize, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dashed" }))
+          make_styled_edge(identifier, slashee.identifier, node.interpret_slash(slashee).capitalize,
+                           default_secondary_edge_style.merge({ :weight => 0.0 }),
+                           chosen_style[:secondary_edges])
         end
       end
 
@@ -505,6 +522,26 @@ module PROIEL
 
       @f.puts "}"
       @f.close
+    end
+
+    # Creates a styled node with identifier +identifier+. The label is
+    # set to +default_label+ unless overridden by styling in +default_style+
+    # or +local_style+. Remaining styling is determined by +default_style+
+    # and +local_style+. Both +default_style+ and +local_style+ may be
+    # +nil+ if not set.
+    def make_styled_node(identifier, default_label, default_style = nil, local_style = nil)
+      make_node(identifier,
+                { :label => default_label }.merge(default_style || {}).merge(local_style || {}))
+    end
+
+    # Creates a styled edge from identifier +identifier1+ to identifier
+    # +identifier2+. The label is set to +default_label+ unless overridden by
+    # styling in +default_style+ or +local_style+. Remaining styling is
+    # determined by +default_style+ and +local_style+. Both +default_style+
+    # and +local_style+ may be +nil+ if not set.
+    def make_styled_edge(identifier1, identifier2, default_label, default_style = nil, local_style = nil)
+      make_edge(identifier1, identifier2,
+                { :label => default_label }.merge(default_style || {}).merge(local_style || {}))
     end
 
     def make_node(obj, attrs)
