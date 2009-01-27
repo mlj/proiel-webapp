@@ -16,7 +16,7 @@ class Sentence < ActiveRecord::Base
      :include => [:dependents, :antecedent], :order => 'tokens.token_number' do
 
     def with_prodrops_in_place
-      prodrops, others = find(:all).partition { |token| token.form == 'PRO' }
+      prodrops, others = find(:all).partition { |token| token.empty_token_sort == 'P' }
 
       prodrops.each do |prodrop|
         head, head_index = others.each_with_index do |token, index|
@@ -48,7 +48,7 @@ class Sentence < ActiveRecord::Base
                             raise "Unknown relation: #{relation}!"
                           end
 
-        prodrop.form += '-' + relation.upcase
+        prodrop.form = 'PRO-' + relation.upcase
         others.insert(insertion_point, prodrop)
       end
       others

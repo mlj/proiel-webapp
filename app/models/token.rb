@@ -359,7 +359,7 @@ class Token < ActiveRecord::Base
 
     # sort :empty_dependency_token <=> form.nil?
     if sort == :empty_dependency_token or sort == :lacuna_start or sort == :lacuna_end or form.nil?
-      errors.add_to_base("Empty tokens must have NULL form and sort set to 'empty_dependency_token' or 'lacuna'") unless (sort == :empty_dependency_token or sort == :lacuna_start or sort == :lacuna_end) and (form.nil? or form == 'PRO')
+      errors.add_to_base("Empty tokens must have NULL form and sort set to 'empty_dependency_token' or 'lacuna'") unless (sort == :empty_dependency_token or sort == :lacuna_start or sort == :lacuna_end) and form.nil?
     end
 
     # sort :presentation_form <=> :presentation_span <=> (contraction || emendation || abbreviation || capitalisation)

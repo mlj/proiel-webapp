@@ -133,7 +133,6 @@ class InfoStatusesController < ApplicationController
 
     graph = @sentence.dependency_graph
     verb_node = graph[verb_id]
-
     verb_token = Token.find(verb_id)
     graph.add_node(prodrop_id, relation, verb_token.id)
     @sentence.syntactic_annotation = graph
@@ -141,7 +140,7 @@ class InfoStatusesController < ApplicationController
     # syntactic_annotation= will have created a token at the end of the sentence
     prodrop_token = Token.find(@sentence.tokens.last.id)
     prodrop_token.verse = verb_token.verse
-    prodrop_token.form = 'PRO'
+    prodrop_token.form = nil
     prodrop_token.info_status = prodrop_attr[:info_status]
     prodrop_token.empty_token_sort = 'P'
     prodrop_token.save!
