@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090120184819) do
+ActiveRecord::Schema.define(:version => 20090130155652) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -47,6 +47,14 @@ ActiveRecord::Schema.define(:version => 20090120184819) do
     t.string "code",         :limit => 8,  :default => "", :null => false
   end
 
+  create_table "changesets", :force => true do |t|
+    t.datetime "created_at",                                 :null => false
+    t.integer  "changer_id",                 :default => 0,  :null => false
+    t.string   "changer_type", :limit => 16, :default => "", :null => false
+  end
+
+  add_index "changesets", ["created_at"], :name => "index_changesets_on_created_at"
+
   create_table "dependency_alignment_terminations", :force => true do |t|
     t.integer "token_id",  :default => 0, :null => false
     t.integer "source_id", :default => 0, :null => false
@@ -82,6 +90,20 @@ ActiveRecord::Schema.define(:version => 20090120184819) do
     t.text     "summary",                                  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "jobs", :force => true do |t|
+    t.string   "name",        :limit => 64,                               :default => "",    :null => false
+    t.text     "parameters"
+    t.integer  "user_id",                                                 :default => 0,     :null => false
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.enum     "result",      :limit => [:successful, :failed, :aborted]
+    t.integer  "source_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "audited",                                                 :default => false, :null => false
+    t.text     "log"
   end
 
   create_table "languages", :force => true do |t|
@@ -127,6 +149,10 @@ ActiveRecord::Schema.define(:version => 20090120184819) do
   create_table "roles", :force => true do |t|
     t.string "code",        :limit => 16, :default => "", :null => false
     t.string "description", :limit => 64, :default => "", :null => false
+  end
+
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version"
   end
 
   create_table "semantic_attribute_values", :force => true do |t|
@@ -227,16 +253,15 @@ ActiveRecord::Schema.define(:version => 20090120184819) do
     t.boolean  "capitalisation",                                                                                                                  :default => false, :null => false
     t.enum     "info_status",                  :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :no_info_status, :info_unannotatable]
     t.string   "empty_token_sort",             :limit => 1
-    t.integer  "anaphor_id"
     t.string   "contrast_group"
     t.integer  "antecedent_dist_in_words"
     t.integer  "antecedent_dist_in_sentences"
     t.integer  "token_alignment_id"
     t.boolean  "automatic_token_alignment",                                                                                                       :default => false
     t.integer  "dependency_alignment_id"
+    t.integer  "antecedent_id"
   end
 
-  add_index "tokens", ["anaphor_id"], :name => "index_tokens_on_anaphor_id", :unique => true
   add_index "tokens", ["contrast_group"], :name => "index_tokens_on_contrast_group"
   add_index "tokens", ["dependency_alignment_id"], :name => "index_tokens_on_dependency_alignment_id"
   add_index "tokens", ["head_id"], :name => "index_tokens_on_head_id"

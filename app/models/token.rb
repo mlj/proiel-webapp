@@ -18,8 +18,8 @@ class Token < ActiveRecord::Base
   belongs_to :dependency_alignment, :class_name => 'Token', :foreign_key => 'dependency_alignment_id'
   has_many :dependency_alignment_terminations
 
-  has_one :antecedent, :class_name => 'Token', :foreign_key => 'anaphor_id', :dependent => :nullify
-  belongs_to :anaphor, :class_name => 'Token'
+  has_one :anaphor, :class_name => 'Token', :foreign_key => 'antecedent_id', :dependent => :nullify
+  belongs_to :antecedent, :class_name => 'Token'
 
   searchable_on :form
 

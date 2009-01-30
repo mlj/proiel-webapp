@@ -161,13 +161,6 @@ class InfoStatusesController < ApplicationController
   end
 
   def process_anaphor(anaphor, antecedent_id, attributes)
-    # Remove the anaphor from the old antecedent, if any
-    old_antecedent = anaphor.antecedent
-    if old_antecedent
-      old_antecedent.anaphor_id = nil
-      old_antecedent.save!
-    end
-
     # Set the new antecedent
     anaphor.antecedent = Token.find(antecedent_id)
 
