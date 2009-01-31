@@ -47,14 +47,6 @@ ActiveRecord::Schema.define(:version => 20090130155652) do
     t.string "code",         :limit => 8,  :default => "", :null => false
   end
 
-  create_table "changesets", :force => true do |t|
-    t.datetime "created_at",                                 :null => false
-    t.integer  "changer_id",                 :default => 0,  :null => false
-    t.string   "changer_type", :limit => 16, :default => "", :null => false
-  end
-
-  add_index "changesets", ["created_at"], :name => "index_changesets_on_created_at"
-
   create_table "dependency_alignment_terminations", :force => true do |t|
     t.integer "token_id",  :default => 0, :null => false
     t.integer "source_id", :default => 0, :null => false
@@ -90,20 +82,6 @@ ActiveRecord::Schema.define(:version => 20090130155652) do
     t.text     "summary",                                  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "jobs", :force => true do |t|
-    t.string   "name",        :limit => 64,                               :default => "",    :null => false
-    t.text     "parameters"
-    t.integer  "user_id",                                                 :default => 0,     :null => false
-    t.datetime "started_at"
-    t.datetime "finished_at"
-    t.enum     "result",      :limit => [:successful, :failed, :aborted]
-    t.integer  "source_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "audited",                                                 :default => false, :null => false
-    t.text     "log"
   end
 
   create_table "languages", :force => true do |t|
@@ -149,10 +127,6 @@ ActiveRecord::Schema.define(:version => 20090130155652) do
   create_table "roles", :force => true do |t|
     t.string "code",        :limit => 16, :default => "", :null => false
     t.string "description", :limit => 64, :default => "", :null => false
-  end
-
-  create_table "schema_info", :id => false, :force => true do |t|
-    t.integer "version"
   end
 
   create_table "semantic_attribute_values", :force => true do |t|
