@@ -43,13 +43,11 @@ var InfoStatus = function() {
     /////////////////////////////////////
 
     function removeEventHandlingForUnannotatables() {
-        unannotatables.invoke('stopObserving', 'click', unannotatableClickHandler);
+        unannotatables.invoke('stopObserving', 'dblclick', unannotatableClickHandler);
     }
 
     function setEventHandlingForUnannotatables() {
-        unannotatables.reject(function(elm) {
-            return elm.hasClassName('verb');
-        }).invoke('observe', 'click', unannotatableClickHandler);
+        unannotatables.invoke('observe', 'dblclick', unannotatableClickHandler);
     }
 
     function unannotatableClickHandler(event) {
