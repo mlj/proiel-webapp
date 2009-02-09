@@ -97,9 +97,9 @@ module ApplicationHelper
   def search_form_tag(submit_path, options = {}, &block)
     html_options = html_options_for_form(submit_path, :method => 'get', :class => 'search')
     content = capture(&block)
-    concat(form_tag_html(html_options), block.binding)
-    concat(content, block.binding)
-    concat(submit_tag(options[:submit] || 'Search', :name => nil) + '</form>', block.binding)
+    concat(form_tag_html(html_options))
+    concat(content)
+    concat(submit_tag(options[:submit] || 'Search', :name => nil) + '</form>')
   end
 
   # Generates a human readable representation of a token sort.
@@ -193,9 +193,9 @@ module ApplicationHelper
   # Generates a rounded box with a description list inside.
   def roundedbox(&block)
     content = capture(&block)
-    concat("<div class='roundedbox'><dl>", block.binding)
-    concat(content, block.binding)
-    concat("</dl></div>", block.binding)
+    concat("<div class='roundedbox'><dl>")
+    concat(content)
+    concat("</dl></div>")
   end
 
   # Generates a title header and a set of associated links directly
@@ -207,9 +207,9 @@ module ApplicationHelper
     actions = "(#{actions.join(' | ')})" if actions
 
     content = capture(&block)
-    concat("<div id='#{id}' class='layer'><h1 class='layer-title'>#{title}</h1> <span class='layer-actions'>#{actions}</span><div class='layer-content'>", block.binding)
-    concat(content, block.binding)
-    concat("</div></div>", block.binding)
+    concat("<div id='#{id}' class='layer'><h1 class='layer-title'>#{title}</h1> <span class='layer-actions'>#{actions}</span><div class='layer-content'>")
+    concat(content)
+    concat("</div></div>")
   end
 
   # Generates a title header and a set of associated links directly
