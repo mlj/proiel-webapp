@@ -18,7 +18,10 @@ ActionController::Routing::Routes.draw do |map|
     annotation.resource :dependency_alignments
     annotation.resource :morphtags
     annotation.resource :dependencies
-    annotation.resource :info_status, :collection => { :delete_contrast => :post }
+    annotation.resource :info_status, :collection => {
+      :delete_contrast => :post,
+      :delete_prodrop => :post
+    }
   end
 
   map.resource :statistics

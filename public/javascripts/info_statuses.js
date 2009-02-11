@@ -185,7 +185,7 @@ var InfoStatus = function() {
                                      elm.update('Error: ' + response.responseText);
                                      elm.highlight({startcolor: 'ff0000'});
                                      elm.fade({delay: 2.0});
-                                 },
+                                 }
                              }
                             );
             event.stop();
@@ -233,7 +233,13 @@ var InfoStatus = function() {
                     throw $break;
                 }
             });
-
+            var delete_prodrop_button = $('delete-prodrop-button');
+            if(elm.innerHTML.startsWith('PRO-')) {
+                delete_prodrop_button.enable();
+            }
+            else {
+                delete_prodrop_button.disable();
+            }
             AnaphoraAndContrast.showAntecedentFor(elm);
         },
 

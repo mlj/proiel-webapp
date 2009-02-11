@@ -66,6 +66,19 @@ class InfoStatusesController < ApplicationController
   end
 
 
+  # POST /annotations/1/info_status/delete_contrast
+  def delete_prodrop
+    graph = @sentence.dependency_graph
+    graph.remove_node(params[:prodrop_id])
+    @sentence.syntactic_annotation = graph
+  rescue
+    render :text => $!, :status => 500
+    raise
+  else
+    render :text => ''
+  end
+
+
   #########
   protected
   #########

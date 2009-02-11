@@ -111,7 +111,7 @@ var AnaphoraAndContrast = function() {
         antecedent.removeClassName('antecedent');
 
         // Remove the visual link between anaphor and antecedent
-        removeLines();
+        AnaphoraAndContrast.removeAnaphoraLines();
     }
 
     function createAntecedentLink(anaphor, antecedent, antecedentClass) {
@@ -132,7 +132,7 @@ var AnaphoraAndContrast = function() {
         antecedent.addClassName('antecedent');
 
         // Remove any other visual links between anaphors and antecedents
-        removeLines();
+        AnaphoraAndContrast.removeAnaphoraLines();
 
         drawLineBetweenElements(anaphor, antecedent);
 
@@ -200,11 +200,6 @@ var AnaphoraAndContrast = function() {
 
     }
 
-    // Removes all lines that have been drawn
-    function removeLines() {
-        jg.clear();
-    }
-
     function getAntecedentClassFor(anaphor) {
         return $w(anaphor.className).find(function(cls) {
             return cls.startsWith('ant-');
@@ -252,7 +247,7 @@ var AnaphoraAndContrast = function() {
             if(!keep_others) {
                 // Stop showing any other antecedent
                 tokens.invoke('removeClassName', 'antecedent');
-                removeLines();
+                AnaphoraAndContrast.removeAnaphoraLines();
             }
 
             var antecedentId = getAntecedentIdFor(token);
@@ -326,7 +321,7 @@ var AnaphoraAndContrast = function() {
                                          cs.remove(cs.selectedIndex);
 
                                          var elm = $('server-message');
-                                         elm.update('Changes saved');
+                                         elm.update('Contrast group removed');
                                          elm.show();
                                          elm.highlight();
                                          elm.fade({delay: 2.0});
@@ -337,7 +332,7 @@ var AnaphoraAndContrast = function() {
                                          elm.update('Error: ' + response.responseText);
                                          elm.highlight({startcolor: 'ff0000'});
                                          elm.fade({delay: 2.0});
-                                     },
+                                     }
                                  }
                                 );
             }
@@ -348,6 +343,11 @@ var AnaphoraAndContrast = function() {
             token.observe('click', antecedentClickHandler);
             token.observe('click', contrastClickHandler);
             tokens.push(token);
+        },
+
+        // Removes all lines that have been drawn
+        removeAnaphoraLines: function() {
+            jg.clear();
         }
     }
 }();

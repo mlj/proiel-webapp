@@ -30,6 +30,10 @@ module Lingua
       @dependents[node.identifier] = node
     end
 
+    def remove_dependent(identifier)
+      @dependents.delete(identifier)
+    end
+
     # Returns the dependents of the node.
     def dependents
       @dependents.values
@@ -230,6 +234,17 @@ module Lingua
       end
 
       @nodes[identifier]
+    end
+
+    def remove_node(identifier)
+      identifier = identifier.to_i
+      node = @nodes[identifier]
+      return unless node   # Will happen if the prodrop token was not saved before it was removed
+
+      if node.head
+        @nodes[node.head.identifier].remove_dependent(identifier)
+      end
+      @nodes.delete(identifier)
     end
 
     def valid?

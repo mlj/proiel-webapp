@@ -93,6 +93,40 @@ var Prodrop = function() {
             setEventHandlingForDocument();
 
             menu_dimensions = menu.getDimensions();
+        },
+
+        deleteProdropToken: function() {
+            var selected_token = InfoStatus.getSelectedToken();
+
+            if(confirm('Do you want to delete the selected prodrop token?')) {
+                new Ajax.Request(document.location.href.match(url_without_last_part)[0] + 'delete_prodrop',
+                                 {
+                                     method: 'post',
+                                     parameters: {
+                                         prodrop_id: InfoStatus.getTokenId(selected_token),
+                                         authenticity_token: authenticity_token
+                                     },
+                                     onSuccess: function() {
+                                         AnaphoraAndContrast.removeAnaphoraLines();  // In case the prodrop token was an anaphor
+                                         selected_token.remove();
+                                         InfoStatus.setAnnotatablesAndUnannotatables();
+
+                                         var elm = $('server-message');
+                                         elm.update('Prodrop token removed');
+                                         elm.show();
+                                         elm.highlight();
+                                         elm.fade({delay: 2.0});
+                                     },
+                                     onFailure: function(response) {
+                                         var elm = $('server-message');
+                                         elm.show();
+                                         elm.update('Error: ' + response.responseText);
+                                         elm.highlight({startcolor: 'ff0000'});
+                                         elm.fade({delay: 2.0});
+                                     }
+                                 }
+                                );
+            }
         }
     }
 }();
