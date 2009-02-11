@@ -172,7 +172,14 @@ var InfoStatus = function() {
                                  method: 'put',
                                  parameters: params.join('&') +
                                      '&authenticity_token=' + authenticity_token,
-                                 onSuccess: function() {
+                                 onSuccess: function(response) {
+                                     // Any new tokens, which have IDs on the form 'token-newX', need to get their
+                                     // real ID set now that they have been saved to the database. A mapping from
+                                     // "fake" IDs to real IDs will have been returned from the server.
+                                     $H(response.responseText.evalJSON()).each(function(pair) {
+                                         $('token-' + pair.key).writeAttribute('id', 'token-' + pair.value);
+                                     });
+
                                      var elm = $('server-message');
                                      elm.update('Changes saved');
                                      elm.show();

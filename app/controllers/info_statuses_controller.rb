@@ -51,7 +51,7 @@ class InfoStatusesController < ApplicationController
     render :text => $!, :status => 500
     raise
   else
-    render :text => ''
+    render :text => new_token_ids.to_json
   end
 
 

@@ -109,6 +109,7 @@ var Prodrop = function() {
                                      onSuccess: function() {
                                          AnaphoraAndContrast.removeAnaphoraLines();  // In case the prodrop token was an anaphor
                                          selected_token.remove();
+                                         $('delete-prodrop-button').disable();
                                          InfoStatus.setAnnotatablesAndUnannotatables();
 
                                          var elm = $('server-message');
