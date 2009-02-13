@@ -231,10 +231,10 @@ module ApplicationHelper
   # Creates hidden 'Previous' and 'Next' links for per-sentence annotation displays
   # with standard access keys P and N.
   def annotation_navigation_links(sentence, url_function)
-    link_to_if(sentence.has_previous_sentence?, 'Previous', self.send(url_function, sentence.previous_sentence),
-               :accesskey => 'p') + '&nbsp;' +
-    link_to_if(sentence.has_next_sentence?, 'Next', self.send(url_function, sentence.next_sentence),
-               :accesskey => 'n')
+    links = []
+    links << link_to('Previous', self.send(url_function, sentence.previous_sentence), :accesskey => 'p') if sentence.has_previous_sentence?
+    links << link_to('Next', self.send(url_function, sentence.next_sentence), :accesskey => 'n') if sentence.has_next_sentence?
+    links.join '&nbsp;'
   end
 
   # Generates a link if the condition +condition+ is +true+, otherwise
