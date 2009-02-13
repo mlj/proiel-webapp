@@ -7,7 +7,7 @@ module AuditsHelper
 
   # Creates a table view of a collection of audits.
   def audit_table(audits)
-    render_tabular audits, :partial => 'audits/audit', :pagination => true, :fields => [ 'User', 'Created at', 'Changed object', '&nbsp;' ]
+    render_tabular audits, :pagination => true, :fields => [ 'User', 'Created at', 'Changed object', '&nbsp;' ]
   end
 
   # Creates a link to an audit.

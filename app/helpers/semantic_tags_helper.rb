@@ -6,7 +6,7 @@ module SemanticTagsHelper
 
   # Creates a table view of a collection of semantic attribute values.
   def semantic_tags_table(semantic_tags)
-    render_tabular semantic_tags, :partial => 'semantic_tags/semantic_tag', :pagination => true, :fields => [ 'Reference', 'Tag', '&nbsp;' ]
+    render_tabular semantic_tags, :pagination => true, :fields => [ 'Reference', 'Tag', '&nbsp;' ]
   end
 
   # Creates a readable semantic attribute + attribute-value pair.

@@ -17,7 +17,7 @@ UNICODE_NORMALIZATION_FORM = :c
 DEFAULT_USER_PREFERENCES = { :graph_format => "png", :graph_method => "unsorted" }
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.2.2' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -50,7 +50,7 @@ Rails::Initializer.run do |config|
   # Make sure the secret is at least 30 characters and all random,
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
-    :session_key => '_proiel_session',
+    :key => '_proiel_session',
     :secret      => '32142b796868de53a2def939cca7017812d8e1b9e90c502b82e8c6b0553b1e1fbc8311eef980dc1f29edfb9cb448815961a85e13045db32669ec8a45705009d3'
   }
 
