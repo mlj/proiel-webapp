@@ -1,7 +1,7 @@
 module LemmataHelper
   # Creates a table view of a collection of lemmata.
   def lemmata_table(lemmata)
-    render_tabular lemmata, :pagination => true, :fields => [ 'Language', 'Lemma', 'Part of speech', 'Translation', 'Frequency', '&nbsp;' ]
+    render_tabular lemmata, [ 'Language', 'Lemma', 'Part of speech', 'Translation', 'Frequency', '&nbsp;' ]
   end
 
   # Creates a link to a lemma.

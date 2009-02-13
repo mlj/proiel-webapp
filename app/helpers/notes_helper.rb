@@ -6,7 +6,7 @@ module NotesHelper
 
   # Creates a table view of a collection of notes.
   def notes_table(notes)
-    render_tabular notes, :pagination => true, :fields => [ 'Originator', 'Reference', 'Contents', '&nbsp;' ]
+    render_tabular notes, [ 'Originator', 'Reference', 'Contents', '&nbsp;' ]
   end
 
   # Creates a link to a note originator.

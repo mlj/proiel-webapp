@@ -2,7 +2,7 @@
   <label>Title</label><%= text_field_tag :query, params[:query] %>
 <% end %>
 
-<%= render_tabular @sources, :pagination => true, :fields => [ 'Title', 'Language', '&nbsp;' ] %>
+<%= render_tabular @sources, [ 'Title', 'Language', '&nbsp;' ] %>
 
 <% if is_reviewer? %>
   <%= statistics "Completion (sentences)", "sentence", @sentence_completion_stats %>

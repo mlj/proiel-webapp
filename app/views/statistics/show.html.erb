@@ -7,10 +7,7 @@
                 :title => 'Your recent sentence annotations',
                 :actions => [link_to("See all annotated sentences", annotations_url)]
                ) do -%>
-  <%= render_tabular @recent_annotations, 
-    :pagination => false, 
-    :partial => 'annotations/annotation',
-    :fields => [ 'Location', 'Sentence' ] %>
+  <%= render_tabular @recent_annotations, ['Location', 'Sentence'], :no_pagination => true, :partial => 'annotations/annotation' %>
 <% end %>
 
 <% reset_cycle %>
@@ -18,10 +15,7 @@
                 :title => 'Your recent sentence reviews',
                 :actions => [link_to("See all annotated sentences", annotations_url)]
                ) do -%>
-  <%= render_tabular @recent_reviews, 
-    :pagination => false, 
-    :partial => 'annotations/annotation',
-    :fields => [ 'Location', 'Sentence' ] %>
+  <%= render_tabular @recent_reviews, ['Location', 'Sentence'], :no_pagination => true, :partial => 'annotations/annotation' %>
 <% end %>
 
 <% reset_cycle %>
@@ -29,8 +23,5 @@
                 :title => 'Your recently reviewed sentences',
                 :actions => [link_to("See all annotated sentences", annotations_url)]
                ) do -%>
-  <%= render_tabular @recent_reviewed, 
-    :pagination => false, 
-    :partial => 'annotations/annotation',
-    :fields => [ 'Location', 'Sentence' ] %>
+  <%= render_tabular @recent_reviewed, ['Location', 'Sentence'], :no_pagination => true, :partial => 'annotations/annotation' %>
 <% end %>

@@ -2,5 +2,4 @@
   <label>Source</label><%= source_select_tag :source_id, params[:source_id], :include_blank => true %>
 <% end %>
 
-<%= render_tabular @sentences, :pagination => true,
-  :fields => [ 'Location', 'Text', '&nbsp;' ] %>
+<%= render_tabular @sentences, [ 'Location', 'Text', '&nbsp;' ] %>

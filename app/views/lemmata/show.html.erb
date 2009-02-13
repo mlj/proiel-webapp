@@ -31,5 +31,5 @@
 <% end %>
 
 <% layer 'tokens' do -%>
-  <%= render_tabular @tokens, :partial => 'annotations/annotation', :pagination => true, :class => 'concordance' %>
+  <%= render_tabular @tokens, nil, :partial => 'annotations/annotation', :css_class => 'concordance' %>
 <% end %>

@@ -2,5 +2,4 @@
   <label>User</label><%= user_select_tag :user_id, params[:user_id], :include_blank => true %>
 <% end %>
 
-<%= render_tabular @bookmarks, :new => new_bookmark_path,
-  :fields => [ 'User', 'Type', '&nbsp;' ] %>
+<%= render_tabular @bookmarks, [ 'User', 'Type', '&nbsp;' ], :new => new_bookmark_path %>

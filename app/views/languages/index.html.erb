@@ -1,4 +1,3 @@
 <% search_form_tag languages_path do %><%= text_field_tag :q, params[:q] %><% end %>
 
-<%= render_tabular @languages, :partial => 'languages/language', :pagination => true,
-  :fields => [ 'ISO code', 'ISO name', '&nbsp;' ] %>
+<%= languages_table @languages %>
