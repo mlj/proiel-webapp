@@ -78,6 +78,15 @@ var InfoStatus = function() {
         });
         selected_token.addClassName(klass);
         selected_token.addClassName('info-changed');
+
+        if(klass !== 'old') {
+            var antecedentClass = AnaphoraAndContrast.getAntecedentClassFor(selected_token);
+            if(antecedentClass) {
+                // Remove anaphoric link if we change info status, since only old tokens can have them
+                selected_token.removeClassName(antecedentClass);
+                AnaphoraAndContrast.removeAnaphoraLines();
+            }
+        }
     }
 
     function setEventHandlingForDocument() {

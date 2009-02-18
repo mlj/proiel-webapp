@@ -137,7 +137,7 @@ var AnaphoraAndContrast = function() {
         drawLineBetweenElements(anaphor, antecedent);
 
         // Remove any old antecedent id
-        anaphor.removeClassName(getAntecedentClassFor(anaphor));
+        anaphor.removeClassName(AnaphoraAndContrast.getAntecedentClassFor(anaphor));
 
         // Mark the anaphor with the new antecedent id
         anaphor.addClassName(antecedentClass);
@@ -200,14 +200,8 @@ var AnaphoraAndContrast = function() {
 
     }
 
-    function getAntecedentClassFor(anaphor) {
-        return $w(anaphor.className).find(function(cls) {
-            return cls.startsWith('ant-');
-        });
-    }
-
     function getAntecedentIdFor(anaphor) {
-        var antecedentClass = getAntecedentClassFor(anaphor);
+        var antecedentClass = AnaphoraAndContrast.getAntecedentClassFor(anaphor);
         if(antecedentClass) {
             return antecedentClass.substr('ant-'.length);
         }
@@ -348,6 +342,12 @@ var AnaphoraAndContrast = function() {
         // Removes all lines that have been drawn
         removeAnaphoraLines: function() {
             jg.clear();
+        },
+
+        getAntecedentClassFor: function(anaphor) {
+            return $w(anaphor.className).find(function(cls) {
+                return cls.startsWith('ant-');
+            });
         }
     }
 }();
