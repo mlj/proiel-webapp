@@ -1,3 +1,8 @@
+% TODO
+
+New features
+============
+
 For next iteration
 ------------------
 
@@ -9,6 +14,8 @@ For next iteration
 
   * More UI stuff for semantic features [currently no online edititing of tags; create/edit/delete of 
     As and AVs must be done in SQL]
+
+    This becomes much easier with forthcoming Rails 2.3.
 
   * Non-numeric chapter number support
 
@@ -24,16 +31,29 @@ For next iteration
 
     Kun enkle varianter: resten kan ordnes gjennom historien.
 
-  * Skrive til TdH om multi-head-word lemmata → TODO-dokument
+  * Skrive til TdH om multi-head-word lemmata
 
-  * Sjekke ut advarsler fra gotisk-skript → TODO-dokument
+  * Sjekke ut advarsler fra gotisk-skript
 
-  * Source meta-data and licensing → TODO-dokument
+  * Source meta-data and licensing
 
-  * Gather all documentation in one location
-    - include notes on text production
-    - include morphology notes
-    - include app doc
+    The following are some bits and pieces that should go in:
+
+    ~~~
+    
+    Our text builds on Ulrik Sandborg-Petersen's electronic edition which
+    is intended to faithfully represent the printed text in Tischendorf's
+    Editio Octava Critica Maior, Leipzig 1869-1872. But in the following
+    places we have found it necessary to diverge from Tischendorf's text:
+
+    - Tischendorf prints John 7.53-8.11 in two versions, one unaccented and
+    one with accents. Our electronic text only has the accented version,
+    pages 831, 833, 835 in Tischendorf vol. 1 and leaves out pages 830, 832
+    and 834.
+
+    - In Luke 15:16 prints ᾧν which we have corrected to ὧν
+
+    ~~~
 
   * Subgraph alignment
 
@@ -57,6 +77,16 @@ For next iteration
 
 Perhaps/later/consider
 ----------------------
+
+  * Implement support for schema-defined hierarchical overlapping sub-divisions.
+
+  * Implement support for extra, non-searchable overlapping textual
+  sub-divisions.
+
+  * Gather all documentation in one location
+    - include notes on text production
+    - include morphology notes
+    - include app doc
 
   * Class morphology
 
@@ -298,3 +328,163 @@ Wishlist
   * Teach the tagger how to deal with tokens that do not match the normalisation.
 
   * Dependency UI: ensure that the ROOT relation is immutable during editing.
+% Known bugs that
+
+Bugs
+====
+
+Critical
+--------
+
+* Saving of very long sentences fails. One known issue with long sentences
+is that the HTTP message buffer overflows. This generates messages like
+this
+
+~~~
+   A RuntimeError occurred in dependencies#update:
+   
+     Incomplete dependency graph
+     [RAILS_ROOT]/app/models/sentence.rb:129:in `syntactic_annotation='
+   
+   -------------------------------
+   Request:
+   -------------------------------
+   
+     * URL       :
+     http://foni.uio.no:3000/annotations/43236/dependencies?wizard%5Blevel%5D=annotation&wizard%5Bskip%5D=true
+     * IP address: 77.18.9.58
+     * Parameters: {"annotation_id"=>"43236", "commit"=>"Save",
+     "authenticity_token"=>"4cb8f3077a67ecc940921d4efcfd22d063ecf505",
+     "_method"=>"put", "wizard"=>{"level"=>"annotation", "skip"=>"true"},
+     "action"=>"update", "output"=>"{\"625754\": {\"relation\": \"pred\",
+     \"dependents\": {\"625755\": {\"relation\": \"pred\", \"dependents\":
+     {\"625756\": {\"relation\": \"obl\", \"empty\": false}}, \"empty\":
+     false}, \"625745\": {\"relation\": \"pred\", \"dependents\":
+     {\"625746\": {\"relation\": \"obj\", \"empty\": false}, \"625736\":
+     {\"relation\": \"aux\", \"empty\": false}, \"625737\": {\"relation\":
+     \"xadv\", \"empty\": false, \"slashes\": [\"625745\"]}, \"625750\":
+     {\"relation\": \"xadv\", \"dependents\": {\"625747\": {\"relation\":
+     \"xadv\", \"dependents\": {\"625748\": {\"relation\": \"obl\",
+     \"dependents\": {\"625749\": {\"relation\": \"obl\", \"empty\":
+     false}}, \"empty\": false}}, \"empty\": false}, \"625753\":
+     {\"relation\": \"xadv\", \"dependents\": {\"625751\": {\"relation\":
+     \"obl\", \"dependents\": {\"625752\": {\"relation\": \"obl\",
+     \"empty\": false}}, \"empty\": false}}, \"empty\": false}}, \"empty\":
+     false, \"slashes\": [\"625746\"]}, \"625741\": {\"relation\":
+     \"nonsub\", \"dependents\": {\"625739\": {\"relation\": \"nonsub\",
+     \"dependents\": {}, \"empty\": false}, \"625742\": {\"relation\":
+     \"nonsub\", \"dependents\": {\"625743\": {\"relation\": \"nonsub\",
+     \"dependents\": {\"625744\": {\"relation\": \"nonsub\", \"empty\":
+     false}}, \"empty\": false}}, \"empty\": false}}, \"empty\": false}},
+     \"empty\": false}}, \"empty\": false}}", "controller"=>"dependencies"}
+     * Rails root: /hf/foni/tekstlab/home/mariuslj/live/production
+   
+   -------------------------------
+   Session:
+   -------------------------------
+   
+     * session id:
+     "BAh7CToOcmV0dXJuX3RvMDoMY3NyZl9pZCIlNGVmMTUwMmRjMmU0YjVlNmI4\nN2NlNTkzYjMwNTY4YjgiCmZsYXNoSUM6J0FjdGlvbkNvbnRyb2xsZXI6OkZs\nYXNoOjpGbGFzaEhhc2h7BjoKZXJyb3IwBjoKQHVzZWR7BjsIVDoMdXNlcl9p\nZGlB--353f6ad9b246906846f9f655639be9042caa7f96"
+     * data: {:return_to=>nil,
+        :csrf_id=>"4ef1502dc2e4b5e6b87ce593b30568b8",
+        "flash"=>{},
+        :user_id=>60}
+   
+   -------------------------------
+   Environment:
+   -------------------------------
+   
+     * CONTENT_LENGTH      : 1972
+     * CONTENT_TYPE        : application/x-www-form-urlencoded
+     * GATEWAY_INTERFACE   : CGI/1.2
+     * HTTP_ACCEPT         :
+     text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+     * HTTP_ACCEPT_CHARSET : ISO-8859-1,utf-8;q=0.7,*;q=0.7
+     * HTTP_ACCEPT_ENCODING: gzip,deflate
+     * HTTP_ACCEPT_LANGUAGE: nb,no;q=0.8,nn;q=0.6,en-us;q=0.4,en;q=0.2
+     * HTTP_CONNECTION     : keep-alive
+     * HTTP_CONTENT_LENGTH : 1972
+     * HTTP_CONTENT_TYPE   : application/x-www-form-urlencoded
+     * HTTP_COOKIE         :
+     _proiel_session_id=BAh7CToOcmV0dXJuX3RvMDoMY3NyZl9pZCIlNGVmMTUwMmRjMmU0YjVlNmI4%0AN2NlNTkzYjMwNTY4YjgiCmZsYXNoSUM6J0FjdGlvbkNvbnRyb2xsZXI6OkZs%0AYXNoOjpGbGFzaEhhc2h7BjoKZXJyb3IwBjoKQHVzZWR7BjsIVDoMdXNlcl9p%0AZGlB--353f6ad9b246906846f9f655639be9042caa7f96
+     * HTTP_HOST           : foni.uio.no:3000
+     * HTTP_KEEP_ALIVE     : 300
+     * HTTP_REFERER        :
+     http://foni.uio.no:3000/annotations/43236/dependencies/edit?output=%7B%22625754%22%3A+%7B%22relation%22%3A+%22pred%22%2C+%22dependents%22%3A+%7B%22625755%22%3A+%7B%22relation%22%3A+%22pred%22%2C+%22dependents%22%3A+%7B%22625756%22%3A+%7B%22relation%22%3A+%22obl%22%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%2C+%22625745%22%3A+%7B%22relation%22%3A+%22pred%22%2C+%22dependents%22%3A+%7B%22625746%22%3A+%7B%22relation%22%3A+%22obj%22%2C+%22empty%22%3A+false%7D%2C+%22625736%22%3A+%7B%22relation%22%3A+%22aux%22%2C+%22empty%22%3A+false%7D%2C+%22625737%22%3A+%7B%22relation%22%3A+%22xadv%22%2C+%22empty%22%3A+false%2C+%22slashes%22%3A+%5B%22625745%22%5D%7D%2C+%22625750%22%3A+%7B%22relation%22%3A+%22xadv%22%2C+%22dependents%22%3A+%7B%22625747%22%3A+%7B%22relation%22%3A+%22xadv%22%2C+%22dependents%22%3A+%7B%22625748%22%3A+%7B%22relation%22%3A+%22obl%22%2C+%22dependents%22%3A+%7B%22625749%22%3A+%7B%22relation%22%3A+%22obl%22%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%2C+%22625753%22%3A+%7B%22relation%22%3A+%22xadv%22%2C+%22dependents%22%3A+%7B%22625751%22%3A+%7B%22relation%22%3A+%22obl%22%2C+%22dependents%22%3A+%7B%22625752%22%3A+%7B%22relation%22%3A+%22obl%22%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%2C+%22slashes%22%3A+%5B%22625746%22%5D%7D%2C+%22625741%22%3A+%7B%22relation%22%3A+%22nonsub%22%2C+%22dependents%22%3A+%7B%22625742%22%3A+%7B%22relation%22%3A+%22nonsub%22%2C+%22dependents%22%3A+%7B%22625743%22%3A+%7B%22relation%22%3A+%22nonsub%22%2C+%22dependents%22%3A+%7B%22625744%22%3A+%7B%22relation%22%3A+%22nonsub%22%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%2C+%22625739%22%3A+%7B%22relation%22%3A+%22nonsub%22%2C+%22dependents%22%3A+%7B%22625738%22%3A+%7B%22relation%22%3A+%22nonsub%22%2C+%22empty%22%3A+false%7D%2C+%22625740%22%3A+%7B%22relation%22%3A+%22nonsub%22%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D&wizard%5Blevel%5D=annotation&wizard%5Bskip%5D=true
+     * HTTP_USER_AGENT     : Mozilla/5.0 (Windows; U; Windows NT 6.0; nb-NO;
+     rv:1.9.0.6) Gecko/2009011913 Firefox/3.0.6
+     * HTTP_VERSION        : HTTP/1.1
+     * PATH_INFO           : /annotations/43236/dependencies
+     * QUERY_STRING        :
+     wizard%5Blevel%5D=annotation&wizard%5Bskip%5D=true
+     * RAW_POST_DATA       :
+     _method=put&authenticity_token=4cb8f3077a67ecc940921d4efcfd22d063ecf505&output=%7B%22625754%22%3A+%7B%22relation%22%3A+%22pred%22%2C+%22dependents%22%3A+%7B%22625755%22%3A+%7B%22relation%22%3A+%22pred%22%2C+%22dependents%22%3A+%7B%22625756%22%3A+%7B%22relation%22%3A+%22obl%22%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%2C+%22625745%22%3A+%7B%22relation%22%3A+%22pred%22%2C+%22dependents%22%3A+%7B%22625746%22%3A+%7B%22relation%22%3A+%22obj%22%2C+%22empty%22%3A+false%7D%2C+%22625736%22%3A+%7B%22relation%22%3A+%22aux%22%2C+%22empty%22%3A+false%7D%2C+%22625737%22%3A+%7B%22relation%22%3A+%22xadv%22%2C+%22empty%22%3A+false%2C+%22slashes%22%3A+%5B%22625745%22%5D%7D%2C+%22625750%22%3A+%7B%22relation%22%3A+%22xadv%22%2C+%22dependents%22%3A+%7B%22625747%22%3A+%7B%22relation%22%3A+%22xadv%22%2C+%22dependents%22%3A+%7B%22625748%22%3A+%7B%22relation%22%3A+%22obl%22%2C+%22dependents%22%3A+%7B%22625749%22%3A+%7B%22relation%22%3A+%22obl%22%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%2C+%22625753%22%3A+%7B%22relation%22%3A+%22xadv%22%2C+%22dependents%22%3A+%7B%22625751%22%3A+%7B%22relation%22%3A+%22obl%22%2C+%22dependents%22%3A+%7B%22625752%22%3A+%7B%22relation%22%3A+%22obl%22%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%2C+%22slashes%22%3A+%5B%22625746%22%5D%7D%2C+%22625741%22%3A+%7B%22relation%22%3A+%22nonsub%22%2C+%22dependents%22%3A+%7B%22625739%22%3A+%7B%22relation%22%3A+%22nonsub%22%2C+%22dependents%22%3A+%7B%7D%2C+%22empty%22%3A+false%7D%2C+%22625742%22%3A+%7B%22relation%22%3A+%22nonsub%22%2C+%22dependents%22%3A+%7B%22625743%22%3A+%7B%22relation%22%3A+%22nonsub%22%2C+%22dependents%22%3A+%7B%22625744%22%3A+%7B%22relation%22%3A+%22nonsub%22%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D%2C+%22empty%22%3A+false%7D%7D&commit=Save
+     * REMOTE_ADDR         : 77.18.9.58
+     * REQUEST_METHOD      : POST
+     * REQUEST_PATH        : /annotations/43236/dependencies
+     * REQUEST_URI         :
+     /annotations/43236/dependencies?wizard%5Blevel%5D=annotation&wizard%5Bskip%5D=true
+     * SCRIPT_NAME         : /
+     * SERVER_NAME         : foni.uio.no
+     * SERVER_PORT         : 3000
+     * SERVER_PROTOCOL     : HTTP/1.1
+     * SERVER_SOFTWARE     : Mongrel 1.1.5
+     
+     * Process: 17171
+     * Server : foni
+   
+   -------------------------------
+   Backtrace:
+   -------------------------------
+   
+     [RAILS_ROOT]/app/models/sentence.rb:129:in `syntactic_annotation='
+
+[...]
+~~~
+
+It may also be related to this problem.
+
+~~~
+> Det kan jo vanskelig være hennes datamaskin som lager problemene...mon
+> tro hva som skjer? Er det bare foni som er for treig? Ingrid på gotisk
+> har rapportert om liknende problemer.
+> Dag
+> 
+> 
+> -------- Forwarded Message --------
+> > From: eirik.welo@ifikk.uio.no
+> > To: Dagmar S Wodtko <dagmar.s.wodtko@mail.uni-freiburg.de>
+> > Cc: d.t.t.haug@ifikk.uio.no
+> > Subject: Computer problems
+> > Date: Fri, 26 Sep 2008 09:16:20 +0200 (CEST)
+> > 
+> > Dear Dagmar,
+> > 
+> > I absolutely agree about the computer problem: it is meaningless to
+> > wait
+> > for hours just to save the sentences. I have looked through the
+> > sentences
+> > annotated in Ephesians so far and things seem generally ok, only in
+> > 3:14-19 and 3:1-7 the syntactic analysis has not been recorded, only
+> > morphology.
+> > 
+> > Is the problem with your own computer? Anyway, skip the longer
+> > sentences
+> > for now and Dag and I will try and come up with a solution.
+> > 
+> > Yours,
+> > Eirik
+> > 
+> > > Dear Eirik,
+> > > thank you for the Ephesians. The computer took more than
+> > > two hours yesterday and the day before to process the long
+> > > sentences at the beginning of the text, and when I tried to
+> > > save there was no response. The sentences are marked red
+> > > (as if unannotated) now, but something has been saved,
+> > > there is a dependency tree. Still, I think I should skip
+> > > sentences over 100 words from now on. If the computer is
+> > > not able to process them properly, then there seems to be
+> > > little use in spending hours on it.
+> > > Sory about that,
+> > > Dagmar
+~~~
