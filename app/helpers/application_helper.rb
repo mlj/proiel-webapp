@@ -169,7 +169,7 @@ module ApplicationHelper
     fields = sentence.source_division.fields
     # FIXME: hard-coded for now. Change this when I figure out this is
     # really supposed to work.
-    keys = { :book => fields.match(/book=([A-Z]+)/)[1],
+    keys = { :book => fields.match(/book=([0-9A-Z]+)/)[1],
              :chapter => fields.match(/chapter=(\d+)/)[1],
              :verse => sentence.tokens.word.first.verse }
 
