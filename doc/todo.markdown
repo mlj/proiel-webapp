@@ -61,6 +61,14 @@ For next iteration
     refinement using secondary edges, potentially null-terminated to indicate
     blocked inheritance.
 
+  * Token alignment
+
+    The basic functions are completed, but some adjustments and experiments 
+    necessary. We need to integrate the alignments in the system: should automatic 
+    alignments be generated nightly? Or every time sentence annotation is changed?
+    The underlying dictionary could also be generated nightly, but currently
+    there is only a python script to create it.
+
   * Interpretive functions for subgraph alignment 
 
     Function set to interpret subgraphs alignment and inheritance of such.
@@ -74,6 +82,16 @@ For next iteration
 
     Implement this/check that it works. One day it might become an issue and Rails
     should be able to handle this out of the box.
+
+  * Error messages when merging lemmata
+
+  * Import Armenian text and check that import functions work with the new model
+
+  * Text presentation
+
+    The current text presentation is rather confusing. Just a long list of all the chapters...
+
+  * Show alignments of more than two languages
 
 Perhaps/later/consider
 ----------------------
