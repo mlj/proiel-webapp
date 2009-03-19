@@ -21,6 +21,8 @@ class Token < ActiveRecord::Base
   has_one :anaphor, :class_name => 'Token', :foreign_key => 'antecedent_id', :dependent => :nullify
   belongs_to :antecedent, :class_name => 'Token'
 
+  before_validation :before_validation_cleanup
+
   searchable_on :form
 
   named_scope :word, :conditions => { :sort => :text }
@@ -368,5 +370,15 @@ class Token < ActiveRecord::Base
       errors.add_to_base("Tokens with presentation form must have presentation_span set") if presentation_span.nil?
       errors.add_to_base("Tokens with presentation form must have one of contraction, emendation, abbreviation or capitalisation set") unless contraction or emendation or abbreviation or capitalisation
     end
+  end
+
+  private
+
+  def before_validation_cleanup
+    self.presentation_form = nil if presentation_form.blank?
+    self.morphtag = nil if morphtag.blank?
+    self.lemma_id = nil if lemma_id.blank?
+    self.foreign_ids = nil if foreign_ids.blank?
+    self.empty_token_sort = nil if empty_token_sort.blank?
   end
 end

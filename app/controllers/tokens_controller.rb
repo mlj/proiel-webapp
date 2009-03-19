@@ -24,17 +24,8 @@ class TokensController < ResourceController::Base
 
   update.before do
     if params[:token]
-      if params[:token][:presentation_form].blank?
-        params[:token][:presentation_form] = nil
-      else
-        params[:token][:presentation_form] = params[:token][:presentation_form].mb_chars.normalize(UNICODE_NORMALIZATION_FORM)
-      end
-      params[:token][:morphtag] = nil if params[:token][:morphtag].blank?
-      params[:token][:lemma_id] = nil if params[:token][:lemma_id].blank?
+      params[:token][:presentation_form] = params[:token][:presentation_form].mb_chars.normalize(UNICODE_NORMALIZATION_FORM) if params[:token][:presentation_form]
       params[:token][:form] = params[:token][:form].mb_chars.normalize(UNICODE_NORMALIZATION_FORM)
-      [:foreign_ids, :empty_token_sort].each do |a|
-        params[:token][a] = nil if params[:token][a].blank?
-      end
     end
   end
 

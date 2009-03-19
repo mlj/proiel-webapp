@@ -11,25 +11,11 @@ class LemmataController < ResourceController::Base
   end
 
   update.before do
-    if params[:lemma]
-      params[:lemma][:variant] = nil if params[:lemma][:variant].blank?
-      params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss].blank?
-      params[:lemma][:lemma] = params[:lemma][:lemma].mb_chars.normalize(UNICODE_NORMALIZATION_FORM)
-      [:foreign_ids].each do |a|
-        params[:lemma][a] = nil if params[:lemma][a].blank?
-      end
-    end
+    params[:lemma][:lemma] = params[:lemma][:lemma].mb_chars.normalize(UNICODE_NORMALIZATION_FORM) if params[:lemma]
   end
 
   create.before do
-    if params[:lemma]
-      params[:lemma][:variant] = nil if params[:lemma][:variant].blank?
-      params[:lemma][:short_gloss] = nil if params[:lemma][:short_gloss].blank?
-      params[:lemma][:lemma] = params[:lemma][:lemma].mb_chars.normalize(UNICODE_NORMALIZATION_FORM)
-      [:foreign_ids].each do |a|
-        params[:lemma][a] = nil if params[:lemma][a].blank?
-      end
-    end
+    params[:lemma][:lemma] = params[:lemma][:lemma].mb_chars.normalize(UNICODE_NORMALIZATION_FORM) if params[:lemma]
   end
 
   private

@@ -8,6 +8,8 @@ class Lemma < ActiveRecord::Base
   has_many :semantic_tags, :as => :taggable, :dependent => :destroy
   belongs_to :language
 
+  before_validation :before_validation_cleanup
+
   searchable_on :lemma
 
   named_scope :by_variant, lambda { |variant| { :conditions => { :variant => variant } } }
@@ -74,5 +76,13 @@ class Lemma < ActiveRecord::Base
       Lemma.find(:all, :include => :language,
                  :conditions => ["languages.iso_code = ? AND lemma LIKE ?", language, "#{lemma}%"])
     end
+  end
+
+  private
+
+  def before_validation_cleanup
+    self.variant = nil if variant.blank?
+    self.short_gloss = nil if short_gloss.blank?
+    self.foreign_ids = nil if foreign_ids.blank?
   end
 end
