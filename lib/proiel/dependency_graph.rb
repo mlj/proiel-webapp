@@ -431,7 +431,7 @@ module PROIEL
       :default => {
         :nodes => { :fontcolor => 'black', },
         :edges => { :color => 'orange', :fontcolor => 'black' },
-        :secondary_edges => { :color => 'blue', :fontcolor => 'blue', :style => 'dashed' },
+        :secondary_edges => { :color => 'blue', :fontcolor => 'black', :style => 'dashed' },
       },
       :empty => {
         'V' => { :nodes => { :label => 'V', :shape => 'circle', }, },
@@ -527,7 +527,7 @@ module PROIEL
 
         slashes.each do |slashee|
           make_edge(identifier, slashee.identifier,
-                    node_options.merge({ :label => node.interpret_slash(slashee).to_s.upcase, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dotted" }))
+                    node_options.merge({ :label => node.interpret_slash(slashee).to_s.upcase, :color => "blue", :weight => 0.0, :style => "dotted", :fontsize => 10 }))
         end
       end
 
