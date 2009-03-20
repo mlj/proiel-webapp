@@ -173,8 +173,12 @@ module ApplicationHelper
              :chapter => fields.match(/chapter=(\d+)/)[1],
              :verse => sentence.tokens.word.first.verse }
 
-    [ link_to('Biblos',     BiblosExternalLinkMapper.instance.to_url(keys), :class => 'external'),
-      link_to('bibelen.no', BibelenNOExternalLinkMapper.instance.to_url(keys), :class => 'external'), ] * '&nbsp;';
+    if keys[:chapter]
+      [ link_to('Biblos',     BiblosExternalLinkMapper.instance.to_url(keys), :class => 'external'),
+        link_to('bibelen.no', BibelenNOExternalLinkMapper.instance.to_url(keys), :class => 'external'), ] * '&nbsp;';
+    else
+      ''
+    end
   end
 
   def wizard_options(ignore, options)

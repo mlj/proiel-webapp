@@ -72,7 +72,7 @@ class PROIELXMLExport < SourceExport
       builder.metadata { write_metadata(builder) }
       @source.source_divisions.each do |source_division|
         builder.div(:type => 'book', :name => source_division.fields.match(/book=([A-Z]+)/)[1]) do
-          builder.div(:type => 'chapter', :name => source_division.fields.match(/chapter=(\d+)/)[1]) do
+          builder.div(:type => 'chapter', :name => source_division.fields.match(/chapter=(\d+|Incipit|Explicit)/)[1]) do
             write_source_division(builder, source_division)
           end
         end

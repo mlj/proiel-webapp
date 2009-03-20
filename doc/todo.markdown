@@ -17,11 +17,6 @@ For next iteration
 
     This becomes much easier with forthcoming Rails 2.3.
 
-  * Non-numeric chapter number support
-
-    Texts can have non-numeric chapter numbers. These have been set to 0 and 255
-    now, creating the illusion of 0..255 chapters in some books.
-
   * Administrative token merging and divisions
 
     These functions are simple in principle, but have to be rethought

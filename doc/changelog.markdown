@@ -1,5 +1,6 @@
   * Secondary edge interpretation changed to report actual relation
   tags (Dag and Marius)
+  * Support for non-numeric chapter numbers (Marius)
   * Generated inflections maintained in the database (Marius)
   * Information structure annotation (Anders)
   * Dependency alignment (Marius)
