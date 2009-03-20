@@ -24,7 +24,7 @@ module SentenceFormattingHelper
   # length_limit:: If not +nil+, will limit the length of the formatted
   # sentence to the given number of words and append an ellipsis if the
   # sentence exceeds that limit. If a negative number is given, the
-  # ellipis is prepended to the sentence.
+  # ellipsis is prepended to the sentence.
   #
   # highlight:: If set to an array of tokens, will highlight those tokens.
   #

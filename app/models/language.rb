@@ -12,8 +12,8 @@ class Language < ActiveRecord::Base
   # Returns inferred morphology for a word form in the language.
   #
   # ==== Options
-  # <tt>:ignore_instances</tt> - If set, ignores all instance matches.
-  # <tt>:force_method</tt> - If set, forces the tagger to use a specific tagging method,
+  # <tt>:ignore_instances</tt> -- If set, ignores all instance matches.
+  # <tt>:force_method</tt> -- If set, forces the tagger to use a specific tagging method,
   #                          e.g. <tt>:manual_rules</tt> for manual rules. All other
   #                          methods are disabled.
   def guess_morphology(form, existing_tags, options = {})

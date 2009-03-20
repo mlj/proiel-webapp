@@ -1,5 +1,5 @@
-# Slash edges are directed, labelled edges in the depedency
-# graph. They are inteded to be used as indicators of various forms
+# Slash edges are directed, labelled edges in the dependency
+# graph. They are intended to be used as indicators of various forms
 # of coindexing. The `slasher' is generally the element that has a `gap',
 # and the `slashee' is the element that would fill the `gap'.
 class SlashEdge < ActiveRecord::Base

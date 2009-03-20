@@ -1,7 +1,7 @@
 class JavascriptsController < ApplicationController
   layout nil
 
-  # Generates javascript suitable to control a sequence of dynamic
+  # Generates JavaScript suitable to control a sequence of dynamic
   # morphology drop-downs.
   def dynamic_pos
     @language = params[:id].to_sym

@@ -43,7 +43,7 @@ class Audit < ActiveRecord::Base
     block_given? ? result : changes
   end
 
-private
+  private
 
   def set_version_number
     max = self.class.maximum(:version,

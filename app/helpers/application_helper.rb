@@ -132,7 +132,7 @@ module ApplicationHelper
     end
   end
 
-  # Generates a human readble representation of a relation code.
+  # Generates a human readable representation of a relation code.
   def readable_relation(code)
     return "<span class='relation bad'>#{code}</span>" unless code and PROIEL::RELATIONS.has_key?(code.to_sym)
 

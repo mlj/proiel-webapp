@@ -10,7 +10,7 @@ class HomeController < ApplicationController
     redirect_to source_divisions_url
   end
 
-  # Returns suggestions for Open Search suggesion queries
+  # Returns suggestions for Open Search suggestion queries.
   def quick_search_suggestions
     query = params[:q] || ""
     query.strip!

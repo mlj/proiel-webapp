@@ -184,7 +184,7 @@ class Token < ActiveRecord::Base
     language.guess_morphology(form, morph_lemma_tag || source_morph_lemma_tag)
   end
 
-  # Merges the token with the token linearly subsequent to it. The succeding
+  # Merges the token with the token linearly subsequent to it. The succeeding
   # token is destroyed, and the original token's word form is updated. All
   # other data is left as-is. Returns the new merged token.
   def merge!(separator = ' ')

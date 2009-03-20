@@ -18,5 +18,4 @@ class Announcement < ActiveRecord::Base
 
     paginate options
   end
-
 end
