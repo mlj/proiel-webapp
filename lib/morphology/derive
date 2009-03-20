@@ -426,7 +426,7 @@ def emit(language, lemma, variant, form, tag, options = {})
     STDERR.puts "Ignoring rule #{tag} for #{form} (#{variant}): Missing lemma."
   elsif tag.is_valid?(language)
     if options[:caseless]
-      capitalised_form = form.chars.capitalize
+      capitalised_form = form.mb_chars.capitalize
       emit(language, lemma, variant, capitalised_form, tag) unless capitalised_form == form
     end
 
