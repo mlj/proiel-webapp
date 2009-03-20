@@ -70,7 +70,7 @@ module PROIEL
   end
 
   class MorphTag < Logos::PositionalTag
-    PRESENTATION_SEQUENCE = [:major, :minor, :mood, :tense, :voice, :degree, :case, 
+    PRESENTATION_SEQUENCE = [:major, :minor, :inflection, :mood, :tense, :voice, :degree, :case,
       :person, :number, :gender, :animacy, :strength]
 
     def initialize(values = nil)

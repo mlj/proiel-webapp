@@ -6,8 +6,6 @@ New features
 For next iteration
 ------------------
 
-  * Generalised `indeclinable` field [complete, but too unstable]
-
   * Refactoring of morphtag and lemma + part of speech [complete, but too unstable]
 
   * Fix visualization which is still based on interpretation

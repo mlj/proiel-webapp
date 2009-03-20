@@ -12,6 +12,7 @@
     <position ref="degree"/>
     <position ref="animacy"/>
     <position ref="strength"/>
+    <position ref="inflection"/>
   </order>
 
   <field id="major">
@@ -43,18 +44,14 @@
 
     <!-- M -->
     <tag code="a" summary="cardinal"/>
-    <tag code="g" summary="cardinal, indeclinable"/>
     <tag code="o" summary="ordinal"/>
 
     <!-- N -->
     <tag code="b" summary="common"/>
-    <tag code="h" summary="common, indeclinable"/>
     <tag code="e" summary="proper"/>
-    <tag code="j" summary="proper, indeclinable"/>
 
     <!-- D -->
-    <tag code="f" summary="comparable"/>
-    <tag code="n" summary="non-comparable" abbreviation="non-comp."/>
+    <tag code="f" summary="other"/>
     <tag code="q" summary="relative"/>
     <tag code="u" summary="interrogative"/>
   </field>
@@ -162,5 +159,10 @@
 
     <equivalence ref="w" isa="t"/>
     <equivalence ref="s" isa="t"/>
+  </field>
+
+  <field id="inflection" default="inflecting">
+    <tag code="i" summary="inflecting"/>
+    <tag code="n" summary="non-inflecting"/>
   </field>
 </tagset>

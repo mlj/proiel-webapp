@@ -12,9 +12,10 @@
 #degree#         = pcs\-
 #animacy#        = ia\-
 #strength#       = wst\-
+#inflection#     = in\-
 
-ALPHABET = [#major#] [#minor#] [#person#] [#number#] [#tense#] [#mood#] [#voice#] [#gender#] [#case#] [#degree#] [#animacy#] [#strength#]
-$any$    = [#major#] [#minor#] [#person#] [#number#] [#tense#] [#mood#] [#voice#] [#gender#] [#case#] [#degree#] [#animacy#] [#strength#]
+ALPHABET = [#major#] [#minor#] [#person#] [#number#] [#tense#] [#mood#] [#voice#] [#gender#] [#case#] [#degree#] [#animacy#] [#strength#] [#inflection#]
+$any$    = [#major#] [#minor#] [#person#] [#number#] [#tense#] [#mood#] [#voice#] [#gender#] [#case#] [#degree#] [#animacy#] [#strength#] [#inflection#]
 
 $n$ = [^\-]
 $e$ = \-
@@ -34,41 +35,47 @@ $feature_mapping$ = \
   (<NOM>:n | <VOC>:v | <ACC>:a | <GEN>:g | <DAT>:d | <ABL>:b | <INS>:i | <LOC>:l | <GEN/DAT>:c | <>:\-) \
   (<POSITIVE>:p | <COMPARATIVE>:c | <SUPERLATIVE>:s | <>:\-) \
   (<INANIMATE>:i | <ANIMATE>:a | <>:\-) \
-  (<WEAK>:w | <STRONG>:s | <WEAK/STRONG>:t | <>:\-)
+  (<WEAK>:w | <STRONG>:s | <WEAK/STRONG>:t | <>:\-) \
+  (<INFLECTING>:i | <NONINFLECTING>:n | <>:\-)
 
 % Positional tag space
 % ====================
 
-%                               Person  Number  Tense   Mood   Voice  Gender  Case  Degree  Animacy  Strength
-$personal_pronominal$ =         $n$     $n$     $e$     $e$    $e$    $n$     $n$   $e$     $n$      $e$
-$nominal$ =                     $e$     $n$     $e$     $e$    $e$    $n$     $n$   $e$     $n$      $e$
-$adjective$ =                   $e$     $n$     $e$     $e$    $e$    $n$     $n$   $n$     $n$      $n$
-$comparable_adverb$ =           $e$     $e$     $e$     $e$    $e$    $e$     $e$   $n$     $e$      $e$
-$indeclinable$ =                $e$     $e$     $e$     $e$    $e$    $e$     $e$   $e$     $e$      $e$
+%                               Person  Number  Tense   Mood   Voice  Gender  Case  Deg Ani Str Inf
+$personal_pronominal$ =         $n$     $n$     $e$     $e$    $e$    $n$     $n$   $e$ $n$ $e$ i
+$nominal$ =                     $e$     $n$     $e$     $e$    $e$    $n$     $n$   $e$ $n$ $e$ i
+$adjective$ =                   $e$     $n$     $e$     $e$    $e$    $n$     $n$   $n$ $n$ $n$ i
+$comparable_adverb$ =           $e$     $e$     $e$     $e$    $e$    $e$     $e$   $n$ $e$ $e$ i
+$indeclinable$ =                $e$     $e$     $e$     $e$    $e$    $e$     $e$   $e$ $e$ $e$ n
 
 % Verbs are complex and need more detailed attention
 $verb$ = ( \
-  % Person  Number  Tense    Mood   Voice  Gender  Case  Degree  Animacy  Strength
-  $e$       $e$     [praf]   n      $n$    $e$     $e$   $e$     $e$      $e$ | \ % ininitive
-  $e$       $n$     [prafsu] p      $n$    $n$     $n$   $e$     $n$      $n$ | \ % participle
-  $e$       $e$     $e$      [du]   $e$    $e$     $n$   $e$     $e$      $e$ | \ % gerund & supine
-  $e$       $n$     $e$      g      $e$    $n$     $n$   $e$     $n$      $n$ | \ % gerundive
-  $n$       $n$     [pafr]   m      $n$    $e$     $e$   $e$     $e$      $e$ | \ % imperative
-  $n$       $n$     $n$      [iso]  $n$    $e$     $e$   $e$     $e$      $e$   \ % other finite forms
+  % Person  Number  Tense    Mood   Voice  Gender  Case  Degree  Animacy  Strength  Inflection
+  $e$       $e$     [praf]   n      $n$    $e$     $e$   $e$     $e$      $e$       i | \ % ininitive
+  $e$       $n$     [prafsu] p      $n$    $n$     $n$   $e$     $n$      $n$       i | \ % participle
+  $e$       $e$     $e$      [du]   $e$    $e$     $n$   $e$     $e$      $e$       i | \ % gerund & supine
+  $e$       $n$     $e$      g      $e$    $n$     $n$   $e$     $n$      $n$       i | \ % gerundive
+  $n$       $n$     [pafr]   m      $n$    $e$     $e$   $e$     $e$      $e$       i | \ % imperative
+  $n$       $n$     $n$      [iso]  $n$    $e$     $e$   $e$     $e$      $e$       i   \ % other finite forms
 )
 
 $legal_tags$ = ( \
   P [pskt]  $personal_pronominal$ | \
+  P [pskt]  $indeclinable$        | \
   P [rdcix] $nominal$             | \
+  P [rdcix] $indeclinable$        | \
   M [ao]    $nominal$             | \
-  M g       $indeclinable$        | \
+  M [ao]    $indeclinable$        | \
   N [be]    $nominal$             | \
-  N [jh]    $indeclinable$        | \
+  N [be]    $indeclinable$        | \
   V \-      $verb$                | \
+  V \-      $indeclinable$        | \
   A \-      $adjective$           | \
+  A \-      $indeclinable$        | \
   S \-      $nominal$             | \
+  S \-      $indeclinable$        | \
   D f       $comparable_adverb$   | \
-  D [nqu]   $indeclinable$        | \
+  D [fqu]   $indeclinable$        | \
   [RCGFI] \- $indeclinable$         \
 )
 
@@ -77,11 +84,11 @@ $tags$ = $any$ & $legal_tags$
 % Language-specific removal of entire categories
 % ==============================================
 
-$hy_category_removals$ =  (.   .   .   .   .   .   .   \-:[#gender#] .    .   \-:[#animacy#] \-:[#strength#])
-$la_category_removals$ =  (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#])
-$grc_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#])
-$got_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] .              )
-$cu_category_removals$ =  (.   .   .   .   .   .   .   .             .    .   .              .              )
+$hy_category_removals$ =  (.   .   .   .   .   .   .   \-:[#gender#] .    .   \-:[#animacy#] \-:[#strength#] .)
+$la_category_removals$ =  (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#] .)
+$grc_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#] .)
+$got_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] .               .)
+$cu_category_removals$ =  (.   .   .   .   .   .   .   .             .    .   .              .               .)
 
 % Language-specific removal of specific category *values*
 % =======================================================
@@ -92,11 +99,11 @@ $cu_category_removals$ =  (.   .   .   .   .   .   .   .             .    .   . 
 % (Some of these restrictions are properly language-specific, but currently flagged
 % as global as they (coincidentally) apply to all our current languages.)
 
-                       % Maj Min Per Num Ten Moo Voi Gender  Case Deg Ani             Str
-$c$                   = (.   .   .   .   .   .   .   m       .    .   .               . ) | \
-                        (.   .   .   .   .   .   .   [^m]    .    .   \-:[#animacy#]  . )
-$d$                   = (.   .   .   .   .   .   .   .       a    .   .               . ) | \
-                        (.   .   .   .   .   .   .   .       [^a] .   \-:[#animacy#]  . )
+                       % Maj Min Per Num Ten Moo Voi Gender  Case Deg Ani             Str Inf
+$c$                   = (.   .   .   .   .   .   .   m       .    .   .               .   .) | \
+                        (.   .   .   .   .   .   .   [^m]    .    .   \-:[#animacy#]  .   .)
+$d$                   = (.   .   .   .   .   .   .   .       a    .   .               .   .) | \
+                        (.   .   .   .   .   .   .   .       [^a] .   \-:[#animacy#]  .   .)
 
 $restricted_tags$ = (\
   (<HY>  ($hy_category_removals$  || $tags$)) | \

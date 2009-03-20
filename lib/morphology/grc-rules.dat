@@ -1,13 +1,29 @@
-# 
+#
 # grc-rules.dat - Hand-written morphology rules for Ancient Greek
 #
-# Written by Dag T. T. Haug, 2008.
+# Copyright 2008 University of Oslo
+# Copyright 2008 Dag T. T. Haug
+# Copyright 2009 Marius L. Jøhndal
+#
+# This file is part of the PROIEL web application.
+#
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
 #
 
-#Nouns
-#=====
-# FIXME Indeclinable proper nouns
-Nj {
+# Nouns
+
+Ne----------n {
  Βεελζεβούλ, Βηθσαϊδά:Βηθσαϊδάν, Βοανηργές, Γεθσημανῆ:Γεθσημανεί,
  Γεννησαρέτ, Δαβίδ, Δαβίδ:Δαυεὶδ, Δαλμανουθά, Καπερναούμ, Καπερναούμ:Καφαρναούμ,
  Ναζαρέθ:Ναζαρὲτ, Ἀββᾶ:ἀββᾶ, Ἀβιαθάρ:Ἀβιαθὰρ,
@@ -15,9 +31,6 @@ Nj {
  Ἰωσήφ, Ἱεριχώ:Ἰερειχὼ
 }
 
-# FIXME Declinable proper nouns - why are they here?
-# Fordi Ulriks data ikke har skille mellom egen- og fellesnavn; taggeren fyller 
-# fremdeles inn fellesnavn som gjetning, så disse må(tte en stund) til for å overstyre.
 Ne- {
  Νινευίτης:Νινευεῖται/p---mn, Πέτρος/s---mn, Πέτρος:Πέτρον/s---ma, Πέτρος:Πέτρου/s---mg,
  Παῦλος/s---mn, Παῦλος:Παύλου/s---mg, Παῦλος:Παύλῳ/s---md, Παῦλος:Παῦλε/s---mv,
@@ -28,18 +41,13 @@ Ne- {
  Ἰησοῦς:Ἰησοῦν/s---ma, Ἰωνᾶς/s---mn, Ἰωνᾶς:Ἰωνᾶ/s---mg
 }
 
-# Indeclinable nouns
-Nh {
+Nb----------n {
  πάσχα, ῥαββί, ῥαββί:ῥαββεί, ῥαββουνί, μάννα
 }
 
-
-
 # Numerals
-# ========
 
-# Indeclinable cardinals
-Mg {
+Ma----------n {
  πέντε, ἕξ, ἑπτά, ὀκτώ, ἐννέα, δέκα, ἕνδεκα,
  δώδεκα, δεκαπέντε, δεκαοκτώ, εἴκοσι, τριάκοντα,
  τεσσεράκοντα, τεσσεράκοντα:τεσσαράκοντα,
@@ -89,12 +97,6 @@ Mo:GA1 {
 
 Mo:GA2 {
  δεύτερος
-}
-
-
-# FIXME What is this? Can't fint this abbreviated numeral in our text
-M {
-  χξζ:χξϛʹ,
 }
 
 # Pronouns
@@ -451,20 +453,12 @@ S-- {
  ὁ:τοῖς/p---md, ὁ:ταῖς/p---fd, ὁ:τοῖς/p---nd
 }
 
-
-#Interjections
-#=============
-
-I {
+I-----------n {
  ἁλληλουϊά, ἀμήν, ὡσαννά, δεῦτε
  ναί, οὐά, οὐαί, οὐαί:οὐαὶ, ἔα, ὦ
 }
 
-
-#Prepositions
-#============
-
-R {
+R-----------n {
  διά,
  διά:δι’,
  εἰς,
@@ -538,16 +532,13 @@ R {
  ὑπό:ὑπ’,
 }
 
-
-#Conjunctions
-C {
+C-----------n {
   ἀλλά, ἀλλά:ἀλλ’, εἴτε, ἤτοι, καί,
   καίγε, καίπερ, μήτε, ἤ,  μηδέ,
   μηδέ:μηδ’, μήτε, οὐδέ, οὐδέ:οὐδ’, οὔτε
 }
 
-#Subjunctions
-G {
+G-----------n {
  ὅτι, ὁπότε, ὅτε, ὅπως, ὡς, ἡνίκα,
  διότι, ἐάν, ἄν:ἐάν, εἰ, εἰ:εἴ, εἴτε, ἐπάν, ἐπεί,
  ἐπειδή, ἐπειδήπερ, ἵνα, καθότι, μήπως, ὅταν, πρίν,
@@ -555,20 +546,13 @@ G {
  ἐάν:ἐάνπερ, ἕως, ὅπου, ὥσπερ, ὥστε
 }
 
-
-#Foreign words
-F {
+F-----------n {
  ἑλωΐ, ἑλωΐ:ἡλεὶ, λεμά, σαβαχθάνι, σαβαχθάνι:σαβαχθανεί, ἐφφαθά,
  ῥακά, κορβᾶν,
  Σαβαώθ:Σαβαὼθ,
  Σαβαώθ:σαβαὼθ,
  μαράνα θᾶ:μαρὰν, μαράνα θᾶ:ἀθά,
 }
-
-
-
-
-
 
 #Adverbs
 
@@ -607,8 +591,7 @@ Df------- {
  ὕστερος:ὕστερον/c, ῥητῶς/p, ῥοιζηδόν/p, Ῥωμαϊστί/p,
 }
 
-#
-Dn {
+Df----------n {
  αὐτοῦ, αὔριον, γάρ, γε,
  γε:γέ, δέ, δέ:δ’,
  δεύτερον,
@@ -722,14 +705,11 @@ Dn {
  ὧδε:ὧδέ
 }
 
-Du {
+Du----------n {
  πότε, ποῦ, πόθεν, πῶς, ὅτι
 }
 
-Dq {
+Dq----------n {
  καθώς, ὅθεν, ὅπου, ὡς,
  καθά, καθό,  καθότι, καθώς, οὗ, ὅθεν, ὅτε
 }
-
-
-

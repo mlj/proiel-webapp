@@ -1,3 +1,26 @@
+#
+# cu-rules.dat - Hand-written morphology rules for Church Slavic
+#
+# Copyright 2008 University of Oslo
+# Copyright 2008 Hanne Eckhoff
+# Copyright 2009 Marius L. Jøhndal
+#
+# This file is part of the PROIEL web application.
+#
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+
 # единъ should be classified both as a numeral and a pronoun, plurals are probably always pronominal
 # к҃ is 40, м҃ is 60, п҃ is 90, the numerals are composite, written in several words and with internal syntactic structure.
 # т҃ is 300
@@ -69,7 +92,7 @@ Mo:C1 {
 
 
 
-I---------- {
+I-----------n {
  аминъ, аминъ:аминь, аминъ:амн, аминъ:амнъ, аминъ:амнь, аминъ:амин,
  оува,
  се,
@@ -78,7 +101,7 @@ I---------- {
 }
 
 
-R---------- {
+R-----------n {
  без, без:бес, без:бе,
  близъ,
  въ, въ:в, въ:во, въ:вь, въ:вꙑ, въ:Въ,
@@ -113,7 +136,7 @@ R---------- {
  вънѣѭдоу, вънѣѭдоу:вьнѣѫдоу,
 }
 
-G---------- {
+G-----------n {
  аще, аще:аште, аще:ѣште, аще:ѣще, аще:ащте, аще:Аще
  да,
  доидеже,
@@ -133,16 +156,16 @@ G---------- {
  ꙗкоже, ꙗкоже:ѣкоже,
 }
 
-Nj {
+Ne----------n {
 воаниръꙉесъ,
 }
 
 
-Nh {
+Nb----------n {
 авва, корван,
 }
 
-F---------- {
+F-----------n {
 еффата, еффата:еффꙿата, ели, ели:елѡи, ели:елѡꙇ, лема, лема:лима, нтафати, савахтани, талиѳакоумъ, талиѳакоумъ:талитакоумъ,
 }
 
@@ -400,10 +423,9 @@ Pi-:C2 {
  каковъ,
 }
 
-# колико is indeclinable
-Pi--------- {
-колико,
- }
+Pi----------n {
+  колико,
+}
 
 Pk {
  себе/3s---qa, себе:се/3s---qa, себе:сѧ/3s---qa, себе:сѩ/3s---qa,
@@ -413,12 +435,10 @@ Pk {
  себе:собоѭ/3s---qi,
 }
 
-# ѥлико and ѥликоже are indeclinable
-Pr--------- {
- ѥлико, ѥлико:елико,
- ѥликоже, ѥликоже:еликоже,
-
- }
+Pr----------n {
+  ѥлико, ѥлико:елико,
+  ѥликоже, ѥликоже:еликоже,
+}
 
  Pr- {
  иже/s---mn, иже:ꙇже/s---mn, иже:ѣже/s---fn, иже:еже/s---nn,
@@ -506,8 +526,7 @@ Pc- {
 
 }
 
-
-Dn--------- {
+Df----------n {
  абиѥ, абиѥ:абие, абиѥ:абь, абиѥ:абье,
  авѣ, авѣ:ѣвѣ,
  аще, аще:аште, аще:ѣште, аще:ѣще, аще:ащте
@@ -675,13 +694,12 @@ Df------- {
 
 }
 
-
-Du--------- {
+Du----------n {
  въскѫѭ, доколѣ, еда, ѥлико, ѥлико:елико, иде, како, камо, когда, коли, колико, коль, кольми, къде, къде:кьде,
  ли,  ѣко,
 }
 
-Dq--------- {
+Dq----------n {
 ѥгда, ѥгда:егда,
 ѥгдаже, ѥгдаже:егдаже,
 ѥлико, ѥлико:елико,
@@ -697,7 +715,7 @@ Dq--------- {
 ѭдоуже,
 }
 
-C---------- {
+C-----------n {
  али,
  и, и:ꙇ, и:Ꙇ, и:Ꙇ҅, и:ꙇ҅,
  а,
@@ -707,4 +725,3 @@ C---------- {
  ни,
  нъ, нъ:нь, нъ:нꙑ,
 }
-

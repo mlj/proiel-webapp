@@ -422,6 +422,11 @@ end
 
 # Emits a new rule
 def emit(language, lemma, variant, form, tag, options = {})
+  # Set inflection field to inflecting if not already set.
+  if tag[:inflection] == '-'
+    tag[:inflection] = 'i'
+  end
+
   if lemma.empty?
     STDERR.puts "Ignoring rule #{tag} for #{form} (#{variant}): Missing lemma."
   elsif tag.is_valid?(language)

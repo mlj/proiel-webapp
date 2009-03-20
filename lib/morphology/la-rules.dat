@@ -1,7 +1,23 @@
-# 
+#
 # la-rules.dat - Hand-written morphology rules for Latin
 #
-# Written by Marius L. Jøhndal, 2008.
+# Copyright 2008 University of Oslo
+# Copyright 2008, 2009 Marius L. Jøhndal
+#
+# This file is part of the PROIEL web application.
+#
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
 #
 
 # ================================================================
@@ -46,7 +62,7 @@ Ma-p--- {
 }
 
 # Indeclinable cardinalia
-Mg {
+Ma----------n {
  quattuor, quinque, sex, septem, octo, novem, decem, undecim, duodecim, 
  tredecim, quattuordecim, quindecim, sedecim, septendecim, duodeviginti,
  undeviginti, viginti, triginta, quadraginta, quinquaginta, sexaginta,
@@ -72,12 +88,12 @@ Mo- {
 #
 
 # Conjunctions
-C {
+C-----------n {
  atque, atque:ac, aut, et, et:que, et:c, sed, vel
 }
 
 # Subjunctions
-G {
+G-----------n{
  an, antequam, cum, donec, dum, ne, neque, neque:nec,
  nisi, postquam, prout, quamquam, quia, quod, quoniam, si,
  sicut, sicut:sicuti, sin, siquidem, tametsi, ut, ut:uti,
@@ -89,13 +105,13 @@ G {
 #
 
 # Interjections
-I {
+I-----------n {
  a, alleluia, alleluia:halleluia, amen, ecce, ei, euge, ave:have, ave, 
  ne, o, osanna, osanna:hosanna, pro, vae, quomodo,
 }
 
 # Prepositions
-R {
+R-----------n {
  ab, ab:a, ab:abs, absque, ad, adversus:adversum, adversus,
  ante, apud, circa, circiter, circum, contra, coram, cum, de, desuper, 
  desursum, erga, ex, ex:e, extra, in, infra, inter, intra, iuxta, ob, obviam,
@@ -104,7 +120,7 @@ R {
 }
 
 # Non-comparable adverbs
-Dn {
+Df----------n {
  abunde, adhuc, alia, alias, alio, alioquin, alioquin:alioqui, aliquanto,
  aliquantum, aliquo, aliquot, aliter, aliunde, amodo, antea, at, autem,
  clam, confestim, continuo, corporaliter, cumque, cur, deinceps, 
@@ -160,7 +176,7 @@ Dn {
 }
 
 # Interrogative adverbs
-Du {
+Du----------n {
  qua, qualiter, quando, quare, quo, quoties, quoties:quotiens, ubi, unde, quamdiu, 
  quanto, quantopere, quantum, quemadmodum, quot, quousque, quomodo, usquequo,
 
@@ -168,7 +184,7 @@ Du {
 }
 
 # Relative adverbs
-Dq {
+Dq----------n {
  qua, qualiter, quando, quare, quo, quoties, quoties:quotiens, ubi, unde, quamdiu,
  quanto, quantopere, quantum, quemadmodum, quot, quousque, quomodo, cum, usquequo,
 
@@ -626,7 +642,7 @@ Ne- {
 }
 
 # Indeclinable proper nouns
-Nj {
+Ne----------n {
  Abiud, Achaz, Acheldemach, Achim, Aminadab, Amon, Aram, Asa, Aser,
  Azor, Beelzebub, Bethleem, Booz, Capharnaum, David, Eleazar, Eliezer, Elisabeth, Eliud,
  Esrom, Gabrihel, Heli, Helmadam, Her, Hierusalem, Iacob, Iannae, Ioda, Iorim, Iosech, Iesse, Ioatham, Ioram, Ioseph, Isaac,
@@ -643,7 +659,7 @@ Ne- {
 }
 
 # Indeclinable common nouns
-Nh {
+Nb----------n {
  rabbi, rabboni,
 }
 
