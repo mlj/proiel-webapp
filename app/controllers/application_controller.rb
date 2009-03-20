@@ -12,9 +12,6 @@ class ApplicationController < ActionController::Base
 
   include ExceptionNotifiable
 
-  # Pick a unique cookie name to distinguish our session data from others'
-  session :session_key => '_proiel_session_id'
-
   layout 'proiel' 
 
   def user_is_reviewer?
