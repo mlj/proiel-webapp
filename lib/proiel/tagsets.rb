@@ -15,6 +15,12 @@ module PROIEL
   MORPHOLOGY = Lingua::PositionalTagSet.new(File.join(DATADIR, 'morphology.xml')).freeze
   RELATIONS = Lingua::TagSet.new(File.join(DATADIR, 'relations.xml')).freeze
 
+  PRIMARY_RELATIONS = RELATIONS.reject { |identifier, tag| tag.priority != 'primary' }
+  SECONDARY_RELATIONS = RELATIONS.reject { |identifier, tag| tag.priority != 'secondary' }
+
+  PRIMARY_RELATION_TAGS = PRIMARY_RELATIONS.keys.map(&:to_s)
+  SECONDARY_RELATION_TAGS = SECONDARY_RELATIONS.keys.map(&:to_s)
+
   INFERENCES = YAML::load_file(File.join(DATADIR, 'inferences.yml')).freeze
 end
 

@@ -20,6 +20,7 @@ module Lingua
     attr_reader :summary
     attr_reader :abbreviation
     attr_reader :nominal
+    attr_reader :priority
 
     # Creates a new tag identified by a given code +code+ and optional descriptive
     # information.
@@ -33,6 +34,7 @@ module Lingua
       @summary = options[:summary]
       @abbreviation = options[:abbreviation]
       @nominal = options[:nominal]
+      @priority = options[:priority]
     end
 
     # Returns a description of tag using a specified style.

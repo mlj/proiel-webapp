@@ -25,7 +25,7 @@ class JavascriptsController < ApplicationController
 
   # Returns a Javascript representation of valid dependency relations
   def relations
-    @relations = PROIEL::RELATIONS
+    @relations = PROIEL::PRIMARY_RELATIONS
     @inferences = PROIEL::INFERENCES
   end
 

@@ -54,7 +54,7 @@ class Token < ActiveRecord::Base
   validates_presence_of :relation, :if => lambda { |t| !t.head_id.nil? }
 
   # If set, relation must be valid.
-  validates_inclusion_of :relation, :allow_nil => true, :in => PROIEL::RELATIONS.keys.map(&:to_s)
+  validates_inclusion_of :relation, :allow_nil => true, :in => PROIEL::PRIMARY_RELATION_TAGS
 
   # If set, morphtag and source_morphtag must have the correct length.
   validates_length_of :morphtag, :allow_nil => true, :is => PROIEL::MorphTag.fields.length

@@ -35,7 +35,7 @@ class DependenciesController < ApplicationController
 
     @structure = (params[:output] and ActiveSupport::JSON.decode(params[:output])) || (@sentence.has_dependency_annotation? ? @sentence.dependency_graph.to_h : {})
 
-    @relations = PROIEL::RELATIONS.values.sort_by { |v| v.code.to_s }
+    @relations = PROIEL::PRIMARY_RELATIONS.values.sort_by { |v| v.code.to_s }
   end
 
   # Saves changes to relations and has the user review the new structure.
