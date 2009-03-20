@@ -5,6 +5,7 @@
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
 require 'pstore'
+require 'active_support'
 require 'proiel/morphtag'
 
 csv_file_name, db_file_name = ARGV
@@ -20,10 +21,10 @@ db.transaction do
 
       raise "Word list database update aborted: invalid morphtag #{morphtags} for form #{form} in rule file #{csv_file_name}" unless morphtags.all? { |m| PROIEL::MorphTag.new(m).is_valid?(language.to_sym) }
 
-      base_form = variant ? "#{lemma}##{variant}" : lemma
+      base_form = variant.blank? ? lemma : "#{lemma}##{variant}"
       morphtags.collect! { |m| [PROIEL::MorphTag.new(m).to_s, base_form].join(':') }
 
-      morphtags += db[form] if db[form]
+      morphtags += db.fetch(form, [])
       db[form] = morphtags
     end
   end

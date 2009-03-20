@@ -1,4 +1,4 @@
-#languages#      = <CU><LA><HY><GRC><GOT>
+#languages#      = <CHU><LAT><XCL><GRC><GOT>
 
 #major#          = PMNVASDRCGFI\-
 #minor#          = psktrdcixagobejhfnqu\-
@@ -84,11 +84,11 @@ $tags$ = $any$ & $legal_tags$
 % Language-specific removal of entire categories
 % ==============================================
 
-$hy_category_removals$ =  (.   .   .   .   .   .   .   \-:[#gender#] .    .   \-:[#animacy#] \-:[#strength#] .)
-$la_category_removals$ =  (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#] .)
+$xcl_category_removals$ = (.   .   .   .   .   .   .   \-:[#gender#] .    .   \-:[#animacy#] \-:[#strength#] .)
+$lat_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#] .)
 $grc_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#] .)
 $got_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] .               .)
-$cu_category_removals$ =  (.   .   .   .   .   .   .   .             .    .   .              .               .)
+$chu_category_removals$ = (.   .   .   .   .   .   .   .             .    .   .              .               .)
 
 % Language-specific removal of specific category *values*
 % =======================================================
@@ -106,11 +106,11 @@ $d$                   = (.   .   .   .   .   .   .   .       a    .   .         
                         (.   .   .   .   .   .   .   .       [^a] .   \-:[#animacy#]  .   .)
 
 $restricted_tags$ = (\
-  (<HY>  ($hy_category_removals$  || $tags$)) | \
-  (<LA>  ($la_category_removals$  || $tags$)) | \
+  (<XCL> ($xcl_category_removals$ || $tags$)) | \
+  (<LAT> ($lat_category_removals$ || $tags$)) | \
   (<GRC> ($grc_category_removals$ || $tags$)) | \
   (<GOT> ($got_category_removals$ || $tags$)) | \
-  (<CU>  ($c$ || $d$ || $cu_category_removals$  || $tags$))   \
+  (<CHU> ($c$ || $d$ || $chu_category_removals$  || $tags$))   \
 )
 $restricted_tag_space$ = _$restricted_tags$
 

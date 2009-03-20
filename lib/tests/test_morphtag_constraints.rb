@@ -6,22 +6,22 @@ require 'test/unit'
 class MorphtagConstraintsTestCase < Test::Unit::TestCase
   def test_simple
     m = PROIEL::MorphtagConstraints.instance
-    assert_equal true, m.is_valid?('V-3sfip-----', :la)
-    assert_equal false, m.is_valid?('V-----------', :la)
-    assert_equal true, m.is_valid?('A--p---fac--', :la)
-    assert_equal false, m.is_valid?('D-----------', :cu)
+    assert_equal true, m.is_valid?('V-3sfip-----', :lat)
+    assert_equal false, m.is_valid?('V-----------', :lat)
+    assert_equal true, m.is_valid?('A--p---fac--', :lat)
+    assert_equal false, m.is_valid?('D-----------', :chu)
   end
 
   def test_animacy
     m = PROIEL::MorphtagConstraints.instance
-    assert_equal true, m.is_valid?('Nb-p---fd---', :cu)
-    assert_equal false, m.is_valid?('Nb-p---fd-i-', :cu)
-    assert_equal true, m.is_valid?('Nb-p---fa---', :cu)
-    assert_equal false, m.is_valid?('Nb-p---fa-i-', :cu)
-    assert_equal true, m.is_valid?('Nb-p---md---', :cu)
-    assert_equal false, m.is_valid?('Nb-p---md-i-', :cu)
+    assert_equal true, m.is_valid?('Nb-p---fd---', :chu)
+    assert_equal false, m.is_valid?('Nb-p---fd-i-', :chu)
+    assert_equal true, m.is_valid?('Nb-p---fa---', :chu)
+    assert_equal false, m.is_valid?('Nb-p---fa-i-', :chu)
+    assert_equal true, m.is_valid?('Nb-p---md---', :chu)
+    assert_equal false, m.is_valid?('Nb-p---md-i-', :chu)
 
-    assert_equal false, m.is_valid?('Nb-p---ma---', :cu)
-    assert_equal true, m.is_valid?('Nb-p---ma-i-', :cu)
+    assert_equal false, m.is_valid?('Nb-p---ma---', :chu)
+    assert_equal true, m.is_valid?('Nb-p---ma-i-', :chu)
   end
 end

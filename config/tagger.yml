@@ -18,7 +18,7 @@
       got-rules.db
     :generated_rules:
       true
-  :cu:
+  :chu:
     :manual_rules:
       cu-rules.db
     :fst:
@@ -50,7 +50,7 @@
         "-"
       "^V":
         "-"
-  :la:    
+  :lat:
     :manual_rules:
       la-rules.db
     :instance_frequencies:

@@ -2,11 +2,11 @@ one:
   id: 1
   lemma: cum
   variant:
-  language: la
+  language_id: 1
   pos: R-
 two:
   id: 2
   lemma: cum
   variant:
-  language: la
+  language_id: 1
   pos: G-

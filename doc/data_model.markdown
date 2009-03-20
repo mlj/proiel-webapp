@@ -58,3 +58,11 @@ Column                                        Description
 `sentences.foreign_ids`                       A comma separated string of key-value pairs on the format key=value that can used to store identifiers or meta-data associated with the row. This is intended to be used typically as semi-permanent holding space for data that does not yet fit into the data model, but is likely to be useful for future extensions. Example: +source_segment_id=T567,witness=CA+
 `tokens.foreign_ids`                          See `sentences.foreign_ids`
 `lemmata.foreign_ids`                         See `sentences.foreign_ids`
+
+Meta data
+=========
+
+Column
+------
+`languages.iso_code`                          ISO 639-3 code for a language. See [http://www.sil.org/iso639-3/codes.asp](ISO-639-3 code table) for valid codes.
+`languages.name`                              ISO 639-3 name for a language. See [http://www.sil.org/iso639-3/codes.asp](ISO-639-3 code table) for valid names.

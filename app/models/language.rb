@@ -4,7 +4,7 @@ class Language < ActiveRecord::Base
   has_many :inflections
 
   validates_presence_of :iso_code
-  validates_length_of :iso_code, :within => 2..3
+  validates_length_of :iso_code, :is => 3
   validates_uniqueness_of :iso_code
   validates_presence_of :name
   validates_uniqueness_of :name

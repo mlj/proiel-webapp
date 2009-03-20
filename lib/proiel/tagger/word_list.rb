@@ -13,6 +13,8 @@ module PROIEL
         super(language)
 
         @file_name = file_name
+        raise "Error word list #{file_name} not found" unless File.exists?(@file_name)
+
         @db = PStore.new(file_name)
         raise "Error opening word list #{file_name}" unless @db
       end

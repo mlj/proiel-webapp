@@ -64,22 +64,22 @@ class MorphtagTestCase < Test::Unit::TestCase
   end
 
   def test_validity
-    assert_equal false, PROIEL::MorphTag.new('A--s---na--').is_valid?(:la)
+    assert_equal false, PROIEL::MorphTag.new('A--s---na--').is_valid?(:lat)
     assert_equal false, PROIEL::MorphTag.new('A--s---na--').is_valid?(:grc)
-    assert_equal true, PROIEL::MorphTag.new('A--p---mdp-').is_valid?(:la)
-    assert_equal false, PROIEL::MorphTag.new('V-3piie----').is_valid?(:la)
+    assert_equal true, PROIEL::MorphTag.new('A--p---mdp-').is_valid?(:lat)
+    assert_equal false, PROIEL::MorphTag.new('V-3piie----').is_valid?(:lat)
     assert_equal true, PROIEL::MorphTag.new('V-3piie----').is_valid?(:grc)
-    assert_equal true, PROIEL::MorphTag.new('Pd-p---nd--').is_valid?(:la)
-    assert_equal true, PROIEL::MorphTag.new('Pi-p---mn--').is_valid?(:la)
-    assert_equal true, PROIEL::MorphTag.new('Pk3p---mb--').is_valid?(:la) # personal reflexive
-    assert_equal true, PROIEL::MorphTag.new('V--pppama--').is_valid?(:la) # present participle
-    assert_equal true, PROIEL::MorphTag.new('V-2sfip----').is_valid?(:la) # future indicative
-    assert_equal true, PROIEL::MorphTag.new('V----u--d--').is_valid?(:la) # supine, dative
+    assert_equal true, PROIEL::MorphTag.new('Pd-p---nd--').is_valid?(:lat)
+    assert_equal true, PROIEL::MorphTag.new('Pi-p---mn--').is_valid?(:lat)
+    assert_equal true, PROIEL::MorphTag.new('Pk3p---mb--').is_valid?(:lat) # personal reflexive
+    assert_equal true, PROIEL::MorphTag.new('V--pppama--').is_valid?(:lat) # present participle
+    assert_equal true, PROIEL::MorphTag.new('V-2sfip----').is_valid?(:lat) # future indicative
+    assert_equal true, PROIEL::MorphTag.new('V----u--d--').is_valid?(:lat) # supine, dative
   end
 
   def test_completions
-    assert_equal ["Nb-s---mn---","Ne-s---mn---", "Nh----------", "Nj----------"], PROIEL::MorphTag.new('N--s---mn-').completions(:la).collect { |t| t.to_s }.sort
-    assert_equal ["Nb-p---mn---","Nb-s---mn---"], PROIEL::MorphTag.new('Nb-----mn--').completions(:la).collect { |t| t.to_s }.sort
+    assert_equal ["Nb-s---mn---","Ne-s---mn---", "Nh----------", "Nj----------"], PROIEL::MorphTag.new('N--s---mn-').completions(:lat).collect { |t| t.to_s }.sort
+    assert_equal ["Nb-p---mn---","Nb-s---mn---"], PROIEL::MorphTag.new('Nb-----mn--').completions(:lat).collect { |t| t.to_s }.sort
     assert_equal ["Nb-d---ma-a-","Nb-d---ma-i-","Nb-p---ma-a-","Nb-p---ma-i-","Nb-s---ma-a-","Nb-s---ma-i-"], PROIEL::MorphTag.new('Nb-----ma--').completions(:cu).collect { |t| t.to_s }.sort
     assert_equal ["Nb-d---mn---","Nb-p---mn---","Nb-s---mn---"], PROIEL::MorphTag.new('Nb-----mn--').completions(:cu).collect { |t| t.to_s }.sort
   end

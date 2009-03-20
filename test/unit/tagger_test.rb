@@ -19,7 +19,7 @@ class TaggerTest < ActiveSupport::TestCase
 
   def test_unambiguous
     tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
-    assert_equal [:unambiguous, PROIEL::MorphLemmaTag.new("I-----------n:amen"), [PROIEL::MorphLemmaTag.new("I-----------n:amen"), 1.0]], tagger.tag_token(:la, 'amen')
+    assert_equal [:unambiguous, PROIEL::MorphLemmaTag.new("I-----------n:amen"), [PROIEL::MorphLemmaTag.new("I-----------n:amen"), 1.0]], tagger.tag_token(:lat, 'amen')
   end
 
   def test_instance_frequency
@@ -29,7 +29,7 @@ class TaggerTest < ActiveSupport::TestCase
     assert_equal [:ambiguous, PROIEL::MorphLemmaTag.new("C-----------n:cum"),
       [PROIEL::MorphLemmaTag.new("C-----------n:cum"), 1.0 + 0.75 * 0.5],
       [PROIEL::MorphLemmaTag.new("R-----------n:cum"), 1.0 + 0.25 * 0.5],
-      [PROIEL::MorphLemmaTag.new("Dq----------n:cum"), 1.0 + 0.00 * 0.5]], tagger.tag_token(:la, 'cum')
+      [PROIEL::MorphLemmaTag.new("Dq----------n:cum"), 1.0 + 0.00 * 0.5]], tagger.tag_token(:lat, 'cum')
   end
 
   def test_source_tag_influence
@@ -40,13 +40,13 @@ class TaggerTest < ActiveSupport::TestCase
       [PROIEL::MorphLemmaTag.new("R-----------n:cum"), (1.0 + 0.25 * 0.5) * 1.0],
       [PROIEL::MorphLemmaTag.new("C-----------n:cum"), (1.0 + 0.75 * 0.5) * 0.5],
       [PROIEL::MorphLemmaTag.new("Dq----------n:cum"), (1.0)              * 0.5],
-    ], tagger.tag_token(:la, 'cum', PROIEL::MorphLemmaTag.new('R-----------n:cum'))
+    ], tagger.tag_token(:lat, 'cum', PROIEL::MorphLemmaTag.new('R-----------n:cum'))
 
     assert_equal [:ambiguous, PROIEL::MorphLemmaTag.new("C-----------n:cum"),
       [PROIEL::MorphLemmaTag.new("C-----------n:cum"), (1.0 + 0.75 * 0.5) * 1.0],
       [PROIEL::MorphLemmaTag.new("R-----------n:cum"), (1.0 + 0.25 * 0.5) * 0.5],
       [PROIEL::MorphLemmaTag.new("Dq----------n:cum"), (1.0)              * 0.5],
-    ], tagger.tag_token(:la, 'cum', PROIEL::MorphLemmaTag.new('C-----------n:cum'))
+    ], tagger.tag_token(:lat, 'cum', PROIEL::MorphLemmaTag.new('C-----------n:cum'))
   end
 
   def test_existing_tag_influence_incomplete_tag
@@ -57,7 +57,7 @@ class TaggerTest < ActiveSupport::TestCase
       [PROIEL::MorphLemmaTag.new("Df----------n:ne"), 1.0],
       [PROIEL::MorphLemmaTag.new("I-----------n:ne"), 0.5],
       [PROIEL::MorphLemmaTag.new("C-----------n:ne"), 0.5],
-    ], tagger.tag_token(:la, 'ne', PROIEL::MorphLemmaTag.new('D'))
+    ], tagger.tag_token(:lat, 'ne', PROIEL::MorphLemmaTag.new('D'))
   end
 
   def test_existing_tag_influence_complete_tag_but_contradictory_lemma
@@ -68,12 +68,12 @@ class TaggerTest < ActiveSupport::TestCase
       [PROIEL::MorphLemmaTag.new("Df----------n:ne"), 0.5],
       [PROIEL::MorphLemmaTag.new("I-----------n:ne"), 0.5],
       [PROIEL::MorphLemmaTag.new("C-----------n:ne"), 0.5],
-    ], tagger.tag_token(:la, 'ne', PROIEL::MorphLemmaTag.new('Df----------n:neo'))
+    ], tagger.tag_token(:lat, 'ne', PROIEL::MorphLemmaTag.new('Df----------n:neo'))
   end
 
   def test_failed_tagging
     tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
-    assert_equal [:failed, nil], tagger.tag_token(:la, 'fjotleik', :text)
+    assert_equal [:failed, nil], tagger.tag_token(:lat, 'fjotleik', :text)
   end
 
   def test_sfst_lookup

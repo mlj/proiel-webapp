@@ -10,7 +10,7 @@ TARGETS=\
 all: $(TARGETS)
 	make -C class_morphology
 
-%.db: %.csv
+%.db: %.csv update_db
 	ruby -I.. update_db $< $@
 
 %.a: %.fst
@@ -27,13 +27,13 @@ clean:
 	rm -f *.db
 
 la-rules.csv: derive la-rules.dat
-	ruby -I.. derive la la-rules.dat | sort > $@ 
+	ruby -I.. derive lat la-rules.dat | sort > $@
 
 got-rules.csv: derive got-rules.dat
 	ruby -I.. derive got got-rules.dat | sort > $@
 
 cu-rules.csv: derive cu-rules.dat
-	ruby -I.. derive cu cu-rules.dat | sort > $@ 
+	ruby -I.. derive chu cu-rules.dat | sort > $@
 
 grc-rules.csv: derive grc-rules.dat
 	ruby -I.. derive --caseless grc grc-rules.dat | sort > $@

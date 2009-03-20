@@ -37,7 +37,7 @@ body {
   text-rendering: optimizeLegibility; /* Only matters for FF >= 3 */
 }
 
-:lang(cu) {
+:lang(chu) {
   font-family: "Kliment Std", "RomanCyrillic Std", "Dilyana", "Menaion", "Menaion Medieval", "Gentium", "Code2000";
 }
 
