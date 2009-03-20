@@ -344,15 +344,15 @@ module PROIEL
       self.subgraph.collect(&:slashes).flatten.uniq.reject { |s| self.dominates?(s) }.empty?
     end
 
-    # Returns an interpretation of a slash -- existing or potential --
+    # Returns the interpretation of a slash -- existing or potential --
     # from the node to another node +slashee+.
     def interpret_slash(slashee)
       if self.is_empty? and self.is_verbal? and slashee.is_verbal? and self.relation == slashee.relation
-        "predicate-identity"
+        :pid
       elsif [:xadv, :piv, :xobj].include?(self.relation)
-        "subject"
+        :xsub
       else
-        slashee.relation.to_s
+        slashee.relation
       end
     end
 
@@ -476,7 +476,7 @@ module PROIEL
                          chosen_style[:edges]) if head and relation and not chosen_style[:ignore]
 
         slashes.each do |slashee|
-          make_styled_edge(identifier, slashee.identifier, node.interpret_slash(slashee).capitalize,
+          make_styled_edge(identifier, slashee.identifier, node.interpret_slash(slashee).to_s.upcase,
                            default_secondary_edge_style.merge({ :weight => 0.0 }),
                            chosen_style[:secondary_edges])
         end
@@ -527,7 +527,7 @@ module PROIEL
 
         slashes.each do |slashee|
           make_edge(identifier, slashee.identifier,
-                    node_options.merge({ :label => node.interpret_slash(slashee).capitalize, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dotted" }))
+                    node_options.merge({ :label => node.interpret_slash(slashee).to_s.upcase, :color => "blue", :fontcolor => "blue", :weight => 0.0, :style => "dotted" }))
         end
       end
 
