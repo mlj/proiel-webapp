@@ -71,16 +71,6 @@ class TaggerTest < ActiveSupport::TestCase
     ], tagger.tag_token(:la, 'ne', PROIEL::MorphLemmaTag.new('Df:neo'))
   end
 
-  def test_generated_lookup
-    tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
-    assert_equal [:ambiguous, nil,
-      [PROIEL::MorphLemmaTag.new("Ne-p---mv:Herodes"), 0.2],
-      [PROIEL::MorphLemmaTag.new("Ne-s---mn:Herodes"), 0.2],
-      [PROIEL::MorphLemmaTag.new("Ne-p---ma:Herodes"), 0.2],
-      [PROIEL::MorphLemmaTag.new("Ne-p---mn:Herodes"), 0.2],
-    ], tagger.tag_token(:la, 'Herodes')
-  end
-
   def test_failed_tagging
     tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
     assert_equal [:failed, nil], tagger.tag_token(:la, 'fjotleik', :text)

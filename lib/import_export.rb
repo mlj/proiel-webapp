@@ -80,6 +80,35 @@ class DependencyAlignmentImportExport < CSVImportExport
   end
 end
 
+# Importer for inflections
+class InflectionsImportExport < CSVImportExport
+  def initialize
+    super :language_code, :lemma, :variant, :form, :morphtag
+  end
+
+  protected
+
+  def read_fields(language_code, lemma, variant, form, *morphtags)
+    @language = Language.find_by_iso_code(language_code) if @language_code != language_code
+
+    morphtags = morphtags.map { |morphtag| PROIEL::MorphTag.new(morphtag) }
+    raise "invalid morphtag for form #{form}" unless morphtags.all? { |m| m.is_valid?(language_code) }
+
+    morphtags.map(&:to_s).each do |morphtag|
+      @language.inflections.create!(:morphtag => morphtag,
+                                    :form => form,
+                                    :lemma => variant.blank? ? lemma : "#{lemma}##{variant}")
+    end
+  end
+
+  def write_fields
+    Inflection.find_each do |inflection|
+      lemma, variant = inflection.lemma.split(/#/)
+      yield inflection.language.iso_code, lemma, variant, inflection.form, inflection.morphtag
+    end
+  end
+end
+
 # Importer for semantic tags
 class SemanticTagImportExport < CSVImportExport
   def initialize

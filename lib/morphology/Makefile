@@ -4,8 +4,6 @@ TARGETS=\
   grc-rules.db \
   la-rules.db \
   got-rules.db \
-  la-generated.db \
-  got-generated.db \
   cu-normalisation.ca \
   cu-orthographics.ca
 

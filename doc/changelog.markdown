@@ -1,3 +1,4 @@
+  * Generated inflections maintained in the database (Marius)
   * Information structure annotation (Anders)
   * Dependency alignment (Marius)
   * Licensing and attribution details (Marius)

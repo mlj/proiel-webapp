@@ -1,6 +1,7 @@
 class Language < ActiveRecord::Base
   has_many :lemmata
   has_many :sources
+  has_many :inflections
 
   validates_presence_of :iso_code
   validates_length_of :iso_code, :within => 2..3

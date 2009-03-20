@@ -172,3 +172,24 @@ the default export path is used.
     -rw-r--r-- 1 mlj mlj 1666 2008-09-08 12:56 relations.xml
     -rw-r--r-- 1 mlj mlj 5958 2008-09-08 12:56 text.xsd
 
+`proiel:inflections:import`
+---------------------------
+
+This task imports inflections. The data should be a comma separated
+files with the following fields:
+
+  1. Language code
+  2. Lemma
+  3. Numeric lemma variant number
+  4. Inflected form
+  5. Positinal tag with part of speech and morphology
+
+e.g.
+
+    got,and-haitan,,andhaihaist,V-2suia-----
+
+`proiel:inflections:export`
+---------------------------
+
+This task exports inflections. The format is the same as for
+`proiel:inflections:import`.

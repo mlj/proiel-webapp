@@ -6422,10 +6422,7 @@ la,fortitudo,,fortitudine,Nb-s---fb
 la,fortitudo,,fortitudines,Nb-p---fa,Nb-p---fn,Nb-p---fv
 la,fortitudo,,fortitudo,Nb-s---fn
 la,forum,,foris,Nb-p---nb,Nb-p---nd
-la,forum,,foris,Nb-p---nb,Nb-p---nd
 la,forum,,foro,Nb-s---nb,Nb-s---nd
-la,forum,,foro,Nb-s---nb,Nb-s---nd
-la,forum,,forum,Nb-p---ng,Nb-s---na,Nb-s---nn,Nb-s---nv
 la,forum,,forum,Nb-p---ng,Nb-s---na,Nb-s---nn,Nb-s---nv
 la,fovea,,foveam,Nb-s---fa
 la,fovea,,foveas,Nb-p---fa
@@ -9529,7 +9526,6 @@ la,meto,,metet,V-3spsa
 la,meto,,mete,V-2spma
 la,meto,,metis,V-2spia
 la,meto,,metit,V-3spia
-la,meto,,meto,V-1spia
 la,meto,,meto,V-1spia
 la,meto,,metunt,V-3ppia
 la,metreta,,metretas,Nb-p---fa
@@ -14823,9 +14819,7 @@ la,sponso,,sponso,V-1spia
 la,sponsus,,sponsi,Nb-p---mn,Nb-p---mv,Nb-s---mg
 la,sponsus,,sponso,Nb-s---mb,Nb-s---md
 la,sponsus,,sponsum,Nb-p---mg,Nb-s---ma
-la,sponsus,,sponsum,Nb-s---ma
 la,sponsus,,sponsus,Nb-p---ma,Nb-p---mn,Nb-s---mg,Nb-s---mn
-la,sponsus,,sponsus,Nb-s---mn
 la,spontaneus,,spontanee,A--s---mvp,A--s---nvp
 la,sporta,,sporta,Nb-s---fb,Nb-s---fn,Nb-s---fv
 la,sporta,,sportas,Nb-p---fa

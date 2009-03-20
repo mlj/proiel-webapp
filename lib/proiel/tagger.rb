@@ -10,6 +10,7 @@ require 'proiel/tagger/analysis_method'
 require 'proiel/tagger/fst'
 require 'proiel/tagger/word_list'
 require 'proiel/tagger/instance_frequency'
+require 'proiel/tagger/inflections_table'
 
 module PROIEL
   class WeightedMorphLemmaTag
@@ -41,7 +42,8 @@ module PROIEL
   module Tagger
     class Tagger
       WEIGHTS = {
-        # The weight given to a generated rule
+        # The weight given to a generated rule from the inflections
+        # table
         :generated_rules => 0.2, 
 
         # The weight given to an FST rule
@@ -85,7 +87,7 @@ module PROIEL
               # Includes candidates from pre-generated word lists.
               when :generated_rules
                 @analysis_methods[language][method] = 
-                  WordListMethod.new(language, File.join(@data_directory, args))
+                  InflectionsTableMethod.new(language)
                 @methods[language] << lambda { |form| analyze_form(language, method, form) }
 
               # Includes candidates from hand-crafterd word lists.

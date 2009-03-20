@@ -3,7 +3,7 @@
     :manual_rules:
       la-rules.db
     :generated_rules:
-      la-generated.db
+      false
     :instance_frequencies:
       false
     :source_tag_pattern_filtering:

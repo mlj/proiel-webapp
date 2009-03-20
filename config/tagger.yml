@@ -17,7 +17,7 @@
     :manual_rules:
       got-rules.db
     :generated_rules:
-      got-generated.db
+      true
   :cu:
     :manual_rules:
       cu-rules.db
@@ -53,7 +53,7 @@
   :la:    
     :manual_rules:
       la-rules.db
-    :generated_rules:
-      la-generated.db
     :instance_frequencies:
+      true
+    :generated_rules:
       true
