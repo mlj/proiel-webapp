@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE xsl:stylesheet [
 	<!ENTITY tooltip '<xsl:attribute xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="title">TEI &lt;<xsl:value-of select="local-name(.)"/>&gt;</xsl:attribute>'>
-	<!ENTITY table-summary 'Table listing fields in the &lt;{local-name(.)}&gt; section of the header'>
 	
 	<!-- Namespace declarations: workaround for MSXML. Cfr. Jeni Tennison, "The trouble is that MSXML merges XML parsing with namespace parsing, so it tries to view the entity that you declare as a little piece of XML, and interpret as such, so the namespace prefix on the xsl:text gets it confused. (...) The solution is to add a namespace declaration to the xsl:text in your entity." (http://www.biglist.com/lists/xsl-list/archives/200104/msg01503.html) -->
 
-<!ENTITY and '&amp;'>
 <!ENTITY eds '(Eds.)'>
 <!ENTITY ed '(Ed.)'>
 
@@ -146,7 +144,7 @@ div#metadata div#footer, div#metadata .small {
 	<xsl:template match="fileDesc/titleStmt">
 		<div>
 			<h3>&tooltip;Title statement</h3>
-			<table border="0" cellspacing="0"  summary="&table-summary;">
+			<table border="0" cellspacing="0">
 				<!-- Process the children in this particular order: -->
 				<xsl:apply-templates select="title" mode="titleStmt"/>
 				<xsl:apply-templates select="author" mode="titleStmt"/>
@@ -212,7 +210,7 @@ div#metadata div#footer, div#metadata .small {
 	<xsl:template match="fileDesc/editionStmt">
 		<div>
 			<h3>&tooltip;Edition statement</h3>
-			<table border="0" cellspacing="0"  summary="&table-summary;">
+			<table border="0" cellspacing="0">
 				<tr>
 					<td class="label">&tooltip;Edition</td>
 					<td><xsl:apply-templates/></td>
@@ -235,7 +233,7 @@ div#metadata div#footer, div#metadata .small {
 	<xsl:template match="extent">		
 		<div>
 			<h3>&tooltip;Extent</h3>
-			<table border="0" cellspacing="0"  summary="&table-summary;">
+			<table border="0" cellspacing="0">
 				<tr>
 					<td class="label">Size</td>
 					<td><xsl:apply-templates/></td>
@@ -260,7 +258,7 @@ div#metadata div#footer, div#metadata .small {
 					<xsl:apply-templates/>
 				</xsl:when>
 				<xsl:otherwise>
-					<table border="0" cellspacing="0"  summary="&table-summary;">
+					<table border="0" cellspacing="0">
 						<xsl:apply-templates mode="publicationStmt"/>
 					</table>
 				</xsl:otherwise>
@@ -344,7 +342,7 @@ div#metadata div#footer, div#metadata .small {
 	<xsl:template match="fileDesc/notesStmt">
 		<div>
 			<h3>&tooltip;Notes</h3>
-			<table border="0" cellspacing="0"  summary="&table-summary;">
+			<table border="0" cellspacing="0">
 				<xsl:for-each select="note">
 					<tr>
 						<td class="label" style="text-align: right;">[<xsl:value-of select="position()"/>]</td>
@@ -423,7 +421,7 @@ div#metadata div#footer, div#metadata .small {
 				</xsl:when>
 				<xsl:otherwise>
 				<!-- contains specific items and optionally paragraphs at the end: -->
-					<table border="0" cellspacing="0"  summary="&table-summary;">
+					<table border="0" cellspacing="0">
 						<xsl:apply-templates select="correction | normalization | quotation | hyphenation | interpretation | segmentation | stdVals"/>
 					</table>
 					<xsl:apply-templates select="p"/>
@@ -607,13 +605,13 @@ div#metadata div#footer, div#metadata .small {
 			<h3>&tooltip;Tagging declaration</h3>
 			<xsl:if test="rendition">
 				<h4 title="TEI &lt;rendition&gt;">Renditions:</h4>
-				<table border="0" cellspacing="0"  summary="&table-summary;">
+				<table border="0" cellspacing="0">
 					<xsl:apply-templates select="rendition"/>
 				</table>
 			</xsl:if>
 			<xsl:if test="tagUsage">
 				<h4 title="TEI &lt;tagUsage&gt;">Elements:</h4>
-				<table border="0" cellspacing="0"  summary="&table-summary;">
+				<table border="0" cellspacing="0">
 					<xsl:apply-templates select="tagUsage"/>
 				</table>
 			</xsl:if>
@@ -677,7 +675,7 @@ div#metadata div#footer, div#metadata .small {
 	<xsl:template match="variantEncoding">
 		<div>
 			<h3>&tooltip;Variant encoding</h3>
-			<table border="0" cellspacing="0"  summary="&table-summary;">
+			<table border="0" cellspacing="0">
 				<tr>
 					<td class="label">Method</td>
 					<td><xsl:value-of select="@method"/></td>
@@ -765,7 +763,7 @@ div#metadata div#footer, div#metadata .small {
 					<xsl:apply-templates/>
 				</xsl:when>
 				<xsl:otherwise>
-					<table border="0" cellspacing="0"  summary="&table-summary;">
+					<table border="0" cellspacing="0">
 						<xsl:apply-templates select="change"/>
 					</table>
 				</xsl:otherwise>
@@ -890,7 +888,7 @@ div#metadata div#footer, div#metadata .small {
 			<xsl:apply-templates select="current()"/>
 			<xsl:if test="position()!=last()">
 				<xsl:choose>
-					<xsl:when test="position()=(last() - 1)"><xsl:text> &and; </xsl:text></xsl:when>
+					<xsl:when test="position()=(last() - 1)"><xsl:text> &amp; </xsl:text></xsl:when>
 					<xsl:when test="position()&lt;(last() - 1)">, </xsl:when>
 				</xsl:choose>
 			</xsl:if>
