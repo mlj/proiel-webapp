@@ -4,8 +4,6 @@
 #
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
-# $Id: tagsets.rb 273 2008-01-31 13:04:37Z mariuslj $
-#
 require 'lingua/tagset'
 require 'yaml'
 
@@ -16,7 +14,7 @@ module PROIEL
   RELATIONS = Lingua::TagSet.new(File.join(DATADIR, 'relations.xml')).freeze
 
   PRIMARY_RELATIONS = RELATIONS.reject { |identifier, tag| tag.priority != 'primary' }
-  SECONDARY_RELATIONS = RELATIONS.reject { |identifier, tag| tag.priority != 'secondary' }
+  SECONDARY_RELATIONS = RELATIONS.dup
 
   PRIMARY_RELATION_TAGS = PRIMARY_RELATIONS.keys.map(&:to_s)
   SECONDARY_RELATION_TAGS = SECONDARY_RELATIONS.keys.map(&:to_s)
