@@ -23,7 +23,6 @@ class CreateInflections < ActiveRecord::Migration
           raise "invalid language code in rule file" unless iso_code.to_s == language_code
 
           morphtags = morphtags.map { |morphtag| PROIEL::MorphTag.new(morphtag) }
-          raise "invalid morphtag for form #{form} in rule file" unless morphtags.all? { |m| m.is_valid?(iso_code) }
 
           morphtags.map(&:to_s).each do |morphtag|
             i = language.inflections.new(:morphtag => morphtag,
