@@ -170,7 +170,7 @@ module ApplicationHelper
     # FIXME: hard-coded for now. Change this when I figure out this is
     # really supposed to work.
     keys = { :book => fields.match(/book=([0-9A-Z]+)/)[1],
-             :chapter => fields.match(/chapter=(\d+)/)[1],
+             :chapter => fields.match(/chapter=(\d+|Incipit|Explicit)/)[1],
              :verse => sentence.tokens.word.first.verse }
 
     if keys[:chapter]
