@@ -1,9 +1,26 @@
-#!/usr/bin/env ruby
+#--
 #
 # export.rb - Export functions for PROIEL sources
 #
-# Written by Marius L. Jøhndal, 2007, 2008.
+# Copyright 2007, 2008 University of Oslo
+# Copyright 2007, 2008, 2009 Marius L. Jøhndal
 #
+# This file is part of the PROIEL web application.
+#
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+#++
 require 'builder'
 require 'metadata'
 
@@ -87,7 +104,7 @@ class PROIELXMLExport < SourceExport
   end
 
   def write_source_division(builder, source_division)
-    filtered_sentences(source_division).each do |sentence|
+    filtered_sentences(source_division).find_each do |sentence|
       builder.sentence { write_sentence(builder, sentence) }
     end
   end
@@ -166,8 +183,7 @@ class TigerXMLExport < SourceExport
   def token_attrs(s, t)
     attrs = { :form => t.form || '' }
 
-    if t.morphtag and t.lemma #FIXME: temp workaround until invariant is OK
-#    if s.has_morphological_annotation? and t.is_morphtaggable?
+    if s.has_morphological_annotation? and t.is_morphtaggable?
       attrs.merge!({ :morphtag => t.morph_lemma_tag.morphtag.to_s, 
                      :lemma => t.morph_lemma_tag.lemma.to_s })
     else
@@ -178,7 +194,7 @@ class TigerXMLExport < SourceExport
   end
 
   def write_body(builder)
-    filtered_sentences.each do |s|
+    filtered_sentences.find_each do |s|
       builder.s(:id => "s#{s.id}") do
         root_node_id = "s#{s.id}_root"
 
@@ -247,7 +263,7 @@ class MaltXMLExport < SourceExport
       end
 
       builder.body do
-        filtered_sentences.each do |s|
+        filtered_sentences.find_each do |s|
           builder.sentence(:id => s.id) do
             # Create a mapping from PROIEL token IDs to one-based, sentence
             # internal IDs. (I don't like reusing the same id attribute values in 
@@ -273,8 +289,7 @@ class MaltXMLExport < SourceExport
                 attrs.merge!({ :deprel => t.relation })
               end
 
-    if t.morphtag and t.lemma #FIXME: temp workaround until invariant is OK
-#             if s.has_morphological_annotation? and t.is_morphtaggable?
+              if s.has_morphological_annotation? and t.is_morphtaggable?
                 attrs.merge!({ :morphtag => t.morph_lemma_tag.morphtag.to_s, 
                                :lemma => t.morph_lemma_tag.lemma.to_s })
               end
