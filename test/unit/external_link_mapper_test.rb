@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require File.dirname(__FILE__) + '/../test_helper'
 
-class BiblosMapperTest < Test::Unit::TestCase
+class BiblosMapperTest < ActiveSupport::TestCase
   def test_loading
     BiblosExternalLinkMapper.instance
   end
@@ -15,7 +15,7 @@ class BiblosMapperTest < Test::Unit::TestCase
   end
 end
 
-class BibelenNOReferenceTest < Test::Unit::TestCase
+class BibelenNOReferenceTest < ActiveSupport::TestCase
   def test_loading
     BiblosExternalLinkMapper.instance
   end

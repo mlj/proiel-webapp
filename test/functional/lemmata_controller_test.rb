@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 # Re-raise errors caught by the controller.
 class LemmataController; def rescue_action(e) raise e end; end
 
-class LemmataControllerTest < Test::Unit::TestCase
+class LemmataControllerTest < ActiveSupport::TestCase
   def setup
     @controller = LemmataController.new
     @request    = ActionController::TestRequest.new

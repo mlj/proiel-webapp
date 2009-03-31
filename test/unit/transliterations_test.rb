@@ -1,7 +1,7 @@
 require 'transliterations'
 require 'test/unit'
 
-class TransliterationTestCase < Test::Unit::TestCase
+class TransliterationTestCase < ActiveSupport::TestCase
   def xlit_sentence(t, e, s)
     e.split(/\s+/).zip(s.split(/\s+/)).each do |x, y|
       assert_equal [Unicode.normalize_C(x)], t.transliterate_string(y)

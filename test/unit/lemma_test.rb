@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class LemmaTest < Test::Unit::TestCase
+class LemmaTest < ActiveSupport::TestCase
   fixtures :lemmata
 
   # Replace this with your real tests.
