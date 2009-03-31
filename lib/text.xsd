@@ -40,7 +40,7 @@
     <xs:sequence>
       <xs:element name="sentence" minOccurs="1" maxOccurs="unbounded" type="Sentence"/>
     </xs:sequence>
-    <xs:attribute name="type" type="TypeID" use="required"/>
+    <xs:attribute name="type" type="DivType" use="required"/>
     <xs:attribute name="name" type="xs:string" use="required"/>
   </xs:complexType>
 
