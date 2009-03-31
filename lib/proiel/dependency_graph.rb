@@ -670,7 +670,7 @@ module PROIEL
     # Verifies that all tokens that match the morphtag mask only have dependents related
     # to it by one of the given relations.
     def test_head_dependent(morphtag_mask, *dependent_relations)
-      test_token("may only be the head in a #{dependent_relations.to_sentence(:connector => "or", :skip_last_comma => true)} relation",
+      test_token("may only be the head in a #{dependent_relations.to_sentence(:connector => 'or')} relation",
                  lambda { |t| !t.is_empty? and !t.data[:morphtag].contradicts?(MorphTag.new(morphtag_mask)) }) do |t|
         t.dependents.all? { |t| dependent_relations.include?(t.relation) }
       end

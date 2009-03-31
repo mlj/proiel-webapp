@@ -184,25 +184,6 @@ class Array
   def shuffle
     sort { rand(3) - 1 }
   end if RUBY_VERSION < '1.8.7'
-
-  # Verbatim from 
-  # ActiveSupport::CoreExtensions::Array::Conversions (2.0.1) except
-  # for the validation bit
-  def to_sentence(options = {})
-    options.assert_valid_keys(:connector, :skip_last_comma)
-    options.reverse_merge! :connector => 'and', :skip_last_comma => false
-    options[:connector] = "#{options[:connector]} " unless options[:connector].nil? || options[:connector].strip == ''
-    case length
-    when 0
-      ""
-    when 1
-      self[0].to_s
-    when 2
-      "#{self[0]} #{options[:connector]}#{self[1]}"
-    else
-      "#{self[0...-1].join(', ')}#{options[:skip_last_comma] ? '' : ','} #{options[:connector]}#{self[-1]}"
-    end
-  end unless defined?(ActiveSupport)
 end
 
 class String
