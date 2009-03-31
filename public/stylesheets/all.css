@@ -138,8 +138,13 @@ thead, tfoot { background-color: #f0f0f0; }
 
 /* Text view */
 
-.book-name, .verse-number { color: #678090; }
+.chapter-number, .verse-number { color: #678090; }
 .sentence-number, .token-number { color: #F7A700; }
+
+.chapter-number {
+  font-size: 200%;
+  font-weight: bold;
+}
 
 .text-view { 
   margin-top: 1em;
