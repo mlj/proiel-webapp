@@ -1,13 +1,6 @@
-#!/usr/bin/env ruby
-#
-# test_morph_lemma_tag.rb - Unit test for MorphLemmaTag class
-#
-# Written by Marius L. Jøhndal, 2008
-#
-require 'proiel'
-require 'test/unit'
+require File.dirname(__FILE__) + '/../test_helper'
 
-class MorphLemmaTagTestCase < Test::Unit::TestCase
+class MorphLemmaTagTestCase < ActiveSupport::TestCase
   def test_separate_initialisation
     m = PROIEL::MorphLemmaTag.new(PROIEL::MorphTag.new('Dq'), 'cur')
     assert_equal 'cur', m.lemma

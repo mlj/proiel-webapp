@@ -1,9 +1,6 @@
-#!/usr/bin/env ruby
+require File.dirname(__FILE__) + '/../test_helper'
 
-require 'proiel/morphtag'
-require 'test/unit'
-
-class MorphtagTestCase < Test::Unit::TestCase
+class MorphtagTestCase < ActiveSupport::TestCase
   def setup
     @c = PROIEL::MorphTag.new('V-3spia----')
     @d = PROIEL::MorphTag.new('-----------')
@@ -43,8 +40,7 @@ class MorphtagTestCase < Test::Unit::TestCase
   end
 
   def test_presentation_sequence
-    # FIXME: This will fail until we get rid of :extra
-    #assert_equal MORPHOLOGY.fields.collect { |f| f.to_s }.sort, PROIEL::MorphTag::PRESENTATION_SEQUENCE.collect { |f| f.to_s }.sort
+    assert_equal MORPHOLOGY.fields.collect { |f| f.to_s }.sort, PROIEL::MorphTag::PRESENTATION_SEQUENCE.collect { |f| f.to_s }.sort
   end
 
   def test_descriptions_pos
@@ -114,21 +110,26 @@ class MorphtagTestCase < Test::Unit::TestCase
     assert_equal true, m.is_gender?(:n)
   end
 
-  def test_morphtags_massively
-    File.open(File.join(File.dirname(__FILE__), "test_morphtag.exp")) do |f|
-      f.each_line do |l|
-        l.chomp!
-        tag, language, validity = l.split(',')
-
-        t = PROIEL::MorphTag.new(tag)
-        l = language.to_sym
-        v = (validity == 'true') ? true : false
-        puts tag, t.descriptions(t.fields), l, v unless v == t.is_valid?(l)
-
-        assert_equal v, t.is_valid?(l)
-      end
-    end
-  end
+#--------------------------------------------------
+# FIXME: Too time consuming
+#   ALL_LANGUAGES = [:lat, :grc, :chu, :xcl, :got]
+# 
+#   def test_morphtags_massively
+#     File.open(File.join(File.dirname(__FILE__), "morphtag_test.exp")) do |f|
+#       f.each_line do |l|
+#         tag, *languages = l.chomp.split(',')
+# 
+#         t = PROIEL::MorphTag.new(tag)
+# 
+#         valid_languages = languages.map(&:to_sym)
+#         invalid_languages = ALL_LANGUAGES - valid_languages
+# 
+#         valid_languages.each { |l| assert_equal true, t.is_valid?(l) }
+#         invalid_languages.each { |l| assert_equal false, t.is_valid?(l) }
+#       end
+#     end
+#   end
+#-------------------------------------------------- 
 
   def test_union
     m = PROIEL::MorphTag.new('D')

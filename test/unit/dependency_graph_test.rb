@@ -1,12 +1,8 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
-require 'proiel/dependency_graph'
-require 'active_support'
+require File.dirname(__FILE__) + '/../test_helper'
 
 include PROIEL
 
-class DependencyGraphTestCase < Test::Unit::TestCase
+class DependencyGraphTestCase < ActiveSupport::TestCase
   def test_each_node
     g = Lingua::DependencyGraph.new
     g.add_node(1, :foo, nil)
@@ -59,7 +55,7 @@ class DependencyGraphTestCase < Test::Unit::TestCase
   end
 end
 
-class ValidatingDependencyGraphTestCase < Test::Unit::TestCase
+class ValidatingDependencyGraphTestCase < ActiveSupport::TestCase
   EMITTER = lambda { |t, m| STDERR.puts "Validation error for node #{t.join(',')}: #{m}" }
 
   def setup_ok_graph

@@ -1,9 +1,6 @@
-#!/usr/bin/env ruby
+require File.dirname(__FILE__) + '/../test_helper'
 
-require 'proiel/morphtag_constraints'
-require 'test/unit'
-
-class MorphtagConstraintsTestCase < Test::Unit::TestCase
+class MorphtagConstraintsTestCase < ActiveSupport::TestCase
   def test_simple
     m = PROIEL::MorphtagConstraints.instance
     assert_equal true, m.is_valid?('V-3sfip-----i', :lat)

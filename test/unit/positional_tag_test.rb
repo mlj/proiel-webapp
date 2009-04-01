@@ -1,7 +1,4 @@
-#!/usr/bin/env ruby
-
-require 'test/unit'
-require 'proiel/positional_tag'
+require File.dirname(__FILE__) + '/../test_helper'
 
 class MyPositionalTag < Logos::PositionalTag
   def fields
@@ -9,7 +6,7 @@ class MyPositionalTag < Logos::PositionalTag
   end
 end
 
-class PositionalTagTestCase < Test::Unit::TestCase
+class PositionalTagTestCase < ActiveSupport::TestCase
   def test_new_and_to_s
     x = MyPositionalTag.new('D---')
     assert_equal 'D---', x.to_s
