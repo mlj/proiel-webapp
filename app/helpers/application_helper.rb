@@ -9,20 +9,6 @@ module ApplicationHelper
     content_for(:head) { stylesheet_link_tag(*files) }
   end
 
-  # Returns an HTML block with formatted error messages.
-  def error_messages(msg, *params)
-    options = params.last.is_a?(Hash) ? params.pop.symbolize_keys : {}
-    objects = params.collect {|object_name| instance_variable_get("@#{object_name}") }.compact
-    count   = objects.inject(0) {|sum, object| sum + object.errors.count }
-    unless count.zero?
-      header_message = "Error #{msg}:"
-      error_messages = objects.map {|object| object.errors.full_messages.map {|msg| content_tag(:li, msg) } }
-      message(:error, "Error #{msg}:", content_tag(:ul, error_messages))  
-    else
-      ''
-    end
-  end
-
   def message(level, header, body = '')
     content_tag(:div, content_tag(:b, header) + body, :id => level)
   end
@@ -253,43 +239,6 @@ module ApplicationHelper
   # +link_to+.
   def show_link_to_for_role(role, *args)
     show_link_to_if(current_user.has_role?(role), *args)
-  end
-
-  # Outputs an error messages block.
-  #
-  # ==== Options
-  # * :on => :products   Also includes AR validation errors for @products
-  # * :clear => true     Clears messages after displaying
-  # * :keep => true      Keeps around messages for next response cycle
-  #
-  def message_block(options = {})
-    options.reverse_merge! :keep => false, :clear => true
-    out = ""
-
-    [:error, :notice].each do |type|
-      next if flash[type].nil? or flash[type].empty?
-      flash[type] = [flash[type]] unless flash[type].is_a?(Array)
-
-      out << "<div class=\"message-block #{type}\"><ul>\n"
-      flash[type].each {|msg| out << "<li>#{h(msg.to_s)}</li>\n"}
-      out << "</ul></div>\n"
-
-      flash[type] = nil if options[:clear]
-      flash.keep[type] if options[:keep]
-    end
-
-    if options[:on]
-      options[:on] = [options[:on]] unless options[:on].kind_of?(Array)
-      models = options[:on].map { |m| instance_variable_get("@" + m.to_s) }.select { |m| !m.nil? }
-      errors = models.inject([]) { |b, m| b += m.errors.full_messages }  
-
-      if errors.size > 0
-        out << "<div class=\"message-block error\"><ul>\n"
-        errors.each {|msg| out << "<li>#{h(msg.to_s)}</li>\n"}
-        out << "</ul></div>\n"
-      end
-    end
-    content_tag(:div, out, :class => 'flash')
   end
 
   # Formats a token form with HTML language attributes.

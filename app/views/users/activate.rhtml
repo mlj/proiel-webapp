@@ -2,8 +2,6 @@
 To activate your account you must choose a password. In the future we will ask you for this password and your user name when you log in.
 </p>
 
-<%= error_messages 'setting password', :user %>
-
 <% form_for :user, :controller => :users, :action => :activate do |f| -%>
   <%= f.password_field :password %></p>
   <%= f.password_field :password_confirmation %></p>

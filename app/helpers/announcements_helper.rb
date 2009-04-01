@@ -3,7 +3,7 @@ module AnnouncementsHelper
     unless current_announcements.empty?
       t = content_tag(:ul, current_announcements.map(&:message).map { |m| content_tag(:li, m) } * "\n")
       t += link_to_remote "Hide this message", :url => "/javascripts/hide_announcement.js"
-      content_tag(:div, t, :class => "message-block flash warning", :id => "announcement")
+      content_tag(:div, t, :id => "announcement")
     end
   end
 

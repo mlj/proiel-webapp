@@ -305,55 +305,6 @@ p.doc-img {
   padding-top: .5em;
 }
 
-/* message-block
- *
- * This is for the various error messages, confirmation messages, 
- * announcements etc. that should appear below the navigation bar 
- * and above any view specific content. Set background colour to 
- * fit the purpose. 
- */
-.message-block {
-  padding: 1em;
-  padding-left: 4em;
-  margin-bottom: 1.5em;
-}
-
-/* Flash messages */
-
-div.fieldWithError { outline: 1px solid red; }
-
-.flash ul {
-  padding-left: 0pt;
-  margin-bottom: 0pt;
-  list-style-type: none;
-  margin-left: 0pt;
-}
-
-.flash ul li {
-  background: transparent url(/images/silk_icons/bullet_orange.png) no-repeat scroll left center;
-  margin-bottom: 0.6em;
-  padding-left: 1em;
-  vertical-align: top;
-}
-
-.flash .error {
-  background: #fcf6d0 url(/images/knob/error.png) 1.5em 1.5em no-repeat;
-  border-top: 1px solid #ecd757;
-  border-bottom: 1px solid #ecd757;
-}
-
-.flash .notice {
-  background: #dee9f4 url(/images/knob/success.png) 1.5em 1em no-repeat;
-  border-top: 1px solid #b4c5d5;
-  border-bottom: 1px solid #b4c5d5;
-}
-
-.flash .warning {
-  background: #fcf6d0 url(/images/knob/warning.png) 1.5em 1em no-repeat;
-  border-top: 1px solid #ecd757;
-  border-bottom: 1px solid #ecd757;
-}
-
 /* Statistics */
 div.statistics { margin-top: 2em; }
 div.statistics img { float: left; }
@@ -361,8 +312,13 @@ div.statistics table { width: 50%; float: right; }
 div.statistics br { clear: both; }
 
 /* Announcement block */
-div#announcement {
+#announcement {
   margin: 0 0 0 0;
   color: #9F6000;
+  border: 1px solid black;
   background: #FEEFB3 url(/images/sweetie/24-tools.png) 10px center no-repeat;
+}
+
+#announcement ul {
+  list-style: none;
 }
