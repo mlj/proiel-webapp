@@ -64,42 +64,42 @@ class MorphtagTestCase < Test::Unit::TestCase
   end
 
   def test_validity
-    assert_equal false, PROIEL::MorphTag.new('A--s---na--').is_valid?(:lat)
-    assert_equal false, PROIEL::MorphTag.new('A--s---na--').is_valid?(:grc)
-    assert_equal true, PROIEL::MorphTag.new('A--p---mdp-').is_valid?(:lat)
-    assert_equal false, PROIEL::MorphTag.new('V-3piie----').is_valid?(:lat)
-    assert_equal true, PROIEL::MorphTag.new('V-3piie----').is_valid?(:grc)
-    assert_equal true, PROIEL::MorphTag.new('Pd-p---nd--').is_valid?(:lat)
-    assert_equal true, PROIEL::MorphTag.new('Pi-p---mn--').is_valid?(:lat)
-    assert_equal true, PROIEL::MorphTag.new('Pk3p---mb--').is_valid?(:lat) # personal reflexive
-    assert_equal true, PROIEL::MorphTag.new('V--pppama--').is_valid?(:lat) # present participle
-    assert_equal true, PROIEL::MorphTag.new('V-2sfip----').is_valid?(:lat) # future indicative
-    assert_equal true, PROIEL::MorphTag.new('V----u--d--').is_valid?(:lat) # supine, dative
+    assert_equal false, PROIEL::MorphTag.new('A--s---na---i').is_valid?(:lat)
+    assert_equal false, PROIEL::MorphTag.new('A--s---na---i').is_valid?(:grc)
+    assert_equal true, PROIEL::MorphTag.new('A--p---mdp--i').is_valid?(:lat)
+    assert_equal false, PROIEL::MorphTag.new('V-3piie-----i').is_valid?(:lat)
+    assert_equal true, PROIEL::MorphTag.new('V-3piie-----i').is_valid?(:grc)
+    assert_equal true, PROIEL::MorphTag.new('Pd-p---nd---i').is_valid?(:lat)
+    assert_equal true, PROIEL::MorphTag.new('Pi-p---mn---i').is_valid?(:lat)
+    assert_equal true, PROIEL::MorphTag.new('Pk3p---mb---i').is_valid?(:lat) # personal reflexive
+    assert_equal true, PROIEL::MorphTag.new('V--pppama---i').is_valid?(:lat) # present participle
+    assert_equal true, PROIEL::MorphTag.new('V-2sfip-----i').is_valid?(:lat) # future indicative
+    assert_equal true, PROIEL::MorphTag.new('V----u--d---i').is_valid?(:lat) # supine, dative
   end
 
   def test_completions
-    assert_equal ["Nb-s---mn---","Ne-s---mn---", "Nh----------", "Nj----------"], PROIEL::MorphTag.new('N--s---mn-').completions(:lat).collect { |t| t.to_s }.sort
-    assert_equal ["Nb-p---mn---","Nb-s---mn---"], PROIEL::MorphTag.new('Nb-----mn--').completions(:lat).collect { |t| t.to_s }.sort
-    assert_equal ["Nb-d---ma-a-","Nb-d---ma-i-","Nb-p---ma-a-","Nb-p---ma-i-","Nb-s---ma-a-","Nb-s---ma-i-"], PROIEL::MorphTag.new('Nb-----ma--').completions(:cu).collect { |t| t.to_s }.sort
-    assert_equal ["Nb-d---mn---","Nb-p---mn---","Nb-s---mn---"], PROIEL::MorphTag.new('Nb-----mn--').completions(:cu).collect { |t| t.to_s }.sort
+    assert_equal ["Nb----------n", "Nb-s---mn---i", "Ne----------n", "Ne-s---mn---i"], PROIEL::MorphTag.new('N--s---mn----').completions(:lat).map(&:to_s).sort
+    assert_equal ["Nb-p---mn---i", "Nb-s---mn---i"], PROIEL::MorphTag.new('Nb-----mn---i').completions(:lat).map(&:to_s).sort
+    assert_equal ["Nb-d---ma-a-i", "Nb-d---ma-i-i", "Nb-p---ma-a-i", "Nb-p---ma-i-i", "Nb-s---ma-a-i", "Nb-s---ma-i-i"], PROIEL::MorphTag.new('Nb-----ma---i').completions(:chu).map(&:to_s).sort
+    assert_equal ["Nb-d---mn---i", "Nb-p---mn---i", "Nb-s---mn---i"], PROIEL::MorphTag.new('Nb-----mn---i').completions(:chu).map(&:to_s).sort
   end
 
   def test_abbrev_s
-    assert_equal 'Df-------p--', PROIEL::MorphTag.new('Df-------p').to_s
-    assert_equal 'Df-------p--', PROIEL::MorphTag.new('Df-------p-').to_s
-    assert_equal 'Df-------p--', PROIEL::MorphTag.new('Df-------p--').to_s
+    assert_equal 'Df-------p---', PROIEL::MorphTag.new('Df-------p').to_s
+    assert_equal 'Df-------p---', PROIEL::MorphTag.new('Df-------p-').to_s
+    assert_equal 'Df-------p---', PROIEL::MorphTag.new('Df-------p--').to_s
     assert_equal 'Df-------p', PROIEL::MorphTag.new('Df-------p').to_abbrev_s
     assert_equal 'Df-------p', PROIEL::MorphTag.new('Df-------p-').to_abbrev_s
   end
 
   def test_pos_to_s
     assert_equal 'Df', PROIEL::MorphTag.new('Df-------p').pos_to_s
-    assert_equal 'D-', PROIEL::MorphTag.new('D----------').pos_to_s
+    assert_equal 'D-', PROIEL::MorphTag.new('D----------i').pos_to_s
   end
 
   def test_non_pos_to_s
-    assert_equal '-s---mn---', PROIEL::MorphTag.new('Ne-s---mn---').non_pos_to_s
-    assert_equal '-s---mn---', PROIEL::MorphTag.new('Ne-s---mn').non_pos_to_s
+    assert_equal '-s---mn---i', PROIEL::MorphTag.new('Ne-s---mn---i').non_pos_to_s
+    assert_equal '-s---mn----', PROIEL::MorphTag.new('Ne-s---mn').non_pos_to_s
   end
 
   def test_is_gender
@@ -132,10 +132,10 @@ class MorphtagTestCase < Test::Unit::TestCase
 
   def test_union
     m = PROIEL::MorphTag.new('D')
-    n = PROIEL::MorphTag.new('-f-------p')
-    assert_equal 'Df-------p--', m.union(n).to_s
+    n = PROIEL::MorphTag.new('-f-------p--i')
+    assert_equal 'Df-------p--i', m.union(n).to_s
 
     n.union!(m)
-    assert_equal 'Df-------p--', n.to_s
+    assert_equal 'Df-------p--i', n.to_s
   end
 end

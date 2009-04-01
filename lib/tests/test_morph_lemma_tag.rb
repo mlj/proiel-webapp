@@ -13,35 +13,35 @@ class MorphLemmaTagTestCase < Test::Unit::TestCase
     assert_equal 'cur', m.lemma
     assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
     assert_equal nil, m.variant
-    assert_equal "Dq----------:cur", m.to_s
+    assert_equal "Dq-----------:cur", m.to_s
     assert_equal "Dq:cur", m.to_abbrev_s
 
     m = PROIEL::MorphLemmaTag.new(PROIEL::MorphTag.new('Dq'), 'cur#2')
     assert_equal 'cur', m.lemma
     assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
     assert_equal 2, m.variant
-    assert_equal "Dq----------:cur#2", m.to_s
+    assert_equal "Dq-----------:cur#2", m.to_s
     assert_equal "Dq:cur#2", m.to_abbrev_s
 
     m = PROIEL::MorphLemmaTag.new(PROIEL::MorphTag.new('Dq'), 'cur', 2)
     assert_equal 'cur', m.lemma
     assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
     assert_equal 2, m.variant
-    assert_equal "Dq----------:cur#2", m.to_s
+    assert_equal "Dq-----------:cur#2", m.to_s
     assert_equal "Dq:cur#2", m.to_abbrev_s
 
     m = PROIEL::MorphLemmaTag.new('Dq', 'cur#2')
     assert_equal 'cur', m.lemma
     assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
     assert_equal 2, m.variant
-    assert_equal "Dq----------:cur#2", m.to_s
+    assert_equal "Dq-----------:cur#2", m.to_s
     assert_equal "Dq:cur#2", m.to_abbrev_s
 
     m = PROIEL::MorphLemmaTag.new('Dq', 'cur', 2)
     assert_equal 'cur', m.lemma
     assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
     assert_equal 2, m.variant
-    assert_equal "Dq----------:cur#2", m.to_s
+    assert_equal "Dq-----------:cur#2", m.to_s
     assert_equal "Dq:cur#2", m.to_abbrev_s
   end
 
@@ -50,28 +50,28 @@ class MorphLemmaTagTestCase < Test::Unit::TestCase
     assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
     assert_equal nil, m.lemma
     assert_equal nil, m.variant
-    assert_equal "Dq----------", m.to_s
+    assert_equal "Dq-----------", m.to_s
     assert_equal "Dq", m.to_abbrev_s
 
     m = PROIEL::MorphLemmaTag.new('Dq', nil)
     assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
     assert_equal nil, m.lemma
     assert_equal nil, m.variant
-    assert_equal "Dq----------", m.to_s
+    assert_equal "Dq-----------", m.to_s
     assert_equal "Dq", m.to_abbrev_s
 
     m = PROIEL::MorphLemmaTag.new('Dq:cur')
     assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
     assert_equal 'cur', m.lemma
     assert_equal nil, m.variant
-    assert_equal "Dq----------:cur", m.to_s
+    assert_equal "Dq-----------:cur", m.to_s
     assert_equal "Dq:cur", m.to_abbrev_s
 
     m = PROIEL::MorphLemmaTag.new('Dq:cur#2')
     assert_equal PROIEL::MorphTag.new('Dq'), m.morphtag
     assert_equal 'cur', m.lemma
     assert_equal 2, m.variant
-    assert_equal "Dq----------:cur#2", m.to_s
+    assert_equal "Dq-----------:cur#2", m.to_s
     assert_equal "Dq:cur#2", m.to_abbrev_s
   end
 
