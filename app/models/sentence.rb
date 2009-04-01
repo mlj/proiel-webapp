@@ -223,9 +223,9 @@ class Sentence < ActiveRecord::Base
         # empty tokens, the orphaned slashes should also have gone away. The remaining slashes
         # will however have to be updated "manually".
         token.slash_out_edges.each { |edge| edge.destroy }
-        node.slashes.each { |slashee| SlashEdge.create(:slasher => token,
+        node.slashes_with_interpretations.each { |slashee, interpretation| SlashEdge.create(:slasher => token,
                                                        :slashee_id => id_map[slashee.identifier],
-                                                       :slash_edge_interpretation => SlashEdgeInterpretation.find_by_tag(node.interpret_slash(slashee))) }
+                                                       :slash_edge_interpretation => SlashEdgeInterpretation.find_by_tag(interpretation) ) }
         token.save!
       end
     end
@@ -374,7 +374,7 @@ class Sentence < ActiveRecord::Base
   def dependency_graph
     PROIEL::ValidatingDependencyGraph.new do |g|
       dependency_tokens.each { |t| g.badd_node(t.id, t.relation, t.head ? t.head.id : nil,
-                                               t.slashees.collect(&:id),
+                                               Hash[*t.slash_out_edges.map { |se| [se.slashee.id, se.slash_edge_interpretation.tag] }.flatten],
                                                { :empty => t.empty_token_sort || false,
                                                  :token_number => t.token_number,
                                                  :morphtag => PROIEL::MorphTag.new(t.morphtag),

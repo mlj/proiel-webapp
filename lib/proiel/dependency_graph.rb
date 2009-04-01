@@ -15,7 +15,6 @@ module Lingua
     attr_reader :head
     attr_reader :identifier
     attr_accessor :data
-    attr_reader :slashes
 
     def initialize(identifier, relation, head, data = {})
       @identifier = identifier
@@ -23,7 +22,7 @@ module Lingua
       @data = data
       @head = head
       @dependents = {}
-      @slashes = []
+      @slashes = {}
     end
 
     def add_dependent(node)
@@ -116,8 +115,8 @@ module Lingua
       end
     end
 
-    def add_slash(slash)
-      @slashes << slash
+    def add_slash(slashee_node, interpretation)
+      @slashes[slashee_node] = interpretation
     end
 
     def has_slash?
@@ -125,6 +124,17 @@ module Lingua
     end
 
     alias :has_slashes? :has_slash?
+
+    # Returns an array with the the slashees of this node.
+    def slashes
+      @slashes.keys
+    end
+
+    # Returns a hash with the the slashees of this node and their
+    # relation to this node.
+    def slashes_with_interpretations
+      @slashes
+    end
   end
 
   class DependencyGraph
@@ -145,8 +155,10 @@ module Lingua
 
         # Add in the slashes if we are about to end the recursion
         @postponed_nodes.each_pair do |identifier, values|
-          next unless values[:slash_ids]
-          values[:slash_ids].each { |slash_id| @nodes[identifier].add_slash(@nodes[slash_id]) }
+          next unless values[:slashes_and_interpretations]
+          values[:slashes_and_interpretations].each do |slash_id, slash_interpretation|
+            @nodes[identifier].add_slash(@nodes[slash_id], slash_interpretation || @nodes[identifier].interpret_slash(@nodes[slash_id]))
+          end
         end
 
         @postponed_nodes = nil
@@ -157,7 +169,8 @@ module Lingua
 
     def add_postponed_subgraph(identifier = :root, head_identifier = nil)
       node = @postponed_nodes[identifier]
-      add_node(identifier, node[:relation], head_identifier, [], node[:data]) unless identifier == :root
+      # Add nodes without their slashes
+      add_node(identifier, node[:relation], head_identifier, {}, node[:data]) unless identifier == :root
       node[:dependent_ids].each { |dependent_id| add_postponed_subgraph(dependent_id, identifier) }
     end
 
@@ -199,7 +212,7 @@ module Lingua
       nodes.map(&:identifier)
     end
 
-    def badd_node(identifier, relation, head_identifier = nil, slash_ids = [], data = {})
+    def badd_node(identifier, relation, head_identifier = nil, slashes_and_interpretations = {}, data = {})
       # Merge data about this token into the result structure
       @postponed_nodes[identifier] ||= { :dependent_ids => [] }
       @postponed_nodes[identifier].merge!({ :relation => relation, :data => data })
@@ -210,11 +223,11 @@ module Lingua
       @postponed_nodes[head_identifier][:dependent_ids] << identifier
 
       returning @postponed_nodes[identifier] do |n|
-        n[:slash_ids] = slash_ids
+        n[:slashes_and_interpretations] = slashes_and_interpretations
       end
     end
 
-    def add_node(identifier, relation, head_identifier = nil, slash_ids = [], data = {})
+    def add_node(identifier, relation, head_identifier = nil, slash_ids_and_interpretations = {}, data = {})
       if @nodes[identifier]
         raise "Node with ID #{identifier} already exists"
       else
@@ -228,9 +241,10 @@ module Lingua
         end
       end
 
-      slash_ids.each do |i|
+      slash_ids_and_interpretations.each do |i, interpretation|
         raise "Slash node with ID #{i} does not exist" unless @nodes[i]
-        @nodes[identifier].add_slash(@nodes[i])
+        raise "Slash to node with ID #{i} does not have an interpretation" if interpretation.blank?
+        @nodes[identifier].add_slash(@nodes[i], interpretation)
       end
 
       @nodes[identifier]
@@ -299,7 +313,7 @@ module PROIEL
       head and head.is_coordinator? and relation == head.relation
     end
 
-    # Returns the slashes for the node, either on the node itself
+    # Returns an array of the node's slashees, either on the node itself
     # or inherited from coordinations.
     def all_slashes
       if slashes.empty? and head and head.is_coordinator?
@@ -389,7 +403,9 @@ module PROIEL
           unless subtree.nil?
             subtree.each_pair do |id, values|
               data = { :empty => values['empty'] }
-              g.badd_node(id_to_i(id), values['relation'], head_id, (values['slashes'] || []).map { |x| id_to_i(x) }, data)
+              slashes = {}
+              (values['slashes'] || []).each { |s| slashes[id_to_i(s)] = nil }
+              g.badd_node(id_to_i(id), values['relation'], head_id, slashes, data)
               rec[values['dependents'], id_to_i(id)]
             end
           end
@@ -458,7 +474,7 @@ module PROIEL
       make_styled_node(:root, '', default_node_style, DEFAULT_STYLE[:empty][:root][:nodes]) unless DEFAULT_STYLE[:empty][:root][:ignore]
 
       @nodes.values.each do |node|
-        identifier, relation, head, slashes, empty = node.identifier, node.relation, node.head, node.slashes, node.data[:empty]
+        identifier, relation, head, slashes_with_interpretations, empty = node.identifier, node.relation, node.head, node.slashes_with_interpretations, node.data[:empty]
 
         chosen_style = if empty
           DEFAULT_STYLE[:empty][empty]
@@ -475,8 +491,8 @@ module PROIEL
                          default_edge_style.merge({ :weight => 1.0, }),
                          chosen_style[:edges]) if head and relation and not chosen_style[:ignore]
 
-        slashes.each do |slashee|
-          make_styled_edge(identifier, slashee.identifier, node.interpret_slash(slashee).to_s.upcase,
+        slashes_with_interpretations.each do |slashee, interpretation|
+          make_styled_edge(identifier, slashee.identifier, interpretation.to_s.upcase,
                            default_secondary_edge_style.merge({ :weight => 0.0 }),
                            chosen_style[:secondary_edges])
         end
@@ -514,7 +530,7 @@ module PROIEL
       @f.puts "}"
 
       @nodes.values.each do |node|
-        identifier, relation, head, slashes = node.identifier, node.relation, node.head, node.slashes
+        identifier, relation, head, slashes_with_interpretations = node.identifier, node.relation, node.head, node.slashes_with_interpretations
         form, empty = node.data.values_at(:form, :empty)
 
         if head and relation
@@ -525,9 +541,9 @@ module PROIEL
         # Hook up the word forms with their nodes
         make_edge("f#{node.identifier}", node.identifier, { :arrowhead => 'none', :color => 'lightgrey' }) unless node.is_empty?
 
-        slashes.each do |slashee|
+        slashes_with_interpretations.each do |slashee, interpretation|
           make_edge(identifier, slashee.identifier,
-                    node_options.merge({ :label => node.interpret_slash(slashee).to_s.upcase, :color => "blue", :weight => 0.0, :style => "dotted", :fontsize => 10 }))
+                    node_options.merge({ :label => interpretation.to_s.upcase, :color => "blue", :weight => 0.0, :style => "dotted", :fontsize => 10 }))
         end
       end
 
@@ -670,7 +686,7 @@ module PROIEL
     # Verifies that all tokens that match the morphtag mask only have dependents related
     # to it by one of the given relations.
     def test_head_dependent(morphtag_mask, *dependent_relations)
-      test_token("may only be the head in a #{dependent_relations.to_sentence(:connector => 'or')} relation",
+      test_token("may only be the head in a #{dependent_relations.to_sentence(:words_connector => 'or')} relation",
                  lambda { |t| !t.is_empty? and !t.data[:morphtag].contradicts?(MorphTag.new(morphtag_mask)) }) do |t|
         t.dependents.all? { |t| dependent_relations.include?(t.relation) }
       end
