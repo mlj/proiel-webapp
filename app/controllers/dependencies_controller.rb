@@ -49,11 +49,20 @@ class DependenciesController < ApplicationController
     end
 
     unless params[:output].blank? || ActiveSupport::JSON.decode(params[:output]).blank?
-      # Convert output to a more flexible representation. IDs will match those in
-      # the database, except for any new empty dependency nodes, which will have
-      # IDs on the form 'newX'.
-      @sentence.syntactic_annotation = PROIEL::ValidatingDependencyGraph.new_from_editor(ActiveSupport::JSON.decode(params[:output]))
-      @sentence.save!
+      # Start a new transaction. Unfortunately, this hacky approach is
+      # vital if validation is going to have any effect.
+      # synctactic_annotation= will update a number of non-Sentence
+      # rows, e.g. Token and SlashEdge, but validation takes place
+      # only when sentence.save! is executed. A roll-back in
+      # sentence.save! won't have any effect unless the transaction
+      # also includes syntactic_annotation=.
+      Token.transaction do
+        # Convert output to a more flexible representation. IDs will match those in
+        # the database, except for any new empty dependency nodes, which will have
+        # IDs on the form 'newX'.
+        @sentence.syntactic_annotation = PROIEL::ValidatingDependencyGraph.new_from_editor(ActiveSupport::JSON.decode(params[:output]))
+        @sentence.save!
+      end
     
       if params[:wizard]
         redirect_to :controller => :wizard, :action => :save_dependencies, :wizard => params[:wizard]
