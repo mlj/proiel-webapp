@@ -84,7 +84,7 @@ $tags$ = $any$ & $legal_tags$
 % Language-specific removal of entire categories
 % ==============================================
 
-$xcl_category_removals$ = (.   .   .   .   .   .   .   \-:[#gender#] .    \-:[#degree#]   \-:[#animacy#] \-:[#strength#])
+$xcl_category_removals$ = (.   .   .   .   .   .   .   \-:[#gender#] .    \-:[#degree#]   \-:[#animacy#] \-:[#strength#] .)
 $lat_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#] .)
 $grc_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] \-:[#strength#] .)
 $got_category_removals$ = (.   .   .   .   .   .   .   .             .    .   \-:[#animacy#] .               .)
@@ -99,16 +99,16 @@ $chu_category_removals$ = (.   .   .   .   .   .   .   .             .    .   . 
 % (Some of these restrictions are properly language-specific, but currently flagged
 % as global as they (coincidentally) apply to all our current languages.)
 
-                       % Maj Min Per Num          Ten             Moo  Voi          Gender           Case       Deg Ani             Str
-$c$                   = (.   .   .   .            .               .    .            m                .          .   .               . ) | \
-                        (.   .   .   .            .               .    .            [^m]             .          .   \-:[#animacy#]  . )
-$d$                   = (.   .   .   .            .               .    .            .                a          .   .               . ) | \
-                        (.   .   .   .            .               .    .            .                [^a]       .   \-:[#animacy#]  . )
+                       % Maj Min Per Num          Ten             Moo  Voi          Gender           Case       Deg Ani             Str Inf
+$c$                   = (.   .   .   .            .               .    .            m                .          .   .               .   .) | \
+                        (.   .   .   .            .               .    .            [^m]             .          .   \-:[#animacy#]  .   .)
+$d$                   = (.   .   .   .            .               .    .            .                a          .   .               .   .) | \
+                        (.   .   .   .            .               .    .            .                [^a]       .   \-:[#animacy#]  .   .)
 
-$g$                   = (.   .   .   .            \-:[#tense#]    [np]  \-:[#voice#] .             .          .   .               . ) | \
-			(.   .   .   .            .               [^np] .            .               .          .   .               . )
+$g$                   = (.   .   .   .            \-:[#tense#]    [np]  \-:[#voice#] .             .          .   .               .   .) | \
+			(.   .   .   .            .               [^np] .            .               .          .   .               .   .)
 $h$                   = (.   .   .   \-:[#number#] .               g     .            \-:[#gender#]    \-:[#case#]	.   .               . ) | \
-			(.   .   .   .            .               [^g]	.            .               .          .   .               .)
+			(.   .   .   .            .               [^g]	.            .               .          .   .               .  .)
 
 $restricted_tags$ = (\
   (<XCL>  ($h$ || $g$ || $xcl_category_removals$  || $tags$)) | \
