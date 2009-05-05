@@ -12,7 +12,7 @@ class CreateInflections < ActiveRecord::Migration
     add_index :inflections, [:language_id, :form, :morphtag, :lemma], :unique => true
 
     # Load existing data
-    [:la, :got].each do |iso_code|
+    [:la, :got, :xcl].each do |iso_code|
       csv_file_name = "db/migrate/#{iso_code}-generated.csv"
 
       language = Language.find_by_iso_code(iso_code)
