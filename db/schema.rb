@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090320204247) do
+ActiveRecord::Schema.define(:version => 20090502152443) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -105,7 +105,7 @@ ActiveRecord::Schema.define(:version => 20090320204247) do
 
   create_table "lemmata", :force => true do |t|
     t.string   "lemma",         :limit => 64, :default => "",    :null => false
-    t.string   "variant",       :limit => 16
+    t.integer  "variant",       :limit => 2
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "pos",           :limit => 2,  :default => "",    :null => false
