@@ -101,25 +101,23 @@ class Validator < Task
   end
 
   def check_manual_morphology(logger)
-    Source.find(:all).each do |source|
-      source.sentences.reviewed.each do |sentence|
-        closed = "^(#{PROIEL::MorphTag::OPEN_MAJOR.map(&:to_s).join('|')})"
-        sentence.morphtaggable_tokens.find(:all, :conditions => [ "lemma_id is not null and morphtag not rlike ?", closed ]).each do |token|
-          ml = token.morph_lemma_tag
-          raise "Inconsistency! #{ml}" unless ml.morphtag.is_closed?
+    Sentence.reviewed.find_each do |sentence|
+      closed = "^(#{PROIEL::MorphTag::OPEN_MAJOR.map(&:to_s).join('|')})"
+      sentence.morphtaggable_tokens.find(:all, :conditions => [ "lemma_id is not null and morphtag not rlike ?", closed ]).each do |token|
+        ml = token.morph_lemma_tag
+        raise "Inconsistency! #{ml}" unless ml.morphtag.is_closed?
 
-          next unless ml.morphtag.is_valid?(token.language.iso_code.to_sym)  # FIXME: at some point eliminate
+        next unless ml.morphtag.is_valid?(token.language.iso_code.to_sym)  # FIXME: at some point eliminate
 
-          result, pick, *manual_tags = token.language.guess_morphology(token.form, nil, :force_method => :manual_rules)
-          manual_tags = manual_tags ? manual_tags.map { |t| t[0] } : []
+        result, pick, *manual_tags = token.language.guess_morphology(token.form, nil, :force_method => :manual_rules)
+        manual_tags = manual_tags ? manual_tags.map { |t| t[0] } : []
 
-          case result
-          when :failed
-            log_token_error(logger, token, "Closed class morphological annotation #{ml.morphtag} but no rule entry")
-          else
-            unless manual_tags.any? { |m| token.morph_lemma_tag.morphtag.is_compatible?(m.morphtag) }
-              log_token_error(logger, token, "Closed class morphological annotation #{token.morphtag} does not match expected #{manual_tags.collect { |m| m.morphtag.to_s }.join(', ')}")
-            end
+        case result
+        when :failed
+          log_token_error(logger, token, "Closed class morphological annotation #{ml.morphtag} but no rule entry")
+        else
+          unless manual_tags.any? { |m| token.morph_lemma_tag.morphtag.is_compatible?(m.morphtag) }
+            log_token_error(logger, token, "Closed class morphological annotation #{token.morphtag} does not match expected #{manual_tags.collect { |m| m.morphtag.to_s }.join(', ')}")
           end
         end
       end
