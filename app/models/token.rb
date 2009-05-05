@@ -37,7 +37,7 @@ class Token < ActiveRecord::Base
     { :conditions => { :sentence_id => source.source_divisions.map(&:sentences).flatten.map(&:id) } }
   }
 
-  acts_as_audited
+  acts_as_audited :except => [ :source_morphtag, :source_lemma ]
 
   # General schema-defined validations
   validates_presence_of :sentence_id
