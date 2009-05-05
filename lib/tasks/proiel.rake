@@ -5,8 +5,8 @@ namespace :proiel do
     require 'jobs'
   end
 
-  desc "Validate PROIEL database"
-  task(:validate => ["db:validate", :myenvironment]) do
+  desc "Validate PROIEL database using extra (non-model) validations"
+  task(:validate => [:myenvironment]) do
     require 'validation'
 
     v = Validator.new

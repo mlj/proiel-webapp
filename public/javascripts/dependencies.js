@@ -755,7 +755,14 @@ var Model = Class.create({
 function validate(ev) {
   var errors = sentence_widget.getUnconsumedTokens();
 
-  if (errors.length > 0) {
+  // Unconsumed tokens is a reliable *except* if the user has cut a
+  // subtree, since the tokens in the cut subtree won't be marked as
+  // unconsumed.
+  if (controller.has_cut_data > 0) {
+    alert("Annotation is incomplete. You have a subtree in the paste buffer.");
+
+    Event.stop(ev) // stop event propagation
+  } else if (errors.length > 0) {
     alert("Annotation is incomplete. Please correct the indicated errors before saving.");
 
     errors.each(function(e) {
