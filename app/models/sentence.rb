@@ -95,8 +95,9 @@ class Sentence < ActiveRecord::Base
 
   acts_as_audited :except => [ :annotated_by, :annotated_at, :reviewed_by, :reviewed_at ]
 
+  # Returns the language for the sentence.
   def language
-    source_division.source.language
+    source_division.language
   end
 
   #FIXME:DRY generalise < token

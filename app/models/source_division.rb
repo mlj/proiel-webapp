@@ -49,6 +49,12 @@ class SourceDivision < ActiveRecord::Base
     end
   end
 
+  # Returns the language for the source division. This is a
+  # convenience method for +source_division.source.language+.
+  def language
+    source.language
+  end
+
   protected
 
   def self.search(query, options = {})

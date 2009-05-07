@@ -71,6 +71,7 @@ class Token < ActiveRecord::Base
   # Specific validations
   validate :validate_sort
 
+  # Returns the language for the token.
   def language
     sentence.language
   end
