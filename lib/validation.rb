@@ -71,13 +71,13 @@ class Validator < Task
     orphans.each { |o| logger.warn { "Token #{o.id} is orphaned" } }
   end
 
+  # FIXME: should be superfluous by now. Keep for a little while, then
+  # remove [May 09]
   def check_morphtag_validity(logger)
-    sentences = Sentence.find(:all)
-    sentences.each do |s|
-      s.morphtaggable_tokens.find(:all, :conditions => [ "morphtag is not null and sentences.reviewed_by is not null" ], :include => :sentence).each do |t|
+    Sentence.find_each do |s|
+      s.morphtaggable_tokens.find(:all, :conditions => [ "morphtag is not null" ], :include => :sentence).each do |t|
         m = PROIEL::MorphTag.new(t.morphtag)
-        logger.warn { "Token #{t.id} (#{t.form} in #{t.sentence.id}): Morphtag #{m} is invalid." } unless m.is_valid?(t.language.iso_code.to_sym)
-      end
+        logger.warn { "Token #{t.id} (#{t.form} in #{t.sentence.id}): Morphtag #{m} is invalid." } unless m.is_valid?(s.language.iso_code.to_sym)
     end
   end
 
@@ -101,7 +101,7 @@ class Validator < Task
   end
 
   def check_manual_morphology(logger)
-    Sentence.reviewed.find_each do |sentence|
+    Sentence.find_each do |sentence|
       closed = "^(#{PROIEL::MorphTag::OPEN_MAJOR.map(&:to_s).join('|')})"
       sentence.morphtaggable_tokens.find(:all, :conditions => [ "lemma_id is not null and morphtag not rlike ?", closed ]).each do |token|
         ml = token.morph_lemma_tag
