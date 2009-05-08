@@ -67,17 +67,17 @@ class Validator < Task
   end
 
   def check_orphaned_tokens(logger)
-    orphans = Token.find(:all, :include => [ :sentence ], :conditions => [ "sentences.id is null" ])
-    orphans.each { |o| logger.warn { "Token #{o.id} is orphaned" } }
+    Token.find_each(:all, :include => [ :sentence ], :conditions => [ "sentences.id is null" ]) do |t|
+      logger.warn { "Token #{t.id} is orphaned" }
+    end
   end
 
   # FIXME: should be superfluous by now. Keep for a little while, then
   # remove [May 09]
   def check_morphtag_validity(logger)
-    Sentence.find_each do |s|
-      s.morphtaggable_tokens.find(:all, :conditions => [ "morphtag is not null" ], :include => :sentence).each do |t|
-        m = PROIEL::MorphTag.new(t.morphtag)
-        logger.warn { "Token #{t.id} (#{t.form} in #{t.sentence.id}): Morphtag #{m} is invalid." } unless m.is_valid?(s.language.iso_code.to_sym)
+    Token.morphology_annotated.find_each(:include => :sentence) do |t|
+      m = PROIEL::MorphTag.new(t.morphtag)
+      logger.warn { "Token #{t.id} (#{t.form} in #{t.sentence.id}): Morphtag #{m} is invalid." } unless m.is_valid?(t.language.iso_code.to_sym)
     end
   end
 
@@ -101,24 +101,22 @@ class Validator < Task
   end
 
   def check_manual_morphology(logger)
-    Sentence.find_each do |sentence|
-      closed = "^(#{PROIEL::MorphTag::OPEN_MAJOR.map(&:to_s).join('|')})"
-      sentence.morphtaggable_tokens.find(:all, :conditions => [ "lemma_id is not null and morphtag not rlike ?", closed ]).each do |token|
-        ml = token.morph_lemma_tag
-        raise "Inconsistency! #{ml}" unless ml.morphtag.is_closed?
+    closed = "^(#{PROIEL::MorphTag::OPEN_MAJOR.map(&:to_s).join('|')})"
+    Token.morphology_annotated.find_each(:conditions => [ "morphtag not rlike ?", closed ]) do |token|
+      ml = token.morph_lemma_tag
+      raise "Inconsistency! #{ml}" unless ml.morphtag.is_closed?
 
-        next unless ml.morphtag.is_valid?(token.language.iso_code.to_sym)  # FIXME: at some point eliminate
+      next unless ml.morphtag.is_valid?(token.language.iso_code.to_sym)  # FIXME: at some point eliminate
 
-        result, pick, *manual_tags = token.language.guess_morphology(token.form, nil, :force_method => :manual_rules)
-        manual_tags = manual_tags ? manual_tags.map { |t| t[0] } : []
+      result, pick, *manual_tags = token.language.guess_morphology(token.form, nil, :force_method => :manual_rules)
+      manual_tags = manual_tags ? manual_tags.map { |t| t[0] } : []
 
-        case result
-        when :failed
-          log_token_error(logger, token, "Closed class morphological annotation #{ml.morphtag} but no rule entry")
-        else
-          unless manual_tags.any? { |m| token.morph_lemma_tag.morphtag.is_compatible?(m.morphtag) }
-            log_token_error(logger, token, "Closed class morphological annotation #{token.morphtag} does not match expected #{manual_tags.collect { |m| m.morphtag.to_s }.join(', ')}")
-          end
+      case result
+      when :failed
+        log_token_error(logger, token, "Closed class morphological annotation #{ml.morphtag} but no rule entry")
+      else
+        unless manual_tags.any? { |m| token.morph_lemma_tag.morphtag.is_compatible?(m.morphtag) }
+          log_token_error(logger, token, "Closed class morphological annotation #{token.morphtag} does not match expected #{manual_tags.collect { |m| m.morphtag.to_s }.join(', ')}")
         end
       end
     end

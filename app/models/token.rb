@@ -28,6 +28,7 @@ class Token < ActiveRecord::Base
   named_scope :word, :conditions => { :sort => :text }
   named_scope :morphology_annotatable, :conditions => { :sort => PROIEL::MORPHTAGGABLE_TOKEN_SORTS }
   named_scope :dependency_annotatable, :conditions => { :sort => PROIEL::DEPENDENCY_TOKEN_SORTS }
+  named_scope :morphology_annotated, :conditions => [ "lemma_id IS NOT NULL" ]
 
   # Tokens that are candidate root nodes in dependency graphs.
   named_scope :root_dependency_tokens, :conditions => [ "head_id IS NULL" ]
