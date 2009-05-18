@@ -152,11 +152,10 @@ module ApplicationHelper
 
   # Returns links to external sites for a sentence.
   def external_text_links(sentence)
-    fields = sentence.source_division.fields
     # FIXME: hard-coded for now. Change this when I figure out this is
     # really supposed to work.
-    keys = { :book => fields.match(/book=([0-9A-Z]+)/)[1],
-             :chapter => fields.match(/chapter=(\d+|Incipit|Explicit)/)[1],
+    keys = { :book => sentence.source_division.field(:book),
+             :chapter => sentence.source_division.field(:chapter),
              :verse => sentence.tokens.word.first.verse }
 
     if keys[:chapter]
