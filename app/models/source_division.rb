@@ -49,6 +49,19 @@ class SourceDivision < ActiveRecord::Base
     end
   end
 
+  # Returns the reference field indentified by +key+ from the the
+  # +fields+ attribute.
+  def field(key)
+    case key
+    when :book
+      fields.match(/book=([0-9A-Z]+)/)[1]
+    when :chapter
+      fields.match(/chapter=(\d+|Incipit|Explicit)/)[1]
+    else
+      raise ArgumentError, 'invalid key'
+    end
+  end
+
   protected
 
   def self.search(query, options = {})
