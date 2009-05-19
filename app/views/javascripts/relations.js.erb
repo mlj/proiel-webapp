@@ -1,11 +1,12 @@
-var valid_relations = <%= ActiveSupport::JSON.encode(@relations) %>;
-var relation_inferences = <%= ActiveSupport::JSON.encode(@inferences) %>;
+var valid_relations = <%= @relations.to_json %>;
+var relation_inferences = <%= @inferences.to_json %>;
 
 function isValidRelation(relation) {
-  if ($H(valid_relations).get(relation.toLowerCase()))
-    return true;
-  else
-    return false;
+  for (var i = 0; i < valid_relations.length; i++)
+    if (valid_relations[i] == relation.toLowerCase())
+      return true;
+
+  return false;
 }
 
 function _testCriteria(head, dependent, criteria) {

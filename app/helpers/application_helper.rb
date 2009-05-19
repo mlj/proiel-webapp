@@ -133,21 +133,19 @@ module ApplicationHelper
   end
 
   # Generates a human readable representation of a relation code.
-  def readable_relation(code)
-    return "<span class='relation bad'>#{code}</span>" unless code and PROIEL::RELATIONS.has_key?(code.to_sym)
-
-    summary = PROIEL::RELATIONS[code].summary
+  def readable_relation(relation_tag)
+    summary = Relation.find_by_tag(relation_tag).summary
 
     if summary
-      "<span class='relation'><abbr title='#{summary.capitalize}'>#{code}</abbr></span>"
+      "<span class='relation'><abbr title='#{summary.capitalize}'>#{relation_tag}</abbr></span>"
     else
-      "<span class='relation'>#{code}</span>"
+      "<span class='relation'>#{relation_tag}</span>"
     end
   end
 
   # Generates a human readable representation of a dependency.
-  def readable_dependency(relation, head)
-    '(' + readable_relation(relation) + (head ? ", #{head}" : '') + ')'
+  def readable_dependency(relation_tag, head)
+    '(' + readable_relation(relation_tag) + (head ? ", #{head}" : '') + ')'
   end
 
   # Returns links to external sites for a sentence.

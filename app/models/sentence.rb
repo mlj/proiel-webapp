@@ -24,7 +24,7 @@ class Sentence < ActiveRecord::Base
         end
         raise "No head found for prodrop element with ID #{prodrop.id}!" unless head
 
-        relation = prodrop.relation.to_s
+        relation = prodrop.relation.tag.to_s
         insertion_point = case relation
                           when 'sub'
                             # Position subjects before the verb
@@ -32,7 +32,7 @@ class Sentence < ActiveRecord::Base
 
                           when 'obl'
                             if others[head_index + 1].respond_to?(:relation) &&
-                                                      others[head_index + 1].relation == 'obj'
+                                                      others[head_index + 1].relation.tag == 'obj'
                               # Position obliques after the object, if any,...
                               head_index + 2
                             else
@@ -217,7 +217,7 @@ class Sentence < ActiveRecord::Base
       dependency_graph.nodes.each do |node|
         token = tokens.find(id_map[node.identifier])
         token.head_id = id_map[node.head.identifier]
-        token.relation = node.relation.to_s
+        token.relation = Relation.find_by_tag(node.relation.to_s)
         token.empty_token_sort = node.data[:empty] if node.is_empty?
 
         # Slash edges are marked as dependent on the association level, so when we destroyed
@@ -226,7 +226,7 @@ class Sentence < ActiveRecord::Base
         token.slash_out_edges.each { |edge| edge.destroy }
         node.slashes_with_interpretations.each { |slashee, interpretation| SlashEdge.create(:slasher => token,
                                                        :slashee_id => id_map[slashee.identifier],
-                                                       :slash_edge_interpretation => SlashEdgeInterpretation.find_by_tag(interpretation) ) }
+                                                       :relation => Relation.find_by_tag(interpretation) ) }
         token.save!
       end
     end
@@ -374,8 +374,8 @@ class Sentence < ActiveRecord::Base
   # Returns the dependency graph for the sentence.
   def dependency_graph
     PROIEL::ValidatingDependencyGraph.new do |g|
-      dependency_tokens.each { |t| g.badd_node(t.id, t.relation, t.head ? t.head.id : nil,
-                                               Hash[*t.slash_out_edges.map { |se| [se.slashee.id, se.slash_edge_interpretation.tag] }.flatten],
+      dependency_tokens.each { |t| g.badd_node(t.id, t.relation.tag, t.head ? t.head.id : nil,
+                                               Hash[*t.slash_out_edges.map { |se| [se.slashee.id, se.relation.tag] }.flatten],
                                                { :empty => t.empty_token_sort || false,
                                                  :token_number => t.token_number,
                                                  :morphtag => PROIEL::MorphTag.new(t.morphtag),

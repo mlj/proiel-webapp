@@ -363,7 +363,7 @@ module PROIEL
     def interpret_slash(slashee)
       if self.is_empty? and self.is_verbal? and slashee.is_verbal? and self.relation == slashee.relation
         :pid
-      elsif [:xadv, :piv, :xobj].include?(self.relation)
+      elsif [:xadv, :xobj].include?(self.relation)
         :xsub
       else
         slashee.relation

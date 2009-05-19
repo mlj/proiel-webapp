@@ -96,8 +96,6 @@ namespace :proiel do
                  File.join(directory, 'text.xsd'))
       File::copy(File.join(RAILS_ROOT, 'lib', 'proiel', 'morphology.xml'),
                  File.join(directory, 'morphology.xml'))
-      File::copy(File.join(RAILS_ROOT, 'lib', 'proiel', 'relations.xml'),
-                 File.join(directory, 'relations.xml'))
     end
   end
 

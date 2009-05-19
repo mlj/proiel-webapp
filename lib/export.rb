@@ -110,7 +110,7 @@ class PROIELXMLExport < SourceExport
   end
 
   VERBATIM_TOKEN_ATTRIBUTES = %w(morphtag presentation_form form presentation_span nospacing contraction
-    emendation abbreviation capitalisation verse relation empty_token_sort foreign_ids)
+    emendation abbreviation capitalisation verse empty_token_sort foreign_ids)
 
   def write_sentence(builder, sentence)
     sentence.tokens.each do |token|
@@ -118,6 +118,7 @@ class PROIELXMLExport < SourceExport
       attributes[:head] = token.head_id if token.head
       attributes[:lemma] = token.morph_lemma_tag.lemma if token.morph_lemma_tag
       attributes[:sort] = token.sort.to_s.gsub('_', '-')
+      attributes[:relation] = token.relation.tag if token.relation
 
       VERBATIM_TOKEN_ATTRIBUTES.each do |a|
         value = token.send(a.to_sym)
@@ -128,7 +129,7 @@ class PROIELXMLExport < SourceExport
         builder.token attributes do
           builder.slashes do
             token.slash_out_edges.each do |slash_out_edge|
-              builder.slash :target => slash_out_edge.slashee_id, :label => slash_out_edge.slash_edge_interpretation.tag
+              builder.slash :target => slash_out_edge.slashee_id, :label => slash_out_edge.relation.tag
             end
           end
         end
@@ -169,9 +170,9 @@ class TigerXMLExport < SourceExport
       builder.feature(:name => 'lemma', :domain => 'FREC')
       builder.edgelabel do
         builder.value(:name => '--')
-        PROIEL::RELATIONS.each_pair do |key, value|
-          builder.comment! value.description
-          builder.value(:name => key)
+        Relation.primary.each do |relation| #FIXME
+          builder.comment! relation.summary
+          builder.value(:name => relation.tag)
         end
       end
       builder.secedgelabel do
@@ -210,7 +211,7 @@ class TigerXMLExport < SourceExport
               # Emit the empty root node
               builder.nt(:id => root_node_id, :form => '', :morphtag => '', :lemma => '') do
                 s.dependency_tokens.reject(&:head).each do |t|
-                  builder.edge(:idref => "p#{t.id}", :label => t.relation)
+                  builder.edge(:idref => "p#{t.id}", :label => t.relation.tag)
                 end
               end
 
@@ -251,9 +252,9 @@ class MaltXMLExport < SourceExport
         builder.annotation do
           builder.attribute(:name => "head")
           builder.attribute(:name => "deprel") do
-            PROIEL::RELATIONS.each_pair do |key, value|
-              builder.comment! value.description
-              builder.value(:name => key)
+            Relation.primary.each do |relation|
+              builder.comment! relation.summary
+              builder.value(:name => relation.tag)
             end
           end
           builder.attribute(:name => "form")

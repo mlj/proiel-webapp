@@ -169,7 +169,6 @@ the default export path is used.
     $ ls -l public/exports/
     total 20
     -rw-r--r-- 1 mlj mlj 5850 2008-09-08 12:56 morphology.xml
-    -rw-r--r-- 1 mlj mlj 1666 2008-09-08 12:56 relations.xml
     -rw-r--r-- 1 mlj mlj 5958 2008-09-08 12:56 text.xsd
 
 `proiel:inflections:import`

@@ -8,6 +8,8 @@ class Token < ActiveRecord::Base
 
   belongs_to :head, :class_name => 'Token'
   has_many :dependents, :class_name => 'Token', :foreign_key => 'head_id'
+  belongs_to :relation
+
 
   has_many :slash_out_edges, :class_name => 'SlashEdge', :foreign_key => 'slasher_id', :dependent => :destroy
   has_many :slash_in_edges, :class_name => 'SlashEdge', :foreign_key => 'slashee_id', :dependent => :destroy
@@ -55,9 +57,6 @@ class Token < ActiveRecord::Base
 
   # Constraint: t.head_id => t.relation
   validates_presence_of :relation, :if => lambda { |t| !t.head_id.nil? }
-
-  # If set, relation must be valid.
-  validates_inclusion_of :relation, :allow_nil => true, :in => PROIEL::PRIMARY_RELATION_TAGS
 
   # If set, morphtag and source_morphtag must have the correct length.
   validates_length_of :morphtag, :allow_nil => true, :is => PROIEL::MorphTag.fields.length
@@ -275,9 +274,11 @@ class Token < ActiveRecord::Base
     if @is_annotatable.nil?
       @is_annotatable = info_status == :no_info_status ||  # manually marked as annotatable
                      (info_status != :info_unannotatable && \
-                      (PROIEL::MORPHOLOGY.nominals.include?(morph[:major]) || \
-                       (relation && PROIEL::RELATIONS.nominals.include?(relation.to_sym)) || \
-                       dependents.any? { |dep| dep.morph[:major] == :S }))
+                      (morphtag =~ /^(C|Pr)/) != 0 &&      # exclude conjunctions and relative pronouns right away
+                      (morphtag =~ /^(N|P)/  ||            # be a noun or a pronoun
+                       (relation && ['part', 'obl', 'sub', 'obj', 'narg', 'voc'].include?(relation.tag)) ||  # or have a nominal relation
+                       dependents.any? { |dep| dep.morph[:major] == :S }   #or have an article dependent
+                       ))
     end
     @is_annotatable
   end

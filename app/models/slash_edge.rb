@@ -5,11 +5,11 @@
 class SlashEdge < ActiveRecord::Base
   belongs_to :slasher, :class_name => 'Token', :foreign_key => 'slasher_id'
   belongs_to :slashee, :class_name => 'Token', :foreign_key => 'slashee_id'
-  belongs_to :slash_edge_interpretation
+  belongs_to :relation
 
   validates_uniqueness_of :slasher_id, :scope => :slashee_id,
     :message => 'Slash edge already exists in dependency structure'
-  validates_presence_of :slash_edge_interpretation
+  validates_presence_of :relation
 
   acts_as_audited
 end

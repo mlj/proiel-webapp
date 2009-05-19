@@ -28,9 +28,9 @@
 
   <div id="palette">
     <% @relations.each do |v| %>
-      <label for="<%= v.code %>">
-        <input type="radio" name="relation-palette" id="<%= v.code %>" value="<%= v.code %>"></input>
-        <span><%= readable_relation(v.code) %></span>
+      <label for="<%= v %>">
+        <input type="radio" name="relation-palette" id="<%= v %>" value="<%= v %>"></input>
+        <span><%= readable_relation(v) %></span>
       </label>
     <% end %>
   </div>

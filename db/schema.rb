@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090502152443) do
+ActiveRecord::Schema.define(:version => 20090502152444) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -85,10 +85,10 @@ ActiveRecord::Schema.define(:version => 20090502152443) do
   end
 
   create_table "inflections", :force => true do |t|
-    t.integer  "language_id",               :null => false
-    t.string   "form",        :limit => 64, :null => false
-    t.string   "morphtag",    :limit => 17, :null => false
-    t.string   "lemma",       :limit => 64, :null => false
+    t.integer  "language_id",               :default => 0,  :null => false
+    t.string   "form",        :limit => 64, :default => "", :null => false
+    t.string   "morphtag",    :limit => 17, :default => "", :null => false
+    t.string   "lemma",       :limit => 64, :default => "", :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -134,6 +134,18 @@ ActiveRecord::Schema.define(:version => 20090502152443) do
     t.text     "contents",                                      :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "relation_equivalences", :id => false, :force => true do |t|
+    t.integer "subrelation_id",   :null => false
+    t.integer "superrelation_id", :null => false
+  end
+
+  create_table "relations", :force => true do |t|
+    t.string  "tag",                :limit => 64,  :default => "",    :null => false
+    t.string  "summary",            :limit => 128, :default => "",    :null => false
+    t.boolean "primary_relation",                  :default => false, :null => false
+    t.boolean "secondary_relation",                :default => false, :null => false
   end
 
   create_table "roles", :force => true do |t|
@@ -183,15 +195,10 @@ ActiveRecord::Schema.define(:version => 20090502152443) do
 
   add_index "sentences", ["source_division_id", "sentence_number"], :name => "index_sentences_on_source_division_id_and_sentence_number"
 
-  create_table "slash_edge_interpretations", :force => true do |t|
-    t.string "tag",     :limit => 64,  :default => "", :null => false
-    t.string "summary", :limit => 128, :default => "", :null => false
-  end
-
   create_table "slash_edges", :force => true do |t|
     t.integer "slasher_id"
     t.integer "slashee_id"
-    t.integer "slash_edge_interpretation_id", :default => 0, :null => false
+    t.integer "relation_id", :default => 0, :null => false
   end
 
   add_index "slash_edges", ["slasher_id", "slashee_id"], :name => "index_slash_edges_on_slasher_and_slashee", :unique => true
@@ -222,7 +229,6 @@ ActiveRecord::Schema.define(:version => 20090502152443) do
     t.string   "morphtag",                     :limit => 17
     t.string   "form",                         :limit => 64
     t.integer  "lemma_id"
-    t.string   "relation",                     :limit => 20
     t.integer  "head_id"
     t.enum     "sort",                         :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end],              :default => :text, :null => false
     t.datetime "created_at"
@@ -246,6 +252,7 @@ ActiveRecord::Schema.define(:version => 20090502152443) do
     t.boolean  "automatic_token_alignment",                                                                                                       :default => false
     t.integer  "dependency_alignment_id"
     t.integer  "antecedent_id"
+    t.integer  "relation_id"
   end
 
   add_index "tokens", ["contrast_group"], :name => "index_tokens_on_contrast_group"
@@ -253,7 +260,7 @@ ActiveRecord::Schema.define(:version => 20090502152443) do
   add_index "tokens", ["head_id"], :name => "index_tokens_on_head_id"
   add_index "tokens", ["lemma_id"], :name => "index_tokens_on_lemma_id"
   add_index "tokens", ["morphtag"], :name => "index_tokens_on_morphtag"
-  add_index "tokens", ["relation"], :name => "index_tokens_on_relation"
+  add_index "tokens", ["relation_id"], :name => "index_tokens_on_relation_id"
   add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true
 
   create_table "users", :force => true do |t|
