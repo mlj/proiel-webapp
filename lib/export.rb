@@ -176,7 +176,10 @@ class TigerXMLExport < SourceExport
         end
       end
       builder.secedgelabel do
-        builder.value(:name => '*')
+        Relation.all.each do |relation|
+          builder.comment! relation.summary
+	  builder.value(:name => relation.tag)
+	end	  
       end
     end
   end
@@ -195,7 +198,7 @@ class TigerXMLExport < SourceExport
   end
 
   def write_body(builder)
-    filtered_sentences.find_each do |s|
+    filtered_sentences.each do |s|
       builder.s(:id => "s#{s.id}") do
         root_node_id = "s#{s.id}_root"
 
@@ -223,8 +226,10 @@ class TigerXMLExport < SourceExport
                   builder.edge(:idref => "w#{t.id}", :label => '--') if t.is_morphtaggable?
 
                   # Add dependency edges, primary and secondary.
-                  t.dependents.each { |d| builder.edge(:idref => "p#{d.id}", :label => d.relation) }
-                  t.slashers.each { |d| builder.secedge(:idref => "p#{d.id}", :label => '*') }
+                  t.dependents.each { |d| builder.edge(:idref => "p#{d.id}", :label => d.relation.tag) }
+		  SlashEdge.find_all_by_slasher_id(t.id).each do |se|
+		    builder.secedge(:idref => "p#{se.slashee_id}", :label => se.relation.tag)
+                  end		    
                 end
               end
             end
@@ -264,7 +269,7 @@ class MaltXMLExport < SourceExport
       end
 
       builder.body do
-        filtered_sentences.find_each do |s|
+        filtered_sentences.each do |s|
           builder.sentence(:id => s.id) do
             # Create a mapping from PROIEL token IDs to one-based, sentence
             # internal IDs. (I don't like reusing the same id attribute values in 
@@ -287,7 +292,7 @@ class MaltXMLExport < SourceExport
 
               if s.has_dependency_annotation?
                 attrs.merge!({ :head => local_token_ids[t.head_id] })
-                attrs.merge!({ :deprel => t.relation })
+                attrs.merge!({ :deprel => t.relation.tag })
               end
 
               if s.has_morphological_annotation? and t.is_morphtaggable?
