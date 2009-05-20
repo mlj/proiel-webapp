@@ -37,9 +37,14 @@
   </xs:simpleType> 
 
   <xs:complexType name="Div">
-    <xs:sequence>
-      <xs:element name="sentence" minOccurs="1" maxOccurs="unbounded" type="Sentence"/>
-    </xs:sequence>
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="sentence" minOccurs="1" maxOccurs="unbounded" type="Sentence"/>
+      </xs:sequence>
+      <xs:sequence>
+        <xs:element name="div" minOccurs="1" maxOccurs="unbounded" type="Div"/>
+      </xs:sequence>
+    </xs:choice>
     <xs:attribute name="type" type="DivType" use="required"/>
     <xs:attribute name="name" type="xs:string" use="required"/>
   </xs:complexType>
