@@ -78,7 +78,7 @@ For next iteration
 
   * Import Armenian text and check that import functions work with the new model
 
-  * Text presentation
+  * Table of content
 
     The current text presentation is rather confusing. Just a long list of all the chapters...
 
@@ -86,11 +86,6 @@ For next iteration
 
 Perhaps/later/consider
 ----------------------
-
-  * Implement support for schema-defined hierarchical overlapping sub-divisions.
-
-  * Implement support for extra, non-searchable overlapping textual
-  sub-divisions.
 
   * Gather all documentation in one location
     - include notes on text production
@@ -105,12 +100,6 @@ Perhaps/later/consider
     hacked together), and the synchronisation symbols used to order
     sound changes are not removed. In addition, the whole system
     lacks glue code after the latest attempt at fixing the system.
-
-  * Fix editorial symbols in existing text.
-
-    We need to distinguish editorial symbols that stem from our sources and those
-    that originate with use. They have to be styled as in the source, but interpretable.
-    Our changes should probably be layered on top of any existing data.
 
   * Allow coordination of ADV and XADV
 
@@ -283,20 +272,6 @@ Wishlist
     These are probably out of sync by now in multiple minor respects. Check and fix!
     Also add IDs to all objects, e.g. sentence IDs.
 
-  * Constrain lemma tuples and redefine `morphtag` as the tuple `(POS, morphology, lemma)`
-
-    Lemma tuples are supposed to be unique
-
-         (base_form, POS, variant)
-
-    and
-
-         exists (base_form, POS, nil) → !exists (base_form, POS, non-nil)
-         exists (base_form, POS, non-nil) → !exists (base_form, POS, nil)
-
-    but this is not the case. This is blocked by a bunch of lemmata that need manual
-    consideration and slight adjustments to the lemma choice algorithms.
-
   * Verify that manual rules for closed parts of speech match annotation for Latin, 
     Gothic and OCS
 
@@ -305,8 +280,6 @@ Wishlist
   * Re-write silly `bookmark` system as a true assignment system.
 
     Blocked by lack of first-order text division objects in the data model.
-
-  * Promote `books` to first-order text division object and make it hierarchical
 
   * User-configurable transliteration functions
 
@@ -337,7 +310,6 @@ Wishlist
   * Teach the tagger how to deal with tokens that do not match the normalisation.
 
   * Dependency UI: ensure that the ROOT relation is immutable during editing.
-% Known bugs that
 
 Bugs
 ====
@@ -351,14 +323,14 @@ this
 
 ~~~
    A RuntimeError occurred in dependencies#update:
-   
+
      Incomplete dependency graph
      [RAILS_ROOT]/app/models/sentence.rb:129:in `syntactic_annotation='
-   
+
    -------------------------------
    Request:
    -------------------------------
-   
+
      * URL       :
      http://foni.uio.no:3000/annotations/43236/dependencies?wizard%5Blevel%5D=annotation&wizard%5Bskip%5D=true
      * IP address: 77.18.9.58
@@ -391,7 +363,7 @@ this
    -------------------------------
    Session:
    -------------------------------
-   
+
      * session id:
      "BAh7CToOcmV0dXJuX3RvMDoMY3NyZl9pZCIlNGVmMTUwMmRjMmU0YjVlNmI4\nN2NlNTkzYjMwNTY4YjgiCmZsYXNoSUM6J0FjdGlvbkNvbnRyb2xsZXI6OkZs\nYXNoOjpGbGFzaEhhc2h7BjoKZXJyb3IwBjoKQHVzZWR7BjsIVDoMdXNlcl9p\nZGlB--353f6ad9b246906846f9f655639be9042caa7f96"
      * data: {:return_to=>nil,
@@ -402,7 +374,7 @@ this
    -------------------------------
    Environment:
    -------------------------------
-   
+
      * CONTENT_LENGTH      : 1972
      * CONTENT_TYPE        : application/x-www-form-urlencoded
      * GATEWAY_INTERFACE   : CGI/1.2
@@ -445,7 +417,7 @@ this
    -------------------------------
    Backtrace:
    -------------------------------
-   
+
      [RAILS_ROOT]/app/models/sentence.rb:129:in `syntactic_annotation='
 
 [...]
