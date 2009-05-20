@@ -66,6 +66,11 @@ class AddRelationsTable < ActiveRecord::Migration
     add_column :tokens, :relation_id, :integer, :null => true
     add_index "tokens", ["relation_id"]
 
+    SlashEdge.find_all_by_relation_id(Relation.find_by_tag('piv').id).each do |se|
+      se.relation = Relation.find_by_tag('xobj')
+      se.save!
+    end
+
     Relation.all.each do |r|
       Token.find(:all, :conditions => { :relation => r.tag }).each do |t|
         if r.tag == 'piv'
