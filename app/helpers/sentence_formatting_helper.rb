@@ -214,7 +214,7 @@ module SentenceFormattingHelper
     t = []
     skip_tokens = 0
 
-    tokens.reject { |token| token.is_empty? and token.empty_token_sort != 'P' }.each do |token|
+    tokens.reject { |token| options[:information_status] ? (token.is_empty? and token.empty_token_sort != 'P' ) : token.is_empty? }.each do |token|
       if skip_tokens > 0
         skip_tokens -= 1
         next
