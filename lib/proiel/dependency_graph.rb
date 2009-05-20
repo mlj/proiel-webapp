@@ -602,30 +602,14 @@ module PROIEL
         t.all_slashes.length == 1
       end
 
-      # Root daughters may be
-      #   i. A single PRED or a single coordination of PREDs,
-      #   ii. A single VOC or a single coordination of VOCs,
-      #   iii. Multiple PARPREDs or coordinations of PARPREDs
-      #   iv. Multiple VOCs, PREDs or coordinations of such, but only if
-      #       for each VOC or PRED subgraph
-      #       a. the subgraph does not overlap with any other subgraph, and
-      #       b. any slashes target only nodes in the subgraph.
+      # Root daughters may be PREDs, VOCs or PARPREDs
       test_token('May not be a daughter of the root node', :is_daughter_of_root?) do |t|
         [:pred, :parpred, :voc].include?(t.relation)
       end
 
-      test_tokens('Subgraphs overlap',
-                  lambda { |t| t.is_daughter_of_root? and t.relation == :pred }) do |ts|
-        # We order the PRED nodes by the maximum token number in their subgraph, then
-        # look for any overlap. We cannot simply order them by their own token numbers, as they may,
-        # as always, be empty nodes, and their token numbers are meaningless to us.
-        x = ts.sort_by(&:max_token_number).enum_cons(2).reject { |x, y| x.linearly_precedes?(y) }
-        x.flatten # Report both part-takers as in violation of constraint
-      end
-
-      test_token('Slashes are not contained by subgraph',
-                 lambda { |t| t.is_daughter_of_root? and [:pred, :voc].include?(t.relation) }) do |t|
-        t.all_slashes_contained?
+      test_tokens('There can only be one PRED node under the root',
+      		  lambda { |t| t.is_daughter_of_root? and t.relation == :pred } ) do |ts|
+	ts.size == 1 ? [] : ts
       end
 
       test_token_by_relation('The head of a PARPRED relation must be the root node or a valid coordination', :parpred) do |t|
