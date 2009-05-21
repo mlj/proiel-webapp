@@ -67,7 +67,7 @@ class Validator < Task
   end
 
   def check_orphaned_tokens(logger)
-    Token.find_each(:all, :include => [ :sentence ], :conditions => [ "sentences.id is null" ]) do |t|
+    Token.find_each(:include => [ :sentence ], :conditions => [ "sentences.id is null" ]) do |t|
       logger.warn { "Token #{t.id} is orphaned" }
     end
   end
