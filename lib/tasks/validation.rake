@@ -4,7 +4,7 @@ namespace :db do
     puts "-- records - model --"
     Dir.glob(RAILS_ROOT + '/app/models/**/*.rb').each { |file| require file unless file =~ /mailer|observer/ }
     Object.subclasses_of(ActiveRecord::Base).select { |c| c.base_class == c}.sort_by(&:name).each do |klass|
-      next if klass == CGI::Session::ActiveRecordStore::Session
+      next if klass.to_s[/Store::Session$/]
       total = klass.count
       printf "%10d - %s\n", total, klass.name
       chunk_size = 500

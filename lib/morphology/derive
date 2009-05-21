@@ -409,7 +409,10 @@ def each_inflection(stem, tag, inflections, &block)
       if new_tag[field] == '-' or new_tag[field] == field_value
         new_tag[field] = field_value 
         if next_level.is_a?(String)
-          block.call(new_tag, stem + next_level)
+          # This is the most ridiculous thing ever: stem + next_level
+          # changes stem! So, keep them separate for as long as
+          # possible.
+          block.call(new_tag, stem, next_level)
         else
           each_inflection(stem, new_tag, next_level, &block)
         end
@@ -421,18 +424,18 @@ def each_inflection(stem, tag, inflections, &block)
 end
 
 # Emits a new rule
-def emit(language, lemma, variant, form, tag, options = {})
+def emit(language, lemma, variant, form, tag, options = {}, suffix = "")
   # Set inflection field to inflecting if not already set.
   if tag[:inflection] == '-'
     tag[:inflection] = 'i'
   end
 
   if lemma.empty?
-    STDERR.puts "Ignoring rule #{tag} for #{form} (#{variant}): Missing lemma."
+    STDERR.puts "Ignoring rule #{tag} for #{form}#{suffix} (#{variant}): Missing lemma."
   elsif tag.is_valid?(language)
     if options[:caseless]
       capitalised_form = form.mb_chars.capitalize
-      emit(language, lemma, variant, capitalised_form, tag) unless capitalised_form == form
+      emit(language, lemma, variant, capitalised_form, tag, {}, suffix) unless capitalised_form == form
     end
 
     # Language hooks
@@ -441,9 +444,9 @@ def emit(language, lemma, variant, form, tag, options = {})
       form = Lingua::GRC::strip_accents(form)
     end
 
-    puts [language, lemma, variant, form, tag.to_abbrev_s].join(',') 
+    puts [language, lemma, variant, "#{form}#{suffix}", tag.to_abbrev_s].join(',') 
   else
-    STDERR.puts "Ignoring rule #{tag} for #{form}/#{lemma} (#{variant}): Invalid tag."
+    STDERR.puts "Ignoring rule #{tag} for #{form}#{suffix}/#{lemma} (#{variant}): Invalid tag."
   end
 end
 
@@ -517,8 +520,8 @@ File.open(rule_file) do |f|
           stemmer = classes[cls.to_sym][:stemmer]
           stem = Lingua::GRC::strip_accents(form).gsub(/#{stemmer}$/, '')
 
-          each_inflection(stem, template, inflections) { |tag, form| 
-            emit(language, lemma, variant, form, tag, options)
+          each_inflection(stem, template, inflections) { |tag, form, form2| 
+            emit(language, lemma, variant, form, tag, options, form2)
           }
         else
           STDERR.puts "Invalid class #{cur_cls}. Ignoring."
