@@ -42,14 +42,13 @@ module PROIEL
   module Tagger
     class Tagger
       WEIGHTS = {
-        # The weight given to a generated rule from the inflections
-        # table
-        :generated_rules => 0.2, 
+        # The weight given to a rule from the inflections table.
+        :inflections_table => 1.0, 
 
         # The weight given to an FST rule
         :fst => 0.2, 
 
-        # The weight given to a hand-written rule
+        # The weight given to a hand-written rule from rule files
         :manual_rules => 1.0,
 
         # The weight *ratio* for existing instances
@@ -85,9 +84,8 @@ module PROIEL
               case method
 
               # Includes candidates from pre-generated word lists.
-              when :generated_rules
-                @analysis_methods[language][method] = 
-                  InflectionsTableMethod.new(language)
+              when :inflections_table
+                @analysis_methods[language][method] = InflectionsTableMethod.new(language)
                 @methods[language] << lambda { |form| analyze_form(language, method, form) }
 
               # Includes candidates from hand-crafterd word lists.

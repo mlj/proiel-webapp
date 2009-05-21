@@ -1,9 +1,7 @@
 :languages:
   :lat:
-    :manual_rules:
-      la-rules.db
-    :generated_rules:
-      false
+    :inflections_table:
+      true
     :instance_frequencies:
       false
     :source_tag_pattern_filtering:

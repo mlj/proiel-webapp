@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090502152444) do
+ActiveRecord::Schema.define(:version => 20090521104823) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -85,12 +85,13 @@ ActiveRecord::Schema.define(:version => 20090502152444) do
   end
 
   create_table "inflections", :force => true do |t|
-    t.integer  "language_id",               :default => 0,  :null => false
-    t.string   "form",        :limit => 64, :default => "", :null => false
-    t.string   "morphtag",    :limit => 17, :default => "", :null => false
-    t.string   "lemma",       :limit => 64, :default => "", :null => false
+    t.integer  "language_id",               :default => 0,     :null => false
+    t.string   "form",        :limit => 64, :default => "",    :null => false
+    t.string   "morphtag",    :limit => 17, :default => "",    :null => false
+    t.string   "lemma",       :limit => 64, :default => "",    :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "manual_rule",               :default => false, :null => false
   end
 
   add_index "inflections", ["language_id", "form", "morphtag", "lemma"], :name => "index_inflections_on_language_id_and_form_and_morphtag_and_lemma", :unique => true

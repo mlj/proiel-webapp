@@ -2,8 +2,8 @@
   :xcl:
     :instance_frequencies:
       true
-    :generated_rules:
-      xcl-generated.db
+    :inflections_table:
+      true
     :source_tag_pattern_filtering:
       true
   :got:
@@ -21,13 +21,9 @@
         "-n"
       "^Df":
       "^C":
-    :manual_rules:
-      got-rules.db
-    :generated_rules:
+    :inflections_table:
       true
   :chu:
-    :manual_rules:
-      cu-rules.db
     :fst:
       :normalisation:
         cu-normalisation.ca
@@ -37,11 +33,11 @@
         cu-orthographics.ca
     :instance_frequencies:
       true
+    :inflections_table:
+      true
     :source_tag_pattern_filtering:
       true
   :grc:
-    :manual_rules:
-      grc-rules.db
     :instance_frequencies:
       true
     :source_tag_pattern_filtering:
@@ -57,10 +53,10 @@
         "-"
       "^V":
         "-"
+    :inflections_table:
+      true
   :lat:
-    :manual_rules:
-      la-rules.db
     :instance_frequencies:
       true
-    :generated_rules:
+    :inflections_table:
       true

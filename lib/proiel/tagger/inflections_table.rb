@@ -16,7 +16,11 @@ module PROIEL
         raise "invalid language #{@language}" unless language
 
         language.inflections.find_all_by_form(form).collect do |instance|
-          [PROIEL::MorphLemmaTag.new("#{instance.morphtag}:#{instance.lemma}"), 1]
+          if instance.manual_rule
+            [PROIEL::MorphLemmaTag.new("#{instance.morphtag}:#{instance.lemma}"), 1.0]
+          else
+            [PROIEL::MorphLemmaTag.new("#{instance.morphtag}:#{instance.lemma}"), 0.2]
+          end
         end
       end
     end
