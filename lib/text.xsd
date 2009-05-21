@@ -82,7 +82,7 @@
 
     <xs:attribute name="verse" type="xs:integer"/>
 
-    <xs:attribute name="morphtag" type="xs:string"/>
+    <xs:attribute name="morphology" type="xs:string"/>
     <xs:attribute name="lemma" type="xs:string"/>
     <xs:attribute name="form" type="xs:string"/>
 

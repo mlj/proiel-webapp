@@ -11,6 +11,7 @@ ActionController::Routing::Routes.draw do |map|
     :dependency_alignment_group => :get,
   }
   map.resources :sentences
+  map.resources :parts_of_speech
   map.resources :languages
 
   map.resources :annotations do |annotation|

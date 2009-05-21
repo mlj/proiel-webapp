@@ -4,8 +4,7 @@
 #
 # Written by Marius L. Jøhndal, 2008.
 #
-module PROIEL
-  module Tagger
+module Tagger
     class TaggerAnalysisMethod
       def initialize(language)
         @language = language
@@ -15,6 +14,4 @@ module PROIEL
         []
       end
     end
-  end
 end
-

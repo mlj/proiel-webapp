@@ -2,14 +2,14 @@
 
 <div class="morphtags">
   <div id="tokens">
-    <% for token in @sentence.morphtaggable_tokens %>
+    <% @sentence.tokens.morphology_annotatable.each do |token| %>
       <div id="item-<%= token.id %>" class="item">
         <p class="form"><%= format_token_form(token) %></p>
-        <div class="morph-lemma-tags <%= (token.morphtag and token.lemma_id) ? 'mannotated' : 'munannotated' %>">
-          <p class="pos">&nbsp;<%= morphtag_pos(token) %></p>
-          <p class="morphology">&nbsp;<%= morphtag_non_pos(token) %></p>
+        <div class="morph-lemma-tags <%= token.morph_features ? 'mannotated' : 'munannotated' %>">
+          <p class="pos"><%= token.morph_features.pos_summary(:abbreviated => true) + '&nbsp;' %></p>
+          <p class="morphology"><%= token.morph_features.morphology_summary(:abbreviated => true, :skip_inflection => true) + '&nbsp;' %></p>
           <% if token.lemma %>
-            <p>(<%= link_to_lemma(token.lemma) %><% if token.lemma.short_gloss %> <q><%= token.lemma.short_gloss %></q><% end %>)</p>
+            <p><%= link_to_lemma(token.lemma) %><% if token.lemma.short_gloss %> <q><%= token.lemma.short_gloss %></q><% end %></p>
           <% else %>
             <p>&nbsp;</p>
           <% end %>

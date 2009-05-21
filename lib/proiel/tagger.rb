@@ -5,15 +5,14 @@
 # Written by Marius L. Jøhndal, 2007, 2008.
 #
 require 'lingua/normalisation'
-require 'proiel/morphtag'
 require 'proiel/tagger/analysis_method'
 require 'proiel/tagger/fst'
 require 'proiel/tagger/word_list'
 require 'proiel/tagger/instance_frequency'
 require 'proiel/tagger/inflections_table'
 
-module PROIEL
-  class WeightedMorphLemmaTag
+module Tagger
+  class WeightedMorphFeatures
     # A weight assigned to the tag
     attr_accessor :weight
 
@@ -21,10 +20,10 @@ module PROIEL
     # inspected.
     attr_accessor :source_identifier
 
-    attr_accessor :mltag
+    attr_accessor :morph_features
 
-    def initialize(mltag, weight, source_identifier)
-      @mltag = mltag
+    def initialize(morph_features, weight, source_identifier)
+      @morph_features = morph_features
       @weight = weight
       @source_identifier = source_identifier
     end
@@ -35,11 +34,10 @@ module PROIEL
       s = (self.weight <=> o.weight)
       return s unless s.zero?
 
-      @mltag <=> o.mltag
+      @morph_features <=> o.morph_features
     end
   end
 
-  module Tagger
     class Tagger
       WEIGHTS = {
         # The weight given to a rule from the inflections table.
@@ -118,9 +116,9 @@ module PROIEL
       def analyze_form(language, method, form)
         @analysis_methods[language][method].analyze(form).collect do |t|
           if t.is_a?(Array)
-            WeightedMorphLemmaTag.new(t[0], t[1] * WEIGHTS[method], method)
+            WeightedMorphFeatures.new(t[0], t[1] * WEIGHTS[method], method)
           else
-            WeightedMorphLemmaTag.new(t, WEIGHTS[method], method)
+            WeightedMorphFeatures.new(t, WEIGHTS[method], method)
           end
         end
       end
@@ -135,6 +133,7 @@ module PROIEL
       #                          e.g. <tt>:manual_rules</tt> for manual rules. All other
       #                          methods are disabled.
       def tag_token(language, form, existing = nil, options = {})
+        raise ArgumentError unless language.class == Symbol
         raise "Undefined language #{language}" unless @methods.has_key?(language) 
 
         raw_candidates = unless options[:force_method]
@@ -155,14 +154,14 @@ module PROIEL
           if m[:include_new_source_tags]
             found = nil
             m[:include_new_source_tags].each_pair do |src, dst|
-              if Regexp.new(src).match(existing.morphtag.to_s)
-                existing.morphtag.union!(dst) if dst
+              if Regexp.new(src).match(existing.pos_s + existing.morphology_s)
+                existing.union!(MorphFeatures.new(",#{dst[0, 2]},#{language}", dst[2, 11])) if dst
                 found = true
               end
             end
               
-            if found and existing.morphtag.is_valid?(language) and !existing.lemma.nil?
-              raw_candidates << WeightedMorphLemmaTag.new(existing, EXISTING_TAG_WEIGHT, :source) if found
+            if found and existing.valid? and !existing.lemma.nil?
+              raw_candidates << WeightedMorphFeatures.new(existing, EXISTING_TAG_WEIGHT, :source) if found
             end
           end
 
@@ -173,22 +172,21 @@ module PROIEL
             # Lower the score of (morphtag, lemma) pairs whose morphtags contradict
             # the (probably incomplete) morphtag in the source_morphtag field.
             raw_candidates.each do |c|
-              if (c.mltag.morphtag and c.mltag.morphtag.contradicts?(existing.morphtag)) || (existing.lemma and c.mltag.lemma != existing.lemma)
-                c.weight = c.weight * CONTRADICTION_RATIO
-              end
+              c.weight = c.weight * CONTRADICTION_RATIO if c.morph_features.contradict?(existing)
             end
           end
         end 
 
         # Filter out duplicates, accumulating scores 
         candidates = raw_candidates.inject({}) do |candidates, raw_candidate| 
-          candidates[raw_candidate.mltag] ||= 0.0
-          candidates[raw_candidate.mltag] += raw_candidate.weight
+          candidates[raw_candidate.morph_features] ||= 0.0
+          candidates[raw_candidate.morph_features] += raw_candidate.weight
           candidates
         end
 
-        # Try to pick the best match.
-        ordered_candidates = candidates.sort_by { |c, w| w }.reverse
+        # Try to pick the best match and keep all entries with the
+        # same weight in a predictable order.
+        ordered_candidates = candidates.sort_by { |c, w| [w, c] }.reverse
 
         # If the first candidate in the ordered list has the same as the next,
         # we're unable to decide, so pick none but return all as suggestions. Otherwise,
@@ -206,6 +204,7 @@ module PROIEL
       private
 
       def normalise_form(language, form)
+        raise ArgumentError unless language.class == Symbol
         case language
         when :grc
           # Strip all accents
@@ -216,5 +215,4 @@ module PROIEL
         end
       end
     end
-  end
 end

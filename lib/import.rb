@@ -96,11 +96,11 @@ class PROIELXMLImport < SourceImport
 
       # Source morphtags do not have to be valid, so we eat the tag without
       # validation.
-      morphtag = attributes[:morphtag] ? PROIEL::MorphTag.new(attributes[:morphtag]).to_s : nil
+      morphology = attributes[:morphology] ? MorphFeatures(nil, attributes[:morphology).morphology_s : nil
 
       n = sentence.tokens.create!(
                    :token_number => attributes[:token_number], 
-                   :source_morphtag => morphtag,
+                   :source_morphology => morphology,
                    :source_lemma => attributes[:lemma],
                    :form => attributes[:form],
                    :verse => attributes[:verse],

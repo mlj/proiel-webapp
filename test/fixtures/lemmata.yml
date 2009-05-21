@@ -3,10 +3,10 @@ one:
   lemma: cum
   variant:
   language_id: 1
-  pos: R-
+  part_of_speech_id: 1
 two:
   id: 2
   lemma: cum
   variant:
   language_id: 1
-  pos: G-
+  part_of_speech_id: 2

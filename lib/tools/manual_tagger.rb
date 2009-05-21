@@ -18,15 +18,11 @@ class ManualTagger < Task
     Source.find(@source_ids).each do |source|
       logger.info { "Working on source #{source.code}..." }
       source.sentences.annotated.each do |sentence|
-        sentence.morphtaggable_tokens.each do |token|
-          if (token.morphtag and not token.lemma_id) or (not token.morphtag and token.lemma_id)
-            next
-          end
+        sentence.tokens.morphology_annotatable.each do |token|
+          mf = token.morph_features
 
-          ml = token.morph_lemma_tag
-
-          if ml and ml.morphtag.is_closed?
-            next unless ml.morphtag.is_valid?(token.language.iso_code.to_sym)
+          if mf and mf.is_closed?
+            next unless mf.valid?
 
             result, pick, *manual_tags = token.language.guess_morphology(token.form, nil, :force_method => :manual_rules)
             manual_tags.collect!(&:first) # ditch the weights
@@ -34,7 +30,7 @@ class ManualTagger < Task
             if manual_tags.length == 0
               log_token_error(logger, token, "Tagged with closed class morphology but not found in definition.")
             else
-              unless manual_tags.any? { |m| token.morph_lemma_tag.morphtag.is_compatible?(m.morphtag) }
+              unless manual_tags.any? { |m| token.morph_features.compatible?(m) }
                 if manual_tags.length == 1
                   from, to = ml, manual_tags.first
                   if sentence.is_reviewed?
@@ -42,9 +38,9 @@ class ManualTagger < Task
                   else
                     logger.info { "Changing token #{token.id}: #{from} -> #{to}" }
                   end
-                  token.set_morph_lemma_tag!(to)
+                  token.morph_features = to
                 else
-                  log_token_error(logger, token, "Closed class morphology does not match: #{token.morphtag} (actual) != #{manual_tags.collect { |m| m.morphtag.to_s }.join(' | ')} (expected)")
+                  log_token_error(logger, token, "Closed class morphology does not match: #{token.morph_features} (actual) != #{manual_tags.map(&:to_s).join(' | ')} (expected)")
                 end
               end
             end

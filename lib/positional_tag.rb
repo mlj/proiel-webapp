@@ -4,11 +4,9 @@
 #
 # Written by Marius L. Jøhndal, 2007, 2008
 #
-require 'xmlsimple'
 
-module Logos
-  # A positional tag.
-  class PositionalTag < Hash
+# A positional tag.
+class PositionalTag < Hash
     # Creates a new positional tag object. The new object may
     # have a new value +value+ assigned to it. The new value may
     # be a string, another positional tag object or a hash.
@@ -78,7 +76,7 @@ module Logos
     # The function raises an exception should there be a conflict 
     # in one of the fields.
     def self.union(klass, *values)
-      raise ArgumentError, 'first argument must be a subclass of Logos::PositionalTag' unless klass.superclass == Logos::PositionalTag
+      raise ArgumentError, 'first argument must be a subclass of PositionalTag' unless klass.superclass == PositionalTag
 
       s = values.inject { |m, n| self.union_s(m.to_s, n.is_a?(String) ? n : n.to_s) }
       klass.new(s)
@@ -89,7 +87,7 @@ module Logos
     # The intersection will be returned as a new object of class +klass+,
     # which must be a subclass of PositionalTag.
     def self.intersection(klass, *values)
-      raise ArgumentError, 'first argument must be a subclass of Logos::PositionalTag' unless klass.superclass == Logos::PositionalTag
+      raise ArgumentError, 'first argument must be a subclass of PositionalTag' unless klass.superclass == PositionalTag
 
       s = values.inject { |m, n| self.intersection_s(m.to_s, n.is_a?(String) ? n : n.to_s) }
       klass.new(s)
@@ -100,14 +98,14 @@ module Logos
     # objects or strings. The function raises an exception should
     # there be a conflict in one of the fields.
     def union(*values)
-      Logos::PositionalTag::union(self.class, self, *values)
+      PositionalTag::union(self.class, self, *values)
     end
 
     # Returns the `intersection' of the positional tag and one or more other
     # positional tags. The other positional tags may be PositionalTag 
     # objects or strings.
     def intersection(*values)
-      Logos::PositionalTag::intersection(self.class, self, *values)
+      PositionalTag::intersection(self.class, self, *values)
     end
 
     # Updates the positional tag with the `union' of the positional tag
@@ -131,11 +129,11 @@ module Logos
       case o
       when String
         fields.zip(o.split('')).each { |e| self[e[0]] = e[1].to_sym if e[1] != '-' }
-      when Hash, Logos::PositionalTag
+      when Hash, PositionalTag
         self.keys.each { |k| self.delete(k) }
         o.each_pair { |k, v| self[k.to_sym] = v unless v == '-' }
       else
-        raise ArgumentError, "must be a String or Logos::PositionalTag"
+        raise ArgumentError, "must be a String or PositionalTag"
       end
     end
 
@@ -161,5 +159,4 @@ module Logos
         super
       end
     end
-  end
 end

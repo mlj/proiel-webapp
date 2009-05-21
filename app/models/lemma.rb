@@ -7,6 +7,7 @@ class Lemma < ActiveRecord::Base
   has_many :notes, :as => :notable, :dependent => :destroy
   has_many :semantic_tags, :as => :taggable, :dependent => :destroy
   belongs_to :language
+  belongs_to :part_of_speech
 
   before_validation :before_validation_cleanup
 
@@ -16,6 +17,7 @@ class Lemma < ActiveRecord::Base
 
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
+  validates_presence_of :part_of_speech
 
   acts_as_audited
 
@@ -24,9 +26,20 @@ class Lemma < ActiveRecord::Base
     self.variant ? "#{self.lemma}##{self.variant}" : self.lemma 
   end
 
-  def Lemma.find_or_create_by_morph_and_lemma_tag(ml_tag)
-    pos = ml_tag.morphtag.pos_to_s
-    find_or_create_by_lemma_and_variant_and_pos(ml_tag.lemma, ml_tag.variant, pos)
+  # Returns a summary description for the part of speech. This is a
+  # convenience function for
+  # +lemma.morph_features.pos_summary(options)+.
+  #
+  # === Options
+  # <tt>:abbreviated</tt> -- If true, returns the summary on an
+  # abbreviated format.
+  def pos_summary(options = {})
+    morph_features.pos_summary(options)
+  end
+
+  # Returns the morphological features for the lemma.
+  def morph_features
+    MorphFeatures.new(self, nil)
   end
 
   # Merges another lemma into this lemma and saves the results. The two lemmata
@@ -49,7 +62,7 @@ class Lemma < ActiveRecord::Base
   protected
 
   def self.search(query, options = {})
-    options[:order] ||= 'language_id ASC, sort_key ASC, lemma ASC, variant ASC, pos ASC'
+    options[:order] ||= 'language_id ASC, sort_key ASC, lemma ASC, variant ASC, part_of_speech_id ASC'
 
     if query.blank?
       paginate options

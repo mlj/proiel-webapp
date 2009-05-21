@@ -715,7 +715,7 @@ var Model = Class.create({
       return null;
   },
 
-  getMorphTag: function(id) { return this._getTokenKey(id, 'morphtag'); },
+  getMorphTag: function(id) { return this._getTokenKey(id, 'morph_features'); },
 
   getWordForm: function(id) { return this._getTokenKey(id, 'form'); },
 

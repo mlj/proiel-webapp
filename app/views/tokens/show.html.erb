@@ -14,18 +14,13 @@
     <dt>Presentation span:</dt><dd><%= @token.presentation_span %></dd>
     <dt>Presentation flags:</dt><dd><%= readable_presentation_flags(@token) %></dd>
   <% end %>
+
   <% if @token.is_morphtaggable? %>
-    <dt>Morphtag:</dt><%= fmt_morphtag(@token, 'dd') %>
-    <dt>Part of speech:</dt><dd><%= readable_pos(@token.morph) %></dd>
-    <dt>Morphology:</dt><dd><%= readable_morphology(@token.morph) %></dd>
+    <dt>Part of speech:</dt><dd><%= @token.morph_features.pos_summary.capitalize %></dd>
+    <dt>Morphology:</dt><dd><%= @token.morph_features.morphology_summary.capitalize %></dd>
     <dt>Lemma:</dt><dd class="foreign-word"><%= @token.lemma ? link_to_lemma(@token.lemma) : '&nbsp;' %></dd>
-    <% if @token.source_morphtag %>
-      <dt>Source morphtag:</dt><%= fmt_source_morphtag(@token, 'dd') %>
-    <% end %>
-    <% if @token.source_lemma %>
-      <dt>Source lemma:</dt><dd class="lemma"><%= format_language_string(@token.source_lemma, @token.language) %></dd>
-    <% end %>
   <% end %>
+
   <% if @token.relation %>
     <dt>Dependency relation:</dt><dd><%= readable_dependency(@token.relation.tag, @token.head ? link_to(@token.head.id, @token.head) : nil) %></dd>
   <% end %>

@@ -6,8 +6,7 @@
 #
 require 'pstore'
 
-module PROIEL
-  module Tagger
+module Tagger
     class WordListMethod < TaggerAnalysisMethod
       def initialize(language, file_name)
         super(language)
@@ -21,9 +20,11 @@ module PROIEL
 
       def analyze(form)
         @db.transaction(true) do
-          @db.fetch(form.to_s, []).map { |x| MorphLemmaTag.new(x) }
+          @db.fetch(form.to_s, []).map do |x|
+            morphtag, lemma = x.split(':')
+            MorphFeatures.new([lemma, morphtag[0, 2], @language.to_s].join(','), morphtag[2, 11])
+          end
         end
       end
     end
-  end
 end

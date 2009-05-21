@@ -6,8 +6,6 @@ New features
 For next iteration
 ------------------
 
-  * Refactoring of morphtag and lemma + part of speech [complete, but too unstable]
-
   * Fix visualization which is still based on interpretation
 
   * More UI stuff for semantic features [currently no online edititing of tags; create/edit/delete of 

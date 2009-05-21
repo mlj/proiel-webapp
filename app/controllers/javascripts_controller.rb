@@ -5,22 +5,9 @@ class JavascriptsController < ApplicationController
   # morphology drop-downs.
   def dynamic_pos
     @language = params[:id].to_sym
-  end
-
-  def morphtag_presentation
-    @summaries = {}
-    @abbreviations = {}
-
-    PROIEL::MORPHOLOGY.each_pair do |field, tags|
-      s = {}
-      a = {}
-      tags.values.each do |tag| 
-        a[tag.code] = tag.description(:style => :abbreviation)
-        s[tag.code] = tag.description
-      end
-      @summaries[field] = s 
-      @abbreviations[field] = a 
-    end
+    @pos_summaries = Hash[*PartOfSpeech.all.map { |pos| [pos.tag, pos.summary] }.flatten]
+    @pos_abbreviated_summaries = Hash[*PartOfSpeech.all.map { |pos| [pos.tag, pos.abbreviated_summary] }.flatten]
+    @pos_values = PartOfSpeech.all.map(&:tag)
   end
 
   # Returns a Javascript representation of valid dependency relations

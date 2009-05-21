@@ -1,5 +1,5 @@
 <%= form.text_field :lemma, :required => true, :help => 'The base form of the lemma.' %>
-<%= form.text_field :pos, :required => true, :label => 'Part of speech' %>
+<%= form.collection_select :part_of_speech_id, PartOfSpeech.find(:all, :order => :summary), :id, :summary, :required => true, :label => 'Part of speech' %>
 <%= form.text_field :variant, :label => 'Variant number', :help => 'An integer number differentiating this lemma from other lemmata with the same base form and part of speech.' %>
 <%= form.collection_select :language_id, Language.find(:all), :id, :name, :required => true, :label => 'Language' %>
 <%= form.text_field :short_gloss %>

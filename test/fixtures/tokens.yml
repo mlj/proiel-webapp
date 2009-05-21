@@ -3,7 +3,7 @@ one:
   verse: 1
   token_number: 1
   sentence_id: 1
-  morphtag: R-----------n
+  morphology_id: 1
   form: cum
   lemma_id: 1
   relation: MyText
@@ -13,7 +13,7 @@ two:
   verse: 1
   token_number: 2
   sentence_id: 1
-  morphtag: C-----------n
+  morphology_id: 1
   form: cum
   lemma_id: 2 
   relation: MyText
@@ -23,7 +23,7 @@ three:
   verse: 1
   token_number: 3
   sentence_id: 1
-  morphtag: C-----------n
+  morphology_id: 1
   form: cum
   lemma_id: 2
   relation: MyText
@@ -33,7 +33,7 @@ four:
   verse: 1
   token_number: 4
   sentence_id: 1
-  morphtag: C-----------n
+  morphology_id: 1
   form: cum
   lemma_id: 2
   relation: MyText

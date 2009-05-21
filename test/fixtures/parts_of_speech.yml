@@ -1,0 +1,15 @@
+one:
+  id: 1
+  tag: R-
+  summary: preposition
+  abbreviated_summary: prep.
+two:
+  id: 2
+  tag: C-
+  summary: conjunction
+  abbreviated_summary: conj.
+three:
+  id: 3
+  tag: V-
+  summary: verb
+  abbreviated_summary: verb

@@ -16,15 +16,8 @@ var PaletteWidget = Class.create({
     this.guesses.insert("<label>Suggestions:</label> ");
   },
 
-  addSuggestion: function(morphtag, lemma, onClick) {
-    this.guesses.insert("<input type='button' value='" + 
-      this._presentMorphLemmaTag(morphtag, lemma) +
-        "' onclick='" + onClick + "'/> ");
-  },
-
-  // Generates the presentation form for morph+lemma tag.
-  _presentMorphLemmaTag: function(morphtag, lemma) {
-    return present_tags(morphtag) + ' (' + lemma + ')';
+  addSuggestion: function(text, onClick) {
+    this.guesses.insert("<input type='button' value='" + text + "' onclick='" + onClick + "'/> ");
   },
 
   showSuggestions: function() { this.guesses.show(); },
@@ -33,11 +26,11 @@ var PaletteWidget = Class.create({
 
   setLemma: function(lemma) { $('morphtags_lemma').value = lemma; },
 
-  setMorphtags: function(morphtags) { 
+  setMorphtags: function(fields) {
     // Clear out all the old values to avoid contamination from existing selections.
-    morphtag_fields.each(function(field) { $(field + '_field').options.length = 0; });
+    field_sequence.each(function(field) { $(field + '_field').options.length = 0; });
 
-    cascadedFieldUpdate('major', morphtags); 
+    cascadedFieldUpdate('pos', fields);
   }
 });
 
@@ -47,9 +40,15 @@ function onTokenSelect(token_id)
 }
 
 // Updates the activated token with guess values.
-function onGuessClick(morphtags, lemma) {
-  palette.setMorphtags($H(morphtags));
-  palette.setLemma(lemma);
+function onGuessClick(morph_features) {
+  var current_lemma = decodeMorphFeaturesLemma(morph_features);
+  var current_pos = decodeMorphFeaturesPOS(morph_features);
+  var current_morphology = decodeMorphFeaturesMorphology(morph_features);
+
+  var fields = current_morphology;
+  fields['pos'] = current_pos;
+  palette.setMorphtags(fields);
+  palette.setLemma(current_lemma);
 
   onPaletteUpdate();
 }
@@ -69,16 +68,10 @@ function onActivate(element)
     palette.clearSuggestions();
 
     suggestions.each(function(suggestion) {
-      var suggestion_data = suggestion[0];
-      var suggestion_confidence = suggestion[1];
-      var morphtag_suggestion = $H(suggestion_data[0]);
-      var lemma_suggestion = suggestion_data[1];
-      if (suggestion_data[2]) {
-        // Add variant number
-        lemma_suggestion += '#' + suggestion_data[2];
-      }
-      palette.addSuggestion(morphtag_suggestion, lemma_suggestion,
-        "onGuessClick(" + morphtag_suggestion.toJSON() + ", \"" + lemma_suggestion + "\")");
+      palette.addSuggestion(present_pos_tag(decodeMorphFeaturesPOS(suggestion)) + ', ' +
+        present_morphology(decodeMorphFeaturesMorphology(suggestion)) +
+        ' (' + decodeMorphFeaturesLemma(suggestion) + ')',
+        "onGuessClick(" + suggestion.toJSON() + ")");
     });
 
     palette.showSuggestions();
@@ -86,10 +79,15 @@ function onActivate(element)
     palette.hideSuggestions();
 
   // Set the information from the activated token.
-  var current_fields = $F('morphtag-' + id).evalJSON();
-  var current_lemma = $F('lemma-' + id);
+  var current_features = $F('morph-features-' + id);
+  var n = current_features.split(',');
+  var current_lemma = decodeMorphFeaturesLemma(current_features);
+  var current_pos = decodeMorphFeaturesPOS(current_features);
+  var current_morphology = decodeMorphFeaturesMorphology(current_features);
 
-  palette.setMorphtags($H(current_fields));
+  var fields = current_morphology;
+  fields['pos'] = current_pos;
+  palette.setMorphtags(fields);
   palette.setLemma(current_lemma);
 }
 
@@ -104,15 +102,15 @@ function onPaletteUpdate()
 {
   var tags = new Hash();
 
-  morphtag_fields.each(function(t) {
-    tags.set(t, getSelectSelection($(t + '_field')));
+  field_sequence.each(function(t) {
+    tags[t] = getSelectSelection($(t + '_field'));
   });
 
   var element = morphtag_selection.getSelection();
   var id = element.identify();
   id = id.sub('item-', '');
-  $('morphtag-' + id).value = tags.toJSON();
-  $('lemma-' + id).value = $F('morphtags_lemma');
+
+  $('morph-features-' + id).value = encodeMorphFeatures($F('morphtags_lemma'), tags['pos'], tags);
 
   onUpdateTokenPresentation(element);
 }
@@ -120,18 +118,20 @@ function onPaletteUpdate()
 // Updates the presentation fields for a token.
 function onUpdateTokenPresentation(element) {
   var id = element.identify().sub('item-', '');
-  var current_morphtags = $H($F('morphtag-' + id).evalJSON());
-  var current_lemma = $F('lemma-' + id);
+  var mf = $F('morph-features-' + id);
+  var current_lemma = decodeMorphFeaturesLemma(mf);
+  var current_pos = decodeMorphFeaturesPOS(mf);
+  var current_morphology = decodeMorphFeaturesMorphology(mf);
 
   // Update human readable display
   var pos = element.down('.pos');
-  pos.innerHTML = present_pos_tags(current_morphtags); 
+  pos.innerHTML = present_pos_tag(current_pos);
 
   var morphology = element.down('.morphology');
-  morphology.innerHTML = present_morphology_tags(current_morphtags); 
+  morphology.innerHTML = present_morphology(current_morphology);
 
   var lemma = element.down('.lemma');
-  lemma.innerHTML = current_lemma ? '(' + current_lemma + ')' : '&nbsp;';
+  lemma.innerHTML = present_lemma(current_lemma);
 
   // Finally, remove any non-good "quality" tags, as we should be good
   // by now.
@@ -177,6 +177,8 @@ document.observe('dom:loaded', function() {
   palette = new PaletteWidget('palette', 'guesses');
 
   $('morphtag-form').observe('submit', validate, false);
+
+  $$('div.item').each(function(el) { onUpdateTokenPresentation(el); });
 
   palette.deactivate();
 });

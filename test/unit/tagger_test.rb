@@ -12,74 +12,73 @@ class TaggerTest < ActiveSupport::TestCase
   fixtures :sentences
   fixtures :tokens
   fixtures :languages
+  fixtures :parts_of_speech
+  fixtures :inflections
+
+  def setup
+    @lat = Language.find_by_iso_code('lat')
+    @amen_fs = MorphFeatures.new("amen,I-,lat", "----------n")
+    @cum_c_fs = MorphFeatures.new("cum,C-,lat", "----------n")
+    @cum_r_fs = MorphFeatures.new("cum,R-,lat", "----------n")
+    @cum_dq_fs = MorphFeatures.new("cum,Dq,lat", "----------n")
+    @ne_c_fs = MorphFeatures.new("ne,C,lat", "----------n")
+    @ne_i_fs = MorphFeatures.new("ne,I,lat", "----------n")
+    @ne_df_fs = MorphFeatures.new("ne,Df,lat", "----------n")
+    @neo_df_fs = MorphFeatures.new("neo,Df,lat", "----------n")
+    @incomplete_d_fs = MorphFeatures.new(",D,lat", nil)
+  end
 
   def test_loading
-    tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
+    tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
   end
 
   def test_unambiguous
-    tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
-    assert_equal [:unambiguous, PROIEL::MorphLemmaTag.new("I-----------n:amen"), [PROIEL::MorphLemmaTag.new("I-----------n:amen"), 1.0]], tagger.tag_token(:lat, 'amen')
+    tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
+    assert_equal [:unambiguous, @amen_fs, [@amen_fs, 1.0]], tagger.tag_token(:lat, 'amen')
   end
 
   def test_instance_frequency
     # With this setup the G occurs more often than R in the data and
     # should be preferred
-    tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
-    assert_equal [:ambiguous, PROIEL::MorphLemmaTag.new("C-----------n:cum"),
-      [PROIEL::MorphLemmaTag.new("C-----------n:cum"), 1.0 + 0.75 * 0.5],
-      [PROIEL::MorphLemmaTag.new("R-----------n:cum"), 1.0 + 0.25 * 0.5],
-      [PROIEL::MorphLemmaTag.new("Dq----------n:cum"), 1.0 + 0.00 * 0.5]], tagger.tag_token(:lat, 'cum')
+    tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
+    assert_equal [:ambiguous, @cum_c_fs,
+      [@cum_c_fs, 1.0 + 0.75 * 0.5], [@cum_r_fs, 1.0 + 0.25 * 0.5], [@cum_dq_fs, 1.0 + 0.00 * 0.5]
+    ], tagger.tag_token(:lat, 'cum')
   end
 
   def test_source_tag_influence
-    tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
+    tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
 
     # Existing tag is complete
-    assert_equal [:ambiguous, PROIEL::MorphLemmaTag.new("R-----------n:cum"),
-      [PROIEL::MorphLemmaTag.new("R-----------n:cum"), (1.0 + 0.25 * 0.5) * 1.0],
-      [PROIEL::MorphLemmaTag.new("C-----------n:cum"), (1.0 + 0.75 * 0.5) * 0.5],
-      [PROIEL::MorphLemmaTag.new("Dq----------n:cum"), (1.0)              * 0.5],
-    ], tagger.tag_token(:lat, 'cum', PROIEL::MorphLemmaTag.new('R-----------n:cum'))
+    assert_equal [:ambiguous, @cum_r_fs,
+      [@cum_r_fs, (1.0 + 0.25 * 0.5) * 1.0], [@cum_c_fs, (1.0 + 0.75 * 0.5) * 0.5], [@cum_dq_fs, (1.0)              * 0.5],
+    ], tagger.tag_token(:lat, 'cum', @cum_r_fs)
 
-    assert_equal [:ambiguous, PROIEL::MorphLemmaTag.new("C-----------n:cum"),
-      [PROIEL::MorphLemmaTag.new("C-----------n:cum"), (1.0 + 0.75 * 0.5) * 1.0],
-      [PROIEL::MorphLemmaTag.new("R-----------n:cum"), (1.0 + 0.25 * 0.5) * 0.5],
-      [PROIEL::MorphLemmaTag.new("Dq----------n:cum"), (1.0)              * 0.5],
-    ], tagger.tag_token(:lat, 'cum', PROIEL::MorphLemmaTag.new('C-----------n:cum'))
+    assert_equal [:ambiguous, @cum_c_fs,
+      [@cum_c_fs, (1.0 + 0.75 * 0.5) * 1.0], [@cum_r_fs, (1.0 + 0.25 * 0.5) * 0.5], [@cum_dq_fs, (1.0)              * 0.5],
+    ], tagger.tag_token(:lat, 'cum', @cum_c_fs)
   end
 
   def test_existing_tag_influence_incomplete_tag
-    tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
+    tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
 
     # Existing tag is incomplete
-    assert_equal [:ambiguous, PROIEL::MorphLemmaTag.new("Df----------n:ne"),
-      [PROIEL::MorphLemmaTag.new("Df----------n:ne"), 1.0],
-      [PROIEL::MorphLemmaTag.new("I-----------n:ne"), 0.5],
-      [PROIEL::MorphLemmaTag.new("C-----------n:ne"), 0.5],
-    ], tagger.tag_token(:lat, 'ne', PROIEL::MorphLemmaTag.new('D'))
+    assert_equal [:ambiguous, @ne_df_fs,
+      [@ne_df_fs, 1.0], [@ne_i_fs, 0.5], [@ne_c_fs, 0.5],
+    ], tagger.tag_token(:lat, 'ne', @incomplete_d_fs)
   end
 
   def test_existing_tag_influence_complete_tag_but_contradictory_lemma
-    tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
+    tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
 
     # Existing tag is complete, but contradictory lemma
     assert_equal [:ambiguous, nil,
-      [PROIEL::MorphLemmaTag.new("Df----------n:ne"), 0.5],
-      [PROIEL::MorphLemmaTag.new("I-----------n:ne"), 0.5],
-      [PROIEL::MorphLemmaTag.new("C-----------n:ne"), 0.5],
-    ], tagger.tag_token(:lat, 'ne', PROIEL::MorphLemmaTag.new('Df----------n:neo'))
+      [@ne_i_fs, 0.5], [@ne_df_fs, 0.5], [@ne_c_fs, 0.5],
+    ], tagger.tag_token(:lat, 'ne', @neo_df_fs)
   end
 
   def test_failed_tagging
-    tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
+    tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
     assert_equal [:failed, nil], tagger.tag_token(:lat, 'fjotleik', :text)
-  end
-
-  def test_sfst_lookup
-#    tagger = PROIEL::Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
-#    assert_equal [:ambiguous, nil,
-#      [PROIEL::MorphLemmaTag.new("Nb-p---fg:ioka"), 0.2],
-#    ], tagger.tag_token(:cu, 'отецъ')
   end
 end

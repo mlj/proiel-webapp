@@ -36,7 +36,7 @@
   </div>
 
   <div id="words">
-    <% @sentence.morphtaggable_tokens.each do |t| %>
+    <% @sentence.tokens.morphology_annotatable.each do |t| %>
       <label for="word-<%= t.id %>">
         <input type="radio" name="token-palette" id="word-<%= t.id %>" value="<%= t.id %>"></input>
         <span><span class="form"><%= format_token_form(t) %></span><span class="token-number"><%= t.token_number %></span></span>

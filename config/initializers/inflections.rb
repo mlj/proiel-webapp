@@ -8,4 +8,5 @@
 
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular "lemma", "lemmata"
+  inflect.irregular "part_of_speech", "parts_of_speech"
 end

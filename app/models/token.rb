@@ -9,7 +9,7 @@ class Token < ActiveRecord::Base
   belongs_to :head, :class_name => 'Token'
   has_many :dependents, :class_name => 'Token', :foreign_key => 'head_id'
   belongs_to :relation
-
+  belongs_to :morphology
 
   has_many :slash_out_edges, :class_name => 'SlashEdge', :foreign_key => 'slasher_id', :dependent => :destroy
   has_many :slash_in_edges, :class_name => 'SlashEdge', :foreign_key => 'slashee_id', :dependent => :destroy
@@ -40,7 +40,7 @@ class Token < ActiveRecord::Base
     { :conditions => { :sentence_id => source.source_divisions.map(&:sentences).flatten.map(&:id) } }
   }
 
-  acts_as_audited :except => [ :source_morphtag, :source_lemma ]
+  acts_as_audited :except => [ :source_morphology, :source_lemma ]
 
   # General schema-defined validations
   validates_presence_of :sentence_id
@@ -51,16 +51,18 @@ class Token < ActiveRecord::Base
   # Constraint: t.sentence.reviewed_by => t.lemma_id
   validates_presence_of :lemma, :if => lambda { |t| t.is_morphtaggable? and t.sentence.reviewed_by }
 
-  # Constraint: t.lemma_id <=> t.morphtag
-  validates_presence_of :lemma, :if => lambda { |t| t.morphtag }
-  validates_presence_of :morphtag, :if => lambda { |t| t.lemma }
+  # Constraint: t.lemma_id <=> t.morphology
+  validates_presence_of :lemma, :if => lambda { |t| t.morphology }
+  validates_presence_of :morphology, :if => lambda { |t| t.lemma }
 
   # Constraint: t.head_id => t.relation
   validates_presence_of :relation, :if => lambda { |t| !t.head_id.nil? }
 
-  # If set, morphtag and source_morphtag must have the correct length.
-  validates_length_of :morphtag, :allow_nil => true, :is => PROIEL::MorphTag.fields.length
-  validates_length_of :source_morphtag, :allow_nil => true, :is => PROIEL::MorphTag.fields.length
+  # If set, source_morphology must have the correct length.
+  validates_length_of :source_morphology, :allow_nil => true, :is => MorphFeatures::MORPHOLOGY_LENGTH
+
+  # FIXME: validate morphology vs language?
+  #validates_inclusion_of :morphology, :in => MorphFeatures.morphology_tag_space(language.iso_code)
 
   # form and presentation_form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
@@ -104,53 +106,48 @@ class Token < ActiveRecord::Base
                               :order => "token_number ASC")
   end
 
-  def morph
-    PROIEL::MorphTag.new(morphtag)
+  # Returns the morphological features for the token or +nil+ if none
+  # are set.
+  def morph_features
+    # We can rely on the invariant !lemma.blank? <=>
+    # !morphology.blank?
+    if lemma
+      MorphFeatures.new(lemma, morphology)
+    else
+      nil
+    end
   end
 
-  # Returns the morph+lemma tag for the token or +nil+ if none
-  # is set.
-  def morph_lemma_tag
-    if self.morphtag
-      if lemma
-        PROIEL::MorphLemmaTag.new(PROIEL::MorphTag.new(morphtag),
-                                  lemma.lemma, lemma.variant)
-      else
-        PROIEL::MorphLemmaTag.new(morphtag)
+  # Sets the morphological features for the token. Executes a +save!+
+  # on the token object, which will result in validation of all token
+  # attributes. Will also create a new Lemma object if necessary.
+  # Returns the morphological features. It is guaranteed that no
+  # updating will take place if the morph-features are unchanged.
+  def morph_features=(f)
+    Token.transaction do
+      if self.morphology != f.morphology or f.lemma.new_record? or f.lemma != self.lemma
+        self.morphology = f.morphology
+        f.lemma.save! if f.lemma.new_record?
+        self.lemma = f.lemma
+        self.save!
       end
+    end
+
+    f
+  end
+
+  # Returns the source morphological features for the token or nil if
+  # none are set.
+  def source_morph_features
+    # Source morph-features may be incomplete, so if any of the
+    # relevant fields are set we should return an object. We will have
+    # to pass along the language, as the +source_lemma+ attribute is a
+    # serialized lemma specification without language code.
+    if source_lemma or source_morphology
+      MorphFeatures.new(source_lemma, source_morphology, token.language)
     else
       nil
     end
-  end
-
-  # Sets morphology and lemma based on a morph+lemma tag. Saves the
-  # token.
-  def set_morph_lemma_tag!(ml_tag)
-    returning language.lemmata.find_or_create_by_morph_and_lemma_tag(ml_tag) do |l|
-      self.morphtag = ml_tag.morphtag.to_s
-      self.lemma_id = l.id
-      self.save!
-    end
-  end
-
-  # Returns the source morph+lemma tag for the token or +nil+ if
-  # none is set.
-  def source_morph_lemma_tag
-    if self.source_morphtag
-      PROIEL::MorphLemmaTag.new(self.source_morphtag, self.source_lemma)
-    else
-      nil
-    end
-  end
-
-  # Returns true if the morphtag is valid.
-  def morphtag_is_valid?
-    PROIEL::MorphTag.new(morphtag).is_valid?(language.iso_code)
-  end
-
-  # Returns true if the source morphtag is valid.
-  def source_morphtag_is_valid?
-    PROIEL::MorphTag.new(source_morphtag).is_valid?(language.iso_code)
   end
 
   # Returns a citation-form reference for this token.
@@ -182,7 +179,7 @@ class Token < ActiveRecord::Base
   # account, be it already existing morph+lemma tags or previous instances
   # of the same token form.
   def invoke_tagger
-    language.guess_morphology(form, morph_lemma_tag || source_morph_lemma_tag)
+    language.guess_morphology(form, morph_features || source_morph_features)
   end
 
   # Merges the token with the token linearly subsequent to it. The succeeding
@@ -274,17 +271,17 @@ class Token < ActiveRecord::Base
     if @is_annotatable.nil?
       @is_annotatable = info_status == :no_info_status ||  # manually marked as annotatable
                      (info_status != :info_unannotatable && \
-                      (morphtag =~ /^(C|Pr)/) != 0 &&      # exclude conjunctions and relative pronouns right away
-                      (morphtag =~ /^(N|P)/  ||            # be a noun or a pronoun
+                      !morph_features.conjunction? && morph_features.pos_s != 'Pr' &&  # exclude conjunctions and relative
+                      (morph_features.noun? || morph_features.pronoun? ||            # be a noun or a pronoun
                        (relation && ['part', 'obl', 'sub', 'obj', 'narg', 'voc'].include?(relation.tag)) ||  # or have a nominal relation
-                       dependents.any? { |dep| dep.morph[:major] == :S }   #or have an article dependent
+                       dependents.any? { |dep| dep.morph_features.article? }   #or have an article dependent
                        ))
     end
     @is_annotatable
   end
 
   def is_verb?
-    @is_verb = morph[:major].to_s.starts_with?('V') if @is_verb.nil?
+    @is_verb = morph_features.verb? if @is_verb.nil?
     @is_verb
   end
 
@@ -353,14 +350,19 @@ class Token < ActiveRecord::Base
   private
 
   def validate_sort
-    # morphtag and morphtag source may only be set
-    # if token is morphtaggable
+    # morphology, source_morphology, lemma and source_lemma may only
+    # be set if token is morphtaggable
     unless is_morphtaggable?
-      errors.add(:morphtag, "not allowed on non-morphtaggable token") unless morphtag.nil?
+      errors.add(:morphology, "not allowed on non-morphtaggable token") unless morphology.nil?
+      errors.add(:source_morphology, "not allowed on non-morphtaggable token") unless morphology.nil?
+      errors.add(:lemma, "not allowed on non-morphtaggable token") unless lemma.nil?
+      errors.add(:source_lemma, "not allowed on non-morphtaggable token") unless source_lemma.nil?
     end
 
-    # if morphtag is set, is it valid?
-    errors.add_to_base("Morphological annotation #{morphtag.inspect} is invalid") if morphtag and !PROIEL::MorphTag.new(morphtag).is_valid?(self.language.iso_code)
+    # if morph-features are set, are they valid?
+    if m = morph_features
+      errors.add_to_base("morph-features #{m.to_s} are invalid") unless m.valid?
+    end
 
     # sort :empty_dependency_token <=> form.nil?
     if sort == :empty_dependency_token or sort == :lacuna_start or sort == :lacuna_end or form.nil?
@@ -379,8 +381,10 @@ class Token < ActiveRecord::Base
 
   def before_validation_cleanup
     self.presentation_form = nil if presentation_form.blank?
-    self.morphtag = nil if morphtag.blank?
+    self.morphology = nil if morphology.blank?
     self.lemma_id = nil if lemma_id.blank?
+    self.source_morphology = nil if source_morphology.blank?
+    self.source_lemma = nil if source_lemma.blank?
     self.foreign_ids = nil if foreign_ids.blank?
     self.empty_token_sort = nil if empty_token_sort.blank?
   end

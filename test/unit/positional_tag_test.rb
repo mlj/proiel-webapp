@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class MyPositionalTag < Logos::PositionalTag
+class MyPositionalTag < PositionalTag
   def fields
     [:a, :b, :c, :d]
   end
@@ -51,7 +51,7 @@ class PositionalTagTestCase < ActiveSupport::TestCase
     x = MyPositionalTag.new('D---')
     y = MyPositionalTag.new('-f-p')
     z = MyPositionalTag.new('---p')
-    assert_equal 'Df-p', Logos::PositionalTag::union(MyPositionalTag, x, y, z).to_s
+    assert_equal 'Df-p', PositionalTag::union(MyPositionalTag, x, y, z).to_s
   end
 
   def test_union
@@ -73,7 +73,7 @@ class PositionalTagTestCase < ActiveSupport::TestCase
     x = MyPositionalTag.new('D--p')
     y = MyPositionalTag.new('-f-p')
     z = MyPositionalTag.new('---p')
-    assert_equal '---p', Logos::PositionalTag::intersection(MyPositionalTag, x, y, z).to_s
+    assert_equal '---p', PositionalTag::intersection(MyPositionalTag, x, y, z).to_s
   end
 
   def test_intersection

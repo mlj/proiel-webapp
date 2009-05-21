@@ -20,10 +20,13 @@ class DependenciesController < ApplicationController
     @sentence = Sentence.find(params[:annotation_id])
 
     @tokens = Hash[*@sentence.dependency_tokens.collect do |token|
+      mh = token.morph_features.morphology_to_hash
+
       [token.id, { 
-        :morphtag => Hash[token.morph].merge({
-          :language => @sentence.source_division.source.language,
-          :finite => [:i, :s, :m, :o].include?(token.morph[:mood]),
+        # FIXME: refactor
+        :morph_features => mh.merge({
+          :language => @sentence.language.iso_code,
+          :finite => ['i', 's', 'm', 'o'].include?(mh[:mood]),
           :form => token.form,
           :lemma => token.lemma ? token.lemma.lemma : nil,
         }),

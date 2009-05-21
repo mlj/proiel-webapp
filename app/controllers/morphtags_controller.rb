@@ -37,41 +37,27 @@ class MorphtagsController < ApplicationController
     @sentence = Sentence.find(params[:annotation_id])
     @language_code = @sentence.language.iso_code
 
-    @tags = @sentence.morphtaggable_tokens.inject({}) do |tags, token|
-      tags[token.id] = {}
+    @token_data = @sentence.tokens.morphology_annotatable.map do |token|
+      result, pick, *suggestions = token.invoke_tagger
 
-      result, tags[token.id][:pick], *tags[token.id][:suggestions] = token.invoke_tagger
-
-      # Figure out which morph+lemma-tag to use as the displayed value. Anything
-      # already set in the editor or, if nothing there, in the morphtag field
-      # trumphs whatever the tagger may decide to spew out. To have the state set
-      # correctly, we pretend we don't have any data from the editor first, and
-      # then check to see if any values given are different from what we determined
-      # to be our choice. If it is different, then set to "annotated".
-      if token.morphtag and token.lemma_id
-        tags[token.id][:set] = token.morph_lemma_tag
-        tags[token.id][:state] = :mannotated
-      elsif tags[token.id][:pick]
-        tags[token.id][:set] = tags[token.id][:pick]
-        tags[token.id][:state] = :mguessed
+      # Figure out which morph-features to use as the displayed value.
+      # Anything already set in the editor or, alternatively, in the
+      # morph-features trumphs whatever the tagger spews out.
+      if x = params["morph-features-#{token.id}".to_sym]
+        set = MorphFeatures.new(x)
+        state = :mannotated
+      elsif token.morph_features
+        set = token.morph_features
+        state = :mannotated
+      elsif pick
+        set = pick
+        state = :mguessed
       else
-        if token.morphtag and not token.lemma_id
-          tags[token.id][:set] = token.morph_lemma_tag 
-        else
-          tags[token.id][:set] = nil
-        end
-        tags[token.id][:state] = :munannotated
+        set = nil
+        state = :munannotated
       end
 
-      if x = params["morphtag-#{token.id}".to_sym] and y = params["lemma-#{token.id}".to_sym]
-        xy = PROIEL::MorphLemmaTag.new("#{x}:#{y}")
-        if tags[token.id][:set] != xy
-          tags[token.id][:set] = xy
-          tags[token.id][:state] = :mannotated
-        end
-      end
-
-      tags
+      [token, set, suggestions, state]
     end
 
     respond_to do |format|
@@ -90,17 +76,11 @@ class MorphtagsController < ApplicationController
     end
 
     Token.transaction do
-      # Cycle the parameters and check whether this one originated with us 
-      # or with them...
-      params.keys.reject { |key| !(key =~ /^morphtag-/) }.each do |key|
-        token_id = key.sub(/^morphtag-/, '')
-        new_morphtag = PROIEL::MorphTag.new(ActiveSupport::JSON.decode(params[key]))
-        new_lemma = params['lemma-' + token_id]
-
-        ml = PROIEL::MorphLemmaTag.new("#{new_morphtag.to_s}:#{new_lemma}")
-
+      params.keys.select { |key| key[/^morph-features-/] }.each do |key|
+        token_id = key.sub(/^morph-features-/, '')
         token = Token.find(token_id)
-        token.set_morph_lemma_tag!(ml) if token.morph_lemma_tag != ml
+        x, y, z, w = ActiveSupport::JSON.decode(params[key]).split(/,\s*/) #FIXME
+        token.morph_features = MorphFeatures.new([x,y,z].join(','), w)
       end
     end
 

@@ -59,10 +59,6 @@ class Sentence < ActiveRecord::Base
   has_many :dependency_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
     :conditions => { "sort" => PROIEL::DEPENDENCY_TOKEN_SORTS }, :order => 'token_number'
 
-  # Tokens that can be tagged with morphology and lemma.
-  has_many :morphtaggable_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
-    :conditions => { "sort" => PROIEL::MORPHTAGGABLE_TOKEN_SORTS }, :order => 'token_number'
-
   # Tokens that are non-empty.
   has_many :nonempty_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
     :conditions => { "sort" => PROIEL::NON_EMPTY_TOKEN_SORTS }, :order => 'token_number'
@@ -378,7 +374,7 @@ class Sentence < ActiveRecord::Base
                                                Hash[*t.slash_out_edges.map { |se| [se.slashee.id, se.relation.tag] }.flatten],
                                                { :empty => t.empty_token_sort || false,
                                                  :token_number => t.token_number,
-                                                 :morphtag => PROIEL::MorphTag.new(t.morphtag),
+                                                 :morph_features => t.morph_features,
                                                  :form => t.form }) }
     end
   end
@@ -389,11 +385,11 @@ class Sentence < ActiveRecord::Base
   end
 
   # Returns +true+ if sentence has morphological annotation (i.e.
-  # morphtag + lemma).
+  # morphology + lemma).
   def has_morphological_annotation?
     # Assumed invariant: morphologically annotated sentence <=> all
-    # morphology tokens have non-nil morphtag and lemma_id attributes.
-    @has_morphological_annotation ||= morphtaggable_tokens.first && !morphtaggable_tokens.first.morphtag.nil?
+    # morphology tokens have non-nil morphology and lemma_id attributes.
+    @has_morphological_annotation ||= tokens.morphology_annotatable.first && !tokens.morphology_annotatable.first.morphology.nil?
   end
 
   # Returns the root token in the dependency graph or +nil+ if none

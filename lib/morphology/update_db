@@ -19,10 +19,8 @@ db.transaction do
     f.each_line do |l|
       language, lemma, variant, form, *morphtags = l.chomp.split(',')
 
-      raise "Word list database update aborted: invalid morphtag #{morphtags} for form #{form} in rule file #{csv_file_name}" unless morphtags.all? { |m| PROIEL::MorphTag.new(m).is_valid?(language.to_sym) }
-
       base_form = variant.blank? ? lemma : "#{lemma}##{variant}"
-      morphtags.collect! { |m| [PROIEL::MorphTag.new(m).to_s, base_form].join(':') }
+      morphtags.collect! { |m| [m, base_form].join(':') }
 
       morphtags += db.fetch(form, [])
       db[form] = morphtags

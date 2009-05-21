@@ -7,8 +7,7 @@
 require 'proiel/tagger/analysis_method'
 require 'sfst'
 
-module PROIEL
-  module Tagger
+module Tagger
     class FSTMethod < TaggerAnalysisMethod
       def initialize(language, analysis, normalisation = nil, orthography = nil)
         super(language)
@@ -31,7 +30,7 @@ module PROIEL
           end
         end
 
-        candidates = @analysis.analyze(form).collect { |t| features2mltag(t) }.flatten
+        candidates = @analysis.analyze(form).collect { |t| features2morph_features(t) }.flatten
 
         if @orthography
           candidates.each do |c|
@@ -96,12 +95,11 @@ module PROIEL
         'ACTIVE' => '------a',
       }.freeze
 
-      def features2mltag(t)
+      def features2morph_features(t)
         pieces = t.split('>')
         lemma, *features = pieces.reverse
         features.collect! { |f| f.sub('<', '') }
-        morphtags = compose_features(features)
-        morphtags.collect { |morphtag| PROIEL::MorphLemmaTag.new("#{morphtag}:#{lemma}") }
+        compose_features(features)
       end
 
       def compose_features(features, collected = nil)
@@ -112,15 +110,17 @@ module PROIEL
 
         alternatives.split('/').collect do |f|
           raise "Unable to translate feature #{f} to positional tag" unless PROIEL_FEATURE_MAP.has_key?(f)
+          mapped = PROIEL_FEATURE_MAP[f]
+          mf = MorphFeatures.new(",#{mapped[0, 2]},#{language}", mapped[2, 11])
+
           if collected
-            morphtags << compose_features(rest, PROIEL::MorphTag.union(PROIEL::MorphTag, collected, PROIEL::MorphTag.pad_s(PROIEL_FEATURE_MAP[f])))
+            morphtags << compose_features(rest, collected.union(mf))
           else
-            morphtags << compose_features(rest, PROIEL::MorphTag.pad_s(PROIEL_FEATURE_MAP[f]))
+            morphtags << compose_features(rest, mf)
           end
         end
 
         morphtags
       end
     end
-  end
 end

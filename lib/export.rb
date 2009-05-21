@@ -109,14 +109,15 @@ class PROIELXMLExport < SourceExport
     end
   end
 
-  VERBATIM_TOKEN_ATTRIBUTES = %w(morphtag presentation_form form presentation_span nospacing contraction
+  VERBATIM_TOKEN_ATTRIBUTES = %w(presentation_form form presentation_span nospacing contraction
     emendation abbreviation capitalisation verse empty_token_sort foreign_ids)
 
   def write_sentence(builder, sentence)
     sentence.tokens.each do |token|
       attributes = { :id => token.id }
       attributes[:head] = token.head_id if token.head
-      attributes[:lemma] = token.morph_lemma_tag.lemma if token.morph_lemma_tag
+      attributes[:lemma] = token.morph_features.lemma_s if token.morph_features
+      attributes[:morphology] = token.morph_features.morphology_s if token.morph_features
       attributes[:sort] = token.sort.to_s.gsub('_', '-')
       attributes[:relation] = token.relation.tag if token.relation
 
@@ -166,7 +167,7 @@ class TigerXMLExport < SourceExport
   def write_head(builder)
     builder.annotation do
       builder.feature(:name => 'form', :domain => 'FREC')
-      builder.feature(:name => 'morphtag', :domain => 'FREC')
+      builder.feature(:name => 'morphology', :domain => 'FREC')
       builder.feature(:name => 'lemma', :domain => 'FREC')
       builder.edgelabel do
         builder.value(:name => '--')
@@ -188,11 +189,9 @@ class TigerXMLExport < SourceExport
     attrs = { :form => t.form || '' }
 
     if s.has_morphological_annotation? and t.is_morphtaggable?
-      attrs.merge!({ :morphtag => t.morph_lemma_tag.morphtag.to_s, 
-                     :lemma => t.morph_lemma_tag.lemma.to_s })
+      attrs.merge!({ :morphology => t.morph_features.morphology_s, :lemma => t.morph_features.lemma_s })
     else
-      attrs.merge!({ :morphtag => '',
-                     :lemma => '' })
+      attrs.merge!({ :morphology => '', :lemma => '' })
     end
     attrs
   end
@@ -204,7 +203,7 @@ class TigerXMLExport < SourceExport
 
         builder.graph(:root => root_node_id) do
           builder.terminals do
-            s.morphtaggable_tokens.each do |t|
+            s.tokens.morphology_annotatable.each do |t|
               builder.t(token_attrs(s, t).merge({ :id => "w#{t.id}"}))
             end
           end
@@ -212,7 +211,7 @@ class TigerXMLExport < SourceExport
           if s.has_dependency_annotation?
             builder.nonterminals do
               # Emit the empty root node
-              builder.nt(:id => root_node_id, :form => '', :morphtag => '', :lemma => '') do
+              builder.nt(:id => root_node_id, :form => '', :morphology => '', :lemma => '') do
                 s.dependency_tokens.reject(&:head).each do |t|
                   builder.edge(:idref => "p#{t.id}", :label => t.relation.tag)
                 end
@@ -263,7 +262,7 @@ class MaltXMLExport < SourceExport
             end
           end
           builder.attribute(:name => "form")
-          builder.attribute(:name => "morphtag")
+          builder.attribute(:name => "morphology")
           builder.attribute(:name => "lemma")
         end
       end
@@ -296,8 +295,8 @@ class MaltXMLExport < SourceExport
               end
 
               if s.has_morphological_annotation? and t.is_morphtaggable?
-                attrs.merge!({ :morphtag => t.morph_lemma_tag.morphtag.to_s, 
-                               :lemma => t.morph_lemma_tag.lemma.to_s })
+                attrs.merge!({ :morphology => t.morph_features.morphology_s,
+                               :lemma => t.morph_features.lemma_s })
               end
 
               builder.word(attrs)

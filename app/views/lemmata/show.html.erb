@@ -1,27 +1,28 @@
 <% roundedbox do -%>
   <dt>Lemma:</dt><dd><span class="lemma" lang="<%= @lemma.language.iso_code %>"><%= @lemma.export_form %></span></dd>
   <dt>Language:</dt><dd class="language"><%= link_to_language @lemma.language %></dd>
-  <% if @lemma.pos %>
-    <dt>Part of speech:</dt><dd><%= PROIEL::MorphTag.new(@lemma.pos).descriptions([:major, :minor], true).join(", ").capitalize %></dd>
-  <% end %>
+  <dt>Part of speech:</dt><dd><%= @lemma.pos_summary.capitalize %></dd>
   <dt>Frequency:</dt><dd><%= pluralize(@lemma.tokens.count, 'token') %></dd>
   <% if @lemma.short_gloss %>
     <dt>Translation:</dt><dd><q><%= @lemma.short_gloss %></q></dd>
   <% end %>
-  <% if @lemma.foreign_ids %>
-    <dt>Foreign IDs:</dt><dd class="tag"><%= @lemma.foreign_ids %></dd>
-  <% end %>
   <%= link_to_resources @lemma, :index, :edit %>
+<% end %>
+
+<% layer_if is_reviewer?, "low_level_data" do -%>
+  <%= low_level_data_table(@lemma, :id, :language, :morph_features, :short_gloss, :full_gloss, :sort_key,
+                           :foreign_ids, :fixed, :conjecture, :unclear, :reconstructed, :nonexistant,
+                           :inflected, :created_at, :updated_at) %>
+<% end %>
+
+<% layer_if (is_reviewer? and !@lemma.audits.empty?), "revisions" do -%>
+  <%= audits_summary @lemma.audits %>
 <% end %>
 
 <% layer_unless @lemma.notes.empty?, "notes" do -%>
   <%= notes_summary(@lemma.notes) %>
 <% end %>
  
-<% layer_unless @lemma.audits.empty?, "revisions" do -%>
-  <%= audits_summary @lemma.audits %>
-<% end %>
-
 <% layer_unless @semantic_tags.empty?, 'semantic_tags' do -%>
   <%= semantic_tags_summary(@semantic_tags) %>
 <% end %>

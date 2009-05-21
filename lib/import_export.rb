@@ -83,28 +83,25 @@ end
 # Importer for inflections
 class InflectionsImportExport < CSVImportExport
   def initialize
-    super :language_code, :lemma, :variant, :form, :morphtag
+    super :language_code, :lemma, :variant, :pos, :form, :morphologies
   end
 
   protected
 
-  def read_fields(language_code, lemma, variant, form, *morphtags)
+  def read_fields(language_code, lemma, pos, form, *morphologies)
     @language = Language.find_by_iso_code(language_code) if @language_code != language_code
 
-    morphtags = morphtags.map { |morphtag| PROIEL::MorphTag.new(morphtag) }
-    raise "invalid morphtag for form #{form}" unless morphtags.all? { |m| m.is_valid?(language_code) }
-
-    morphtags.map(&:to_s).each do |morphtag|
-      @language.inflections.create!(:morphtag => morphtag,
+    morphologies.each do |morphology|
+      @language.inflections.create!(:morphology => morphology,
                                     :form => form,
-                                    :lemma => variant.blank? ? lemma : "#{lemma}##{variant}")
+                                    :lemma => [lemma, pos].join(','))
     end
   end
 
   def write_fields
     Inflection.find_each do |inflection|
-      lemma, variant = inflection.lemma.split(/#/)
-      yield inflection.language.iso_code, lemma, variant, inflection.form, inflection.morphtag
+      lemma, pos = inflection.lemma.split(/,/)
+      yield inflection.language.iso_code, lemma, pos, inflection.form, inflection.morphology
     end
   end
 end

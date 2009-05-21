@@ -7,7 +7,6 @@
 require 'extensions'
 require 'enumerator'
 require 'open3'
-require 'proiel/morphtag'
 
 module Lingua
   class DependencyGraphNode
@@ -283,7 +282,7 @@ module PROIEL
     end
 
     def pos
-      @data[:morphtag] ? @data[:morphtag].pos_to_s : nil
+      @data[:morph_features] ? @data[:morph_features].pos_s : nil
     end
 
     # Returns +true+ if this node is a coordination node or
@@ -593,6 +592,14 @@ module PROIEL
       @root.relinearise
     end
 
+    HEAD_DEPENDENT_CONSTRAINTS = {
+      # FIXME: ATR should be excluded from anything but participles
+      'V-' => [:adv, :ag, :apos, :arg, :aux, :comp, :nonsub, :obj, :obl, :per, :piv, :sub, :xadv, :xobj, :atr],
+      'N-' => [:adnom, :apos, :atr, :aux, :comp, :narg, :part, :rel],
+      'A-' => [:adv, :apos, :atr, :aux, :comp, :obl, :part],
+      'P-' => [:apos, :atr, :aux, :part, :rel],
+    }
+
     def valid?(msg_handler = lambda { |token_ids, msg| })
       #FIXME
       @valid = true
@@ -645,21 +652,15 @@ module PROIEL
       end
 
       test_token("An infinitive may not be the dependent in an ADV relation",
-                 lambda { |t| t.data[:morphtag][:mood] == :n }) do |t|
+                 lambda { |t| t.data[:morph_features].morphology_to_hash[:mood] == 'n' }) do |t|
         t.relation != :adv
       end
 
-      # Morphology based head-dependent constraints
-
       #FIXME: special handling of non-part. vs. part.
       #FIXME: empty nodes can be verbs, but have to be excluded for now
-      test_head_dependent('V----p', :adv, :ag, :apos, :arg, :aux, :comp, :nonsub, :obj, :obl,
-                          :per, :piv, :sub, :xadv, :xobj, :atr) # participles
-      test_head_dependent('V', :adv, :ag, :apos, :arg, :aux, :comp, :nonsub, :obj, :obl,
-                          :per, :piv, :sub, :xadv, :xobj, :atr) # other verbs FIXME: no ATR
-      test_head_dependent('N', :adnom, :apos, :atr, :aux, :comp, :narg, :part, :rel)
-      test_head_dependent('A', :adv, :apos, :atr, :aux, :comp, :obl, :part)
-      test_head_dependent('P', :apos, :atr, :aux, :part, :rel)
+      HEAD_DEPENDENT_CONSTRAINTS.each_pair do |pos, relations|
+        test_head_dependent(pos, *relations)
+      end
 
       #FIXME
       @valid
@@ -669,9 +670,10 @@ module PROIEL
 
     # Verifies that all tokens that match the morphtag mask only have dependents related
     # to it by one of the given relations.
-    def test_head_dependent(morphtag_mask, *dependent_relations)
+    def test_head_dependent(pos_mask, *dependent_relations)
+      # FIXME: language code in contradicts clause is a bad hack
       test_token("may only be the head in a #{dependent_relations.to_sentence(:words_connector => ', ', :two_words_connector => ' or ', :last_word_connector => ', or ')} relation",
-                 lambda { |t| !t.is_empty? and !t.data[:morphtag].contradicts?(MorphTag.new(morphtag_mask)) }) do |t|
+                 lambda { |t| !t.is_empty? and !t.data[:morph_features].contradict?(MorphFeatures.new(",#{pos_mask},lat", nil)) }) do |t|
         t.dependents.all? { |t| dependent_relations.include?(t.relation) }
       end
     end

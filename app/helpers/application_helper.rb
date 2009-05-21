@@ -13,12 +13,6 @@ module ApplicationHelper
     content_tag(:div, content_tag(:b, header) + body, :id => level)
   end
 
-  # Returns the contents of +value+ unless +value+ is +nil+, in which case it
-  # returns the HTML entity for non-breakable space.
-  def make_nonblank(value)
-    value.nil? || value == '' ? '&nbsp;' : value
-  end
-
   def _select_tag(name, value, option_tags, options = {}) #:nodoc:
     if options[:include_blank]
       options.delete(:include_blank)
@@ -91,16 +85,6 @@ module ApplicationHelper
   # Generates a human readable representation of a token sort.
   def readable_token_sort(sort)
     sort.to_s.humanize
-  end
-
-  # Generates human readable POS information for a morphtag.
-  def readable_pos(morphtag)
-    make_nonblank(morphtag ? morphtag.descriptions([:major, :minor]).join(', ').capitalize : nil)
-  end
-
-  # Generates human readable morphology information for a morphtag. 
-  def readable_morphology(morphtag)
-    make_nonblank(morphtag ? morphtag.descriptions([:major, :minor], false).join(', ').capitalize : nil)
   end
 
   # Generates a human readable representation of a completion rate for a sentence.

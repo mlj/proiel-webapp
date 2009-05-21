@@ -9,6 +9,12 @@ class Language < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
+  # Returns the language code as a string. Equivalent to
+  # +language.iso_code+.
+  def to_s
+    iso_code
+  end
+
   # Returns inferred morphology for a word form in the language.
   #
   # ==== Options

@@ -37,24 +37,22 @@ class MassTokenAssignment < MassAssignment
     super(Token)
   end
 
-  # Changes the value of one morphological field from one value to another for all tokens.
-  # The operation is transactional. The operation can be applied to any morphological
-  # attribute in the Token model by overriding the +attribute+ argument. If +old_value+
-  # is nil, all values will be reassigned.
-  def reassign_morphology!(field, old_value, new_value, attribute = "morphtag", lemma_id = nil)
-    raise ArgumentError, "attribute must be one of 'morphtag' or 'source_morphtag'" unless attribute == 'morphtag' or attribute == 'source_morphtag'
-
+  # Changes the value of the +source_morphology+ attribute from one
+  # value to another for all tokens.  If +old_value+ is nil, all
+  # values will be reassigned.
+  def reassign_source_morphology!(field, old_value, new_value)
     Token.transaction do
-      pattern = PROIEL::MorphTag.new({ field => old_value }).to_sql_pattern
+      pattern = MorphFeatures.new(",,lat", nil)
+      pattern.send("#{field}=", old_value)
+      pattern = pattern.morphology_as_sql_pattern
       param = "#{attribute} LIKE '#{pattern}'"
-      param += " AND lemma_id = #{lemma_id}" if lemma_id
       chunked_each(:conditions => param) do |t|
-        m = PROIEL::MorphTag.new(t.send(attribute))
+        m = t.source_morph_features
         n = m.dup
-        n[field] = new_value
-        unless m.to_s == n.to_s
-          puts "Reassigning #{field} of attribute #{attribute} for token #{t.id}: #{m} → #{n}"
-          t.send("#{attribute}=", n.to_s)
+        n.send("#{field}=", new_value)
+        unless m == n
+          puts "Reassigning #{field} for token #{t.id}: #{m} → #{n}"
+          t.source_morph_features = n
           begin
             t.save!
           rescue Exception => e

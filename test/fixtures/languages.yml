@@ -6,3 +6,7 @@ greek:
   id: 2
   iso_code: grc
   name: Greek
+ocs:
+  id: 3
+  iso_code: chu
+  name: Church Slavonic
