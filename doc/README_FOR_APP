@@ -30,6 +30,18 @@ Before starting the application for the first time, you must run
     make -C lib
 to build the support files.
 
+== Setting up the database
+
+To inititialize a new database, you should create a new database and
+load the schema as usual.
+
+    $ rake db:create:all
+    $ rake db:schema:load
+
+In addition, you will need to seed the database
+
+    $ rake db:seed
+
 == License
 
 The PROIEL web application is licensed under the terms

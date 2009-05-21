@@ -1,0 +1,21 @@
+--- 
+languages_001: 
+  name: Latin
+  id: "1"
+  iso_code: lat
+languages_002: 
+  name: Old Church Slavonic
+  id: "2"
+  iso_code: chu
+languages_003: 
+  name: Classical Armenian
+  id: "3"
+  iso_code: xcl
+languages_004: 
+  name: Ancient Greek (to 1453)
+  id: "4"
+  iso_code: grc
+languages_005: 
+  name: Gothic
+  id: "5"
+  iso_code: got

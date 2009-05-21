@@ -1,0 +1,31 @@
+--- 
+relation_equivalences_004: 
+  superrelation_id: "14"
+  subrelation_id: "12"
+relation_equivalences_005: 
+  superrelation_id: "19"
+  subrelation_id: "18"
+relation_equivalences_006: 
+  superrelation_id: "19"
+  subrelation_id: "24"
+relation_equivalences_007: 
+  superrelation_id: "21"
+  subrelation_id: "20"
+relation_equivalences_008: 
+  superrelation_id: "21"
+  subrelation_id: "16"
+relation_equivalences_010: 
+  superrelation_id: "14"
+  subrelation_id: "19"
+relation_equivalences_009: 
+  superrelation_id: "12"
+  subrelation_id: "17"
+relation_equivalences_001: 
+  superrelation_id: "21"
+  subrelation_id: "8"
+relation_equivalences_002: 
+  superrelation_id: "21"
+  subrelation_id: "6"
+relation_equivalences_003: 
+  superrelation_id: "21"
+  subrelation_id: "9"
