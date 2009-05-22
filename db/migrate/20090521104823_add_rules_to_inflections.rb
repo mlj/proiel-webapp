@@ -15,10 +15,11 @@ class AddRulesToInflections < ActiveRecord::Migration
           if o = language.inflections.find_by_form_and_morphtag_and_lemma(form, morphtag, lemma)
             STDERR.puts "Upgrading an existing inflection to a manual rule" unless o.manual_rule
             o.manual_rule = true
-            o.save!
+            o.save_without_validation!
           else
-            language.inflections.create! :form => form, :morphtag => morphtag, :lemma => lemma,
+            i = language.inflections.new :form => form, :morphtag => morphtag, :lemma => lemma,
               :manual_rule => true
+            i.save_without_validation!
           end
         end
       end
