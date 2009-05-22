@@ -83,7 +83,7 @@ class Sentence < ActiveRecord::Base
         # Then we take in any following punctuation unless we are in the last sentence
         if i < (roots.size - 1)
           tokens.select { |t| t.token_number > pred.max_token_number and t.token_number < roots[i+1].min_token_number }.each do |tt|
-            if tt.sort == :punctuation
+            if [:punctuation, :lacuna_start, :lacuna_end].include?(tt.sort)
               tt.sentence_id = new_s.id
               tt.save_without_validation!
             else
