@@ -27,7 +27,7 @@ function decodeMorphFeaturesMorphology(f) {
   var tags = new Hash();
 
   <% MorphFeatures::MORPHOLOGY_POSITIONAL_TAG_SEQUENCE.each_with_index do |field, i| -%>
-    if (morphology[<%= i %>] != '-')
+    if (morphology && morphology[<%= i %>] != '-')
       tags['<%= field %>'] = morphology[<%= i %>];
     else
       tags['<%= field %>'] = null;
@@ -76,9 +76,11 @@ function extractLegalFieldValues(pos, pattern, field) {
   var fields = new Array;
   var space = morphology_values[pos];
 
-  for (var i = 0; i < space.length; i++) {
-    if (space[i].match(r))
-      fields.push(space[i][position]);
+  if (space) {
+    for (var i = 0; i < space.length; i++) {
+      if (space[i].match(r))
+        fields.push(space[i][position]);
+    }
   }
 
   return fields.uniq();
