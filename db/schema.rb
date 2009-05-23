@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090521104826) do
+ActiveRecord::Schema.define(:version => 20090523133728) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -91,7 +91,7 @@ ActiveRecord::Schema.define(:version => 20090521104826) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "manual_rule",                 :default => false, :null => false
-    t.integer  "morphology_id",                                  :null => false
+    t.integer  "morphology_id",               :default => 0,     :null => false
   end
 
   add_index "inflections", ["language_id", "form", "morphology_id", "lemma"], :name => "index_inflections_on_language_and_form_and_morphology_and_lemma", :unique => true
@@ -121,7 +121,7 @@ ActiveRecord::Schema.define(:version => 20090521104826) do
     t.boolean  "nonexistant"
     t.boolean  "inflected"
     t.integer  "language_id",                     :default => 0,     :null => false
-    t.integer  "part_of_speech_id",                                  :null => false
+    t.integer  "part_of_speech_id",               :default => 0,     :null => false
   end
 
   add_index "lemmata", ["language_id"], :name => "index_lemmata_on_language_id"
@@ -130,9 +130,9 @@ ActiveRecord::Schema.define(:version => 20090521104826) do
   add_index "lemmata", ["variant"], :name => "index_lemmata_on_variant"
 
   create_table "morphologies", :force => true do |t|
-    t.string "tag",                 :limit => 11,  :null => false
-    t.string "summary",             :limit => 128, :null => false
-    t.string "abbreviated_summary", :limit => 64,  :null => false
+    t.string "tag",                 :limit => 11,  :default => "", :null => false
+    t.string "summary",             :limit => 128, :default => "", :null => false
+    t.string "abbreviated_summary", :limit => 64,  :default => "", :null => false
   end
 
   add_index "morphologies", ["tag"], :name => "index_morphologies_on_tag", :unique => true
@@ -147,10 +147,12 @@ ActiveRecord::Schema.define(:version => 20090521104826) do
     t.datetime "updated_at"
   end
 
+  add_index "notes", ["notable_id", "notable_type"], :name => "index_notes_on_notable_id_and_notable_type"
+
   create_table "parts_of_speech", :force => true do |t|
-    t.string "tag",                 :limit => 2,   :null => false
-    t.string "summary",             :limit => 64,  :null => false
-    t.string "abbreviated_summary", :limit => 128, :null => false
+    t.string "tag",                 :limit => 2,   :default => "", :null => false
+    t.string "summary",             :limit => 64,  :default => "", :null => false
+    t.string "abbreviated_summary", :limit => 128, :default => "", :null => false
   end
 
   add_index "parts_of_speech", ["tag"], :name => "index_parts_of_speech_on_tag", :unique => true
@@ -274,8 +276,10 @@ ActiveRecord::Schema.define(:version => 20090521104826) do
     t.integer  "morphology_id"
   end
 
+  add_index "tokens", ["antecedent_id"], :name => "index_tokens_on_antecedent_id"
   add_index "tokens", ["contrast_group"], :name => "index_tokens_on_contrast_group"
   add_index "tokens", ["dependency_alignment_id"], :name => "index_tokens_on_dependency_alignment_id"
+  add_index "tokens", ["form"], :name => "index_tokens_on_form"
   add_index "tokens", ["head_id"], :name => "index_tokens_on_head_id"
   add_index "tokens", ["lemma_id"], :name => "index_tokens_on_lemma_id"
   add_index "tokens", ["morphology_id"], :name => "index_tokens_on_morphology_id"
