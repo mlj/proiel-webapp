@@ -38,7 +38,7 @@ class MorphtagsController < ApplicationController
     @language_code = @sentence.language.iso_code
 
     @token_data = @sentence.tokens.morphology_annotatable.map do |token|
-      result, pick, *suggestions = token.invoke_tagger
+      pick, *suggestions = token.inferred_morph_features
 
       # Figure out which morph-features to use as the displayed value.
       # Anything already set in the editor or, alternatively, in the

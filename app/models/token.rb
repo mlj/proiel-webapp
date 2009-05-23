@@ -150,6 +150,13 @@ class Token < ActiveRecord::Base
     end
   end
 
+  # Infers morph-features by invoking the morphological tagger. If morph-features
+  # are already present these take precedence.
+  def inferred_morph_features
+    result, pick, *suggestions = language.guess_morphology(form, morph_features || source_morph_features)
+    [pick, *suggestions]
+  end
+
   # Returns a citation-form reference for this token.
   #
   # ==== Options
@@ -173,13 +180,6 @@ class Token < ActiveRecord::Base
   # Returns true if this is a token that takes part in morphology tagging.
   def is_morphtaggable?
     PROIEL::MORPHTAGGABLE_TOKEN_SORTS.include?(sort)
-  end
-
-  # Invokes the PROIEL morphology tagger. Takes existing information into
-  # account, be it already existing morph+lemma tags or previous instances
-  # of the same token form.
-  def invoke_tagger
-    language.guess_morphology(form, morph_features || source_morph_features)
   end
 
   # Merges the token with the token linearly subsequent to it. The succeeding
