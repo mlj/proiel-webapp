@@ -2,6 +2,6 @@
 <%= form.text_field :presentation_form %>
 <%= form.text_field :sort, :required => true %>
 <%= form.text_field :empty_token_sort %>
-<%= form.text_field :morphtag %>
+<%= form.collection_select :morphology_id, Morphology.all, :id, :abbreviated_summary, :include_blank => true, :label => 'Morphology' %>
 <%= form.collection_select :lemma_id, @token.language.lemmata.find(:all, :order => [ "lemma ASC" ]), :id, :export_form, :include_blank => true, :label => 'Lemma' %>
 <%= form.text_field :foreign_ids, :help => 'A comma-separated list of key-value pairs that link the lemma to some external resource.' %>

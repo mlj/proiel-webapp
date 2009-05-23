@@ -15,7 +15,7 @@
     <dt>Presentation flags:</dt><dd><%= readable_presentation_flags(@token) %></dd>
   <% end %>
 
-  <% if @token.is_morphtaggable? %>
+  <% if @token.is_morphtaggable? and @token.morph_features %>
     <dt>Part of speech:</dt><dd><%= @token.morph_features.pos_summary.capitalize %></dd>
     <dt>Morphology:</dt><dd><%= @token.morph_features.morphology_summary.capitalize %></dd>
     <dt>Lemma:</dt><dd class="foreign-word"><%= @token.lemma ? link_to_lemma(@token.lemma) : '&nbsp;' %></dd>
