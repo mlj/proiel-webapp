@@ -95,8 +95,8 @@ module Tagger
               when :fst
                 @analysis_methods[language][method] = FSTMethod.new(language, 
                   File.join(@data_directory, args[:analysis]),
-                  File.join(@data_directory, args[:normalisation]),
-                  File.join(@data_directory, args[:orthography]))
+                  args[:normalisation] ? File.join(@data_directory, args[:normalisation]) : nil,
+                  args[:orthography] ? File.join(@data_directory, args[:orthography]) : nil)
                 @methods[language] << lambda { |form| analyze_form(language, method, form) }
               end
             end
