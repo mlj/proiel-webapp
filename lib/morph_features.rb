@@ -48,7 +48,7 @@ class MorphFeatures
         part_of_speech = PartOfSpeech.find_by_tag(tag)
         part_of_speech ||= PartOfSpeech.new({ :tag => tag })
 
-        @lemma = part_of_speech.lemmata.find_by_lemma_and_variant(base, variant) if part_of_speech
+        @lemma = part_of_speech.lemmata.find_by_lemma_and_variant_and_language_id(base, variant, language.id) if part_of_speech
       else
         part_of_speech = nil
       end
