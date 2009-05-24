@@ -3,7 +3,7 @@
     <dt>Source:</dt><dd><%= link_to_source(@source_division.source) %></dd>
     <dt>Part:</dt><dd><%=h @source_division.title %></dd>
   </dl>
-  <%= link_to_resources @source_division, :index, :edit %>
+  <%= link_to_resources @source_division, :previous, :next, :index, :edit %>
   <%= link_to_if @source_division.aligned_source_division, "Sentence alignments", alignment_path(@source_division) %>
 </div>
 

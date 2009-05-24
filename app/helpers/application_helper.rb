@@ -242,7 +242,20 @@ module ApplicationHelper
     LangString.new(s, language).to_h
   end
 
-  # Creates resource links for an object.
+  # Creates resource links for an object. +actions+ contains a list of
+  # actions to present. All links are styled with icons. The links are
+  # shown in the order given.
+  #
+  # === Actions
+  # <tt>:index</tt> -- A link to the index page for the resource.
+  # <tt>:edit</tt> -- A link for editing the object.
+  # <tt>:delete</tt> -- A link for deleting the object.
+  # <tt>:previous</tt> -- A link to the previous object. This is only
+  # shown if there is a previous object. This requires the model to
+  # respond to +has_previous?+ and +previous+.
+  # <tt>:next</tt> -- A link to the next object. This is only shown if
+  # there is a next object. This requires the model to respond to
+  # +has_next?+ and +next+.
   def link_to_resources(object, *actions)
     actions.map do |action|
       case action
@@ -252,6 +265,10 @@ module ApplicationHelper
         link_to_edit(object)
       when :delete
         link_to_delete(object)
+      when :previous
+        link_to_previous(object)
+      when :next
+        link_to_next(object)
       end
     end.join(' ')
   end
@@ -269,5 +286,19 @@ module ApplicationHelper
   # Creates a resource delete link for an object.
   def link_to_delete(object)
     link_to('Delete', object, :method => :delete, :confirm => 'Are you sure?', :class => :delete)
+  end
+
+  # Creates a resource previous link for an object. This is only
+  # shown if there is a previous object. This requires the model to
+  # respond to +has_previous?+ and +previous+.
+  def link_to_previous(object)
+    link_to_if(object.has_previous?, 'Show previous', object.previous, :class => :previous)
+  end
+
+  # Creates a resource next link for an object. This is only shown if
+  # there is a next object. This requires the model to respond to
+  # +has_next?+ and +next+.
+  def link_to_next(object)
+    link_to_if(object.has_next?, 'Show next', object.next, :class => :next)
   end
 end

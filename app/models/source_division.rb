@@ -25,6 +25,26 @@ class SourceDivision < ActiveRecord::Base
   has_many :tokens, :through => :sentences, :order => 'sentences.sentence_number ASC, token_number ASC'
   belongs_to :aligned_source_division, :class_name => "SourceDivision"
 
+  # Returns the previous source division in a source.
+  def previous
+    source.source_divisions.find(:first, :conditions =>  ["position < ?", position], :order => "position DESC")
+  end
+
+  # Returns the next source division in a source.
+  def next
+    source.source_divisions.find(:first, :conditions =>  ["position > ?", position], :order => "position ASC")
+  end
+
+  # Returns true if there is a previous source division in a source.
+  def has_previous?
+    source.source_divisions.exists?(["position < ?", position])
+  end
+
+  # Returns true if there is a next source division in a source.
+  def has_next?
+    source.source_divisions.exists?(["position > ?", position])
+  end
+
   # Returns a citation-form reference for this source division.
   #
   # ==== Options
