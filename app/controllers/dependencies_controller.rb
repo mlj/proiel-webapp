@@ -38,7 +38,7 @@ class DependenciesController < ApplicationController
 
     @structure = (params[:output] and ActiveSupport::JSON.decode(params[:output])) || (@sentence.has_dependency_annotation? ? @sentence.dependency_graph.to_h : {})
 
-    @relations = Relation.primary.map(&:tag)
+    @relations = Relation.primary
   end
 
   # Saves changes to relations and has the user review the new structure.

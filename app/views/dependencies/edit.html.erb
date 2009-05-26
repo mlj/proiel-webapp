@@ -6,7 +6,7 @@
 <div id="annotation" class="annotation">
   <%= hidden_field_tag 'input-tokens', @tokens.to_json %>
   <%= hidden_field_tag 'input-structure', @structure.to_json %>
-  <%= hidden_field_tag 'input-relations', @relations.to_json %>
+  <%= hidden_field_tag 'input-relations', @relations.map(&:tag).to_json %>
 
   <div class="actions">
     <%= button_to_function "Delete subtree", :id => 'button-delete', :disabled => true %>
@@ -28,8 +28,8 @@
 
   <div id="palette">
     <% @relations.each do |v| %>
-      <label for="<%= v %>">
-        <input type="radio" name="relation-palette" id="<%= v %>" value="<%= v %>"></input>
+      <label for="<%= v.tag %>">
+        <input type="radio" name="relation-palette" id="<%= v.tag %>" value="<%= v.tag %>"></input>
         <span><%= readable_relation(v) %></span>
       </label>
     <% end %>

@@ -117,19 +117,13 @@ module ApplicationHelper
   end
 
   # Generates a human readable representation of a relation code.
-  def readable_relation(relation_tag)
-    summary = Relation.find_by_tag(relation_tag).summary
-
-    if summary
-      "<span class='relation'><abbr title='#{summary.capitalize}'>#{relation_tag}</abbr></span>"
-    else
-      "<span class='relation'>#{relation_tag}</span>"
-    end
+  def readable_relation(relation)
+    "<span class='relation'><abbr title='#{relation.summary.capitalize}'>#{relation.tag}</abbr></span>"
   end
 
   # Generates a human readable representation of a dependency.
-  def readable_dependency(relation_tag, head)
-    '(' + readable_relation(relation_tag) + (head ? ", #{head}" : '') + ')'
+  def readable_dependency(relation, head)
+    '(' + readable_relation(relation) + (head ? ", #{head}" : '') + ')'
   end
 
   # Returns links to external sites for a sentence.

@@ -22,7 +22,7 @@
   <% end %>
 
   <% if @token.relation %>
-    <dt>Dependency relation:</dt><dd><%= readable_dependency(@token.relation.tag, @token.head ? link_to(@token.head.id, @token.head) : nil) %></dd>
+    <dt>Dependency relation:</dt><dd><%= readable_dependency(@token.relation, @token.head ? link_to(@token.head.id, @token.head) : nil) %></dd>
   <% end %>
   <% if @token.foreign_ids %>
     <dt>Foreign IDs:</dt><dd class="tag"><%= @token.foreign_ids %></dd>
