@@ -274,15 +274,14 @@ class Token < ActiveRecord::Base
                       !morph_features.conjunction? && morph_features.pos_s != 'Pr' &&  # exclude conjunctions and relative
                       (morph_features.noun? || morph_features.pronoun? ||            # be a noun or a pronoun
                        (relation && ['part', 'obl', 'sub', 'obj', 'narg', 'voc'].include?(relation.tag)) ||  # or have a nominal relation
-                       dependents.any? { |dep| dep.morph_features.article? }   #or have an article dependent
+                       dependents.any? { |dep| dep.morph_features and dep.morph_features.article? }   #or have an article dependent
                        ))
     end
     @is_annotatable
   end
 
   def is_verb?
-    @is_verb = morph_features.verb? if @is_verb.nil?
-    @is_verb
+    empty_token_sort == 'V' || morph_features.verb?
   end
 
   # Returns all contrast groups registered for the given source division
