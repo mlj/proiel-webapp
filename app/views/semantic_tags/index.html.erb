@@ -1,5 +1,5 @@
 <% search_form_tag semantic_tags_path do %>
-  <%= text_field_tag :query, params[:query] %>
+  <%= query_tag :query %>
 <% end %>
 
-<%= semantic_tags_table(@semantic_tags) %>
+<%= semantic_tags_table @semantic_tags %>
