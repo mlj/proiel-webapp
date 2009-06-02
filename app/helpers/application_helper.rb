@@ -73,15 +73,6 @@ module ApplicationHelper
     }))
   end
 
-  # Generates a search form.
-  def search_form_tag(submit_path, options = {}, &block)
-    html_options = html_options_for_form(submit_path, :method => 'get', :class => 'search')
-    content = capture(&block)
-    concat(form_tag_html(html_options))
-    concat(content)
-    concat(submit_tag(options[:submit] || 'Search', :name => nil) + '</form>')
-  end
-
   # Generates a human readable representation of a token sort.
   def readable_token_sort(sort)
     sort.to_s.humanize
