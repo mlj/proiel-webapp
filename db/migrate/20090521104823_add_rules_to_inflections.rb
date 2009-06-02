@@ -1,6 +1,6 @@
 class AddRulesToInflections < ActiveRecord::Migration
   def self.up
-  #  add_column :inflections, :manual_rule, :boolean, :default => false, :null => false
+    add_column :inflections, :manual_rule, :boolean, :default => false, :null => false
 
     %W{lat got grc chu}.each do |language_code|
       language = Language.find_by_iso_code(language_code)
