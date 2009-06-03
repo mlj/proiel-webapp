@@ -299,26 +299,47 @@ class Token < ActiveRecord::Base
                       "AND tokens.sentence_id = sentences.id AND sentences.source_division_id = #{source_division.id}")
   end
 
+  private
+
+  def self.tokens_in_same_source?(t1, t2)
+    t1.sentence.source_division.source == t2.sentence.source_division.source
+  end
+
+  def self.tokens_in_contiguous_source_divisions?(t1, t2)
+    t1.sentence.source_division.source.source_divisions.count(:all, :conditions => ['position between ? and ?', t1.sentence.source_division.position, t2.sentence.source_division.position]) < 3
+  end
+
+  public
+
   # Returns the distance between two tokens measured in number of sentences.
   # first_token is supposed to precede second_token.
   def self.sentence_distance_between(first_token, second_token)
-    first_token.sentence.source_division.sentences.count(:all, :conditions => ['sentence_number BETWEEN ? AND ?',
-                                                                               first_token.sentence.sentence_number,
-                                                                               second_token.sentence.sentence_number]) - 1
+    raise "Tokens must be in the same source" unless self.tokens_in_same_source?(first_token, second_token)
+    raise "The two tokens are not in contiguous source divisions" unless self.tokens_in_contiguous_source_divisions?(first_token, second_token)
+
+    if first_token.sentence.source_division == second_token.sentence.source_division
+      first_token.sentence.source_division.sentences.count(:all, :conditions => ['sentence_number BETWEEN ? AND ?',
+                                                                                 first_token.sentence.sentence_number,
+                                                                                 second_token.sentence.sentence_number]) - 1
+    else
+      first_token.sentence.source_division.sentences.count(:all, :conditions => ['sentence_number > ?',
+                                                                                 first_token.sentence.sentence_number]) + second_token.sentence.source_division.sentences.count(:all, :conditions => ['sentence_number < ?', second_token.sentence.sentence_number ]) + 1
+    end
   end
 
   # Returns the distance between two tokens measured in number of words (i.e., tokens with sort == 'text').
   # first_token is supposed to precede second_token.
   def self.word_distance_between(first_token, second_token)
+    raise "Tokens must be in the same source" unless self.tokens_in_same_source?(first_token, second_token)
+    raise "The two tokens are not in contiguous source divisions" unless self.tokens_in_contiguous_source_divisions?(first_token, second_token)
+
     first_token = first_token.head if first_token.empty_token_sort == 'P'
     second_token = second_token.head if second_token.empty_token_sort == 'P'
 
-    if first_token.sentence.sentence_number == second_token.sentence.sentence_number
-      num_words = first_token.sentence.tokens.word.count(:conditions => [
-                                                           'token_number BETWEEN ? AND ?',
-                                                           first_token.token_number,
-                                                           second_token.token_number - 1
-                                                         ])
+    if first_token.sentence.sentence_number == second_token.sentence.sentence_number and first_token.sentence.source_division == second_token.sentence.source_division
+      num_words = first_token.sentence.tokens.word.count(:conditions => ['token_number BETWEEN ? AND ?',
+                                                                         first_token.token_number,
+                                                                         second_token.token_number - 1])
     else
       # Find the number of words following (and including) the first token in its sentence
       num_words = first_token.sentence.tokens.word.count(:conditions => ['token_number >= ?', first_token.token_number])
@@ -326,11 +347,25 @@ class Token < ActiveRecord::Base
       # Find the number of words preceding the second token in its sentence
       num_words += second_token.sentence.tokens.word.count(:conditions => ['token_number < ?', second_token.token_number])
 
-      # Find the number of words in intervening sentences
-      first_token.sentence.source_division.sentences.find(:all, :conditions => ['sentence_number BETWEEN ? AND ?',
-                                                                                first_token.sentence.sentence_number + 1,
-                                                                                second_token.sentence.sentence_number - 1]).each do |sentence|
-        num_words += sentence.tokens.word.count
+      # Check whether the two tokens are in the same source_division
+      if first_token.sentence.source_division == second_token.sentence.source_division
+        # Find the number of words in intervening sentences of the same source_division
+        first_token.sentence.source_division.sentences.find(:all, :conditions => ['sentence_number BETWEEN ? AND ?',
+                                                                                  first_token.sentence.sentence_number + 1,
+                                                                                  second_token.sentence.sentence_number - 1]).each do |sentence|
+          num_words += sentence.tokens.word.count
+        end
+      else
+        # Find the number of words in sentences following the first token's sentence in its source_division
+        first_token.sentence.source_division.sentences.find(:all, :conditions => ['sentence_number > ?',
+                                                                                  first_token.sentence.sentence_number]).each do |sentence|
+          num_words += sentence.tokens.word.count
+        end
+        # Find the number of words preceding the second token in its source_division
+        second_token.sentence.source_division.sentences.find(:all, :conditions => ['sentence_number < ?',
+                                                                                   second_token.sentence.sentence_number]).each do |sentence|
+          num_words += sentence.tokens.word.count
+        end
       end
     end
     num_words
