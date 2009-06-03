@@ -281,7 +281,7 @@ class Token < ActiveRecord::Base
   end
 
   def is_verb?
-    empty_token_sort == 'V' || morph_features.verb?
+    empty_token_sort == 'V' || (morph_features and morph_features.verb?)
   end
 
   # Returns all contrast groups registered for the given source division
