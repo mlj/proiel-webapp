@@ -120,11 +120,6 @@ var AnaphoraAndContrast = function() {
             return;
         }
 
-        if(!$w(anaphor.className).include('old')) {
-            alert('Only tokens with information status "old" can have antecedents!');
-            return;
-        }
-
         // Remove any antecedent style from all other tokens
         tokens.invoke('removeClassName', 'antecedent');
 

@@ -98,10 +98,12 @@ class Sentence < ActiveRecord::Base
 
   #FIXME:DRY generalise < token
 
-  def previous_sentences
-    source_division.sentences.find(:all,
+  def previous_sentences(include_previous_sd = false)
+    ps = source_division.sentences.find(:all,
                                    :conditions => [ "sentence_number < ?", sentence_number ],
                                    :order => "sentence_number ASC")
+    ps = source_division.previous.sentences.find(:all, :order => "sentence_number ASC" ) + ps if include_previous_sd and source_division.previous
+    ps
   end
 
   def next_sentences
