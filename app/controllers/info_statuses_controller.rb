@@ -37,6 +37,7 @@ class InfoStatusesController < ApplicationController
         token = Token.find(id)
       end
       antecedent_id = attr[:antecedent_id]
+      token.antecedent_dist_in_words = token.antecedent_dist_in_sentences = nil unless antecedent_id
 
       # If the antecedent is a prodrop token, find the real id that has been created for it
       antecedent_id = new_token_ids[antecedent_id] if antecedent_id && antecedent_id.starts_with?('new')
