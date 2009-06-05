@@ -468,43 +468,66 @@ class Sentence < ActiveRecord::Base
   # Appends the next sentence onto this sentence and destroys the old
   # sentence. This also removed all dependency annotation from both
   # sentences to ensure validity.
-  def append_next_sentence!
-    if self.has_next_sentence?
+  def append_next_sentence!(nondestructive = false)
+    if has_next?
       Sentence.transaction do
-        # Start by clearing as much annotation as we need to
-        self.clear_dependencies!
-        self.next_sentence.clear_dependencies!
-
-        append_tokens!(self.next_sentence.tokens)
+        if nondestructive
+          append_tokens!(next_sentence.tokens)
+        else
+          detokenize!
+          next_sentence.detokenize!
+        end
 
         self.presentation = self.presentation + ' ' + self.next_sentence.presentation
-        self.save!
+        save!
 
-        self.next_sentence.destroy
+        next_sentence.destroy
       end
     else
       raise "No next sentence"
     end
   end
 
-  def split_sentence!
-    if not tokens.length.zero?
+  # Split the sentence into a number of sentences. Undoes tokenization
+  # of the sentence and thus also removes all annotation from the
+  # sentence. The symbol or regular expression used for segment splits
+  # is given in +segment_divider+. If the new segmentation produces
+  # only one segment, the presentation string for this sentence is
+  # updated but no new sentence objects are created.
+  def split_sentence!(presentation_string, segment_divider = /\s*\|\s*/)
+    raise ArgumentError if presentation_string.blank?
+
+    presentation_strings = presentation_string.split(segment_divider)
+
+    n = presentation_strings.length - 1
+
+    if n.zero?
+      self.presentation = presentation_string
+      self.save!
+    else
       Sentence.transaction do
-        # We need to shift all sentence numbers after this one first. Do it in reverse order
-        # just to be cool.
-        ses = source_division.find(:all, :conditions => [ "sentence_number > ?", sentence_number ])
+        detokenize!
+
+        # We need to shift all sentence numbers after this one first. Do it in
+        # reverse order to avoid confusing the indices.
+        ses = parent.sentences.find(:all, :conditions => ["sentence_number > ?", sentence_number])
         ses.sort { |x, y| y.sentence_number <=> x.sentence_number }.each do |s|
-          s.sentence_number += 1
+          s.sentence_number += n
           s.save!
         end
 
-        # Copy all attributes
-        new_s = source_division.sentences.create
-        new_s.sentence_number = sentence_number + 1
-        new_s.save!
+        # Update presentation strings.
+        self.presentation = presentation_strings[0]
+        self.save!
+        self.reindex!
 
-        # Finally, shuffle our last token over to the new sentence.
-        new_s.prepend_token!(tokens.last)
+        1.upto(n).map do |i|
+           s = parent.sentences.create!(:sentence_number => sentence_number + i,
+                                        :presentation => presentation_strings[i])
+           s.reference_fields = self.reference_fields
+           s.save!
+           s.reindex!
+        end
       end
     end
   end
@@ -636,6 +659,58 @@ class Sentence < ActiveRecord::Base
     # TODO: add a validation rule that verifies that root_dependency_tokens only matches one
     # token?
     tokens.dependency_annotatable.root_dependency_tokens.first
+  end
+
+  # Tokenizes the sentence using the current tokenization rules.
+  # The function has no effect on a sentence that has already been
+  # tokenized.
+  def tokenize!
+    # TODO: Major FIXME: this is specific to Latin and does not even
+    # do a good job with that language. But it has to do for now...
+    presentation_as_text.gsub('á', 'a').gsub('é', 'e').gsub('í', 'i').gsub('ó', 'o').gsub('ú', 'u').gsub(/[†#\?\[\]]/, '').gsub(/\s*["'—]\s*/,' ').gsub(/[\.]\s*$/, '').gsub(/[,;:]\s*/, ' ').gsub('onust', 'onus est').gsub(/(occasio)st/, '\1 est').gsub(/(aeris|senatus|re|rem|rei|res)\s+(alieni|consulto|publica|publicam|publicae)/, '\1#\2').split(/\s+/).map do |t|
+      if t[/^(.*)que$/]
+        base = $1
+        unless t[/^pler(us|um|i|o|a|am|ae|os|orum|is|as|arum)que$/] or t[/^([Aa]t|[Ii]ta|[Nn]e)que$/]
+          [base, '-que']
+        else
+          t
+        end
+      else
+        t.gsub('#', ' ')
+      end
+    end.flatten.each_with_index do |form, position|
+      self.tokens.create! :form => form, :token_number => position, :empty_token_sort => nil
+    end
+  end
+
+  # Re-tokenizes a sentence using the current tokenization rules.
+  # If inkoved on a sentence that has been tokenized before, the
+  # existing tokenization is undone and all annotation is removed.
+  # If invoken in a sentence that has not been tokenized before, the
+  # sentence is tokenized.
+  def retokenize!
+    Sentence.transaction do
+      detokenize! if tokenized?
+      tokenize!
+    end
+  end
+
+  # Undoes any tokenization of the sentence. All annotation is also
+  # removed.
+  def detokenize!
+    Sentence.transaction do
+      tokens.map(&:destroy)
+      self.annotated_by = nil
+      self.annotated_at = nil
+      self.reviewed_by = nil
+      self.reviewed_at = nil
+      save!
+    end
+  end
+
+  # Returns true if the sentence has been tokenized, false otherwise.
+  def tokenized?
+    !tokens.word.length.zero?
   end
 
   protected

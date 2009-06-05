@@ -1,0 +1,5 @@
+<% form_for(:sentence, @sentence, :url => { :action => "resegment_update", :id => @sentence.id }) do |form| %>
+  <%= render :partial => 'form', :object => form %>
+  <%= form.submit "Update" %>
+<% end %>
+

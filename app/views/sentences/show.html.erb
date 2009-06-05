@@ -4,6 +4,9 @@
   <%= link_to_resources @sentence, :index, :previous, :next, :parent, :delete, :edit %>
   <%= link_to_if(is_administrator?, "Information structure", sentence_info_status_url(@sentence)) %>
   <%= link_to_dependency_alignments @sentence, 'Dependency alignments' %>
+  <%= link_to "Tokenize", :action => :tokenize %>
+  <%= link_to "Resegment", :action => :resegment_edit %>
+  <%= link_to "Merge with next", :action => :merge %>
 <% end %>
 
 <% layer_if is_reviewer?, "low_level_data" do -%>

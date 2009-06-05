@@ -1,7 +1,8 @@
 class SentencesController < ResourceController::Base
   before_filter :find_parents
-  before_filter :is_reviewer?, :only => [:edit, :update, :destroy, :flag_as_reviewed, :flag_as_not_reviewed]
-  actions :all, :except => [:new, :create, :destroy] # we add our own destroy later
+  before_filter :is_annotator?, :only => [:merge, :tokenize, :resegment_edit, :resegment_update]
+  before_filter :is_reviewer?, :only => [:edit, :update, :flag_as_reviewed, :flag_as_not_reviewed]
+  actions :all, :except => [:new, :create]
 
   show.before do
     @tokens = @sentence.tokens.search(params[:query], :page => current_page)
@@ -31,27 +32,19 @@ class SentencesController < ResourceController::Base
 
   public
 
-  # Destroys the sentence. This works by moving all tokens in the sentence to the
-  # previous sentence in the linear order before actually removing the sentence.
-  # If there is no previous sentence, then destruction will fail.
-  def destroy
+  # Merges this sentence with the next sentence.
+  def merge
     @sentence = Sentence.find(params[:id])
 
-    if @sentence.has_previous_sentence?
-      previous_sentence = @sentence.previous_sentence
-      previous_sentence.append_next_sentence!
-
-      respond_to do |format|
-        flash[:notice] = 'Successfully destroyed.'
-        format.html { redirect_to(previous_sentence) }
-        format.xml  { head :ok }
-      end
+    if @sentence.has_next?
+      @sentence.append_next_sentence!
+      flash[:notice] = 'Sentences successfully merged.'
     else
-      respond_to do |format|
-        flash[:error] = 'Sentence cannot be destroyed.'
-        format.html { redirect_to(@sentence) }
-        format.xml  { render :status => :unprocessable_entity }
-      end
+      flash[:error] = 'Sentence cannot be merged.'
+    end
+
+    respond_to do |format|
+      format.html { redirect_to @sentence }
     end
   end
 
@@ -75,5 +68,32 @@ class SentencesController < ResourceController::Base
   rescue ActiveRecord::RecordInvalid => invalid
     flash[:error] = invalid.record.errors.full_messages.join('<br>')
     render :action => "show"
+  end
+
+  def tokenize
+    @sentence = Sentence.find(params[:id])
+    @sentence.tokenize!
+
+    respond_to do |format|
+      flash[:notice] = 'Sentence was successfully tokenized.'
+      format.html { redirect_to @sentence }
+    end
+  end
+
+  def resegment_edit
+    @sentence = Sentence.find(params[:id])
+  end
+
+  def resegment_update
+    @sentence = Sentence.find(params[:id])
+
+    l = params[:sentence][:presentation]
+
+    Sentence.transaction do
+      @sentence.split_sentence!(l)
+      @sentence.save!
+    end
+
+    redirect_to @sentence
   end
 end
