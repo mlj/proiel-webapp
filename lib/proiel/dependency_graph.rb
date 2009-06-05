@@ -652,7 +652,7 @@ module PROIEL
       end
 
       test_token("An infinitive may not be the dependent in an ADV relation",
-                 lambda { |t| t.data[:morph_features].morphology_to_hash[:mood] == 'n' }) do |t|
+                 lambda { |t| t.data[:morph_features] and t.data[:morph_features].morphology_to_hash[:mood] == 'n' }) do |t|
         t.relation != :adv
       end
 
