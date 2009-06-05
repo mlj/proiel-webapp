@@ -1,0 +1,2 @@
+presentation_as_text_stylesheet: 'lib/presentation_as_text.xsl'
+presentation_as_html_stylesheet: 'lib/presentation_as_html.xsl'

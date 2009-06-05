@@ -16,8 +16,8 @@
 
 <div class='page_info'><%= page_entries_info(@sentences) %></div><%= will_paginate(@sentences) %>
 <div class="text-view">
-  <%= format_sentence(@sentences, {
-    :verse_numbers => params[:numbering] != 'sentences',
+  <%= format_presentation_text(@sentences, {
+    :section_numbers => params[:numbering] != 'sentences',
     :sentence_numbers => params[:numbering] == 'sentences' }) %>
 </div>
 

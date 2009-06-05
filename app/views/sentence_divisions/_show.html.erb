@@ -1,6 +1,9 @@
 <% stylesheet 'sentence_divisions' %>
 
 <div class="sentence-divisions">
-  <%= format_sentence(@sentence.previous_sentences.last(5) + [@sentence] + @sentence.next_sentences.first(5),
-    { :verse_numbers => true, :highlight => @sentence.tokens }) %>
+  <%= format_presentation_text(@sentence.sentences_in_context, {
+    :section_numbers => true,
+    :sentence_numbers => true,
+    :highlight => [@sentence]
+  }) %>
 </div>

@@ -25,7 +25,7 @@ class BiblosExternalLinkMapper < ExternalLinkMapper
   end
 
   def to_url(ref)
-    book, chapter, verse = @book_mapping[ref[:book]], ref[:chapter], ref[:verse]
+    book, chapter, verse = @book_mapping[ref["book"]], ref["chapter"], ref["verse"]
 
     if chapter and verse
       "#{@base_url}#{book}/#{chapter}-#{verse}.htm"
@@ -41,7 +41,7 @@ class BibelenNOExternalLinkMapper < ExternalLinkMapper
   end
 
   def to_url(ref)
-    book, chapter, verse = @book_mapping[ref[:book]], ref[:chapter], ref[:verse]
+    book, chapter, verse = @book_mapping[ref["book"]], ref["chapter"], ref["verse"]
 
     if chapter
       "#{@base_url}chapter.aspx?book=#{book}&chapter=#{chapter}"

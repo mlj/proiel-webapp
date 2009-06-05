@@ -1,5 +1,5 @@
 class SentenceDivisionsController < ApplicationController
-  before_filter :is_annotator?, :only => [:edit, :update, :flag_bad_alignment]
+  before_filter :is_annotator?, :only => [:edit, :update]
 
   # GET /annotations/1/sentence_division
   def show
@@ -25,9 +25,9 @@ class SentenceDivisionsController < ApplicationController
   def edit
     @sentence = Sentence.find(params[:annotation_id])
 
-    @shorten = _edit_cover_length(@sentence.nonempty_tokens, :last)
-    @expand = _edit_cover_length(@sentence.has_next_sentence? ? @sentence.next_sentence.nonempty_tokens : [], :first)
-    @fixed = @sentence.nonempty_tokens.first(@sentence.nonempty_tokens.length - @shorten.length)
+    @shorten = _edit_cover_length(@sentence.tokens.word, :last)
+    @expand = _edit_cover_length(@sentence.has_next_sentence? ? @sentence.next_sentence.tokens.word : [], :first)
+    @fixed = @sentence.tokens.word.first(@sentence.tokens.word.length - @shorten.length)
   end
   
   # PUT /annotations/1/sentence_division
@@ -59,28 +59,6 @@ class SentenceDivisionsController < ApplicationController
       redirect_to :controller => :wizard, :action => :save_sentence_divisions, :wizard => params[:wizard]
     else
       redirect_to :action => 'show'
-    end
-  rescue ActiveRecord::RecordInvalid => invalid 
-    flash[:error] = invalid.record.errors.full_messages
-    redirect_to :action => 'edit', :wizard => params[:wizard]
-  end
-
-  # FIXME: eliminate this when alignment editing is re-enabled
-  def flag_bad_alignment
-    sentence = Sentence.find(params[:annotation_id])
-
-    if sentence.is_reviewed? and not user_is_reviewer?
-      flash[:error] = 'You do not have permission to update reviewed sentences'
-      redirect_to :action => 'edit', :wizard => params[:wizard], :annotation_id => params[:annotation_id]
-      return
-    end
-
-    Note.create! :originator => current_user, :notable => sentence, :contents => 'Bad sentence alignment'
-
-    if params[:wizard]
-      redirect_to :controller => :wizard, :action => "skip_sentence_divisions", :wizard => params[:wizard]
-    else
-      redirect_to :action => 'show', :annotation_id => sentence
     end
   rescue ActiveRecord::RecordInvalid => invalid 
     flash[:error] = invalid.record.errors.full_messages

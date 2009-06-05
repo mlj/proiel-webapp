@@ -23,6 +23,14 @@
   <%= audits_summary @sentence.audits %>
 <% end %>
 
-<% layer("tokens") do -%>
+<% layer("presentation_form") do -%>
+  <h3>Mark-up</h3>
+  <div><%= @sentence.presentation_as_prettyprinted_code(:coloured => true) %></div>
+
+  <h3>Styled</h3>
+  <div><%= @sentence.presentation_as_html %></div>
+<% end %>
+
+<% layer("tokenization") do -%>
   <%= tokens_table @tokens %>
 <% end %>

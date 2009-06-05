@@ -6,7 +6,11 @@ module StatisticsHelper
 
   def statistics_table(title, unit, data, options = {})
     total = data.map { |k, v| v}.sum if options[:percentage]
-    content_tag(:table, data.map { |k, v| content_tag(:tr, content_tag(:td, k.is_a?(Symbol) ? k.humanize : k) + content_tag(:td, pluralize(v, unit)) + (total ? content_tag(:td, "#{(v * 100.0 / total).to_i}%") : ""), :class => cycle('even', 'odd')) }.join)
+    unless total.zero?
+      content_tag(:table, data.map { |k, v| content_tag(:tr, content_tag(:td, k.is_a?(Symbol) ? k.humanize : k) + content_tag(:td, pluralize(v, unit)) + (total ? content_tag(:td, "#{(v * 100.0 / total).to_i}%") : ""), :class => cycle('even', 'odd')) }.join)
+    else
+      ''
+    end
   end
 
   # Veerle's top colour scheme from http://beta.dailycolorscheme.com/archive/2006/09/20

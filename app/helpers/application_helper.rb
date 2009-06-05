@@ -73,11 +73,6 @@ module ApplicationHelper
     }))
   end
 
-  # Generates a human readable representation of a token sort.
-  def readable_token_sort(sort)
-    sort.to_s.humanize
-  end
-
   # Generates a human readable representation of a completion rate for a sentence.
   def readable_completion(sentence, options = {})
     if sentence.is_reviewed?
@@ -121,11 +116,9 @@ module ApplicationHelper
   def external_text_links(sentence)
     # FIXME: hard-coded for now. Change this when I figure out this is
     # really supposed to work.
-    keys = { :book => sentence.source_division.field(:book),
-             :chapter => sentence.source_division.field(:chapter),
-             :verse => sentence.tokens.word.first.verse }
+    keys = sentence.reference_fields.slice("book", "chapter", "verse")
 
-    if keys[:chapter]
+    if keys["chapter"]
       [ link_to('Biblos',     BiblosExternalLinkMapper.instance.to_url(keys), :class => 'external'),
         link_to('bibelen.no', BibelenNOExternalLinkMapper.instance.to_url(keys), :class => 'external'), ] * '&nbsp;';
     else
@@ -210,11 +203,6 @@ module ApplicationHelper
   # Formats a token form with HTML language attributes.
   def format_token_form(token)
     LangString.new(token.form, token.language).to_h
-  end
-
-  # Formats a token presentation form with HTML language attributes.
-  def format_token_presentation_form(token)
-    LangString.new(token.presentation_form, token.language).to_h
   end
 
   # Formats a lemma form with HTML language attributes.

@@ -1,43 +1,74 @@
 require 'ucodes'
 
 module SentenceFormattingHelper
-  # Formats one or more sentences as a legible sequence of words. +value+ may
-  # either be an array of +Sentence+ objects, a single +Sentence+ object or an
-  # array of +Token+ objects.
+  # Formats an array of sentences as HTML using their presentation
+  # format.
   #
   # ==== Options
-  # verse_numbers:: If +true+, will insert all verse numbers between the words
-  # of the sentence.
   #
-  # sentence_numbers:: If +true+, will insert sentence numbers between the
-  # words of the sentence. Each number will be contained within a +span+ of
-  # class +sentence-number+.
+  # <tt>:section_numbers</tt> -- If true, will display section
+  # numbers.
   #
-  # token_numbers:: If +true+, will insert token numbers after each token.
-  # Each number will be contained within a +span+ of class +token_number+.
+  # <tt>:sentence_numbers</tt> -- If true, will display sentence
+  # numbers.
   #
-  # ignore_punctuation:: If +true+, will ignore any punctuation.
+  # <tt>:highlight</tt> -- If set to an array of sentences, will
+  # highlight those sentences.
   #
-  # ignore_presentation_forms:: If +true+, will preserve the token form of
-  # of tokens with a presentation forms.
+  # <tt>:ignore_links</tt> -- If true, will not produce links to other
+  # resources, e.g. to annotation views for sentences, in the
+  # sentence.
+  def format_presentation_text(sentences, options = {})
+    options.reverse_merge! :section_numbers => false,
+      :sentence_numbers => false, :highlight => []
+
+    current_sentence_number = nil
+
+    markup = sentences.map do |sentence|
+      m = ''
+      if options[:sentence_numbers] and sentence.sentence_number and current_sentence_number != sentence.sentence_number
+        current_sentence_number == sentence.sentence_number
+        m = "<section type='sentence-number' n='#{sentence.sentence_number}'/>&nbsp;"
+      end
+
+      s = sentence.presentation_as_html(options)
+      s = '<span class="highlight">' + s + '</span>' if options[:highlight].include?(sentence)
+      s = link_to(s, annotation_path(sentence)) unless options[:ignore_links]
+      m + s
+    end.join(' ')
+  end
+
+  # Formats one or more sentences as HTML using their content format.
+  # +value+ may either be an array of +Sentence+ objects, a single
+  # +Sentence+ object or an array of +Token+ objects.
   #
-  # length_limit:: If not +nil+, will limit the length of the formatted
-  # sentence to the given number of words and append an ellipsis if the
-  # sentence exceeds that limit. If a negative number is given, the
-  # ellipsis is prepended to the sentence.
+  # ==== Options
   #
-  # highlight:: If set to an array of tokens, will highlight those tokens.
+  # <tt>:sentence_numbers</tt> -- If true, will insert sentence
+  # numbers between the words of the sentence. Each number will be
+  # contained within a +span+ of class +sentence-number+.
   #
-  # custom_style:: If set to a hash of tokens, will apply custom styling
-  # to each of these tokens.
+  # <tt>:token_numbers</tt> -- If true, will insert token numbers
+  # after each token. Each number will be contained within a +span+ of
+  # class +token_number+.
   #
-  # information_status:: If +true+, will put each token inside a span with a
-  # class named as "info-status-#{token.info_status}"
+  # <tt>:length_limit</tt> -- If not +nil+, will limit the length of
+  # the formatted sentence to the given number of words and append an
+  # ellipsis if the sentence exceeds that limit. If a negative number
+  # is given, the ellipis is prepended to the sentence.
   #
-  # <tt>:ignore_links</tt> -- If +true+, will not produce links to other
-  # resources, e.g. to annotation views for sentences, in the sentence.
+  # <tt>:highlight</tt> -- If set to an array of tokens, will
+  # highlight those tokens.
+  #
+  # <tt>:information_status</tt> -- If true, will put each token
+  # inside a span with a class named as
+  # "info-status-#{token.info_status}"
+  #
+  # <tt>:ignore_links</tt> -- If true, will not produce links to other
+  # resources, e.g. to annotation views for sentences, in the
+  # sentence.
   def format_sentence(value, options = {})
-    options.reverse_merge! :highlight => [], :custom_style => []
+    options.reverse_merge! :highlight => []
 
     x = nil
 
@@ -63,7 +94,6 @@ module SentenceFormattingHelper
   UNICODE_HORIZONTAL_ELLIPSIS = Unicode::U2026
 
   FORMATTED_REFERENCE_CLASSES = {
-    :verse => 'verse-number',
     :sentence => 'sentence-number',
     :token => 'token-number',
   }.freeze
@@ -85,8 +115,6 @@ module SentenceFormattingHelper
       case reference_type
       when :sentence
         options[:sentence_numbers]
-      when :verse
-        options[:verse_numbers]
       when :token
         options[:token_numbers]
       else
@@ -99,53 +127,40 @@ module SentenceFormattingHelper
     end
   end
 
-  FormattedToken = Struct.new(:token_type, :text, :nospacing, :link, :title, :extra_css, :token)
+  FormattedToken = Struct.new(:text, :link, :extra_css, :token)
 
   class FormattedToken
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::UrlHelper
 
     def spacing_before?
-      nospacing.nil? or nospacing == :after
+      true
     end
 
     def spacing_after?
-      nospacing.nil? or nospacing == :before
+      true
     end
 
     def selected?(options)
-      if token_type == :punctuation
-        !options[:ignore_punctuation]
-      else
-        true
-      end
+      true
     end
 
     def to_html(language, options)
       css = extra_css || []
 
-      case token_type
-      when :lacuna_start, :lacuna_end
-        content_tag(:span, UNICODE_HORIZONTAL_ELLIPSIS, :class => (css << 'lacuna') * ' ', :title => title)
-      when :punctuation
-        content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ', :title => title)
-      when :text, :empty_dependency_token
-        if link
-          link_to(LangString.new(text, language).to_h, link, :class => (css << 'token') * ' ', :title => title)
-        elsif options[:information_status]
-          if options[:highlight].include?(token)
-            css << info_status_css_class
-            css << 'ant-' + token.antecedent.id.to_s if token.antecedent
-            css << 'con-' + token.contrast_group if token.contrast_group
-            css << 'verb' if token.is_verb?
-          end
+      if link
+        link_to(LangString.new(text, language).to_h, link, :class => (css << 'token') * ' ')
+      elsif options[:information_status]
+        if options[:highlight].include?(token)
+          css << info_status_css_class
+          css << 'ant-' + token.antecedent.id.to_s if token.antecedent
           css << 'con-' + token.contrast_group if token.contrast_group
-          LangString.new(text, language, :id => 'token-' + token.id.to_s, :css => css * ' ', :title => title).to_h
-        else
-          content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ', :title => title)
+          css << 'verb' if token.is_verb?
         end
+        css << 'con-' + token.contrast_group if token.contrast_group
+        LangString.new(text, language, :id => 'token-' + token.id.to_s, :css => css * ' ').to_h
       else
-        raise "Invalid token type"
+        content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ')
       end
     end
 
@@ -212,34 +227,15 @@ module SentenceFormattingHelper
   def convert_to_presentation_sequence(tokens, options)
     state = {}
     t = []
-    skip_tokens = 0
 
     tokens.reject { |token| options[:information_status] ? (token.is_empty? and token.empty_token_sort != 'P' ) : token.is_empty? }.each do |token|
-      if skip_tokens > 0
-        skip_tokens -= 1
-        next
-      end
-
       t << check_reference_update(state, :sentence, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
-      t << check_reference_update(state, :verse, token.verse, token.verse.to_i)
 
       extra_css = []
       extra_css << :highlight if options[:highlight].include?(token)
 
-      if token.presentation_form and not options[:ignore_presentation_forms]
-        t << FormattedToken.new(token.sort, token.presentation_form, token.nospacing, options[:ignore_links] ? nil : annotation_path(token.sentence), nil, extra_css)
-        skip_tokens = token.presentation_span - 1
-      elsif options[:information_status]
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, nil, nil, extra_css, token)
-      else
-        t << FormattedToken.new(token.sort, token.form, token.nospacing, options[:ignore_links] ? nil : annotation_path(token.sentence), nil, extra_css)
-      end
-
-      if token.presentation_span and token.presentation_span - 1 > 0
-        t << FormattedReference.new(:token, "#{token.token_number}-#{token.token_number + token.presentation_span - 1}")
-      else
-        t << FormattedReference.new(:token, token.token_number)
-      end
+      t << FormattedToken.new(token.form, (options[:ignore_links] or options[:information_status]) ? nil : annotation_path(token.sentence), extra_css, token)
+      t << FormattedReference.new(:token, token.token_number)
     end
 
     t.compact

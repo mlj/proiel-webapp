@@ -341,3 +341,45 @@ table.low_level_data {
   border-top: 2px solid black;
   border-bottom: 2px solid black;
 }
+
+/* Styled button */
+input.styled {
+  display: block;
+  float: left;
+  margin: 0 7px 0 0;
+  color: #666;
+  background-color: #ccc;
+  border-top: 1px solid #e2e2e2;
+  border-right: 1px solid #818181;
+  border-bottom: 1px solid #565656;
+  border-left: 1px solid #d7d7d7;
+  font-size: 100%;
+  line-height: 130%;
+  text-decoration: none;
+  cursor: pointer;
+  width: auto;
+  overflow: visible;
+  padding: 9px 15px 8px 36px; /* IE6 */
+}
+
+input.styled.add {
+  background: #ccc url("/images/sweetie/16-circle-green-add.png") no-repeat 15px 50%;
+}
+
+input[type].styled {
+  padding: 10px 15px 10px 36px; /* Firefox */
+  line-height: 17px; /* Safari */
+}
+
+*:first-child+html input[type].styled {
+  padding: 9px 15px 8px 36px; /* IE7 */
+}
+
+input:hover {
+  color: #444;
+  background-color: #eee;
+  border-top: 1px solid #f5f5f5;
+  border-right: 1px solid #969696;
+  border-bottom: 1px solid #646464;
+  border-left: 1px solid #f2f2f2;
+}

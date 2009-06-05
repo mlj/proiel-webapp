@@ -48,49 +48,6 @@ the correct solution to the problem that you are attempting to solve!</p>
       </li>
     </ul>
   </li>
-  <li>
-    Tokeniser
-    <ul>
-      <li><b>Merge word token pair.</b>
-      <p>
-      The ID of the first token should be provided, the ID of the second token
-      is inferred from the linearisation numbers. The second token is permanently
-      deleted from the database, while the first token is updated with new
-      information. After the function has been performed, the first token will
-      have its word form set to the concatenation of the first token's original 
-      word form,
-      a single space, and the second token's word form. 
-      No other attributes are
-      changed, i.e. morphology, dependency information and token sort is kept
-      as-is. This means that this function is <em>only</em> suitable for merging adjacent
-      tokens that represent orthographically separate, stand-alone words, whose
-      syntax is better described if single tokens. Remember that the linearly adjacent token
-      is not necessarily a word, it may be a punctuation token or an empty token. 
-      The function will be ill-behaved if there is no next token in the sentence.
-      </p>
-      <% form_tag :action => 'merge_tokens' do -%> 
-        First token ID: <%= text_field_tag :id, params[:id] %>
-        <%= submit_tag 'Merge tokens' %>
-      <% end %>
-      </li>
-      <li><b>Split sentence.</b>
-      <p></p>
-      TODO
-      <!-- 
-      <% form_tag :action => 'split_sentence' do -%> 
-        First token ID of new sentence: <%= text_field_tag :id, params[:id] %>
-        <%= submit_tag 'Split sentence' %>
-      <% end %>
-      -->
-      </li>
-      <li><b>Split word token into clitic-host token pair.</b>
-      <p>TODO</p>
-      </li>
-      <li><b>Merge clitic-host token pair into word token.</b>
-      <p>TODO</p>
-      </li>
-    </ul>
-  </li>
 </ul>
 
 <% end %>

@@ -82,7 +82,9 @@ Rails::Initializer.run do |config|
   config.gem 'diff-lcs', :lib => 'diff/lcs'
   config.gem 'ruby-sfst', :lib => 'sfst'
   config.gem 'mlj-alignment', :lib => 'alignment', :source => 'http://gems.github.com'
-  config.gem 'libxml-ruby', :lib => 'libxml'
+  # We need 0.9.3 < version < 1.0  to satisfy libxslt-ruby, which
+  # unfortunately has not been updated in a while.
+  config.gem 'libxml-ruby', :lib => 'libxml', :version => '0.9.9'
   config.gem 'libxslt-ruby', :lib => 'libxslt'
   config.gem 'log4r'
   config.gem 'mlj-unicode_normalization_validation', :lib => 'unicode_normalization_validation', :source => 'http://gems.github.com'

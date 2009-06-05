@@ -4,8 +4,11 @@
 <%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Sentence divisions', :edit_url => :edit_annotation_sentence_division_url } %>
 
 <div class="sentence-divisions">
-  <%= format_sentence(@sentence.previous_sentences.last(5) + [@sentence] + @sentence.next_sentences.first(5),
-                      { :verse_numbers => true, :highlight => @sentence.tokens, :sentence_numbers => true }) %>
+  <%= format_presentation_text(@sentence.sentences_in_context, {
+    :section_numbers => true,
+    :sentence_numbers => true,
+    :highlight => [@sentence]
+  }) %>
 </div>
 
 <div class="adjustment-area">
@@ -18,15 +21,10 @@
   <% @expand.each_with_index do |token, i| %>
     <span class="adjustable" id="change<%= i + 1 %>"><%= token.form %><span class="token-number"><%= token.token_number %></span></span>
   <% end %>
-  &nbsp;
-  <%= link_to_function('Shorten sentence', "shortenAfter()", :class => :remove) %>
-  <%= link_to_function('Expand sentence', "expandAfter()", :class => :add) %>
-  <br/>
 </div>
 
 <div class="annotation-actions">
   <%= wizard_options(nil, params[:wizard]) %>
-  <%= button_to 'Flag bad sentence division', :action => 'flag_bad_alignment', :annotation_id => @sentence, :wizard => params[:wizard] %>
 
   <% form_tag({ :controller => 'sentence_divisions', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :method => :put) do -%>
     <%= hidden_field_tag 'change' %>

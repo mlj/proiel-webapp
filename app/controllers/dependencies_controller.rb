@@ -19,8 +19,8 @@ class DependenciesController < ApplicationController
   def edit 
     @sentence = Sentence.find(params[:annotation_id])
 
-    @tokens = Hash[*@sentence.dependency_tokens.collect do |token|
-      mh = token.morph_features.morphology_to_hash
+    @tokens = Hash[*@sentence.tokens.dependency_annotatable.collect do |token|
+      mh = token.morph_features ? token.morph_features.morphology_to_hash : {}
 
       [token.id, { 
         # FIXME: refactor

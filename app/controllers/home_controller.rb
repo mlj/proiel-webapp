@@ -63,12 +63,6 @@ class HomeController < ApplicationController
   def user_administration
   end
 
-  def merge_tokens
-    token = Token.find(params[:id])
-    token.merge!
-    redirect_to token_url(token)
-  end
-
   def merge_lemmata
     from = Lemma.find(params[:first_id])
     to = Lemma.find(params[:second_id])

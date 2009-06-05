@@ -53,15 +53,14 @@
     <xs:sequence>
       <xs:element name="token" minOccurs="1" maxOccurs="unbounded" type="Token"/>
     </xs:sequence>
+    <xs:attribute name="presentation-string" type="xs:string"/>
   </xs:complexType>
 
-  <xs:simpleType name="TokenSort">
+  <xs:simpleType name="EmptyTokenSort">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="text"/>
-      <xs:enumeration value="punctuation"/>
-      <xs:enumeration value="empty-dependency-token"/>
-      <xs:enumeration value="lacuna-start"/>
-      <xs:enumeration value="lacuna-end"/>
+      <xs:enumeration value="p"/>
+      <xs:enumeration value="c"/>
+      <xs:enumeration value="v"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -87,17 +86,11 @@
     <xs:attribute name="form" type="xs:string"/>
 
     <!-- Token semantics -->
-    <xs:attribute name="sort" type="TokenSort"/>
-    <xs:attribute name="empty-token-sort" type="xs:string" use="optional"/>
+    <xs:attribute name="sort" type="EmptyTokenSort" use="optional"/>
     <xs:attribute name="contraction" type="xs:boolean" use="optional"/>
     <xs:attribute name="emendation" type="xs:boolean" use="optional"/>
     <xs:attribute name="abbreviation" type="xs:boolean" use="optional"/>
     <xs:attribute name="capitalisation" type="xs:boolean" use="optional"/>
-
-    <!-- Presentation fields -->
-    <xs:attribute name="nospacing" type="TokenNospacing" use="optional"/>
-    <xs:attribute name="presentation-form" type="xs:string" use="optional"/>
-    <xs:attribute name="presentation-span" type="xs:integer" use="optional"/>
 
     <xs:attribute name="id" type="xs:NMTOKEN" use="optional"/>
     <xs:attribute name="head" type="xs:NMTOKEN" use="optional"/>

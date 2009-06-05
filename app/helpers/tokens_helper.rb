@@ -1,7 +1,7 @@
 module TokensHelper
   # Creates a table view of a collection of tokens.
   def tokens_table(tokens)
-    render_tabular tokens, [ 'Form', 'Linearisation index', 'Sort', 'Part of speech', 'Morphology', 'Lemma', '&nbsp;' ]
+    render_tabular tokens, ['Form', 'Index', 'Part of speech', 'Morphology', 'Lemma', 'Empty sort', '&nbsp;']
   end
 
   # Create a link to a token.

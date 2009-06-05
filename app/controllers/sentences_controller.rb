@@ -7,6 +7,16 @@ class SentencesController < ResourceController::Base
     @tokens = @sentence.tokens.search(params[:query], :page => current_page)
   end
 
+  update.before do
+    if params[:sentence]
+      if params[:sentence][:presentation].blank?
+        params[:sentence][:presentation] = nil
+      else
+        params[:sentence][:presentation] = params[:sentence][:presentation].mb_chars.normalize(UNICODE_NORMALIZATION_FORM)
+      end
+    end
+  end
+
   protected
 
   def find_parents
@@ -21,9 +31,6 @@ class SentencesController < ResourceController::Base
 
   public
 
-  # DELETE /sentence/1
-  # DELETE /sentence/1.xml
-  #
   # Destroys the sentence. This works by moving all tokens in the sentence to the
   # previous sentence in the linear order before actually removing the sentence.
   # If there is no previous sentence, then destruction will fail.
@@ -32,12 +39,7 @@ class SentencesController < ResourceController::Base
 
     if @sentence.has_previous_sentence?
       previous_sentence = @sentence.previous_sentence
-
-      Sentence.transaction do
-        previous_sentence.append_first_tokens_from_next_sentence!(@sentence.tokens.length)
-        @sentence.destroy
-        previous_sentence.clear_dependencies!
-      end
+      previous_sentence.append_next_sentence!
 
       respond_to do |format|
         flash[:notice] = 'Successfully destroyed.'

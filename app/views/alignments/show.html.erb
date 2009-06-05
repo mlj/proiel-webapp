@@ -13,12 +13,12 @@
     <tr>
       <td>
         <% a.left.each do |sentence| %>
-          <%= format_sentence(sentence, { :verse_numbers => true, :sentence_numbers => true, } ) %>
+          <%= format_sentence(sentence, { :sentence_numbers => true, } ) %>
         <% end %>
       </td>
       <td>
         <% a.right.each do |sentence| -%>
-          <%= format_sentence(sentence, { :verse_numbers => true, :sentence_numbers => true, } ) %>
+          <%= format_sentence(sentence, { :sentence_numbers => true, } ) %>
         <% end %>
       </td>
     </tr>

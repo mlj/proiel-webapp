@@ -19,6 +19,10 @@ class SourceDivisionsController < ResourceController::Base
     @reviewed_by_stats = @source_division.sentences.reviewed.count(:group => :reviewer).map { |k, v| [k.full_name, v] }
   end
 
+  edit.before do
+    @sentences = @source_division.sentences.search("", :page => current_page, :per_page => 40)
+  end
+
   private
 
   def collection

@@ -24,7 +24,6 @@ class TokensController < ResourceController::Base
 
   update.before do
     if params[:token]
-      params[:token][:presentation_form] = params[:token][:presentation_form].mb_chars.normalize(UNICODE_NORMALIZATION_FORM) if params[:token][:presentation_form]
       params[:token][:form] = params[:token][:form].mb_chars.normalize(UNICODE_NORMALIZATION_FORM)
     end
   end

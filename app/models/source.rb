@@ -10,6 +10,7 @@ class Source < ActiveRecord::Base
   has_many :bookmarks
 
   composed_of :metadata, :class_name => 'Metadata', :mapping => %w(tei_header)
+  serialize :tracked_references
 
   has_many :dependency_alignment_terminations
 

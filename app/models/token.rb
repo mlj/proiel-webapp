@@ -27,9 +27,9 @@ class Token < ActiveRecord::Base
 
   searchable_on :form
 
-  named_scope :word, :conditions => { :sort => :text }
-  named_scope :morphology_annotatable, :conditions => { :sort => PROIEL::MORPHTAGGABLE_TOKEN_SORTS }
-  named_scope :dependency_annotatable, :conditions => { :sort => PROIEL::DEPENDENCY_TOKEN_SORTS }
+  named_scope :word, :conditions => ["empty_token_sort IS NULL"]
+  named_scope :morphology_annotatable, :conditions => ["empty_token_sort IS NULL"]
+  named_scope :dependency_annotatable, :conditions => ["empty_token_sort IS NULL OR empty_token_sort != 'P'"]
   named_scope :morphology_annotated, :conditions => [ "lemma_id IS NOT NULL" ]
 
   # Tokens that are candidate root nodes in dependency graphs.
@@ -44,9 +44,7 @@ class Token < ActiveRecord::Base
 
   # General schema-defined validations
   validates_presence_of :sentence_id
-  validates_presence_of :verse, :unless => :is_empty?
   validates_presence_of :token_number
-  validates_presence_of :sort
 
   # Constraint: t.sentence.reviewed_by => t.lemma_id
   validates_presence_of :lemma, :if => lambda { |t| t.is_morphtaggable? and t.sentence.reviewed_by }
@@ -64,9 +62,8 @@ class Token < ActiveRecord::Base
   # FIXME: validate morphology vs language?
   #validates_inclusion_of :morphology, :in => MorphFeatures.morphology_tag_space(language.iso_code)
 
-  # form and presentation_form must be on the appropriate Unicode normalization form
+  # form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
-  validates_unicode_normalization_of :presentation_form, :form => UNICODE_NORMALIZATION_FORM
 
   validates_inclusion_of :info_status, :allow_nil => true, :in => INFO_STATUSES
 
@@ -174,12 +171,12 @@ class Token < ActiveRecord::Base
   # Returns true if this is an empty token, i.e. a token used for empty nodes
   # in dependency structures.
   def is_empty?
-    PROIEL::EMPTY_TOKEN_SORTS.include?(sort)
+    !empty_token_sort.nil?
   end
 
   # Returns true if this is a token that takes part in morphology tagging.
   def is_morphtaggable?
-    PROIEL::MORPHTAGGABLE_TOKEN_SORTS.include?(sort)
+    empty_token_sort.nil?
   end
 
   # Merges the token with the token linearly subsequent to it. The succeeding
@@ -327,8 +324,8 @@ class Token < ActiveRecord::Base
     end
   end
 
-  # Returns the distance between two tokens measured in number of words (i.e., tokens with sort == 'text').
-  # first_token is supposed to precede second_token.
+  # Returns the distance between two tokens measured in number of words.
+  # first_token must precede second_token.
   def self.word_distance_between(first_token, second_token)
     raise "Tokens must be in the same source" unless self.tokens_in_same_source?(first_token, second_token)
     raise "The two tokens are not in contiguous source divisions" unless self.tokens_in_contiguous_source_divisions?(first_token, second_token)
@@ -399,22 +396,14 @@ class Token < ActiveRecord::Base
     end
 
     # sort :empty_dependency_token <=> form.nil?
-    if sort == :empty_dependency_token or sort == :lacuna_start or sort == :lacuna_end or form.nil?
-      errors.add_to_base("Empty tokens must have NULL form and sort set to 'empty_dependency_token' or 'lacuna'") unless (sort == :empty_dependency_token or sort == :lacuna_start or sort == :lacuna_end) and form.nil?
-    end
-
-    # sort :presentation_form <=> :presentation_span <=> (contraction || emendation || abbreviation || capitalisation)
-    if !presentation_form.nil? or !presentation_span.nil? or contraction or emendation or abbreviation or capitalisation
-      errors.add_to_base("Tokens with presentation form must have presentation_form set") if presentation_form.nil?
-      errors.add_to_base("Tokens with presentation form must have presentation_span set") if presentation_span.nil?
-      errors.add_to_base("Tokens with presentation form must have one of contraction, emendation, abbreviation or capitalisation set") unless contraction or emendation or abbreviation or capitalisation
+    if is_empty? or form.nil?
+      errors.add_to_base("Empty tokens must have NULL form") unless is_empty? and form.nil?
     end
   end
 
   private
 
   def before_validation_cleanup
-    self.presentation_form = nil if presentation_form.blank?
     self.morphology = nil if morphology.blank?
     self.lemma_id = nil if lemma_id.blank?
     self.source_morphology = nil if source_morphology.blank?

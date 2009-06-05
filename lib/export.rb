@@ -105,11 +105,11 @@ class PROIELXMLExport < SourceExport
 
   def write_source_division(builder, source_division)
     filtered_sentences(source_division).find_each do |sentence|
-      builder.sentence { write_sentence(builder, sentence) }
+      builder.sentence(:presentation => sentence.presentation) { write_sentence(builder, sentence) }
     end
   end
 
-  VERBATIM_TOKEN_ATTRIBUTES = %w(presentation_form form presentation_span nospacing contraction
+  VERBATIM_TOKEN_ATTRIBUTES = %w(form contraction
     emendation abbreviation capitalisation verse empty_token_sort foreign_ids)
 
   def write_sentence(builder, sentence)
@@ -118,7 +118,6 @@ class PROIELXMLExport < SourceExport
       attributes[:head] = token.head_id if token.head
       attributes[:lemma] = token.morph_features.lemma_s if token.morph_features
       attributes[:morphology] = token.morph_features.morphology_s if token.morph_features
-      attributes[:sort] = token.sort.to_s.gsub('_', '-')
       attributes[:relation] = token.relation.tag if token.relation
 
       VERBATIM_TOKEN_ATTRIBUTES.each do |a|
@@ -212,13 +211,13 @@ class TigerXMLExport < SourceExport
             builder.nonterminals do
               # Emit the empty root node
               builder.nt(:id => root_node_id, :form => '', :morphology => '', :lemma => '') do
-                s.dependency_tokens.reject(&:head).each do |t|
+                s.tokens.dependency_annotatable.reject(&:head).each do |t|
                   builder.edge(:idref => "p#{t.id}", :label => t.relation.tag)
                 end
               end
 
               # Do the actual nodes
-              s.dependency_tokens.each do |t|
+              s.tokens.dependency_annotatable.each do |t|
                 builder.nt(token_attrs(s, t).merge({ :id => "p#{t.id}"})) do
                   # Add an edge between this node and the correspoding terminal node unless
                   # this is not a morphtaggable node.
@@ -275,7 +274,7 @@ class MaltXMLExport < SourceExport
             # XML in this manner, but what can one do...) The ID 1 is reserved
             # for an empty root node to be added later, so we start the mapping at
             # ID 2.
-            ids = s.dependency_tokens.collect(&:id)
+            ids = s.tokens.dependency_annotatable.map(&:id)
             local_token_ids = Hash[*ids.zip((2..(ids.length + 1)).to_a).flatten]
 
             # Add another one to function as a root node. This is necessary
@@ -285,7 +284,7 @@ class MaltXMLExport < SourceExport
             local_token_ids[nil] = 1
             builder.word({ :id => 1, :head => 0, :deprel => 'ROOT' })
 
-            s.dependency_tokens.each do |t|
+            s.tokens.dependency_annotatable.each do |t|
               attrs = { :id => local_token_ids[t.id]}
               attrs.merge!({ :form => t.form }) if t.form
 

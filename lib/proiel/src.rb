@@ -105,13 +105,9 @@ module PROIEL
                 a[k.to_sym] = v
               when 'verse'
                 a[k.to_sym] = v.to_i
-              when 'presentation-span'
-                a[:presentation_span] = v.to_i
-              when 'presentation-form'
-                a[:presentation_form] = v
               when 'contraction', 'emendation', 'abbreviation', 'capitalisation'
                 a[k.to_sym] = (v == 'true' ? true : false)
-              when 'sort', 'nospacing'
+              when 'sort'
                 a[k.to_sym] = v.gsub(/-/, '_').to_sym
               when 'foreign-ids'
                 a[:foreign_ids] = v
@@ -126,11 +122,4 @@ module PROIEL
       end
     end
   end
-
-  WORD_TOKEN_SORTS = [ :text ].freeze
-  EMPTY_TOKEN_SORTS = [ :empty_dependency_token ].freeze
-  PUNCTUATION_TOKEN_SORTS = [ :punctuation ].freeze
-  NON_EMPTY_TOKEN_SORTS = WORD_TOKEN_SORTS + PUNCTUATION_TOKEN_SORTS
-  MORPHTAGGABLE_TOKEN_SORTS = WORD_TOKEN_SORTS
-  DEPENDENCY_TOKEN_SORTS = WORD_TOKEN_SORTS + EMPTY_TOKEN_SORTS
 end

@@ -80,7 +80,8 @@ class PROIELXMLImport < SourceImport
       if sentence_number != attributes[:sentence_number]
         sentence_number = attributes[:sentence_number]
         sentence = source_division.sentences.create!(:sentence_number => sentence_number, 
-                                                     :chapter => attributes[:chapter])
+                                                     :chapter => attributes[:chapter],
+                                                     :presentation => attributes[:presentation])
       end
 
 #FIXME: this should be moved somewhere else to allow for future extensions. 
@@ -104,14 +105,10 @@ class PROIELXMLImport < SourceImport
                    :source_lemma => attributes[:lemma],
                    :form => attributes[:form],
                    :verse => attributes[:verse],
-                   :sort => attributes[:sort],
                    :contraction => attributes[:contraction] || false,
                    :emendation => attributes[:emendation] || false,
                    :abbreviation => attributes[:abbreviation] || false,
                    :capitalisation => attributes[:capitalisation] || false,
-                   :nospacing => attributes[:nospacing],
-                   :presentation_form => attributes[:presentation_form],
-                   :presentation_span => attributes[:presentation_span],
                    :foreign_ids => attributes[:foreign_ids])
 
       if attributes[:notes]

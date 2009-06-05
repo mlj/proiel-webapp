@@ -55,13 +55,9 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  # Tokens that can be tagged with dependency relations.
-  has_many :dependency_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
-    :conditions => { "sort" => PROIEL::DEPENDENCY_TOKEN_SORTS }, :order => 'token_number'
+  before_validation :before_validation_cleanup
 
-  # Tokens that are non-empty.
-  has_many :nonempty_tokens, :class_name => 'Token', :foreign_key => 'sentence_id',
-    :conditions => { "sort" => PROIEL::NON_EMPTY_TOKEN_SORTS }, :order => 'token_number'
+  serialize :reference_fields
 
   # Sentences that have not been annotated.
   named_scope :unannotated, :conditions => ["annotated_by IS NULL"]
@@ -87,6 +83,9 @@ class Sentence < ActiveRecord::Base
   validates_presence_of :source_division_id
   validates_presence_of :sentence_number
 
+  # Presentation string must be on the appropriate Unicode normalization form
+  validates_unicode_normalization_of :presentation, :form => UNICODE_NORMALIZATION_FORM
+
   validate :check_invariants
 
   acts_as_audited :except => [ :annotated_by, :annotated_at, :reviewed_by, :reviewed_at ]
@@ -94,6 +93,84 @@ class Sentence < ActiveRecord::Base
   # Returns the language for the sentence.
   def language
     source_division.language
+  end
+
+  # Returns the reference fields. Also merges in fields from the
+  # source division.
+  def reference_fields
+    source_division.reference_fields.merge(read_attribute(:reference_fields))
+  end
+
+  # Sets the reference fields. Also updates fields in the source
+  # division.
+  def reference_fields=(x)
+    write_attribute(:reference_fields, x.slice(source_division.source.tracked_references["sentence"]))
+    source_division.reference_fields = x
+  end
+
+  # Returns the presentation level as UTF-8 HTML.
+  #
+  # <tt>:section_numbers</tt> -- If true, output will include section
+  # numbers.
+  def presentation_as_html(options = {})
+    xsl_params = {
+      :language_code => "'#{language.iso_code.to_s}'",
+      :default_language_code => "'en'"
+    }
+    xsl_params[:sectionNumbers] = "'1'" if options[:section_numbers]
+
+    presentation_as(APPLICATION_CONFIG.presentation_as_html_stylesheet, xsl_params)
+  end
+
+  # Returns the presentation level as verbatim UTF-8 HTML, i.e.
+  # without converting the data to proper presentation HTML.
+  #
+  # === Options
+  #
+  # <tt>:coloured</tt> -- If true, will colour the output.
+  def presentation_as_prettyprinted_code(options = {})
+    unless options[:coloured]
+      presentation.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;')
+    else
+      presentation.gsub(/&([^;]+);/, '<font color="blue">&\1;</font>').gsub(/<([^>]+)>/, '<font color="blue">&lt;\1&gt;</font>')
+    end
+  end
+
+  # Returns the presentation level as UTF-8 text.
+  def presentation_as_text
+    presentation_as(APPLICATION_CONFIG.presentation_as_text_stylesheet)
+  end
+
+  private
+
+  def presentation_as(stylesheet_method, xsl_params = {})
+    parser = XML::Parser.string('<presentation>' + presentation + '</presentation>')
+
+    begin
+      xml = parser.parse
+    rescue LibXML::XML::Parser::ParseError => p
+      raise "Invalid presentation string for sentence #{id}: #{p}"
+    end
+
+    s = stylesheet_method.apply(xml, xsl_params).to_s
+
+    # FIXME: libxslt-ruby bug #21615: XML decl. shows up in the output
+    # even when omit-xml-declaration is set
+    s.gsub!(/<\?xml version="1\.0" encoding="UTF-8"\?>\s+/, '')
+
+    # FIXME: Why is there an additional CR at the end of the string?
+    s.chomp!
+
+    s
+  end
+
+  public
+
+  # Returns the sentence and its context as an array of sentences. +n+
+  # specifies the number of sentences to count as the sentence's
+  # 'context'.
+  def sentences_in_context(n = 5)
+    previous_sentences.last(n) + [self] + next_sentences.first(n)
   end
 
   #FIXME:DRY generalise < token
@@ -147,26 +224,25 @@ class Sentence < ActiveRecord::Base
     sentence_citation = if options[:internal]
                           sentence_number
                         else
-                          verses = tokens.word.first.verse..tokens.word.last.verse
-                          if verses.first == verses.last
-                            verses.first
-                          else
-                            "#{verses.first}-#{verses.last}"
-                          end
+                          reference_fields.values.join(', ')
                         end
     [source_division.citation(options), sentence_citation] * ':'
   end
 
   # Remove all dependency annotation from a sentence and save the changes.
-  # This will also do away with any empty tokens in the sentence.
+  # This will also do away with any empty tokens in the sentence, and
+  # change the annotation and review state of the sentence.
   def clear_dependencies!
     tokens.each { |token| token.update_attributes!(:relation => nil, :head => nil) }
-    delete_all_empty_tokens!
-  end
 
-  # Remove all empty tokens from a sentence
-  def delete_all_empty_tokens!
+    # Remove all empty tokens from a sentence
     Token.delete_all :sentence_id => self.id, :form => nil
+
+    self.annotated_by = nil
+    self.annotated_at = nil
+    self.reviewed_by = nil
+    self.reviewed_at = nil
+    save!
   end
 
   def syntactic_annotation=(dependency_graph)
@@ -201,7 +277,7 @@ class Sentence < ActiveRecord::Base
         # will not have its verse number set as the sentence may cross
         # verse boundaries. The verse number of the empty token is therefore
         # undefined.
-        t = tokens.create(:token_number => @new_token_number, :sort => :empty_dependency_token)
+        t = tokens.create(:token_number => @new_token_number)
         @new_token_number += 1
         id_map[added_token_id] = t.id
       end
@@ -240,14 +316,25 @@ class Sentence < ActiveRecord::Base
     self.tokens.minimum(:token_number)
   end
 
-  # Appends the next sentence onto this sentence and destroys the old next
-  # sentence. This should be protected by a transaction.
+  # Appends the next sentence onto this sentence and destroys the old
+  # sentence. This also removed all dependency annotation from both
+  # sentences to ensure validity.
   def append_next_sentence!
-    if succ
-      succ.tokens.each do |token|
-        append_token!(token)
+    if self.has_next_sentence?
+      Sentence.transaction do
+        # Start by clearing as much annotation as we need to
+        self.clear_dependencies!
+        self.next_sentence.clear_dependencies!
+
+        append_tokens!(self.next_sentence.tokens)
+
+        self.presentation = self.presentation + ' ' + self.next_sentence.presentation
+        self.save!
+
+        self.next_sentence.destroy
       end
-      succ.destroy!
+    else
+      raise "No next sentence"
     end
   end
 
@@ -372,7 +459,7 @@ class Sentence < ActiveRecord::Base
   # Returns the dependency graph for the sentence.
   def dependency_graph
     PROIEL::ValidatingDependencyGraph.new do |g|
-      dependency_tokens.each { |t| g.badd_node(t.id, t.relation.tag, t.head ? t.head.id : nil,
+      tokens.dependency_annotatable.each { |t| g.badd_node(t.id, t.relation.tag, t.head ? t.head.id : nil,
                                                Hash[*t.slash_out_edges.map { |se| [se.slashee.id, se.relation.tag] }.flatten],
                                                { :empty => t.empty_token_sort || false,
                                                  :token_number => t.token_number,
@@ -383,7 +470,7 @@ class Sentence < ActiveRecord::Base
 
   # Returns +true+ if sentence has dependency annotation.
   def has_dependency_annotation?
-    @has_dependency_annotation ||= dependency_tokens.first && !dependency_tokens.first.relation.nil?
+    @has_dependency_annotation ||= tokens.dependency_annotatable.first && !tokens.dependency_annotatable.first.relation.nil?
   end
 
   # Returns +true+ if sentence has morphological annotation (i.e.
@@ -399,7 +486,7 @@ class Sentence < ActiveRecord::Base
   def root_dependency_token
     # TODO: add a validation rule that verifies that root_dependency_tokens only matches one
     # token?
-    dependency_tokens.root_dependency_tokens.first
+    tokens.dependency_annotatable.root_dependency_tokens.first
   end
 
   protected
@@ -437,7 +524,7 @@ class Sentence < ActiveRecord::Base
     # Invariant: sentence is dependency annotated <=>
     # all dependency tokens have non-nil relation attributes <=> there exists one
     # dependency token with non-nil relation.
-    if dependency_tokens.any?(&:relation) and not dependency_tokens.all?(&:relation)
+    if tokens.dependency_annotatable.any?(&:relation) and not tokens.dependency_annotatable.all?(&:relation)
       errors.add_to_base("Dependency annotation must be complete")
     end
 
@@ -458,5 +545,11 @@ class Sentence < ActiveRecord::Base
   def add_dependency_error(msg, tokens)
     ids = tokens.collect(&:token_number)
     errors.add_to_base("Token #{ids.length == 1 ? 'number' : 'numbers'} #{ids.to_sentence}: #{msg}")
+  end
+
+  private
+
+  def before_validation_cleanup
+    self.presentation = nil if presentation.blank?
   end
 end

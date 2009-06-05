@@ -1,4 +1,12 @@
-<% form_for(@source_division) do |form| %>
-  <%= render :partial => 'form', :object => form %>
-  <%= form.submit "Update" %>
-<% end %>
+<div>
+  <% form_for(@source_division) do |form| %>
+    <%= render :partial => 'form', :object => form %>
+    <%= form.submit "Update" %>
+  <% end %>
+</div>
+
+<div class="text-view">
+  <%= format_presentation_text(@sentences, {
+    :section_numbers => params[:numbering] != 'sentences',
+    :sentence_numbers => params[:numbering] == 'sentences' }) %>
+</div>

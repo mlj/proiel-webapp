@@ -75,17 +75,12 @@ class SourceDivision < ActiveRecord::Base
     source.language
   end
 
-  # Returns the reference field indentified by +key+ from the the
-  # +fields+ attribute.
-  def field(key)
-    case key
-    when :book
-      fields.match(/book=([0-9A-Z]+)/)[1]
-    when :chapter
-      fields.match(/chapter=(\d+|Incipit|Explicit)/)[1]
-    else
-      raise ArgumentError, 'invalid key'
-    end
+  serialize :reference_fields
+
+  # Sets the reference fields. Also updates fields in the source
+  # division.
+  def reference_fields=(x)
+    write_attribute(:reference_fields, x.slice(source.tracked_references["source_division"]))
   end
 
   protected

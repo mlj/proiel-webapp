@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090531145517) do
+ActiveRecord::Schema.define(:version => 20090531145518) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -201,17 +201,19 @@ ActiveRecord::Schema.define(:version => 20090531145517) do
   add_index "semantic_tags", ["taggable_type"], :name => "index_semantic_tags_on_taggable_type"
 
   create_table "sentences", :force => true do |t|
-    t.integer  "sentence_number",       :default => 0,     :null => false
+    t.integer  "sentence_number",                      :default => 0,     :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "annotated_by"
     t.datetime "annotated_at"
     t.integer  "reviewed_by"
     t.datetime "reviewed_at"
-    t.boolean  "unalignable",           :default => false, :null => false
-    t.boolean  "automatic_alignment",   :default => false
+    t.boolean  "unalignable",                          :default => false, :null => false
+    t.boolean  "automatic_alignment",                  :default => false
     t.integer  "sentence_alignment_id"
-    t.integer  "source_division_id",    :default => 0,     :null => false
+    t.integer  "source_division_id",                   :default => 0,     :null => false
+    t.text     "presentation",                                            :null => false
+    t.string   "reference_fields",      :limit => 128, :default => "",    :null => false
   end
 
   add_index "sentences", ["source_division_id", "sentence_number"], :name => "index_sentences_on_source_division_id_and_sentence_number"
@@ -227,42 +229,34 @@ ActiveRecord::Schema.define(:version => 20090531145517) do
   create_table "source_divisions", :force => true do |t|
     t.integer  "source_id",                                 :default => 0,  :null => false
     t.integer  "position",                                  :default => 0,  :null => false
-    t.string   "title",                      :limit => 128, :default => "", :null => false
+    t.string   "title",                      :limit => 128
     t.string   "abbreviated_title",          :limit => 128, :default => "", :null => false
-    t.string   "fields",                     :limit => 128, :default => "", :null => false
+    t.string   "reference_fields",           :limit => 128, :default => "", :null => false
     t.integer  "aligned_source_division_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "sources", :force => true do |t|
-    t.string  "code",         :limit => 64, :default => "", :null => false
+    t.string  "code",               :limit => 64,  :default => "", :null => false
     t.text    "title"
-    t.string  "abbreviation", :limit => 64, :default => "", :null => false
-    t.integer "language_id",                :default => 0,  :null => false
-    t.text    "tei_header",                                 :null => false
+    t.string  "abbreviation",       :limit => 64,  :default => "", :null => false
+    t.integer "language_id",                       :default => 0,  :null => false
+    t.text    "tei_header",                                        :null => false
+    t.string  "tracked_references", :limit => 128, :default => "", :null => false
   end
 
   create_table "tokens", :force => true do |t|
     t.integer  "sentence_id",                                                                                                                                 :default => 0,     :null => false
-    t.integer  "verse"
     t.integer  "token_number",                                                                                                                                :default => 0,     :null => false
     t.string   "form",                         :limit => 64
     t.integer  "lemma_id"
     t.integer  "head_id"
-    t.enum     "sort",                         :limit => [:text, :punctuation, :empty_dependency_token, :lacuna_start, :lacuna_end],              :default => :text, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "source_morphology",            :limit => 17
     t.string   "source_lemma",                 :limit => 32
     t.text     "foreign_ids"
-    t.boolean  "contraction",                                                                                                                                 :default => false, :null => false
-    t.enum     "nospacing",                    :limit => [:before, :after, :both]
-    t.string   "presentation_form",            :limit => 128
-    t.integer  "presentation_span"
-    t.boolean  "emendation",                                                                                                                                  :default => false, :null => false
-    t.boolean  "abbreviation",                                                                                                                                :default => false, :null => false
-    t.boolean  "capitalisation",                                                                                                                              :default => false, :null => false
     t.enum     "info_status",                  :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :old_inact, :no_info_status, :info_unannotatable]
     t.string   "empty_token_sort",             :limit => 1
     t.string   "contrast_group"
