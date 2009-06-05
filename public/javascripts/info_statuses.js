@@ -7,7 +7,7 @@ var InfoStatus = function() {
 
     // private variables
 
-    var categories = new Array('new', 'acc', 'acc-gen', 'acc-disc', 'acc-inf', 'old', 'old-inact', 'no-info-status', 'info-unannotatable');
+    var categories = new Array('new', 'acc', 'acc-gen', 'acc-sit', 'acc-inf', 'old', 'old-inact', 'no-info-status', 'info-unannotatable');
     var annotatables = null;
     var unannotatables = null;
     var selected_token = null;

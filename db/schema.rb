@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090531145518) do
+ActiveRecord::Schema.define(:version => 20090531145519) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -243,12 +243,12 @@ ActiveRecord::Schema.define(:version => 20090531145518) do
     t.string  "abbreviation",       :limit => 64,  :default => "", :null => false
     t.integer "language_id",                       :default => 0,  :null => false
     t.text    "tei_header",                                        :null => false
-    t.string  "tracked_references", :limit => 128, :default => "", :null => false
+    t.string  "tracked_references", :limit => 128,                 :null => false
   end
 
   create_table "tokens", :force => true do |t|
-    t.integer  "sentence_id",                                                                                                                                 :default => 0,     :null => false
-    t.integer  "token_number",                                                                                                                                :default => 0,     :null => false
+    t.integer  "sentence_id",                                                                                                                                :default => 0,     :null => false
+    t.integer  "token_number",                                                                                                                               :default => 0,     :null => false
     t.string   "form",                         :limit => 64
     t.integer  "lemma_id"
     t.integer  "head_id"
@@ -257,13 +257,13 @@ ActiveRecord::Schema.define(:version => 20090531145518) do
     t.string   "source_morphology",            :limit => 17
     t.string   "source_lemma",                 :limit => 32
     t.text     "foreign_ids"
-    t.enum     "info_status",                  :limit => [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :old_inact, :no_info_status, :info_unannotatable]
+    t.enum     "info_status",                  :limit => [:new, :acc, :acc_gen, :acc_sit, :acc_inf, :old, :old_inact, :no_info_status, :info_unannotatable]
     t.string   "empty_token_sort",             :limit => 1
     t.string   "contrast_group"
     t.integer  "antecedent_dist_in_words"
     t.integer  "antecedent_dist_in_sentences"
     t.integer  "token_alignment_id"
-    t.boolean  "automatic_token_alignment",                                                                                                                   :default => false
+    t.boolean  "automatic_token_alignment",                                                                                                                  :default => false
     t.integer  "dependency_alignment_id"
     t.integer  "antecedent_id"
     t.integer  "relation_id"

@@ -1,5 +1,5 @@
 class Token < ActiveRecord::Base
-  INFO_STATUSES = [:new, :acc, :acc_gen, :acc_disc, :acc_inf, :old, :old_inact, :no_info_status, :info_unannotatable]
+  INFO_STATUSES = [:new, :acc, :acc_gen, :acc_sit, :acc_inf, :old, :old_inact, :no_info_status, :info_unannotatable]
 
   belongs_to :sentence
   belongs_to :lemma
