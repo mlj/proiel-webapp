@@ -155,7 +155,7 @@ module Tagger
             found = nil
             m[:include_new_source_tags].each_pair do |src, dst|
               if Regexp.new(src).match(existing.pos_s + existing.morphology_s)
-                existing.union!(MorphFeatures.new(",#{dst[0, 2]},#{language}", dst[2, 11])) if dst
+                existing = existing.union(MorphFeatures.new(",#{dst[0, 2]},#{language}", dst[2, 11])) if dst
                 found = true
               end
             end
