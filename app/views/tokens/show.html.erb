@@ -8,13 +8,11 @@
   <% if @token.form %>
     <dt>Form:</dt><dd class="foreign-word"><%= format_token_form(@token) %></dd>
   <% end %>
-  <dt>Tokenization flags:</dt><dd><%= readable_presentation_flags(@token) %></dd>
   <% if @token.is_morphtaggable? and @token.morph_features %>
     <dt>Part of speech:</dt><dd><%= @token.morph_features.pos_summary.capitalize %></dd>
     <dt>Morphology:</dt><dd><%= @token.morph_features.morphology_summary.capitalize %></dd>
     <dt>Lemma:</dt><dd class="foreign-word"><%= @token.lemma ? link_to_lemma(@token.lemma) : '&nbsp;' %></dd>
   <% end %>
-
   <% if @token.relation %>
     <dt>Dependency relation:</dt><dd><%= readable_dependency(@token.relation, @token.head ? link_to(@token.head.id, @token.head) : nil) %></dd>
   <% end %>
