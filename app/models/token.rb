@@ -141,7 +141,7 @@ class Token < ActiveRecord::Base
     # to pass along the language, as the +source_lemma+ attribute is a
     # serialized lemma specification without language code.
     if source_lemma or source_morphology
-      MorphFeatures.new(source_lemma, source_morphology, token.language)
+      MorphFeatures.new(source_lemma, source_morphology, language)
     else
       nil
     end
