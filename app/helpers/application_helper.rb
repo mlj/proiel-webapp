@@ -221,6 +221,7 @@ module ApplicationHelper
   #
   # === Actions
   # <tt>:index</tt> -- A link to the index page for the resource.
+  # <tt>:new</tt> -- A link for adding a new object.
   # <tt>:edit</tt> -- A link for editing the object.
   # <tt>:delete</tt> -- A link for deleting the object.
   # <tt>:previous</tt> -- A link to the previous object. This is only
@@ -234,6 +235,8 @@ module ApplicationHelper
       case action
       when :index
         link_to_index(object)
+      when :new
+        link_to_new(object)
       when :edit
         link_to_edit(object)
       when :delete
@@ -249,6 +252,12 @@ module ApplicationHelper
   # Creates a resource index link for an object.
   def link_to_index(object)
     link_to('Index', send("#{object.class.to_s.underscore.pluralize}_url"), :class => :index)
+  end
+
+  # Creates a resource index link for an object or a model.
+  def link_to_new(object_or_model)
+    klass = object_or_model.is_a?(Class) ? object_or_model : object_or_model.class
+    link_to('New', send("new_#{klass.to_s.underscore}_url"), :class => :new)
   end
 
   # Creates a resource edit link for an object.
