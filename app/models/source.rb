@@ -1,9 +1,12 @@
 class Source < ActiveRecord::Base
+  validates_presence_of :code
   validates_presence_of :title
   validates_uniqueness_of :title
+  validates_presence_of :language
   validates_each :metadata do |record, attr, value|
     record.errors.add :tei_header, "invalid: #{value.error_message}" unless value.valid?
   end
+  validates_presence_of :tracked_references
 
   belongs_to :language
   has_many :source_divisions, :order => [:position]

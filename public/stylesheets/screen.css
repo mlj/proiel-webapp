@@ -94,6 +94,12 @@ a.add {
   margin-right: 1em;
 }
 
+a.new {
+  padding-left: 16px;
+  background: transparent url(/images/sweetie/16-em-plus.png) no-repeat center left;
+  margin-right: 1em;
+}
+
 /* Link target decorations */
 
 a[href $='.pdf'] { 

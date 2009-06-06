@@ -1,5 +1,8 @@
-<% search_form_tag sources_path do %>
-  <label>Title</label><%= text_field_tag :query, params[:query] %>
+<% roundedbox do -%>
+  <%= link_to_resources Source, :new %>
+  <% search_form_tag sources_path do %>
+    <label>Title</label><%= text_field_tag :query, params[:query] %>
+  <% end %>
 <% end %>
 
 <%= render_tabular @sources, [ 'Title', 'Language', '&nbsp;' ] %>
