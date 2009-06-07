@@ -70,4 +70,9 @@
     <span class="speaker"><xsl:apply-templates/>: </span>
     <xsl:text> </xsl:text>
   </xsl:template>
+
+  <!-- Typography -->
+  <xsl:template match="lb">
+    <br/>
+  </xsl:template>
 </xsl:stylesheet>

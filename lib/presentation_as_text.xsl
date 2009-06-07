@@ -38,4 +38,7 @@
 
   <!-- Speakers etc. -->
   <xsl:template match="speaker"/>
+
+  <!-- Typography -->
+  <xsl:template match="lb"/>
 </xsl:stylesheet>
