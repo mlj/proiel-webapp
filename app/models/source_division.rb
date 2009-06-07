@@ -80,7 +80,7 @@ class SourceDivision < ActiveRecord::Base
   # Sets the reference fields. Also updates fields in the source
   # division.
   def reference_fields=(x)
-    write_attribute(:reference_fields, x.slice(source.tracked_references["source_division"]))
+    write_attribute(:reference_fields, x.slice(*source.tracked_references["source_division"]))
   end
 
   protected

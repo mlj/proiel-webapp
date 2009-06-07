@@ -20,6 +20,10 @@ class ApplicationConfig
   def presentation_as_text_stylesheet
     @presentation_as_text_stylesheet ||= XSLT::Stylesheet.new(XML::Document.file(@config.presentation_as_text_stylesheet))
   end
+
+  def presentation_as_reference_stylesheet
+    @presentation_as_reference_stylesheet ||= XSLT::Stylesheet.new(XML::Document.file(@config.presentation_as_reference_stylesheet))
+  end
 end
 
 APPLICATION_CONFIG = ApplicationConfig.instance

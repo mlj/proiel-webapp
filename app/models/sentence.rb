@@ -102,9 +102,9 @@ class Sentence < ActiveRecord::Base
   end
 
   # Sets the reference fields. Also updates fields in the source
-  # division.
+  # division, which must be separately saved if updated.
   def reference_fields=(x)
-    write_attribute(:reference_fields, x.slice(source_division.source.tracked_references["sentence"]))
+    write_attribute(:reference_fields, x.slice(*source_division.source.tracked_references["sentence"]))
     source_division.reference_fields = x
   end
 
@@ -139,6 +139,33 @@ class Sentence < ActiveRecord::Base
   # Returns the presentation level as UTF-8 text.
   def presentation_as_text
     presentation_as(APPLICATION_CONFIG.presentation_as_text_stylesheet)
+  end
+
+  # Returns the presentation level as a sequence of references. The
+  # references are returned as a hash with reference units as keys and
+  # reference values as values.
+  def presentation_as_reference
+    refs = presentation_as(APPLICATION_CONFIG.presentation_as_reference_stylesheet)
+
+    refs.gsub(/\s+/, ' ').split(/\s*,\s*/).compact.inject({}) do |fields, field|
+      r, v = field.split('=')
+
+      # Type conversion: try to convert to integer if possible
+      v = v.to_i if v.to_i.to_s == v
+
+      case fields[r]
+      when NilClass
+        fields[r] = v
+      when Array
+        fields[r] << v
+        fields[r].sort!
+        fields[r].uniq!
+      else
+        fields[r] = [fields[r], v].sort.uniq
+      end
+
+      fields
+    end
   end
 
   private
