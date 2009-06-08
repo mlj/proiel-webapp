@@ -1,11 +1,8 @@
-<div class="roundedbox">
-  <dl>
-    <dt>Source:</dt><dd><%= link_to_source(@source_division.source) %></dd>
-    <dt>Part:</dt><dd><%=h @source_division.title %></dd>
-  </dl>
-  <%= link_to_resources @source_division, :previous, :next, :index, :edit %>
+<% roundedbox do -%>
+  <%=h @source_division.citation %> <%= show_completion_rate(@source_division.completion, :checkmark => :only) %><br/>
+  <%= link_to_resources @source_division, :previous, :next, :index, :edit, :parent %>
   <%= link_to_if @source_division.aligned_source_division, "Sentence alignments", alignment_path(@source_division) %>
-</div>
+<% end %>
 
 <% search_form_tag source_division_path(@source_division), :submit => 'Update' do %>
   <%= radio_button_tag 'numbering', 'verses', params[:numbering] != 'sentences' %>

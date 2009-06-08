@@ -45,6 +45,23 @@ class SourceDivision < ActiveRecord::Base
     source.source_divisions.exists?(["position > ?", position])
   end
 
+  # Returns the parent object for the source division, which will be its
+  # source.
+  def parent
+    source
+  end
+
+  # Returns the completion state of the source division.
+  def completion
+    if sentences.exists?(["reviewed_by IS NULL and annotated_by IS NULL"])
+      :unannotated
+    elsif sentences.exists?(["reviewed_by IS NULL"])
+      :annotated
+    else
+      :reviewed
+    end
+  end
+
   # Returns a citation-form reference for this source division.
   #
   # ==== Options
