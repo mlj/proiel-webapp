@@ -1,5 +1,5 @@
 <tr class="<%= cycle('even', 'odd') %>">
   <td><%= link_to_source(source_division.source) %></td>
-  <td><%=h source_division.title %></td>
+  <td><%=h source_division.title %> <%= show_completion_rate(source_division.completion, :checkmark => :only) %></td>
   <td><%= link_to 'Details', source_division %></td>
 </tr>

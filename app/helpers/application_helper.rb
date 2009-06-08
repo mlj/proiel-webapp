@@ -76,11 +76,23 @@ module ApplicationHelper
   # Generates a human readable representation of a completion rate for a sentence.
   def readable_completion(sentence, options = {})
     if sentence.is_reviewed?
-      s = "Reviewed"
+      show_completion_rate(:reviewed, options)
     elsif sentence.is_annotated?
-      s = "Annotated"
+      show_completion_rate(:annotated, options)
     else
+      show_completion_rate(:unannotated, options)
+    end
+  end
+
+  # Generates a human readable representation of a completion rate.
+  def show_completion_rate(rate, options = {})
+    case rate
+    when :unannotated
       s = "Not annotated"
+    when :annotated
+      s = "Annotated"
+    when :reviewed
+      s = "Reviewed"
     end
 
     if options[:checkmark]
@@ -90,18 +102,11 @@ module ApplicationHelper
         c = s
       end
 
-      if sentence.is_reviewed?
-        content_tag(:span, c, :class => 'reviewed')
-      elsif sentence.is_annotated?
-        content_tag(:span, c, :class => 'annotated')
-      else
-        content_tag(:span, c, :class => 'unannotated')
-      end
+      content_tag(:span, c, :class => rate.to_s)
     else
       s
     end
   end
-
   # Generates a human readable representation of a relation code.
   def readable_relation(relation)
     "<span class='relation'><abbr title='#{relation.summary.capitalize}'>#{relation.tag}</abbr></span>"

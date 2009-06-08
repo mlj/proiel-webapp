@@ -1,4 +1,5 @@
 <% roundedbox do -%>
+  <%=h @source.citation %> <%= show_completion_rate(@source.completion, :checkmark => :only) %><br/>
   <dt>Title:</dt><dd class="title"><%=h @source.title %></dd>
   <dt>Abbreviation:</dt><dd class="title"><%=h @source.abbreviation %></dd>
   <dt>Tag:</dt><dd class="tag"><%=h @source.code %></dd>
