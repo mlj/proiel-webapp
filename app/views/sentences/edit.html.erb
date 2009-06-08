@@ -1,0 +1,5 @@
+<% form_for(@sentence) do |form| %>
+  <%= render :partial => 'form', :object => form %>
+  <%= form.submit "Update" %>
+<% end %>
+

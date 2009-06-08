@@ -1,7 +1,7 @@
 class SentencesController < ResourceController::Base
   before_filter :find_parents
-  before_filter :is_reviewer?, :only => [:destroy, :flag_as_reviewed, :flag_as_not_reviewed]
-  actions :all, :except => [:new, :edit, :create, :update, :destroy] # we add our own destroy later
+  before_filter :is_reviewer?, :only => [:edit, :update, :destroy, :flag_as_reviewed, :flag_as_not_reviewed]
+  actions :all, :except => [:new, :create, :destroy] # we add our own destroy later
 
   show.before do
     @tokens = @sentence.tokens.search(params[:query], :page => current_page)
