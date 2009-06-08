@@ -1,0 +1,5 @@
+<% form_for(@source) do |form| %>
+  <%= form.text_field :code, :required => true, :help => 'Identifying tag for the source', :label => 'Tag' %>
+  <%= render :partial => 'form', :object => form %>
+  <%= form.submit "Create" %>
+<% end %>
