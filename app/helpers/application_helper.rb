@@ -208,7 +208,8 @@ module ApplicationHelper
 
   # Creates resource links for an object. +actions+ contains a list of
   # actions to present. All links are styled with icons. The links are
-  # shown in the order given.
+  # shown in a specific order regardless of the sequence of actions
+  # given in the call.
   #
   # === Actions
   # <tt>:index</tt> -- A link to the index page for the resource.
@@ -221,28 +222,19 @@ module ApplicationHelper
   # <tt>:next</tt> -- A link to the next object. This is only shown if
   # there is a next object. This requires the model to respond to
   # +has_next?+ and +next+.
+  # <tt>:parent</tt> -- A link to the parent object in a hierarchical
+  # structure. This requires the model to respond to +parent+.
   def link_to_resources(object, *actions)
-    actions.map do |action|
-      case action
-      when :index
-        link_to_index(object)
-      when :new
-        link_to_new(object)
-      when :edit
-        link_to_edit(object)
-      when :delete
-        link_to_delete(object)
-      when :previous
-        link_to_previous(object)
-      when :next
-        link_to_next(object)
-      end
+    [:index, :new, :edit, :delete, :previous, :next, :parent].select do |action|
+      actions.include?(action)
+    end.map do |action|
+      send("link_to_#{action}", object)
     end.join(' ')
   end
 
   # Creates a resource index link for an object.
   def link_to_index(object)
-    link_to('Index', send("#{object.class.to_s.underscore.pluralize}_url"), :class => :index)
+    link_to('Show index', send("#{object.class.to_s.underscore.pluralize}_url"), :class => :index)
   end
 
   # Creates a resource index link for an object or a model.
@@ -274,5 +266,12 @@ module ApplicationHelper
   # +has_next?+ and +next+. The link will be tied to an access key.
   def link_to_next(object)
     link_to_if(object.has_next?, 'Show next', object.next, :class => :next, :accesskey => 'n')
+  end
+
+  # Creates a resource parent link for an object. This requires the
+  # model to respond to +parent+. The link will be tied to an access
+  # key.
+  def link_to_parent(object)
+    link_to('Show parent', object.parent, :class => :parent, :accesskey => 'u')
   end
 end
