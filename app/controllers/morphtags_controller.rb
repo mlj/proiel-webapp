@@ -58,7 +58,7 @@ class MorphtagsController < ApplicationController
     if params[:wizard]
       redirect_to :controller => :wizard, :action => :edit_dependencies, :wizard => true
     else
-      redirect_to :action => 'show'
+      redirect_to @sentence
     end
   rescue ActiveRecord::RecordInvalid => invalid 
     flash[:error] = invalid.record.errors.full_messages

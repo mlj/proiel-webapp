@@ -8,7 +8,6 @@ class DependenciesController < ApplicationController
     graph_options[:linearized] = user_preferences[:graph_method] == "linearized"
 
     respond_to do |format|
-      format.html # show.html.erb
       format.svg  { send_data @sentence.dependency_graph.visualize(:svg, graph_options),
         :filename => "#{params[:id]}.svg", :disposition => 'inline', :type => :svg }
       format.png  { send_data @sentence.dependency_graph.visualize(:png, graph_options),
@@ -49,7 +48,7 @@ class DependenciesController < ApplicationController
       if params[:wizard]
         redirect_to :controller => :wizard, :action => :save_dependencies, :wizard => true
       else
-        redirect_to :action => 'show'
+        redirect_to @sentence
       end
     else
       flash[:error] = 'Invalid dependency structure'
