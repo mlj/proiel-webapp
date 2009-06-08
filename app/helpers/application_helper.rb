@@ -177,15 +177,6 @@ module ApplicationHelper
     layer_if(!condition, *args, &block)
   end
 
-  # Creates hidden 'Previous' and 'Next' links for per-sentence annotation displays
-  # with standard access keys P and N.
-  def annotation_navigation_links(sentence, url_function)
-    links = []
-    links << link_to('Previous', self.send(url_function, sentence.previous_sentence), :accesskey => 'p') if sentence.has_previous_sentence?
-    links << link_to('Next', self.send(url_function, sentence.next_sentence), :accesskey => 'n') if sentence.has_next_sentence?
-    links.join '&nbsp;'
-  end
-
   # Generates a link if the condition +condition+ is +true+, otherwise
   # takes no action. The remaining arguments are the same as those 
   # for +link_to+.
@@ -272,15 +263,16 @@ module ApplicationHelper
 
   # Creates a resource previous link for an object. This is only
   # shown if there is a previous object. This requires the model to
-  # respond to +has_previous?+ and +previous+.
+  # respond to +has_previous?+ and +previous+. The link will be tied
+  # to an access key.
   def link_to_previous(object)
-    link_to_if(object.has_previous?, 'Show previous', object.previous, :class => :previous)
+    link_to_if(object.has_previous?, 'Show previous', object.previous, :class => :previous, :accesskey => 'p')
   end
 
   # Creates a resource next link for an object. This is only shown if
   # there is a next object. This requires the model to respond to
-  # +has_next?+ and +next+.
+  # +has_next?+ and +next+. The link will be tied to an access key.
   def link_to_next(object)
-    link_to_if(object.has_next?, 'Show next', object.next, :class => :next)
+    link_to_if(object.has_next?, 'Show next', object.next, :class => :next, :accesskey => 'n')
   end
 end

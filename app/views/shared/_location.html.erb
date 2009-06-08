@@ -1,7 +1,6 @@
 <div class="roundedbox">
   <b><%=h sentence.citation %>:</b>
   <%= value %> <%= readable_completion(sentence, :checkmark => :only) %><br/>
-  <%= annotation_navigation_links(sentence, edit_url) %>&nbsp;
   <%= external_text_links(sentence) %>&nbsp;
 
   <% if is_reviewer? %>
