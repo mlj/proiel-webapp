@@ -41,7 +41,7 @@ class HomeController < ApplicationController
         redirect_to source_divisions_url
       end
     elsif m = query.match(ANNOTATION_SEARCH_PATTERN)
-      redirect_to annotation_url($1)
+      redirect_to sentence_url($1)
     else
       # A token or lemma.
       redirect_to :controller => 'home', :action => 'search', :query => query, :mode => 'tokens'

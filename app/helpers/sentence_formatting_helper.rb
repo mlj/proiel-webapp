@@ -33,7 +33,7 @@ module SentenceFormattingHelper
 
       s = sentence.presentation_as_html(options)
       s = '<span class="highlight">' + s + '</span>' if options[:highlight].include?(sentence)
-      s = link_to(s, annotation_path(sentence)) unless options[:ignore_links]
+      s = link_to(s, sentence) unless options[:ignore_links]
       m + s
     end.join(' ')
   end
@@ -234,7 +234,7 @@ module SentenceFormattingHelper
       extra_css = []
       extra_css << :highlight if options[:highlight].include?(token)
 
-      t << FormattedToken.new(token.form, (options[:ignore_links] or options[:information_status]) ? nil : annotation_path(token.sentence), extra_css, token)
+      t << FormattedToken.new(token.form, (options[:ignore_links] or options[:information_status]) ? nil : token.sentence, extra_css, token)
       t << FormattedReference.new(:token, token.token_number)
     end
 

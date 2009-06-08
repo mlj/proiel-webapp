@@ -1,7 +1,7 @@
-<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Sentence divisions', :edit_url => :annotation_sentence_division_url } %>
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Sentence divisions', :edit_url => :sentence_sentence_division_url } %>
 
 <%= render :partial => 'show' %>
 
 <div class="annotation-actions">
-  <%= wizard_options(edit_annotation_sentence_division_path(@sentence), params[:wizard]) %>
+  <%= wizard_options(edit_sentence_sentence_division_path(@sentence), params[:wizard]) %>
 </div>

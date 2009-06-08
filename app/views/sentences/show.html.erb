@@ -1,29 +1,53 @@
-<div class="roundedbox">
-  <dl>
-    <dt>Sentence ID:</dt><dd><%= @sentence.id %></dd>
-    <dt>Source:</dt><dd><%= link_to_source(@sentence.source_division.source) %></dd>
-    <dt>Source part:</dt><dd><%= link_to_source_division(@sentence.source_division) %></dd>
-    <dt>Citation:</dt><dd class="reference"><%= @sentence.citation :internal => true %> (<%= @sentence.citation %>)</dd>
-    <dt>Linearisation index:</dt><dd><%= @sentence.sentence_number %></dd>
-    <dt>Time stamps:</dt><dd><%= @sentence.created_at ? @sentence.created_at : '?' %> (creation), <%= @sentence.updated_at %> (last update)</dd>
-    <dt>Annotation completion:</dt><dd><%= link_to(readable_completion(@sentence), annotation_path(@sentence)) %></dd>
-  </dl>
-  <%= link_to_if @sentence.has_previous_sentence?, 'Show previous', @sentence.previous_sentence, :class => :previous %>
-  <%= link_to_if @sentence.has_next_sentence?, 'Show next', @sentence.next_sentence, :class => :next %>
-  <%= link_to 'Index', sentences_url, :class => :index %>
-  <%= link_to_if @sentence.has_previous_sentence?, 'Remove', @sentence, :confirm => 'Are you sure? This will append all tokens to the previous sentence in the text and remove all syntactic annotation from the new merged sentence.', :method => :delete, :class => :delete %>
+<% roundedbox do -%>
+  <%=h @sentence.citation %> <%= readable_completion(@sentence, :checkmark => :only) %><br/>
+  <%= external_text_links(@sentence) %><br/>
+  <%= link_to_resources @sentence, :index, :previous, :next, :parent, :delete %>
+  <%= link_to_if(is_administrator?, "Information structure", sentence_info_status_url(@sentence)) %>
   <%= link_to_dependency_alignments @sentence, 'Dependency alignments' %>
-</div>
+<% end %>
 
-<% layer_unless @sentence.notes.empty?, "notes" do -%>
+<% layer_if is_reviewer?, "low_level_data" do -%>
+  <%= low_level_data_table(@sentence, :id, :sentence_number, :created_at, :updated_at, :annotated_by, :annotated_at, :reviewed_by, :reviewed_at, :unalignable, :automatic_alignment, :sentence_alignment_id, :source_division_id, :presentation) %>
+<% end %>
+
+<% if is_annotator? or @sentence.is_reviewed? %>
+  <% layer_if(is_reviewer?, "completion", :actions => [
+                            link_to_unless(@sentence.is_reviewed?, "Flag as reviewed", :action => 'flag_as_reviewed', :id => @sentence),
+                            link_to_if(@sentence.is_reviewed?, "Flag as not reviewed", :action => 'flag_as_not_reviewed', :id => @sentence),
+    ] ) do -%>
+    <%= format_annotator(@sentence, :time => true) %><br/>
+    <%= format_reviewer(@sentence, :time => true) %>
+  <% end %>
+
+  <% layer("sentence-division", :title => "Sentence division", :actions => [
+    link_to_if(is_annotator?, "Edit", edit_sentence_sentence_division_url(@sentence))]) do -%>
+    <%= render :partial => 'sentence_divisions/show' %>
+  <% end %>
+
+  <% layer("morphology", :actions => [
+    link_to_if(is_annotator?, "Edit", edit_sentence_morphtags_url(@sentence))]) do -%>
+    <%= render :partial => 'morphtags/legend' %>
+    <%= render :partial => 'morphtags/show' %>
+  <% end %>
+
+  <% layer("dependencies", :actions => [
+    link_to_if(is_annotator?, "Edit", edit_sentence_dependencies_url(@sentence))]) do -%>
+    <%= render :partial => 'dependencies/legend' %>
+    <%= render :partial => 'dependencies/show' %>
+  <% end %>
+<% else %>
+  Sentence not yet annotated and reviewed.
+<% end %>
+
+<% layer_if((is_reviewer? and not @sentence.notes.empty?), "notes") do -%>
   <%= notes_summary(@sentence.notes) %>
 <% end %>
  
-<% layer_unless @sentence.audits.empty?, "revisions" do -%>
+<% layer_if((is_reviewer? and not @sentence.audits.empty?), "revisions") do -%>
   <%= audits_summary @sentence.audits %>
 <% end %>
 
-<% layer("presentation_form") do -%>
+<% layer_if(is_reviewer?, "presentation_form") do -%>
   <h3>Mark-up</h3>
   <div><%= @sentence.presentation_as_prettyprinted_code(:coloured => true) %></div>
 
@@ -31,6 +55,6 @@
   <div><%= @sentence.presentation_as_html %></div>
 <% end %>
 
-<% layer("tokenization") do -%>
+<% layer_if(is_reviewer?, "tokenization") do -%>
   <%= tokens_table @tokens %>
 <% end %>

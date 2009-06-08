@@ -30,11 +30,11 @@ class MorphtagsController < ApplicationController
   end
 
   def show
-    @sentence = Sentence.find(params[:annotation_id])
+    @sentence = Sentence.find(params[:sentence_id])
   end
 
   def edit
-    @sentence = Sentence.find(params[:annotation_id])
+    @sentence = Sentence.find(params[:sentence_id])
     @language_code = @sentence.language.iso_code
 
     @token_data = @sentence.tokens.morphology_annotatable.map do |token|
@@ -67,11 +67,11 @@ class MorphtagsController < ApplicationController
   end
 
   def update
-    @sentence = Sentence.find(params[:annotation_id])
+    @sentence = Sentence.find(params[:sentence_id])
 
     if @sentence.is_reviewed? and not user_is_reviewer?
       flash[:error] = 'You do not have permission to update reviewed sentences'
-      redirect_to :action => 'edit', :wizard => params[:wizard], :annotation_id => params[:annotation_id]
+      redirect_to :action => 'edit', :wizard => params[:wizard], :sentence_id => params[:sentence_id]
       return
     end
 

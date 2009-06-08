@@ -143,7 +143,7 @@ class WizardController < ApplicationController
     else
       raise "Invalid mode"
     end
-    redirect_to :controller => controller, :action => action, :annotation_id => bm.sentence, 
+    redirect_to :controller => controller, :action => action, :sentence_id => bm.sentence,
       :wizard => buttons.merge({ :level => level })
   end
 

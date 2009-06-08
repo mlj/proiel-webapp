@@ -29,7 +29,7 @@ module LowLevelHelper
               td field + ':'
 
               case method
-              when :morph_features, :sort_key, :foreign_ids, :language
+              when :morph_features, :sort_key, :foreign_ids, :language, :presentation
                 td.tag value
               else
                 td value

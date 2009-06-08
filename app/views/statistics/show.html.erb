@@ -5,7 +5,7 @@
 <% reset_cycle %>
 <% layer_unless(@recent_annotations.empty?, "recent-annotations", 
                 :title => 'Your recent sentence annotations',
-                :actions => [link_to("See all annotated sentences", annotations_url)]
+                :actions => [link_to("See all sentences", sentences_url)]
                ) do -%>
   <%= render_tabular @recent_annotations, ['Location', 'Sentence'], :no_pagination => true, :partial => 'annotations/annotation' %>
 <% end %>
@@ -13,7 +13,7 @@
 <% reset_cycle %>
 <% layer_unless(@recent_reviews.empty?, "recent-reviews", 
                 :title => 'Your recent sentence reviews',
-                :actions => [link_to("See all annotated sentences", annotations_url)]
+                :actions => [link_to("See all sentences", sentences_url)]
                ) do -%>
   <%= render_tabular @recent_reviews, ['Location', 'Sentence'], :no_pagination => true, :partial => 'annotations/annotation' %>
 <% end %>
@@ -21,7 +21,7 @@
 <% reset_cycle %>
 <% layer_unless(@recent_reviewed.empty?, "recent-reviewed", 
                 :title => 'Your recently reviewed sentences',
-                :actions => [link_to("See all annotated sentences", annotations_url)]
+                :actions => [link_to("See all sentences", sentences_url)]
                ) do -%>
   <%= render_tabular @recent_reviewed, ['Location', 'Sentence'], :no_pagination => true, :partial => 'annotations/annotation' %>
 <% end %>

@@ -242,6 +242,17 @@ class Sentence < ActiveRecord::Base
     !next_sentence.nil?
   end
 
+  alias :next :next_sentence
+  alias :previous :previous_sentence
+  alias :has_next? :has_next_sentence?
+  alias :has_previous? :has_previous_sentence?
+
+  # Returns the parent object for the sentence, which will be its
+  # source division.
+  def parent
+    source_division
+  end
+
   # Returns a citation-form reference for this sentence.
   #
   # ==== Options

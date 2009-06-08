@@ -2,7 +2,7 @@ class DependenciesController < ApplicationController
   before_filter :is_annotator?, :only => [:edit, :update]
 
   def show 
-    @sentence = Sentence.find(params[:annotation_id])
+    @sentence = Sentence.find(params[:sentence_id])
 
     graph_options = { :fontname => 'Legendum' }
     graph_options[:linearized] = user_preferences[:graph_method] == "linearized"
@@ -17,7 +17,7 @@ class DependenciesController < ApplicationController
   end
   
   def edit 
-    @sentence = Sentence.find(params[:annotation_id])
+    @sentence = Sentence.find(params[:sentence_id])
 
     @tokens = Hash[*@sentence.tokens.dependency_annotatable.collect do |token|
       mh = token.morph_features ? token.morph_features.morphology_to_hash : {}
@@ -43,11 +43,11 @@ class DependenciesController < ApplicationController
 
   # Saves changes to relations and has the user review the new structure.
   def update 
-    @sentence = Sentence.find(params[:annotation_id])
+    @sentence = Sentence.find(params[:sentence_id])
 
     if @sentence.is_reviewed? and not user_is_reviewer?
       flash[:error] = 'You do not have permission to update reviewed sentences'
-      redirect_to :action => 'edit', :wizard => params[:wizard], :annotation_id => params[:annotation_id]
+      redirect_to :action => 'edit', :wizard => params[:wizard], :sentence_id => params[:sentence_id]
       return
     end
 

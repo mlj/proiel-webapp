@@ -1,7 +1,7 @@
 <% javascript "sentence_divisions" %>
 <% stylesheet 'sentence_divisions' %>
 
-<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Sentence divisions', :edit_url => :edit_annotation_sentence_division_url } %>
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Sentence divisions', :edit_url => :edit_sentence_sentence_division_url } %>
 
 <div class="sentence-divisions">
   <%= format_presentation_text(@sentence.sentences_in_context, {
@@ -26,7 +26,7 @@
 <div class="annotation-actions">
   <%= wizard_options(nil, params[:wizard]) %>
 
-  <% form_tag({ :controller => 'sentence_divisions', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :method => :put) do -%>
+  <% form_tag({ :controller => 'sentence_divisions', :action => 'update', :sentence_id => @sentence, :wizard => params[:wizard]}, :method => :put) do -%>
     <%= hidden_field_tag 'change' %>
     <%= submit_tag "Save", :id => 'submit' %>
  <% end %>

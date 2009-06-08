@@ -2,7 +2,7 @@ class InfoStatusesController < ApplicationController
   before_filter :find_sentence
   before_filter :is_annotator?, :only => [:edit, :update]
 
-  # GET /annotations/1/info_status
+  # GET /sentences/1/info_status
   def show
     set_contrast_options_for(@sentence.source_division)
 
@@ -12,13 +12,13 @@ class InfoStatusesController < ApplicationController
   end
 
 
-  # GET /annotations/1/info_status/edit
+  # GET /sentences/1/info_status/edit
   def edit
     set_contrast_options_for(@sentence.source_division)
   end
 
 
-  # PUT /annotations/1/info_status
+  # PUT /sentences/1/info_status
   def update
     # If we could trust that Hash#keys and Hash#values always return values in the
     # same order, we could simply use params[:tokens].keys and params[:tokens].values as
@@ -56,7 +56,7 @@ class InfoStatusesController < ApplicationController
   end
 
 
-  # POST /annotations/1/info_status/delete_contrast
+  # POST /sentences/1/info_status/delete_contrast
   def delete_contrast
     Token.delete_contrast(params[:contrast], @sentence.source_division)
   rescue
@@ -67,7 +67,7 @@ class InfoStatusesController < ApplicationController
   end
 
 
-  # POST /annotations/1/info_status/delete_contrast
+  # POST /sentences/1/info_status/delete_contrast
   def delete_prodrop
     graph = @sentence.dependency_graph
     graph.remove_node(params[:prodrop_id])
@@ -85,7 +85,7 @@ class InfoStatusesController < ApplicationController
   #########
 
   def find_sentence
-    @sentence = Sentence.find(params[:annotation_id])
+    @sentence = Sentence.find(params[:sentence_id])
   end
 
   def get_ids_and_attributes_from_params

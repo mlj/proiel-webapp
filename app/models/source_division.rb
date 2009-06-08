@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008 University of Oslo
-# Copyright 2007, 2008 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009 University of Oslo
+# Copyright 2007, 2008, 2009 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #

@@ -1,9 +1,9 @@
 class SentenceDivisionsController < ApplicationController
   before_filter :is_annotator?, :only => [:edit, :update]
 
-  # GET /annotations/1/sentence_division
+  # GET /sentences/1/sentence_division
   def show
-    @sentence = Sentence.find(params[:annotation_id])
+    @sentence = Sentence.find(params[:sentence_id])
   end
 
   EDIT_LIMIT = 3
@@ -21,22 +21,22 @@ class SentenceDivisionsController < ApplicationController
   end
 
 
-  # GET /annotations/1/sentence_division/edit
+  # GET /sentences/1/sentence_division/edit
   def edit
-    @sentence = Sentence.find(params[:annotation_id])
+    @sentence = Sentence.find(params[:sentence_id])
 
     @shorten = _edit_cover_length(@sentence.tokens.word, :last)
     @expand = _edit_cover_length(@sentence.has_next_sentence? ? @sentence.next_sentence.tokens.word : [], :first)
     @fixed = @sentence.tokens.word.first(@sentence.tokens.word.length - @shorten.length)
   end
   
-  # PUT /annotations/1/sentence_division
+  # PUT /sentences/1/sentence_division
   def update
-    sentence = Sentence.find(params[:annotation_id])
+    sentence = Sentence.find(params[:sentence_id])
 
     if sentence.is_reviewed? and not user_is_reviewer?
       flash[:error] = 'You do not have permission to update reviewed sentences'
-      redirect_to :action => 'edit', :wizard => params[:wizard], :annotation_id => params[:annotation_id]
+      redirect_to :action => 'edit', :wizard => params[:wizard], :sentence_id => params[:sentence_id]
       return
     end
 

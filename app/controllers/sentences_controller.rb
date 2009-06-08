@@ -1,6 +1,6 @@
 class SentencesController < ResourceController::Base
   before_filter :find_parents
-  before_filter :is_reviewer?, :only => [:destroy]
+  before_filter :is_reviewer?, :only => [:destroy, :flag_as_reviewed, :flag_as_not_reviewed]
   actions :all, :except => [:new, :edit, :create, :update, :destroy] # we add our own destroy later
 
   show.before do
@@ -53,5 +53,27 @@ class SentencesController < ResourceController::Base
         format.xml  { render :status => :unprocessable_entity }
       end
     end
+  end
+
+  def flag_as_reviewed
+    @sentence = Sentence.find(params[:id])
+
+    @sentence.set_reviewed!(User.find(session[:user_id]))
+    flash[:notice] = 'Sentence was successfully updated.'
+    redirect_to @sentence
+  rescue ActiveRecord::RecordInvalid => invalid
+    flash[:error] = invalid.record.errors.full_messages.join('<br>')
+    render :action => "show"
+  end
+
+  def flag_as_not_reviewed
+    @sentence = Sentence.find(params[:id])
+
+    @sentence.unset_reviewed!(User.find(session[:user_id]))
+    flash[:notice] = 'Sentence was successfully updated.'
+    redirect_to @sentence
+  rescue ActiveRecord::RecordInvalid => invalid
+    flash[:error] = invalid.record.errors.full_messages.join('<br>')
+    render :action => "show"
   end
 end

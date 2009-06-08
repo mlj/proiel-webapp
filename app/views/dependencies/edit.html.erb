@@ -1,7 +1,7 @@
 <% javascript "utils", "relations", "tree", "dependencies" %>
 <% stylesheet "dependencies" %>
 
-<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Dependency structure', :edit_url => :edit_annotation_dependencies_url } %>
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Dependency structure', :edit_url => :edit_sentence_dependencies_url } %>
 
 <div id="annotation" class="annotation">
   <%= hidden_field_tag 'input-tokens', @tokens.to_json %>
@@ -49,7 +49,7 @@
   <ul id="relations" lang="<%= @sentence.language.iso_code %>" class="tree"></ul>
 
   <div class="actions">
-    <% form_tag({ :controller => 'dependencies', :action => 'update', :annotation_id => @sentence, :wizard => params[:wizard]}, :method => :put, :id => 'dependencies-form') do -%>
+    <% form_tag({ :controller => 'dependencies', :action => 'update', :sentence_id => @sentence, :wizard => params[:wizard]}, :method => :put, :id => 'dependencies-form') do -%>
       <%= hidden_field_tag 'output', '' %>
       <%= submit_tag 'Save' %>
     <% end %>

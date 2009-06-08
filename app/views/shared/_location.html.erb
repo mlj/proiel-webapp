@@ -1,21 +1,18 @@
 <div class="roundedbox">
-  <b><%=h sentence.citation %>:</b>
-  <%= value %> <%= readable_completion(sentence, :checkmark => :only) %><br/>
-  <%= external_text_links(sentence) %>&nbsp;
-
-  <% if is_reviewer? %>
-    <%= link_to("Low-level sentence data", sentence_url(@sentence)) %>
-  <% end %>
+  <b><%=h sentence.citation %></b> <%= readable_completion(sentence, :checkmark => :only) %><br/>
+  <%= external_text_links(sentence) %><br/>
+  <%= link_to_source(@sentence.source_division.source) %>
   &nbsp;
+  <%= link_to_source_division(@sentence.source_division) %><br/>
   <% if controller.class == InfoStatusesController %>
-    <%= link_to("Sentence divisions, morphology and dependency structure", annotation_url(@sentence)) %>
+    <%= link_to("Sentence divisions, morphology and dependency structure", @sentence) %>
   <% end %>
   &nbsp;
   <% if is_administrator? && controller.class != InfoStatusesController %>
-    <%= link_to("Information structure", annotation_info_status_url(@sentence)) %>
+    <%= link_to("Information structure", sentence_info_status_url(@sentence)) %>
   <% end %>
   &nbsp;
   <% if controller.class != DependencyAlignmentsController %>
-    <%= link_to("Dependency alignment", edit_annotation_dependency_alignments_url(@sentence)) %>
+    <%= link_to("Dependency alignment", edit_sentence_dependency_alignments_url(@sentence)) %>
   <% end %>
 </div>
