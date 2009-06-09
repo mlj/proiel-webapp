@@ -18,27 +18,6 @@ class DependenciesController < ApplicationController
   
   def edit 
     @sentence = Sentence.find(params[:sentence_id])
-
-    @tokens = Hash[*@sentence.tokens.dependency_annotatable.collect do |token|
-      mh = token.morph_features ? token.morph_features.morphology_to_hash : {}
-
-      [token.id, { 
-        # FIXME: refactor
-        :morph_features => mh.merge({
-          :language => @sentence.language.iso_code,
-          :finite => ['i', 's', 'm', 'o'].include?(mh[:mood]),
-          :form => token.form,
-          :lemma => token.lemma ? token.lemma.lemma : nil,
-        }),
-        :empty => token.is_empty? ? token.empty_token_sort : false,
-        :form => token.form,
-        :token_number => token.token_number
-      } ] 
-    end.flatten]
-
-    @structure = (params[:output] and ActiveSupport::JSON.decode(params[:output])) || (@sentence.has_dependency_annotation? ? @sentence.dependency_graph.to_h : {})
-
-    @relations = Relation.primary
   end
 
   # Saves changes to relations and has the user review the new structure.

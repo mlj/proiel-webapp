@@ -378,6 +378,32 @@ class Sentence < ActiveRecord::Base
     end
   end
 
+  def syntactic_annotation_with_tokens(overlaid_features = {})
+    d = {}
+    d[:tokens] = Hash[*tokens.dependency_annotatable.collect do |token|
+      mh = token.morph_features ? token.morph_features.morphology_to_hash : {}
+
+      [token.id, {
+        # FIXME: refactor
+        :morph_features => mh.merge({
+          :language => language.iso_code,
+          :finite => ['i', 's', 'm', 'o'].include?(mh[:mood]),
+          :form => token.form,
+          :lemma => token.lemma ? token.lemma.lemma : nil,
+        }),
+        :empty => token.is_empty? ? token.empty_token_sort : false,
+        :form => token.form,
+        :token_number => token.token_number
+      } ]
+    end.flatten]
+
+    d[:structure] = (overlaid_features and ActiveSupport::JSON.decode(overlaid_features)) || (has_dependency_annotation? ? dependency_graph.to_h : {})
+
+    d[:relations] = Relation.primary
+
+    d
+  end
+
   def morphological_annotation(overlaid_features = {})
     tokens.morphology_annotatable.map do |token|
       pick, *suggestions = token.inferred_morph_features
