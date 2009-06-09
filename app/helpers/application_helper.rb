@@ -45,21 +45,6 @@ module ApplicationHelper
     Markaby::Builder.new({}, self, &block)
   end
 
-  # Makes an information box intended for display of meta-data and navigational
-  # aids.
-  def make_information_box(entries)
-    markaby do
-      div.roundedbox do
-        dl do
-          entries.each do |title, data|
-            dt "#{title}:"
-            dd data
-          end
-        end
-      end
-    end
-  end
-
   # Returns a radio button with a function as onclick handler.
   def radio_button_to_function(name, value, checked, *args, &block)
     html_options = args.extract_options!
