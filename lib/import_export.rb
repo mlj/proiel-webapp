@@ -36,6 +36,111 @@ class CSVImportExport
   end
 end
 
+class InfoStatusesImportExport < CSVImportExport
+  def initialize
+    super :token, :info_status, :antecedent
+  end
+
+  protected
+
+  def read_fields(token, info_status, antecedent)
+    # prodrop
+    if token =~ /\+/
+      head_id, relation = token.split(/\+/)
+      s = Sentence.find(Token.find(head_id).sentence_id)
+      tts =  s.tokens.find(:all, :conditions => [ "head_id = ? and relation_id = ?", head_id, Relation.find_by_tag(relation).id ] )
+      case tts.size
+      when 0
+        t = create_prodrop_relation(s, "new3", relation, head_id)
+      when 1
+        t = tts.last
+      else
+        raise "Several candidates! #{token} could refer to all of #{tts.map(&:id).join(",")} "
+      end
+    else
+      t = Token.find(token.to_i)
+    end
+
+    t.info_status = info_status
+    t.save!
+
+    if antecedent != "" and antecedent != "missing"
+      unless antecedent =~ /\+/
+        ac = Token.find(antecedent)
+      else
+        head_id, relation = antecedent.split(/\+/)
+        s2 = Token.find(head_id).sentence
+        acs = s2.tokens.find(:all, :conditions => [ "head_id = ? and relation_id = ?", head_id, Relation.find_by_tag(relation).id ])
+        case acs.size
+        when 0
+          ac = create_prodrop_relation(s2, "new3", relation, head_id)
+        when 1
+          ac = acs.last
+        else
+          raise "Antecedent problems"
+        end
+      end
+      t.antecedent_id = ac.id
+      t.antecedent_dist_in_words = Token.word_distance_between(ac, t)
+      t.antecedent_dist_in_sentences = Token.sentence_distance_between(ac, t)
+      t.save!
+    end
+  end
+
+  def create_prodrop_relation(sentence, prodrop_id, relation, verb_id, info_status = nil)
+
+    graph = sentence.dependency_graph
+    verb_node = graph[verb_id]
+    verb_token = Token.find(verb_id)
+    graph.add_node(prodrop_id, relation, verb_token.id)
+    sentence.syntactic_annotation = graph
+
+    # syntactic_annotation= will have created a token at the end of the sentence
+    prodrop_token = Token.find(sentence.tokens.last.id)
+    prodrop_token.verse = verb_token.verse
+    prodrop_token.form = nil
+    prodrop_token.info_status = info_status
+    prodrop_token.empty_token_sort = 'P'
+    prodrop_token.save!
+
+    # This is apparently needed after saving a new graph node to the database in order to make
+    # sure that the new node is included in the dependency_tokens collection. Otherwise,
+    # the node will be deleted the next time we run syntactic_annotation= (e.g., if we try to
+    # create more than one prodrop token as part of the same save operation).
+    sentence.dependency_tokens.reload
+
+    prodrop_token
+  end
+
+
+  def write_fields #(token, info_status, antecedent)
+    export_tokens = Token.find(:all, :conditions => ["info_status is not null and info_status != 'info_unannotatable'"]).each do |t|
+      STDERR.puts "Now doing token #{t.id} of status #{t.info_status} and antecedent #{t.antecedent_id}"
+      case t.empty_token_sort
+      when "P"
+        token = "#{t.head.id}+#{t.relation.tag}"
+      else
+        token = t.id.to_s
+      end
+      info_status = t.info_status
+      if t.antecedent_id
+        ac = Token.find(t.antecedent_id)
+        case ac.empty_token_sort
+        when "P"
+          antecedent = "#{ac.head.id}+#{ac.relation.tag}"
+        else
+          antecedent = ac.id.to_s
+        end
+      else
+        antecedent = nil
+      end
+
+      yield token, info_status, antecedent
+    end
+  end
+end
+
+
 # Importer for dependency alignments
 class DependencyAlignmentImportExport < CSVImportExport
   def initialize

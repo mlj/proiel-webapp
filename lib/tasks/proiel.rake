@@ -147,6 +147,33 @@ namespace :proiel do
     end
   end
 
+  namespace :info_statuses do
+    desc "Import info statuses. Options: FILE=csv_file. Optional options MODE={overwrite|recreate}"
+    task(:import => :myenvironment) do
+      require 'import_export'
+      file_name = ENV['FILE']
+      raise "Missing argument" unless file_name
+      execute("UPDATE tokens SET info_status = NULL, antecedent_dist_in_words = NULL, antecedent_dist_in_sentences = NULL, antecedent_id = NULL WHERE info_status is not null") if ENV['MODE'] == "recreate"
+      overwrite = false
+      overwrite = true if ENV['MODE'] == "overwrite"
+      i = InfoStatusesImportExport.new
+      i.read(file_name)
+    end
+
+    desc "Export info statuses. Options: FILE=csv_file. Optional options: SD=source_division_id"
+    task(:export => :myenvironment) do
+      require 'import_export'
+      file_name = ENV['FILE']
+      raise "Missing argument" unless file_name
+
+      i = InfoStatusesImportExport.new
+      i.write(file_name)
+    end
+  end
+
+
+
+
   namespace :semantic_tags do
     desc "Import semantic tags. Options: FILE=csv_file"
     task(:import => :myenvironment) do
