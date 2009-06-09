@@ -344,6 +344,31 @@ class Sentence < ActiveRecord::Base
     end
   end
 
+  def morphological_annotation(overlaid_features = {})
+    tokens.morphology_annotatable.map do |token|
+      pick, *suggestions = token.inferred_morph_features
+
+      # Figure out which morph-features to use as the displayed value.
+      # Anything already set in the editor or, alternatively, in the
+      # morph-features trumphs whatever the tagger spews out.
+      if x = overlaid_features["morph-features-#{token.id}".to_sym] #FIXME
+        set = MorphFeatures.new(x)
+        state = :mannotated
+      elsif token.morph_features
+        set = token.morph_features
+        state = :mannotated
+      elsif pick
+        set = pick
+        state = :mguessed
+      else
+        set = nil
+        state = :munannotated
+      end
+
+      [token, set, suggestions, state]
+    end
+  end
+
   # Returns the maximum token number in the sentence.
   def max_token_number
     self.tokens.maximum(:token_number)

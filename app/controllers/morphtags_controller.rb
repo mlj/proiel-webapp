@@ -35,35 +35,6 @@ class MorphtagsController < ApplicationController
 
   def edit
     @sentence = Sentence.find(params[:sentence_id])
-    @language_code = @sentence.language.iso_code
-
-    @token_data = @sentence.tokens.morphology_annotatable.map do |token|
-      pick, *suggestions = token.inferred_morph_features
-
-      # Figure out which morph-features to use as the displayed value.
-      # Anything already set in the editor or, alternatively, in the
-      # morph-features trumphs whatever the tagger spews out.
-      if x = params["morph-features-#{token.id}".to_sym]
-        set = MorphFeatures.new(x)
-        state = :mannotated
-      elsif token.morph_features
-        set = token.morph_features
-        state = :mannotated
-      elsif pick
-        set = pick
-        state = :mguessed
-      else
-        set = nil
-        state = :munannotated
-      end
-
-      [token, set, suggestions, state]
-    end
-
-    respond_to do |format|
-      format.html { render :layout => false if request.xhr? } 
-      format.js { render :layout => false }
-    end
   end
 
   def update
