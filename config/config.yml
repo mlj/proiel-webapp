@@ -1,3 +1,4 @@
 presentation_as_text_stylesheet: 'lib/presentation_as_text.xsl'
 presentation_as_html_stylesheet: 'lib/presentation_as_html.xsl'
+presentation_as_minimal_html_stylesheet: 'lib/presentation_as_minimal_html.xsl'
 presentation_as_reference_stylesheet: 'lib/presentation_as_reference.xsl'

@@ -108,10 +108,20 @@ class Sentence < ActiveRecord::Base
     source_division.reference_fields = x
   end
 
+  UNICODE_HORIZONTAL_ELLIPSIS = Unicode::U2026
+
   # Returns the presentation level as UTF-8 HTML.
+  #
+  # === Options
   #
   # <tt>:section_numbers</tt> -- If true, output will include section
   # numbers.
+  #
+  # <tt>:length_limit</tt> -- If set, will limit the length of
+  # the formatted sentence to the given number of words and append an
+  # ellipsis if the sentence exceeds that limit. If a negative number
+  # is given, the ellipis is prepended to the sentence. The conversion
+  # will also use a less rich form of HTML.
   def presentation_as_html(options = {})
     xsl_params = {
       :language_code => "'#{language.iso_code.to_s}'",
@@ -119,7 +129,31 @@ class Sentence < ActiveRecord::Base
     }
     xsl_params[:sectionNumbers] = "'1'" if options[:section_numbers]
 
-    presentation_as(APPLICATION_CONFIG.presentation_as_html_stylesheet, xsl_params)
+    if limit = options[:length_limit]
+      s = presentation_as(APPLICATION_CONFIG.presentation_as_minimal_html_stylesheet, xsl_params)
+
+      # We assume here that all strings have an outer span with a
+      # language attribute
+      seq = Hpricot.XML(s).search("//span/.").map do |t|
+        if t.class == Hpricot::Text
+          t.to_s.split(/\s+/)
+        else
+          t.to_s
+        end
+      end.flatten.reject(&:blank?)
+
+      if limit and seq.length > limit
+        if limit < 0
+          UNICODE_HORIZONTAL_ELLIPSIS + seq.last(-limit).join(' ')
+        else
+          seq.first(limit).join(' ') + UNICODE_HORIZONTAL_ELLIPSIS
+        end
+      else
+        s
+      end
+    else
+      presentation_as(APPLICATION_CONFIG.presentation_as_html_stylesheet, xsl_params)
+    end
   end
 
   # Returns the presentation level as verbatim UTF-8 HTML, i.e.
