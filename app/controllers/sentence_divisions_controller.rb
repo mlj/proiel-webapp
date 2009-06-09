@@ -36,7 +36,7 @@ class SentenceDivisionsController < ApplicationController
 
     if sentence.is_reviewed? and not user_is_reviewer?
       flash[:error] = 'You do not have permission to update reviewed sentences'
-      redirect_to :action => 'edit', :wizard => params[:wizard], :sentence_id => params[:sentence_id]
+      redirect_to :action => 'edit', :sentence_id => params[:sentence_id]
       return
     end
 
@@ -55,13 +55,9 @@ class SentenceDivisionsController < ApplicationController
       end
     end
 
-    if params[:wizard]
-      redirect_to :controller => :wizard, :action => :save_sentence_divisions, :wizard => params[:wizard]
-    else
-      redirect_to :action => 'show'
-    end
+    redirect_to :action => 'show'
   rescue ActiveRecord::RecordInvalid => invalid 
     flash[:error] = invalid.record.errors.full_messages
-    redirect_to :action => 'edit', :wizard => params[:wizard]
+    redirect_to :action => 'edit'
   end
 end

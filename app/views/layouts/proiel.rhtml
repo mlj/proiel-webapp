@@ -46,9 +46,8 @@
         <span style="float:left">
           <%= link_to 'Text', '/', :accesskey => 't', :accesskey => '1' %>
           <% if current_user.has_role?(:annotator) %>
-            <%= link_to 'Annotation', :controller => :wizard, :wizard => { :level => :annotation } %>
+            <%= link_to 'Annotation', :controller => :wizard %>
             <% if current_user.has_role?(:reviewer) %>
-              <%= link_to 'Review', :controller => :wizard, :wizard => { :level => :review } %>
               <%= link_to 'Administration', :controller => :home, :action => :user_administration %>
             <% end %>
           <% end %>

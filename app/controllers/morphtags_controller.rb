@@ -56,7 +56,7 @@ class MorphtagsController < ApplicationController
     end
 
     if params[:wizard]
-      redirect_to :controller => :wizard, :action => :save_morphtags, :wizard => params[:wizard]
+      redirect_to :controller => :wizard, :action => :edit_dependencies, :wizard => true
     else
       redirect_to :action => 'show'
     end

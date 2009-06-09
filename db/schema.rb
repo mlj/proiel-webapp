@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090531145519) do
+ActiveRecord::Schema.define(:version => 20090608163634) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -31,15 +31,6 @@ ActiveRecord::Schema.define(:version => 20090531145519) do
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
-
-  create_table "bookmarks", :force => true do |t|
-    t.integer "user_id",                                                  :default => 0,         :null => false
-    t.integer "source_id",                                                :default => 0,         :null => false
-    t.integer "sentence_id",                                              :default => 0,         :null => false
-    t.enum    "flow",        :limit => [:browsing, :annotation, :review], :default => :browsing, :null => false
-  end
-
-  add_index "bookmarks", ["user_id"], :name => "fk_bookmarks_user"
 
   create_table "books", :force => true do |t|
     t.string "title",        :limit => 16, :default => "", :null => false
@@ -214,6 +205,7 @@ ActiveRecord::Schema.define(:version => 20090531145519) do
     t.integer  "source_division_id",                   :default => 0,     :null => false
     t.text     "presentation",                                            :null => false
     t.string   "reference_fields",      :limit => 128, :default => "",    :null => false
+    t.integer  "assigned_to",                                             :null => false
   end
 
   add_index "sentences", ["source_division_id", "sentence_number"], :name => "index_sentences_on_source_division_id_and_sentence_number"
@@ -248,7 +240,7 @@ ActiveRecord::Schema.define(:version => 20090531145519) do
 
   create_table "tokens", :force => true do |t|
     t.integer  "sentence_id",                                                                                                                                :default => 0,     :null => false
-    t.integer  "token_number",                                                                                                                               :default => 0,     :null => false
+    t.integer  "token_number",                                                                                                                               :default => 0
     t.string   "form",                         :limit => 64
     t.integer  "lemma_id"
     t.integer  "head_id"

@@ -47,7 +47,7 @@ class DependenciesController < ApplicationController
       end
     
       if params[:wizard]
-        redirect_to :controller => :wizard, :action => :save_dependencies, :wizard => params[:wizard]
+        redirect_to :controller => :wizard, :action => :save_dependencies, :wizard => true
       else
         redirect_to :action => 'show'
       end

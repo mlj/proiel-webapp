@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   model_stamper
 
   belongs_to :role
-  has_many :bookmarks
+  has_many :assigned_sentences, :class_name => 'Sentence', :foreign_key => 'assigned_to'
   has_many :audits
   has_many :notes, :as => :originator
 
@@ -162,4 +162,15 @@ class User < ActiveRecord::Base
         role.code.to_sym == :administrator
       end
     end
+
+  def first_assigned_sentence
+    assigned_sentences.first
+  end
+
+  def shift_assigned_sentence!
+    returning(assigned_sentences.first) do |s|
+      s.assigned_to = nil
+      s.save!
+    end
+  end
 end

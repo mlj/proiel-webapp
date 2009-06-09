@@ -5,6 +5,7 @@ class Sentence < ActiveRecord::Base
 
   belongs_to :annotator, :class_name => 'User', :foreign_key => 'annotated_by'
   belongs_to :reviewer, :class_name => 'User', :foreign_key => 'reviewed_by'
+  belongs_to :assigned_to, :class_name => 'User', :foreign_key => 'assigned_to'
 
   belongs_to :sentence_alignment, :class_name => 'Sentence', :foreign_key => 'sentence_alignment_id'
 

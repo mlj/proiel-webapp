@@ -24,9 +24,7 @@
 </div>
 
 <div class="annotation-actions">
-  <%= wizard_options(nil, params[:wizard]) %>
-
-  <% form_tag({ :controller => 'sentence_divisions', :action => 'update', :sentence_id => @sentence, :wizard => params[:wizard]}, :method => :put) do -%>
+  <% form_tag({ :controller => 'sentence_divisions', :action => 'update', :sentence_id => @sentence }, :method => :put) do -%>
     <%= hidden_field_tag 'change' %>
     <%= submit_tag "Save", :id => 'submit' %>
  <% end %>

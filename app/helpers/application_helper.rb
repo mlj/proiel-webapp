@@ -116,19 +116,6 @@ module ApplicationHelper
     end
   end
 
-  def wizard_options(ignore, options)
-    s = ''
-    if options
-      c = controller.controller_name
-      s << button_to('Edit', :controller => :wizard, :action => "modify_#{c}", :wizard => options, :sentence_id => params[:sentence_id]) if options[:edit]
-      s << button_to('Verify', :controller => :wizard, :action => "verify_#{c}", :wizard => options, :sentence_id => params[:sentence_id]) if options[:verify]
-      s << button_to('Skip', :controller => :wizard, :action => "skip_#{c}", :wizard => options, :sentence_id => params[:sentence_id]) if options[:skip]
-    elsif ignore
-      s << button_to('Edit', { :action => 'edit', :method => 'get' }, :method => 'get' )
-    end
-    s
-  end
-
   # Generates a rounded box with a description list inside.
   def roundedbox(&block)
     content = capture(&block)

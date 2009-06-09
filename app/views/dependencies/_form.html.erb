@@ -1,8 +1,6 @@
 <% javascript "utils", "relations", "tree", "dependencies" %>
 <% stylesheet "dependencies" %>
 
-<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Dependency structure', :edit_url => :edit_sentence_dependencies_url } %>
-
 <div id="annotation" class="annotation">
   <%= hidden_field_tag 'input-tokens', @sentence.syntactic_annotation_with_tokens(params[:output])[:tokens].to_json %>
   <%= hidden_field_tag 'input-structure', @sentence.syntactic_annotation_with_tokens(params[:output])[:structure].to_json %>
