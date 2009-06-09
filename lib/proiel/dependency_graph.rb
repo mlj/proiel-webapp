@@ -616,7 +616,7 @@ module PROIEL
 
       test_tokens('There can only be one PRED node under the root',
       		  lambda { |t| t.is_daughter_of_root? and t.relation == :pred } ) do |ts|
-	ts.size == 1 ? [] : ts
+	ts.size < 2 ? [] : ts
       end
 
       test_token_by_relation('The head of a PARPRED relation must be the root node or a valid coordination', :parpred) do |t|
