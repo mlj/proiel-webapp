@@ -6,6 +6,4 @@
 class RelationEquivalence < ActiveRecord::Base
   has_and_belongs_to_many :subrelation, :class_name => 'Relation', :foreign_key => 'subrelation_id'
   has_and_belongs_to_many :superrelation, :class_name => 'Relation', :foreign_key => 'superrelation_id'
-
-  acts_as_audited
 end
