@@ -1,7 +1,7 @@
 <% roundedbox do -%>
   <%=h @sentence.citation %> <%= readable_completion(@sentence, :checkmark => :only) %><br/>
   <%= external_text_links(@sentence) %><br/>
-  <%= link_to_resources @sentence, :index, :previous, :next, :parent, :delete %>
+  <%= link_to_resources @sentence, :index, :previous, :next, :parent, :delete, :edit %>
   <%= link_to_if(is_administrator?, "Information structure", sentence_info_status_url(@sentence)) %>
   <%= link_to_dependency_alignments @sentence, 'Dependency alignments' %>
 <% end %>
