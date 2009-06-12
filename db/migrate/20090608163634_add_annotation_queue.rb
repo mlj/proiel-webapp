@@ -1,6 +1,6 @@
 class AddAnnotationQueue < ActiveRecord::Migration
   def self.up
-    add_column :sentences, :assigned_to, :integer, :null => false
+    add_column :sentences, :assigned_to, :integer, :null => true
 
     drop_table :bookmarks
   end
