@@ -12,17 +12,18 @@
   border: white 1px solid; /* This prevents redraws of items when selected. */
 }
 
-.morphtags .form {
+.morphtags .form, .morphtags .pos, .morphtags .morphology {
   margin: 0em;
   padding: 0em 0.5em;
-  font-weight: bold;
-  font-style: normal;
+  text-align: center;
 }
 
-.morphtags .pos, #morphtagging .morphology {
-  margin: 0em;
-  padding: 0em 1em;
-  text-align: center;
+.morphtags .form {
+  font-weight: bold;
+}
+
+.morphtags .morphology {
+  font-size: small;
 }
 
 .morphtags .selected { 
@@ -43,8 +44,8 @@
 .morphtags br { clear: both; }
 
 .mannotated { color: green; }
-.mguessed { color: orange; }
-.munannotated { color: red; }
+.munambiguous { color: orange; }
+.mambiguous { color: red; }
 .mannotated-bg { background-color: green; }
-.mguessed-bg { background-color: orange; }
-.munannotated-bg { background-color: red; }
+.munambiguous-bg { background-color: orange; }
+.mambiguous-bg { background-color: red; }

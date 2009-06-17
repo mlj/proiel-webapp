@@ -24,7 +24,7 @@
     <% @sentence.morphological_annotation(params).each do |token, set, suggestions, state| %>
       <div id="item-<%= token.id %>" class="item" onclick="onTokenSelect(<%= token.id %>)">
         <p class="form"><%= format_token_form(token) %></p>
-        <div class="morph-lemma-tags <%= state %>">
+        <div class="morph-lemma-tags m<%= state %>">
           <p class="pos">&nbsp;</p>
           <p class="morphology">&nbsp;</p>
           <p class="lemma" lang="<%= @sentence.language.iso_code %>">&nbsp;</p>

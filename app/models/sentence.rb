@@ -439,16 +439,16 @@ class Sentence < ActiveRecord::Base
       # morph-features trumphs whatever the tagger spews out.
       if x = overlaid_features["morph-features-#{token.id}".to_sym] #FIXME
         set = MorphFeatures.new(x)
-        state = :mannotated
+        state = :annotated
       elsif token.morph_features
         set = token.morph_features
-        state = :mannotated
+        state = :annotated
       elsif pick
         set = pick
-        state = :mguessed
+        state = suggestions.length > 1 ? :ambiguous : :unambiguous
       else
         set = nil
-        state = :munannotated
+        state = :ambiguous
       end
 
       [token, set, suggestions, state]

@@ -133,11 +133,6 @@ function onUpdateTokenPresentation(element) {
   var lemma = element.down('.lemma');
   lemma.innerHTML = present_lemma(current_lemma);
 
-  // Finally, remove any non-good "quality" tags, as we should be good
-  // by now.
-  element.down('.morph-lemma-tags').removeClassName('mguessed');
-  element.down('.morph-lemma-tags').removeClassName('munannotated');
-  element.down('.morph-lemma-tags').addClassName('mannotated');
   element.removeClassName('validation-error');
 }
 
