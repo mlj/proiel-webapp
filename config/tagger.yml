@@ -53,3 +53,6 @@
       true
     :inflections_table:
       true
+    :fst:
+      :analysis:
+        lat.a
