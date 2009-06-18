@@ -24,13 +24,6 @@
     :inflections_table:
       true
   :chu:
-    :fst:
-      :normalisation:
-        cu-normalisation.ca
-      :analysis:
-        cu.ca
-      :orthography:
-        cu-orthographics.ca
     :instance_frequencies:
       true
     :inflections_table:
