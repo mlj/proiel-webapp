@@ -6,19 +6,22 @@ var controller = null;
 var model = null;
 var hotkeys = {
   a: "adv",
-  t: "atr",
-  x: "aux",
+  A: "xadv",
   c: "comp",
+  g: "ag",
+  j: "obj",
+  J: "xobj",
   l: "obl",
   n: "narg",
   o: "obj",
+  O: "xobj",
   p: "pred",
   P: "piv",
   r: "part",
   s: "sub",
+  t: "atr",
   v: "voc",
-  O: "xobj",
-  A: "xadv"
+  x: "aux"
 };
 
 var Widget = Class.create({
