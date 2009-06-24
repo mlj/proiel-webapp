@@ -66,6 +66,15 @@ are designed to be auto-correcting, e.g. orphaned lemmata are cleaned up by this
 The task is intended to be run whenever the annotation scheme is modified to ensure that
 all annotation remains valid.
 
+`proiel:notes:import`
+---------------------
+
+This task can be used for mass-import of notes. The data file should
+be provided in the argument `FILE` and should be a comma-separated
+file on the following format:
+
+    User,2,Sentence,12345,"a long comment here"
+
 `proiel:dependency_alignments:import`
 -------------------------------------
 

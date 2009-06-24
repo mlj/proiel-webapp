@@ -36,6 +36,22 @@ class CSVImportExport
   end
 end
 
+class NoteImportExport < CSVImportExport
+  def initialize
+    super :originator_type, :originator_id, :notable_type, :notable_id, :contents
+  end
+
+  protected
+
+  def read_fields(originator_type, originator_id, notable_type, notable_id, contents)
+    Note.create!(:originator_type => originator_type,
+                 :originator_id => originator_id,
+                 :notable_type => notable_type,
+                 :notable_id => notable_id,
+                 :contents => contents)
+  end
+end
+
 class InfoStatusesImportExport < CSVImportExport
   def initialize
     super :token, :info_status, :antecedent

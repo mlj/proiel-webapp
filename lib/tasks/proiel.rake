@@ -171,8 +171,16 @@ namespace :proiel do
     end
   end
 
+  namespace :notes do
+    desc "Import notes. Options: FILE=csv_file."
+    task(:import => :myenvironment) do
+      require 'import_export'
+      file_name = ENV['FILE']
+      raise "Missing argument" unless file_name
 
-
+      NoteImportExport.new.read(file_name)
+    end
+  end
 
   namespace :semantic_tags do
     desc "Import semantic tags. Options: FILE=csv_file"
