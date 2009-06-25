@@ -9,10 +9,6 @@
   <%= link_to "Merge with next", :action => :merge %>
 <% end %>
 
-<% layer_if is_reviewer?, "low_level_data" do -%>
-  <%= low_level_data_table(@sentence, :id, :sentence_number, :created_at, :updated_at, :annotated_by, :annotated_at, :reviewed_by, :reviewed_at, :unalignable, :automatic_alignment, :sentence_alignment_id, :source_division_id, :presentation) %>
-<% end %>
-
 <% if is_annotator? or @sentence.is_reviewed? %>
   <% layer_if(is_reviewer?, "completion", :actions => [
                             link_to_unless(@sentence.is_reviewed?, "Flag as reviewed", :action => 'flag_as_reviewed', :id => @sentence),
@@ -46,10 +42,6 @@
   <%= notes_summary(@sentence.notes) %>
 <% end %>
  
-<% layer_if((is_reviewer? and not @sentence.audits.empty?), "revisions") do -%>
-  <%= audits_summary @sentence.audits %>
-<% end %>
-
 <% layer_if(is_reviewer?, "presentation_form") do -%>
   <h3>Mark-up</h3>
   <div><%= @sentence.presentation_as_prettyprinted_code(:coloured => true) %></div>
@@ -60,4 +52,12 @@
 
 <% layer_if(is_reviewer?, "tokenization") do -%>
   <%= tokens_table @tokens %>
+<% end %>
+
+<% layer_if((is_reviewer? and not @sentence.audits.empty?), "revisions") do -%>
+  <%= audits_summary @sentence.audits %>
+<% end %>
+
+<% layer_if is_reviewer?, "low_level_data" do -%>
+  <%= low_level_data_table(@sentence, :id, :sentence_number, :created_at, :updated_at, :annotated_by, :annotated_at, :reviewed_by, :reviewed_at, :unalignable, :automatic_alignment, :sentence_alignment_id, :source_division_id, :presentation) %>
 <% end %>

@@ -9,16 +9,6 @@
   <%= link_to_resources @lemma, :index, :edit %>
 <% end %>
 
-<% layer_if is_reviewer?, "low_level_data" do -%>
-  <%= low_level_data_table(@lemma, :id, :language, :morph_features, :short_gloss, :full_gloss, :sort_key,
-                           :foreign_ids, :fixed, :conjecture, :unclear, :reconstructed, :nonexistant,
-                           :inflected, :created_at, :updated_at) %>
-<% end %>
-
-<% layer_if (is_reviewer? and !@lemma.audits.empty?), "revisions" do -%>
-  <%= audits_summary @lemma.audits %>
-<% end %>
-
 <% layer_unless @lemma.notes.empty?, "notes" do -%>
   <%= notes_summary(@lemma.notes) %>
 <% end %>
@@ -34,3 +24,14 @@
 <% layer 'tokens' do -%>
   <%= render_tabular @tokens, nil, :partial => 'annotations/annotation', :css_class => 'concordance' %>
 <% end %>
+
+<% layer_if (is_reviewer? and !@lemma.audits.empty?), "revisions" do -%>
+  <%= audits_summary @lemma.audits %>
+<% end %>
+
+<% layer_if is_reviewer?, "low_level_data" do -%>
+  <%= low_level_data_table(@lemma, :id, :language, :morph_features, :short_gloss, :full_gloss, :sort_key,
+                           :foreign_ids, :fixed, :conjecture, :unclear, :reconstructed, :nonexistant,
+                           :inflected, :created_at, :updated_at) %>
+<% end %>
+
