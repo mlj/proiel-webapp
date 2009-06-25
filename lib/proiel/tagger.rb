@@ -7,7 +7,6 @@
 require 'lingua/normalisation'
 require 'proiel/tagger/analysis_method'
 require 'proiel/tagger/fst'
-require 'proiel/tagger/word_list'
 require 'proiel/tagger/instance_frequency'
 require 'proiel/tagger/inflections_table'
 
@@ -85,12 +84,6 @@ module Tagger
               when :inflections_table
                 @analysis_methods[language][method] = InflectionsTableMethod.new(language)
                 @methods[language] << lambda { |form| analyze_form(language, method, form) }
-
-              # Includes candidates from hand-crafterd word lists.
-              when :manual_rules
-                @analysis_methods[language][method] = 
-                  WordListMethod.new(language, File.join(@data_directory, args))
-                @methods[language] << lambda { |form| analyze_form(language, method, normalise_form(language, form)) }
 
               # Includes candidates from existing annotation.
               when :instance_frequencies
