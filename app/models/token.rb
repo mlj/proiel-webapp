@@ -158,14 +158,8 @@ class Token < ActiveRecord::Base
   #
   # ==== Options
   # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
-  # <tt>:internal</tt> -- If true, will use the internal numbering system.
   def citation(options = {})
-    if options[:internal]
-      [sentence.citation(options), token_number] * '.'
-    else
-      token_citation = [verse, token_number] * '.'
-      [sentence.source_division.citation(options), token_citation] * ':'
-    end
+    sentence.citation(options)
   end
 
   # Returns true if this is an empty token, i.e. a token used for empty nodes

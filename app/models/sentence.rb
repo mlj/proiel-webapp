@@ -292,14 +292,8 @@ class Sentence < ActiveRecord::Base
   #
   # ==== Options
   # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
-  # <tt>:internal</tt> -- If true, will use the internal numbering system.
   def citation(options = {})
-    sentence_citation = if options[:internal]
-                          sentence_number
-                        else
-                          reference_fields.values.join(', ')
-                        end
-    [source_division.citation(options), sentence_citation] * ':'
+    sentence_citation = source_division.citation(options) + %w{book chapter}.map { |f| reference_fields[f] }.join('.')
   end
 
   # Remove all dependency annotation from a sentence and save the changes.
