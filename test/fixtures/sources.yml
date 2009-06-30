@@ -3,8 +3,29 @@ one:
   title: Vulgate
   language_id: 1
   tei_header: "<tei></tei>"
+  tracked_references: "---
+sentence:
+- verse
+source_division:
+- book
+- chapter"
 two:
   id: 2
   title: Greek New Testament
   language_id: 2
   tei_header: "<tei></tei>"
+  tracked_references: "---
+sentence:
+- verse
+source_division:
+- book
+- chapter"
+three:
+  id: 3
+  title: Plautus, Amphitruo
+  abbreviation: Plaut., Amph.
+  language_id: 2
+  tei_header: "<tei></tei>"
+  tracked_references: "---
+sentence:
+- line"

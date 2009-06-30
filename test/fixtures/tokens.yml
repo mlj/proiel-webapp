@@ -13,7 +13,7 @@ two:
   sentence_id: 1
   morphology_id: 1
   form: cum
-  lemma_id: 2 
+  lemma_id: 2
   relation: MyText
   head: 1
 three:
