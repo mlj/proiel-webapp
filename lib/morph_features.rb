@@ -484,6 +484,10 @@ class MorphFeatures
     pos_s[0, 1] == 'P'
   end
 
+  def relative_pronoun?
+    pos_s == 'Pr'
+  end
+
   def inspect
     "#<MorphFeatures lemma=\"#{lemma_s}\" morphology=\"#{morphology_s}\">"
   end

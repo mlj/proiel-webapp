@@ -122,7 +122,11 @@ class Token < ActiveRecord::Base
   # updating will take place if the morph-features are unchanged.
   def morph_features=(f)
     Token.transaction do
-      if self.morphology != f.morphology or f.lemma.new_record? or f.lemma != self.lemma
+      if f.nil?
+        self.morphology = nil
+        self.lemma = nil
+        self.save!
+      elsif self.morphology != f.morphology or f.lemma.new_record? or f.lemma != self.lemma
         self.morphology = f.morphology
         f.lemma.save! if f.lemma.new_record?
         self.lemma = f.lemma
@@ -152,6 +156,32 @@ class Token < ActiveRecord::Base
   def inferred_morph_features
     result, pick, *suggestions = language.guess_morphology(form, morph_features || source_morph_features)
     [pick, *suggestions]
+  end
+
+  # Morph-feature predicates to be delegated to MorphFeatures.
+  MORPH_FEATURE_TESTS = [:noun?, :pronoun?, :relative_pronoun?, :article?]
+
+  # Delegate morphological feature tests to the morph-features class.
+  def method_missing(n)
+    if MORPH_FEATURE_TESTS.include?(n)
+      morph_features and morph_features.send(n)
+    else
+      super
+    end
+  end
+
+  # Returns true if the token is a verb. If +include_empty_tokens+ is
+  # true, also returns true for an empty node with its empty token
+  # sort set to verb.
+  def verb?(include_empty_tokens = true)
+    (include_empty_tokens && empty_token_sort == 'V') || (morph_features and morph_features.verb?)
+  end
+
+  # Returns true if the token is a conjunction. If +include_empty_tokens+ is
+  # true, also returns true for an empty node with its empty token
+  # sort set to conjunction.
+  def conjunction?(include_empty_tokens = true)
+    (include_empty_tokens && empty_token_sort == 'C') || (morph_features and morph_features.conjunction?)
   end
 
   # Returns a citation-form reference for this token.
@@ -269,10 +299,6 @@ class Token < ActiveRecord::Base
                        ))
     end
     @is_annotatable
-  end
-
-  def is_verb?
-    empty_token_sort == 'V' || (morph_features and morph_features.verb?)
   end
 
   # Returns all contrast groups registered for the given source division
