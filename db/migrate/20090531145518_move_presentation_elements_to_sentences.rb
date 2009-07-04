@@ -267,7 +267,7 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
       next unless s.tokens.morphology_annotatable.first # some sentences are broken; this is not the place to deal with this
       next unless s.tokens.morphology_annotatable.first.verse # some sentences are broken; this is not the place to deal with this
       b, e = s.tokens.morphology_annotatable.first.verse, s.tokens.morphology_annotatable.last.verse
-      if b == e
+      if b != e
         s.reference_fields = { "verse" => "#{b}-#{e}" }
       else
         s.reference_fields = { "verse" => "#{b}" }
@@ -277,6 +277,7 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
 
     remove_column :tokens, :verse
 
+    SourceDivision.reset_column_information
     SourceDivision.find_each do |sd|
       sd.reference_fields = sd.read_attribute(:reference_fields).split(',').inject({}) do |fields, field|
         key, value = field.split('=')
