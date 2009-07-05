@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090705151836) do
+ActiveRecord::Schema.define(:version => 20090705192735) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -205,7 +205,7 @@ ActiveRecord::Schema.define(:version => 20090705151836) do
     t.integer  "source_division_id",                   :default => 0,     :null => false
     t.text     "presentation",                                            :null => false
     t.string   "reference_fields",      :limit => 128, :default => "",    :null => false
-    t.integer  "assigned_to",                                             :null => false
+    t.integer  "assigned_to"
   end
 
   add_index "sentences", ["source_division_id", "sentence_number"], :name => "index_sentences_on_source_division_id_and_sentence_number"
