@@ -89,7 +89,7 @@ class Sentence < ActiveRecord::Base
 
   validate :check_invariants
 
-  acts_as_audited :except => [ :annotated_by, :annotated_at, :reviewed_by, :reviewed_at ]
+  acts_as_audited :except => [:annotated_by, :annotated_at, :reviewed_by, :reviewed_at, :tracked_references]
 
   # Returns the language for the sentence.
   def language
@@ -285,12 +285,46 @@ class Sentence < ActiveRecord::Base
     source_division
   end
 
+  protected
+
+  # Returns the reference-format for this sentence.
+  def reference_format
+    source_division.source.reference_format[:sentence]
+  end
+
+  # Returns the source title for this sentence.
+  #
+  # ==== Options
+  # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the title.
+  def source_title(options = {})
+    source_division.source_title
+  end
+
+  public
+
   # Returns a citation-form reference for this sentence.
   #
   # ==== Options
   # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
   def citation(options = {})
-    sentence_citation = source_division.citation(options) + %w{book chapter}.map { |f| reference_fields[f] }.join('.')
+    reference_fields.merge({ :title => source_title }).inject(reference_format) { |s, f| s.gsub("##{f.first}#", f.last) }
+  end
+
+  # Re-indexes the references.
+  def reindex!
+    Sentence.transaction do
+      unless sentence.has_previous?
+        s.reference_fields = s.presentation_as_reference
+        s.source_division.save!
+      else
+        # Merge with what we had in the last sentence, but
+        # overwrite with new information.
+        s.reference_fields = s.previous.reference_fields.merge(s.presentation_as_reference)
+        raise "Referencing inconsistency: source division unexpectedly changed" if s.source_division.changed?
+      end
+
+      s.save!
+    end
   end
 
   # Remove all dependency annotation from a sentence and save the changes.

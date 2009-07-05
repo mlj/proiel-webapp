@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090608163634) do
+ActiveRecord::Schema.define(:version => 20090705151836) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -236,6 +236,7 @@ ActiveRecord::Schema.define(:version => 20090608163634) do
     t.integer "language_id",                       :default => 0,  :null => false
     t.text    "tei_header",                                        :null => false
     t.string  "tracked_references", :limit => 128,                 :null => false
+    t.string  "reference_format",   :limit => 256,                 :null => false
   end
 
   create_table "tokens", :force => true do |t|

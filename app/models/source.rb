@@ -35,6 +35,7 @@ class Source < ActiveRecord::Base
 
   composed_of :metadata, :class_name => 'Metadata', :mapping => %w(tei_header)
   serialize :tracked_references
+  serialize :reference_format
 
   has_many :dependency_alignment_terminations
 
@@ -55,7 +56,12 @@ class Source < ActiveRecord::Base
   # ==== Options
   # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
   def citation(options = {})
-    options[:abbreviated] ? abbreviation : title
+    reference_fields.merge({ :title => title }).inject(reference_format) { |s, f| s.gsub("##{f.first}#", f.last) }
+  end
+
+  # Re-indexes the references.
+  def reindex!
+    Source.transaction { sentence_divisions.find_each(&:reindex!) }
   end
 
   protected
