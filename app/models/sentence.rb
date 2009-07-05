@@ -289,7 +289,7 @@ class Sentence < ActiveRecord::Base
 
   # Returns the reference-format for this sentence.
   def reference_format
-    source_division.source.reference_format[:sentence]
+    source_division.source.reference_format[:sentence] || ""
   end
 
   # Returns the source title for this sentence.
@@ -313,17 +313,17 @@ class Sentence < ActiveRecord::Base
   # Re-indexes the references.
   def reindex!
     Sentence.transaction do
-      unless sentence.has_previous?
-        s.reference_fields = s.presentation_as_reference
-        s.source_division.save!
+      unless has_previous?
+        self.reference_fields = self.presentation_as_reference
+        source_division.save!
       else
         # Merge with what we had in the last sentence, but
         # overwrite with new information.
-        s.reference_fields = s.previous.reference_fields.merge(s.presentation_as_reference)
-        raise "Referencing inconsistency: source division unexpectedly changed" if s.source_division.changed?
+        self.reference_fields = previous.reference_fields.merge(presentation_as_reference)
+        raise "Referencing inconsistency: source division unexpectedly changed" if source_division.changed?
       end
 
-      s.save!
+      save!
     end
   end
 

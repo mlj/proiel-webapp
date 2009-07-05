@@ -2,7 +2,7 @@
 #
 # export.rb - Export functions for PROIEL sources
 #
-# Copyright 2007, 2008 University of Oslo
+# Copyright 2007, 2008, 2009 University of Oslo
 # Copyright 2007, 2008, 2009 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
@@ -32,7 +32,7 @@ class String
 end
 
 # Abstract source exporter.
-class SourceExport
+class SourceXMLExport
   # Creates a new exporter that exports the source +source+ 
   #
   # ==== Options
@@ -56,7 +56,6 @@ class SourceExport
     end
   end
 
-
   # Returns the sentences to be exported by the exporter.
   def filtered_sentences(source_division = nil)
     if source_division
@@ -79,56 +78,54 @@ class SourceExport
 end
 
 # Source exporter for the PROIEL XML format.
-class PROIELXMLExport < SourceExport
+class PROIELXMLExport < SourceXMLExport
   protected
 
   def do_export(file)
     builder = Builder::XmlMarkup.new(:target => file, :indent => 2)
     builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
-    builder.text(:id => identifier, :lang => @source.language.iso_code) do
-      builder.metadata { write_metadata(builder) }
-      @source.source_divisions.each do |source_division|
-        builder.div(:type => 'book', :name => source_division.field(:book)) do
-          builder.div(:type => 'chapter', :name => source_division.field(:chapter)) do
-            write_source_division(builder, source_division)
-          end
-        end
+
+    builder.source(:id => identifier, :language => @source.language.iso_code) do
+      builder.title @source.title
+      builder.abbreviation @source.abbreviation
+      builder.tag!("tracked-references", @source.tracked_references.map { |k, v| v.map { |x| [x, k].join('=') }}.flatten.join(','))
+      builder.tag!("tei-header") { @metadata.write(builder) }
+
+      @source.source_divisions.each do |sd|
+        write_source_division(builder, sd)
       end
     end
   end
 
   private
 
-  def write_metadata(builder)
-    @metadata.write(builder)
-  end
+  def write_source_division(builder, sd)
+    builder.div do
+      builder.title sd.title
+      builder.abbreviation sd.abbreviated_title
 
-  def write_source_division(builder, source_division)
-    filtered_sentences(source_division).find_each do |sentence|
-      builder.sentence(:presentation => sentence.presentation) { write_sentence(builder, sentence) }
+      filtered_sentences(sd).find_each do |s|
+        builder.sentence do
+          builder.presentation { |x| x << s.presentation }
+          write_sentence(builder, s)
+        end
+      end
     end
   end
 
-  VERBATIM_TOKEN_ATTRIBUTES = %w(form contraction
-    emendation abbreviation capitalisation verse empty_token_sort foreign_ids)
+  def write_sentence(builder, s)
+    s.tokens.each do |t|
+      attributes = {}
 
-  def write_sentence(builder, sentence)
-    sentence.tokens.each do |token|
-      attributes = { :id => token.id }
-      attributes[:head] = token.head_id if token.head
-      attributes[:lemma] = token.morph_features.lemma_s if token.morph_features
-      attributes[:morphology] = token.morph_features.morphology_s if token.morph_features
-      attributes[:relation] = token.relation.tag if token.relation
-
-      VERBATIM_TOKEN_ATTRIBUTES.each do |a|
-        value = token.send(a.to_sym)
-        attributes[a.gsub('_', '-')] = value unless value.blank?
+      %w(id form empty_token_sort morph_features source_morph_features foreign_ids head_id relation).each do |f|
+        v = t.send(f)
+        attributes[f.to_s.gsub('_', '-').to_sym] = v.to_s if v
       end
 
-      unless token.slashees.empty? # this extra test avoids <token></token> style XML
+      unless t.slashees.empty? # this extra test avoids <token></token> style XML
         builder.token attributes do
           builder.slashes do
-            token.slash_out_edges.each do |slash_out_edge|
+            t.slash_out_edges.each do |slash_out_edge|
               builder.slash :target => slash_out_edge.slashee_id, :label => slash_out_edge.relation.tag
             end
           end
@@ -137,6 +134,10 @@ class PROIELXMLExport < SourceExport
         builder.token attributes
       end
     end
+
+    s.notes.each do |n|
+      builder.note({ :originator => n.originator.to_s }, n.contents)
+    end
   end
 end
 
@@ -144,7 +145,7 @@ end
 # (http://www.ims.uni-stuttgart.de/projekte/TIGER/TIGERSearch/doc/html/TigerXML.html)
 # in the variant used by VISL under the name `TIGER dependency format'
 # (http://beta.visl.sdu.dk/treebanks.html#TIGER_dependency_format).
-class TigerXMLExport < SourceExport
+class TigerXMLExport < SourceXMLExport
   protected
 
   def do_export(file)
@@ -241,7 +242,7 @@ end
 # Source exporter for the MaltXML format
 # (http://w3.msi.vxu.se/~nivre/research/MaltXML.html).
 # Note that this exporter does not support secondary edges.
-class MaltXMLExport < SourceExport
+class MaltXMLExport < SourceXMLExport
   protected
 
   def do_export(file)

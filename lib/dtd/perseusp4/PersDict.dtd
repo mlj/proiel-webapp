@@ -1,0 +1,14 @@
+<!-- Perseus dictionary TEI modules -->
+
+<!ENTITY % TEI.dictionaries 'INCLUDE' >
+<!ENTITY % TEI.figures 'INCLUDE' >
+<!ENTITY % TEI.names.dates 'INCLUDE' >
+<!ENTITY % PERSEUS.SENSE 'INCLUDE' >
+<!ENTITY % PERSEUS.CIT 'INCLUDE' >
+<!ENTITY % PERSEUS.FOREIGN 'INCLUDE' >
+<!ENTITY % PERSEUS.ETYM 'INCLUDE' >
+<!ENTITY % PERSEUS.HI 'INCLUDE' >
+
+<!ENTITY % PersTei PUBLIC "-//Perseus P4//DTD Perseus TEI Common Declarations//EN" "http://www.perseus.tufts.edu/DTD/1.0/PersTeiCommon.dtd">
+%PersTei;
+

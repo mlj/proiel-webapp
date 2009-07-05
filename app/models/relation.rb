@@ -10,4 +10,8 @@ class Relation < ActiveRecord::Base
   named_scope :secondary, :conditions => { :secondary_relation => true }, :order => 'tag'
 
   acts_as_audited
+
+  def to_s
+    tag
+  end
 end

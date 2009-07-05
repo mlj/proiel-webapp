@@ -1,0 +1,6 @@
+<!-- PersTemplates.ent -->
+<!-- Entities to set up information extraction analysis -->
+
+<!ENTITY % TEI.analysis 'INCLUDE'>
+
+<!ENTITY PersTemplates SYSTEM "PersTemplates.dtd" >

@@ -14,46 +14,76 @@
     </xs:documentation>
   </xs:annotation>
 
-  <xs:complexType name="Metadata">
+  <xs:complexType name="TeiHeader">
     <xs:sequence>
       <xs:element ref="tei:teiHeader" minOccurs="1" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Text">
+  <xs:complexType name="Source">
     <xs:sequence>
-      <xs:element name="metadata" minOccurs="0" maxOccurs="1" type="Metadata"/>
+      <xs:element name="title" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:element name="abbreviation" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:element name="tei-header" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="tracked-references" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:element name="reference-format" minOccurs="1" maxOccurs="1" type="xs:string"/>
       <xs:element name="div" minOccurs="1" maxOccurs="unbounded" type="Div"/>
     </xs:sequence>
     <xs:attribute name="id" type="xs:string" use="required"/>
-    <xs:attribute name="lang" type="xs:string" use="required"/>
+    <xs:attribute name="language" type="xs:string" use="required"/>
   </xs:complexType>
 
-  <xs:simpleType name="DivType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="book"/>
-      <xs:enumeration value="chapter"/>
-    </xs:restriction>
-  </xs:simpleType> 
+  <xs:complexType name="Presentation" mixed="true">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="speaker" type="xs:token"/>
+      <xs:element name="lb"/>
+      <xs:element name="gap"/>
+      <xs:element name="milestone">
+        <xs:complexType>
+          <xs:attribute name="unit" type="xs:string" use="required"/>
+          <xs:attribute name="n" type="xs:string" use="required"/>
+          <xs:attribute name="ed" type="xs:string" use="optional"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="expan">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="abbr" type="xs:string" use="required"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
 
   <xs:complexType name="Div">
-    <xs:choice>
-      <xs:sequence>
-        <xs:element name="sentence" minOccurs="1" maxOccurs="unbounded" type="Sentence"/>
-      </xs:sequence>
-      <xs:sequence>
-        <xs:element name="div" minOccurs="1" maxOccurs="unbounded" type="Div"/>
-      </xs:sequence>
-    </xs:choice>
-    <xs:attribute name="type" type="DivType" use="required"/>
-    <xs:attribute name="name" type="xs:string" use="required"/>
-  </xs:complexType>
-
-  <xs:complexType name="Sentence">
     <xs:sequence>
-      <xs:element name="token" minOccurs="1" maxOccurs="unbounded" type="Token"/>
+      <xs:element name="title" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:element name="abbreviation" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:choice>
+        <xs:sequence>
+          <xs:choice>
+            <xs:sequence>
+              <xs:element name="sentence" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="presentation" minOccurs="1" maxOccurs="1" type="Presentation"/>
+                    <xs:element name="token" minOccurs="1" maxOccurs="unbounded" type="Token"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:sequence>
+              <xs:element name="unsegmented-text" minOccurs="1" maxOccurs="1" type="Presentation"/>
+            </xs:sequence>
+          </xs:choice>
+        </xs:sequence>
+        <xs:sequence>
+          <xs:element name="div" minOccurs="1" maxOccurs="unbounded" type="Div"/>
+        </xs:sequence>
+      </xs:choice>
     </xs:sequence>
-    <xs:attribute name="presentation-string" type="xs:string"/>
   </xs:complexType>
 
   <xs:simpleType name="EmptyTokenSort">
@@ -146,5 +176,5 @@
     <xs:attribute name="original" type="xs:boolean"/>
   </xs:complexType>
 
-  <xs:element name='text' type='Text'/>
+  <xs:element name='source' type='Source'/>
 </xs:schema>

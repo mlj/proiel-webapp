@@ -1,15 +1,32 @@
-#!/usr/bin/env ruby
+#--
 #
-# import.rb - Import functions
+# import.rb - Import functions for PROIEL sources
 #
-# Written by Marius L. Jøhndal, 2007, 2008.
+# Copyright 2007, 2008, 2009 University of Oslo
+# Copyright 2007, 2008, 2009 Marius L. Jøhndal
 #
+# This file is part of the PROIEL web application.
+#
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+#++
 require 'proiel/src'
+require 'hpricot'
+require 'singleton'
 
-class PROIELXMLDictionaryImport
-  # Creates a new importer.
-  def initialize(options = {})
-  end
+class DictionaryImport
+  include Singleton
 
   # Reads import data. The data source +file+ may be any URI supported
   # by open-uri.
@@ -28,99 +45,94 @@ class PROIELXMLDictionaryImport
   end
 end
 
-class SourceImport
-  # Creates a new importer.
-  #
-  # ==== Options
-  # book_filter:: If non-empty, only import books with the given code.
-  # May be either a string or an array of strings.
-  def initialize(options = {})
-    options.assert_valid_keys(:book_filter)
-    options.reverse_merge! :book_filter => []
+class TextImport
+  include Singleton
 
-    @book_filter = [options[:book_filter]].flatten
-  end
-end
+  # Reads import data. The data source +xml_or_file+ may be an opened
+  # file or a string containing the XML.
+  def read(xml_or_file)
+    doc = Hpricot.XML(xml_or_file)
 
-class PROIELXMLImport < SourceImport
-  # Reads import data. The data source +file+ may be any URI supported
-  # by open-uri.
-  def read(file)
+    identifier = (doc/:source).first.attributes['id']
+    language_code = (doc/:source).first.attributes['language']
+    # There may be elements called 'title', 'abbreviation' etc
+    # elsewhere (typically inside the TEI header), so we must be
+    # careful to get only the children of 'source'.
+    title = doc.search('source > title').inner_html
+    abbreviation = doc.search('source > abbreviation').inner_html
+    tracked_references = doc.search('source > tracked-references').inner_html
+    reference_format = doc.search('source > reference-format').inner_html
+    tei_header = (doc/:source/:"tei-header").to_s
+
+    source = Source.find_by_code(identifier)
+    raise "Source #{identifier} already exists" if source
+
+    language = Language.find_by_iso_code(language_code)
+    raise "Language code #{language} invalid" unless language
+
+    tracked_references = tracked_references.split(/\s*,\s*/).inject({}) do |v, e|
+      sect, level = e.split(/\s*=\s*/)
+      v[level] ||= []
+      v[level] << sect
+      v
+    end
+
+    reference_format = reference_format.split(/,(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/).map { |s| s.tr('"', '') }.inject({}) do |v, e|
+      sect, fmt = e.split(/\s*=\s*/)
+      v[sect.to_sym] = fmt
+      v
+    end
+
+    source = language.sources.create!(:code => identifier,
+                                      :title => title,
+                                      :abbreviation => abbreviation,
+                                      :tei_header => tei_header,
+                                      :tracked_references => tracked_references,
+                                      :reference_format => reference_format)
+
     # We do not need versioning for imports, so disable it.
     Sentence.disable_auditing
     Token.disable_auditing
 
-    import = PROIEL::XSource.new(file)
-    STDOUT.puts "Importing source #{import.metadata[:id]}..."
-    STDOUT.puts " * Identifier: #{import.metadata[:id]}"
-    STDOUT.puts " * Language: #{import.metadata[:language]}"
+    (doc/:div).each_with_index do |div, div_position|
+      sd = source.source_divisions.create! :position => div_position,
+        :title => (div/:title).inner_html,
+        :abbreviated_title => (div/:abbreviation).inner_html
 
-    language = Language.find_by_iso_code(import.metadata[:language])
-    raise "Language #{import.metadata[:language]} undefined" unless language
+      if (div/:"unsegmented-text")
+        (div/:"unsegmented-text").inner_html.chomp.gsub(/\s+/, ' ').gsub(/(\s*[—]?[\.\?:\!][—]?)\s+/, '\1#').split(/#/).map(&:chomp).each_with_index do |segment, segment_position|
+          add_sentence(sd, segment_position, segment)
+        end
+      else
+        (div/:sentence).each_with_index do |sentence, sentence_position|
+          s = add_sentence(sd, sentence_position, sentence.attributes[:presentation])
 
-    source = language.sources.find_by_code(import.metadata[:id])
-    raise "Source #{source.metadata[:id]} not found" unless source
+          (sentence/:token).each_with_index do |token, token_position|
+            t = s.tokens.create! :form => attributes[:form],
+              :empty_token_sort => attributes[:"empty-token-sort"],
+              :morphology => attributes[:"morphology"],
+              :source_morphology => attributes[:"source-morphology"],
+              :foreign_ids => attributes[:"foreign-ids"]
+          end
 
-    book = nil
-    source_division = nil
-    sentence_number = nil
-    sentence = nil
+          (sentence/:note).each do |note|
+            originator = ImportSource.find_or_create_by_tag :tag => note.attributes[:origin],
+              :summary => note[:origin]
 
-    args = {}
-    args[:books] = @book_filter unless @book_filter.empty?
-
-    import.read_tokens(args) do |form, attributes|
-      if book != attributes[:book]
-        book = attributes[:book] #FIXME!!! now by book AND chapter!
-        source_division = SourceDivision.find_by_fields("book=#{book}").id
-        sentence_number = nil
-        STDOUT.puts "Importing book #{book} for source #{source.code}..."
-      end
-
-      if sentence_number != attributes[:sentence_number]
-        sentence_number = attributes[:sentence_number]
-        sentence = source_division.sentences.create!(:sentence_number => sentence_number, 
-                                                     :chapter => attributes[:chapter],
-                                                     :presentation => attributes[:presentation])
-      end
-
-#FIXME: this should be moved somewhere else to allow for future extensions. 
-#Separate word/lemma-lists?
-#            # Now hook up dictionary references,if any
-#            if attributes[:references]
-#              attributes[:references].split(',').each do |reference|
-#                dictionary, entry = reference.split('=')
-#                DictionaryReference.find_or_create_by_lemma_id_and_dictionary_identifier_and_entry_identifier(:lemma_id => lemma_id, :dictionary_identifier => dictionary,
-#                                                            :entry_identifier => entry)
-#              end
-#            end
-
-      # Source morphtags do not have to be valid, so we eat the tag without
-      # validation.
-      morphology = attributes[:morphology] ? MorphFeatures(nil, attributes[:morphology).morphology_s : nil
-
-      n = sentence.tokens.create!(
-                   :token_number => attributes[:token_number], 
-                   :source_morphology => morphology,
-                   :source_lemma => attributes[:lemma],
-                   :form => attributes[:form],
-                   :verse => attributes[:verse],
-                   :contraction => attributes[:contraction] || false,
-                   :emendation => attributes[:emendation] || false,
-                   :abbreviation => attributes[:abbreviation] || false,
-                   :capitalisation => attributes[:capitalisation] || false,
-                   :foreign_ids => attributes[:foreign_ids])
-
-      if attributes[:notes]
-        attributes[:notes].each do |note|
-          n.notes.create! :originator => ImportSource.find_or_create_by_tag(:tag => note[:origin], :summary => note[:origin]), :contents => note[:contents]
+            t.notes.create! :contents => note.inner_html,
+              :originator => originator
+          end
         end
       end
+    end
+  end
 
-      if (attributes[:relation] or attributes[:head]) and not dependency_warned
-        STDERR.puts "Dependency structures cannot be imported. Ignoring."
-        dependency_warned = true
-      end
+  private
+
+  def add_sentence(sd, position, presentation)
+    returning(sd.sentences.new(:sentence_number => position,
+                               :presentation => presentation)) do |s|
+      s.reindex!
     end
   end
 end

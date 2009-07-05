@@ -267,11 +267,6 @@ Wishlist
     Also, those lemmata that secondarily reference others have been imported, but
     these should, by policy, not be available and have to be purged.
 
-  * Synchronise XML import, export and database data model
-
-    These are probably out of sync by now in multiple minor respects. Check and fix!
-    Also add IDs to all objects, e.g. sentence IDs.
-
   * Verify that manual rules for closed parts of speech match annotation for Latin, 
     Gothic and OCS
 

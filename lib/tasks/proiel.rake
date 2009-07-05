@@ -19,24 +19,54 @@ namespace :proiel do
       require 'import'
 
       raise "Filename required" unless ENV['FILE']
-      PROIELXMLDictionaryImport.new.read(ENV['FILE'])
+      DictionaryImport.instance.read(ENV['FILE'])
     end
   end
 
   namespace :text do
+    namespace :tei do
+      desc "List TEI source texts available for import. Options: TEI_BASE=root TEI directory"
+      task(:list => :environment) do
+        require 'tei'
+        puts "Available sources"
+        puts "  %-15s   %-30s %s" % %w(Identifier Filename Title)
+        puts "  " + '-' * 70
+        TEI::RegisteredSources.instance.sort.each do |identifier, data|
+          s = File.exists?(File.join(ENV['TEI_BASE'], data.file_name)) ? '+' : '-'
+          puts "  %-15s %s %-30s %s" % [identifier, s, data.file_name, data.title]
+        end
+      end
+
+      desc "Dump a TEI source text as PROIEL XML. Options: ID=identifier, TEI_BASE=root TEI directory"
+      task(:dump => :environment) do
+        require 'tei'
+        raise "Identifier required" unless ENV['ID']
+        File.open("#{ENV['ID']}.xml", "w") do |f|
+          f.puts TEI::PerseusAdapter.instance.transform(ENV['ID'], ENV['TEI_BASE'])
+        end
+      end
+
+      desc "Import a TEI source text. Options: ID=identifier, TEI_BASE=root TEI directory"
+      task(:import => :environment) do
+        require 'import'
+
+        raise "Identifier required" unless ENV['ID']
+        TextImport.instance.read(TEI::PerseusAdapter.instance.transform(ENV['ID'], ENV['TEI_BASE']))
+      end
+    end
+
     desc "Validate a PROIEL source text. Options: FILE=data_file"
     task(:validate => :environment) do
       raise "Filename required" unless ENV['FILE']
       `xmllint --schema #{File.join(RAILS_ROOT, 'lib', 'text.xsd')} --noout #{ENV['FILE']}`
     end
 
-    desc "Import a PROIEL source text. Options: FILE=data_file BOOK=book_filter"
+    desc "Import a PROIEL source text. Options: FILE=data_file"
     task(:import => :environment) do
       require 'import'
 
       raise "Filename required" unless ENV['FILE']
-      e = ENV['BOOK'] ? PROIELXMLImport.new(:book_filter => ENV['BOOK']) : PROIELXMLImport.new
-      e.read(ENV['FILE'])
+      TextImport.instance.read(ENV['FILE'])
     end
 
     desc "Export a PROIEL source text. Optional options: ID=source_identifier FORMAT={proiel|maltxml|tigerxml} MODE={all|reviewed} DIRECTORY=destination_directory"

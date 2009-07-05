@@ -138,19 +138,48 @@ export path is used.
 `proiel:text:import`
 --------------------
 
-This task is used to import _new_ base texts. The import will look for the appropriate
-source in the database using the identifier in the XML file to be imported. If it does
-not exist, an exception will be raised. It is possible to import a subsection of the
-XML file by using the `BOOK` variable to filter on book identifiers. Once a book has
-been imported, it cannot be imported again, and an attempt to do is likely to lead to
-data corruption.
+This task is used to import _new_ base texts. The import will create a new
+source object in the database. If one already exists, an exception will be
+raised.
 
 Example:
 
-    $ rake proiel:text:import FILE=wulfila-gothicnt.xml BOOK=1THESS
-    Registered books COL,2THESS,1THESS,MARK,JOHN,PHILEM,ROM,1TIM,PHIL,GAL,EPH,LUKE,2TIM,TIT,2COR,MATT,1COR...
-    Importing source wulfila-gothicnt...
-    Importing book 1THESS for source wulfila-gothicnt...
+    $ rake proiel:text:import FILE=wulfila-gothicnt.xml
+
+`proiel:text:tei:list`
+----------------------
+
+This task is used to list TEI sources that have been registered and
+are available for import.
+
+Set +TEI_BASE+ to the directory containing the TEI files.
+
+Example:
+
+    $ TEI_BASE=$HOME/share/perseus/texts rake proiel:text:tei:list
+    Available sources
+    Identifier        Filename                       Title
+    ----------------------------------------------------------------------
+    caes-civ        + Caesar/caes.bc_lat.xml         Caesar, commentarii belli civilis
+    caes-gall       + Caesar/caes.bg_lat.xml         Caesar, commentarii belli Gallici
+    ...
+
+`proiel:text:tei:dump`
+----------------------
+
+This task dumps a TEI source text as PROIEL XML by running it through
+the same conversion process that is applied when importing a TEI text.
+
+Set +TEI_BASE+ to the directory containing the TEI files, and provide
+the text identifier in +ID+.
+
+`proiel:text:tei:import`
+------------------------
+
+This task imports a TEI source text.
+
+Set +TEI_BASE+ to the directory containing the TEI files, and provide
+the text identifier in +ID+.
 
 `proiel:schemata:export`
 ------------------------

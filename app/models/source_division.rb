@@ -66,7 +66,7 @@ class SourceDivision < ActiveRecord::Base
 
   # Returns the reference-format for this source division.
   def reference_format
-    source.reference_format[:source_division]
+    source.reference_format[:source_division] || ""
   end
 
   # Returns the source title for this source division.

@@ -1,0 +1,195 @@
+<!-- Perseus XML Unicode/other character entities.
+
+     Included by PersTeiCommon for XML source files.
+     Entities listed here can override ISO equivalents.
+-->
+
+<!-- With unicode equivalent -->
+
+<!ENTITY ebreve "&#x115;" > <!-- short e -->
+<!ENTITY ibreve "&#x12d;" > <!-- short i -->
+<!ENTITY obreve "&#x14f;" > <!-- short o -->
+
+<!ENTITY Ebreve "&#x114;" > <!-- short E -->
+<!ENTITY Ibreve "&#x12c;" > <!-- short I -->
+<!ENTITY Obreve "&#x14e;" > <!-- short O -->
+
+<!ENTITY Ybreve "Y"       > <!-- short Y -->
+<!ENTITY ybreve "y"       > <!-- short y -->
+<!ENTITY Ymacr  "&#x232;" > <!-- long Y -->
+<!ENTITY ymacr  "&#x233;" > <!-- long y -->
+
+<!ENTITY AEligmacr  "&#x01e2;" > <!-- long AE ligature -->
+<!ENTITY aeligmacr  "&#x01e3;" > <!-- long ae ligature -->
+
+<!ENTITY c "&#x2183;" > <!-- Roman 100,000, reversed C -->
+<!ENTITY Koppa "&#x3de;" > <!-- upper-case koppa -->
+<!ENTITY koppa "&#x3df;" > <!-- lower-case koppa -->
+
+<!ENTITY lnull "&#x1e37;" > <!-- l with dot, syllabic l -->
+<!ENTITY mnull "&#x1e43;" > <!-- m with dot, syllabic m -->
+<!ENTITY nnull "&#x1e47;" > <!-- n with dot, syllabic n -->
+<!ENTITY rnull "&#x1e5b;" > <!-- r with dot, syllabic r -->
+
+<!ENTITY inter2 "&#x2236;" > <!-- double interpunct -->
+<!ENTITY inter3 "&#x22ee;" > <!-- triple interpunct -->
+
+<!ENTITY hbreve "&#x1e2b;" > <!-- h with breve below, Hittite laryngeal -->
+
+<!ENTITY ohbr   "&#x01eb;" > <!-- o hook bottom right -->
+
+<!ENTITY minim	"&#x264f;" > <!-- symbol of quantity, also a scorpius -->
+<!ENTITY pounds	"&#x2114;" > <!-- lbs. symbol -->
+<!ENTITY ounce	"&#x2125;" > <!-- oz. symbol -->
+<!ENTITY scruple    "&#x2108;" > <!-- scruple (another quantity symbol) -->
+
+<!-- the character below is apparently not in the character set -->
+<!-- <!ENTITY brevenote  "&#119132;" > musical breve note -->
+
+<!-- Without unicode equivalent -->
+
+<!ENTITY drachm "[drachma]" > <!-- drachma symbol, not yet defined -->
+
+<!ENTITY angle	"[angle ]">	<!--angle symbol-->
+<!ENTITY triangle	"[triangle]">	<!--angle symbol-->
+<!ENTITY gtlt	"[gtlt  ]">	<!--greater-than over less-than-->
+<!ENTITY quad	"[quad  ]">	<!--quadrilateral symbol-->
+<!ENTITY ngt	"[ngt   ]">	<!--not-greater-than symbol-->
+<!ENTITY nlt	"[nlt   ]">	<!--not-less-than symbol-->
+
+<!-- Funny diacritical letters -->
+<!ENTITY Arpress "[Arpress]" >
+<!ENTITY Eunc	"[Eunc  ]" >
+<!ENTITY Ndot "[Ndot]" >
+<!ENTITY Rnull	"[Rnull ]" >
+<!ENTITY San	"[San   ]" >
+<!ENTITY acaron	"[acaron]" >
+<!ENTITY acutebreve	"[acutebreve]" >
+<!ENTITY acutemacr	"[acutemacr]" >
+<!ENTITY adot "[adot  ]" >
+<!ENTITY amacracute "[amacracute]" >
+<!ENTITY anceps	"[anceps]" >
+<!ENTITY brevemacr "[brevemacr]" >
+<!ENTITY bstrok "[bstrok]" >
+<!ENTITY cbreve "[cbreve]" >
+<!ENTITY chirho	"&#x2ce9;"	>
+<!ENTITY c	"[C     ]" >
+<!ENTITY cj	"[C     ]" >
+<!ENTITY cj     "[cj    ]" >
+<!ENTITY cnull  "[cnull ]" >
+<!ENTITY dibreve "[dibreve]"> <!--Double inverted breve -->
+<!ENTITY ecedil "[ecedil]" >
+<!ENTITY eglide	"[eglide]" >
+<!ENTITY emacracute  "[emacracute]" >
+<!ENTITY enull  "[enull ]" >
+<!ENTITY epig-rough "[epig-rough]"> <!--Epigraphical rough breathing -->
+<!ENTITY etilde "[etilde]"	>
+<!ENTITY gkhyph  "[gkhyph]" >
+<!ENTITY gklig  "[gklig]" >
+<!ENTITY gtbreve	"[gtbreve]" >
+<!ENTITY hudot  "[hudot ]" >
+<!ENTITY icaron "[icaron]" >
+<!ENTITY iglide	"[iglide]" >
+<!ENTITY imacracute  "[imacracute]" >
+<!ENTITY imacrbreve  "[imacrbreve]" >
+<!ENTITY jcaron "[jcaron]" >
+<!ENTITY kacute "[kacute]" >
+<!ENTITY kdot   "[kdot  ]" >
+<!ENTITY kcirc  "[kcirc ]" >
+<!ENTITY koopa  "[koopa ]" >
+<!ENTITY kudot	"[kudot ]"> <!--small letter k, dot under -->
+<!ENTITY ldsqb	"&#x27e6;" >
+<!ENTITY lins	"[lins  ]" >
+<!ENTITY longs    "&#x017f;"> <!--Long medial "s" -->
+<!ENTITY lpress "[lpress]" >
+<!ENTITY ltilde "[ltilde]"	>
+<!ENTITY macracute  "[macracute]" >
+<!ENTITY macrbreve "[macrbreve]" >
+<!ENTITY macrcirc	"[macrcirc]" >
+<!ENTITY macrdot	"[macrdot]" >
+<!ENTITY macutenull "[macutenull]" >
+<!ENTITY mmacrnull "[mmacrnull]" >
+<!ENTITY ncirc  "[ncirc ]" >
+<!ENTITY ndot   "[ndot  ]" >
+<!ENTITY ngnull	"[ngnull]" >
+<!ENTITY nmacrnull "[nmacrnull]" >
+<!ENTITY nring  "[nring]" >
+<!ENTITY null	"[null  ]" >
+<!ENTITY ocaron "[ocaron]" >
+<!ENTITY oogon  "[oogon ]" >
+<!ENTITY oolig  "[oolig ]" >
+<!ENTITY rcirc  "[rcirc]" >
+<!ENTITY rdot   "[rdot  ]" >
+<!ENTITY rdsqb	"&#x27e7;" >
+<!ENTITY rmacr  "[rmacr ]" >
+<!ENTITY root   "[root  ]" >
+<!ENTITY rough	"[rough ]" >
+<!ENTITY rpress "[rpress]" >
+<!ENTITY rtilde "[rtilde]" >
+<!ENTITY sampi	"[sampi ]" >
+<!ENTITY san	"[san   ]" >
+<!ENTITY sbreve "[sbreve]" >
+<!ENTITY schwa  "[schwa]" >
+<!ENTITY scron  "[scron]" >
+<!ENTITY smooth	"[smooth]" >
+<!ENTITY snull	"[snull ]" >
+<!ENTITY staur	"&#x2ce7;" >
+<!ENTITY stigma	"[stigma]" >
+<!ENTITY tnull  "[tnull ]" >
+<!ENTITY tnum	"[tnum  ]" >
+<!ENTITY ucaron	"[ucaron]" >
+<!ENTITY udot   "[udot  ]" >
+<!ENTITY uglide	"[uglide]" >
+<!ENTITY umacracute	"[umacracute]" >
+<!ENTITY wacute	"[wacute]" >
+<!ENTITY x1000	"[x1000 ]" >
+<!ENTITY yogh   "[yogh  ]" >
+<!ENTITY ygrave "[ygrave]" >
+<!ENTITY ytilde "[ytilde]" >
+<!ENTITY zcirc  "[zcirc ]" >
+
+<!-- More MPI entities -->
+<!ENTITY acedil "[acedil]" >
+<!ENTITY ngrave "[ngrave]" >
+<!ENTITY qacute "[qacute]" >
+<!ENTITY mtilde "[mtilde]" >
+<!ENTITY pacute "[pacute]" > <!--used in Buonamici for pr&aelig; -->
+<!ENTITY ptilde "[ptilde]" >
+<!ENTITY qgrave "[qgrave]" >
+<!ENTITY qring	"[qring ]" >
+<!ENTITY qtilde "[qtilde]" >
+<!ENTITY quml	"[quml  ]" >
+<!ENTITY ttilde "[ttilde]" >
+<!ENTITY cgrave "[cgrave]" >
+<!ENTITY zgrave "[zgrave]" >
+
+<!ENTITY C	"[C     ]" >
+<!ENTITY D	"[D     ]" >
+<!ENTITY dram	"[dram  ]" >
+<!-- <!ENTITY ounce	"[ounce ]" > -->
+<!ENTITY que	"[que   ]" > <!--special sign for enclitic -que-->
+<!ENTITY queacute "[queacute]" >
+<!ENTITY quetilde "[quetilde]" >
+<!ENTITY scruple "[scruple]" >
+
+<!-- More Bolles entities -->
+<!ENTITY Mtilde "[Mtilde]" >
+<!ENTITY Ptilde "[Ptilde]" >
+
+<!-- Combining accents -->
+<!ENTITY combacute	"[combacute]" >
+<!ENTITY combgrave	"[combgrave]" >
+<!ENTITY combcirc	"[combcirc]" >
+<!ENTITY combmacr	"[combmacr]" >
+<!ENTITY combbreve	"[combbreve]" >
+
+<!-- Found in LSJ -->
+<!ENTITY sdot 	"[sdot	]" >
+
+<!-- Used in Knight -->
+<!ENTITY paid	"[paid	]" >
+<!ENTITY quantity1  "&pounds;" >
+<!ENTITY quantity2  "&ounce;" >
+<!ENTITY quantity3  "&scruple;" >
+<!ENTITY brevenote  "[brevenote]" >
+<!ENTITY shortnote  "&brevenote;" >

@@ -1,0 +1,155 @@
+<!-- Perseus TEI extension definitions
+
+     See PersTeiExt.ent for usage.
+
+ -->
+
+
+<!-- New elements -->
+
+<!-- Lemma: direct app. crit. citation -->
+<![ %PERSEUS.LEMMA; [
+
+<!ELEMENT %n.lemma;	%om.RR; %paraContent;>
+<!ATTLIST %n.lemma;	%a.global;
+			%a.xPointer;
+          TEIform CDATA 'lemma'>
+
+]]>
+
+<!-- Overlapping markup: tagStart, tagEnd -->
+<![ %PERSEUS.OVERLAPPING; [
+
+<!ELEMENT %n.tagStart;	%om.RO;	EMPTY>
+<!ATTLIST %n.tagStart;	gi	CDATA	#REQUIRED
+			atts	CDATA	#IMPLIED
+          TEIform CDATA 'tagStart'>
+
+<!ELEMENT %n.tagEnd;	%om.RO;	EMPTY>
+<!ATTLIST %n.tagEnd;	gi	CDATA	#REQUIRED
+          TEIform CDATA 'tagEnd'>
+
+]]>
+
+
+<!-- Redefined elements -->
+
+<!-- note: allow 'note' globally -->
+<![ %PERSEUS.NOTE; [
+
+<!ELEMENT %n.globalNote; %om.RO;  %specialPara;>
+<!ATTLIST %n.globalNote;
+      %a.global;
+      type CDATA #IMPLIED
+      resp CDATA #IMPLIED
+      place CDATA 'unspecified'
+      anchored (yes | no) "yes"
+      target IDREFS #IMPLIED
+      targetEnd IDREFS #IMPLIED
+      TEIform CDATA 'note'  >
+
+<!ELEMENT %n.notesStmt; %om.RO;  ((%n.globalNote;)+)>
+<!ATTLIST %n.notesStmt;
+      %a.global;
+      TEIform CDATA 'notesStmt'  >
+
+]]>
+
+<!-- Quote: add 'type' attribute -->
+<![%PERSEUS.QUOTE; [
+
+<!ELEMENT %n.quote;     %om.RR;  %specialPara;                    >
+<!ATTLIST %n.quote;          %a.global;
+          type               CDATA               #IMPLIED
+          TEIform            CDATA               'quote'        >
+
+]]>
+
+<!-- biblStruct: allow multiple analytics -->
+<![%PERSEUS.BIBLSTRUCT; [
+
+<!ELEMENT %n.biblStruct; %om.RO;  ((%m.Incl;)*, ((%n.analytic;), (%m.Incl;)*)+,
+                  (((%n.monogr;), (%m.Incl;)*), ((%n.series;), (%m.Incl;)*)*)+,
+                  (((%n.note;), (%m.Incl;)*) | ((%n.idno;), (%m.Incl;)*))*)>
+<!ATTLIST %n.biblStruct;
+      %a.global;
+      %a.declarable;
+      TEIform CDATA 'biblStruct'  >
+
+]]>
+
+<!-- dateline: allow dateline to include dateStruct, orgName-->
+<![%PERSEUS.DATELINE; [
+
+<!ELEMENT %n.dateline; %om.RO;  ( #PCDATA | %n.date; | %n.time;
+                            | %n.dateStruct; | %n.placeName; | %n.orgName; | %n.name; | %n.address; | %m.Incl; )* >
+<!ATTLIST %n.dateline;
+      %a.global;
+      TEIform CDATA 'dateline'  >
+]]>
+
+<!-- placeName: add type attribute to placeName -->
+<![%PERSEUS.PLACENAME; [
+<!ELEMENT %n.placeName; %om.RR;  ( #PCDATA | %m.placePart;
+                   | %m.phrase; | %m.Incl; )* >
+<!ATTLIST %n.placeName;      %a.global;
+      type CDATA             #IMPLIED
+				%a.names;
+      TEIform CDATA 'placeName'  >
+]]>
+
+<!-- measure: add value attribute to measure -->
+<![%PERSEUS.MEASURE; [
+<!ELEMENT measure %om.RR;  %phrase.seq;>
+<!ATTLIST measure
+      %a.global;
+      %a.names;
+      type CDATA #IMPLIED
+      value CDATA #IMPLIED>
+]]>
+
+<!-- Extensions to make the lexica valid P4 -->
+<![%PERSEUS.SENSE; [
+<!ELEMENT %n.sense; %om.RR;  ( #PCDATA | %n.sense; | %m.dictionaryTopLevel;
+                          | %n.quote; | %n.cit; | %m.bibl; | %m.phrase;
+			  | %m.morphInfo; | %n.pron; | %n.tr;
+			  | %n.orth; | %n.pos; | %m.Incl; | %n.subc;
+			  | %n.figure; | %n.lbl; )* >
+<!ATTLIST %n.sense;
+      %a.global;
+      %a.dictionaries;
+      level CDATA #IMPLIED
+      TEIform CDATA 'sense'  >
+]]>
+
+<![%PERSEUS.CIT; [
+<!ELEMENT %n.cit; %om.RR;  (#PCDATA | %n.q; | %n.quote; | %m.bibl; | %m.loc; | %m.Incl; | %n.tr; | %n.trans; )*>
+<!ATTLIST %n.cit;
+      %a.global;
+      TEIform CDATA 'cit'  >
+]]>
+
+<![%PERSEUS.FOREIGN; [
+<!ELEMENT %n.foreign; %om.RR; (#PCDATA | %m.phrase; | %m.inter; | %m.Incl; | %m.formInfo;)* >
+<!ATTLIST %n.foreign;
+      %a.global;
+      TEIform CDATA 'foreign'  >
+]]>
+
+<![%PERSEUS.ETYM; [
+<!ELEMENT %n.etym; %om.RO;   ( #PCDATA | %m.phrase; | %m.inter;
+                      | %n.def; | %n.trans; | %n.tr; | %m.formInfo; | %n.eg;
+                      | %n.xr; | %m.Incl; | %n.pos; )* >
+<!ATTLIST %n.etym;
+      %a.global;
+      %a.dictionaries;
+      TEIform CDATA 'etym'  >
+]]>
+
+<![%PERSEUS.HI; [
+<!ELEMENT %n.hi; %om.RR; ( #PCDATA | %m.phrase; | %m.inter; | %m.Incl;
+			    | %n.usg; | %n.orth; )* >
+<!ATTLIST %n.hi;
+      %a.global;
+      TEIform CDATA 'hi'  >
+]]>

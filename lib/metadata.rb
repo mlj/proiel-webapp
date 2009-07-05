@@ -1,9 +1,9 @@
 #--
 #
-# metadata.rb - Metadata functions for PROIEL sources
+# metadata.rb - TEI metadata functions for PROIEL sources
 #
-# Copyright 2008 University of Oslo
-# Copyright 2008 Marius L. Jøhndal
+# Copyright 2008, 2009 University of Oslo
+# Copyright 2008, 2009 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #

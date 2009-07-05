@@ -56,7 +56,7 @@ class Source < ActiveRecord::Base
   # ==== Options
   # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
   def citation(options = {})
-    reference_fields.merge({ :title => title }).inject(reference_format) { |s, f| s.gsub("##{f.first}#", f.last) }
+    reference_fields.merge({ :title => title }).inject(reference_format[:source] || "") { |s, f| s.gsub("##{f.first}#", f.last) }
   end
 
   # Re-indexes the references.

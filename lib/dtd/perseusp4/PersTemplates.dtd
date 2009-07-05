@@ -1,0 +1,10 @@
+<!-- PersTemplates.dtd -->
+<!-- TEI interpGrp templates for information extraction -->
+
+<!-- Events: started with Civil War battles in Dyer -->
+<interpGrp id=interp-event type='event'>
+<interp id=interp-event-date  value='date of event' type='date'>
+<interp id=interp-event-place value='location of event' type='location'>
+<interp id=interp-event-type  value='type of event'>
+</interpGrp>
+

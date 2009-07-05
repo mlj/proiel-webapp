@@ -173,4 +173,8 @@ class User < ActiveRecord::Base
       s.save!
     end
   end
+
+  def to_s
+    login
+  end
 end
