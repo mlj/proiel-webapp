@@ -27,7 +27,7 @@ require 'metadata'
 # Monkeypatch builder with a less obtuse version of XML escaping
 class String
   def to_xs
-    self.gsub(/'/, '&amp;').gsub(/</, '&lt;').gsub(/>/, '&gt;')
+    self.gsub(/'/, '&quot;').gsub(/</, '&lt;').gsub(/>/, '&gt;')
   end
 end
 
