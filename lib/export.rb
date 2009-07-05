@@ -42,7 +42,7 @@ class SourceExport
     options.reverse_merge! :reviewed_only => false
 
     @source = source
-    @metadata = source.metadata
+    @metadata = source.metadata if source.metadata.valid?
     @options = options
   end
 
