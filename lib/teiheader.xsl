@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE xsl:stylesheet [
 	<!ENTITY tooltip '<xsl:attribute xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="title">TEI &lt;<xsl:value-of select="local-name(.)"/>&gt;</xsl:attribute>'>
-	
+
 	<!-- Namespace declarations: workaround for MSXML. Cfr. Jeni Tennison, "The trouble is that MSXML merges XML parsing with namespace parsing, so it tries to view the entity that you declare as a little piece of XML, and interpret as such, so the namespace prefix on the xsl:text gets it confused. (...) The solution is to add a namespace declaration to the xsl:text in your entity." (http://www.biglist.com/lists/xsl-list/archives/200104/msg01503.html) -->
 
 <!ENTITY eds '(Eds.)'>
 <!ENTITY ed '(Ed.)'>
 
 ]>
-	
+
 <!-- ========================================================================== -->
 <!-- TEI header TO XHTML conversion -->
 <!-- ========================================================================== -->
@@ -23,7 +23,7 @@
      [2006-09-26] Minor changes to the output HTML
 
 		The stylesheet was developed for the Wulfila Project (http://www.wulfila.be) in March 2004 and is freely available for academic and non-commercial purposes. A link to the original file would of course be appreciated.
-		
+
 		(author: Tom De Herdt)
 
    This stylesheet was modified for the PROIEL web application by Marius L. Jøhndal. The changes made are the following:
@@ -45,10 +45,10 @@
 	doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
 	doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
 	indent="yes"/>
-	
+
 	<xsl:param name="timestamp"/>
 	<xsl:param name="doc"/><!-- URI of the TEI document -->
-	
+
 	<xsl:template match="/">
  <style type="text/css">
 div#metadata h3 {
@@ -125,8 +125,8 @@ div#metadata div#footer, div#metadata .small {
 				</xsl:if>
 				<xsl:apply-templates select="TEI.2/teiHeader"/>
 	</xsl:template>
-	
-	
+
+
 <!-- ========================================================================== -->
 <!-- [1] FILE DESCRIPTION <fileDesc> -->
 <!-- ========================================================================== -->
@@ -140,7 +140,7 @@ div#metadata div#footer, div#metadata .small {
 
 <!-- .......................................................................... -->
 <!-- [1.1] <titleStmt> -->
-	
+
 	<xsl:template match="fileDesc/titleStmt">
 		<div>
 			<h3>&tooltip;Title statement</h3>
@@ -181,7 +181,7 @@ div#metadata div#footer, div#metadata .small {
 			<td><xsl:apply-templates/></td>
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="title" mode="titleStmt">
 		<tr>
 			<td class="label">
@@ -195,7 +195,7 @@ div#metadata div#footer, div#metadata .small {
 			<td><strong><xsl:apply-templates/></strong></td>
 		</tr>
 	</xsl:template>
-		
+
 	<xsl:template match="resp|respStmt/name">
 	<!-- problematic -->
 		<xsl:for-each select=".">
@@ -218,7 +218,7 @@ div#metadata div#footer, div#metadata .small {
 			</table>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:template match="fileDesc/editionStmt/edition">
 		<xsl:apply-templates/>
 		<xsl:if test="not(substring(normalize-space(.), string-length(normalize-space(.)))='.')">.</xsl:if>
@@ -230,7 +230,7 @@ div#metadata div#footer, div#metadata .small {
 <!-- .......................................................................... -->
 <!-- [1.3] <extent> -->
 
-	<xsl:template match="extent">		
+	<xsl:template match="extent">
 		<div>
 			<h3>&tooltip;Extent</h3>
 			<table border="0" cellspacing="0">
@@ -241,7 +241,7 @@ div#metadata div#footer, div#metadata .small {
 			</table>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:template match="measure">
 		<xsl:value-of select="concat(., ' ', @type)"/>
 	</xsl:template>
@@ -265,7 +265,7 @@ div#metadata div#footer, div#metadata .small {
 			</xsl:choose>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:template match="publisher|distributor|authority|pubPlace|idno|date" mode="publicationStmt">
 		<xsl:variable name="label">
 			<xsl:choose>
@@ -332,13 +332,13 @@ div#metadata div#footer, div#metadata .small {
 
 <!-- .......................................................................... -->
 <!-- [1.5] <seriesStmt> *** NOT (YET) IMPLEMENTED *** -->
-	
+
 	<xsl:template match="seriesStmt"/>
 
 
 <!-- .......................................................................... -->
 <!-- [1.6] <notesStmt> -->
-	
+
 	<xsl:template match="fileDesc/notesStmt">
 		<div>
 			<h3>&tooltip;Notes</h3>
@@ -362,7 +362,7 @@ div#metadata div#footer, div#metadata .small {
 			<xsl:apply-templates select="biblStruct"/>
 		</div>
 	</xsl:template>
-	
+
 <!-- ========================================================================== -->
 <!-- [2] ENCODING DESCRIPTION <encodingDesc> -->
 <!-- ========================================================================== -->
@@ -429,10 +429,10 @@ div#metadata div#footer, div#metadata .small {
 			</xsl:choose>
 		</div>
 	</xsl:template>
-	
+
 <!-- <!ELEMENT editorialDecl %om.RO; ( p+ | ((correction | normalization | quotation | hyphenation | interpretation
        | segmentation | stdVals)+, p*))> -->
-	
+
 	<xsl:template match="correction">
 		<!-- ATTRIBUTE: status -->
 		<xsl:variable name="status">
@@ -474,7 +474,7 @@ div#metadata div#footer, div#metadata .small {
 			</td>
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="normalization">
 		<!-- ATTRIBUTE: method -->
 		<xsl:variable name="method">
@@ -505,7 +505,7 @@ div#metadata div#footer, div#metadata .small {
 			</td>
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="quotation">
 		<!-- ATTRIBUTE: marks -->
 		<xsl:variable name="marks">
@@ -549,7 +549,7 @@ div#metadata div#footer, div#metadata .small {
 			</td>
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="hyphenation">
 		<!-- ATTRIBUTE: eol -->
 		<xsl:variable name="eol">
@@ -575,28 +575,28 @@ div#metadata div#footer, div#metadata .small {
 			</td>
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="segmentation">
 		<tr>
 			<td class="label">&tooltip;Segmentation</td>
 			<td><xsl:apply-templates/></td>
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="interpretation">
 		<tr>
 			<td class="label">&tooltip;Interpretation</td>
 			<td><xsl:apply-templates/></td>
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="stdVals">
 		<tr>
 			<td class="label">&tooltip;Standardization</td>
 			<td><xsl:apply-templates/></td>
 		</tr>
 	</xsl:template>
-	
+
 <!-- .......................................................................... -->
 <!-- [2.4] <tagsDecl> -->
 
@@ -618,16 +618,16 @@ div#metadata div#footer, div#metadata .small {
 			<xsl:if test="tagUsage"></xsl:if>
 		</div>
 	</xsl:template>
-	
+
 <!-- <!ELEMENT tagsDecl %om.RO; (rendition*, tagUsage*) >  -->
-	
+
 	<xsl:template match="rendition">
 		<tr>
 			<td class="label">ID <code><xsl:value-of select="@id"/></code></td>
 			<td><p><xsl:apply-templates/></p></td>
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="tagUsage">
 		<tr>
 			<td class="label"><code>&lt;<xsl:value-of select="@gi"/>&gt;</code></td>
@@ -652,14 +652,14 @@ div#metadata div#footer, div#metadata .small {
 
 <!-- <!ELEMENT refsDecl %om.RO; (p+ | step+ | state+)> -->
 <!-- "specifies how canonical references are constructed for this text" -->
-	
+
 	<xsl:template match="refsDecl">
 		<div>
 			<h3>&tooltip;Reference system declaration</h3>
 			<xsl:apply-templates select="p"/><!-- step|state not supported -->
 		</div>
 	</xsl:template>
-	
+
 <!-- .......................................................................... -->
 <!-- [2.6] <classDecl> -->
 
@@ -671,7 +671,7 @@ div#metadata div#footer, div#metadata .small {
 
 <!-- .......................................................................... -->
 <!-- [2.9] <variantEncoding> -->
-	
+
 	<xsl:template match="variantEncoding">
 		<div>
 			<h3>&tooltip;Variant encoding</h3>
@@ -687,7 +687,7 @@ div#metadata div#footer, div#metadata .small {
 			</table>
 		</div>
 	</xsl:template>
-	
+
 
 <!-- ========================================================================== -->
 <!-- [3] PROFILE DESCRIPTION <profileDesc> -->
@@ -711,12 +711,12 @@ div#metadata div#footer, div#metadata .small {
 			<p><xsl:apply-templates/></p>
 		</div>
 	</xsl:template>
-	
+
 <!-- .......................................................................... -->
 <!-- [3.2] <langUsage> -->
-	
+
 	<!-- <!ELEMENT langUsage %om.RO; (p | language)+> -->
-	
+
 	<xsl:template match="langUsage">
 		<div>
 			<h3>&tooltip;Language</h3>
@@ -729,7 +729,7 @@ div#metadata div#footer, div#metadata .small {
 			</xsl:if>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:template match="language">
 		<li>
 			<xsl:text>[</xsl:text>
@@ -781,17 +781,17 @@ div#metadata div#footer, div#metadata .small {
 			</td>
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="respStmt" mode="change">
 		<xsl:apply-templates/>
 	</xsl:template>
-		
+
 	<xsl:template match="item" mode="change">
 		<xsl:apply-templates/>
 	</xsl:template>
-	
+
 	<!-- <list> handled by generic templates below -->
-	
+
 
 <!-- ========================================================================== -->
 <!-- GENERIC TEMPLATES -->
@@ -802,49 +802,49 @@ div#metadata div#footer, div#metadata .small {
 			<xsl:apply-templates select="item"/>
 		</ul>
 	</xsl:template>
-	
+
 	<xsl:template match="item">
 		<li><xsl:apply-templates/></li>
 	</xsl:template>
-	
+
 	<xsl:template match="ref">
 		<a href="#{@target}"><xsl:apply-templates/></a>
 	</xsl:template>
-	
+
 	<xsl:template match="xref">
 		<a href="{unparsed-entity-uri(@doc)}"><xsl:value-of select="."/></a></xsl:template>
-	
+
 	<xsl:template match="p">
 		<p><xsl:apply-templates/></p>
 	</xsl:template>
-	
+
 	<xsl:template match="mentioned|foreign">
 		<em><xsl:apply-templates/></em>
 	</xsl:template>
-	
+
 	<xsl:template match="cit">
 		<xsl:apply-templates select="quote"/> (<xsl:apply-templates select="bibl"/>)
 	</xsl:template>
-	
+
 	<xsl:template match="quote">
 		<q><xsl:apply-templates/></q>
 	</xsl:template>
-	
+
 	<xsl:template match="emph|hi">
 		<em><xsl:apply-templates/></em>
 	</xsl:template>
-	
+
 	<xsl:template match="emph[@rend='bold']|hi[@rend='bold']">
 		<strong><xsl:apply-templates/></strong>
 	</xsl:template>
-	
+
 	<xsl:template match="hi[@rend='monospace']"><code><xsl:apply-templates/></code></xsl:template>
-	
+
 	<xsl:template match="lb"><br/></xsl:template>
-	
+
 	<xsl:template match="abbr"><abbr title="{@expan}"><xsl:apply-templates/></abbr></xsl:template>
-	
-	
+
+
 <!-- ========================================================================== -->
 <!-- BIBLIOGRAPHIC -->
 <!-- ========================================================================== -->
@@ -857,7 +857,7 @@ div#metadata div#footer, div#metadata .small {
 			<xsl:apply-templates select="series|idno"/>
 		</p>
 	</xsl:template>
-		
+
 	<xsl:template match="monogr">
 		<xsl:call-template name="process-authors"/>
 		<xsl:apply-templates select="title"/>
@@ -866,13 +866,13 @@ div#metadata div#footer, div#metadata .small {
 		<xsl:apply-templates select="note"/>
 		<xsl:apply-templates select="imprint"/>
 	</xsl:template>
-	
-	
+
+
 <!-- AUTHORS and EDITORS: -->
 	<xsl:template name="process-authors">
 		<xsl:call-template name="process-names"><xsl:with-param name="names" select="author"/></xsl:call-template>
 		<xsl:if test="count(author)&gt;0 and count(editor)&gt;0"> / </xsl:if>
-		<xsl:call-template name="process-names"><xsl:with-param name="names" select="editor"/></xsl:call-template>			
+		<xsl:call-template name="process-names"><xsl:with-param name="names" select="editor"/></xsl:call-template>
 		<xsl:if test="count(editor)&gt;0">
 			<xsl:choose>
 				<xsl:when test="count(editor)=1"><xsl:text> </xsl:text>&ed;</xsl:when>
@@ -881,7 +881,7 @@ div#metadata div#footer, div#metadata .small {
 		</xsl:if>
 		<xsl:text>. </xsl:text>
 	</xsl:template>
-	
+
 	<xsl:template name="process-names">
 		<xsl:param name="names"/>
 		<xsl:for-each select="$names">
@@ -894,13 +894,13 @@ div#metadata div#footer, div#metadata .small {
 			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<xsl:template match="title">
 		<span class="title">
 			<xsl:apply-templates/>
 		</span>
 	</xsl:template>
-	
+
 	<xsl:template match="biblStruct/monogr/title">
 		<span class="title">
 			<xsl:apply-templates/>
@@ -912,30 +912,30 @@ div#metadata div#footer, div#metadata .small {
 		<xsl:apply-templates/>
 		<xsl:text>. </xsl:text>
 	</xsl:template>
-	
+
 	<xsl:template match="biblStruct/monogr/edition">
 		<xsl:apply-templates/>
 		<xsl:text>. </xsl:text>
 	</xsl:template>
-	
+
 	<xsl:template match="biblStruct/monogr/note">
 		<xsl:apply-templates/>
 		<xsl:text>. </xsl:text>
 	</xsl:template>
-	
+
 	<xsl:template match="biblStruct/monogr/imprint">
 		<xsl:apply-templates select="publisher"/>,
 		<xsl:apply-templates select="pubPlace"/>,
 		<xsl:apply-templates select="date"/>.
 	</xsl:template>
-	
+
 	<xsl:template match="series">
 		<xsl:text> (</xsl:text>
 		<xsl:apply-templates select="title"/>
 		<xsl:apply-templates select="biblScope"/>
 		<xsl:text>)</xsl:text>
 	</xsl:template>
-	
+
 	<xsl:template match="biblScope[@type='pages']">
 		<xsl:text>, pp. </xsl:text>
 		<xsl:value-of select="."/>
