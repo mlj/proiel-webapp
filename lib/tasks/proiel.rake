@@ -24,6 +24,12 @@ namespace :proiel do
   end
 
   namespace :text do
+    desc "Validate a PROIEL source text. Options: FILE=data_file"
+    task(:validate => :environment) do
+      raise "Filename required" unless ENV['FILE']
+      `xmllint --schema #{File.join(RAILS_ROOT, 'lib', 'text.xsd')} --noout #{ENV['FILE']}`
+    end
+
     desc "Import a PROIEL source text. Options: FILE=data_file BOOK=book_filter"
     task(:import => :environment) do
       require 'import'

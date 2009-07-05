@@ -112,6 +112,15 @@ Example:
     ...
     $ rake proiel:semantic_tags:import FILE=tags.csv
 
+`proiel:text:validate`
+----------------------
+
+This task is used to validate PROIEL XML file against the XML schema prior to import.
+
+Example:
+
+    $ rake proiel:text:validate FILE=my-file.xml
+
 `proiel:text:export`
 --------------------
 
