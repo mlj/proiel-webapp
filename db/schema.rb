@@ -208,6 +208,7 @@ ActiveRecord::Schema.define(:version => 20090705192735) do
     t.integer  "assigned_to"
   end
 
+  add_index "sentences", ["assigned_to"], :name => "index_sentences_on_assigned_to"
   add_index "sentences", ["source_division_id", "sentence_number"], :name => "index_sentences_on_source_division_id_and_sentence_number"
 
   create_table "slash_edges", :force => true do |t|
