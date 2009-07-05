@@ -185,9 +185,6 @@ class Sentence < ActiveRecord::Base
     refs.gsub(/\s+/, ' ').split(/\s*,\s*/).compact.inject({}) do |fields, field|
       r, v = field.split('=')
 
-      # Type conversion: try to convert to integer if possible
-      v = v.to_i if v.to_i.to_s == v
-
       case fields[r]
       when NilClass
         fields[r] = v
