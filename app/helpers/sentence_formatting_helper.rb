@@ -155,7 +155,7 @@ module SentenceFormattingHelper
           css << info_status_css_class
           css << 'ant-' + token.antecedent.id.to_s if token.antecedent
           css << 'con-' + token.contrast_group if token.contrast_group
-          css << 'verb' if token.is_verb?
+          css << 'verb' if token.verb?
         end
         css << 'con-' + token.contrast_group if token.contrast_group
         LangString.new(text, language, :id => 'token-' + token.id.to_s, :css => css * ' ').to_h
