@@ -181,6 +181,13 @@ This task imports a TEI source text.
 Set +TEI_BASE+ to the directory containing the TEI files, and provide
 the text identifier in +ID+.
 
+`proiel:text:tei:import:all`
+----------------------------
+
+Imports all available TEI source texts. If the task encounters a TEI
+source whose identifier already exists in the database, the source is
+ignored.
+
 `proiel:schemata:export`
 ------------------------
 

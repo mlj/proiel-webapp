@@ -53,6 +53,25 @@ namespace :proiel do
         raise "Identifier required" unless ENV['ID']
         TextImport.instance.read(TEI::PerseusAdapter.instance.transform(ENV['ID'], ENV['TEI_BASE']))
       end
+
+      namespace :import do
+        desc "Import a all available TEI source texts. Options: TEI_BASE=root TEI directory"
+        task(:all => :environment) do
+          require 'import'
+
+          TEI::RegisteredSources.instance.sort.each do |identifier, data|
+            if File.exists?(File.join(ENV['TEI_BASE'], data.file_name))
+              unless Source.find_by_code(identifier)
+                TextImport.instance.read(TEI::PerseusAdapter.instance.transform(identifier, ENV['TEI_BASE']))
+              else
+                STDERR.puts "Source #{identifier} already defined. Ignoring."
+              end
+            else
+              STDERR.puts "Cannot find TEI file for #{identifier}. Ignoring."
+            end
+          end
+        end
+      end
     end
 
     desc "Validate a PROIEL source text. Options: FILE=data_file"
