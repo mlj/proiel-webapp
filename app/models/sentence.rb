@@ -354,47 +354,47 @@ class Sentence < ActiveRecord::Base
     # Work inside a transaction since we have lots of small pieces that must go together.
     Token.transaction do
       ts = tokens.dependency_annotatable
+
       removed_token_ids = ts.map(&:id) - dependency_graph.nodes.map(&:identifier)
       added_token_ids = dependency_graph.nodes.map(&:identifier) - ts.map(&:id)
 
       removed_tokens = ts.select { |token| removed_token_ids.include?(token.id) }
+
       # This list of "removed" tokens is actually not a list of tokens to be
       # deleted, but all the tokens not included in the dependency graph. We need
       # to make sure that only empty dependency nodes are actually deleted; if others
       # are present, the user has given us an incomplete analysis.
       raise "Incomplete dependency graph" unless removed_tokens.all?(&:is_empty?)
+
       removed_tokens.each { |token| token.destroy }
 
       # We will append new empty nodes at the end of the token sequence. Establish
       # which token_number to start at.
       @new_token_number ||= max_token_number + 1
-      id_map = Hash[*tokens.map { |token| [token.id, token.id] }.flatten] # new tokens will have "fake" token IDs on the form "newX"
+      id_map = Hash[*tokens.map { |token| [token.id, token.id] }.flatten]
 
-      added_token_ids.each do |added_token_id|
-        # Append an empty token at the end of the sentence. The token
-        # will not have its verse number set as the sentence may cross
-        # verse boundaries. The verse number of the empty token is therefore
-        # undefined.
-        t = tokens.create(:token_number => @new_token_number)
-        @new_token_number += 1
-        id_map[added_token_id] = t.id
+      dependency_graph.nodes.each do |node|
+        unless id_map[node.identifier]
+          raise "Unexpected new node" unless added_token_ids.include?(node.identifier)
+          token = tokens.new
+          token.token_number = @new_token_number
+          token.empty_token_sort = node.data[:empty]
+          token.save!
+          id_map[node.identifier] = token.id
+          @new_token_number += 1
+        end
       end
-
-      # Now the graph should contain the same number of tokens as the sentence, and
-      # their IDs should, if id_map is taken into account, add up.
-      raise "Dependency graph ID inconsistency" unless tokens.dependency_annotatable.map(&:id).sort == dependency_graph.identifiers.map { |i| id_map[i] }.sort
 
       # Now we can iterate the sentence and update all tokens with new annotation
       # and secondary edges.
       dependency_graph.nodes.each do |node|
         token = tokens.find(id_map[node.identifier])
         token.head_id = id_map[node.head.identifier]
-        token.relation = Relation.find_by_tag(node.relation.to_s)
-        token.empty_token_sort = node.data[:empty] if node.is_empty?
+        token.relation = node.relation
 
-        # Slash edges are marked as dependent on the association level, so when we destroyed
-        # empty tokens, the orphaned slashes should also have gone away. The remaining slashes
-        # will however have to be updated "manually".
+        # Slash edges are marked as dependent on the association level, so when we
+        # destroyed empty tokens, the orphaned slashes should also have gone away.
+        # The remaining slashes will however have to be updated "manually".
         token.slash_out_edges.each { |edge| edge.destroy }
         node.slashes_with_interpretations.each { |slashee, interpretation| SlashEdge.create(:slasher => token,
                                                        :slashee_id => id_map[slashee.identifier],
@@ -530,6 +530,14 @@ class Sentence < ActiveRecord::Base
         end
       end
     end
+  end
+
+  # Creates a new token and appends it to the end of the sentence. The
+  # function is equivalent to +create!+ except for the automatic
+  # positioning of the new token in the sentence's linearization
+  # sequence.
+  def append_new_token!(attrs = {})
+    tokens.create!(attrs.merge({ :token_number => max_token_number + 1 }))
   end
 
   private

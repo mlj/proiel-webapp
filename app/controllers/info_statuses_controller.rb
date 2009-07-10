@@ -66,12 +66,10 @@ class InfoStatusesController < ApplicationController
     render :text => ''
   end
 
-
   # POST /sentences/1/info_status/delete_contrast
   def delete_prodrop
-    graph = @sentence.dependency_graph
-    graph.remove_node(params[:prodrop_id])
-    @sentence.syntactic_annotation = graph
+    t = Token.find(params[:prodrop_id])
+    t.destroy
   rescue
     render :text => $!, :status => 500
     raise
@@ -79,10 +77,7 @@ class InfoStatusesController < ApplicationController
     render :text => ''
   end
 
-
-  #########
   protected
-  #########
 
   def find_sentence
     @sentence = Sentence.find(params[:sentence_id])
@@ -142,30 +137,20 @@ class InfoStatusesController < ApplicationController
   end
 
   def create_prodrop_relation(prodrop_id, prodrop_attr)
-    relation = prodrop_attr[:relation]
-    verb_id = prodrop_attr[:verb_id]
+    returning(@sentence.append_new_token!(
+      :head_id => prodrop_attr[:verb_id],
+      :relation => prodrop_attr[:relation],
+      :empty_token_sort => 'P',
+      :info_status => prodrop_attr[:info_status])) do
 
-    graph = @sentence.dependency_graph
-    verb_node = graph[verb_id]
-    verb_token = Token.find(verb_id)
-    graph.add_node(prodrop_id, relation, verb_token.id)
-    @sentence.syntactic_annotation = graph
-
-    # syntactic_annotation= will have created a token at the end of the sentence
-    prodrop_token = Token.find(@sentence.tokens.last.id)
-    prodrop_token.verse = verb_token.verse
-    prodrop_token.form = nil
-    prodrop_token.info_status = prodrop_attr[:info_status]
-    prodrop_token.empty_token_sort = 'P'
-    prodrop_token.save!
-
-    # This is apparently needed after saving a new graph node to the database in order to make
-    # sure that the new node is included in the tokens.dependency_annotatable collection. Otherwise,
-    # the node will be deleted the next time we run syntactic_annotation= (e.g., if we try to
-    # create more than one prodrop token as part of the same save operation).
-    @sentence.tokens.dependency_annotatable.reload
-
-    prodrop_token
+      # This is needed after saving a new graph node to the database
+      # in order to make sure that the new node is included in the
+      # tokens.dependency_annotatable collection. Otherwise, the node
+      # will be deleted the next time we run syntactic_annotation=
+      # (e.g., if we try to create more than one prodrop token as part
+      # of the same save operation).
+      @sentence.tokens.reload
+    end
   end
 
   def set_contrast_options_for(source_division)
