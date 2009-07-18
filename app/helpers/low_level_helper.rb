@@ -12,7 +12,15 @@ module LowLevelHelper
         tbody do
           methods.each do |method|
             value = object.send(method)
-            value = value.to_s if value
+
+            if value
+              case method
+              when :reference_fields
+                value = value.inspect
+              else
+                value = value.to_s
+              end
+            end
 
             field = case method
                     when :id
@@ -28,8 +36,8 @@ module LowLevelHelper
             tr do
               td field + ':'
 
-              case method
-              when :morph_features, :sort_key, :foreign_ids, :language, :presentation
+              case method.to_s
+              when "language", "presentation", /_(at|by|key|ids|features|state|fields)$/
                 td.tag value
               else
                 td value

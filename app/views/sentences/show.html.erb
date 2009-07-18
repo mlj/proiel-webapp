@@ -86,5 +86,5 @@
 <% end %>
 
 <% layer_if(is_reviewer?, "low_level_data") do -%>
-  <%= low_level_data_table(@sentence, :id, :sentence_number, :created_at, :updated_at, :annotated_by, :annotated_at, :reviewed_by, :reviewed_at, :unalignable, :automatic_alignment, :sentence_alignment_id, :source_division_id, :presentation) %>
+  <%= low_level_data_table(@sentence, :id, :sentence_number, :created_at, :updated_at, :annotated_by, :annotated_at, :reviewed_by, :reviewed_at, :unalignable, :automatic_alignment, :sentence_alignment_id, :source_division_id, :presentation, :reference_fields) %>
 <% end %>
