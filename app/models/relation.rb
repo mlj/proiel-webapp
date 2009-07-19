@@ -11,6 +11,27 @@ class Relation < ActiveRecord::Base
 
   acts_as_audited
 
+  PREDICATIVE_RELATIONS = %w(xobj xadv)
+  APPOSITIVE_RELATIONS = %w(apos)
+  # FIXME: a misnomer
+  NOMINAL_RELATIONS = %w(part obl sub obj narg voc)
+
+  # Returns true if the relation is a predicative relation.
+  def predicative?
+    PREDICATIVE_RELATIONS.include?(tag)
+  end
+
+  # Returns true if the relation is a appositive relation.
+  def appositive?
+    APPOSITIVE_RELATIONS.include?(tag)
+  end
+
+  # Returns true if the relation is a nominal relation.
+  def nominal?
+    # FIXME: a misnomer
+    NOMINAL_RELATIONS.include?(tag)
+  end
+
   def to_s
     tag
   end

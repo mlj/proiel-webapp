@@ -8,6 +8,28 @@ class TokenTest < ActiveSupport::TestCase
     assert true
   end
 
+  def test_relation_predicates
+    s = Sentence.first
+
+    t = Token.new(:sentence => s, :form => 'foo')
+    t.relation = :xobj
+    assert t.predicative?
+    assert !t.appositive?
+    assert !t.nominal?
+
+    t = Token.new(:sentence => s, :form => 'foo')
+    t.relation = :voc
+    assert !t.predicative?
+    assert !t.appositive?
+    assert t.nominal?
+
+    t = Token.new(:sentence => s, :form => 'foo')
+    t.relation = :apos
+    assert !t.predicative?
+    assert t.appositive?
+    assert !t.nominal?
+  end
+
   def test_morph_feature_predicates
     s = Sentence.first # associate our tokens with a random sentence
 

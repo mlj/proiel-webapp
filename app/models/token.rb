@@ -161,10 +161,15 @@ class Token < ActiveRecord::Base
   # Morph-feature predicates to be delegated to MorphFeatures.
   MORPH_FEATURE_TESTS = [:noun?, :pronoun?, :relative_pronoun?, :article?]
 
+  # Relation predicates to be delegated to Relation.
+  RELATION_TESTS = [:predicative?, :nominal?, :appositive?]
+
   # Delegate morphological feature tests to the morph-features class.
   def method_missing(n)
     if MORPH_FEATURE_TESTS.include?(n)
       morph_features and morph_features.send(n)
+    elsif RELATION_TESTS.include?(n)
+      relation and relation.send(n)
     else
       super
     end
@@ -286,16 +291,16 @@ class Token < ActiveRecord::Base
     end
   end
 
+  PREDICATIVE_AND_APPOSITIVE_RELATIONS = %w(xobj xadv apos)
+  NOMINAL_RELATIONS = %w(part obl sub obj narg voc)
+
   # Returns true if the token has a nominal POS or a nominal syntactic relation,
   # or if one of its dependents is an article.
   def is_annotatable?
-    info_status == :no_info_status ||  # manually marked as annotatable
+    info_status == :no_info_status || # manually marked as annotatable
       (info_status != :info_unannotatable && \
-        !morph_features.conjunction? && morph_features.pos_s != 'Pr' &&  # exclude conjunctions and relative
-        relation && !['xobj', 'xadv', 'apos'].include?(relation.tag) &&  # exclude predicative relations and appositions
-       (morph_features.noun? || morph_features.pronoun? ||            # be a noun or a pronoun
-         (relation && ['part', 'obl', 'sub', 'obj', 'narg', 'voc'].include?(relation.tag)) ||  # or have a nominal relation
-         dependents.any? { |dep| dep.morph_features and dep.morph_features.article? })) #or have an article dependent
+        !conjunction? && !relative_pronoun? && !predicative? && !appositive? &&
+        (noun? || pronoun? || nominal? || dependents.any?(&:article?)))
   end
 
   # Returns all contrast groups registered for the given source division
