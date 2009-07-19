@@ -1,3 +1,6 @@
+<%= javascript "prototabs" %>
+<%= stylesheet "tabs" %>
+
 <% roundedbox do -%>
   <%=h @sentence.citation %> <%= readable_completion(@sentence, :checkmark => :only) %><br/>
   <%= external_text_links(@sentence) %><br/>
@@ -8,7 +11,24 @@
 <% end %>
 
 <% if is_annotator? or @sentence.is_reviewed? %>
-  <% layer_if(is_reviewer?, "completion", :actions => [
+  <ul id="tabs" class="tabs">
+    <li><a href="#metadata"><span>Metadata</span></a></li>
+    <li><a href="#sentence_division"><span>Sentence division</span></a></li>
+    <li><a href="#tokenization"><span>Tokenization</span></a></li>
+    <li><a href="#morphology"><span>Morphology</span></a></li>
+    <li><a href="#dependencies"><span>Dependencies</span></a></li>
+    <li><a href="#information_structure"><span>Information structure</span></a></li>
+    <li><a href="#history"><span>History</span></a></li>
+    <li><a href="#low_level_data"><span>Low level data</span></a></li>
+  </ul>
+
+  <script>
+    Event.observe(window, 'load', function() {
+      var tab = new ProtoTabs('tabs', { defaultPanel: 'dependencies' });
+    });
+  </script>
+
+  <% layer_if(is_reviewer?, "metadata", :actions => [
                             link_to_unless(@sentence.is_reviewed?, "Flag as reviewed", :action => 'flag_as_reviewed', :id => @sentence),
                             link_to_if(@sentence.is_reviewed?, "Flag as not reviewed", :action => 'flag_as_not_reviewed', :id => @sentence),
     ] ) do -%>
@@ -16,7 +36,7 @@
     <%= format_reviewer(@sentence, :time => true) %>
   <% end %>
 
-  <% layer("sentence-division", :title => "Sentence division", :actions => [
+  <% layer("sentence_division", :actions => [
     link_to_if(is_annotator?, "Edit", edit_sentence_sentence_division_url(@sentence))]) do -%>
     <%= render :partial => 'sentence_divisions/show' %>
   <% end %>
@@ -33,7 +53,7 @@
     <%= render :partial => 'dependencies/show' %>
   <% end %>
 
-  <% layer_if(is_annotator? || @sentence.is_reviewed?, "info-status", :title => "Information structure", :actions => [
+  <% layer_if(is_annotator? || @sentence.is_reviewed?, "information_structure", :actions => [
     link_to_if(is_annotator?, "Edit", edit_sentence_info_status_url(@sentence))]) do -%>
     <%= render :partial => 'info_statuses/legend_show' %>
     <%= render :partial => 'info_statuses/show' %>
@@ -46,22 +66,25 @@
   <%= notes_summary(@sentence.notes) %>
 <% end %>
  
-<% layer_if(is_reviewer?, "presentation_form") do -%>
+<% layer_if(is_reviewer?, "tokenization") do -%>
   <h3>Mark-up</h3>
   <div><%= @sentence.presentation_as_prettyprinted_code(:coloured => true) %></div>
 
-  <h3>Styled</h3>
+  <h3>Styled sentence</h3>
   <div><%= @sentence.presentation_as_html %></div>
-<% end %>
 
-<% layer_if(is_reviewer?, "tokenization") do -%>
+  <h3>Tokens</h3>
   <%= tokens_table @tokens %>
 <% end %>
 
-<% layer_if((is_reviewer? and not @sentence.audits.empty?), "revisions") do -%>
-  <%= audits_summary @sentence.audits %>
+<% layer_if(is_reviewer?, "history") do -%>
+  <% unless @sentence.audits.empty? %>
+    <%= audits_summary @sentence.audits %>
+  <% else %>
+    No history.
+  <% end %>
 <% end %>
 
-<% layer_if is_reviewer?, "low_level_data" do -%>
+<% layer_if(is_reviewer?, "low_level_data") do -%>
   <%= low_level_data_table(@sentence, :id, :sentence_number, :created_at, :updated_at, :annotated_by, :annotated_at, :reviewed_by, :reviewed_at, :unalignable, :automatic_alignment, :sentence_alignment_id, :source_division_id, :presentation) %>
 <% end %>

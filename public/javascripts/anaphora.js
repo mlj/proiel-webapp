@@ -347,6 +347,7 @@ var AnaphoraAndContrast = function() {
     }
 }();
 
-document.observe('dom:loaded', function() {
-    AnaphoraAndContrast.init();
+Event.observe(window, 'load', function() {
+  AnaphoraAndContrast.init();
+  AnaphoraAndContrast.showAntecedentsForAllAnaphors();
 });
