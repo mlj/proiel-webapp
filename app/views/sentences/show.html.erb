@@ -2,7 +2,6 @@
   <%=h @sentence.citation %> <%= readable_completion(@sentence, :checkmark => :only) %><br/>
   <%= external_text_links(@sentence) %><br/>
   <%= link_to_resources @sentence, :index, :previous, :next, :parent, :delete, :edit %>
-  <%= link_to_dependency_alignments @sentence, 'Dependency alignments' %>
   <%= link_to "Tokenize", :action => :tokenize %>
   <%= link_to "Resegment", :action => :resegment_edit %>
   <%= link_to "Merge with next", :action => :merge %>

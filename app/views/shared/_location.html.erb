@@ -2,8 +2,4 @@
   <b><%=h sentence.citation %></b> <%= readable_completion(sentence, :checkmark => :only) %><br/>
   <%= external_text_links(sentence) %><br/>
   <%= link_to_source(@sentence.source_division.source) %>
-  &nbsp;
-  <% if controller.class != DependencyAlignmentsController %>
-    <%= link_to("Dependency alignment", edit_sentence_dependency_alignments_url(@sentence)) %>
-  <% end %>
 </div>
