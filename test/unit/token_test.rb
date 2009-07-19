@@ -80,4 +80,29 @@ class TokenTest < ActiveSupport::TestCase
     assert t.verb?(true)
     assert !t.verb?(false)
   end
+
+  def test_relation_assignment
+    pred = Relation.find_by_tag('pred')
+    obl = Relation.find_by_tag('obl')
+
+    t = Token.first
+    t.relation = pred
+    t.save!
+    assert_equal pred.id, t.relation.id
+
+    t = Token.first
+    t.relation = obl
+    t.save!
+    assert_equal obl.id, t.relation.id
+
+    t = Token.first
+    t.relation = :pred
+    t.save!
+    assert_equal pred.id, t.relation.id
+
+    t = Token.first
+    t.relation = 'obl'
+    t.save!
+    assert_equal obl.id, t.relation.id
+  end
 end

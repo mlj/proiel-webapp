@@ -70,6 +70,14 @@ class Token < ActiveRecord::Base
   # Specific validations
   validate :validate_sort
 
+  # Sets the relation for the token. The relation may be a Relation
+  # object, a string with the relation tag or a symbol with the
+  # relation tag.
+  def relation=(r)
+    r = Relation.find_by_tag(r.to_s) unless r.is_a?(Relation)
+    write_attribute(:relation_id, r.id)
+  end
+
   # Returns the language for the token.
   def language
     sentence.language

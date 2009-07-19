@@ -1,0 +1,139 @@
+--- 
+relations_023: 
+  tag: xobj
+  primary_relation: "1"
+  id: "25"
+  secondary_relation: "1"
+  summary: open objective complement
+relations_012: 
+  tag: pred
+  primary_relation: "1"
+  id: "13"
+  secondary_relation: "1"
+  summary: predicate
+relations_001: 
+  tag: pid
+  primary_relation: "0"
+  id: "1"
+  secondary_relation: "1"
+  summary: Predicate identity
+relations_013: 
+  tag: nonsub
+  primary_relation: "1"
+  id: "14"
+  secondary_relation: "1"
+  summary: non-subject (object, oblique or adverbial)
+relations_002: 
+  tag: xsub
+  primary_relation: "0"
+  id: "2"
+  secondary_relation: "1"
+  summary: external subject
+relations_014: 
+  tag: ag
+  primary_relation: "1"
+  id: "15"
+  secondary_relation: "1"
+  summary: agens
+relations_003: 
+  tag: aux
+  primary_relation: "1"
+  id: "4"
+  secondary_relation: "1"
+  summary: auxiliary
+relations_015: 
+  tag: part
+  primary_relation: "1"
+  id: "16"
+  secondary_relation: "1"
+  summary: partitive
+relations_004: 
+  tag: xadv
+  primary_relation: "1"
+  id: "5"
+  secondary_relation: "1"
+  summary: open adverbial complement
+relations_016: 
+  tag: obj
+  primary_relation: "1"
+  id: "17"
+  secondary_relation: "1"
+  summary: object
+relations_005: 
+  tag: atr
+  primary_relation: "1"
+  id: "6"
+  secondary_relation: "1"
+  summary: attribute
+relations_017: 
+  tag: adv
+  primary_relation: "1"
+  id: "18"
+  secondary_relation: "1"
+  summary: adverbial
+relations_006: 
+  tag: comp
+  primary_relation: "1"
+  id: "7"
+  secondary_relation: "1"
+  summary: complement
+relations_018: 
+  tag: per
+  primary_relation: "1"
+  id: "19"
+  secondary_relation: "1"
+  summary: peripheral (oblique or adverbial)
+relations_007: 
+  tag: narg
+  primary_relation: "1"
+  id: "8"
+  secondary_relation: "1"
+  summary: adnominal argument
+relations_019: 
+  tag: apos
+  primary_relation: "1"
+  id: "20"
+  secondary_relation: "1"
+  summary: apposition
+relations_008: 
+  tag: rel
+  primary_relation: "1"
+  id: "9"
+  secondary_relation: "1"
+  summary: apposition or attribute
+relations_020: 
+  tag: adnom
+  primary_relation: "1"
+  id: "21"
+  secondary_relation: "1"
+  summary: adnominal
+relations_009: 
+  tag: parpred
+  primary_relation: "1"
+  id: "10"
+  secondary_relation: "1"
+  summary: parenthetical predication
+relations_021: 
+  tag: sub
+  primary_relation: "1"
+  id: "22"
+  secondary_relation: "1"
+  summary: subject
+relations_010: 
+  tag: voc
+  primary_relation: "1"
+  id: "11"
+  secondary_relation: "1"
+  summary: vocative
+relations_022: 
+  tag: obl
+  primary_relation: "1"
+  id: "24"
+  secondary_relation: "1"
+  summary: oblique
+relations_011: 
+  tag: arg
+  primary_relation: "1"
+  id: "12"
+  secondary_relation: "1"
+  summary: argument (object or oblique)
