@@ -3,6 +3,7 @@ one:
   title: Vulgate
   language_id: 1
   tei_header: "<tei></tei>"
+  reference_format: ""
   tracked_references: "---
 sentence:
 - verse
@@ -14,6 +15,7 @@ two:
   title: Greek New Testament
   language_id: 2
   tei_header: "<tei></tei>"
+  reference_format: ""
   tracked_references: "---
 sentence:
 - verse
@@ -26,6 +28,7 @@ three:
   abbreviation: Plaut., Amph.
   language_id: 2
   tei_header: "<tei></tei>"
+  reference_format: ""
   tracked_references: "---
 sentence:
 - line"
