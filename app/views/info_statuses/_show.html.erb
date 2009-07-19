@@ -1,4 +1,5 @@
 <% stylesheet 'sentence_divisions', 'info_statuses' %>
+<%= javascript 'wz_jsgraphics', 'anaphora' %>
 
 <div>
   Contrast: <%= select_tag('contrast-select', @contrast_options, :onchange => "AnaphoraAndContrast.showContrastNo(this.value);") %>
@@ -12,3 +13,9 @@
   <%= format_sentence(@sentence.previous_sentences(true).last(13) + [@sentence] + @sentence.next_sentences.first(1),
     { :information_status => true, :highlight => @sentence.tokens }) %>
 </div>
+
+<script type="text/javascript">
+  document.observe('dom:loaded', function() {
+    AnaphoraAndContrast.showAntecedentsForAllAnaphors();
+  });
+</script>

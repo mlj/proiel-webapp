@@ -2,16 +2,6 @@ class InfoStatusesController < ApplicationController
   before_filter :find_sentence
   before_filter :is_annotator?, :only => [:edit, :update]
 
-  # GET /sentences/1/info_status
-  def show
-    set_contrast_options_for(@sentence.source_division)
-
-    respond_to do |format|
-      format.html # show.html.erb
-    end
-  end
-
-
   # GET /sentences/1/info_status/edit
   def edit
     set_contrast_options_for(@sentence.source_division)

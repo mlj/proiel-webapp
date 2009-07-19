@@ -3,15 +3,6 @@
   <%= external_text_links(sentence) %><br/>
   <%= link_to_source(@sentence.source_division.source) %>
   &nbsp;
-  <%= link_to_source_division(@sentence.source_division) %><br/>
-  <% if controller.class == InfoStatusesController %>
-    <%= link_to("Sentence divisions, morphology and dependency structure", @sentence) %>
-  <% end %>
-  &nbsp;
-  <% if is_administrator? && controller.class != InfoStatusesController %>
-    <%= link_to("Information structure", sentence_info_status_url(@sentence)) %>
-  <% end %>
-  &nbsp;
   <% if controller.class != DependencyAlignmentsController %>
     <%= link_to("Dependency alignment", edit_sentence_dependency_alignments_url(@sentence)) %>
   <% end %>

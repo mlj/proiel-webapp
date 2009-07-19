@@ -9,23 +9,11 @@
   <div class="prodrop-menu-item obl">Insert pro-drop oblique</div>
 </div>
 
-<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :title => 'Annotation', :value => 'Information status', :edit_url => :edit_sentence_info_status_url } %>
+<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :value => 'Information status' } %>
 
-<% if is_annotator? or @sentence.is_reviewed? %>
-  <% layer_if(is_reviewer?, "completion", :actions => [
-                            link_to_unless(@sentence.is_reviewed?, "Flag as reviewed", :action => 'flag_as_reviewed', :id => @sentence),
-                            link_to_if(@sentence.is_reviewed?, "Flag as not reviewed", :action => 'flag_as_not_reviewed', :id => @sentence),
-    ] ) do -%>
-    <%= format_annotator(@sentence, :time => true) %><br/>
-    <%= format_reviewer(@sentence, :time => true) %>
-  <% end %>
-
-  <% layer("info-status", :title => "Information structure", :actions => [
-    link_to("Show", sentence_info_status_url(@sentence))]) do -%>
-    <%= render :partial => 'info_statuses/legend_edit' %>
-    <%= render :partial => 'info_statuses/show' %>
-  <% end %>
-
+<% if @sentence.is_reviewed? %>
+  <%= render :partial => 'info_statuses/legend_edit' %>
+  <%= render :partial => 'info_statuses/show' %>
 <% else %>
   Sentence not yet annotated and reviewed.
 <% end %>
