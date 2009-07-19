@@ -642,7 +642,7 @@ class Sentence < ActiveRecord::Base
 
   # Returns +true+ if sentence has dependency annotation.
   def has_dependency_annotation?
-    @has_dependency_annotation ||= tokens.dependency_annotatable.first && !tokens.dependency_annotatable.first.relation.nil?
+    tokens.dependency_annotatable.first && !tokens.dependency_annotatable.first.relation.nil?
   end
 
   # Returns +true+ if sentence has morphological annotation (i.e.
@@ -650,7 +650,7 @@ class Sentence < ActiveRecord::Base
   def has_morphological_annotation?
     # Assumed invariant: morphologically annotated sentence <=> all
     # morphology tokens have non-nil morphology and lemma_id attributes.
-    @has_morphological_annotation ||= tokens.morphology_annotatable.first && !tokens.morphology_annotatable.first.morphology.nil?
+    tokens.morphology_annotatable.first && !tokens.morphology_annotatable.first.morphology.nil?
   end
 
   # Returns the root token in the dependency graph or +nil+ if none

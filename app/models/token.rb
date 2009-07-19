@@ -289,17 +289,13 @@ class Token < ActiveRecord::Base
   # Returns true if the token has a nominal POS or a nominal syntactic relation,
   # or if one of its dependents is an article.
   def is_annotatable?
-    if @is_annotatable.nil?
-      @is_annotatable = info_status == :no_info_status ||  # manually marked as annotatable
-                     (info_status != :info_unannotatable && \
-                      !morph_features.conjunction? && morph_features.pos_s != 'Pr' &&  # exclude conjunctions and relative
-                      relation && !['xobj', 'xadv', 'apos'].include?(relation.tag) &&  # exclude predicative relations and appositions
-                      (morph_features.noun? || morph_features.pronoun? ||            # be a noun or a pronoun
-                       (relation && ['part', 'obl', 'sub', 'obj', 'narg', 'voc'].include?(relation.tag)) ||  # or have a nominal relation
-                       dependents.any? { |dep| dep.morph_features and dep.morph_features.article? }   #or have an article dependent
-                       ))
-    end
-    @is_annotatable
+    info_status == :no_info_status ||  # manually marked as annotatable
+      (info_status != :info_unannotatable && \
+        !morph_features.conjunction? && morph_features.pos_s != 'Pr' &&  # exclude conjunctions and relative
+        relation && !['xobj', 'xadv', 'apos'].include?(relation.tag) &&  # exclude predicative relations and appositions
+       (morph_features.noun? || morph_features.pronoun? ||            # be a noun or a pronoun
+         (relation && ['part', 'obl', 'sub', 'obj', 'narg', 'voc'].include?(relation.tag)) ||  # or have a nominal relation
+         dependents.any? { |dep| dep.morph_features and dep.morph_features.article? })) #or have an article dependent
   end
 
   # Returns all contrast groups registered for the given source division
