@@ -416,6 +416,7 @@ class Sentence < ActiveRecord::Base
           :finite => ['i', 's', 'm', 'o'].include?(mh[:mood]),
           :form => token.form,
           :lemma => token.lemma ? token.lemma.lemma : nil,
+          :pos => token.morph_features ? token.morph_features.pos_s : nil,
         }),
         :empty => token.is_empty? ? token.empty_token_sort : false,
         :form => token.form,
