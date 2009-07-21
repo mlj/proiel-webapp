@@ -197,6 +197,13 @@ class Sentence < ActiveRecord::Base
     end
   end
 
+  # Returns the presentation string as an array of tokens. This
+  # presupposes that presentation string to already contains
+  # tokenization markup.
+  def presentation_as_tokens
+    presentation_as(APPLICATION_CONFIG.presentation_as_tokens_stylesheet).split('#')
+  end
+
   private
 
   def presentation_as(stylesheet_method, xsl_params = {})
