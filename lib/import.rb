@@ -99,27 +99,43 @@ class TextImport
         :title => (div/:title).inner_html,
         :abbreviated_title => (div/:abbreviation).inner_html
 
-      if (div/:"unsegmented-text")
+      unless (div/:"unsegmented-text").empty?
         (div/:"unsegmented-text").inner_html.chomp.gsub(/\s+/, ' ').gsub(/(\s*[—]?[\.\?:\!][—]?)\s+/, '\1#').split(/#/).map(&:chomp).each_with_index do |segment, segment_position|
           add_sentence(sd, segment_position, segment)
         end
       else
         (div/:sentence).each_with_index do |sentence, sentence_position|
-          s = add_sentence(sd, sentence_position, sentence.attributes[:presentation])
+          presentation_string = (sentence/:presentation).inner_html
+          s = add_sentence(sd, sentence_position, presentation_string)
 
+          token_id_map = {}
+
+          # First pass to set up the token data.
           (sentence/:token).each_with_index do |token, token_position|
-            t = s.tokens.create! :form => attributes[:form],
-              :empty_token_sort => attributes[:"empty-token-sort"],
-              :morphology => attributes[:"morphology"],
-              :source_morphology => attributes[:"source-morphology"],
-              :foreign_ids => attributes[:"foreign-ids"]
+            t = s.tokens.create! :form => token.attributes['form'],
+              :empty_token_sort => token.attributes['empty-token-sort'],
+              :foreign_ids => token.attributes['foreign-ids'],
+              :token_number => token_position
+            t.morph_features = token.attributes['morph-features']
+            t.source_morph_features = token.attributes['source-morph-features']
+            t.save!
+
+            token_id_map[token.attributes['id']] = t
+          end
+
+          # Make another pass to set up dependencies.
+          (sentence/:token).each_with_index do |token, token_position|
+            t = token_id_map[token.attributes['id']]
+            t.head_id = token_id_map[token.attributes['head-id']]
+            t.relation = token.attributes['relation']
+            t.save! if t.changed?
           end
 
           (sentence/:note).each do |note|
-            originator = ImportSource.find_or_create_by_tag :tag => note.attributes[:origin],
-              :summary => note[:origin]
+            originator = ImportSource.find_or_create_by_tag :tag => note.attributes['originator'],
+              :summary => note.attributes['originator']
 
-            t.notes.create! :contents => note.inner_html,
+            s.notes.create! :contents => note.inner_html,
               :originator => originator
           end
         end

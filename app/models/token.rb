@@ -74,8 +74,18 @@ class Token < ActiveRecord::Base
   # object, a string with the relation tag or a symbol with the
   # relation tag.
   def relation=(r)
-    r = Relation.find_by_tag(r.to_s) unless r.is_a?(Relation)
-    write_attribute(:relation_id, r.id)
+    case r
+    when Relation
+      write_attribute(:relation_id, r.id)
+    else
+      if r.blank?
+        write_attribute(:relation_id, nil)
+      else
+        r = Relation.find_by_tag(r.to_s)
+        raise ArgumentError, 'invalid relation' unless r
+        write_attribute(:relation_id, r.id)
+      end
+    end
   end
 
   # Returns the language for the token.
@@ -134,6 +144,9 @@ class Token < ActiveRecord::Base
         self.morphology = nil
         self.lemma = nil
         self.save!
+      elsif f.is_a?(String)
+        s1, s2, s3, s4 = f.split(',')
+        self.morph_features = MorphFeatures.new([s1, s2, s3].join(','), s4)
       elsif self.morphology != f.morphology or f.lemma.new_record? or f.lemma != self.lemma
         self.morphology = f.morphology
         f.lemma.save! if f.lemma.new_record?
@@ -156,6 +169,28 @@ class Token < ActiveRecord::Base
       MorphFeatures.new([source_lemma, language.iso_code].join(','), source_morphology)
     else
       nil
+    end
+  end
+
+  # Sets the source morphological features for the token. Executes a
+  # +save!+ on the token object, which will result in validation of
+  # all token attributes.  Returns the morphological features. It is
+  # guaranteed that no updating will take place if the morph-features
+  # are unchanged.
+  def source_morph_features=(f)
+    Token.transaction do
+      if f.nil?
+        self.source_morphology = nil
+        self.source_lemma = nil
+        self.save!
+      elsif f.is_a?(String)
+        s1, s2, s3, s4 = f.split(',')
+        self.source_morph_features = MorphFeatures.new([s1, s2, s3].join(','), s4)
+      elsif self.source_morphology != f.morphology or f.lemma_s != self.source_lemma
+        self.source_morphology = f.morphology
+        self.source_lemma = f.lemma_s
+        self.save!
+      end
     end
   end
 
@@ -440,5 +475,6 @@ class Token < ActiveRecord::Base
     self.source_lemma = nil if source_lemma.blank?
     self.foreign_ids = nil if foreign_ids.blank?
     self.empty_token_sort = nil if empty_token_sort.blank?
+    self.form = nil if form.blank?
   end
 end

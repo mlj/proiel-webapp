@@ -85,7 +85,7 @@ namespace :proiel do
       require 'import'
 
       raise "Filename required" unless ENV['FILE']
-      TextImport.instance.read(ENV['FILE'])
+      File.open(ENV['FILE']) { |f| TextImport.instance.read(f) }
     end
 
     desc "Export a PROIEL source text. Optional options: ID=source_identifier FORMAT={proiel|maltxml|tigerxml} MODE={all|reviewed} DIRECTORY=destination_directory"
