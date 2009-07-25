@@ -1,4 +1,4 @@
-<tr class="<%= cycle('even', 'odd') %>">
+<tr>
   <td><%= link_to_originator(note.originator) %></td>
   <td><%= link_to_notable(note.notable) %></td>
   <td><%= highlight(params[:query].blank? ? truncate(note.contents, 50) : excerpt(note.contents, params[:query], 50), params[:query]) %></td>

@@ -242,6 +242,15 @@ div.legend {
 
 form.button-to, .button-to div { display: inline; }
 
+/* Tables with every odd line in a darker background to improve
+ * legibility. This does not colour the header row, and to avoid
+ * having the header and first non-header highlighted, even rows and
+ * not odd rows are coloured. */
+table.odd-even-line tr:nth-child(even)
+{
+  background-color: #E8E8E8;
+}
+
 /* Misc. */
 
 .good { color: green; }
@@ -250,9 +259,6 @@ form.button-to, .button-to div { display: inline; }
 .average-bg { background-color: orange; }
 .warning, .bad { color: red; }
 .bad-bg { background-color: red; }
-
-.odd { background: #f0f0f0; }
-.even { background-color: white; }
 
 .relation { text-transform: uppercase; }
 

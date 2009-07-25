@@ -1,4 +1,4 @@
-<tr class="<%= cycle('even', 'odd') %>">
+<tr>
   <td class="tag"><%= part_of_speech.tag %></td>
   <td class="pos"><%= highlight(part_of_speech.summary, params[:q]) %></td>
   <td><%= link_to pluralize(part_of_speech.lemmata.count, "lemma"), lemmata_path(:part_of_speech_id => part_of_speech) %></td>

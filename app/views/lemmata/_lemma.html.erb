@@ -1,4 +1,4 @@
-<tr class="<%= cycle('even', 'odd') %>">
+<tr>
   <td class="language"><%= link_to_language lemma.language %></td>
   <td class="lemma" lang="<%= lemma.language %>"><%= highlight(lemma.export_form, params[:query]) %></td>
   <td lang="<%= lemma.language.iso_code %>"><%= lemma.pos_summary.capitalize %></td>

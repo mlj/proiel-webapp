@@ -6,7 +6,7 @@
     <%= will_paginate(collection) || "" %>
   <% end %>
 
-  <table class="<%= css_class %>">
+  <table class="odd-even-line <%= css_class %>">
     <% if fields %>
       <thead>
         <tr>

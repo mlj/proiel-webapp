@@ -1,4 +1,4 @@
-<tr class="<%= cycle('even', 'odd') %>">
+<tr>
   <td class="form" lang="<%= token.language.iso_code %>"><%= highlight(token.form, params[:query]) || '&nbsp;' %></td>
   <td><%= token.token_number %></td>
   <% if token.morph_features %>
