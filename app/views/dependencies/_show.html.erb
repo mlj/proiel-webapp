@@ -1,13 +1,15 @@
-<%= stylesheet 'dependencies' %>
+<% if @sentence.has_dependency_annotation? %>
+  <%= stylesheet 'dependencies' %>
 
-<div class="dependencies-image">
-  <% if @sentence.has_dependency_annotation? %>
+  <%= render :partial => 'dependencies/legend' %>
+
+  <div class="dependencies-image">
     <% if user_preferences[:graph_format] == "svg" %>
       <object data="<%= sentence_dependencies_url(@sentence, :format => :svg) %>" type="image/svg+xml" />
     <% else %>
       <img src="<%= sentence_dependencies_url(@sentence, :format => :png) %>" />
     <% end %>
-  <% else %>
-    No dependency annotation
-  <% end %>
-</div>
+  </div>
+<% else %>
+  No dependency annotation
+<% end %>

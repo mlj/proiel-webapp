@@ -1,9 +1,7 @@
 <%= render :partial => 'context' %>
 
-<%= render :partial => 'morphtags/legend' %>
 <%= render :partial => 'morphtags/show' %>
 
-<%= render :partial => 'dependencies/legend' %>
 <%= render :partial => 'dependencies/show' %>
 
 <%= button_to('Edit morphology', :action => "edit_morphtags", :sentence_id => params[:sentence_id], :wizard => true) %>

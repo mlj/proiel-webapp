@@ -1,20 +1,25 @@
-<% stylesheet 'morphtags' %>
+<% if @sentence.has_morphological_annotation? %>
+  <%= render :partial => 'morphtags/legend' %>
+  <% stylesheet 'morphtags' %>
 
-<div class="morphtags">
-  <div id="tokens">
-    <% @sentence.tokens.morphology_annotatable.each do |token| %>
-      <div id="item-<%= token.id %>" class="item">
-        <p class="form"><%= format_token_form(token) %></p>
-        <% if token.morph_features %>
-          <div class="morph-lemma-tags">
-            <p class="pos"><%= token.morph_features.pos_summary(:abbreviated => true) + '&nbsp;' %></p>
-            <p class="morphology"><%= token.morph_features.morphology_summary(:abbreviated => true, :skip_inflection => true) + '&nbsp;' %></p>
-            <p><%= link_to_lemma(token.lemma) %><% if token.lemma.short_gloss %> <q><%= token.lemma.short_gloss %></q><% end %></p>
-          <% end %>
+  <div class="morphtags">
+    <div id="tokens">
+      <% @sentence.tokens.morphology_annotatable.each do |token| %>
+        <div id="item-<%= token.id %>" class="item">
+          <p class="form"><%= format_token_form(token) %></p>
+          <% if token.morph_features %>
+            <div class="morph-lemma-tags">
+              <p class="pos"><%= token.morph_features.pos_summary(:abbreviated => true) + '&nbsp;' %></p>
+              <p class="morphology"><%= token.morph_features.morphology_summary(:abbreviated => true, :skip_inflection => true) + '&nbsp;' %></p>
+              <p><%= link_to_lemma(token.lemma) %><% if token.lemma.short_gloss %> <q><%= token.lemma.short_gloss %></q><% end %></p>
+            <% end %>
+          </div>
         </div>
-      </div>
-    <% end %>
+      <% end %>
 
-    <br/>
+      <br/>
+    </div>
   </div>
-</div>
+<% else %>
+  No morphological annotation
+<% end %>

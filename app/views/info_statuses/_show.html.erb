@@ -1,15 +1,21 @@
-<% stylesheet 'sentence_divisions', 'info_statuses' %>
-<% javascript 'wz_jsgraphics', 'anaphora' %>
+<% if @sentence.has_information_structure_annotation? %>
+  <% stylesheet 'sentence_divisions', 'info_statuses' %>
+  <% javascript 'wz_jsgraphics', 'anaphora' %>
 
-<div>
-  Contrast: <%= select_tag('contrast-select', @contrast_options, :onchange => "AnaphoraAndContrast.showContrastNo(this.value);") %>
-  <% if params[:action] == 'edit' %>
-  <input type="button" value="Create new" onclick="AnaphoraAndContrast.createNewContrast();" />
-  <input type="button" value="Delete" onclick="AnaphoraAndContrast.deleteContrast();" />
-  <input id="delete-prodrop-button" type="button" value="Delete prodrop token" onclick="Prodrop.deleteProdropToken();" style="position:relative; left:50px" disabled="disabled" />
-  <% end %>
-</div>
-<div class="sentence-divisions" id="info-status">
-  <%= format_sentence(@sentence.previous_sentences(true).last(13) + [@sentence] + @sentence.next_sentences.first(1),
-    { :information_status => true, :highlight => @sentence.tokens }) %>
-</div>
+  <%= render :partial => 'info_statuses/legend_show' %>
+
+  <div>
+    Contrast: <%= select_tag('contrast-select', @contrast_options, :onchange => "AnaphoraAndContrast.showContrastNo(this.value);") %>
+    <% if params[:action] == 'edit' %>
+    <input type="button" value="Create new" onclick="AnaphoraAndContrast.createNewContrast();" />
+    <input type="button" value="Delete" onclick="AnaphoraAndContrast.deleteContrast();" />
+    <input id="delete-prodrop-button" type="button" value="Delete prodrop token" onclick="Prodrop.deleteProdropToken();" style="position:relative; left:50px" disabled="disabled" />
+    <% end %>
+  </div>
+  <div class="sentence-divisions" id="info-status">
+    <%= format_sentence(@sentence.previous_sentences(true).last(13) + [@sentence] + @sentence.next_sentences.first(1),
+      { :information_status => true, :highlight => @sentence.tokens }) %>
+  </div>
+<% else %>
+  No information structure annotation
+<% end %>

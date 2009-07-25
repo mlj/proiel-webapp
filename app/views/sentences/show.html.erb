@@ -43,19 +43,16 @@
 
   <% layer("morphology", :actions => [
     link_to_if(is_annotator?, "Edit", edit_sentence_morphtags_url(@sentence))]) do -%>
-    <%= render :partial => 'morphtags/legend' %>
     <%= render :partial => 'morphtags/show' %>
   <% end %>
 
   <% layer("dependencies", :actions => [
     link_to_if(is_annotator?, "Edit", edit_sentence_dependencies_url(@sentence))]) do -%>
-    <%= render :partial => 'dependencies/legend' %>
     <%= render :partial => 'dependencies/show' %>
   <% end %>
 
   <% layer_if(is_annotator? || @sentence.is_reviewed?, "information_structure", :actions => [
     link_to_if(is_annotator?, "Edit", edit_sentence_info_status_url(@sentence))]) do -%>
-    <%= render :partial => 'info_statuses/legend_show' %>
     <%= render :partial => 'info_statuses/show' %>
   <% end %>
 <% else %>
