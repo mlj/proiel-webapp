@@ -51,13 +51,22 @@ class Source < ActiveRecord::Base
     end
   end
 
-  # Returns a citation-form reference for this source.
-  #
-  # ==== Options
-  # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
-  def citation(options = {})
-    { :title => title }.inject(reference_format[:source] || "") { |s, f| s.gsub("##{f.first}#", f.last) }
+  include References
+
+  protected
+
+  # Returns the reference-format for this source division.
+  def citation_format
+    reference_format[:source] || ""
   end
+
+  def reference_fields
+    { :title => title }
+  end
+
+  public
+
+  include References
 
   # Re-indexes the references.
   def reindex!
