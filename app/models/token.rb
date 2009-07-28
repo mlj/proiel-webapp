@@ -201,15 +201,16 @@ class Token < ActiveRecord::Base
     [pick, *suggestions]
   end
 
-  # Morph-feature predicates to be delegated to MorphFeatures.
-  MORPH_FEATURE_TESTS = [:noun?, :pronoun?, :relative_pronoun?, :article?]
-
   # Relation predicates to be delegated to Relation.
   RELATION_TESTS = [:predicative?, :nominal?, :appositive?]
 
   # Delegate morphological feature tests to the morph-features class.
   def method_missing(n)
-    if MORPH_FEATURE_TESTS.include?(n)
+    if MorphFeatures::POS_PREDICATES.include?(n)
+      # Morph-feature predicates to be delegated to MorphFeatures
+      morph_features and morph_features.send(n)
+    elsif MorphFeatures::MORPHOLOGY_POSITIONAL_TAG_SEQUENCE.include?(n)
+      # Morph-feature field accessors to be delegated to MorphFeatures.
       morph_features and morph_features.send(n)
     elsif RELATION_TESTS.include?(n)
       relation and relation.send(n)

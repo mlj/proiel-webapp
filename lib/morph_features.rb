@@ -455,37 +455,28 @@ class MorphFeatures
     s
   end
 
+  POS_PREDICATES = {
+    :verb? => 'V-',
+    :article? => 'S-',
+    :conjunction? => 'C-',
+    :noun? => 'N',
+    :pronoun? => 'P',
+    :relative_pronoun? => 'Pr',
+    :preposition? => 'R-',
+  }
+
   def method_missing(n)
     if MORPHOLOGY_POSITIONAL_TAG_SEQUENCE.include?(n)
       morphology_to_hash[n]
+    elsif POS_PREDICATES.has_key?(n)
+      if POS_PREDICATES[n].length == 1
+        pos_s[0, 1] == POS_PREDICATES[n]
+      else
+        pos_s == POS_PREDICATES[n]
+      end
     else
       super n
     end
-  end
-
-  # TODO: move these to a +method_missing+ implementation
-  def verb?
-    pos_s == 'V-'
-  end
-
-  def article?
-    pos_s == 'S-'
-  end
-
-  def conjunction?
-    pos_s == 'C-'
-  end
-
-  def noun?
-    pos_s[0, 1] == 'N'
-  end
-
-  def pronoun?
-    pos_s[0, 1] == 'P'
-  end
-
-  def relative_pronoun?
-    pos_s == 'Pr'
   end
 
   def inspect
