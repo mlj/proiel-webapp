@@ -233,6 +233,10 @@ class Token < ActiveRecord::Base
     (include_empty_tokens && empty_token_sort == 'C') || (morph_features and morph_features.conjunction?)
   end
 
+  def parent
+    sentence
+  end
+
   include References
 
   def reference_parent

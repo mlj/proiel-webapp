@@ -20,7 +20,7 @@
     <dt>Foreign IDs:</dt><dd class="tag"><%= @token.foreign_ids %></dd>
   <% end %>
   <dt>Annotation completion:</dt><dd><%= link_to(readable_completion(@token.sentence), @token.sentence) %></dd>
-  <%= link_to_resources @token, :index, :edit %>
+  <%= link_to_resources @token, :index, :edit, :parent %>
 <% end %>
 
 <% layer_unless @token.notes.empty?, "notes" do -%>
