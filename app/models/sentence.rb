@@ -58,8 +58,6 @@ class Sentence < ActiveRecord::Base
 
   before_validation :before_validation_cleanup
 
-  serialize :reference_fields
-
   # Sentences that have not been annotated.
   named_scope :unannotated, :conditions => ["annotated_by IS NULL"]
 
@@ -94,19 +92,6 @@ class Sentence < ActiveRecord::Base
   # Returns the language for the sentence.
   def language
     source_division.language
-  end
-
-  # Returns the reference fields. Also merges in fields from the
-  # source division.
-  def reference_fields
-    source_division.reference_fields.merge(read_attribute(:reference_fields))
-  end
-
-  # Sets the reference fields. Also updates fields in the source
-  # division, which must be separately saved if updated.
-  def reference_fields=(x)
-    write_attribute(:reference_fields, x.slice(*source_division.source.tracked_references["sentence"]))
-    source_division.reference_fields = x
   end
 
   UNICODE_HORIZONTAL_ELLIPSIS = Unicode::U2026
@@ -182,7 +167,7 @@ class Sentence < ActiveRecord::Base
   def presentation_as_reference
     refs = presentation_as(APPLICATION_CONFIG.presentation_as_reference_stylesheet)
 
-    refs.gsub(/\s+/, ' ').split(/\s*,\s*/).compact.inject({}) do |fields, field|
+    refs.gsub(/\s+/, ' ').split(/\s*,\s*/).reject { |t| t.blank? }.inject({}) do |fields, field|
       r, v = field.split('=')
 
       case fields[r]
@@ -287,22 +272,9 @@ class Sentence < ActiveRecord::Base
 
   include References
 
-  protected
-
-  # Returns the reference-format for this sentence.
-  def citation_format
-    source_division.source.reference_format[:sentence] || ""
+  def reference_parent
+    parent
   end
-
-  # Returns the source title for this sentence.
-  #
-  # ==== Options
-  # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the title.
-  def source_title(options = {})
-    source_division.source_title(options)
-  end
-
-  public
 
   # Re-indexes the references.
   def reindex!

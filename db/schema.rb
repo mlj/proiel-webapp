@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090724211830) do
+ActiveRecord::Schema.define(:version => 20090729193651) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -262,6 +262,7 @@ ActiveRecord::Schema.define(:version => 20090724211830) do
     t.integer  "antecedent_id"
     t.integer  "relation_id"
     t.integer  "morphology_id"
+    t.string   "reference_fields",             :limit => 128,                                                                                                :default => "",    :null => false
   end
 
   add_index "tokens", ["antecedent_id"], :name => "index_tokens_on_antecedent_id"

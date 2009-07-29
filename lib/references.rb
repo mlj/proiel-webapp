@@ -21,14 +21,15 @@
 #++
 
 module References
-  # Returns a citation-form reference. This assumes that
-  # +reference_fields+, +source_title+ and
-  # +citation_format+ are accessible.
+  # Returns a citation-form reference. This assumes that the attribute
+  # +reference_fields+ and +reference_parent+ are defined and that
+  # +reference_format+, +tracked_references+, +title+ and
+  # +abbreviation+ are defined on the top reference level.
   #
   # ==== Options
   # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
   def citation(options = {})
-    reference_fields.merge({ :title => source_title(options) }).inject(citation_format) do |s, f|
+    reference_fields.merge({ :title => source_title(options) }).inject(reference_format || "") do |s, f|
       key, value = f
 
       case value
@@ -43,5 +44,78 @@ module References
 
       s.gsub("##{key}#", value)
     end
+  end
+
+  # Sets the reference fields. Also updates fields in parent levels,
+  # which must be saved separately if updated.
+  def reference_fields=(x)
+    write_reference(x.slice(*tracked_references))
+    reference_parent.reference_fields = x if reference_parent
+  end
+
+  # Returns the reference fields. Also merges in fields from parent
+  # level.
+  def reference_fields
+    if reference_parent
+      reference_parent.reference_fields.merge(read_reference)
+    else
+      read_reference
+    end
+  end
+
+  protected
+
+  # Returns the source title.
+  #
+  # ==== Options
+  # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the title.
+  def source_title(options = {})
+    if reference_parent
+      reference_parent.source_title(options)
+    else
+      options[:abbreviated] ? abbreviation : title
+    end
+  end
+
+  def read_hierarchic_attribute(attr)
+    if has_attribute?(attr)
+      read_attribute(attr)
+    elsif reference_parent
+      reference_parent.read_hierarchic_attribute(attr)
+    else
+      raise ArgumentError, 'attribute not found'
+    end
+  end
+
+  def reference_format
+    read_hierarchic_attribute(:reference_format)[reference_level]
+  end
+
+  def tracked_references
+    read_hierarchic_attribute(:tracked_references)[reference_level]
+  end
+
+  def write_reference(r)
+    write_attribute(:reference_fields, serialize_reference(r))
+  end
+
+  def read_reference
+    unserialize_reference(read_attribute(:reference_fields))
+  end
+
+  def serialize_reference(r)
+    r.map { |k, v| "#{k}=#{v}" }.join(',')
+  end
+
+  def unserialize_reference(r)
+    r.split(',').inject({}) do |s, f|
+      k, v = f.split('=')
+      s[k] = v
+      s
+    end
+  end
+
+  def reference_level
+    self.class.to_s.underscore
   end
 end

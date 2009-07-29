@@ -53,20 +53,9 @@ class Source < ActiveRecord::Base
 
   include References
 
-  protected
-
-  # Returns the reference-format for this source division.
-  def citation_format
-    reference_format[:source] || ""
+  def reference_parent
+    nil
   end
-
-  def reference_fields
-    { :title => title }
-  end
-
-  public
-
-  include References
 
   # Re-indexes the references.
   def reindex!

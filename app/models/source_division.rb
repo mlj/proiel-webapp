@@ -64,22 +64,9 @@ class SourceDivision < ActiveRecord::Base
 
   include References
 
-  protected
-
-  # Returns the reference-format for this source division.
-  def citation_format
-    source.reference_format[:source_division] || ""
+  def reference_parent
+    parent
   end
-
-  # Returns the source title for this source division.
-  #
-  # ==== Options
-  # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the title.
-  def source_title(options = {})
-    options[:abbreviated] ? source.abbreviation : source.title
-  end
-
-  public
 
   # Re-indexes the references.
   def reindex!
@@ -106,14 +93,6 @@ class SourceDivision < ActiveRecord::Base
   # convenience method for +source_division.source.language+.
   def language
     source.language
-  end
-
-  serialize :reference_fields
-
-  # Sets the reference fields. Also updates fields in the source
-  # division.
-  def reference_fields=(x)
-    write_attribute(:reference_fields, x.slice(*source.tracked_references["source_division"]))
   end
 
   protected

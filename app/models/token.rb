@@ -40,7 +40,7 @@ class Token < ActiveRecord::Base
     { :conditions => { :sentence_id => source.source_divisions.map(&:sentences).flatten.map(&:id) } }
   }
 
-  acts_as_audited :except => [ :source_morphology, :source_lemma ]
+  acts_as_audited :except => [:source_morphology, :source_lemma, :tracked_references]
 
   # General schema-defined validations
   validates_presence_of :sentence_id
@@ -233,12 +233,10 @@ class Token < ActiveRecord::Base
     (include_empty_tokens && empty_token_sort == 'C') || (morph_features and morph_features.conjunction?)
   end
 
-  # Returns a citation-form reference for this token.
-  #
-  # ==== Options
-  # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
-  def citation(options = {})
-    sentence.citation(options)
+  include References
+
+  def reference_parent
+    sentence
   end
 
   # Returns true if this is an empty token, i.e. a token used for empty nodes

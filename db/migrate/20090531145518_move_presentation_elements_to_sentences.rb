@@ -3,6 +3,8 @@ class Formatter
     t = ''
     text_started = false
     skip_tokens = 0
+    book = sentence.source_division.fields[/^book=(\w+),/]
+    book.gsub!(/book=/, '')
     chapter = sentence.source_division.fields[/(\d|Incipit|Explicit)$/]
 
     sentence.tokens.each do |token|
@@ -11,10 +13,12 @@ class Formatter
         next
       end
 
+      t_b = check_reference_update(:book, book)
       t_c = check_reference_update(:chapter, chapter)
       t_v = check_reference_update(:verse, token.verse)
 
-      t += ' ' if !t.blank? and (!t_c.blank? or !t_v.blank?)
+      t += ' ' if !t.blank? and (!t_b.blank? or !t_c.blank? or !t_v.blank?)
+      t += t_b
       t += t_c
       t += t_v
 
@@ -152,7 +156,9 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
     # useless. For Gothic they are predictable from parentheses or
     # angle brackets in the presentation_form.
     # <> = additions, [] = deletions, () = unclear
-    Source.find_by_code('wulfila-gothicnt').source_divisions.each do |sd|
+    wulfila = Source.find_by_code('wulfila-gothicnt')
+    if wulfila
+    wulfila.source_divisions.each do |sd|
       sd.sentences.find(:all, :conditions => ["tokens.emendation = 1"], :include => :tokens).map(&:tokens).flatten.select(&:emendation).each do |t|
         predicated_form = nil
         actual_form = nil
@@ -213,6 +219,7 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
         t.without_auditing { t.save! }
       end
     end
+    end
 
     raise "tokens table contains unhandled emendation" if Token.exists?(['emendation = 1 and temp_presentation is null'])
     remove_column :tokens, :emendation
@@ -252,39 +259,20 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
     remove_column :tokens, :temp_presentation
 
     # Deal with fluid reference systems
-    rename_column :source_divisions, :fields, :reference_fields
-    add_column :sentences, :reference_fields, :string, :limit => 128, :null => false
-    add_column :sources, :tracked_references, :string, :limit => 128, :null => false
+    remove_column :source_divisions, :fields
+    add_column :sources, :tracked_references, :string, :limit => 128, :null => true
+
+    add_column :sources, :reference_fields, :string, :limit => 128, :null => false, :default => ''
+    add_column :source_divisions, :reference_fields, :string, :limit => 128, :null => false, :default => ''
+    add_column :sentences, :reference_fields, :string, :limit => 128, :null => false, :default => ''
+    add_column :tokens, :reference_fields, :string, :limit => 128, :null => false, :default => ''
 
     Source.reset_column_information
-    Source.find_each do |s|
-      s.tracked_references = {"sentence"=>["verse"], "source_division"=>["book", "chapter"]}
-      s.save_without_validation!
-    end
-
     Sentence.reset_column_information
-    Sentence.find_each do |s|
-      next unless s.tokens.morphology_annotatable.first # some sentences are broken; this is not the place to deal with this
-      next unless s.tokens.morphology_annotatable.first.verse # some sentences are broken; this is not the place to deal with this
-      b, e = s.tokens.morphology_annotatable.first.verse, s.tokens.morphology_annotatable.last.verse
-      if b != e
-        s.reference_fields = { "verse" => "#{b}-#{e}" }
-      else
-        s.reference_fields = { "verse" => "#{b}" }
-      end
-      s.without_auditing { s.save_without_validation! }
-    end
 
-    remove_column :tokens, :verse
-
-    SourceDivision.reset_column_information
-    SourceDivision.find_each do |sd|
-      sd.reference_fields = sd.read_attribute(:reference_fields).split(',').inject({}) do |fields, field|
-        key, value = field.split('=')
-        fields[key] = value
-        fields
-      end
-      sd.save!
+    Source.find_each do |s|
+      s.tracked_references = {"token"=>["verse"], "source_division"=>["book", "chapter"]}
+      s.save_without_validation!
     end
   end
 
