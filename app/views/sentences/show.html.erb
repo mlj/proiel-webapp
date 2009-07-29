@@ -11,7 +11,7 @@
 <% end %>
 
 <% if is_annotator? or @sentence.is_reviewed? %>
-  <ul id="tabs" class="tabs">
+  <!-- ul id="tabs" class="tabs">
     <li><a href="#metadata"><span>Metadata</span></a></li>
     <li><a href="#sentence_division"><span>Sentence division</span></a></li>
     <li><a href="#tokenization"><span>Tokenization</span></a></li>
@@ -20,12 +20,13 @@
     <li><a href="#information_structure"><span>Information structure</span></a></li>
     <li><a href="#history"><span>History</span></a></li>
     <li><a href="#low_level_data"><span>Low level data</span></a></li>
-  </ul>
+  </ul -->
 
   <script>
-    Event.observe(window, 'load', function() {
-      var tab = new ProtoTabs('tabs', { defaultPanel: 'dependencies' });
-    });
+    // TODO: This interferes with the drawing of anaphoric links in the information structure view.
+    // Event.observe(window, 'load', function() {
+    //   var tab = new ProtoTabs('tabs', { defaultPanel: 'dependencies' });
+    // });
   </script>
 
   <% layer_if(is_reviewer?, "metadata", :actions => [
