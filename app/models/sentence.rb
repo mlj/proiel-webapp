@@ -683,6 +683,7 @@ class Sentence < ActiveRecord::Base
   def detokenize!
     Sentence.transaction do
       tokens.map(&:destroy)
+      tokens.reload
       self.annotated_by = nil
       self.annotated_at = nil
       self.reviewed_by = nil
