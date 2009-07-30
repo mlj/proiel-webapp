@@ -12,10 +12,12 @@
   </xsl:template>
 
   <xsl:template match="milestone|lb">
-    <xsl:value-of select="@unit"/>
-    <xsl:text>=</xsl:text>
-    <xsl:value-of select="@n"/>
-    <xsl:text>,</xsl:text>
+    <xsl:if test="@unit!=''">
+      <xsl:value-of select="@unit"/>
+      <xsl:text>=</xsl:text>
+      <xsl:value-of select="@n"/>
+      <xsl:text>,</xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="text()"/>

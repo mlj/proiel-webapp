@@ -1,15 +1,121 @@
-one:
-  id: 1
-  tag: R-
-  summary: preposition
-  abbreviated_summary: prep.
-two:
-  id: 2
-  tag: C-
-  summary: conjunction
+--- 
+parts_of_speech_015: 
+  abbreviated_summary: interrog. pron.
+  tag: Pi
+  id: "15"
+  summary: interrogative pronoun
+parts_of_speech_004: 
   abbreviated_summary: conj.
-three:
-  id: 3
-  tag: V-
-  summary: verb
+  tag: C-
+  id: "4"
+  summary: conjunction
+parts_of_speech_016: 
+  abbreviated_summary: rel. adv.
+  tag: Dq
+  id: "16"
+  summary: relative adverb
+parts_of_speech_005: 
+  abbreviated_summary: art.
+  tag: S-
+  id: "5"
+  summary: article
+parts_of_speech_017: 
+  abbreviated_summary: card. num.
+  tag: Ma
+  id: "17"
+  summary: cardinal numeral
+parts_of_speech_006: 
   abbreviated_summary: verb
+  tag: V-
+  id: "6"
+  summary: verb
+parts_of_speech_018: 
+  abbreviated_summary: recipr. pron.
+  tag: Pc
+  id: "18"
+  summary: reciprocal pronoun
+parts_of_speech_007: 
+  abbreviated_summary: adj.
+  tag: A-
+  id: "7"
+  summary: adjective
+parts_of_speech_020: 
+  abbreviated_summary: pers. refl. pron.
+  tag: Pk
+  id: "20"
+  summary: personal reflexive pronoun
+parts_of_speech_019: 
+  abbreviated_summary: interj.
+  tag: I-
+  id: "19"
+  summary: interjection
+parts_of_speech_008: 
+  abbreviated_summary: pers. pron.
+  tag: Pp
+  id: "8"
+  summary: personal pronoun
+parts_of_speech_021: 
+  abbreviated_summary: ord. num.
+  tag: Mo
+  id: "21"
+  summary: ordinal numeral
+parts_of_speech_010: 
+  abbreviated_summary: subj.
+  tag: G-
+  id: "10"
+  summary: subjunction
+parts_of_speech_009: 
+  abbreviated_summary: adv.
+  tag: Df
+  id: "9"
+  summary: adverb
+parts_of_speech_022: 
+  abbreviated_summary: interrog. adv.
+  tag: Du
+  id: "22"
+  summary: interrogative adverb
+parts_of_speech_011: 
+  abbreviated_summary: rel. pron.
+  tag: Pr
+  id: "11"
+  summary: relative pronoun
+parts_of_speech_023: 
+  abbreviated_summary: foreign word
+  tag: F-
+  id: "23"
+  summary: foreign word
+parts_of_speech_012: 
+  abbreviated_summary: dem. pron.
+  tag: Pd
+  id: "12"
+  summary: demonstrative pronoun
+parts_of_speech_001: 
+  abbreviated_summary: common noun
+  tag: Nb
+  id: "1"
+  summary: common noun
+parts_of_speech_024: 
+  abbreviated_summary: poss. refl. pron.
+  tag: Pt
+  id: "24"
+  summary: possessive reflexive pronoun
+parts_of_speech_013: 
+  abbreviated_summary: indef. pron.
+  tag: Px
+  id: "13"
+  summary: indefinite pronoun
+parts_of_speech_002: 
+  abbreviated_summary: proper noun
+  tag: Ne
+  id: "2"
+  summary: proper noun
+parts_of_speech_014: 
+  abbreviated_summary: poss. pron.
+  tag: Ps
+  id: "14"
+  summary: possessive pronoun
+parts_of_speech_003: 
+  abbreviated_summary: prep.
+  tag: R-
+  id: "3"
+  summary: preposition
