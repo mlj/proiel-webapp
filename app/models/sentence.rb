@@ -762,4 +762,10 @@ class Sentence < ActiveRecord::Base
   def before_validation_cleanup
     self.presentation = nil if presentation.blank?
   end
+
+  public
+
+  def to_s
+    presentation_as_text
+  end
 end

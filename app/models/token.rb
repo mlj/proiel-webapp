@@ -493,4 +493,10 @@ class Token < ActiveRecord::Base
     self.empty_token_sort = nil if empty_token_sort.blank?
     self.form = nil if form.blank?
   end
+
+  public
+
+  def to_s
+    form
+  end
 end

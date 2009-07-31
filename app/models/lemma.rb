@@ -98,4 +98,10 @@ class Lemma < ActiveRecord::Base
     self.short_gloss = nil if short_gloss.blank?
     self.foreign_ids = nil if foreign_ids.blank?
   end
+
+  public
+
+  def to_s
+    [export_form, part_of_speech.to_s].join(',')
+  end
 end

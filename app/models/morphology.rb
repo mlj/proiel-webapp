@@ -18,4 +18,10 @@ class Morphology < ActiveRecord::Base
 
     paginate options
   end
+
+  public
+
+  def to_s
+    tag
+  end
 end
