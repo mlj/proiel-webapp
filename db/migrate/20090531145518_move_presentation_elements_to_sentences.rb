@@ -18,7 +18,7 @@ class Formatter
       t_c = check_reference_update(:chapter, chapter)
       t_v = check_reference_update(:verse, token.verse)
 
-      t += ' ' if !t.blank? and (!t_b.blank? or !t_c.blank? or !t_v.blank?)
+      t += '<s¤> </s¤>' if !t.blank? and (!t_b.blank? or !t_c.blank? or !t_v.blank?)
       t += t_b
       t += t_c
       t += t_v
@@ -26,30 +26,34 @@ class Formatter
       case token.sort
       when :empty_dependency_token
       when :lacuna_start
-        t.sub!(/\s+$/, '')
+        t.sub!(/(<s¤> <\/s¤>)+$/, '')
         t += '<gap/>'
       when :lacuna_end
-        t.sub!(/\s+$/, '')
+        t.sub!(/(<s¤> <\/s¤>)+$/, '')
         t += '<gap/>'
       when :punctuation, :text
         if token.temp_presentation
           f = token.temp_presentation
           skip_tokens = token.presentation_span - 1
         else
-          f = token.form
+          if token.sort == :punctuation
+            f = "<pc¤>#{token.form}</pc¤>"
+          else
+            f = "<w¤>#{token.form}</w¤>"
+          end
         end
 
         case token.nospacing
         when :after
           t += f
         when :before
-          t.sub!(/\s+$/, '')
-          t += f + ' '
+          t.sub!(/(<s¤> <\/s¤>)+$/, '')
+          t += f + '<s¤> </s¤>'
         when NilClass
-          if !text_started or t[/ $/]
+          if !text_started or t[/<s¤> <\/s¤>$/]
             t += f + ''
           else
-            t += ' ' + f + ' '
+            t += '<s¤> </s¤>' + f + '<s¤> </s¤>'
           end
         else
           raise "Invalid nospacing value"
@@ -61,7 +65,7 @@ class Formatter
       end
     end
 
-    t.sub(/\s+$/,'')
+    t.sub(/<s¤> <\/s¤>$/,'')
   end
 
   def check_reference_update(reference_type, reference)
@@ -104,21 +108,21 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
       raise "invalid presentation settings" if n.presentation_form or n.presentation_span
 
       if m.form + n.form == m.presentation_form
-        m.temp_presentation = "<w>#{m.form}</w><w>-#{n.form}</w>"
+        m.temp_presentation = "<w>#{m.form}</w><w>#{n.form}</w>"
       elsif m.form + '-' + n.form == m.presentation_form
         m.temp_presentation = "<reg orig='#{m.presentation_form}'><w>#{m.form}</w><w>-#{n.form}</w></reg>"
       elsif m.form + n.form == m.presentation_form.downcase
-        m.temp_presentation = "<reg orig='#{m.presentation_form}'><w>#{m.form}</w><w>-#{n.form}</w></reg>"
+        m.temp_presentation = "<reg orig='#{m.presentation_form}'><w>#{m.form}</w><w>#{n.form}</w></reg>"
       else
         case m.presentation_form
         when 'с҃нбсе', 'с҃нбе', 'с҃мъ', 'н҃бсе', 'н҃нбсе' 'н҃нбсхъ', 'в҃лмъ', 'ч҃лвѣкотъ', 'н҃кстѣ', 'с҃пстѧ', 'в҃ли', 'вⷧ҇мъ', 'ньⷩ҇', 'н҃нбсхъ', 'н҃нбо', 'н҃нбсе', 'н҃нбхъ'
-          m.temp_presentation = "<expan abbr='#{m.presentation_form}'>#{m.form} #{n.form}</expan>"
+          m.temp_presentation = "<expan abbr='#{m.presentation_form}'><w¤>#{m.form}</w¤><s¤> </s¤><w¤>#{n.form}</w¤></expan>"
         when 'осѫдѧтꙑи', 'единого-тъ', 'бечьсти', 'домотъ', 'ежестъ', 'народось', 'родось', 'ичрѣва'
-          m.temp_presentation = "<reg orig='#{m.presentation_form}'>#{m.form} #{n.form}</reg>"
+          m.temp_presentation = "<reg orig='#{m.presentation_form}'><w¤>#{m.form}</w¤><s¤> </s¤><w¤>#{n.form}</w¤></reg>"
         when 'Niþ-þan'
           m.temp_presentation = "<reg orig='#{m.presentation_form}'><w>#{m.form}</w><w>-#{n.form}</w></reg>"
         when 'κἀγὼ', 'κἀγώ', 'Κἀγὼ', 'κἀκεῖ', 'κἀκεῖνος', 'κἀκεῖθεν', 'κἀκείνους', 'κἀκεῖνον', 'διατί', 'κἀκεῖνοι', 'τοὐναντίον', 'κἀκεῖνα', 'Κἀκεῖθεν', 'κἂν', 'κἀκεῖνός', 'κἀμοὶ', 'τοὔνομα', 'κἀμὲ', 'Κἀκεῖ', 'Κἀγώ', 'κἀμοί', 'þû', 'uzuhhof', 'uzuhiddja'
-          m.temp_presentation = "<segmented orig='#{m.presentation_form}'><w>#{m.form}</w> <w>#{n.form}</w></segmented>"
+          m.temp_presentation = "<segmented orig='#{m.presentation_form}'><w>#{m.form}</w><s¤> </s¤><w>#{n.form}</w></segmented>"
         when 'ƕileiku<h>'
           m.temp_presentation = "<corr sic='#{m.presentation_form}'><w>#{m.form}</w><w>-u<add>h</add></w></corr>"
           m.emendation = false
@@ -178,14 +182,14 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
           t.presentation_span = 1
           t.sort = :punctuation
         when '(ga)qiu_'
-          t.temp_presentation = "<unclear>ga</unlear>qiu"
+          t.temp_presentation = "<w¤><unclear>ga</unlear>qiu</w¤>"
           t.form = "gaqiu"
         when 'A(ipist)a(ule)'
-          t.temp_presentation = '<reg orig="A">a</reg><unclear>ipist</unclear>a<unclear>ule</unclear>'
+          t.temp_presentation = '<w¤><reg orig="A">a</reg><unclear>ipist</unclear>a<unclear>ule</unclear></w¤>'
         when 'D(u)'
-          t.temp_presentation = '<reg orig="D">d</reg><unclear>u</unclear>'
+          t.temp_presentation = '<w¤><reg orig="D">d</reg><unclear>u</unclear></w¤>'
         when '(Galeik)'
-          t.temp_presentation = '<unclear><reg orig="G">g</reg>aleik</unclear>'
+          t.temp_presentation = '<w¤><unclear><reg orig="G">g</reg>aleik</unclear></w¤>'
         when /^\[(#{chr})\]$/, '[freij(hals)]', '[uf(kun)nands]', '[arma(hai)rtein]', '[(j)ah]', '[(qairrus)]'
           # These are wrongly tokenized as tokens, but should be in
           # the database.
@@ -209,9 +213,9 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
           t.temp_presentation = m.map do |x|
             case x
             when NilClass: nil
-            when /^\((#{chr})\)$/: "<unclear>#{$1}</unclear>"
-            when /^\[(#{chr})\]$/: "<del>#{$1}</del>"
-            when /^<(#{chr})>$/: "<add>#{$1}</add>"
+            when /^\((#{chr})\)$/: "<w¤><unclear>#{$1}</unclear></w¤>"
+            when /^\[(#{chr})\]$/: "<w¤><del>#{$1}</del></w¤>"
+            when /^<(#{chr})>$/: "<w¤><add>#{$1}</add></w¤>"
             when /^(#{chr})$/: $1
             else
               raise "Unknown characters"
@@ -231,7 +235,7 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
     Token.reset_column_information
 
     # tokens.capitalisation
-    execute("update tokens set temp_presentation = concat('<reg orig=\"', presentation_form, '\">', form, '</reg>') where capitalisation = 1 and presentation_span = 1 and ucase(presentation_form) = ucase(form);")
+    execute("update tokens set temp_presentation = concat('<reg orig=\"', presentation_form, '\"><w¤>', form, '</w¤></reg>') where capitalisation = 1 and presentation_span = 1 and ucase(presentation_form) = ucase(form);")
 
     raise "tokens table contains unhandled capitalisation" if Token.exists?(['capitalisation = 1 and temp_presentation is null'])
     remove_column :tokens, :capitalisation
@@ -240,16 +244,30 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
     raise "tokens table contains unhandled presentation_form" if Token.exists?(['presentation_form and temp_presentation is null'])
     raise "tokens table contains unhandled presentation_span" if Token.exists?(['presentation_span and temp_presentation is null'])
 
+    add_column :source_divisions, :presentation, :text, :null => false
     add_column :sentences, :presentation, :text, :null => false
 
     Sentence.reset_column_information
 
-    SourceDivision.find(:all).each do |div|
+    SourceDivision.reset_column_information
+    SourceDivision.all.each do |div|
       f = Formatter.new # recreate each time to reset all reference states
-      div.sentences.find(:all).each do |s|
-        s.presentation = f.format_sentence(s)
+      sd_p = []
+      div.sentences.each do |s|
+        x = f.format_sentence(s)
+        y = x.dup
+        x.gsub!('¤', '')
+        y.gsub!(/<[spcw]+¤>/, '')
+        y.gsub!(/<\/[spcw]+¤>/, '')
+
+        s.presentation = x
+        sd_p << y
+
         s.without_auditing { s.save_without_validation! }
       end
+
+      div.presentation = sd_p.join(' ')
+      div.save_without_validation!
     end
 
     # Kill off all unannotatable tokens that we no longer care about.

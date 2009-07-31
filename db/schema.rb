@@ -224,10 +224,11 @@ ActiveRecord::Schema.define(:version => 20090729193651) do
     t.integer  "position",                                  :default => 0,  :null => false
     t.string   "title",                      :limit => 128
     t.string   "abbreviated_title",          :limit => 128, :default => "", :null => false
-    t.string   "reference_fields",           :limit => 128, :default => "", :null => false
     t.integer  "aligned_source_division_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "presentation",                                              :null => false
+    t.string   "reference_fields",           :limit => 128, :default => "", :null => false
   end
 
   create_table "sources", :force => true do |t|
