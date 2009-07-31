@@ -29,7 +29,7 @@ module References
   # ==== Options
   # <tt>:abbreviated</tt> -- If true, will use abbreviated form for the citation.
   def citation(options = {})
-    reference_fields.merge({ :title => source_title(options) }).inject(reference_format || "") do |s, f|
+    reference_fields.merge({ :title => source_title(options) }).inject(reference_format_for_this_level) do |s, f|
       key, value = f
 
       case value
@@ -49,7 +49,7 @@ module References
   # Sets the reference fields. Also updates fields in parent levels,
   # which must be saved separately if updated.
   def reference_fields=(x)
-    write_reference(x.slice(*tracked_references))
+    write_reference(x.slice(*tracked_references_on_this_level))
     reference_parent.reference_fields = x if reference_parent
   end
 
@@ -87,11 +87,11 @@ module References
     end
   end
 
-  def reference_format
-    read_hierarchic_attribute(:reference_format)[reference_level]
+  def reference_format_for_this_level
+    read_hierarchic_attribute(:reference_format)[reference_level] || ""
   end
 
-  def tracked_references
+  def tracked_references_on_this_level
     read_hierarchic_attribute(:tracked_references)[reference_level]
   end
 
@@ -114,6 +114,8 @@ module References
       s
     end
   end
+
+  private
 
   def reference_level
     self.class.to_s.underscore
