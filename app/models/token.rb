@@ -20,8 +20,8 @@ class Token < ActiveRecord::Base
   belongs_to :dependency_alignment, :class_name => 'Token', :foreign_key => 'dependency_alignment_id'
   has_many :dependency_alignment_terminations
 
-  has_one :anaphor, :class_name => 'Token', :foreign_key => 'antecedent_id', :dependent => :nullify
-  belongs_to :antecedent, :class_name => 'Token'
+  has_many :anaphors, :class_name => 'Token', :foreign_key => 'antecedent_id', :dependent => :nullify
+  belongs_to :antecedent, :class_name => 'Token', :foreign_key => 'antecedent_id'
 
   before_validation :before_validation_cleanup
 
@@ -91,6 +91,11 @@ class Token < ActiveRecord::Base
   # Returns the language for the token.
   def language
     sentence.language
+  end
+  
+  # Returns the nearest anaphor for the token.
+  def anaphor
+    anaphors.min { |x, y| x.antecedent_dist_in_words <=> y.antecedent_dist_in_words }
   end
 
   def previous_tokens
