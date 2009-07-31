@@ -35,14 +35,14 @@ class SourceDivision < ActiveRecord::Base
     source.source_divisions.find(:first, :conditions =>  ["position > ?", position], :order => "position ASC")
   end
 
-  # Returns true if there is a previous source division in a source.
-  def has_previous?
-    source.source_divisions.exists?(["position < ?", position])
+  include Ordering
+
+  def ordering_attribute
+    :position
   end
 
-  # Returns true if there is a next source division in a source.
-  def has_next?
-    source.source_divisions.exists?(["position > ?", position])
+  def ordering_collection
+    source.source_divisions
   end
 
   # Returns the parent object for the source division, which will be its

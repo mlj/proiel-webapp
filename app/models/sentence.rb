@@ -249,20 +249,22 @@ class Sentence < ActiveRecord::Base
                                    :order => "sentence_number ASC")
   end
 
-  # Returns true if there is a previous sentence.
-  def has_previous_sentence?
-    !previous_sentence.nil?
-  end
-
-  # Returns true if there is a next sentence.
-  def has_next_sentence?
-    !next_sentence.nil?
-  end
-
   alias :next :next_sentence
   alias :previous :previous_sentence
-  alias :has_next? :has_next_sentence?
-  alias :has_previous? :has_previous_sentence?
+
+  include Ordering
+
+  def ordering_attribute
+    :sentence_number
+  end
+
+  def ordering_collection
+    source_division.sentences
+  end
+
+  # FIXME: backwards compatibility
+  alias :has_next_sentence? :has_next?
+  alias :has_previous_sentence? :has_previous?
 
   # Returns the parent object for the sentence, which will be its
   # source division.

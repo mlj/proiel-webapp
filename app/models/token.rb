@@ -121,6 +121,19 @@ class Token < ActiveRecord::Base
                               :order => "token_number ASC")
   end
 
+  alias :next :next_token
+  alias :previous :previous_token
+
+  include Ordering
+
+  def ordering_attribute
+    :token_number
+  end
+
+  def ordering_collection
+    sentence.tokens
+  end
+
   # Returns the morphological features for the token or +nil+ if none
   # are set.
   def morph_features
