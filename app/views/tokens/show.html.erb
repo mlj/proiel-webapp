@@ -1,10 +1,10 @@
 <% roundedbox do -%>
-  <dt>Token ID:</dt><dd><%= @token.id %></dd>
-  <dt>Sentence ID:</dt><dd><%= link_to @token.sentence.id, @token.sentence %></dd>
-  <dt>Linearisation index:</dt><dd><%= @token.token_number %></dd>
-  <% if @token.is_empty? %>
-    <dt>Empty token sort:</dt><dd><%= @token.empty_token_sort %></dd>
-  <% end %>
+  <%=h @token.citation %> <%= readable_completion(@token.sentence, :checkmark => :only) %><br/>
+  <%= external_text_links(@token.sentence) %><br/>
+  <%= link_to_resources @token, :index, :previous, :next, :parent, :edit %>
+<% end %>
+
+<% layer "annotation" do -%>
   <% if @token.form %>
     <dt>Form:</dt><dd class="foreign-word"><%= format_token_form(@token) %></dd>
   <% end %>
@@ -19,8 +19,6 @@
   <% if @token.foreign_ids %>
     <dt>Foreign IDs:</dt><dd class="tag"><%= @token.foreign_ids %></dd>
   <% end %>
-  <dt>Annotation completion:</dt><dd><%= link_to(readable_completion(@token.sentence), @token.sentence) %></dd>
-  <%= link_to_resources @token, :index, :edit, :parent %>
 <% end %>
 
 <% layer_unless @token.notes.empty?, "notes" do -%>
@@ -29,6 +27,10 @@
 
 <% layer_unless @semantic_tags.empty?, 'semantic_tags' do -%>
   <%= semantic_tags_summary(@semantic_tags) %>
+<% end %>
+
+<% layer_if(is_reviewer?, "low_level_data") do -%>
+  <%= low_level_data_table(@token, :id, :sentence, :created_at, :updated_at, :token_number, :empty_token_sort, :form, :head, :relation, :lemma, :morphology, :source_morphology, :source_lemma, :foreign_ids, :reference_fields) %>
 <% end %>
 
 <% layer_unless @token.audits.empty?, "revisions" do -%>
