@@ -22,8 +22,6 @@
   <!-- Tokenization -->
   <xsl:template match="w">
     <xsl:apply-templates/>
-    <!-- A space to force tokenization. -->
-    <xsl:text> </xsl:text>
   </xsl:template>
 
   <!-- Editorial mark-up -->

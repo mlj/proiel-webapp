@@ -25,6 +25,7 @@ ActionController::Routing::Routes.draw do |map|
       :delete_contrast => :post,
       :delete_prodrop => :post
     }
+    annotation.resource :tokenizations
   end
 
   map.resource :statistics

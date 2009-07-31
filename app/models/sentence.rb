@@ -156,6 +156,18 @@ class Sentence < ActiveRecord::Base
     end
   end
 
+  def presentation_as_editable_html
+    s = presentation_as(APPLICATION_CONFIG.presentation_as_editable_html_stylesheet)
+
+    # The xslt processor ignores all instructions and inserts
+    # non-sense "\n" characters all over the place. That seriously
+    # messes with out code. Try to mend it by removing all "\n"
+    # characters.
+    s.gsub!("\n", '')
+
+    s
+  end
+
   # Returns the presentation level as UTF-8 text.
   def presentation_as_text
     presentation_as(APPLICATION_CONFIG.presentation_as_text_stylesheet)

@@ -1,0 +1,53 @@
+<% javascript 'tokenization' %>
+
+<% javascript_tag do -%>
+  var authenticity_token = '<%= form_authenticity_token %>';
+<% end -%>
+
+<style>
+  #presentation {
+    border: 1px solid black;
+    padding: 1em 1em 1em 1em;
+    margin: 3em 3em 3em 3em;
+    line-height: 4em;
+    display: block;
+  }
+
+  .pc, .milestone, .gap {
+    color: red;
+  }
+
+  .milestone, .gap {
+    padding-left: .25em;
+    padding-right: .25em;
+  }
+
+  .segmented {
+    border: 1px dashed red;
+  }
+
+  .w {
+    border: 1px solid grey;
+    padding: .25em .25em .25em .25em;
+    margin: 1px 1px 1px 1px;
+  }
+
+  .s {
+    margin-left: .1em;
+    margin-right: .1em;
+    color: red;
+  }
+</style>
+
+<!-- div id="z">
+  <presentation xmlns="http://proiel.org" id="presentationxml"><%= @sentence.presentation %></presentation>
+</div -->
+
+<div id="presentation">
+  <%= @sentence.presentation_as_editable_html %>
+</div>
+
+<% form_tag({ :controller => 'tokenizations', :action => 'update', :sentence_id => @sentence, }, :method => :put) do -%>
+  <%= hidden_field_tag 'new_presentation' %>
+  <%= submit_tag 'Save' %>
+<% end %>

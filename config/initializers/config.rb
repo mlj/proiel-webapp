@@ -21,6 +21,18 @@ class ApplicationConfig
     @presentation_as_minimal_html_stylesheet ||= XSLT::Stylesheet.new(XML::Document.file(@config.presentation_as_minimal_html_stylesheet))
   end
 
+  def presentation_as_editable_html_stylesheet
+    @presentation_as_editable_html_stylesheet ||= XSLT::Stylesheet.new(XML::Document.file(@config.presentation_as_editable_html_stylesheet))
+  end
+
+  def presentation_from_editable_html_stylesheet
+    @presentation_from_editable_html_stylesheet ||= XSLT::Stylesheet.new(XML::Document.file(@config.presentation_from_editable_html_stylesheet))
+  end
+
+  def presentation_from_editable_xml_stylesheet
+    @presentation_from_editable_xml_stylesheet ||= XSLT::Stylesheet.new(XML::Document.file(@config.presentation_from_editable_xml_stylesheet))
+  end
+
   def presentation_as_text_stylesheet
     @presentation_as_text_stylesheet ||= XSLT::Stylesheet.new(XML::Document.file(@config.presentation_as_text_stylesheet))
   end

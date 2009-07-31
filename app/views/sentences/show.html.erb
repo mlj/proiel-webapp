@@ -64,7 +64,8 @@
   <%= notes_summary(@sentence.notes) %>
 <% end %>
  
-<% layer_if(is_reviewer?, "tokenization") do -%>
+<% layer_if(is_reviewer?, "tokenization", :actions => [
+           link_to_if(is_reviewer?, "Edit", edit_sentence_tokenizations_path(@sentence))]) do -%>
   <h3>Mark-up</h3>
   <div><%= @sentence.presentation_as_prettyprinted_code(:coloured => true) %></div>
 
