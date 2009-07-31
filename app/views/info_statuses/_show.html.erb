@@ -2,7 +2,9 @@
   <% stylesheet 'sentence_divisions', 'info_statuses' %>
   <% javascript 'wz_jsgraphics', 'anaphora' %>
 
-  <%= render :partial => 'info_statuses/legend_show' %>
+  <% if action_name != 'edit' %>
+    <%= render :partial => 'info_statuses/legend_show' %>
+  <% end %>
 
   <div>
     Contrast: <%= select_tag('contrast-select', @contrast_options, :onchange => "AnaphoraAndContrast.showContrastNo(this.value);") %>
