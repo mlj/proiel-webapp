@@ -13,13 +13,15 @@ module LowLevelHelper
           methods.each do |method|
             value = object.send(method)
 
-            if value
-              case method
-              when :reference_fields
-                value = value.inspect
-              else
-                value = value.to_s
-              end
+            case value
+            when Hash
+              value = value.inspect
+            when ActiveRecord::Base
+              value = "#{value.to_s} (#{value.id})"
+            when NilClass
+              value = ''
+            else
+              value = value.to_s
             end
 
             field = case method
@@ -37,7 +39,7 @@ module LowLevelHelper
               td field + ':'
 
               case method.to_s
-              when "language", "presentation", /_(at|by|key|ids|features|state|fields)$/
+              when /language|presentation|relation|morphology|lemma/, /_(sort|at|by|key|ids|features|state|fields)$/
                 td.tag value
               else
                 td value
