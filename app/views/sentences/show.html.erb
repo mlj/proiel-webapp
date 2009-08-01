@@ -6,8 +6,6 @@
   <%= external_text_links(@sentence) %><br/>
   <%= link_to_resources @sentence, :index, :previous, :next, :parent, :delete, :edit %>
   <%= link_to "Tokenize", :action => :tokenize %>
-  <%= link_to "Resegment", :action => :resegment_edit %>
-  <%= link_to "Merge with next", :action => :merge %>
 <% end %>
 
 <% if is_annotator? or @sentence.is_reviewed? %>
@@ -38,7 +36,8 @@
   <% end %>
 
   <% layer("sentence_division", :actions => [
-    link_to_if(is_annotator?, "Edit", edit_sentence_sentence_division_url(@sentence))]) do -%>
+           link_to_if(is_annotator?, "Edit", :action => :resegment_edit),
+           link_to_if(is_annotator?, "Merge with next", :action => :merge)]) do -%>
     <%= render :partial => 'sentence_divisions/show' %>
   <% end %>
 

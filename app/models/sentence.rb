@@ -466,8 +466,9 @@ class Sentence < ActiveRecord::Base
           next_sentence.detokenize!
         end
 
-        self.presentation = self.presentation + ' ' + self.next_sentence.presentation
+        self.presentation = self.presentation + '<s> </s>' + self.next_sentence.presentation
         save!
+        tokenize!
 
         next_sentence.destroy
       end
@@ -508,13 +509,15 @@ class Sentence < ActiveRecord::Base
         self.presentation = presentation_strings[0]
         self.save!
         self.reindex!
+        self.tokenize!
 
         1.upto(n).map do |i|
-           s = parent.sentences.create!(:sentence_number => sentence_number + i,
-                                        :presentation => presentation_strings[i])
-           s.reference_fields = self.reference_fields
-           s.save!
-           s.reindex!
+          s = parent.sentences.create!(:sentence_number => sentence_number + i,
+                                       :presentation => presentation_strings[i])
+          s.reference_fields = self.reference_fields
+          s.save!
+          s.reindex!
+          s.tokenize!
         end
       end
     end
@@ -668,7 +671,7 @@ class Sentence < ActiveRecord::Base
   # Tokenizes the sentence using the current tokenization rules.
   # The function has no effect on a sentence that has already been
   # tokenized.
-  def tokenize!
+  def guess_tokenization!
     # TODO: Major FIXME: this is specific to Latin and does not even
     # do a good job with that language. But it has to do for now...
     presentation_as_text.gsub('á', 'a').gsub('é', 'e').gsub('í', 'i').gsub('ó', 'o').gsub('ú', 'u').gsub(/[†#\?\[\]]/, '').gsub(/\s*["'—]\s*/,' ').gsub(/[\.]\s*$/, '').gsub(/[,;:]\s*/, ' ').gsub('onust', 'onus est').gsub(/(occasio)st/, '\1 est').gsub(/(aeris|senatus|re|rem|rei|res)\s+(alieni|consulto|publica|publicam|publicae)/, '\1#\2').split(/\s+/).map do |t|
@@ -687,15 +690,19 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  # Re-tokenizes a sentence using the current tokenization rules.
-  # If inkoved on a sentence that has been tokenized before, the
+  # Tokenizes a sentence using the tokenization mark-up in the
+  # presentation string.
+  #
+  # If invoked on a sentence that has been tokenized before, the
   # existing tokenization is undone and all annotation is removed.
-  # If invoken in a sentence that has not been tokenized before, the
-  # sentence is tokenized.
-  def retokenize!
+  def tokenize!
     Sentence.transaction do
       detokenize! if tokenized?
-      tokenize!
+
+      presentation_as_tokens.each_with_index do |form, position|
+        # FIXME: Deal with reference_fields.
+        tokens.create! :form => form, :token_number => position, :empty_token_sort => nil
+      end
     end
   end
 

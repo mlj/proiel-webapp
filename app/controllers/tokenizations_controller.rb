@@ -63,6 +63,7 @@ class TokenizationsController < ApplicationController
     Sentence.transaction do
       @sentence.presentation = s
       @sentence.save!
+      @sentence.tokenize!
     end
 
     flash[:notice] = 'Tokenization updated.'
