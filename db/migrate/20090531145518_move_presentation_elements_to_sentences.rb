@@ -124,7 +124,7 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
         when 'κἀγὼ', 'κἀγώ', 'Κἀγὼ', 'κἀκεῖ', 'κἀκεῖνος', 'κἀκεῖθεν', 'κἀκείνους', 'κἀκεῖνον', 'διατί', 'κἀκεῖνοι', 'τοὐναντίον', 'κἀκεῖνα', 'Κἀκεῖθεν', 'κἂν', 'κἀκεῖνός', 'κἀμοὶ', 'τοὔνομα', 'κἀμὲ', 'Κἀκεῖ', 'Κἀγώ', 'κἀμοί', 'þû', 'uzuhhof', 'uzuhiddja'
           m.temp_presentation = "<segmented orig='#{m.presentation_form}'><w>#{m.form}</w><s¤> </s¤><w>#{n.form}</w></segmented>"
         when 'ƕileiku<h>'
-          m.temp_presentation = "<corr sic='#{m.presentation_form}'><w>#{m.form}</w><w>-u<add>h</add></w></corr>"
+          m.temp_presentation = "<corr sic='ƕileiku&lt;h&gt;'><w>#{m.form}</w><w>-u<add>h</add></w></corr>"
           m.emendation = false
         else
           raise "unhandled contraction"
@@ -182,7 +182,7 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
           t.presentation_span = 1
           t.sort = :punctuation
         when '(ga)qiu_'
-          t.temp_presentation = "<w¤><unclear>ga</unlear>qiu</w¤>"
+          t.temp_presentation = "<w¤><unclear>ga</unclear>qiu</w¤>"
           t.form = "gaqiu"
         when 'A(ipist)a(ule)'
           t.temp_presentation = '<w¤><reg orig="A">a</reg><unclear>ipist</unclear>a<unclear>ule</unclear></w¤>'
