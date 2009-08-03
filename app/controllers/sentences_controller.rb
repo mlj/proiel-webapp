@@ -56,7 +56,7 @@ class SentencesController < ResourceController::Base
     redirect_to @sentence
   rescue ActiveRecord::RecordInvalid => invalid
     flash[:error] = invalid.record.errors.full_messages.join('<br>')
-    render :action => "show"
+    redirect_to @sentence
   end
 
   def flag_as_not_reviewed
@@ -67,7 +67,7 @@ class SentencesController < ResourceController::Base
     redirect_to @sentence
   rescue ActiveRecord::RecordInvalid => invalid
     flash[:error] = invalid.record.errors.full_messages.join('<br>')
-    render :action => "show"
+    redirect_to @sentence
   end
 
   def tokenize
