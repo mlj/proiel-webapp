@@ -5,6 +5,7 @@ class Formatter
     skip_tokens = 0
     book = sentence.source_division.fields[/^book=(\w+),/]
     book.gsub!(/book=/, '')
+    book.gsub!(',', '')
     chapter = sentence.source_division.fields[/(\d|Incipit|Explicit)$/]
 
     sentence.tokens.each do |token|
