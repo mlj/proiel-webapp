@@ -271,7 +271,7 @@ class MovePresentationElementsToSentences < ActiveRecord::Migration
     Sentence.reset_column_information
 
     Source.find_each do |s|
-      s.tracked_references = {"token"=>["verse"], "source_division"=>["book", "chapter"]}
+      s.tracked_references = {"token"=>["verse"], "sentence"=>["verse"], "source_division"=>["book", "chapter"]}
       s.save_without_validation!
     end
   end

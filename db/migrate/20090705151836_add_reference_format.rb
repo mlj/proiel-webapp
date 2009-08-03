@@ -4,7 +4,7 @@ class AddReferenceFormat < ActiveRecord::Migration
 
     Source.reset_column_information
     Source.find_each do |s|
-      s.reference_format = { "source" => '#title#', "source_division" => '#title#, #book#', "sentence" => '#title#, #book# #chapter#', "token" => '#title#, #book# #chapter#.#verse#' }
+      s.reference_format = { "source" => '#title#', "source_division" => '#title#, #book#', "sentence" => '#title#, #book# #chapter#.#verse#', "token" => '#title#, #book# #chapter#.#verse#' }
       s.save_without_validation!
     end
   end
