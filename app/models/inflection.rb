@@ -11,7 +11,7 @@ class Inflection < ActiveRecord::Base
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
   # FIXME: validate morphology vs language?
   #validates_inclusion_of :morphology, :in => MorphFeatures.morphology_tag_space(language.iso_code)
-  validates_uniqueness_of :form, :scope => [:language_id, :morphology, :lemma]
+  validates_uniqueness_of :form, :scope => [:language_id, :morphology_id, :lemma]
 
   # Returns the morphological features. These will never be nil.
   def morph_features
