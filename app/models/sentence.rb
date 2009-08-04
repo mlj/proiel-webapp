@@ -10,7 +10,7 @@ class Sentence < ActiveRecord::Base
   belongs_to :sentence_alignment, :class_name => 'Sentence', :foreign_key => 'sentence_alignment_id'
 
   # All tokens
-  has_many :tokens, :order => 'token_number'
+  has_many :tokens, :order => 'token_number', :dependent => :destroy
 
   # All tokens with dependents and information structure included
   has_many :tokens_with_dependents_and_info_structure, :class_name => 'Token',
@@ -463,7 +463,7 @@ class Sentence < ActiveRecord::Base
           append_tokens!(next_sentence.tokens)
         else
           detokenize!
-          next_sentence.detokenize!
+          # next_sentence's tokens will be removed when sentence is destroyed.
         end
 
         self.presentation = self.presentation + '<s> </s>' + self.next_sentence.presentation
