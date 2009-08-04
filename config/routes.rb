@@ -5,7 +5,9 @@ ActionController::Routing::Routes.draw do |map|
     :commit => :post,
     :uncommit => :post,
   }
-  map.resources :lemmata, :singular => 'lemma'
+  map.resources :lemmata, :singular => 'lemma', :member => {
+    :merge => :post,
+  }
   map.resources :tokens, :member => {
     :dependency_alignment_group => :get,
   }

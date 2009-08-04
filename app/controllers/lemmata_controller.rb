@@ -7,6 +7,7 @@ class LemmataController < ResourceController::Base
     @semantic_tags = @lemma.semantic_tags
     @tokens = @lemma.tokens.search(params[:query], :page => current_page)
     @morphology_stats = @lemma.tokens.count(:group => :morphology).map { |k, v| [k.abbreviated_summary.capitalize, v] }
+    @mergeable_lemmata = @lemma.mergeable_lemmata
   end
 
   update.before do
@@ -15,6 +16,14 @@ class LemmataController < ResourceController::Base
 
   create.before do
     params[:lemma][:lemma] = params[:lemma][:lemma].mb_chars.normalize(UNICODE_NORMALIZATION_FORM) if params[:lemma]
+  end
+
+  def merge
+    @lemma = Lemma.find(params[:id])
+    @other_lemma = Lemma.find(params[:other_id])
+    @lemma.merge!(@other_lemma)
+    flash[:notice] = "Lemmata sucessfully merged"
+    redirect_to @lemma
   end
 
   protected

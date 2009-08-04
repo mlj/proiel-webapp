@@ -42,20 +42,33 @@ class Lemma < ActiveRecord::Base
     MorphFeatures.new(self, nil)
   end
 
+  # Returns a list of lemmata that are 'sufficiently similar' to this
+  # lemma to be candidates for being merged with it. 'Sufficiently
+  # similar' is defined in terms of what will not violate constraints:
+  # two lemmata with different part of speech, for example, cannot be
+  # merged since this will affect the annotation of morphology for any
+  # associated tokens. Two tokens are 'mergeable' iff they belong to
+  # the same language, have the same base form (variant number may be
+  # different) and have identical part of speech.
+  def mergeable_lemmata
+    language.lemmata.find(:all, :conditions => { :part_of_speech_id => part_of_speech.id, :lemma => lemma }) - [self]
+  end
+
   # Merges another lemma into this lemma and saves the results. The two lemmata
   # must have the same base form, the same morphology and be for the same language.
   # All tokens belonging to the lemma to be merged will have their lemma references
-  # changed.
+  # changed, and the lemma without tokens deleted.
   def merge!(other_lemma)
     raise "Different base forms" unless self.lemma == other_lemma.lemma
     raise "Different languages" unless self.language == other_lemma.language
-    raise "Different morphology" unless self.pos == other_lemma.pos
+    raise "Different morphology" unless self.part_of_speech == other_lemma.part_of_speech
 
     Token.transaction do
       other_lemma.tokens.each do |t|
         t.lemma_id = self.id
         t.save!
       end
+      other_lemma.destroy
     end
   end
 

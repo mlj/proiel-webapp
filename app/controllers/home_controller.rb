@@ -62,11 +62,4 @@ class HomeController < ApplicationController
 
   def user_administration
   end
-
-  def merge_lemmata
-    from = Lemma.find(params[:first_id])
-    to = Lemma.find(params[:second_id])
-    to.merge!(from)
-    redirect_to lemma_url(to)
-  end
 end

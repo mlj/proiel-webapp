@@ -1,52 +1,20 @@
 <% layer('history', :title => 'History') do -%>
-
-<ul style="list-style: lower-greek">
-  <li><%= link_to 'History', audits_url %></li>
-</ul>
-
+  <ul style="list-style: lower-greek">
+    <li><%= link_to 'History', audits_url %></li>
+  </ul>
 <% end %>
 
 <% layer('users', :title => 'User administration') do -%>
-
-<ul style="list-style: armenian">
-  <li><%= link_to 'Users', :controller => :users %></li>
-</ul>
-
+  <ul style="list-style: armenian">
+    <li><%= link_to 'Users', :controller => :users %></li>
+  </ul>
 <% end %>
  
 <% layer('low-level', :title => 'Low-level data access') do -%>
-
-<p><span class="warning">Warning:</span> These functions are not protected by
-any sanity checks and can therefore cause data corruption that
-is difficult to revert if used improperly. Please read the description of each function carefully
-so that you understand exactly what the function does and that it is
-the correct solution to the problem that you are attempting to solve!</p>
-
-<ul style="list-style: upper-roman">
-  <li><%= link_to 'Sentences', :controller => :sentences %></li>
-  <li><%= link_to 'Tokens', :controller => :tokens %></li>
-  <li><%= link_to 'Lemmata', :controller => :lemmata %></li>
-  <li><%= link_to 'Notes', :controller => :notes %></li>
-  <li>Lemmatiser
-    <ul>
-      <li><b>Merge two lemmata.</b>
-      <p>
-      The IDs of two lemmata should be provided, the first ID references the lemma which
-      will have its tokens removed, the second ID the lemma that will contain the merged information.
-      All tokens that reference the first lemma will be changed to reference the second 
-      lemma. The function performs basic tests on the compatibility of the two lemmata
-      and will refuse to merge lemmata with different base forms, belonging to different
-      languages or with different POS. Different variant numbers are not considered
-      a compatibility mismatch.
-      </p>
-      <% form_tag :action => 'merge_lemmata' do -%> 
-        First lemma ID: <%= text_field_tag :first_id, params[:first_id] %>
-        Second lemma ID: <%= text_field_tag :second_id, params[:second_id] %>
-        <%= submit_tag 'Merge lemmata' %>
-      <% end %>
-      </li>
-    </ul>
-  </li>
-</ul>
-
+  <ul style="list-style: upper-roman">
+    <li><%= link_to 'Sentences', :controller => :sentences %></li>
+    <li><%= link_to 'Tokens', :controller => :tokens %></li>
+    <li><%= link_to 'Lemmata', :controller => :lemmata %></li>
+    <li><%= link_to 'Notes', :controller => :notes %></li>
+  </ul>
 <% end %>
