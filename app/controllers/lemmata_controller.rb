@@ -1,5 +1,5 @@
 class LemmataController < ResourceController::Base
-  before_filter :is_administrator?, :except => [ :index, :show ]
+  before_filter :is_reviewer?, :except => [:index, :show]
   before_filter :find_parents
   actions :all, :except => [ :destroy ]
 
