@@ -65,13 +65,6 @@
  
 <% layer_if(is_reviewer?, "tokenization", :actions => [
            link_to_if(is_reviewer?, "Edit", edit_sentence_tokenizations_path(@sentence))]) do -%>
-  <h3>Mark-up</h3>
-  <div><%= @sentence.presentation_as_prettyprinted_code(:coloured => true) %></div>
-
-  <h3>Styled sentence</h3>
-  <div><%= @sentence.presentation_as_html %></div>
-
-  <h3>Tokens</h3>
   <%= tokens_table @tokens %>
 <% end %>
 

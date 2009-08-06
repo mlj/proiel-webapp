@@ -9,6 +9,8 @@
   <%= @source_division.presentation_as_html %>
 </div>
 
+<%= render_tabular @sentences, ['Location', 'Text', '&nbsp;'] %>
+
 <% layer :statistics do -%>
   <%= statistics "Completion (sentences)", "sentence", @sentence_completion_stats %>
   <%= statistics "Completion (words/text tokens)", "token", @text_token_completion_stats %>
@@ -16,4 +18,6 @@
   <%= statistics "Reviewers", "sentence", @reviewed_by_stats %>
 <% end %>
 
-<%= render_tabular @sentences, ['Location', 'Text', '&nbsp;'] %>
+<% layer_if(is_reviewer?, "low_level_data") do -%>
+  <%= low_level_data_table(@source_division, :id, :position, :source, :title, :abbreviated_title, :aligned_source_division, :presentation, :reference_fields, :created_at, :updated_at) %>
+<% end %>
