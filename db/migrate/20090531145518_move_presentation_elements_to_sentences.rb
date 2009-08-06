@@ -77,6 +77,10 @@ end
 
 class MovePresentationElementsToSentences < ActiveRecord::Migration
   def self.up
+    # First remove verse numbers from empty tokens that have it. This
+    # messes up the milestones later.
+    execute("update tokens set verse = NULL where empty_token_sort = 'P';")
+
     add_column :tokens, :temp_presentation, :text
 
     # XML escaping
