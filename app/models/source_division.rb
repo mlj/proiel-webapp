@@ -73,52 +73,8 @@ class SourceDivision < ActiveRecord::Base
     SourceDivision.transaction { sentences.find_each(&:reindex!) }
   end
 
-  # Returns the presentation level as UTF-8 HTML.
-  #
-  # === Options
-  #
-  # <tt>:section_numbers</tt> -- If true, output will include section
-  # numbers.
-  #
-  # <tt>:length_limit</tt> -- If set, will limit the length of
-  # the formatted sentence to the given number of words and append an
-  # ellipsis if the sentence exceeds that limit. If a negative number
-  # is given, the ellipis is prepended to the sentence. The conversion
-  # will also use a less rich form of HTML.
-  def presentation_as_html(options = {})
-    xsl_params = {
-      :language_code => "'#{language.iso_code.to_s}'",
-      :default_language_code => "'en'"
-    }
-    xsl_params[:sectionNumbers] = "'1'" if options[:section_numbers]
+  include Presentation
 
-    presentation_as(APPLICATION_CONFIG.presentation_as_html_stylesheet, xsl_params)
-  end
-
-  private
-
-  def presentation_as(stylesheet_method, xsl_params = {})
-    parser = XML::Parser.string('<presentation>' + presentation + '</presentation>')
-
-    begin
-      xml = parser.parse
-    rescue LibXML::XML::Parser::ParseError => p
-      raise "Invalid presentation string for sentence #{id}: #{p}"
-    end
-
-    s = stylesheet_method.apply(xml, xsl_params).to_s
-
-    # FIXME: libxslt-ruby bug #21615: XML decl. shows up in the output
-    # even when omit-xml-declaration is set
-    s.gsub!(/<\?xml version="1\.0" encoding="UTF-8"\?>\s+/, '')
-
-    # FIXME: Why is there an additional CR at the end of the string?
-    s.chomp!
-
-    s
-  end
-
-  public
   # Returns sentence alignments for the source division.
   #
   # ==== Options

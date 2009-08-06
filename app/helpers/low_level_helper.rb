@@ -39,7 +39,11 @@ module LowLevelHelper
               td field + ':'
 
               case method.to_s
-              when /language|presentation|relation|morphology|lemma/, /_(sort|at|by|key|ids|features|state|fields)$/
+              when "presentation"
+                td do
+                  self << object.presentation_as_prettyprinted_code(:coloured => true)
+                end
+              when /language|relation|morphology|lemma/, /_(sort|at|by|key|ids|features|state|fields)$/
                 td.tag value
               else
                 td value

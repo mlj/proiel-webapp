@@ -94,6 +94,8 @@ class Sentence < ActiveRecord::Base
     source_division.language
   end
 
+  include Presentation
+
   UNICODE_HORIZONTAL_ELLIPSIS = Unicode::U2026
 
   # Returns the presentation level as UTF-8 HTML.
@@ -139,20 +141,6 @@ class Sentence < ActiveRecord::Base
       end
     else
       presentation_as(APPLICATION_CONFIG.presentation_as_html_stylesheet, xsl_params)
-    end
-  end
-
-  # Returns the presentation level as verbatim UTF-8 HTML, i.e.
-  # without converting the data to proper presentation HTML.
-  #
-  # === Options
-  #
-  # <tt>:coloured</tt> -- If true, will colour the output.
-  def presentation_as_prettyprinted_code(options = {})
-    unless options[:coloured]
-      presentation.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;')
-    else
-      presentation.gsub(/&([^;]+);/, '<font color="blue">&\1;</font>').gsub(/<([^>]+)>/, '<font color="blue">&lt;\1&gt;</font>')
     end
   end
 
