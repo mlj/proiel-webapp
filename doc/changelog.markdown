@@ -1,6 +1,15 @@
+Release 20090807
+----------------
+
+  * Integrated import from Perseus TEI sources (Marius)
+  * Upgraded to Rails 2.3.2 (Marius)
+  * Separate presentation XML on sentences and source divisions
+  (Marius)
+  * Token and lemma definitions altered to share part of speech
+  (Marius)
   * Secondary edge interpretation changed to report actual relation
   tags (Dag and Marius)
-  * Support for non-numeric chapter numbers (Marius)
+  * Support for variable reference systems (Marius)
   * Generated inflections maintained in the database (Marius)
   * Information structure annotation (Anders)
   * Dependency alignment (Marius)
