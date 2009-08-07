@@ -1,4 +1,12 @@
 module LowLevelHelper
+  def validation_stamp(object)
+    if object.valid?
+      ''
+    else
+      image_tag 'invalid.jpeg'
+    end
+  end
+
   def low_level_data_table(object, *methods)
     markaby do
       table.low_level_data do

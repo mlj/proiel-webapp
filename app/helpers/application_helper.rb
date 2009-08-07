@@ -117,11 +117,13 @@ module ApplicationHelper
   end
 
   # Generates a rounded box with a description list inside.
-  def roundedbox(&block)
+  def roundedbox(object = nil, &block)
+    stamp = object ? validation_stamp(object) : ""
+
     content = capture(&block)
-    concat("<div class='roundedbox'><dl>")
+    concat("<div class='roundedbox'><dl style='float: left; width: 90%'>")
     concat(content)
-    concat("</dl></div>")
+    concat("</dl><span style='float: right; padding: 1em 1em 1em 1em;'>" + stamp + "</span><br style='clear: both' /></div>")
   end
 
   # Generates a title header and a set of associated links directly
