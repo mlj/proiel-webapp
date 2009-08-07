@@ -1,12 +1,12 @@
-"cu-ascii":
+"chu-ascii":
   :human_readable_name:
     "Dumb ASCII transliteration"
   :languages:
-    - :cu
+    - :chu
   :scripts:
     - :cyrs
   :machine:
-    "cu-ascii.a"
+    "chu-ascii.a"
 "got-ascii":
   :mode:
     :all
