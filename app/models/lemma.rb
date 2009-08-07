@@ -18,6 +18,7 @@ class Lemma < ActiveRecord::Base
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
   validates_presence_of :part_of_speech
+  validates_uniqueness_of :lemma, :scope => [:language_id, :part_of_speech_id, :variant]
 
   acts_as_audited
 
