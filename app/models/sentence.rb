@@ -87,7 +87,7 @@ class Sentence < ActiveRecord::Base
 
   validate :check_invariants
 
-  acts_as_audited :except => [:annotated_by, :annotated_at, :reviewed_by, :reviewed_at, :tracked_references]
+  acts_as_audited :except => [:annotated_by, :annotated_at, :reviewed_by, :reviewed_at, :reference_fields]
 
   # Returns the language for the sentence.
   def language
