@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090729193651) do
+ActiveRecord::Schema.define(:version => 20090807201325) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -103,7 +103,6 @@ ActiveRecord::Schema.define(:version => 20090729193651) do
     t.datetime "updated_at"
     t.string   "short_gloss",       :limit => 64
     t.text     "full_gloss"
-    t.boolean  "fixed",                           :default => false, :null => false
     t.string   "sort_key",          :limit => 16
     t.text     "foreign_ids"
     t.boolean  "conjecture"

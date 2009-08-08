@@ -62,6 +62,10 @@ class Source < ActiveRecord::Base
     Source.transaction { source_divisions.find_each(&:reindex!) }
   end
 
+  def to_s
+    title
+  end
+
   protected
 
   def self.search(query, options)

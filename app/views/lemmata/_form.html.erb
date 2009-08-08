@@ -4,4 +4,3 @@
 <%= form.collection_select :language_id, Language.find(:all), :id, :name, :required => true, :label => 'Language' %>
 <%= form.text_field :short_gloss %>
 <%= form.text_field :foreign_ids, :help => 'A comma-separated list of key-value pairs that link the lemma to some external resource.' %>
-<%= form.check_box :fixed, :help => 'If true, will ensure that the lemma is not deleted even when no tokens reference it.' %>

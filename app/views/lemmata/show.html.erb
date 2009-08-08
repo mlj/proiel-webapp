@@ -41,7 +41,7 @@
 
 <% layer_if is_reviewer?, "low_level_data" do -%>
   <%= low_level_data_table(@lemma, :id, :language, :morph_features, :short_gloss, :full_gloss, :sort_key,
-                           :foreign_ids, :fixed, :conjecture, :unclear, :reconstructed, :nonexistant,
+                           :foreign_ids, :conjecture, :unclear, :reconstructed, :nonexistant,
                            :inflected, :created_at, :updated_at) %>
 <% end %>
 
