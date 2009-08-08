@@ -37,6 +37,10 @@ module References
       case value
       when Range
         value = [value.first, value.last].join(EN_DASH)
+      when Integer, String
+        value = value.to_s
+      when Array
+        value = value.join(', ')
       else
         raise "Invalid reference_fields value #{value.inspect} for key #{key}"
       end
