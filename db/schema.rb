@@ -236,13 +236,15 @@ ActiveRecord::Schema.define(:version => 20090807201325) do
     t.string  "abbreviation",       :limit => 64,  :default => "", :null => false
     t.integer "language_id",                       :default => 0,  :null => false
     t.text    "tei_header",                                        :null => false
-    t.string  "tracked_references", :limit => 128, :default => "", :null => false
+    t.string  "tracked_references", :limit => 128
+    t.string  "reference_fields",   :limit => 128, :default => "", :null => false
     t.string  "reference_format",   :limit => 256,                 :null => false
   end
 
   create_table "tokens", :force => true do |t|
     t.integer  "sentence_id",                                                                                                                                :default => 0,     :null => false
-    t.integer  "token_number",                                                                                                                               :default => 0
+    t.integer  "verse"
+    t.integer  "token_number",                                                                                                                               :default => 0,     :null => false
     t.string   "form",                         :limit => 64
     t.integer  "lemma_id"
     t.integer  "head_id"

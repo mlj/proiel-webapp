@@ -21,6 +21,8 @@
 #++
 
 module References
+  EN_DASH = Unicode::U2013
+
   # Returns a citation-form reference. This assumes that the attribute
   # +reference_fields+ and +reference_parent+ are defined and that
   # +reference_format+, +tracked_references+, +title+ and
@@ -33,11 +35,8 @@ module References
       key, value = f
 
       case value
-      when Fixnum, String
-        value = value.to_s
-      when Array
-        # FIXME: Merge consecutive numbers to ranges.
-        value = value.join(',')
+      when Range
+        value = [value.first, value.last].join(EN_DASH)
       else
         raise "Invalid reference_fields value #{value.inspect} for key #{key}"
       end
@@ -104,14 +103,75 @@ module References
   end
 
   def serialize_reference(r)
-    r.map { |k, v| "#{k}=#{v}" }.join(',')
+    r.map do |k, v|
+      v = serialize_reference_value(v)
+      "#{k}=#{v}"
+    end.join(',')
+  end
+
+  RANGE_PATTERN = /^(\d+)-(\d+)$/
+  ARRAY_PATTERN = /^\[(.*)\]$/
+
+  def serialize_reference_value(v)
+    # Do a bit of work here to reduce the amount of information and
+    # keep things consistent
+    case v
+    when Range
+      "#{serialize_reference_value(v.first)}-#{serialize_reference_value(v.last)}"
+    when Array
+      if v.length == 0
+        raise ArgumentError, 'invalid empty array value in reference'
+      elsif v.length == 1
+        serialize_reference_value(v.first)
+      else
+        # Check if we are dealing with integers only, which is the
+        # normal case.
+        if v.map(&:to_i).map(&:to_s) == v.map(&:to_s)
+          # Yes, convert to integers, sort and check to see if it is a
+          # continuous range, in which case we swap to a range
+          # representation on the format "x-y".
+          v = v.map(&:to_i).sort
+          v = "#{v.first}-#{v.last}" if (v.first..v.last).to_a == v
+        end
+
+        # If still an array, transpose to our array format, which is
+        # [a,b,c] etc.
+        v = "[#{v.join('-')}]" if v.is_a?(Array)
+
+        v
+      end
+    when String
+      raise ArgumentError, 'invalid value in reference' if v[/[,=-]/] or v[RANGE_PATTERN] or v[ARRAY_PATTERN]
+      v
+    when Integer
+      # Pass through
+      v
+    else
+      raise ArgumentError, "invalid value (#{v.class}) in reference"
+    end
   end
 
   def unserialize_reference(r)
     r.split(',').inject({}) do |s, f|
       k, v = f.split('=')
+      case v
+      when RANGE_PATTERN
+        v = (unserialize_reference_value($1))..(unserialize_reference_value($2))
+      when ARRAY_PATTERN
+        v = $1.split('-').map { |x| unserialize_reference_value(x) }
+      else
+        v = unserialize_reference_value(v)
+      end
       s[k] = v
       s
+    end
+  end
+
+  def unserialize_reference_value(v)
+    if v.to_i.to_s == v
+      v.to_i
+    else
+      v
     end
   end
 
