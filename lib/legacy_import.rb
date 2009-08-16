@@ -43,13 +43,13 @@ class LegacyImport
     
     import.read_tokens(source.tracked_references) do |form, attributes|
       if sd.nil? or sd.title != attributes[:sd_title]
-        
+                
         sd = source.source_divisions.create do |s| 
           s.position = source.source_divisions.last ? source.source_divisions.last.position + 1 : 0
           s.title = attributes[:sd_title]
           s.abbreviated_title = attributes[:sd_abbreviated_title]
           s.reference_fields = attributes[:reference_fields].slice(*source.tracked_references["source_division"]) 
-          s.presentation = attributes[:source_division_presentation].join.gsub(/(<s>)([^<]*)(<\/s>)/, '\2').gsub(/(<w>)([^<]*)(<\/w>)/, '\2').gsub(/(<pc>)([^<]*)(<\/pc>)/, '\2').gsub(/seg[^>]*/, "w")
+          s.presentation = attributes[:source_division_presentation].join.gsub(/(<s>)([^<]*)(<\/s>)/, '\2').gsub(/(<w>)([^<]*)(<\/w>)/, '\2').gsub(/(<pc>)([^<]*)(<\/pc>)/, '\2').gsub(/(<\/*)(seg>)/, '\1w>')
         end
         
         sentence_number = nil
@@ -62,7 +62,7 @@ class LegacyImport
       if sentence_number != attributes[:sentence_number]
         sentence_number = attributes[:sentence_number]
         sentence = sd.sentences.create!(:sentence_number => sentence_number, 
-                                        :presentation => attributes[:sentence_presentation].gsub(/seg[^>]*/, "w").gsub(/expan[^>]*/, "w").gsub(/<\/*add[^>]*>/,"").gsub(/<\/*segmented[^>]*>/, "").gsub(/<\/*del[^>]*>/,"").gsub(/<s> <\/s>(<s> <\/s>)+/, "<s> <\/s>")
+                                        :presentation => attributes[:sentence_presentation].gsub(/(<\/*)(seg>)/, '\1w>').gsub(/(<\/*)(expan[^>]*>)/, '\1w>').gsub(/<\/*add[^>]*>/,"").gsub(/<\/*segmented[^>]*>/, "").gsub(/<\/*del[^>]*>/,"").gsub(/<s> <\/s>(<s> <\/s>)+/, "<s> <\/s>")
 
 
 )

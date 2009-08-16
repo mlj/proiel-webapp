@@ -95,7 +95,7 @@ module PROIEL
                 f = "</del><s> </s>"
               when "<"
                 f = "<add>"
-              when
+              when ">"
                 f = "</add><s> </s>"
               else
                 f = "<pc>#{LegacySource.escape(t.attributes["form"])}</pc>"
