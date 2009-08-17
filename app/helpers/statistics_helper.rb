@@ -29,10 +29,16 @@ module StatisticsHelper
   end
 
   def line_chart(title, data)
+    raise ArgumentError, "No data" if data.length.zero?
+
     x_labels = data.keys
-    skips = (x_labels.length / 6).to_i
-    # Now replace with empty entries except for roughly every skip'th entry
-    x_labels.each_index { |i| x_labels[i] = nil unless i % skips == 0 }
+
+    # If many labels, reduce the number to be more manageable.
+    if x_labels.length > 6
+      skips = (x_labels.length / 6).to_i
+      # Now replace with empty entries except for roughly every skip'th entry
+      x_labels.each_index { |i| x_labels[i] = nil unless i % skips == 0 }
+    end
  
     average = data.length > 0 ? (data.values.sum / data.length).to_i : 0
     alfa, beta = least_squares((0..data.length-1).to_a, data.values)
