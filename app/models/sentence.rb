@@ -126,6 +126,8 @@ class Sentence < ActiveRecord::Base
     tokens.with_citation
   end
 
+  include DependencyExport
+
   # All sentences within a window of +before_limit+ sentences before and
   # +after_limit+ sentences after the sentence within the source division in
   # the order of presentation.
