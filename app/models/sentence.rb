@@ -32,7 +32,7 @@ class Sentence < ActiveRecord::Base
                             head_index
 
                           when 'obl'
-                            if others[head_index + 1].relation &&
+                            if others[head_index + 1] && others[head_index + 1].relation &&
                                                       others[head_index + 1].relation.tag == 'obj'
                               # Position obliques after the object, if any,...
                               head_index + 2
