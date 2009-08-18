@@ -646,9 +646,9 @@ module PROIEL
         t.is_daughter_of_root? or t.head.pos == 'G-' or t.is_coordinated?
       end
 
-      test_token("A subjunction may only be the dependent in a COMP, ADV or APOS relation",
+      test_token("A subjunction may only be the dependent in a COMP, ADV, AUX or APOS relation",
                  lambda { |t| t.pos == 'G-' }) do |t|
-        t.relation == :comp or t.relation == :adv or t.relation == :apos
+        t.relation == :comp or t.relation == :adv or t.relation == :apos or t.relation == :aux
       end
 
       test_token("An infinitive may not be the dependent in an ADV relation",
