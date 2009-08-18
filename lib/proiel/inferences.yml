@@ -224,16 +224,16 @@
     :inferred_relation: obj
 
 #nouns in sentence-level functions
-- :criteria: # adjectives dependent on esse are pivs
+- :criteria: # adjectives dependent on esse are xobjs
     :head_form: est
     :dependent_pos: A-
   :actions:
-    :inferred_relation: piv
-- :criteria: # adjectives dependent on esse are pivs
+    :inferred_relation: xobj
+- :criteria: # adjectives dependent on esse are xobjs
     :head_form: sunt
     :dependent_pos: A-
   :actions:
-    :inferred_relation: piv
+    :inferred_relation: xobj
 - :criteria: # ablatives dependent on ablative participles are subjects
     :language: lat
     :head_mood: p
