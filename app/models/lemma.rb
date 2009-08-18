@@ -15,6 +15,12 @@ class Lemma < ActiveRecord::Base
 
   named_scope :by_variant, lambda { |variant| { :conditions => { :variant => variant } } }
 
+  # Limits the scope to potential completions of +queries+. +queries+
+  # should be an array of strings on the form +foo+ or +foo#1+, where
+  # +foo+ is a prefix of all lemmata to be returned, and +1+ is a
+  # variant number required to be present.
+  named_scope :by_completions, lambda { |queries| { :conditions => build_completion_terms(queries) } }
+
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
   validates_presence_of :part_of_speech
@@ -90,22 +96,26 @@ class Lemma < ActiveRecord::Base
     end
   end
 
-  # Returns lemmata that are possible completions of the lemma +q+ in the language
-  # +language+. The lemma should be given on presentation form, i.e. "lemma" or
-  # "lemma#variant". If no variant is given, both completion with and without
-  # variant numbers will be returned.
-  def self.find_completions(q, language)
-    lemma, variant = q.split(/#/)
-    unless variant.blank?
-      Lemma.find(:all, :include => :language,
-                 :conditions => ["languages.iso_code = ? AND lemma LIKE ? AND variant = ?", language, "#{lemma}%", variant])
-    else
-      Lemma.find(:all, :include => :language,
-                 :conditions => ["languages.iso_code = ? AND lemma LIKE ?", language, "#{lemma}%"])
-    end
-  end
-
   private
+
+  # Returns conditions for a completion query.
+  def self.build_completion_terms(queries)
+    q = queries.map { |query| query.split('#') }
+
+    statement = q.map do |lemma, variant|
+      variant.blank? ? 'lemma LIKE ?' : 'lemma LIKE ? AND variant = ?'
+    end.map { |s| "(#{s})" }.join(' OR ')
+
+    terms = q.map do |lemma, variant|
+      if variant.blank?
+        "#{lemma}%"
+      else
+        ["#{lemma}%", variant]
+      end
+    end.flatten
+
+    [statement] + terms
+  end
 
   def before_validation_cleanup
     self.variant = nil if variant.blank?

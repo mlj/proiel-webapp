@@ -4,27 +4,8 @@ class MorphtagsController < ApplicationController
 
   # Returns potential renderings of transliterated lemmata.
   def auto_complete_for_morphtags_lemma
-    search = params[:morphtags][:lemma]
-
-    # Perform transliteration
-    if !params[:morphtags][:language].blank? and TRANSLITERATORS.has_key?(params[:morphtags][:language].to_sym)
-      xliterator = TransliteratorFactory::get_transliterator(TRANSLITERATORS[params[:morphtags][:language].to_sym])
-      @results = xliterator.transliterate_string(search)
-
-      completion_candidates = @results
-    else
-      @results = []
-
-      completion_candidates = [params[:morphtags][:lemma]]
-    end
-
-    # Auto-complete lemmata
-    completions = completion_candidates.collect do |result|
-      Lemma.find_completions(result, params[:morphtags][:language]).map(&:export_form)
-    end.flatten
-
-    @completions = completions.sort.uniq
-    @transliterations = @results.sort.uniq
+    @transliterations, c = Language.find_lemma_completions(params[:morphtags][:language], params[:morphtags][:lemma])
+    @completions = c.map(&:export_form).sort.uniq
 
     render :partial => "transliterations/input"
   end

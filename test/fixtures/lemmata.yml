@@ -10,3 +10,27 @@ two:
   variant:
   language_id: 1
   part_of_speech_id: 4
+lemma_3:
+  id: 3
+  lemma: bellum
+  variant:
+  language_id: 1
+  part_of_speech_id: 1
+lemma_4:
+  id: 4
+  lemma: belligero
+  variant:
+  language_id: 1
+  part_of_speech_id: 6
+lemma_5:
+  id: 5
+  lemma: cedo
+  variant: 1
+  language_id: 1
+  part_of_speech_id: 6
+lemma_6:
+  id: 6
+  lemma: Cedron
+  variant:
+  language_id: 1
+  part_of_speech_id: 2
