@@ -5,7 +5,7 @@
   <%=h @sentence.citation %> <%= readable_completion(@sentence, :checkmark => :only) %><br/>
   <%= external_text_links(@sentence) %><br/>
   <%= link_to_resources @sentence, :index, :previous, :next, :parent, :delete, :edit %>
-  <%= link_to "Tokenize", :action => :tokenize %>
+  <!-- %= link_to "Tokenize", :action => :tokenize % -->
 <% end %>
 
 <% if is_annotator? or @sentence.is_reviewed? %>
