@@ -1,3 +1,4 @@
+require 'markdown_template_handler'
 require 'google_chart'
 require 'lang_string'
 require 'statistics'

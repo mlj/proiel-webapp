@@ -88,6 +88,7 @@ Rails::Initializer.run do |config|
   config.gem 'libxslt-ruby', :lib => 'libxslt'
   config.gem 'log4r'
   config.gem 'mlj-unicode_normalization_validation', :lib => 'unicode_normalization_validation', :source => 'http://gems.github.com'
+  config.gem 'bluecloth'
 end
 
 # Release number
