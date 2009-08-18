@@ -68,8 +68,10 @@ function areWordElementsAdjacent(left, right) {
 
 function splitWordElement(element) {
   var ts = element.innerHTML.split(tokenDivider);
+  var cs = element.innerHTML.split('');
 
   if (ts.length > 1) {
+    // Split into tokens divided by a token divider.
     element.innerHTML = ts[0];
     element.highlight();
 
@@ -93,6 +95,31 @@ function splitWordElement(element) {
 
       c.insert({ after: m });
       m.insert({ after: n });
+
+      activateWordElement(n);
+      n.highlight();
+
+      c = n;
+    }
+
+    updateForm();
+  } else if (cs.length > 1) {
+    // Split token into characters without dividers between them.
+    element.innerHTML = cs[0];
+    element.highlight();
+
+    var c = element;
+    for (var i = 1; i < cs.length; i++) {
+      var n;
+
+      if (useXML)
+        n = new Element('w');
+      else
+        n = new Element('span', { "class": 'w' });
+
+      n.innerHTML = cs[i];
+
+      c.insert({ after: n });
 
       activateWordElement(n);
       n.highlight();
