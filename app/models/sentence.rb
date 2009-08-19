@@ -694,6 +694,17 @@ class Sentence < ActiveRecord::Base
     end
   end
 
+  # Compares tokenization based on the presentation string with actual
+  # tokenization, if any. Returns true if the tokenization is
+  # identical, i.e. valid, or if the sentence has not been tokenized.
+  def tokenization_valid?
+    # This will be ordered by token number, and that is all we need except the form.
+    t = tokens.word.map(&:form)
+    p = presentation_as_tokens
+
+    !tokenized? or p == t
+  end
+
   # Undoes any tokenization of the sentence. All annotation is also
   # removed.
   def detokenize!
