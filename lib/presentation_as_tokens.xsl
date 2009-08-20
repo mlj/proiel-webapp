@@ -14,7 +14,7 @@
   </xsl:template>
 
   <xsl:template match="w">
-    <xsl:value-of select="."/>
+    <xsl:apply-templates/>
     <xsl:text>#</xsl:text>
   </xsl:template>
 
@@ -24,5 +24,12 @@
 
   <xsl:template match="gap|del|milestone|speaker|lb"/>
 
+  <!-- Accept text within a w element unless matched by any of the
+  above (typically by del) -->
+  <xsl:template match="//w/text()">
+    <xsl:value-of select="."/>
+  </xsl:template>
+
+  <!-- Ignore all text not caught by the w element template above. -->
   <xsl:template match="text()"/>
 </xsl:stylesheet>
