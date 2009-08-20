@@ -86,6 +86,11 @@ class Sentence < ActiveRecord::Base
   validates_unicode_normalization_of :presentation, :form => UNICODE_NORMALIZATION_FORM
 
   validate :check_invariants
+  validate do |s|
+    unless s.presentation_well_formed?
+      s.errors.add_to_base('Presentation string is not well-formed.')
+    end
+  end
 
   acts_as_audited :except => [:annotated_by, :annotated_at, :reviewed_by, :reviewed_at, :reference_fields]
 

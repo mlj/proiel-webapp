@@ -44,4 +44,27 @@ class SentenceTest < ActiveSupport::TestCase
     s.presentation = "<w>anstai</w><s> </s><w>sijuþ</w><s> </s><w>ganasidai</w><pc>—</pc><s> </s><s> </s><milestone n='6' unit='verse'/><s> </s><w>jah</w><s> </s><w>miþurraisida</w><s> </s><w>jah</w><s> </s><w>miþgasatida</w><s> </s><w>in</w><s> </s><w>himinakundaim</w><s> </s><w>in</w><s> </s><w>Xristau</w><s> </s><w>Iesu</w><pc>,</pc><s> </s><s> </s><milestone n='7' unit='verse'/><s> </s><w>ei</w><s> </s><w>ataugjai</w><s> </s><w>in</w><s> </s><w>ald<del>a</del>im</w><s> </s><w>þaim</w><s> </s><w>anagaggandeim</w><s> </s><w>ufarassu</w><s> </s><w>gabeins</w><s> </s><w>anstais</w><s> </s><w>seinaizos</w><s> </s><w>in</w><s> </s><w>selein</w><s> </s><w>bi</w><s> </s><w>uns</w><s> </s><w>in</w><s> </s><w>Xristau</w><s> </s><w>Iesu</w><pc>.</pc>"
     assert_equal ["anstai", "sijuþ", "ganasidai", "jah", "miþurraisida", "jah", "miþgasatida", "in", "himinakundaim", "in", "Xristau", "Iesu", "ei", "ataugjai", "in", "aldim", "þaim", "anagaggandeim", "ufarassu", "gabeins", "anstais", "seinaizos", "in", "selein", "bi", "uns", "in", "Xristau", "Iesu"], s.presentation_as_tokens
   end
+
+  def test_presentation_well_formed?
+    s = Sentence.new
+
+    s.presentation = "<w>anstai</w><s> </s><w>sijuþ</w><s> </s><w>ganasidai</w><pc>—</pc><s> </s><s> </s><milestone n='6' unit='verse'/><s> </s><w>jah</w><s> </s><w>miþurraisida</w><s> </s><w>jah</w><s> </s><w>miþgasatida</w><s> </s><w>in</w><s> </s><w>himinakundaim</w><s> </s><w>in</w><s> </s><w>Xristau</w><s> </s><w>Iesu</w><pc>,</pc><s> </s><s> </s><milestone n='7' unit='verse'/><s> </s><w>ei</w><s> </s><w>ataugjai</w><s> </s><w>in</w><s> </s><w>ald<del>a</del>im</w><s> </s><w>þaim</w><s> </s><w>anagaggandeim</w><s> </s><w>ufarassu</w><s> </s><w>gabeins</w><s> </s><w>anstais</w><s> </s><w>seinaizos</w><s> </s><w>in</w><s> </s><w>selein</w><s> </s><w>bi</w><s> </s><w>uns</w><s> </s><w>in</w><s> </s><w>Xristau</w><s> </s><w>Iesu</w><pc>.</pc>"
+    assert s.presentation_well_formed?
+    assert s.valid?
+
+    # Missing closing tag.
+    s.presentation = "<w>in</w><s> </s><w>Xristau</w><s> </s><w>Iesu</w><pc>."
+    assert !s.presentation_well_formed?
+    assert !s.valid?
+
+    # Missing opening tag.
+    s.presentation = "in</w><s> </s><w>Xristau</w><s> </s><w>Iesu</w><pc>.</pc>"
+    assert !s.presentation_well_formed?
+    assert !s.valid?
+
+    # Unescaped ampersand
+    s.presentation = "&<w>in</w><s> </s><w>Xristau</w><s> </s><w>Iesu</w><pc>.</pc>"
+    assert !s.presentation_well_formed?
+    assert !s.valid?
+  end
 end

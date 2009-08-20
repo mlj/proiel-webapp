@@ -25,6 +25,12 @@ class SourceDivision < ActiveRecord::Base
   has_many :tokens, :through => :sentences, :order => 'sentences.sentence_number ASC, token_number ASC'
   belongs_to :aligned_source_division, :class_name => "SourceDivision"
 
+  validate do |s|
+    unless s.presentation_well_formed?
+      s.errors.add_to_base('Presentation string is not well-formed.')
+    end
+  end
+
   # Returns the previous source division in a source.
   def previous
     source.source_divisions.find(:first, :conditions =>  ["position < ?", position], :order => "position DESC")
