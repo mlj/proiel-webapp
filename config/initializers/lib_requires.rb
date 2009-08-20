@@ -1,4 +1,5 @@
 require 'markdown_template_handler'
+require 'xml_parser'
 require 'google_chart'
 require 'lang_string'
 require 'statistics'
