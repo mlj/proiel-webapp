@@ -128,7 +128,7 @@ module Presentation
   # presupposes that the presentation string already contains
   # tokenization markup.
   def presentation_as_tokens
-    presentation_as(APPLICATION_CONFIG.presentation_as_tokens_stylesheet).split('#')
+    presentation_as(APPLICATION_CONFIG.presentation_as_tokens_stylesheet).split('#').map { |form| form.sub(/^-/, '') }
   end
 
   # Returns true if the presentation XML is well-formed.
