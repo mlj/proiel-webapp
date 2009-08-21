@@ -350,12 +350,23 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  # Split the sentence into a number of sentences. Undoes tokenization
-  # of the sentence and thus also removes all annotation from the
-  # sentence. The symbol or regular expression used for segment splits
-  # is given in +segment_divider+. If the new segmentation produces
-  # only one segment, the presentation string for this sentence is
-  # updated but no new sentence objects are created.
+
+  # Creates a new token and appends it to the end of the sentence. The
+  # function is equivalent to +create!+ except for the automatic
+  # positioning of the new token in the sentence's linearization
+  # sequence.
+  def append_new_token!(attrs = {})
+    tokens.create!(attrs.merge({ :token_number => max_token_number + 1 }))
+  end
+
+  # Split the sentence into a number of sentences. The symbol or
+  # regular expression used for segment splits is given in
+  # +segment_divider+. If the new segmentation produces only one
+  # segment, the presentation string for this sentence is updated but
+  # no new sentence objects are created. It the sentence has valid
+  # tokenization, the old tokens are preserved with their
+  # morphological annotation; else, the tokenization is undone and
+  # all annotation removed.
   def split_sentence!(presentation_string, segment_divider = /\s*\|\s*/)
     raise ArgumentError if presentation_string.blank?
 
@@ -368,7 +379,10 @@ class Sentence < ActiveRecord::Base
       self.save!
     else
       Sentence.transaction do
-        detokenize!
+        self.annotated_by = nil
+        self.annotated_at = nil
+        self.reviewed_by = nil
+        self.reviewed_at = nil
 
         # We need to shift all sentence numbers after this one first. Do it in
         # reverse order to avoid confusing the indices.
@@ -378,30 +392,116 @@ class Sentence < ActiveRecord::Base
           s.save!
         end
 
-        # Update presentation strings.
-        self.presentation = presentation_strings[0]
-        self.save!
-        self.reindex!
-        self.tokenize!
-
-        1.upto(n).map do |i|
-          s = parent.sentences.create!(:sentence_number => sentence_number + i,
-                                       :presentation => presentation_strings[i])
-          s.reference_fields = self.reference_fields
-          s.save!
-          s.reindex!
-          s.tokenize!
+        if tokenized? and tokenization_valid?
+          split_with_tokens!(presentation_strings)
+        else
+          split_without_tokens!(presentation_strings)
         end
       end
     end
   end
 
-  # Creates a new token and appends it to the end of the sentence. The
-  # function is equivalent to +create!+ except for the automatic
-  # positioning of the new token in the sentence's linearization
-  # sequence.
-  def append_new_token!(attrs = {})
-    tokens.create!(attrs.merge({ :token_number => max_token_number + 1 }))
+  private
+
+  # Split the sentence into a number of sentences destructively,
+  # ie. undoing and regenerating the tokenization.
+  def split_without_tokens!(presentation_strings)
+
+    self.detokenize!
+    self.presentation = presentation_strings[0]
+    self.save!
+    self.reindex!
+    self.tokenize!
+
+    1.upto(presentation_strings.size - 1).map do |i|
+      s = parent.sentences.create!(:sentence_number => sentence_number + i,
+                                   :presentation => presentation_strings[i],
+                                   :assigned_to => self.assigned_to)
+      s.reference_fields = self.reference_fields
+      s.save!
+      s.reindex!
+      s.tokenize!
+    end
+  end
+
+  # Split the sentence into a number of sentences non-destructively,
+  # ie. keeping the tokenization.
+  def split_with_tokens!(presentation_strings)
+    # This can only be done to sentences that are actually tokenized and have a valid tokenization
+    raise "Sentence is untokenized" unless tokenized?
+    raise "Invalid tokenization" unless tokenization_valid?
+
+    self.tokens.reload
+    self.presentation = presentation_strings[0]
+    self.save!
+    self.reindex!
+
+    used_tokens = self.presentation_as_tokens.size
+
+    1.upto(presentation_strings.size - 1).map do |i|
+      s = parent.sentences.create!(:sentence_number => sentence_number + i,
+                                   :presentation => presentation_strings[i],
+                                   :assigned_to => self.assigned_to)
+      s.reference_fields = self.reference_fields
+      s.save!
+      s.reindex!
+      sentence_tokens = self.tokens.slice(used_tokens...used_tokens + s.presentation_as_tokens.size)
+      sentence_tokens.each do |t|
+        t.sentence_id = s.id
+        # Make tokens that have heads outside the sentence daughters
+        # of the root, with pred relations unless they happen to be
+        # vocatives or parpreds
+        unless sentence_tokens.include?(t.head)
+          t.head_id = nil
+          t.relation = Relation.find_by_tag('pred') if t.relation and !['voc', 'parpred'].include?(t.relation.tag)
+        end
+        t.save!
+      end
+      # now check if there are empty tokens somewhere in the subgraph
+      # that have not been included among the sentence tokens; if so,
+      # include them to this sentence
+      sentence_tokens.map(&:subgraph_set).flatten.uniq.select { |d| !d.empty_token_sort.nil? }.each do |t|
+        t.sentence_id = s.id
+        t.save!
+      end
+      s.tokens.reload
+      # Try to save the sentence. If it passes validation, we're fine,
+      # else we'll have to remove the syntax and information structure
+      # and try again
+      begin
+        s.save!
+      rescue
+        s.remove_syntax_and_info_structure
+        s.tokens.reload
+        s.save!
+      end
+      used_tokens += s.presentation_as_tokens.size
+    end
+    # Finally, check if the original sentence is still valid after all the token removals; if not, delete its syntax
+    begin
+      self.save!
+    rescue
+      self.remove_syntax_and_info_structure
+      self.save!
+    end
+  end
+
+  protected
+
+  # Deletes all syntactic and information structural annotation from the sentence
+  def remove_syntax_and_info_structure
+    self.tokens.each do |t|
+      if t.is_empty?
+        t.destroy
+      else
+        t.relation_id = nil
+        t.head_id = nil
+        t.slash_out_edges.each { |sl| sl.destroy }
+        t.info_status = nil
+        t.antecedent_id = nil
+        t.save!
+      end
+    end
   end
 
   private
