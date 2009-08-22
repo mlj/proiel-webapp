@@ -26,7 +26,7 @@ module ActionView
       end
 
       def render(template, local_assigns = {})
-        markdown(template.source)
+        '<span class="markdown">' + markdown(template.source) + '</span>'
       end
     end
   end
