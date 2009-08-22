@@ -1,3 +1,9 @@
+Change log
+==========
+
+This is a list of major changes between the releases of the
+application.
+
 Release 20090807
 ----------------
 

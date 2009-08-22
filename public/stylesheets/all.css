@@ -304,13 +304,6 @@ a.token {
 
 .tag { font-family: Courier, monospace; }
 
-/* Documentation */
-
-p.doc-img { 
-  text-align: center;
-  padding-top: .5em;
-}
-
 /* Statistics */
 div.statistics { margin-top: 2em; }
 div.statistics img { float: left; }
@@ -391,15 +384,73 @@ input:hover {
 }
 
 /* Markdown documentation pages */
+.markdown {
+  margin: auto;
+  padding-right: 2em;
+  padding-left: 2em;
+  color: black;
+  font-size: 100%;
+  line-height: 140%;
+}
+
+.markdown pre, .markdown p, .markdown img {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
 .markdown img {
   display: block;
   margin-left: auto;
   margin-right: auto;
-
-  padding-top: 1em;
-  padding-bottom: 1em;
 }
 
 .markdown code {
   font-family: Courier, monospace;
+}
+
+.markdown pre {
+  border: 1px dotted gray;
+  background-color: #ececec;
+  color: #1111111;
+  padding: 0.5em;
+  margin-left: 2em;
+}
+
+.markdown h1, .markdown h2, .markdown h3, .markdown h4, .markdown h5 {
+  font-family: verdana;
+  font-weight: bold;
+  color: #678090;
+}
+
+.markdown h1 {
+  font-size: 150%;
+}
+
+.markdown h2 {
+  font-size: 130%;
+}
+
+.markdown h3 {
+  font-size: 110%;
+}
+
+.markdown h4, .markdown h5 {
+  font-size: 100%;
+  font-style: italic;
+}
+
+.markdown h1.title {
+  font-size: 200%;
+  font-weight: bold;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  text-align: left;
+  border: none;
+}
+
+.markdown dt code {
+        font-weight: bold;
+}
+.markdown dd p {
+        margin-top: 0;
 }

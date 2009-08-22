@@ -14,9 +14,9 @@ A number of these tasks are explained in more detail below.
 `proiel:morphology:reassign`
 ----------------------------
 
-This task is used to change all occurrences of a particular value of a morphological
-field to another value in the +tokens+ table, i.e. to change the
-+source_morphology+ field. For example
+This task is used to change all occurrences of a particular value of a
+morphological field to another value in the `tokens` table, i.e. to
+change the `source_morphology` field. For example
 
     $ rake proiel:morphology:reassign FIELD=voice FROM=o TO=p
     ...
@@ -152,7 +152,7 @@ Example:
 This task is used to list TEI sources that have been registered and
 are available for import.
 
-Set +TEI_BASE+ to the directory containing the TEI files.
+Set `TEI_BASE` to the directory containing the TEI files.
 
 Example:
 
@@ -170,16 +170,16 @@ Example:
 This task dumps a TEI source text as PROIEL XML by running it through
 the same conversion process that is applied when importing a TEI text.
 
-Set +TEI_BASE+ to the directory containing the TEI files, and provide
-the text identifier in +ID+.
+Set `TEI_BASE` to the directory containing the TEI files, and provide
+the text identifier in `ID`.
 
 `proiel:text:tei:import`
 ------------------------
 
 This task imports a TEI source text.
 
-Set +TEI_BASE+ to the directory containing the TEI files, and provide
-the text identifier in +ID+.
+Set `TEI_BASE` to the directory containing the TEI files, and provide
+the text identifier in `ID`.
 
 `proiel:text:tei:import:all`
 ----------------------------
@@ -205,13 +205,13 @@ the default export path is used.
 This task imports inflections. The data should be a comma separated
 files with the following fields:
 
-  1. Language code
-  2. Lemma and optional variant number separated by a hash mark (#)
-  3. Part of speech
-  4. Inflected form
-  5. Positional tag(s) with morphology
+  * Language code
+  * Lemma and optional variant number separated by a hash mark (#)
+  * Part of speech
+  * Inflected form
+  * Positional tag(s) with morphology
 
-e.g.
+Example:
 
     got,and-haitan,,andhaihaist,V-2suia-----
 
