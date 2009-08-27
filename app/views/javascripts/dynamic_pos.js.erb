@@ -202,7 +202,7 @@ function present_tags(morphtag) {
 }
 
 function present_pos_tag(pos) {
-  return pos_abbreviated_summaries[pos];
+  return pos_abbreviated_summaries[pos] || '&nbsp;';
 }
 
 function present_morphology(morphology) {
