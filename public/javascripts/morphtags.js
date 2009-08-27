@@ -140,12 +140,12 @@ function getTokenIDs() {
   return $F('token-ids').evalJSON();
 }
 
-function validateLemmata() {
+function validateToken() {
   var errors = new Array();
   var ids = getTokenIDs();
 
   ids.each(function(id) {
-    if ($F("lemma-" + id) == "") {
+    if (!$F("morph-features-" + id)) {
       errors.push(id);
       validated = false;
     }
@@ -155,7 +155,7 @@ function validateLemmata() {
 }
 
 function validate(ev) {
-  var errors = validateLemmata().uniq();
+  var errors = validateToken().uniq();
 
   if (errors.length > 0) {
     alert("Annotation is incomplete. Please correct the indicated errors before saving.");
