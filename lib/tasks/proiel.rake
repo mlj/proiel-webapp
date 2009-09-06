@@ -200,6 +200,56 @@ namespace :proiel do
     end
   end
 
+  namespace :bilingual_dictionary do
+    desc "Create a dictionary based on collocation measures. Options: SOURCE=source_id, FORMAT=human or id, FILE=outfile, METHOD=association score method"
+    task(:create => :myenvironment) do
+      require 'alignment/dictionary_creator'
+      source = ENV['SOURCE'].to_i
+      raise "Missing argument" unless source
+      format = ENV['FORMAT'].to_sym if ENV['FORMAT']
+      format ||= :id
+      file = ENV['FILE']
+      raise "Missing argument" unless file
+      method = ENV['METHOD'].to_sym if ENV['METHOD']
+      method ||= :zvtuuf
+      dc = DictionaryCreator.new(source, format, file, method)
+      dc.execute
+    end
+  end
+
+  namespace :token_alignments do
+    desc "Set token alignments. Options: SOURCE=source_id or SOURCE_DIVISION=source_division_id, FORMAT={human|csv|db}, FILE=outfile DICTIONARY=dictionary file"
+    task(:set => :myenvironment) do
+      require 'alignment/token_aligner'
+      format = ENV['FORMAT']
+      format ||= 'db'
+      file_name = ENV['FILE']
+      file_name ||= STDOUT
+      raise "Missing argument DICTIONARY" unless ENV['DICTIONARY']
+      dictionary = Lingua::Collocations.new(File.join(RAILS_ROOT, "lib", ENV['DICTIONARY']))
+
+      source = ENV['SOURCE']
+      source_division = ENV['SOURCE_DIVISION']
+      raise "You can't specify both SOURCE and SOURCE_DIVISION" if source and source_division
+
+      if source_division
+        if source_division.include?('-')
+          source_division = (source_division.split('-')[0].to_i)..(source_division.split('-')[1].to_i)
+        else
+          source_division = [source_division]
+        end
+        sds = source_division.map { |sd| SourceDivision.find(sd) }
+      elsif source
+        sds = Source.find(source).source_divisions
+      else
+        raise "Missing argument"
+      end
+
+      ta = TokenAligner.new(dictionary, format, sds, file_name)
+      ta.execute
+    end
+  end
+
   namespace :dependency_alignments do
     desc "Import dependency alignments. Options: FILE=csv_file"
     task(:import => :myenvironment) do

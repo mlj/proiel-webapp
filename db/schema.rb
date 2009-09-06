@@ -276,6 +276,7 @@ ActiveRecord::Schema.define(:version => 20090817093221) do
   add_index "tokens", ["morphology_id"], :name => "index_tokens_on_morphology_id"
   add_index "tokens", ["relation_id"], :name => "index_tokens_on_relation_id"
   add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true
+  add_index "tokens", ["token_alignment_id"], :name => "index_tokens_on_token_alignment_id"
 
   create_table "users", :force => true do |t|
     t.string   "login",                                   :default => "",        :null => false

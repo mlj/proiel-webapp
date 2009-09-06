@@ -220,3 +220,71 @@ Example:
 
 This task exports inflections. The format is the same as for
 `proiel:inflections:import`.
+
+`proiel:bilingual_dictionary:create`
+------------------------------------
+
+This task creates a dictionary of lemmas in the specified source with
+their presumed equivalents in the Greek original. The `SOURCE` should be
+the ID of the source to process. The lemmas will be referred to
+using the database ID unless `FORMAT`=`human` is set, in which case their
+export_form will be used instead. The dictionary is written to the
+specified `FILE`.
+
+The `METHOD` argument specifies the statistical method used to compute
+collocation significance. The default is `zvtuuf`, which is a log
+likelihood measure. Other options are `dunning`, which is Dunning's
+log likelihood measure, and `fisher`, which is Fisher's exact
+test. The latter method requires a working installation of R and the
+rsruby gem.
+
+The format of the resulting dictionary file is the following. The
+first line contains the number of aligned chunks (i.e. Bible verses)
+the dictionary was based on. Next there is one line for each lemma of
+the processed source, containing comma separated data: first, the
+lemma export form or ID, next the frequency of that lemma, and then
+the thirty most plausible Greek original lemmas (most plausible
+first). For each Greek lemma, the export form or ID is given, followed
+by semi-colon separated information about that lemma and its
+co-occurrence with the given translation lemma. The following
+information is available:
+
+  1. `cr` = a measure combining the rank of the translation lemma as a
+  correspondence to the original lemma, and the original lemma as a
+  correspondence to the translation lemma. The value is 1 divided by
+  the square root of the product of the two ranks, so if both lemma's
+  are the best correspondences to each other, the value will be
+  1.0. This is the value used to rank the translations.
+  2. `sign` = the
+  log likelihood or significance value returned by the given
+  statistical test. This is used to produce the ranks that go into `cr`.
+  3. `cooccurs` = the number of times the two lemmas co-occur in the same
+  aligned chunk.
+  4. `occurs` = the number of times the given Greek
+  lemma occurs in the chunks that went into the creation of the
+  dictionary.
+
+Thus
+
+    misso,freq=42,ἀλλήλων{cr=1.0;sign=13.6667402646542;cooccurs=33;occurs=36}
+
+means that the Gothic lemma `misso` occurs 42 times, its best Greek
+equivalent is ἀλλήλων, their combined rank is 1.0, the log likelihood
+value of the collocation is 13.66, the two lemmas co-occur 33 times,
+and ἀλλήλων occurs 36 times.
+
+`proiel:token_alignments:set`
+-----------------------------
+
+This tasks generates token alignments, guessing at which Greek tokens
+correspond to which translation tokens. The task requires that a
+dictionary file (on ID format) is present in the lib directory, and
+the name of this file must be given as the value of the `DICTIONARY`
+argument.
+
+Either a `SOURCE` or a (sequence of) `SOURCE_DIVISION`(s) to be
+aligned must be specified. SOURCE_DIVISION can take single
+source_division ID or a range of IDs (e.g. 346--349). The default
+`FORMAT` is `db`, which writes the alignments to the database. Other
+formats are `csv` and `human`, which write the alignments on CSV or
+human-readable format to standard out, or to the specified `FILE`.

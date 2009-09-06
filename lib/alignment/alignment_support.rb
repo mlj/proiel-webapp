@@ -29,7 +29,7 @@
 # make up a list of sentence pairs which has to be monotonic for the
 # function to function properly. Also, sentences with a
 # +sentence_alignment+ association are assumed not to have +unalignable+ set.
-# 
+#
 # +sentences1+ contains sentences from the primary source and +sentences2+
 # sentences from some secondary source that should be aligned with the primary
 # source. All sentences in both lists must be part of the final alignment, and
