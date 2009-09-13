@@ -274,7 +274,7 @@ end
 module PROIEL
   class ValidatingDependencyGraphNode < Lingua::DependencyGraphNode
     def is_empty?
-      @data[:empty] or identifier == :root
+      (@data[:empty] or identifier == :root) ? true : false
     end
 
     def token_number
