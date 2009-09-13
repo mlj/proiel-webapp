@@ -176,9 +176,10 @@ class Sentence < ActiveRecord::Base
         self.reference_fields = self.presentation_as_reference
         source_division.save!
       else
-        # Merge with what we had in the last sentence, but
-        # overwrite with new information.
-        self.reference_fields = previous.reference_fields.merge(presentation_as_reference)
+        # Merge with what we had in the last sentence, but only keep
+        # the last element in arrays or ranges, and always overwrite
+        # with new information.
+        self.reference_fields = previous.last_of_reference_fields.merge(presentation_as_reference)
         raise "Referencing inconsistency: source division unexpectedly changed" if source_division.changed?
       end
 

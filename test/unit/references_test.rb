@@ -49,4 +49,36 @@ class ReferencesTestCase < ActiveSupport::TestCase
     assert_equal({ "verse" => [1, 3, 4] }, unserialize_reference("verse=[1-3-4]"))
     assert_equal({ "verse" => [1, "prol."] }, unserialize_reference("verse=[1-prol.]"))
   end
+
+  def test_last_of_reference_fields
+    class Mock
+      attr_accessor :r
+
+      include References
+
+      def reference_fields
+        @r
+      end
+    end
+
+    m = Mock.new
+
+    m.r = { "verse" => 1 }
+    assert_equal { "verse" => 1 }, m.last_of_reference_fields
+
+    m.r = { "verse" => "prol." }
+    assert_equal { "verse" => "prol." }, m.last_of_reference_fields
+
+    m.r = { "verse" => 1..2 }
+    assert_equal { "verse" => 2 }, m.last_of_reference_fields
+
+    m.r = { "verse" => 1..4 }
+    assert_equal { "verse" => 4 }, m.last_of_reference_fields
+
+    m.r = { "verse" => [1, 3, 4] }
+    assert_equal { "verse" => 4 }, m.last_of_reference_fields
+
+    m.r = { "verse" => [1, "prol."] }
+    assert_equal { "verse" => "prol." }, m.last_of_reference_fields
+  end
 end

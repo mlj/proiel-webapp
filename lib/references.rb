@@ -57,13 +57,22 @@ module References
   end
 
   # Returns the reference fields. Also merges in fields from parent
-  # level.
+  # levels.
   def reference_fields
     if reference_parent
       reference_parent.reference_fields.merge(read_reference)
     else
       read_reference
     end
+  end
+
+  # Returns the reference fields, but only the last element of the
+  # values for each reference. Also merges in fields from parent
+  # levels.
+  def last_of_reference_fields
+    Hash[*reference_fields.map do |k, v|
+      [k, (v.is_a?(Array) or v.is_a?(Range)) ? v.last : v]
+    end.flatten]
   end
 
   protected
