@@ -141,7 +141,7 @@ module Presentation
 
   def presentation_as(xsl, parameters = {})
     s = XMLParser.instance.transform_s('<presentation>' + presentation + '</presentation>', xsl, parameters)
-    raise "Invalid presentation string for sentence #{id}: #{x.errors.join(', ')}" unless s
+    raise "Invalid presentation string #{presentation} for sentence #{id}: #{XMLParser.instance.errors.join(', ')}" unless s
 
     s
   end
