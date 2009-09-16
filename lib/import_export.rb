@@ -53,7 +53,8 @@ class NoteImportExport < CSVImportExport
 end
 
 class InfoStatusesImportExport < CSVImportExport
-  def initialize
+  def initialize(sd = nil)
+    @sd = SourceDivision.find(sd)
     super :token, :info_status, :antecedent
   end
 
@@ -104,7 +105,6 @@ class InfoStatusesImportExport < CSVImportExport
   end
 
   def create_prodrop_relation(sentence, prodrop_id, relation, verb_id, info_status = nil)
-
     graph = sentence.dependency_graph
     verb_node = graph[verb_id]
     verb_token = Token.find(verb_id)
@@ -128,10 +128,13 @@ class InfoStatusesImportExport < CSVImportExport
     prodrop_token
   end
 
-
-  def write_fields #(token, info_status, antecedent)
-    export_tokens = Token.find(:all, :conditions => ["info_status is not null and info_status != 'info_unannotatable'"]).each do |t|
-      STDERR.puts "Now doing token #{t.id} of status #{t.info_status} and antecedent #{t.antecedent_id}"
+  def write_fields
+    conditions = if @sd
+                   ["info_status is not null and info_status != 'info_unannotatable' and sentence_id in (?)", @sd.sentences]
+                 else
+                   ["info_status is not null and info_status != 'info_unannotatable'"]
+                 end
+    Token.find(:all, :conditions => conditions).each do |t|
       case t.empty_token_sort
       when "P"
         token = "#{t.head.id}+#{t.relation.tag}"
