@@ -47,7 +47,7 @@ module Presentation
   # <tt>:length_limit</tt> -- If set, will limit the length of
   # the formatted sentence to the given number of words and append an
   # ellipsis if the sentence exceeds that limit. If a negative number
-  # is given, the ellipis is prepended to the sentence. The conversion
+  # is given, the ellipsis is prepended to the sentence. The conversion
   # will also use a less rich form of HTML.
   def presentation_as_html(options = {})
     xsl_params = {
@@ -56,7 +56,7 @@ module Presentation
     }
     xsl_params[:sectionNumbers] = "1" if options[:section_numbers]
 
-    if limit = options[:length_limit]
+    markup = if limit = options[:length_limit]
       s = presentation_as(APPLICATION_CONFIG.presentation_as_minimal_html_stylesheet, xsl_params)
 
       # We assume here that all strings have an outer span with a
@@ -81,6 +81,8 @@ module Presentation
     else
       presentation_as(APPLICATION_CONFIG.presentation_as_html_stylesheet, xsl_params)
     end
+
+    "<span class='formatted-text'>#{markup}</span>"
   end
 
   def presentation_as_editable_html

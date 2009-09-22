@@ -454,3 +454,15 @@ input:hover {
 .markdown dd p {
         margin-top: 0;
 }
+
+/* Formatted (presentation) text */
+.formatted-text add:before { content: '<'; }
+.formatted-text add:after { content: '>'; }
+
+.formatted-text del { text-decoration: line-through; }
+.formatted-text del:before { content: '['; }
+.formatted-text del:after { content: ']'; }
+
+.formatted-text .unclear { font-style: italic; }
+.formatted-text .unclear:before { content: '('; }
+.formatted-text .unclear:after { content: ')'; }

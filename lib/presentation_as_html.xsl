@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
   <xsl:output
           method="xml"
           encoding="UTF-8"
@@ -44,15 +42,15 @@
 
   <!-- Editorial mark-up -->
   <xsl:template match="add">
-    <xsl:text>&lt;</xsl:text><xsl:apply-templates/><xsl:text>&gt;</xsl:text>
+    <add><xsl:apply-templates/></add>
   </xsl:template>
 
   <xsl:template match="del">
-    <xsl:text>[</xsl:text><xsl:apply-templates/><xsl:text>]</xsl:text>
+    <del><xsl:apply-templates/></del>
   </xsl:template>
 
   <xsl:template match="unclear">
-    <xsl:text>(</xsl:text><xsl:apply-templates/><xsl:text>)</xsl:text>
+    <span class="unclear"><xsl:apply-templates/></span>
   </xsl:template>
 
   <xsl:template match="gap">

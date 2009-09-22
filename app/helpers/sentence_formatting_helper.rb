@@ -36,6 +36,8 @@ module SentenceFormattingHelper
       s = link_to(s, sentence) unless options[:ignore_links]
       m + s
     end.join(' ')
+
+    "<span class='formatted-text'>#{markup}</span>"
   end
 
   # Formats one or more sentences as HTML using their content format.
@@ -86,7 +88,8 @@ module SentenceFormattingHelper
 
     raise "Invalid value of type #{value.class}" if x.nil?
 
-    format_tokens(x, x.first.language, options)
+    markup = format_tokens(x, x.first.language, options)
+    "<span class='formatted-text'>#{markup}</span>"
   end
 
   private
