@@ -174,7 +174,7 @@ class Sentence < ActiveRecord::Base
     Sentence.transaction do
       unless has_previous?
         self.reference_fields = self.presentation_as_reference
-        source_division.save!
+        source_division.save_without_validation!
       else
         # Merge with what we had in the last sentence, but only keep
         # the last element in arrays or ranges, and always overwrite
@@ -183,7 +183,7 @@ class Sentence < ActiveRecord::Base
         raise "Referencing inconsistency: source division unexpectedly changed" if source_division.changed?
       end
 
-      save!
+      save_without_validation!
     end
   end
 
