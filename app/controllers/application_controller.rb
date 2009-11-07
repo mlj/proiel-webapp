@@ -10,8 +10,6 @@ class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   before_filter :login_required
 
-  include ExceptionNotifiable
-
   layout 'proiel' 
 
   def user_is_reviewer?
