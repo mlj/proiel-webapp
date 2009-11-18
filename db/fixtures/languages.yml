@@ -19,3 +19,7 @@ languages_005:
   name: Gothic
   id: "5"
   iso_code: got
+languages_006: 
+  name: Old Norse
+  id: "6"
+  iso_code: non
