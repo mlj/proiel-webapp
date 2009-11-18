@@ -71,9 +71,6 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
 
   config.gem 'mislav-will_paginate', :version => '~> 2.3.2', :lib => 'will_paginate', :source => 'http://gems.github.com'
-  # Versions > 0.5.2 of r_c mess with Rails' dependency loading system. Is it
-  # already time to migrate away from r_c?
-  config.gem 'resource_controller', :lib => 'resource_controller', :version => '0.5.2'
   config.gem 'unicode'
   config.gem 'oniguruma'
   config.gem 'builder'
