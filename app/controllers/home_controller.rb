@@ -31,14 +31,16 @@ class HomeController < ApplicationController
     query = params[:q] || ""
     query.strip!
 
-    if m = query.match(LOCATION_SEARCH_PATTERN) 
+    if m = query.match(LOCATION_SEARCH_PATTERN)
       all, source, book = m.to_a
       source = Source.find(:first, :conditions => [ "code like ? or abbreviation like ?", "#{source}%", "#{source}%" ])
-      d = source.source_divisions.find(:first, :conditions => [ "title LIKE ? OR abbreviated_title LIKE ?", "#{book}%", "#{book}%" ])
-      if d
-        redirect_to source_division_url(d)
-      else
-        redirect_to source_divisions_url
+      if source
+        d = source.source_divisions.find(:first, :conditions => [ "title LIKE ? OR abbreviated_title LIKE ?", "#{book}%", "#{book}%" ])
+        if d
+          redirect_to source_division_url(d)
+        else
+          redirect_to source_divisions_url
+        end
       end
     elsif m = query.match(ANNOTATION_SEARCH_PATTERN)
       redirect_to sentence_url($1)
