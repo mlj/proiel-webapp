@@ -110,4 +110,21 @@ class SourceDivision < ActiveRecord::Base
 
     paginate options
   end
+
+  public
+
+  # Compares segmentation based on the presentation string with actual
+  # segmentation, if any. Returns true if the segmentation is
+  # identical, i.e. valid, or if the sentence has not been segmented.
+  def segmentation_valid?
+    s = sentences.map(&:presentation_as_text).flatten.join(' ')
+    p = presentation_as_text
+
+    !segmented? or p == s
+  end
+
+  # Returns true if the source division has been segmented, false otherwise.
+  def segmented?
+    true # FIXME: for future use, always return true for now
+  end
 end
