@@ -26,11 +26,9 @@
     != stylesheet_link_tag "all"
     != stylesheet_link_tag "pagination"
     != stylesheet_link_tag "message_block"
-    != stylesheet_link_tag "semantic_forms" unless params[:controller] == 'info_statuses' or params[:controller] == 'sentence_divisions'
     != stylesheet_link_tag "screen",     :media => "screen"
     != stylesheet_link_tag "print",      :media => "print"
     != stylesheet_link_tag "projection", :media => "projection"
-    != stylesheet_link_tag "purple"
 
     != yield :head
 

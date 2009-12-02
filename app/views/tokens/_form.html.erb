@@ -1,5 +1,5 @@
-<%= form.text_field :form, :required => true %>
-<%= form.text_field :empty_token_sort %>
-<%= form.collection_select :morphology_id, Morphology.all, :id, :abbreviated_summary, :include_blank => true, :label => 'Morphology' %>
-<%= form.collection_select :lemma_id, @token.language.lemmata.find(:all, :order => [ "lemma ASC" ]), :id, :export_form, :include_blank => true, :label => 'Lemma' %>
-<%= form.text_field :foreign_ids, :help => 'A comma-separated list of key-value pairs that link the lemma to some external resource.' %>
+<%= form.input :form %>
+<%= form.input :empty_token_sort, :required => false %>
+<%= form.input :morphology, :label_method => :abbreviated_summary, :required => false %>
+<%= form.input :lemma, :collection => @token.language.lemmata.find(:all, :order => [ "lemma ASC" ]), :label_method => :export_form, :required => false %>
+<%= form.input :foreign_ids, :hint => 'A comma-separated list of key-value pairs that link the lemma to some external resource.', :label => 'Foreign IDs', :required => false %>

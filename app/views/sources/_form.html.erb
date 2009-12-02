@@ -1,5 +1,7 @@
-<%= form.text_field :title, :required => true, :help => 'Full title of source' %>
-<%= form.text_field :abbreviation, :help => 'Abbreviated title to be used in references' %>
-<%= form.collection_select :language_id, Language.find(:all), :id, :name, :required => true, :label => 'Language' %>
-<%= form.text_area :tei_header, :required => true, :label => 'TEI header' %>
-<%= form.text_area :tracked_references, :required => true, :label => 'Tracked references' %>
+<%= form.input :title, :help => 'Full title of source' %>
+<%= form.input :abbreviation, :help => 'Abbreviated title to be used in references' %>
+<%= form.input :language, :label_method => :name %>
+<%= form.input :tracked_references %>
+<%= form.input :reference_fields %>
+<%= form.input :reference_format %>
+<%= form.input :tei_header, :label => 'TEI header' %>

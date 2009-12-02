@@ -1,6 +1,4 @@
-<div>
-  <% form_for(@source_division) do |form| %>
-    <%= render :partial => 'form', :object => form %>
-    <%= form.submit "Update" %>
-  <% end %>
-</div>
+<% semantic_form_for @source_division do |form| %>
+  <%= render :partial => 'form', :object => form %>
+  <%= form.submit "Update" %>
+<% end %>

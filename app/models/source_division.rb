@@ -154,4 +154,10 @@ class SourceDivision < ActiveRecord::Base
   def segmented?
     true # FIXME: for future use, always return true for now
   end
+
+  # Returns a collection of source divisions that are candidates for
+  # alignment with this source division.
+  def alignment_candidates
+    SourceDivision.find(:all, :conditions => ["source_id != ?", self.source.id])
+  end
 end

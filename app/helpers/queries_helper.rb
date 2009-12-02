@@ -5,7 +5,7 @@ module QueriesHelper
     content = capture(&block)
     concat(form_tag_html(html_options))
     concat(content)
-    concat(submit_tag(options[:submit] || 'Search', :name => nil) + '</form>')
+    concat(submit_tag(options[:submit] || 'Search', :name => nil) + '</form>'.html_safe)
   end
 
   def collection_select_tag(method, collection, value_method, text_method, options = {}, html_options = {})

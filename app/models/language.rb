@@ -1,4 +1,6 @@
 class Language < ActiveRecord::Base
+  default_scope :order => 'name ASC'
+
   has_many :lemmata
   has_many :sources
   has_many :inflections
@@ -68,7 +70,6 @@ class Language < ActiveRecord::Base
 
   def self.search(query, options)
     options[:conditions] ||= ["name LIKE ?", "%#{query}%"]
-    options[:order] ||= "name ASC"
 
     paginate options
   end

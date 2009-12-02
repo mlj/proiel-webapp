@@ -1,8 +1,8 @@
 - title "Sign in"
 
-- form_for resource_name, resource, :url => session_path(resource_name) do |f|
-  != f.text_field :login, :label => 'User name'
-  != f.password_field :password
+- semantic_form_for resource_name, resource, :url => session_path(resource_name) do |f|
+  != f.input :login, :label => 'User name'
+  != f.input :password
 
   - if devise_mapping.rememberable?
     != f.check_box :remember_me

@@ -4,3 +4,4 @@ doc/api
 doc/app
 config/database.yml
 *.sqlite3
+.sass-cache

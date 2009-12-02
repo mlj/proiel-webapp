@@ -1,5 +1,5 @@
-<% form_for(@source) do |form| %>
-  <%= form.text_field :code, :required => true, :help => 'Identifying tag for the source', :label => 'Tag' %>
+<% semantic_form_for @source do |form| %>
+  <%= form.input :code, :label => 'Tag' %>
   <%= render :partial => 'form', :object => form %>
   <%= form.submit "Create" %>
 <% end %>

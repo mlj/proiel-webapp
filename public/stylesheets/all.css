@@ -1,7 +1,4 @@
-/* Site-wide, layout independent stuff */
-
 /* Reset style */
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -30,7 +27,6 @@ body {
 }
 
 /* Font family */
-
 body {
   font-family: sans-serif;
   line-height: 1.4em;
@@ -42,11 +38,6 @@ body {
 }
 
 /* "Typography" */
-
-a { text-decoration: underline; }
-a:link { color: #678090; }
-a:visited { color: #678090; }
-a:link:hover, a:visited:hover { color: #6F9DBE; }
 
 h1 {
   font-weight: bold;
@@ -65,10 +56,6 @@ h3 { font-weight: bold; }
 
 tt { font-family: proportional; }
 em { font-style: italic; }
-abbr {
-  font-stretch: condensed;
-  border-bottom: dotted orange 1px;
-}
 
 blockquote:before, q:before { content: '\2018'; }
 blockquote:after, q:after { content: '\2019'; }
@@ -106,7 +93,6 @@ caption, th, td {
 
 th[colspan] { text-align: center; }
 th { font-weight: bold; }
-thead, tfoot { background-color: #f0f0f0; }
 
 /* Generic "text effects" */
 
@@ -203,32 +189,6 @@ h1.layer-title { display: inline; }
   margin-bottom: 1em;
   margin-left: 1em;
   margin-right: 1em;
-}
-
-/* Legends */
-
-div.legend {
- font-size: 75%;
- margin: 1em 0;
- padding: .5em;
- overflow: hidden;
-}
-
-.legend h3 { display: none; }
-
-.legend dt {
- border: 1px solid #999;
- float: left;
- margin: .1em .5em .1em 2em;
- width: .8em; height: .8em;
-}
-
-.legend dl, .legend dd {
- display: inline;
- float: left;
- padding: 0;
- margin: 0;
- margin-right: .5em;
 }
 
 /* Rails kludges */
@@ -369,78 +329,6 @@ input:hover {
   border-right: 1px solid #969696;
   border-bottom: 1px solid #646464;
   border-left: 1px solid #f2f2f2;
-}
-
-/* Markdown documentation pages */
-.markdown {
-  margin: auto;
-  padding-right: 2em;
-  padding-left: 2em;
-  color: black;
-  font-size: 100%;
-  line-height: 140%;
-}
-
-.markdown pre, .markdown p, .markdown img {
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-
-.markdown img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.markdown code {
-  font-family: Courier, monospace;
-}
-
-.markdown pre {
-  border: 1px dotted gray;
-  background-color: #ececec;
-  color: #1111111;
-  padding: 0.5em;
-  margin-left: 2em;
-}
-
-.markdown h1, .markdown h2, .markdown h3, .markdown h4, .markdown h5 {
-  font-family: verdana;
-  font-weight: bold;
-  color: #678090;
-}
-
-.markdown h1 {
-  font-size: 150%;
-}
-
-.markdown h2 {
-  font-size: 130%;
-}
-
-.markdown h3 {
-  font-size: 110%;
-}
-
-.markdown h4, .markdown h5 {
-  font-size: 100%;
-  font-style: italic;
-}
-
-.markdown h1.title {
-  font-size: 200%;
-  font-weight: bold;
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
-  text-align: left;
-  border: none;
-}
-
-.markdown dt code {
-        font-weight: bold;
-}
-.markdown dd p {
-        margin-top: 0;
 }
 
 /* Formatted (presentation) text */

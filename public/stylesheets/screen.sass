@@ -1,0 +1,249 @@
+// Formtastic
+@import formtastic-sass/formtastic_base.sass
+@import formtastic-sass/skintastic.sass
+
+.formtastic
+  +float-form
+
+// Purple colour theme
+$globalfg: black
+$globalbg: #ffffd0
+$globallink: #678090
+$globalhover: #6f9dbe
+$logobg: $globalbg
+$logofg: $globalfg
+$logo: unquote("/images/logo-purple.png")
+$logoheight: 50px
+$logoborder: #872020
+$navbarfg: #607888
+$navbarbg: $globalbg
+$navbarfghover: #872020
+$navbarborder: #ababab
+
+// Orange colour theme
+$globalfg: black
+$globalbg: white
+$globallink: #678090
+$globalhover: #6f9dbe
+$logobg: #f7a700
+
+// TODO: needed?
+$logofg: #585858
+$logo: unquote("/images/logo-orange.png")
+$logoheight: 100px
+$logoborder: black
+$navbarfg: #ffffd8
+$navbarbg: #678090
+$navbarfghover: #f9ca69
+$navbarborder: black
+
+body
+  background-color: $globalbg
+  color: $globalfg
+
+a
+  text-decoration: underline
+  &:link, &:visited
+    color: $globallink
+  &:link:hover, &:visited:hover
+    color: $globalhover
+
+abbr
+  font-stretch: condensed
+  border-bottom: dotted orange 1px
+
+thead, tfoot
+  background-color: #f0f0f0
+
+div
+  &#headline
+    height: $logoheight
+    background-color: $logobg
+    color: $logofg
+    background-image: url($logo)
+    background-repeat: no-repeat
+    border-bottom-width: 1px
+    border-bottom-style: solid
+    border-bottom-color: $logoborder
+    // TODO
+    font-weight: bold
+    font-variant: small-caps
+  &.navbar
+    color: $navbarfg
+    background-color: $navbarbg
+    border-bottom-width: 1px
+    border-bottom-style: solid
+    border-bottom-color: $navbarborder
+    padding: 3px 20px 3px 20px
+    .current
+      padding: 1px 4px 1px 4px
+    a
+      color: $navbarfg
+      text-decoration: none
+      padding: 1px 4px 1px 4px
+      &:hover
+        color: $navbarfghover
+  &#footer
+    clear: both
+    margin: 1cm 0 0 0
+    padding: 5px 30px 5px 1em
+    border-top: 1px solid #ababab
+    font-size: smaller
+  &#body
+    margin: 0 1em 0 1em
+    padding: 5px 5px 5px 5px
+
+// Toolbar icons
+
+=toolbar-icon($icon, $size)
+  padding-left: $size
+  background-color: transparent
+  background-image: url("/images/" + $icon)
+  background-repeat: no-repeat
+  background-attachment: center
+  background-position: left
+  margin-right: 1em
+
+a
+  &.previous
+    +toolbar-icon(unquote("sweetie/24-arrow-previous.png"), 24px)
+  &.next
+    +toolbar-icon(unquote("sweetie/24-arrow-next.png"), 24px)
+  &.index
+    +toolbar-icon(unquote("sweetie/24-columns.png"), 24px)
+  &.statistics
+    +toolbar-icon(unquote("sweetie/24-message-info.png"), 24px)
+  &.delete
+    +toolbar-icon(unquote("sweetie/24-em-cross.png"), 24px)
+  &.edit
+    +toolbar-icon(unquote("sweetie/24-settings-silver.png"), 24px)
+  &.parent
+    +toolbar-icon(unquote("sweetie/24-em-up.png"), 24px)
+  &.remove
+    +toolbar-icon(unquote("sweetie/16-circle-red-remove.png"), 16px)
+  &.add
+    +toolbar-icon(unquote("sweetie/16-circle-green-add.png"), 16px)
+  &.new
+    +toolbar-icon(unquote("sweetie/16-em-plus.png"), 16px)
+
+// Link icons
+
+=link-icon($icon, $size)
+  padding-right: $size
+  background-color: transparent
+  background-image: url("/images/" + $icon)
+  background-repeat: no-repeat
+  background-attachment: center
+  background-position: right
+
+a
+  &[href$='.pdf']
+    +link-icon(unquote("iconize/icon_pdf.gif"), 18px)
+
+  &[href^="mailto:"]
+    +link-icon(unquote("iconize/icon_mail.gif"), 20px)
+
+  &[class~="popup"]
+    +link-icon(unquote("iconize/icon_popup.gif"), 18px)
+
+  &[class~="external"]
+    +link-icon(unquote("iconize/icon_external.gif"), 18px)
+
+// Documentation blocks
+
+.markdown
+  margin: auto
+  padding-right: 2em
+  padding-left: 2em
+  color: black
+  font-size: 100%
+  line-height: 140%
+  pre, p
+    margin-top: 1em
+    margin-bottom: 1em
+  img
+    margin-top: 1em
+    margin-bottom: 1em
+    display: block
+    margin-left: auto
+    margin-right: auto
+  code
+    font-family: Courier, monospace
+  pre
+    border: 1px dotted gray
+    background-color: #ececec
+    color: #111111
+    padding: 0.5em
+    margin-left: 2em
+  h1, h2, h3, h4, h5
+    font-family: verdana
+    font-weight: bold
+    color: #678090
+  h1
+    font-size: 150%
+  h2
+    font-size: 130%
+  h3
+    font-size: 110%
+  h4, h5
+    font-size: 100%
+    font-style: italic
+  h1.title
+    font-size: 200%
+    font-weight: bold
+    padding-top: 0.2em
+    padding-bottom: 0.2em
+    text-align: left
+    border: none
+  dt code
+    font-weight: bold
+  dd p
+    margin-top: 0
+
+// Table of contents
+
+ul.toc
+  list-style: none
+  width: 95%
+  ul.toc-l2
+    list-style: none
+  .toc-language
+    font-weight: bold
+  ul.toc-l2
+    li
+      background: url(/images/toc-dots.png) repeat-x 0 1em
+      height: 1.2em
+      margin-top: 0.2em
+    .toc-title
+      font-style: italic
+      float: left
+      background: white
+      padding: 0 0.75em 0 0
+    .toc-link
+      float: right
+      background: white
+      padding: 0 0 0 0.75em
+    li
+      clear: both
+
+// Legends
+
+div.legend
+  font-size: 75%
+  margin: 1em 0
+  padding: 0.5em
+  overflow: hidden
+  h3
+    display: none
+  dt
+    border: 1px solid #999999
+    float: left
+    margin: 0.1em 0.5em 0.1em 2em
+    width: 0.8em
+    height: 0.8em
+  dl, dd
+    display: inline
+    float: left
+    padding: 0
+    margin: 0
+    margin-right: 0.5em

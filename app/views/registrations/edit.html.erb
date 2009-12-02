@@ -2,20 +2,20 @@
 
 <h2>Change e-mail address</h2>
 
-<% form_for resource_name, resource, :url => registration_path(resource_name), :html => { :method => :put } do |f| %>
+<% semantic_form_for resource_name, resource, :url => registration_path(resource_name), :html => { :method => :put } do |f| %>
   <%= f.error_messages %>
-  <%= f.text_field :email, :label => 'New e-mail address' %>
-  <%= f.password_field :current_password, :label => 'Password' %>
+  <%= f.input :email, :label => 'New e-mail address' %>
+  <%= f.input :current_password, :label => 'Password' %>
   <%= f.submit "Update" %>
 <% end %>
 
 <h2>Change password</h2>
 
-<% form_for resource_name, resource, :url => registration_path(resource_name), :html => { :method => :put } do |f| %>
+<% semantic_form_for resource_name, resource, :url => registration_path(resource_name), :html => { :method => :put } do |f| %>
   <%= f.error_messages %>
-  <%= f.password_field :current_password, :label => 'Current password' %>
-  <%= f.password_field :password, :label => 'New password' %>
-  <%= f.password_field :password_confirmation, :label => 'New password repeated' %>
+  <%= f.input :current_password, :label => 'Current password' %>
+  <%= f.input :password, :label => 'New password' %>
+  <%= f.input :password_confirmation, :label => 'New password repeated' %>
   <%= f.submit "Update" %>
 <% end %>
 

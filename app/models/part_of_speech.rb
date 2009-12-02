@@ -1,4 +1,6 @@
 class PartOfSpeech < ActiveRecord::Base
+  default_scope :order => 'summary ASC'
+
   has_many :lemmata
 
   has_many :tokens, :through => :lemmata
@@ -16,7 +18,6 @@ class PartOfSpeech < ActiveRecord::Base
 
   def self.search(query, options)
     options[:conditions] ||= ["summary LIKE ?", "%#{query}%"]
-    options[:order] ||= "summary ASC"
 
     paginate options
   end

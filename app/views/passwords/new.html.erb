@@ -1,8 +1,8 @@
 <h2>Reset password</h2>
 
-<% form_for resource_name, resource, :url => password_path(resource_name) do |f| %>
+<% semantic_form_for resource_name, resource, :url => password_path(resource_name) do |f| %>
   <%= f.error_messages %>
-  <%= f.text_field :email, :label => 'E-mail address' %>
+  <%= f.input :email, :label => 'E-mail address' %>
   <%= f.submit "Reset" %>
 <% end %>
 
