@@ -2,8 +2,9 @@
 #
 # export.rb - Export functions for PROIEL sources
 #
-# Copyright 2007, 2008, 2009 University of Oslo
-# Copyright 2007, 2008, 2009 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010 University of Oslo
+# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
+# Copyright 2010 Dag Haug
 #
 # This file is part of the PROIEL web application.
 #
@@ -33,12 +34,14 @@ end
 
 # Abstract source exporter.
 class SourceXMLExport
-  # Creates a new exporter that exports the source +source+ 
+  # Creates a new exporter that exports the source +source+.
   #
   # ==== Options
   # reviewed_only:: Only include reviewed sentences. Default: +false+.
+  # sem_tags:: Include semantic tags. Default: +false+.
+  # info:: Include information structure. Default: +false+.
   def initialize(source, options = {})
-    options.assert_valid_keys(:reviewed_only)
+    options.assert_valid_keys(:reviewed_only, :sem_tags, :source_division, :info)
     options.reverse_merge! :reviewed_only => false
 
     @source = source
@@ -56,20 +59,31 @@ class SourceXMLExport
     end
   end
 
-  # Returns the sentences to be exported by the exporter.
-  def filtered_sentences(source_division = nil)
-    if source_division
-      if @options[:reviewed_only]
-        source_division.sentences.reviewed
-      else
-        source_division.sentences
-      end
+  # Returns the sentences to be exported by the malt or tigerxml
+  # exporter. (The PROIEL xml exporter will export the presentation of
+  # all sentences.)
+  def filtered_sentences
+    filtered_source_divisions.map { |sd| filter_sentences(sd) }.flatten
+  end
+
+  # Returns the source_divisions to be exported
+  def filtered_source_divisions
+    unless @options[:source_division]
+      @source.source_divisions
     else
-      @source.source_divisions.map { |d| filtered_sentences(d) }.flatten
+      @options[:source_division].map { |d| SourceDivision.find(d) }.sort { |x,y| x.position <=> y.position }
     end
   end
 
-  protected
+  # Returns the sentences from a single source_division which are to
+  # be exported by the exporter
+  def filter_sentences(source_division)
+      if @options[:reviewed_only]
+        source_division.sentences.reviewed
+      else
+        source_division.sentences.select(&:has_dependency_annotation?)
+      end
+  end
 
   # Returns the public identifier for the source.
   def identifier
@@ -91,7 +105,7 @@ class PROIELXMLExport < SourceXMLExport
       builder.tag!("tracked-references", @source.tracked_references.map { |k, v| v.map { |x| [x, k].join('=') }}.flatten.join(','))
       builder.tag!("tei-header") { @metadata.write(builder) }
 
-      @source.source_divisions.each do |sd|
+      filtered_source_divisions.each do |sd|
         write_source_division(builder, sd)
       end
     end
@@ -104,22 +118,32 @@ class PROIELXMLExport < SourceXMLExport
       builder.title sd.title
       builder.abbreviation sd.abbreviated_title
 
-      filtered_sentences(sd).find_each do |s|
+      sd.sentences.each do |s|
         builder.sentence do
           builder.presentation { |x| x << s.presentation }
-          write_sentence(builder, s)
+          write_sentence(builder, s) if (@options[:reviewed_only] and s.is_reviewed?) or (!@options[:reviewed_only] and s.has_dependency_annotation?)
         end
       end
     end
   end
 
   def write_sentence(builder, s)
-    s.tokens.each do |t|
+    s.tokens.dependency_annotatable.each do |t|
       attributes = {}
-
-      %w(id form empty_token_sort morph_features source_morph_features foreign_ids head_id relation).each do |f|
+      features = %w(id form empty_token_sort morph_features foreign_ids head_id relation)
+      features += %w(antecedent_id info_status) if @options[:info]
+      features.each do |f|
         v = t.send(f)
         attributes[f.to_s.gsub('_', '-').to_sym] = v.to_s if v
+      end
+
+      # Add semantic tags if wanted
+      if @options[:sem_tags]
+        sem_tags = t.semantic_tags
+        sem_tags += t.lemma.semantic_tags.reject { |tag| sem_tags.map(&:semantic_attribute).include?(tag.semantic_attribute) } if t.lemma
+        sem_tags.each do |st|
+          attributes[st.semantic_attribute.tag] = st.semantic_attribute_value.tag
+        end
       end
 
       unless t.slashees.empty? # this extra test avoids <token></token> style XML
@@ -135,9 +159,6 @@ class PROIELXMLExport < SourceXMLExport
       end
     end
 
-    s.notes.each do |n|
-      builder.note({ :originator => n.originator.to_s }, n.contents)
-    end
   end
 end
 
@@ -146,13 +167,32 @@ end
 # in the variant used by VISL under the name `TIGER dependency format'
 # (http://beta.visl.sdu.dk/treebanks.html#TIGER_dependency_format).
 class TigerXMLExport < SourceXMLExport
+  MORPHOLOGY_BUNDLES = [:person_number, :tense_mood_voice, :case_number, :degree, :strength, :inflection]
+
+  def initialize(source, options = {})
+    super(source, options)
+
+    @features = ([:lemma, :pos] + MORPHOLOGY_BUNDLES).inject([]) { |m, f| m << [f, 'FREC'] }
+
+    if @options[:sem_tags]
+      # FIXME: what if there is a conflect between features
+      SemanticAttribute.all.each { |sa| @features << [sa.tag.downcase.to_sym, 'FREC'] }
+    end
+
+    if @options[:info]
+      ['info_status', 'antecedent_id'].each { |f| @features << [f, 'FREC'] }
+    end
+
+    @features << [:word, 'FREC']
+  end
+
   protected
 
   def do_export(file)
     builder = Builder::XmlMarkup.new(:target => file, :indent => 2)
     builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
     builder.corpus(:id => self.identifier) do
-      builder.meta { write_meta(builder) } 
+      builder.meta { write_meta(builder) }
       builder.head { write_head(builder) }
       builder.body { write_body(builder) }
     end
@@ -166,35 +206,62 @@ class TigerXMLExport < SourceXMLExport
 
   def write_head(builder)
     builder.annotation do
-      builder.feature(:name => 'form', :domain => 'FREC')
-      builder.feature(:name => 'morphology', :domain => 'FREC')
-      builder.feature(:name => 'lemma', :domain => 'FREC')
+      @features.each do |f|
+        builder.feature(:name => f.first.to_s, :domain => f.last) #FIXME - we probably want to list possible values
+      end
+
       builder.edgelabel do
         builder.value(:name => '--')
-        Relation.primary.each do |relation| #FIXME
+        Relation.primary.each do |relation|
           builder.comment! relation.summary
           builder.value(:name => relation.tag)
         end
       end
+
       builder.secedgelabel do
         Relation.all.each do |relation|
           builder.comment! relation.summary
-	  builder.value(:name => relation.tag)
-	end	  
+          builder.value(:name => relation.tag)
+        end
       end
     end
   end
 
-  def token_attrs(s, t)
-    attrs = { :form => t.form || '' }
+  def token_attrs(s, t, type)
+    attrs = @features.select { |f| f.last == 'FREC' or f.last == type }.map(&:first).inject({}) { |m, o| m[o] = nil; m }
 
-    if s.has_morphological_annotation? and t.is_morphtaggable?
-      attrs.merge!({ :morphology => t.morph_features.morphology_s, :lemma => t.morph_features.lemma_s })
-    else
-      attrs.merge!({ :morphology => '', :lemma => '' })
+    attrs.keys.each do |attr|
+      if attr == :tiger
+        attrs[attr] = t.id
+      elsif [:word, :cat].include?(attr)
+        if t.empty_token_sort == 'P'
+          attrs[attr] = "PRO-#{t.relation.tag.upcase}"
+        elsif t.form
+          attrs[attr] = t.form
+        end
+      elsif SemanticAttribute.all.map { |sa| sa.tag.downcase.to_sym }.include?(attr)
+        attrs[attr] = t.sem_tags_to_hash[attr]
+      elsif attr == :lemma
+        attrs[attr] = t.morph_features.lemma_s.split(",")[0] if t.morph_features
+      elsif attr == :pos
+        if t.empty_token_sort
+          attrs[attr] = t.empty_token_sort + "-"
+        else
+          attrs[attr] = t.morph_features.lemma_s.split(",")[1] if t.morph_features
+        end
+      elsif MORPHOLOGY_BUNDLES.include?(attr)
+        attrs[attr] = attr.to_s.split("_").map { |a| t.send(a.to_sym).nil? ? "-" : t.send(a.to_sym) }.join
+      elsif t.respond_to?(attr)
+        attrs[attr] = t.send(attr)
+      else
+        raise "Do not know how to get required attribute #{attr}"
+      end
+      attrs[attr] ||= "--"
     end
     attrs
   end
+
+  protected
 
   def write_body(builder)
     filtered_sentences.each do |s|
@@ -203,32 +270,38 @@ class TigerXMLExport < SourceXMLExport
 
         builder.graph(:root => root_node_id) do
           builder.terminals do
-            s.tokens.morphology_annotatable.each do |t|
-              builder.t(token_attrs(s, t).merge({ :id => "w#{t.id}"}))
+            (@options[:info] ? s.tokens_with_dependents_and_info_structure.with_prodrops_in_place.reject { |t| ['C', 'V'].include?(t.empty_token_sort) } : s.tokens.morphology_annotatable).each do |t|
+              builder.t(token_attrs(s, t, 'T').merge({ :id => "w#{t.id}"}))
             end
           end
 
           if s.has_dependency_annotation?
             builder.nonterminals do
               # Emit the empty root node
-              builder.nt(:id => root_node_id, :form => '', :morphology => '', :lemma => '') do
+              h = @features.select { |f| ['FREC', 'NT'].include?(f.last) }.map(&:first).inject({}) { |m, o| m[o] = '--'; m }.merge({:id => root_node_id })
+              builder.nt(h) do
                 s.tokens.dependency_annotatable.reject(&:head).each do |t|
                   builder.edge(:idref => "p#{t.id}", :label => t.relation.tag)
                 end
               end
 
-              # Do the actual nodes
-              s.tokens.dependency_annotatable.each do |t|
-                builder.nt(token_attrs(s, t).merge({ :id => "p#{t.id}"})) do
+              # Do the actual nodes including pro drops if we are
+              # exporting info structure as well
+              (@options[:info] ? s.tokens_with_dependents_and_info_structure.with_prodrops_in_place : s.tokens.dependency_annotatable).each do |t|
+                builder.nt(token_attrs(s, t, 'NT').merge({ :id => "p#{t.id}"})) do
                   # Add an edge between this node and the correspoding terminal node unless
                   # this is not a morphtaggable node.
-                  builder.edge(:idref => "w#{t.id}", :label => '--') if t.is_morphtaggable?
+                  builder.edge(:idref => "w#{t.id}", :label => '--') if t.is_morphtaggable? or (@options[:info] and t.empty_token_sort == 'P')
 
-                  # Add dependency edges, primary and secondary.
-                  t.dependents.each { |d| builder.edge(:idref => "p#{d.id}", :label => d.relation.tag) }
-		  SlashEdge.find_all_by_slasher_id(t.id).each do |se|
-		    builder.secedge(:idref => "p#{se.slashee_id}", :label => se.relation.tag)
-                  end		    
+                  # Add primary dependency edges including empty pro tokens if we are exporting info structure as well
+                  (@options[:info] ? t.dependents : t.dependents.reject { |p| p.empty_token_sort == 'P' }).each { |d| builder.edge(:idref => "p#{d.id}", :label => d.relation.tag) }
+
+                  # Add secondary dependency edges, ignoring those
+                  # pointing upwards, since they are only there for
+                  # validation purposes
+                  SlashEdge.find_all_by_slasher_id(t.id).reject { |se| se.slashee_id == t.head_id }. each do |se|
+                    builder.secedge(:idref => "p#{se.slashee_id}", :label => se.relation.tag)
+                  end
                 end
               end
             end

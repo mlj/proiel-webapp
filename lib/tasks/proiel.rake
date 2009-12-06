@@ -88,15 +88,17 @@ namespace :proiel do
       File.open(ENV['FILE']) { |f| TextImport.instance.read(f) }
     end
 
-    desc "Export a PROIEL source text. Optional options: ID=source_identifier FORMAT={proiel|maltxml|tigerxml} MODE={all|reviewed} DIRECTORY=destination_directory"
+    desc "Export a PROIEL source text. Optional options: ID=source_identifier FORMAT={proiel|maltxml|tigerxml} MODE={all|reviewed} DIRECTORY=destination_directory INFO={semtags|info|both} SOURCE_DIVISION=source division title regexp"
     task(:export => :environment) do
       source = ENV['ID']
       format = ENV['FORMAT']
       format ||= 'proiel'
+      source_division = Regexp.new(ENV['SOURCE_DIVISION']) if ENV['SOURCE_DIVISION']
       mode = ENV['MODE']
       mode ||= 'all'
       directory = ENV['DIRECTORY']
       directory ||= DEFAULT_EXPORT_DIRECTORY
+      info = ENV['INFO']
       require 'export'
 
       case format
@@ -122,6 +124,26 @@ namespace :proiel do
         raise "Invalid mode"
       end
 
+      case info
+      when 'semtags'
+        options[:sem_tags] = true
+      when 'info'
+        options[:info] = true
+      when 'both'
+        options[:sem_tags] = true
+        options[:info] = true
+      else
+        raise "Invalid info" if info
+      end
+
+      if options[:sem_tags]
+        raise "Information structure not available for maltxml" if format == 'maltxml'
+      end
+
+      if options[:info]
+        raise "Semantic tags not available for maltxml" if format == 'maltxml'
+      end
+
       if source
         sources = Source.find_all_by_code(source)
       else
@@ -134,6 +156,7 @@ namespace :proiel do
       Dir::mkdir(directory) unless File::directory?(directory)
 
       sources.each do |source|
+        options[:source_division] = source.source_divisions.select { |sd| sd.title =~ source_division }.map(&:id) if source_division
         e = klass.new(source, options)
         e.write(File.join(directory, "#{source.code}#{suffix}.xml"))
       end
@@ -147,7 +170,7 @@ namespace :proiel do
       format ||= :proiel
       li = LegacyImport.new(:proiel)
       li.read(ENV['FILE'])
-    end 
+    end
   end
 
   namespace :schemata do
@@ -275,14 +298,24 @@ namespace :proiel do
       i.read(file_name)
     end
 
-    desc "Export info statuses. Options: FILE=csv_file. Optional options: SOURCE_DIVISION=source_division_id"
+    desc "Export info statuses. Options: FILE=csv_file. Optional options: SOURCE_DIVISION=source_division_id FORMAT={csv|xml}"
     task(:export => :myenvironment) do
-      require 'import_export'
       file_name = ENV['FILE']
       raise "Missing argument FILE" unless file_name
-
       sd = ENV['SOURCE_DIVISION']
-      i = InfoStatusesImportExport.new(sd)
+
+      case ENV['FORMAT']
+      when 'csv'
+        require 'import_export'
+        klass = InfoStatusesImportExport
+      when 'xml'
+        require 'info_statuses_xml_export'
+        klass = InfoStatusesXMLExport
+      else
+        raise "Unknown format"
+      end
+
+      i = klass.new(sd)
       i.write(file_name)
     end
   end
