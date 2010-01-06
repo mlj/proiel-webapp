@@ -196,10 +196,7 @@ class Sentence < ActiveRecord::Base
     # Remove all empty tokens from a sentence
     Token.delete_all :sentence_id => self.id, :form => nil
 
-    self.annotated_by = nil
-    self.annotated_at = nil
-    self.reviewed_by = nil
-    self.reviewed_at = nil
+    remove_annotation_metadata!
     save!
   end
 
@@ -329,11 +326,12 @@ class Sentence < ActiveRecord::Base
   # Appends the next sentence onto this sentence and destroys the old
   # sentence. This also removed all dependency annotation from both
   # sentences to ensure validity.
-  def append_next_sentence!(nondestructive = false)
+  def append_next_sentence!(nondestructive = true)
     if has_next?
       Sentence.transaction do
         if nondestructive
           append_tokens!(next_sentence.tokens)
+          remove_syntax_and_info_structure!
         else
           detokenize!
           # next_sentence's tokens will be removed when sentence is destroyed.
@@ -341,7 +339,7 @@ class Sentence < ActiveRecord::Base
 
         self.presentation = self.presentation + '<s> </s>' + self.next_sentence.presentation
         save!
-        tokenize!
+        tokenize! unless nondestructive
 
         next_sentence.destroy
       end
@@ -379,10 +377,7 @@ class Sentence < ActiveRecord::Base
       self.save!
     else
       Sentence.transaction do
-        self.annotated_by = nil
-        self.annotated_at = nil
-        self.reviewed_by = nil
-        self.reviewed_at = nil
+        remove_annotation_metadata!
 
         # We need to shift all sentence numbers after this one first. Do it in
         # reverse order to avoid confusing the indices.
@@ -471,25 +466,34 @@ class Sentence < ActiveRecord::Base
       begin
         s.save!
       rescue
-        s.remove_syntax_and_info_structure
-        s.tokens.reload
+        s.remove_syntax_and_info_structure!
         s.save!
       end
       used_tokens += s.presentation_as_tokens.size
     end
-    # Finally, check if the original sentence is still valid after all the token removals; if not, delete its syntax
+    # Finally, check if the original sentence is still valid after all
+    # the token removals; if not, delete its syntax
     begin
       self.save!
     rescue
-      self.remove_syntax_and_info_structure
+      self.remove_syntax_and_info_structure!
       self.save!
     end
   end
 
   protected
 
-  # Deletes all syntactic and information structural annotation from the sentence
-  def remove_syntax_and_info_structure
+  # removes information about when and by whom the sentence was annotated
+  def remove_annotation_metadata!
+    self.annotated_by = nil
+    self.annotated_at = nil
+    self.reviewed_by = nil
+    self.reviewed_at = nil
+  end
+
+  # Deletes all syntactic and information structural annotation from
+  # the sentence and reloads the tokens
+  def remove_syntax_and_info_structure!
     self.tokens.each do |t|
       if t.is_empty?
         t.destroy
@@ -502,6 +506,8 @@ class Sentence < ActiveRecord::Base
         t.save!
       end
     end
+    tokens.reload
+    remove_annotation_metadata!
   end
 
   private
@@ -696,10 +702,7 @@ class Sentence < ActiveRecord::Base
     Sentence.transaction do
       tokens.map(&:destroy)
       tokens.reload
-      self.annotated_by = nil
-      self.annotated_at = nil
-      self.reviewed_by = nil
-      self.reviewed_at = nil
+      remove_annotation_metadata!
       save!
     end
   end
