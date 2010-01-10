@@ -214,9 +214,24 @@ class InflectionsImportExport < CSVImportExport
     @language = Language.find_by_iso_code(language_code) if @language_code != language_code
 
     morphologies.each do |morphology|
-      @language.inflections.create!(:morphology => morphology,
-                                    :form => form,
-                                    :lemma => [lemma, pos].join(','))
+      n = MorphFeatures.new([lemma, pos, language_code].join(","), morphology)
+      if n.valid?
+        m = Morphology.find_by_tag(morphology)
+        unless m
+          m = Morphology.create!(:tag => morphology,
+                                 :summary => n.morphology_summary,
+                                 :abbreviated_summary => n.morphology_summary(:abbreviated => true))
+        end
+        begin
+          @language.inflections.create!(:morphology => m,
+                                        :form => form,
+                                        :lemma => [lemma, pos].join(','))
+        rescue
+          STDERR.puts "Disregarding rule #{form} -> #{lemma},#{pos},#{n.morphology_summary}: #{$!}"
+        end
+      else
+        STDERR.puts "The tag #{pos + morphology} -- #{n.morphology_summary} -- (assumed for #{form}) is invalid in #{@language.name}...ignoring"
+      end
     end
   end
 

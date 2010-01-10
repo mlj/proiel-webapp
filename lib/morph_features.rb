@@ -280,7 +280,11 @@ class MorphFeatures
     h = morphology_to_hash
     MORPHOLOGY_PRESENTATION_SEQUENCE.map do |field|
       next if field == :inflection and h[field] == 'i' and options[:skip_inflection]
-      h[field] == '-' ? nil : MORPHOLOGY_SUMMARIES[field][h[field]]
+      if options[:abbreviated]
+        h[field] == '-' ? nil : MORPHOLOGY_ABBREVIATED_SUMMARIES[field][h[field]]
+      else
+        h[field] == '-' ? nil : MORPHOLOGY_SUMMARIES[field][h[field]]
+      end
     end.compact.join(', ')
   end
 
