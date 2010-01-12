@@ -211,6 +211,14 @@ var DependencyStructureWidget = Class.create(Widget, {
         var id = i.identify().sub('rel-', '');
         value.set('empty', model.isEmpty(id));
 
+        // Return the pos to make slash interpretation possible. If
+        // graphs from the editor and graphs from the base were to be
+        // treated in the same way, we'd actually need to return
+        // enough data to make possible the creation of a full
+        // morphtag object, but that seems too much
+        var m = model.getMorphTag(id);
+        value.set('pos', $H(m).get('pos'));
+
         if (this.hasSlashes(id)) {
           value.set('slashes', this.getSlashes(id));
         }

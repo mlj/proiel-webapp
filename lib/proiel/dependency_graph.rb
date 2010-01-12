@@ -281,8 +281,18 @@ module PROIEL
       @data[:token_number]
     end
 
+    # A hack, but it works. Graphs that are initialized with
+    # new_from_editor will have @data[:pos], whereas graphs that are
+    # initialized from the database will have a full morph_features
+    # object.
     def pos
-      @data[:morph_features] ? @data[:morph_features].pos_s : nil
+      if @data[:morph_features]
+        @data[:morph_features].pos_s
+      elsif @data[:pos]
+        @data[:pos]
+      else
+        nil
+      end
     end
 
     # Returns +true+ if this node is a coordination node or
@@ -401,7 +411,7 @@ module PROIEL
         (rec = lambda do |subtree, head_id|
           unless subtree.nil?
             subtree.each_pair do |id, values|
-              data = { :empty => values['empty'] }
+              data = { :empty => values['empty'], :pos => values['pos'] }
               slashes = {}
               (values['slashes'] || []).each { |s| slashes[id_to_i(s)] = nil }
               g.badd_node(id_to_i(id), values['relation'], head_id, slashes, data)
