@@ -299,14 +299,14 @@ module PROIEL
     # a potential coordination node, i.e. a conjunction or an
     # empty node (which might be an asyndetic conjunction).
     def is_coordinator?
-      pos == 'C-' or is_empty?
+      pos == 'C-' or @data[:empty] == 'C'
     end
 
     # Returns +true+ if this node is a verbal node or a potential
     # verbal node, i.e. a verb, an empty node or something with
     # the relation PRED.
     def is_verbal?
-      pos == 'V-' or is_empty? or relation == :pred
+      pos == 'V-' or @data[:empty] == 'V' or relation == :pred
     end
 
     # Returns +true+ if this node represents an `open' relation, i.e.
