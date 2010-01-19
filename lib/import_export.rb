@@ -98,8 +98,6 @@ class InfoStatusesImportExport < CSVImportExport
         end
       end
       t.antecedent_id = ac.id
-      t.antecedent_dist_in_words = Token.word_distance_between(ac, t)
-      t.antecedent_dist_in_sentences = Token.sentence_distance_between(ac, t)
       t.save!
     end
   end

@@ -268,7 +268,7 @@ namespace :proiel do
       require 'import_export'
       file_name = ENV['FILE']
       raise "Missing argument" unless file_name
-      execute("UPDATE tokens SET info_status = NULL, antecedent_dist_in_words = NULL, antecedent_dist_in_sentences = NULL, antecedent_id = NULL WHERE info_status is not null") if ENV['MODE'] == "recreate"
+      execute("UPDATE tokens SET info_status = NULL, antecedent_id = NULL WHERE info_status is not null") if ENV['MODE'] == "recreate"
       overwrite = false
       overwrite = true if ENV['MODE'] == "overwrite"
       i = InfoStatusesImportExport.new

@@ -27,7 +27,7 @@ class InfoStatusesController < ApplicationController
         token = Token.find(id)
       end
       antecedent_id = attr[:antecedent_id]
-      token.antecedent_dist_in_words = token.antecedent_dist_in_sentences = nil unless antecedent_id
+
 
       # If the antecedent is a prodrop token, find the real id that has been created for it
       antecedent_id = new_token_ids[antecedent_id] if antecedent_id && antecedent_id.starts_with?('new')
@@ -152,9 +152,5 @@ class InfoStatusesController < ApplicationController
   def process_anaphor(anaphor, antecedent_id, attributes)
     # Set the new antecedent
     anaphor.antecedent = Token.find(antecedent_id)
-
-    # Set the distance to the antecedent in terms of tokens and sentences
-    anaphor.antecedent_dist_in_words = Token.word_distance_between(anaphor.antecedent, anaphor)
-    anaphor.antecedent_dist_in_sentences = Token.sentence_distance_between(anaphor.antecedent, anaphor)
   end
 end

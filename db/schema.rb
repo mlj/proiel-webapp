@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091117230842) do
+ActiveRecord::Schema.define(:version => 20100119204015) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message"
@@ -256,8 +256,6 @@ ActiveRecord::Schema.define(:version => 20091117230842) do
     t.enum     "info_status",                  :limit => [:new, :acc, :acc_gen, :acc_sit, :acc_inf, :old, :old_inact, :no_info_status, :info_unannotatable]
     t.string   "empty_token_sort",             :limit => 1
     t.string   "contrast_group"
-    t.integer  "antecedent_dist_in_words"
-    t.integer  "antecedent_dist_in_sentences"
     t.integer  "token_alignment_id"
     t.boolean  "automatic_token_alignment",                                                                                                                  :default => false
     t.integer  "dependency_alignment_id"

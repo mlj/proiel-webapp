@@ -95,7 +95,7 @@ class Token < ActiveRecord::Base
   
   # Returns the nearest anaphor for the token.
   def anaphor
-    anaphors.min { |x, y| x.antecedent_dist_in_words <=> y.antecedent_dist_in_words }
+    anaphors.min { |x, y| Token.word_distance_between(self, x) <=> Token.word_distance_between(self, y) }
   end
 
   def previous_tokens
