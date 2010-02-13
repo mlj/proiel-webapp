@@ -1,1 +1,3 @@
 *.sql.gz
+*.sql.bz2
+*.sql.lzma

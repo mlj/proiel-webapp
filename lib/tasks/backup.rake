@@ -13,17 +13,17 @@ namespace :db do
 
     # Figure out directories and file names
     datestamp = Time.now.strftime("%Y%m%d-%H%M%S")
-    backup_file = File.join(backup_folder, "#{RAILS_ENV}-#{datestamp}.sql.gz")
+    backup_file = File.join(backup_folder, "#{RAILS_ENV}-#{datestamp}.sql.lzma")
     File.makedirs(backup_folder)
 
     # Do the dump
     db_config = ActiveRecord::Base.configurations[RAILS_ENV]
-    sh "mysqldump -u#{db_config['username']} -p#{db_config['password']} --add-drop-table --add-locks #{db_config['database']} | gzip -c > #{backup_file}"
+    sh "mysqldump -u#{db_config['username']} -p#{db_config['password']} --add-drop-table --add-locks #{db_config['database']} | lzma -c > #{backup_file}"
     puts "Created backup #{backup_file}"
 
     # Clean up old mess
     dir = Dir.new(backup_folder)
-    all_backups = dir.select { |e| e[/\.sql\.gz$/] }.entries[2..-1].sort.reverse
+    all_backups = dir.select { |e| e[/\.sql\.(gz|bz2|lzma)$/] }.entries[2..-1].sort.reverse
     unwanted_backups = all_backups[max_backups..-1] || []
     for unwanted_backup in unwanted_backups
       File.unlink(File.join(backup_folder, unwanted_backup))
