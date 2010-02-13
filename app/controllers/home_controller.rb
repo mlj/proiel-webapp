@@ -59,7 +59,4 @@ class HomeController < ApplicationController
       @lemmata = Lemma.search(params[:query].strip, :page => current_page)
     end
   end
-
-  def user_administration
-  end
 end

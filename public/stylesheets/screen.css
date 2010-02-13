@@ -12,26 +12,32 @@ div#headline {
   font-variant: small-caps;
 }
 
-/* Navigation bar */
+/* Navigation bars */
 
-div#navbar, div#navbar a {
+div.navbar, div.navbar a {
   color: #FFFFD8;
+}
+
+div#user-navbar, div#user-navbar a {
   background-color: #678090;
 }
 
-div#navbar {
-  border-top: 2px solid #678090;
-  border-bottom: 2px solid #678090;
-  padding: 1px 20px 1px 20px;
+div#admin-navbar, div#admin-navbar a {
+  background-color: #872020;
 }
 
-div#navbar a { text-decoration: none; }
+div.navbar {
+  border-top: 1px solid black;
+  padding: 3px 20px 3px 20px;
+}
 
-div#navbar .current, div#navbar a { padding: 1px 4px 1px 4px; }
+div.navbar a { text-decoration: none; }
 
-div#navbar a:hover { color: #F9CA69; }
+div.navbar .current, div.navbar a { padding: 1px 4px 1px 4px; }
 
-div#navbar a:link, div#navbar a:visited, div#navbar a:active { }
+div.navbar a:hover { color: #F9CA69; }
+
+div.navbar a:link, div.navbar a:visited, div.navbar a:active { }
 
 /* Footer */
 

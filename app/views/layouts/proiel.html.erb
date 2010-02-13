@@ -41,15 +41,12 @@
     <%= announcement_block %>
     <div id="headline">
     </div>
-    <div id="navbar">
+    <div id="user-navbar" class="navbar">
       <% if user_signed_in? %>
         <span style="float:left">
           <%= link_to 'Text', '/', :accesskey => 't', :accesskey => '1' %>
           <% if current_user.has_role?(:annotator) %>
             <%= link_to 'Annotation', :controller => :wizard %>
-            <% if current_user.has_role?(:reviewer) %>
-              <%= link_to 'Administration', :controller => :home, :action => :user_administration %>
-            <% end %>
           <% end %>
           <% if current_user.has_role?(:annotator) %>
             <%= link_to 'Statistics', statistics_path %>
@@ -72,6 +69,16 @@
         &nbsp;
       <% end %>
     </div>
+    <% if current_user and current_user.has_role?(:reviewer) %>
+      <div id="admin-navbar" class="navbar">
+        <%= link_to 'History', audits_url %>
+        <%= link_to 'Users', users_url %>
+        <%= link_to 'Sentences', :controller => :sentences %>
+        <%= link_to 'Tokens', :controller => :tokens %>
+        <%= link_to 'Lemmata', :controller => :lemmata %>
+        <%= link_to 'Notes', :controller => :notes %>
+      </div>
+    <% end %>
 
     <div id="body">
       <%= message_block %>
