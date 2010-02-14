@@ -1,6 +1,3 @@
-# Settings specified here will take precedence over those in config/environment.rb
-config.active_record.observers = :user_observer
-
 # The production environment is meant for finished, "live" apps.
 # Code is not reloaded between requests
 config.cache_classes = true
@@ -21,5 +18,4 @@ config.action_mailer.delivery_method = :sendmail
 
 config.action_view.cache_template_loading = true
 
-SITE_CANONICAL_URL = 'http://foni.uio.no:3001'
-SITE_ADMINISTRATOR_EMAIL = 'mariuslj@ifi.uio.no'
+config.action_mailer.default_url_options = { :host => 'http://foni.uio.no:3001' }

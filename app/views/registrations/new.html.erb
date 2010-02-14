@@ -1,0 +1,15 @@
+<h2>Register a new account</h2>
+
+<% form_for resource_name, resource, :url => registration_path(resource_name) do |f| %>
+  <%= f.error_messages %>
+  <%= f.text_field :login, :label => 'User name', :required => true %>
+  <%= f.text_field :email, :label => 'E-mail address', :required => true %>
+  <%= f.text_field :first_name, :required => true %>
+  <%= f.text_field :last_name, :required => true %>
+  <%= f.password_field :password, :required => true %>
+  <%= f.password_field :password_confirmation, :required => true %>
+
+  <%= f.submit "Register" %>
+<% end %>
+
+<%= render :partial => "shared/devise_links" %>

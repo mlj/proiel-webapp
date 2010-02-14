@@ -1,11 +1,14 @@
-<h2>Welcome to the PROIEL Corpus!</h2>
+<h2>Sign in</h2>
 
-<p>To access the PROIEL Corpus you need to be logged in. If you do
-not already have an account, you can <a href="/signup">sign up</a>.
+<% form_for resource_name, resource, :url => session_path(resource_name) do |f| %>
+  <%= f.text_field :login, :label => 'User name' %>
+  <%= f.password_field :password %>
 
-<% form_tag session_path do -%>
-  <div class="text-field"><label for="login">Login</label><div class="input"><%= text_field_tag 'login' %></div></div>
-  <div class="text-field"><label for="password">Password</label><div class="input"><%= password_field_tag 'password' %></div></div>
-  <div class="check-box-field"><label for="remember_me">Remember me</label><div class="input"><%= check_box_tag 'remember_me' %></div></div>
-  <div class="submit-field"><div class="input"><%= submit_tag 'Log in' %></div></div>
-<% end -%>
+  <% if devise_mapping.rememberable? -%>
+    <%= f.check_box :remember_me %>
+  <% end -%>
+
+  <%= f.submit "Sign in" %>
+<% end %>
+
+<%= render :partial => "shared/devise_links" %>

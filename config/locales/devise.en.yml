@@ -1,0 +1,35 @@
+en:
+  devise:
+    sessions:
+      link: 'Sign in'
+      signed_in: 'Signed in successfully.'
+      signed_out: 'Signed out successfully.'
+      unauthenticated: 'You need to sign in or register before continuing.'
+      unconfirmed: 'You have to confirm your account before continuing.'
+      locked: 'Your account is locked.'
+      invalid: 'Invalid e-mail address or password.'
+      invalid_token: 'Invalid authentication token.'
+      timeout: 'Your session has expired. Please sign in again to continue.'
+      inactive: 'Your account has not been activated yet.'
+    passwords:
+      link: 'Forgot password or user name?'
+      send_instructions: 'You will receive an e-mail with instructions in a few minutes.'
+      updated: 'Your password was successfully changed. You are now signed in.'
+    confirmations:
+      link: "No confirmation e-mail?"
+      send_instructions: 'You will receive a confirmation e-mail in a few minutes.'
+      confirmed: 'Your account was successfully confirmed. You are now signed in.'
+    registrations:
+      link: 'Register a new account'
+      signed_up: 'You have successfully registered.'
+      updated: 'Your account was successfully updated.'
+      destroyed: 'Your account was successfully removed.'
+    unlocks:
+      link: "No unlock instructions?"
+      send_instructions: 'You will receive an e-mail with instructions in a few minutes.'
+      unlocked: 'Your account was successfully unlocked. You are now signed in.'
+    mailer:
+      confirmation_instructions: 'The PROIEL corpus: Account confirmation'
+      reset_password_instructions: 'The PROIEL corpus: User name reminder and password reset instructions'
+      unlock_instructions: 'Unlock your account'
+

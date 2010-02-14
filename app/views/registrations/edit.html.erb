@@ -1,0 +1,29 @@
+<h1>Your profile</h2>
+
+<h2>Change e-mail address</h2>
+
+<% form_for resource_name, resource, :url => registration_path(resource_name), :html => { :method => :put } do |f| %>
+  <%= f.error_messages %>
+  <%= f.text_field :email, :label => 'New e-mail address' %>
+  <%= f.password_field :current_password, :label => 'Password' %>
+  <%= f.submit "Update" %>
+<% end %>
+
+<h2>Change password</h2>
+
+<% form_for resource_name, resource, :url => registration_path(resource_name), :html => { :method => :put } do |f| %>
+  <%= f.error_messages %>
+  <%= f.password_field :current_password, :label => 'Current password' %>
+  <%= f.password_field :password, :label => 'New password' %>
+  <%= f.password_field :password_confirmation, :label => 'New password repeated' %>
+  <%= f.submit "Update" %>
+<% end %>
+
+<h2>Delete account</h2>
+
+<p>If you wish, you can delete your account. This deletes all
+information associated with your account.</p>
+
+<p><%= link_to "Delete", registration_path(resource_name), :confirm => "Are you sure?", :method => :delete %></p>
+
+<%= render :partial => "shared/devise_links" %>

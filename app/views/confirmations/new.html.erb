@@ -1,0 +1,9 @@
+<h2>Resend confirmation e-mail</h2>
+
+<% form_for resource_name, resource, :url => confirmation_path(resource_name) do |f| %>
+  <%= f.error_messages %>
+  <%= f.text_field :email, :label => 'E-mail address', :required => true %>
+  <%= f.submit "Resend" %>
+<% end %>
+
+<%= render :partial => "shared/devise_links" %>

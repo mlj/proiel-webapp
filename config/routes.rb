@@ -1,6 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
+  map.devise_for :users
+  map.resources :users
+
   map.resources :audits
-  map.resources :sources, :source_divisions
+  map.resources :sources
+  map.resources :source_divisions
   map.resources :alignments, :member => {
     :commit => :post,
     :uncommit => :post,
@@ -36,16 +40,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :notes
   map.resources :semantic_tags
   map.resource :preferences
-
-  # Authentication and authorisation
-  map.resources :users, :member => { :suspend   => :put,
-                                     :unsuspend => :put,
-                                     :purge     => :delete }
-  map.resource :session
-  map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
-  map.signup '/signup', :controller => 'users', :action => 'new'
-  map.login '/login', :controller => 'sessions', :action => 'new'
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
 
   # Permalinks
   map.connect 'permalinks/sentence/:id', :controller => 'annotations', :action => 'show'

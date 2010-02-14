@@ -42,7 +42,7 @@
     <div id="headline">
     </div>
     <div id="navbar">
-      <% if logged_in? %>
+      <% if user_signed_in? %>
         <span style="float:left">
           <%= link_to 'Text', '/', :accesskey => 't', :accesskey => '1' %>
           <% if current_user.has_role?(:annotator) %>
@@ -55,16 +55,17 @@
             <%= link_to 'Statistics', statistics_path %>
           <% end %>
           <%= link_to 'Search', { :controller => :home, :action => :search }, :accesskey => 's', :style => 'display: none' %>
+          <%= link_to 'Downloads', site_path('public_data') %>
           <%= link_to 'Preferences', edit_preferences_path %>
+          <%= link_to 'Your profile', edit_user_registration_path %>
+          <%= link_to 'Logout', destroy_user_session_path %>
+          <%= link_to 'Help', site_path('help'), :accesskey => '6' %>
         </span>
         <span style="float:right">
           <% form_tag({ :controller => "home", :action => "quick_search" }, { :style => 'display: inline; padding: 0 0 0 0;' }) do -%>
             <%= text_field_tag :q, params[:q], :size => 15 %>
             <%= submit_tag 'Search' %>
           <% end %>
-          <%= link_to 'Downloads', site_path('public_data') %>
-          <%= link_to 'Help', site_path('help'), :accesskey => '6' %>
-          <%= link_to 'Logout', logout_path %>
         </span>
         <br style="clear:both"/>
       <% else %>

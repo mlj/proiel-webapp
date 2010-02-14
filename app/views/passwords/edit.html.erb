@@ -1,0 +1,11 @@
+<h2>Set new password</h2>
+
+<% form_for resource_name, resource, :url => password_path(resource_name), :html => { :method => :put } do |f| %>
+  <%= f.error_messages %>
+  <%= f.hidden_field :reset_password_token %>
+  <%= f.password_field :password %></p>
+  <%= f.password_field :password_confirmation %>
+  <%= f.submit "Update" %>
+<% end %>
+
+<%= render :partial => "shared/devise_links" %>

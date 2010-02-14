@@ -4,6 +4,12 @@ Change log
 This is a list of major changes between the releases of the
 application.
 
+Release 20100212
+----------------
+
+  * Changed to Devise for authentication (Marius)
+  * Upgraded to Rails 2.3.5 (Marius)
+
 Release 20090807
 ----------------
 
@@ -33,7 +39,7 @@ Release 20080911
   * Made imported sentence, token and lemma notes available + joined with `flag as bad sentence division`
   * Killed impersonal active and deponent tags
   * Updated USC text with new presentational features.
-  * Re-enabled full validation 
+  * Re-enabled full validation
   * Implemented orphaned slash clean-up
   * Added SVG graphs, alternative visualisations and user preferences
   * Enabled editing of tokens and lemmata
@@ -42,4 +48,3 @@ Release 20080911
   * Differentiated empty dependency tokens in UI and added writing of empty dependency token sort to
     database.
   * Initial support for information structure annotation
-
