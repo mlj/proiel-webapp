@@ -37,19 +37,19 @@ class WizardController < ApplicationController
   end
 
   def verify
-    @sentence.set_annotated!(User.find(session[:user_id]))
+    @sentence.set_annotated!(current_user)
 
     next_sentence
   end
 
   def next_sentence
-    User.find(session[:user_id]).shift_assigned_sentence!
+    current_user.shift_assigned_sentence!
     redirect_to :action => :edit_morphtags
   end
 
   protected
 
   def find_sentence
-    @sentence = User.find(session[:user_id]).first_assigned_sentence
+    @sentence = current_user.first_assigned_sentence
   end
 end

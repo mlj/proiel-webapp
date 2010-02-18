@@ -51,7 +51,7 @@ class SentencesController < ResourceController::Base
   def flag_as_reviewed
     @sentence = Sentence.find(params[:id])
 
-    @sentence.set_reviewed!(User.find(session[:user_id]))
+    @sentence.set_reviewed!(current_user)
     flash[:notice] = 'Sentence was successfully updated.'
     redirect_to @sentence
   rescue ActiveRecord::RecordInvalid => invalid
@@ -62,7 +62,7 @@ class SentencesController < ResourceController::Base
   def flag_as_not_reviewed
     @sentence = Sentence.find(params[:id])
 
-    @sentence.unset_reviewed!(User.find(session[:user_id]))
+    @sentence.unset_reviewed!(current_user)
     flash[:notice] = 'Sentence was successfully updated.'
     redirect_to @sentence
   rescue ActiveRecord::RecordInvalid => invalid
