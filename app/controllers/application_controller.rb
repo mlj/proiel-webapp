@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
     unless user_signed_in? && @current_user.has_role?(role)
       if user_signed_in?
         flash[:error] = 'You do not have permission to access this feature.'
-        redirect_back_or_default('/')
+        redirect_to :root_url
       else
         access_denied
       end
