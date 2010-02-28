@@ -14,13 +14,40 @@ class Validator < Task
   protected
 
   def run!(logger)
-    check_manual_morphology(logger)
+    check_segmentation(logger)
+    check_tokenization(logger)
+#    check_manual_morphology(logger)
     check_lemmata(logger)
     check_orphaned_tokens(logger)
-    check_changesets_and_changes(logger)
+#    check_changesets_and_changes(logger)
   end
 
   private
+
+  def check_tokenization(logger)
+    Sentence.find_each do |s|
+      unless s.tokenization_valid?
+        x, y = s.presentation_as_tokens, s.tokens.map(&:form)
+        d1, d2 = (x - y).compact, (y - x).compact
+        if not d1.empty?
+          logger.error { "Tokenisation of #{s.id} is inconsistent: -#{d1.inspect}" }
+        elsif not d2.empty?
+          logger.error { "Tokenisation of #{s.id} is inconsistent: +#{d2.inspect}" }
+        else
+          logger.error { "Tokenisation of #{s.id} is inconsistent" }
+        end
+      end
+      logger.warn { "Presentation string for #{s.id} contains suspicious characters" } if s.presentation[/([{}\[\]]|&lt;|&gt;)/]
+    end
+  end
+
+  def check_segmentation(logger)
+    SourceDivision.find_each do |sd|
+      unless sd.segmentation_valid?
+        logger.error { "Segmentation of #{sd.id} is inconsistent: #{sd.segmentation_diff.format_as(:ascii)}" }
+      end
+    end
+  end
 
   def check_changesets_and_changes(logger)
     failures = false

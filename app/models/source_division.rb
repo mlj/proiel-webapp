@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009 University of Oslo
-# Copyright 2007, 2008, 2009 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010 University of Oslo
+# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -19,6 +19,8 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
+require 'differ'
+
 class SourceDivision < ActiveRecord::Base
   belongs_to :source
   has_many :sentences, :order => 'sentence_number ASC'
@@ -113,14 +115,28 @@ class SourceDivision < ActiveRecord::Base
 
   public
 
+  def segmentation_diff
+    Differ.diff_by_char(segmentation_derived_from_data,
+                        segmentation_derived_from_presentation)
+  end
+
   # Compares segmentation based on the presentation string with actual
   # segmentation, if any. Returns true if the segmentation is
   # identical, i.e. valid, or if the sentence has not been segmented.
   def segmentation_valid?
-    s = sentences.map(&:presentation_as_text).flatten.join(' ')
-    p = presentation_as_text
+    !segmented? or segmentation_derived_from_presentation == segmentation_derived_from_data
+  end
 
-    !segmented? or p == s
+  # Returns an array of segments as derived from stored data.
+  # Eliminates extra whitespace to facilitate comparison.
+  def segmentation_derived_from_data
+    sentences.map(&:presentation_as_text).flatten.join(' ').gsub(/\s+/, ' ').sub(/ $/, '')
+  end
+
+  # Returns an array of segments as derived from the presentation
+  # string. Eliminates extra whitespace to facilitate comparison.
+  def segmentation_derived_from_presentation
+    presentation_as_text.gsub(/\s+/, ' ').sub(/ $/, '')
   end
 
   # Returns true if the source division has been segmented, false otherwise.
