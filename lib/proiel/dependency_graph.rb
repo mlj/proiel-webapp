@@ -651,11 +651,6 @@ module PROIEL
         t.relation == :comp or t.relation == :adv or t.relation == :apos or t.relation == :aux
       end
 
-      test_token("An infinitive may not be the dependent in an ADV relation",
-                 lambda { |t| t.data[:morph_features] and t.data[:morph_features].morphology_to_hash[:mood] == 'n' }) do |t|
-        t.relation != :adv
-      end
-
       #FIXME: special handling of non-part. vs. part.
       #FIXME: empty nodes can be verbs, but have to be excluded for now
       HEAD_DEPENDENT_CONSTRAINTS.each_pair do |pos, relations|
