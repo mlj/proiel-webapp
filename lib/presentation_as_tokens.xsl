@@ -26,7 +26,7 @@
 
   <!-- Accept text within a w element unless matched by any of the
   above (typically by del) -->
-  <xsl:template match="//w/text()">
+  <xsl:template match="//w/text()|//w/add/text()|//w/unclear/text()">
     <xsl:value-of select="."/>
   </xsl:template>
 
