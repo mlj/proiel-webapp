@@ -115,7 +115,7 @@ module PROIEL
                 span = t.attributes["presentation-span"].nil? ? 1 : t.attributes["presentation-span"].to_i
                 case span
                 when 1
-                  f = "<expan abbr='#{t.attributes["presentation-form"]}'>#{LegacySource.escape(t.attributes["form"])}</expan>"
+                  f = "<corr sic='#{t.attributes["presentation-form"]}'>#{LegacySource.escape(t.attributes["form"])}</corr>"
                 else
                   pure_segmentation = true if (s/:token).slice(j...(j + t.attributes["presentation-span"].to_i)).map { |tt| tt.attributes["form"] }.join == t.attributes["presentation-form"]
 
