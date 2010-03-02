@@ -310,18 +310,6 @@ div.statistics img { float: left; }
 div.statistics table { width: 50%; float: right; }
 div.statistics br { clear: both; }
 
-/* Announcement block */
-#announcement {
-  margin: 0 0 0 0;
-  color: #9F6000;
-  border: 1px solid black;
-  background: #FEEFB3 url(/images/sweetie/24-tools.png) 10px center no-repeat;
-}
-
-#announcement ul {
-  list-style: none;
-}
-
 /* Low level data tables. */
 table.low_level_data {
   width: 90%;

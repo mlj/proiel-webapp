@@ -35,7 +35,6 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.resource :statistics
-  map.resources :announcements
   map.resources :import_sources
   map.resources :notes
   map.resources :semantic_tags

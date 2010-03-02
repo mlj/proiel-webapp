@@ -9,16 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100119204015) do
-
-  create_table "announcements", :force => true do |t|
-    t.text     "message"
-    t.datetime "starts_at"
-    t.datetime "ends_at"
-    t.integer  "role_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+ActiveRecord::Schema.define(:version => 20100301120338) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
