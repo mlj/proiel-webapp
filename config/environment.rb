@@ -58,7 +58,7 @@ Rails::Initializer.run do |config|
 
   config.gem 'warden', :version => '~> 0.9'
   config.gem 'devise', :version => '~> 1.0.0'
-  config.gem 'mislav-will_paginate', :version => '~> 2.3.2', :lib => 'will_paginate', :source => 'http://gems.github.com'
+  config.gem 'will_paginate', :version => '~> 2.3.2'
   config.gem 'unicode'
   config.gem 'oniguruma'
   config.gem 'builder'
