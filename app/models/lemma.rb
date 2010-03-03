@@ -131,6 +131,31 @@ class Lemma < ActiveRecord::Base
     end
   end
 
+  # Returns subcategorisation frames for all tokens associated with the
+  # lemma. A subcategorisation frame is here taken in a liberal sense, to
+  # include all occurring combinations of dependents' relations. It is also
+  # defined for any lemma and token, and so may not make linguistic sense
+  # unless properly restricted by the caller.
+  #
+  # The frames are returned as a hash with the frame as key and the
+  # frequency as value. The frame is itself an array of relations (as
+  # symbols).
+  #
+  # The token sample can be filtered by morphology by populating
+  # +morphology_filter+ with a hash of morphology fields (as as symbols)
+  # and values, e.g. to sample tokens with passive morphology only, set
+  # +morphology_filter+
+  #
+  #     subcategorisation_frames { :voice => 'p' }
+
+  def subcategorisation_frames(morphology_filter = {})
+    tokens.by_morphology(morphology_filter).map(&:subcategorisation_frame).inject({}) do |frames, frame|
+      frames[frame] ||= 0
+      frames[frame] += 1
+      frames
+    end
+  end
+
   def to_s
     [export_form, part_of_speech.to_s].join(',')
   end

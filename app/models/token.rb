@@ -45,6 +45,12 @@ class Token < ActiveRecord::Base
   has_many :outgoing_semantic_relations, :class_name => 'SemanticRelation', :foreign_key => 'controller_id', :dependent => :destroy
   has_many :incoming_semantic_relations, :class_name => 'SemanticRelation', :foreign_key => 'target_id', :dependent => :destroy
 
+  # Tokens that are shared arguments for this token through a secondary
+  # dependency.
+  def shared_arguments
+    slashees.select(&:shared_arguments)
+  end
+
   belongs_to :token_alignment, :class_name => 'Token', :foreign_key => 'token_alignment_id'
   belongs_to :dependency_alignment, :class_name => 'Token', :foreign_key => 'dependency_alignment_id'
   has_many :dependency_alignment_terminations, class_name: 'DependencyAlignmentTerm'
@@ -53,6 +59,25 @@ class Token < ActiveRecord::Base
   belongs_to :antecedent, :class_name => 'Token', :foreign_key => 'antecedent_id'
 
   composed_of :morphology, :mapping => %w(morphology_tag to_s), :allow_nil => true, :converter => Proc.new { |x| Morphology.new(x) }
+
+  before_validation :before_validation_cleanup
+
+  # Tokens that are candidate root nodes in dependency graphs.
+  named_scope :root_dependency_tokens, :conditions => [ "head_id IS NULL" ]
+
+  # General schema-defined validations
+  validates_presence_of :sentence_id
+  validates_presence_of :token_number
+
+  # Constraint: t.sentence.reviewed_by => t.lemma_id
+  validates_presence_of :lemma, :if => lambda { |t| t.is_morphtaggable? and t.sentence.reviewed_by }
+
+  # Constraint: t.lemma_id <=> t.morphology
+  validates_presence_of :lemma, :if => lambda { |t| t.morphology }
+  validates_presence_of :morphology, :if => lambda { |t| t.lemma }
+
+  # Constraint: t.head_id => t.relation
+  validates_presence_of :relation, :if => lambda { |t| !t.head_id.nil? }
 
   # form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
@@ -246,6 +271,35 @@ class Token < ActiveRecord::Base
   end
 
   alias :is_morphtaggable? :is_visible? # deprecated
+
+  # Merges the token with the token linearly subsequent to it. The succeeding
+  # token is destroyed, and the original token's word form is updated. All
+  # other data is left as-is. Returns the new merged token.
+  def merge!(separator = ' ')
+    Token.transaction do
+      n = self.next_token
+      self.form = [self.form, n.form].join(separator)
+      self.save!
+      n.destroy
+    end
+    self
+  end
+
+  # Returns the subcategorisation frames for the token. A subcategorisation
+  # frame is here taken in a liberal sense, to include all occurring
+  # combinations of dependents' relations. It is also defined for any lemma
+  # and token, and so may not make linguistic sense unless properly
+  # restricted by the caller.
+  #
+  # The frame is an array of relations (as symbols).
+  #
+  # If +add_shared_arguments+ is true, shared argument secondary relations
+  # are added to the frame.
+  def subcategorisation_frame(add_shared_arguments = true)
+    frame = dependents.map(&:relation)
+    frame += shared_arguments.map(&:relation) if add_shared_arguments
+    frame.sort.map(&:to_sym)
+  end
 
   # Returns the dependency subgraph for the token as an unordered list.
   def subgraph_set

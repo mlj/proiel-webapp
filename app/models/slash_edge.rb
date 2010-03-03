@@ -10,8 +10,12 @@ class SlashEdge < ActiveRecord::Base
   belongs_to :slashee, :class_name => 'Token', :foreign_key => 'slashee_id'
   tag_attribute :relation, :relation_tag, RelationTag, :allow_nil => false
 
+  belongs_to :slash_edge_interpretation
+
   validates_uniqueness_of :slasher_id, :scope => :slashee_id,
     :message => 'Slash edge already exists in dependency structure'
+
+  named_scope :shared_arguments, :condition => { :slash_edge_interpretation => { :tag => 'shared-argument' }}
 
   # Returns +true+ if the slash points to the slasher's head.
   def points_to_head?
