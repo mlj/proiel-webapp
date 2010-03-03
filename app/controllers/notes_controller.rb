@@ -1,4 +1,4 @@
-class NotesController < ResourceController::Base
+class NotesController < InheritedResources::Base
   # Only reviewers may edit or delete notes
   before_filter :is_reviewer?, :only => [ :update, :destroy ]
 

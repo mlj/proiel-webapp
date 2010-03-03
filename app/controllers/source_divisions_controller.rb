@@ -1,13 +1,20 @@
-class SourceDivisionsController < ResourceController::Base
-  before_filter :is_administrator?, :except => [:index, :show]
-  actions :all, :except => [:new, :create, :destroy]
+class SourceDivisionsController < InheritedResources::Base
+  actions :index, :show, :edit, :update
 
-  show.before do
+  before_filter :is_administrator?, :except => [:index, :show]
+
+  def show
+    @source_division = SourceDivision.find(params[:id])
     @sentences = @source_division.sentences.search("", :page => current_page, :per_page => 40)
+
+    show!
   end
 
-  edit.before do
+  def edit
+    @source_division = SourceDivision.find(params[:id])
     @sentences = @source_division.sentences.search("", :page => current_page, :per_page => 40)
+
+    edit!
   end
 
   private

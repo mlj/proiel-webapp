@@ -1,4 +1,4 @@
-class SemanticTagsController < ResourceController::Base
+class SemanticTagsController < InheritedResources::Base
   before_filter :is_reviewer?
 
   private

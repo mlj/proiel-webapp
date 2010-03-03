@@ -1,15 +1,18 @@
-class AuditsController < ResourceController::Base
-  actions :all, :except => [:new, :create, :update]
+class AuditsController < InheritedResources::Base
+  actions :index, :show, :destroy
+
   before_filter :is_annotator?
   before_filter :is_administrator?, :only => [:destroy]
   before_filter :find_parents
 
-  destroy.before do
+  def destroy
     raise "Object has been modified after this revision" unless @audit.latest_revision_of_auditable?
 
     o = @audit.previous_revision_of_auditable
     raise "Unable to revert: resulting object state is invalid" unless o.valid?
     o.without_auditing { o.save! }
+
+    destroy!
   end
 
   private

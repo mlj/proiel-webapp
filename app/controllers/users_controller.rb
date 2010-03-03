@@ -1,11 +1,11 @@
-class UsersController < ApplicationController
+class UsersController < InheritedResources::Base
+  actions :index, :show
+
   before_filter :is_administrator?
 
-  def index
-    @users = User.search(params[:query], :page => current_page)
-  end
+  private
 
-  def show
-   @user = User.find(params[:id])
+  def collection
+    @users = User.search(params[:query], :page => current_page)
   end
 end

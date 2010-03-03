@@ -1,14 +1,18 @@
-class SentencesController < ResourceController::Base
+class SentencesController < InheritedResources::Base
+  actions :all, :except => [:new, :create]
+
   before_filter :find_parents
   before_filter :is_annotator?, :only => [:merge, :tokenize, :resegment_edit, :resegment_update]
   before_filter :is_reviewer?, :only => [:edit, :update, :flag_as_reviewed, :flag_as_not_reviewed]
-  actions :all, :except => [:new, :create]
 
-  show.before do
+  def show
+    @sentence = Sentence.find(params[:id])
     @tokens = @sentence.tokens.search(params[:query], :page => current_page)
+
+    show!
   end
 
-  update.before do
+  def update
     if params[:sentence]
       if params[:sentence][:presentation].blank?
         params[:sentence][:presentation] = nil
@@ -16,6 +20,8 @@ class SentencesController < ResourceController::Base
         params[:sentence][:presentation] = params[:sentence][:presentation].mb_chars.normalize(UNICODE_NORMALIZATION_FORM)
       end
     end
+
+    update!
   end
 
   protected

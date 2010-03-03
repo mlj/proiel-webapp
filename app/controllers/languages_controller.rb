@@ -1,4 +1,6 @@
-class LanguagesController < ReadOnlyController
+class LanguagesController < InheritedResources::Base
+  actions :index, :show
+
   private
 
   def collection

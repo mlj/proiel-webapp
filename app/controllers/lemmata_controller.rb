@@ -1,21 +1,29 @@
-class LemmataController < ResourceController::Base
+class LemmataController < InheritedResources::Base
+  actions :all, :except => [:destroy]
+
   before_filter :is_reviewer?, :except => [:index, :show]
   before_filter :find_parents
-  actions :all, :except => [ :destroy ]
 
-  show.before do
+  def show
+    @lemma = Lemma.find(params[:id])
     @semantic_tags = @lemma.semantic_tags
     @tokens = @lemma.tokens.search(params[:query], :page => current_page)
     @morphology_stats = @lemma.tokens.count(:group => :morphology).map { |k, v| [k.abbreviated_summary.capitalize, v] }
     @mergeable_lemmata = @lemma.mergeable_lemmata
+
+    show!
   end
 
-  update.before do
+  def update
     params[:lemma][:lemma] = params[:lemma][:lemma].mb_chars.normalize(UNICODE_NORMALIZATION_FORM) if params[:lemma]
+
+    update!
   end
 
-  create.before do
+  def create
     params[:lemma][:lemma] = params[:lemma][:lemma].mb_chars.normalize(UNICODE_NORMALIZATION_FORM) if params[:lemma]
+
+    create!
   end
 
   def merge

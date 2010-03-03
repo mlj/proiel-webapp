@@ -1,4 +1,4 @@
-class SourcesController < ResourceController::Base
+class SourcesController < InheritedResources::Base
   before_filter :is_administrator?, :except => [:index, :show]
   actions :all, :except => [:destroy]
 

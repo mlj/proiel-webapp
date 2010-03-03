@@ -1,4 +1,4 @@
-class BookmarksController < ResourceController::Base
+class BookmarksController < InheritedResources::Base
   before_filter :is_reviewer?
   before_filter :find_parents
 

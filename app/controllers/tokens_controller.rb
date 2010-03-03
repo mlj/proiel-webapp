@@ -1,5 +1,6 @@
-class TokensController < ResourceController::Base
+class TokensController < InheritedResources::Base
   actions :all, :except => [ :new, :create, :destroy ]
+
   before_filter :is_reviewer?
   before_filter :is_administrator?, :only => [ :edit, :update ]
   before_filter :find_parents
@@ -16,16 +17,24 @@ class TokensController < ResourceController::Base
     @tokens = (@parent ? Token.by_source(@source) : Token).search(params[:query], :page => current_page, :include => [:lemma])
   end
 
-  show.before do
+  public
+
+  def show
+    @token = Token.find(params[:id])
+
     @semantic_tags = @token.semantic_tags
     # Add semantic tags from lemma not present in the token's semantic tags.
     @semantic_tags += @token.lemma.semantic_tags.reject { |tag| @semantic_tags.map(&:semantic_attribute).include?(tag.semantic_attribute) } if @token.lemma
+
+    show!
   end
 
-  update.before do
+  def update
     if params[:token]
       params[:token][:form] = params[:token][:form].mb_chars.normalize(UNICODE_NORMALIZATION_FORM)
     end
+
+    update!
   end
 
   public
