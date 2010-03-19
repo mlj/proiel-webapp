@@ -1,0 +1,15 @@
+<h1>Table of contents</h1>
+
+<ul class="toc toc-l1">
+  <% @sources.group_by(&:language).each do |language, sources| -%>
+    <li><span class="toc-language"><%= language.name %></span>
+      <ul class="toc-l2">
+        <% sources.each do |source| -%>
+          <li>
+            <span class="toc-title"><%= source.title %></span><span class="toc-link"><%= link_to 'Browse', source_divisions_path(:source => source.id) %></span>
+          </li>
+        <% end %>
+      </ul>
+    </li>
+  <% end %>
+</ul>

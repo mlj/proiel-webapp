@@ -1,3 +1,9 @@
-<% layer :recent_activity do -%>
-  <%= line_chart "Recent activity", @activity_stats %>
+<% if @activity_stats.length > 1 %>
+  <% layer :activity do -%>
+    <%= line_chart "Recent activity", @activity_stats %>
+  <% end %>
 <% end %>
+
+<%= statistics "Completion (ratio of completed sentences)", "sentence", @sentence_completion_stats %>
+<%= statistics "Annotators", "sentence", @annotated_by_stats %>
+<%= statistics "Reviewers", "sentence", @reviewed_by_stats %>

@@ -108,7 +108,18 @@ class SourceDivision < ActiveRecord::Base
   protected
 
   def self.search(query, options = {})
-    options[:conditions] ||= ['title LIKE ?', "%#{query}%"] unless query.blank?
+    options[:conditions] ||= query.inject([nil,[]]) do |m,v| 
+      [[m.first, (case v[0]
+                 when :source_id
+                   'source_id = ?'
+                 when :title
+                   'title LIKE ?'
+                 else
+                   raise "Unknown key #{v[0]}"
+                  end)].compact.join(" AND "),
+       m.last + [(v[1].to_i.to_s == v[1] ? v[1].to_i : "%#{v[1]}%" )]
+      ]
+    end.flatten unless query.empty?
 
     paginate options
   end

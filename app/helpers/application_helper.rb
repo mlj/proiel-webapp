@@ -192,6 +192,7 @@ module ApplicationHelper
   #
   # === Actions
   # <tt>:index</tt> -- A link to the index page for the resource.
+  # <tt>:statistics</tt> -- A link to the statistics page for the resource.
   # <tt>:new</tt> -- A link for adding a new object.
   # <tt>:edit</tt> -- A link for editing the object.
   # <tt>:delete</tt> -- A link for deleting the object.
@@ -204,7 +205,7 @@ module ApplicationHelper
   # <tt>:parent</tt> -- A link to the parent object in a hierarchical
   # structure. This requires the model to respond to +parent+.
   def link_to_resources(object, *actions)
-    [:index, :new, :edit, :delete, :previous, :next, :parent].select do |action|
+    [:index, :statistics, :new, :edit, :delete, :previous, :next, :parent].select do |action|
       actions.include?(action)
     end.map do |action|
       send("link_to_#{action}", object)
@@ -253,4 +254,11 @@ module ApplicationHelper
   def link_to_parent(object)
     link_to('Show parent', object.parent, :class => :parent, :accesskey => 'u')
   end
+
+  # Creates a resource statistics link for an object or a model.
+  def link_to_statistics(object_or_model)
+    klass = object_or_model.is_a?(Class) ? object_or_model : object_or_model.class
+    link_to('Statistics', send("#{klass.to_s.underscore}_statistics_url", object_or_model), :class => :statistics)
+  end
+
 end

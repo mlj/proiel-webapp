@@ -3,8 +3,13 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users
 
   map.resources :audits
-  map.resources :sources
-  map.resources :source_divisions
+  map.resource :statistics
+  map.resources :sources do |s|
+    s.resource :statistics
+  end
+  map.resources :source_divisions do |s|
+    s.resource :statistics
+  end
   map.resources :alignments, :member => {
     :commit => :post,
     :uncommit => :post,
@@ -34,7 +39,6 @@ ActionController::Routing::Routes.draw do |map|
     annotation.resource :tokenizations
   end
 
-  map.resource :statistics
   map.resources :import_sources
   map.resources :notes
   map.resources :semantic_tags
@@ -56,5 +60,5 @@ ActionController::Routing::Routes.draw do |map|
   map.site 'site/:name', :controller => 'page', :action => 'show'
 
   # Default page
-  map.root :source_divisions
+  map.root :controller => 'home', :action => 'index'
 end

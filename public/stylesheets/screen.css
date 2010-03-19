@@ -76,6 +76,12 @@ a.index {
   margin-right: 1em;
 }
 
+a.statistics {
+  padding-left: 24px;
+  background: transparent url(/images/sweetie/24-message-info.png) no-repeat center left;
+  margin-right: 1em;
+}
+
 a.delete {
   padding-left: 24px;
   background: transparent url(/images/sweetie/24-em-cross.png) no-repeat center left;

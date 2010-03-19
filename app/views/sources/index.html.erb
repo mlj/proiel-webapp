@@ -1,15 +1,5 @@
-<% roundedbox do -%>
+<%= render_tabular @sources, [ 'Title', 'Language', '&nbsp;', '&nbsp;'  ] %>
+<% if is_administrator? %>
   <%= link_to_resources Source, :new %>
-  <% search_form_tag sources_path do %>
-    <label>Title</label><%= text_field_tag :query, params[:query] %>
-  <% end %>
 <% end %>
 
-<%= render_tabular @sources, [ 'Title', 'Language', '&nbsp;' ] %>
-
-<% if is_reviewer? %>
-  <%= statistics "Completion (sentences)", "sentence", @sentence_completion_stats %>
-  <%= statistics "Completion (words/text tokens)", "tokens", @text_token_completion_stats %>
-  <%= statistics "Annotators", "sentence", @annotated_by_stats %>
-  <%= statistics "Reviewers", "sentence", @reviewed_by_stats %>
-<% end %>

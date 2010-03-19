@@ -5,16 +5,9 @@
   <dt>Tag:</dt><dd class="tag"><%=h @source.code %></dd>
   <dt>Language:</dt><dd class="language"><%= link_to_language @source.language %></dd>
   <dt>Tracked references:</dt><dd class="tag"><%= @source.tracked_references.inspect %></dd>
-  <%= link_to_resources @source, :index, :edit %>
+  <%= link_to_resources @source, :index, :statistics, :edit %>
 <% end %>
 
 <% layer :metadata do -%>
   <%= @source.metadata.to_html %>
-<% end %>
-
-<% layer :statistics do -%>
-  <%= statistics "Completion (sentences)", "sentence", @sentence_completion_stats %>
-  <%= statistics "Completion (words/text tokens)", "token", @text_token_completion_stats %>
-  <%= statistics "Annotators", "sentence", @annotated_by_stats %>
-  <%= statistics "Reviewers", "sentence", @reviewed_by_stats %>
 <% end %>

@@ -1,6 +1,6 @@
 <% roundedbox do -%>
   <%=h @source_division.citation %> <%= show_completion_rate(@source_division.completion, :checkmark => :only) %><br/>
-  <%= link_to_resources @source_division, :previous, :next, :index, :edit, :parent %>
+  <%= link_to_resources @source_division, :previous, :next, :index, :statistics, :edit, :parent %>
   <%= link_to_if @source_division.aligned_source_division, "Sentence alignments", alignment_path(@source_division) %>
 <% end %>
 
@@ -10,13 +10,6 @@
 </div>
 
 <%= render_tabular @sentences, ['Location', 'Text', '&nbsp;'] %>
-
-<% layer :statistics do -%>
-  <%= statistics "Completion (sentences)", "sentence", @sentence_completion_stats %>
-  <%= statistics "Completion (words/text tokens)", "token", @text_token_completion_stats %>
-  <%= statistics "Annotators", "sentence", @annotated_by_stats %>
-  <%= statistics "Reviewers", "sentence", @reviewed_by_stats %>
-<% end %>
 
 <% layer_if(is_reviewer?, "low_level_data") do -%>
   <%= low_level_data_table(@source_division, :id, :position, :source, :title, :abbreviated_title, :aligned_source_division, :presentation, :reference_fields, :created_at, :updated_at) %>
