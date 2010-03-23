@@ -32,15 +32,20 @@ to build the support files.
 
 == Setting up the database
 
-To inititialize a new database, you should create a new database and
-load the schema as usual.
+Copy +config/database.yml.example+ to +config/database.yml+ and customize
+if needed. The default setup creates SQLite databases in the +db+
+directory.
 
-    $ rake db:create:all
-    $ rake db:schema:load
+Inititialize a new database by running
 
-In addition, you will need to seed the database
+    $ rake db:setup
 
-    $ rake db:seed
+Add an administrator account. This has to be done using Rails' console
+interface:
+
+    $ ./script/console
+    Loading development environment (Rails 2.3.5)
+    >> User.create! :login => "username", :first_name => "Foo", :last_name => "Bar", :email => "foo@bar", :password => "foo"
 
 == License
 
