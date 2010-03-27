@@ -56,7 +56,7 @@ Rails::Initializer.run do |config|
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
 
-  config.gem 'warden'
+  config.gem 'warden', :version => '~> 0.9'
   config.gem 'devise', :version => '~> 1.0.0'
   config.gem 'mislav-will_paginate', :version => '~> 2.3.2', :lib => 'will_paginate', :source => 'http://gems.github.com'
   config.gem 'unicode'
