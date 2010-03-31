@@ -38,15 +38,7 @@ Column                                        Description
 Presentational data and tokenisation
 ====================================
 
-All presentational text columns are expected to be on Unicode Normalisation Form C.
-
-Column                                        Description
-------                                        -----------
-`sentences.presentation`                      Presentation form for all tokens in the sentence.
-`tokens.contraction`                          If true, indicates that the tokeniser identified a contraction.
-`tokens.emendation`                           If true, indicates that the tokeniser identified an emendation.
-`tokens.abbreviation`                         If true, indicates that the tokeniser identifier an abbreviation.
-`tokens.capitalisation`                       If true, indicates that the tokeniser identifier a capitalisation.
+All text columns are expected to be on Unicode Normalisation Form C.
 
 Subset of TEI P4 used in presentation strings
 ---------------------------------------------

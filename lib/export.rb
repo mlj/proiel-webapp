@@ -60,7 +60,7 @@ class SourceXMLExport
   end
 
   # Returns the sentences to be exported by the malt or tigerxml
-  # exporter. (The PROIEL xml exporter will export the presentation of
+  # exporter. (The PROIEL XML exporter will export the presentation of
   # all sentences.)
   def filtered_sentences
     filtered_source_divisions.map { |sd| filter_sentences(sd) }.flatten

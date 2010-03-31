@@ -2,35 +2,34 @@
 
 == Installation
 
-You need Rails 2.3.2 installed as a RubyGem for this application to work.
-
-Note that you will also need RubyGems >= 1.3 to run Rails >= 2.3.2 successfully.
-See link:http://afreshcup.com/2008/10/25/rails-212-and-22rc1-update-your-rubygems/
-for details on how to solve this issue.
+You need Rails 2.3.8 installed as a RubyGem for this application to work.
 
 The application has a number of other dependencies that should be handled
 automatically by Rails' dependency tracker. Use
-    rake gems
-to get a list of dependencies and their installation status, and
+
     rake gems:install
-to install any missing RubyGems.
 
-You should also install +graphviz+ to get dependency graph visualisations.
-You can download it from link:http://www.graphviz.org/. Version 2.20.2 with
-Pango and Cairo support enabled is recommended for this release of the PROIEL
-application.
+to have the dependency tracker automatically install all dependencies.
 
-For the morphological rules, you will also need to install the +SFST+
-toolkit from
+You should also install +graphviz+ from link:http://www.graphviz.org/ to
+get dependency graph visualisations. Version 2.26.3 is known to work with
+this release of the PROIEL application. +graphviz+ must be complied with
+SVG support. The recommended configuration settings are
+
+    --with-fontconfig --with-freetype2 --with-pangocairo --with-rsvg
+
+To be able to compile morphological rules, you will need the +SFST+ toolkit
+from
 link:http://www.ims.uni-stuttgart.de/projekte/gramotron/SOFTWARE/SFST.html.
-This release of the application is designed to work with version 1.3
-of +SFST+.
+This release of the application is designed to work with version 1.3 of
++SFST+. As this is only required if you plan to complile new morphological
+rules, this step is optional.
 
 Before starting the application for the first time, you must run
     make -C lib
 to build the support files.
 
-== Setting up the database
+== Configuring the database
 
 Copy +config/database.yml.example+ to +config/database.yml+ and customize
 if needed. The default setup creates SQLite databases in the +db+
@@ -40,14 +39,17 @@ Inititialize a new database by running
 
     $ rake db:setup
 
-Add an administrator account. This has to be done using Rails' console
+Add an administrator account. This should be done using Rails' console
 interface:
 
     $ ./script/console
-    Loading development environment (Rails 2.3.5)
-    >> User.create! :login => "username", :first_name => "Foo", :last_name => "Bar", :email => "foo@bar", :password => "foo"
+    Loading development environment (Rails 2.3.8)
+    >> u = User.new :login => "username", :first_name => "Foo", :last_name => "Bar", :email => "foo@bar", :password => "foo"
+    >> u.role_id = 4
+    >> u.save!
+    >> u.confirm!
 
 == License
 
-The PROIEL web application is licensed under the terms
-of the GNU General Public License version 2. See the file +COPYING+ for details.
+The PROIEL web application is licensed under the terms of the GNU General
+Public License version 2. See the file +COPYING+ for details.

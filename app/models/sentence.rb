@@ -326,7 +326,7 @@ class Sentence < ActiveRecord::Base
   end
 
   # Appends the next sentence onto this sentence and destroys the old
-  # sentence. This also removed all dependency annotation from both
+  # sentence. This also removes all dependency annotation from both
   # sentences to ensure validity.
   def append_next_sentence!(nondestructive = true)
     if has_next?

@@ -78,14 +78,12 @@ For next iteration
 
   * Import Armenian text and check that import functions work with the new model
 
-  * Table of content
-
-    The current text presentation is rather confusing. Just a long list of all the chapters...
-
   * Show alignments of more than two languages
 
 Perhaps/later/consider
 ----------------------
+
+  * Validation of all tokens when lemma changes.
 
   * Gather all documentation in one location
     - include notes on text production
