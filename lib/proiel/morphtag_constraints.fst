@@ -1,7 +1,7 @@
 #languages#      = <CHU><LAT><XCL><GRC><GOT>
 
 #major#          = PMNVASDRCGFI\-
-#minor#          = psktrdcixagobejhfnqu\-
+#minor#          = psktrdcixagobejhfnquy\-
 #person#         = 123\-
 #number#         = sdp\-
 #tense#          = pilafrtsu\-
@@ -25,7 +25,7 @@ $e$ = \-
 
 $feature_mapping$ = \
   (<PRONOUN>:P | <NUMERAL>:M | <NOUN>:N | <VERB>:V | <ADJECTIVE>:A | <ARTICLE>:S | <ADVERB>:D | <PREPOSITION>:R | <CONJUNCTION>:C | <SUBJUNCTION>:G | <FOREIGNWORD>:F | <INTERJECTION>:I | <>:\-) \
-  (<PERSONAL>:p | <POSSESSIVE>:s | <PERSONALREFLEXIVE>:k | <POSSESSIVEREFLEXIVE>:t | <RELATIVE>:r | <DEMONSTRATIVE>:d | <RECIPROCAL>:c | <INTERROGATIVE>:i | <INDEFINITE>:x | <CARDINAL>:a | <CARDINALINDECL>:g | <ORDINAL>:o | <COMMON>:b | <PROPER>:e | <COMMONINDECL>:h | <PROPERINDECL>:j | <COMPARABLE>:f | <NONCOMPARABLE>:n | <RELATIVE>:q | <INTERROGATIVE>:u | <>:\-) \
+  (<PERSONAL>:p | <POSSESSIVE>:s | <PERSONALREFLEXIVE>:k | <POSSESSIVEREFLEXIVE>:t | <RELATIVE>:r | <DEMONSTRATIVE>:d | <RECIPROCAL>:c | <INTERROGATIVE>:i | <INDEFINITE>:x | <CARDINAL>:a | <CARDINALINDECL>:g | <ORDINAL>:o | <COMMON>:b | <PROPER>:e | <COMMONINDECL>:h | <PROPERINDECL>:j | <COMPARABLE>:f | <NONCOMPARABLE>:n | <RELATIVE>:q | <INTERROGATIVE>:u | <QUANTIFIER>:y | <>:\-) \
   (<1>:1 | <2>:2 | <3>:3 | <>:\-) \
   (<SIN>:s | <DUA>:d | <PLU>:p | <>:\-) \
   (<PRESENT>:p | <IMPERFECT>:i | <PLUPERFECT>:l | <AORIST>:a | <FUTURE>:f | <PERFECT>:r | <FUTUREPERFECT>:t | <RESULTATIVE>:s | <PAST>:u | <>:\-) \
@@ -62,8 +62,8 @@ $verb$ = ( \
 $legal_tags$ = ( \
   P [pskt]  $personal_pronominal$ | \
   P [pskt]  $indeclinable$        | \
-  P [rdcix] $nominal$             | \
-  P [rdcix] $indeclinable$        | \
+  P [rdcixy] $nominal$            | \
+  P [rdcixy] $indeclinable$       | \
   M [ao]    $nominal$             | \
   M [ao]    $indeclinable$        | \
   N [be]    $nominal$             | \

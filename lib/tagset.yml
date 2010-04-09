@@ -1,5 +1,8 @@
 ---
 parts_of_speech:
+  Py:
+    abbreviated_summary: quant.
+    summary: quantifier
   Pp:
     abbreviated_summary: pers. pron.
     summary: personal pronoun
