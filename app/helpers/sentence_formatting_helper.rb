@@ -170,8 +170,8 @@ module SentenceFormattingHelper
     private
 
     def info_status_css_class
-      @info_status_css_class ||= if token.info_status && token.info_status != :info_unannotatable
-                                   'info-annotatable ' + token.info_status.to_s.gsub('_', '-')
+      @info_status_css_class ||= if token.info_status && token.info_status != 'info_unannotatable'
+                                   'info-annotatable ' + token.info_status.gsub('_', '-')
                                  elsif token.is_annotatable?
                                    'info-annotatable no-info-status'
                                  else

@@ -1,5 +1,6 @@
 class Token < ActiveRecord::Base
-  INFO_STATUSES = [:new, :acc, :acc_gen, :acc_sit, :acc_inf, :old, :old_inact, :no_info_status, :info_unannotatable]
+  INFO_STATUSES = %w{new acc acc_gen acc_sit acc_inf old old_inact
+    no_info_status info_unannotatable}
 
   belongs_to :sentence
   belongs_to :lemma
@@ -361,8 +362,8 @@ class Token < ActiveRecord::Base
   # Returns true if the token has a nominal POS or a nominal syntactic relation,
   # or if one of its dependents is an article.
   def is_annotatable?
-    info_status == :no_info_status || # manually marked as annotatable
-      (info_status != :info_unannotatable && \
+    info_status == 'no_info_status' || # manually marked as annotatable
+      (info_status != 'info_unannotatable' && \
         !conjunction? && !relative_pronoun? && !predicative? && !appositive? &&
         (noun? || pronoun? || nominal? || dependents.any?(&:article?)))
   end
