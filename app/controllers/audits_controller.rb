@@ -18,11 +18,11 @@ class AuditsController < InheritedResources::Base
   private
 
   def object
-    @change = Audit.find(params[:id])
+    @audit = Audit.find(params[:id])
   end
 
   def collection
-    @changes = (@parent ? @parent.audits : Audit).search(params[:query], :page => current_page)
+    @audits = (@parent ? @parent.audits : Audit).search(params[:query], :page => current_page)
   end
 
   protected
