@@ -14,9 +14,13 @@ class StatisticsController < ApplicationController
 
     # Grab last 10 days with activity
     activity_dates  = sentences.annotated.find(:all, :limit => 10, :group => "DATE_FORMAT(annotated_at, '%Y-%m-%d')", :order => "annotated_at ASC")
-    activity_date_range = activity_dates.first.annotated_at..activity_dates.last.annotated_at
+    if activity_dates.first and activity_dates.last
+      activity_date_range = activity_dates.first.annotated_at..activity_dates.last.annotated_at
 
-    @activity_stats = sentences.annotated.count(:all, :group => "DATE_FORMAT(annotated_at, '%Y-%m-%d')", :order => "annotated_at ASC", :conditions => { :annotated_at => activity_date_range })
+      @activity_stats = sentences.annotated.count(:all, :group => "DATE_FORMAT(annotated_at, '%Y-%m-%d')", :order => "annotated_at ASC", :conditions => { :annotated_at => activity_date_range })
+    else
+      @activity_stats = []
+    end
 
     @sentence_completion_stats = {
       :reviewed => sentences.reviewed.count,
