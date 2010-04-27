@@ -254,7 +254,7 @@ class ValidatingDependencyGraphTestCase < ActiveSupport::TestCase
     g = ValidatingDependencyGraph.new
     g.add_node(1, :pred, nil, {}, { :empty => false, :token_number => 1})
     g.add_node(11, :adv, 1, {}, { :empty => false, :token_number => 2})
-    g.add_node(12, :xobj, 1, { 1 => :pred }, { :empty => true, :token_number => 3})
+    g.add_node(12, :xobj, 1, { 1 => :pred }, { :empty => 'C', :token_number => 3})
     g.add_node(121, :xobj, 12, {}, { :empty => false, :token_number => 5})
     g.add_node(122, :xobj, 12, {}, { :empty => false, :token_number => 6})
     assert_equal g[1].all_slashes.length, 0
@@ -269,7 +269,7 @@ class ValidatingDependencyGraphTestCase < ActiveSupport::TestCase
     g = ValidatingDependencyGraph.new
     g.add_node(1, :pred, nil, {}, { :empty => false, :token_number => 1})
     g.add_node(11, :adv, 1, {}, { :empty => false, :token_number => 2})
-    g.add_node(12, :xobj, 1, { 1 => :pred }, { :empty => true, :token_number => 3})
+    g.add_node(12, :xobj, 1, { 1 => :pred }, { :empty => 'C', :token_number => 3})
     g.add_node(121, :xobj, 12, {}, { :empty => false, :token_number => 4, :morph_features => MorphFeatures.new(',C-,lat', nil)})
     g.add_node(1211, :xobj, 121, {}, { :empty => false, :token_number => 5})
     g.add_node(1212, :xobj, 121, {}, { :empty => false, :token_number => 6})
