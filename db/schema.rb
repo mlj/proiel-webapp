@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100303145555) do
+ActiveRecord::Schema.define(:version => 20100427093157) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -22,12 +22,6 @@ ActiveRecord::Schema.define(:version => 20100303145555) do
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
-
-  create_table "books", :force => true do |t|
-    t.string "title",        :limit => 16, :default => "", :null => false
-    t.string "abbreviation", :limit => 8
-    t.string "code",         :limit => 8,  :default => "", :null => false
-  end
 
   create_table "dependency_alignment_terminations", :force => true do |t|
     t.integer "token_id",  :default => 0, :null => false
@@ -233,9 +227,9 @@ ActiveRecord::Schema.define(:version => 20100303145555) do
   end
 
   create_table "tokens", :force => true do |t|
-    t.integer  "sentence_id",                                                                                                                             :default => 0,     :null => false
+    t.integer  "sentence_id",                              :default => 0,     :null => false
     t.integer  "verse"
-    t.integer  "token_number",                                                                                                                            :default => 0,     :null => false
+    t.integer  "token_number",                             :default => 0,     :null => false
     t.string   "form",                      :limit => 64
     t.integer  "lemma_id"
     t.integer  "head_id"
@@ -244,16 +238,16 @@ ActiveRecord::Schema.define(:version => 20100303145555) do
     t.string   "source_morphology",         :limit => 17
     t.string   "source_lemma",              :limit => 32
     t.text     "foreign_ids"
-    t.enum     "info_status",               :limit => [:new, :acc, :acc_gen, :acc_sit, :acc_inf, :old, :old_inact, :no_info_status, :info_unannotatable]
+    t.string   "info_status",               :limit => 20
     t.string   "empty_token_sort",          :limit => 1
     t.string   "contrast_group"
     t.integer  "token_alignment_id"
-    t.boolean  "automatic_token_alignment",                                                                                                               :default => false
+    t.boolean  "automatic_token_alignment",                :default => false
     t.integer  "dependency_alignment_id"
     t.integer  "antecedent_id"
     t.integer  "relation_id"
     t.integer  "morphology_id"
-    t.string   "reference_fields",          :limit => 128,                                                                                                :default => "",    :null => false
+    t.string   "reference_fields",          :limit => 128, :default => "",    :null => false
   end
 
   add_index "tokens", ["antecedent_id"], :name => "index_tokens_on_antecedent_id"
