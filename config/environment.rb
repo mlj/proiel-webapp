@@ -61,7 +61,7 @@ Rails::Initializer.run do |config|
   config.gem 'unicode'
   config.gem 'oniguruma'
   config.gem 'builder'
-  config.gem 'hpricot'
+  config.gem 'nokogiri'
   config.gem 'gchartrb', :lib => 'google_chart'
   config.gem 'diff-lcs', :lib => 'diff/lcs'
   config.gem 'ruby-sfst', :lib => 'sfst'

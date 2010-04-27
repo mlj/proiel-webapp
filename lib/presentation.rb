@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2009 University of Oslo
-# Copyright 2009 Marius L. Jøhndal
+# Copyright 2009, 2010 University of Oslo
+# Copyright 2009, 2010 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -61,8 +61,8 @@ module Presentation
 
       # We assume here that all strings have an outer span with a
       # language attribute
-      seq = Hpricot.XML(s).search("//span/.").map do |t|
-        if t.class == Hpricot::Text
+      seq = Nokogiri::XML(s).search("//span/.").map do |t|
+        if t.class == Nokogiri::XML::Text
           t.to_s.split(/\s+/)
         else
           t.to_s

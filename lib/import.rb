@@ -2,8 +2,8 @@
 #
 # import.rb - Import functions for PROIEL sources
 #
-# Copyright 2007, 2008, 2009 University of Oslo
-# Copyright 2007, 2008, 2009 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010 University of Oslo
+# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -22,8 +22,8 @@
 #
 #++
 require 'proiel/src'
-require 'hpricot'
 require 'singleton'
+require 'nokogiri'
 
 class DictionaryImport
   include Singleton
@@ -51,7 +51,7 @@ class TextImport
   # Reads import data. The data source +xml_or_file+ may be an opened
   # file or a string containing the XML.
   def read(xml_or_file)
-    doc = Hpricot.XML(xml_or_file)
+    doc = Nokogiri::XML(xml_or_file)
 
     identifier = (doc/:source).first.attributes['id']
     language = (doc/:source).first.attributes['language']
