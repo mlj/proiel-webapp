@@ -11,7 +11,7 @@ module Tagger
     end
 
     def analyze(form)
-      language = Language.find_by_iso_code(@language)
+      language = Language.find_by_iso_code(@language.to_s)
       raise "invalid language #{@language}" unless language
 
       language.inflections.find_all_by_form(form).map do |instance|
