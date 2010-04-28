@@ -96,12 +96,12 @@ module Lingua
 
     def inspect_subgraph(indentation = 0)
       unless dependents.empty?
-        s = ' ' * indentation + "[#{identifier}: #{relation.inspect}, #{data.inspect}] -> {\n"
+        s = ' ' * indentation + "[#{identifier}: #{relation.inspect}, #{data.inspect} | #{slashes.map(&:identifier).inspect}] -> {\n"
         dependents.each { |d| s += d.inspect_subgraph(indentation + 2) }
         s += ' ' * indentation + "}\n"
         s
       else
-        ' ' * indentation + "[#{identifier}: #{relation.inspect}, #{data.inspect}]\n"
+        ' ' * indentation + "[#{identifier}: #{relation.inspect}, #{data.inspect} | #{slashes.map(&:identifier).inspect}]\n"
       end
     end
 
