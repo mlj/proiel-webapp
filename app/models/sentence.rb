@@ -253,9 +253,11 @@ class Sentence < ActiveRecord::Base
         # destroyed empty tokens, the orphaned slashes should also have gone away.
         # The remaining slashes will however have to be updated "manually".
         token.slash_out_edges.each { |edge| edge.destroy }
-        node.slashes_with_interpretations.each { |slashee, interpretation| SlashEdge.create(:slasher => token,
-                                                       :slashee_id => id_map[slashee.identifier],
-                                                       :relation => Relation.find_by_tag(interpretation) ) }
+        node.slashes_with_interpretations.each do |slashee, interpretation|
+          SlashEdge.create!(:slasher => token,
+                            :slashee_id => id_map[slashee.identifier],
+                            :relation => Relation.find_by_tag(interpretation.to_s))
+        end
         token.save!
       end
     end
