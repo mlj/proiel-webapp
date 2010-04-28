@@ -113,7 +113,7 @@ class InfoStatusesController < ApplicationController
         }
         # Only set the info status category of the token unless it is null (which will happen if the
         # token is not part of the focussed sentence but is nevertheless included in a contrast group)
-        attr[:info_status] = category.tr('-', '_').to_sym if category
+        attr[:info_status] = category.tr('-', '_') if category
 
         if id.starts_with?('new')
           new_attributes_ary << attr
