@@ -74,7 +74,6 @@ Rails::Initializer.run do |config|
   config.gem 'mlj-unicode_normalization_validation', :lib => 'unicode_normalization_validation', :source => 'http://gems.github.com'
   config.gem 'bluecloth'
   config.gem 'formtastic'
-  config.gem 'hoptoad_notifier'
   config.gem 'inherited_resources', :version => '~> 1.0.3'
 end
 
