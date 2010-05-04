@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
 
   serialize :preferences
 
-  devise :authenticatable, :confirmable, :recoverable, :rememberable,
+  devise :database_authenticatable, :confirmable, :recoverable, :rememberable,
     :trackable, :validatable, :registerable
 
   attr_accessible :login, :first_name, :last_name, :email, :password, :password_confirmation
