@@ -472,6 +472,7 @@ module PROIEL
       @f = dot
       @f.puts "digraph G {"
       @f.puts "  charset=\"UTF-8\";"
+      @f.puts "  graph [truecolor bgcolor=\"#ff000000\"];"
 
       default_edge_style = DEFAULT_STYLE[:default][:edges] || {}
       default_edge_style.merge!(node_options)
@@ -515,6 +516,7 @@ module PROIEL
       @f = dot
       @f.puts "digraph G {"
       @f.puts "  charset=\"UTF-8\"; rankdir=TD; ranksep=.0005; nodesep=.05;"
+      @f.puts "  graph [truecolor bgcolor=\"#ff000000\"];"
 
       @f.puts "node [shape=none]; {"
       x = (0..self.max_depth).to_a
