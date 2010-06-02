@@ -4,6 +4,15 @@ Change log
 This is a list of major changes between the releases of the
 application.
 
+Release 20100602
+----------------
+
+  * Switched to Formtastic and SASS (Marius)
+  * Upgraded to Rails 2.3.8 (Marius)
+  * Added HAML support (Marius)
+  * Switched from resource_controller to inherited_resources (Marius)
+  * Updated export functions (Dag)
+
 Release 20100212
 ----------------
 
