@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
   filter_parameter_logging :password, :password_confirmation
 
-  layout 'proiel' 
+  layout 'application'
 
   def user_is_reviewer?
     current_user.has_role?(:reviewer)

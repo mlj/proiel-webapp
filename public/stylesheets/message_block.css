@@ -37,7 +37,7 @@
   background: #fcf6d0 url(../../images/message_block/confirmation_m.gif) 1em 50% no-repeat;
 }
 
-#message_block ul.warn {
+#message_block ul.warn, #message_block ul.alert {
   border-top: 1px solid #ecd757;
   border-bottom: 1px solid #ecd757;
   background: #fcf6d0 url(../../images/message_block/warn_m.gif) 1em 50% no-repeat;

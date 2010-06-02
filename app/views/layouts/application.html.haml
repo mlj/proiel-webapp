@@ -1,0 +1,82 @@
+!!! Strict
+%html{:xmlns => 'http://www.w3.org/1999/xhtml', 'xml:lang' => 'en', :lang => 'en'}
+
+  %head
+    %title
+      = yield(:title) || 'PROIEL'
+
+    %link{:rel => 'shortcut icon', :href => '/favicon.ico'}
+    %link{:rel => 'search', :type => 'application/opensearchdescription+xml', :title => 'Search PROIEL', :href => '/search.xml'}
+    %link{:rel => 'contents', :href => '/'}
+    %link{:rel => 'index', :href => '/sentences'}
+    %link{:rel => 'glossary', :href => '/lemmata'}
+
+    %link{:rel => 'schema.DC', :href => 'http://purl.org/dc/elements/1.1/'}
+    %link{:rel => 'schema.DCTERMS', :href => 'http://purl.org/dc/terms/'}
+    %meta{:name => 'DC.type', :scheme => 'DCTERMS.DCMIType', :content => 'Text'}
+    %meta{:name => 'DC.format', :content => 'text/html; charset=utf-8'}
+    %meta{:name => 'DC.title', :lang => 'en', :content => CONFIG[:dc_title]}
+    %meta{:name => 'DC.subject', :lang => 'en', :content => CONFIG[:dc_subject]}
+    %meta{:name => 'DC.publisher', :content => CONFIG[:dc_publisher]}
+    %meta{:name => 'DC.identifier', :scheme => 'DCTERMS.URI', :content => CONFIG[:base_url]}
+
+    %meta{"http-equiv"=>"Content-Type", :content=>"text/html; charset=utf-8"}
+
+    != javascript_include_tag "prototype", "scriptaculous", "utils", "effects", "dragdrop", "controls", :cache => "base"
+    != stylesheet_link_tag "all"
+    != stylesheet_link_tag "pagination"
+    != stylesheet_link_tag "message_block"
+    != stylesheet_link_tag "semantic_forms" unless params[:controller] == 'info_statuses' or params[:controller] == 'sentence_divisions'
+    != stylesheet_link_tag "screen",     :media => "screen"
+    != stylesheet_link_tag "print",      :media => "print"
+    != stylesheet_link_tag "projection", :media => "projection"
+    != stylesheet_link_tag "purple"
+
+    != yield :head
+
+  %body
+    #headline
+    #user-navbar{:class => 'navbar'}
+      - if user_signed_in?
+        %span{:style => "float:left"}
+          != link_to 'Contents', '/', :accesskey => 't', :accesskey => '1'
+          - if current_user.has_role?(:annotator)
+            != link_to 'Annotation', :controller => :wizard
+          - if current_user.has_role?(:annotator)
+            != link_to 'Statistics', statistics_path
+          != link_to 'Search', { :controller => :home, :action => :search }, :accesskey => 's', :style => 'display: none'
+          != link_to 'Downloads', site_path('public_data')
+          != link_to 'Preferences', edit_preferences_path
+          != link_to 'Your profile', edit_user_registration_path
+          != link_to 'Logout', destroy_user_session_path
+          != link_to 'Help', site_path('help'), :accesskey => '6'
+        %span{:style => "float:right"}
+          - form_tag({ :controller => "home", :action => "quick_search" }, { :style => 'display: inline; padding: 0 0 0 0;' }) do
+            != text_field_tag :q, params[:q], :size => 15
+            != submit_tag 'Search'
+        %br{:style => "clear:both"}
+      - else
+        &nbsp;
+    - if current_user and current_user.has_role?(:reviewer)
+      #admin-navbar{:class => 'navbar'}
+        != link_to 'History', audits_path
+        != link_to 'Users', users_path
+        != link_to 'Sources', sources_path
+        != link_to 'Sentences', sentences_path
+        != link_to 'Tokens', tokens_path
+        != link_to 'Lemmata', lemmata_path
+        != link_to 'Notes', notes_path
+
+    #body
+      != message_block :flash_types => [:alert, :notice, :back, :confirm, :error, :info, :warn]
+
+      - if show_title?
+        %h1= yield :title
+      != yield
+
+    #footer
+      %span{ :class => "tag"} proiel
+      release
+      = PROIEL_RELEASE
+      - if Rails.env == 'development'
+        (in development mode)

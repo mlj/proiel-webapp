@@ -1,14 +1,4 @@
 module ApplicationHelper
-  # Inserts javascript files in the layout.
-  def javascript(*files)
-    content_for(:head) { javascript_include_tag(*files) }
-  end
-
-  # Inserts stylesheets in the layout.
-  def stylesheet(*files)
-    content_for(:head) { stylesheet_link_tag(*files) }
-  end
-
   def message(level, header, body = '')
     content_tag(:div, content_tag(:b, header) + body, :id => level)
   end
@@ -260,5 +250,4 @@ module ApplicationHelper
     klass = object_or_model.is_a?(Class) ? object_or_model : object_or_model.class
     link_to('Statistics', send("#{klass.to_s.underscore}_statistics_url", object_or_model), :class => :statistics)
   end
-
 end
