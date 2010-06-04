@@ -1,3 +1,5 @@
+var ie = false;
+
 function toggle(ev)
 {
   var elm = ev.Element();
