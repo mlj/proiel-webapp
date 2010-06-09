@@ -75,6 +75,7 @@ Rails::Initializer.run do |config|
   config.gem 'bluecloth'
   config.gem 'formtastic'
   config.gem 'inherited_resources', :version => '~> 1.0.3'
+  config.gem 'haml'
 end
 
 # Release number
