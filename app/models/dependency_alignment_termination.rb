@@ -1,4 +1,4 @@
-class DependencyAlignmentTermination < ActiveRecord::Base
+class DependencyAlignmentTerm < ActiveRecord::Base
   belongs_to :token
   belongs_to :source
 

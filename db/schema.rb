@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100427093157) do
+ActiveRecord::Schema.define(:version => 20100625101053) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -23,13 +23,13 @@ ActiveRecord::Schema.define(:version => 20100427093157) do
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
 
-  create_table "dependency_alignment_terminations", :force => true do |t|
+  create_table "dependency_alignment_terms", :force => true do |t|
     t.integer "token_id",  :default => 0, :null => false
     t.integer "source_id", :default => 0, :null => false
   end
 
-  add_index "dependency_alignment_terminations", ["source_id"], :name => "index_dependency_alignment_terminations_on_source_id"
-  add_index "dependency_alignment_terminations", ["token_id"], :name => "index_dependency_alignment_terminations_on_token_id"
+  add_index "dependency_alignment_terms", ["source_id"], :name => "idx_depalterms_source_id"
+  add_index "dependency_alignment_terms", ["token_id"], :name => "idx_depaliterms_token_id"
 
   create_table "dictionaries", :force => true do |t|
     t.string "identifier", :limit => 32,  :default => "", :null => false
@@ -70,9 +70,9 @@ ActiveRecord::Schema.define(:version => 20100427093157) do
     t.integer  "morphology_id",                                  :null => false
   end
 
-  add_index "inflections", ["language_id", "form", "morphology_id", "lemma"], :name => "index_inflections_on_language_and_form_and_morphology_and_lemma", :unique => true
-  add_index "inflections", ["language_id", "form"], :name => "index_inflections_on_language_id_and_form"
-  add_index "inflections", ["morphology_id"], :name => "index_inflections_on_morphology_id"
+  add_index "inflections", ["language_id", "form", "morphology_id", "lemma"], :name => "idx_inflections_lfml", :unique => true
+  add_index "inflections", ["language_id", "form"], :name => "idx_inflections_lf"
+  add_index "inflections", ["morphology_id"], :name => "idx_inflections_m"
 
   create_table "languages", :force => true do |t|
     t.string "iso_code", :limit => 3,  :default => "", :null => false
@@ -122,7 +122,7 @@ ActiveRecord::Schema.define(:version => 20100427093157) do
     t.datetime "updated_at"
   end
 
-  add_index "notes", ["notable_id", "notable_type"], :name => "index_notes_on_notable_id_and_notable_type"
+  add_index "notes", ["notable_id", "notable_type"], :name => "idx_notes_notable"
 
   create_table "parts_of_speech", :force => true do |t|
     t.string "tag",                 :limit => 2,   :null => false
@@ -156,7 +156,7 @@ ActiveRecord::Schema.define(:version => 20100427093157) do
     t.datetime "updated_at"
   end
 
-  add_index "semantic_attribute_values", ["semantic_attribute_id"], :name => "index_semantic_attribute_values_on_semantic_attribute_id"
+  add_index "semantic_attribute_values", ["semantic_attribute_id"], :name => "idx_semattrvalues_semattr_id"
 
   create_table "semantic_attributes", :force => true do |t|
     t.string   "tag",        :limit => 64, :default => "", :null => false
@@ -172,8 +172,8 @@ ActiveRecord::Schema.define(:version => 20100427093157) do
     t.datetime "updated_at"
   end
 
-  add_index "semantic_tags", ["taggable_id"], :name => "index_semantic_tags_on_taggable_id"
-  add_index "semantic_tags", ["taggable_type"], :name => "index_semantic_tags_on_taggable_type"
+  add_index "semantic_tags", ["taggable_id"], :name => "idx_semtags_taggable_id"
+  add_index "semantic_tags", ["taggable_type"], :name => "idx_semtags_taggable_type"
 
   create_table "sentences", :force => true do |t|
     t.integer  "sentence_number",                      :default => 0,     :null => false
@@ -193,7 +193,7 @@ ActiveRecord::Schema.define(:version => 20100427093157) do
   end
 
   add_index "sentences", ["assigned_to"], :name => "index_sentences_on_assigned_to"
-  add_index "sentences", ["source_division_id", "sentence_number"], :name => "index_sentences_on_source_division_id_and_sentence_number"
+  add_index "sentences", ["source_division_id", "sentence_number"], :name => "idx_sentences_sdid_snu"
 
   create_table "slash_edges", :force => true do |t|
     t.integer "slasher_id"
@@ -201,7 +201,7 @@ ActiveRecord::Schema.define(:version => 20100427093157) do
     t.integer "relation_id", :default => 0, :null => false
   end
 
-  add_index "slash_edges", ["slasher_id", "slashee_id"], :name => "index_slash_edges_on_slasher_and_slashee", :unique => true
+  add_index "slash_edges", ["slasher_id", "slashee_id"], :name => "idx_slash_edges_ser_see", :unique => true
 
   create_table "source_divisions", :force => true do |t|
     t.integer  "source_id",                                 :default => 0,  :null => false
@@ -252,14 +252,14 @@ ActiveRecord::Schema.define(:version => 20100427093157) do
 
   add_index "tokens", ["antecedent_id"], :name => "index_tokens_on_antecedent_id"
   add_index "tokens", ["contrast_group"], :name => "index_tokens_on_contrast_group"
-  add_index "tokens", ["dependency_alignment_id"], :name => "index_tokens_on_dependency_alignment_id"
+  add_index "tokens", ["dependency_alignment_id"], :name => "idx_tokens_depalid"
   add_index "tokens", ["form"], :name => "index_tokens_on_form"
   add_index "tokens", ["head_id"], :name => "index_tokens_on_head_id"
   add_index "tokens", ["lemma_id"], :name => "index_tokens_on_lemma_id"
   add_index "tokens", ["morphology_id"], :name => "index_tokens_on_morphology_id"
   add_index "tokens", ["relation_id"], :name => "index_tokens_on_relation_id"
-  add_index "tokens", ["sentence_id", "token_number"], :name => "index_tokens_on_sentence_id_and_token_number", :unique => true
-  add_index "tokens", ["token_alignment_id"], :name => "index_tokens_on_token_alignment_id"
+  add_index "tokens", ["sentence_id", "token_number"], :name => "idx_tokens_sid_tnur", :unique => true
+  add_index "tokens", ["token_alignment_id"], :name => "idx_tokens_tokalid"
 
   create_table "users", :force => true do |t|
     t.string   "login",                              :default => "", :null => false
@@ -288,8 +288,8 @@ ActiveRecord::Schema.define(:version => 20100427093157) do
     t.datetime "locked_at"
   end
 
-  add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
+  add_index "users", ["confirmation_token"], :name => "idx_users_conf_token", :unique => true
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["reset_password_token"], :name => "idx_users_reset_pw_token", :unique => true
 
 end
