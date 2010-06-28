@@ -167,7 +167,7 @@ end
 # in the variant used by VISL under the name `TIGER dependency format'
 # (http://beta.visl.sdu.dk/treebanks.html#TIGER_dependency_format).
 class TigerXMLExport < SourceXMLExport
-  MORPHOLOGY_BUNDLES = [:person_number, :tense_mood_voice, :case_number, :degree, :strength, :inflection]
+  MORPHOLOGY_BUNDLES = [:person_number, :tense_mood_voice, :case_number, :gender, :degree, :strength, :inflection]
 
   def initialize(source, options = {})
     super(source, options)
