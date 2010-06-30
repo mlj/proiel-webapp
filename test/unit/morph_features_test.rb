@@ -144,22 +144,22 @@ class MorphFeaturesTestCase < ActiveSupport::TestCase
     assert_equal false, @dq_i.contradict?(@dq)
     assert_equal false, @dq_i.contradict?(@_i)
 
-    assert_equal true, MorphFeatures.new('ne,C-,lat', '----------n').contradict?(MorphFeatures.new(',D,lat', nil))
+    assert_equal true, MorphFeatures.new('ne,C-,lat', '----------n').contradict?(MorphFeatures.new(',R-,lat', nil))
   end
 
   def test_closed
     assert_equal false, MorphFeatures.new(',V,lat', nil).closed?
     assert_equal false, MorphFeatures.new(',V-,lat', nil).closed?
     assert_equal false, MorphFeatures.new(',-,lat', nil).closed?
-    assert_equal false, MorphFeatures.new(',N,lat', nil).closed?
+    assert_equal false, MorphFeatures.new(',Nb,lat', nil).closed?
     assert_equal false, MorphFeatures.new(',A,lat', nil).closed?
     assert_equal true, MorphFeatures.new(',C,lat', nil).closed?
   end
 
   def test_pos_s
     assert_equal 'Df', MorphFeatures.new(',Df,lat', nil).pos_s
-    assert_equal 'D-', MorphFeatures.new(',D-,lat', nil).pos_s
-    assert_equal 'D-', MorphFeatures.new(',D,lat', nil).pos_s
+    assert_equal 'R-', MorphFeatures.new(',R-,lat', nil).pos_s
+    assert_equal 'R-', MorphFeatures.new(',R,lat', nil).pos_s
   end
 
   def test_morphology_s
@@ -185,7 +185,7 @@ class MorphFeaturesTestCase < ActiveSupport::TestCase
     assert_equal false, MorphFeatures.new(',--,lat', '------').subtag?(MorphFeatures.new(',--,lat', '-----n'))
 
     assert_equal true, MorphFeatures.new(',A-,lat', '-----n').subtag?(MorphFeatures.new(',A-,lat', '-----q'))
-    assert_equal false, MorphFeatures.new(',P-,lat', '-----n').subtag?(MorphFeatures.new(',A-,lat', '-----q'))
+    assert_equal false, MorphFeatures.new(',R-,lat', '-----n').subtag?(MorphFeatures.new(',A-,lat', '-----q'))
   end
 
   def test_compatible
@@ -195,7 +195,7 @@ class MorphFeaturesTestCase < ActiveSupport::TestCase
     assert_equal false, MorphFeatures.new(',--,lat', '------').compatible?(MorphFeatures.new(',--,lat', '-----n'))
 
     assert_equal true, MorphFeatures.new(',A-,lat', '-----n').compatible?(MorphFeatures.new(',A-,lat', '-----q'))
-    assert_equal false, MorphFeatures.new(',P-,lat', '-----n').compatible?(MorphFeatures.new(',A-,lat', '-----q'))
+    assert_equal false, MorphFeatures.new(',R-,lat', '-----n').compatible?(MorphFeatures.new(',A-,lat', '-----q'))
   end
 
   def test_pos_summary

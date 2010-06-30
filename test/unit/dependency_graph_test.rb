@@ -62,23 +62,23 @@ class ValidatingDependencyGraphTestCase < ActiveSupport::TestCase
     g = ValidatingDependencyGraph.new
     g.add_node(250414, "pred", nil, {}, {:empty=>false, :token_number => 17, :morph_features => MorphFeatures.new(',V-,lat', nil) })
     g.add_node(250398, "adv", 250414, {}, {:empty=>false, :token_number => 1, :morph_features => MorphFeatures.new(',V-,lat', nil)})
-    g.add_node(250399, "aux", 250414, {}, {:empty=>false, :token_number => 2, :morph_features => MorphFeatures.new(',,lat', nil)})
+    g.add_node(250399, "aux", 250414, {}, {:empty=>false, :token_number => 2, :morph_features => MorphFeatures.new(',Df,lat', nil)})
     g.add_node(250400, "adv", 250398, {}, {:empty=>false, :token_number => 3, :morph_features => MorphFeatures.new(',V-,lat', nil)})
-    g.add_node(250401, "aux", 250400, {}, {:empty=>false, :token_number => 4, :morph_features => MorphFeatures.new(',,lat', nil)})
-    g.add_node(250402, "sub", 250400, {}, {:empty=>false, :token_number => 5, :morph_features => MorphFeatures.new(',,lat', nil)})
+    g.add_node(250401, "aux", 250400, {}, {:empty=>false, :token_number => 4, :morph_features => MorphFeatures.new(',Df,lat', nil)})
+    g.add_node(250402, "sub", 250400, {}, {:empty=>false, :token_number => 5, :morph_features => MorphFeatures.new(',Nb,lat', nil)})
     g.add_node(250403, "adv", 250400, {}, {:empty=>false, :token_number => 6, :morph_features => MorphFeatures.new(',V-,lat', nil)})
-    g.add_node(250404, "obl", 250403, {}, {:empty=>false, :token_number => 7, :morph_features => MorphFeatures.new(',,lat', nil)})
-    g.add_node(250405, "atr", 250404, {}, {:empty=>false, :token_number => 8, :morph_features => MorphFeatures.new(',,lat', nil)})
+    g.add_node(250404, "obl", 250403, {}, {:empty=>false, :token_number => 7, :morph_features => MorphFeatures.new(',Nb,lat', nil)})
+    g.add_node(250405, "atr", 250404, {}, {:empty=>false, :token_number => 8, :morph_features => MorphFeatures.new(',A-,lat', nil)})
     g.add_node(250406, "adv", 250414, {}, {:empty=>false, :token_number => 9, :morph_features => MorphFeatures.new(',V-,lat', nil)})
-    g.add_node(250407, "obl", 250406, {}, {:empty=>false, :token_number => 10, :morph_features => MorphFeatures.new(',,lat', nil)})
-    g.add_node(250408, "atr", 250407, {}, {:empty=>false, :token_number => 11, :morph_features => MorphFeatures.new(',,lat', nil)})
-    g.add_node(250409, "apos", 250408, {}, {:empty=>false, :token_number => 12, :morph_features => MorphFeatures.new(',,lat', nil)})
-    g.add_node(250410, "aux", 250414, {}, {:empty=>false, :token_number => 13, :morph_features => MorphFeatures.new(',,lat', nil)})
-    g.add_node(250411, "sub", 250414, {}, {:empty=>false, :token_number => 14, :morph_features => MorphFeatures.new(',,lat', nil)})
+    g.add_node(250407, "obl", 250406, {}, {:empty=>false, :token_number => 10, :morph_features => MorphFeatures.new(',Nb,lat', nil)})
+    g.add_node(250408, "atr", 250407, {}, {:empty=>false, :token_number => 11, :morph_features => MorphFeatures.new(',A-,lat', nil)})
+    g.add_node(250409, "apos", 250408, {}, {:empty=>false, :token_number => 12, :morph_features => MorphFeatures.new(',Nb,lat', nil)})
+    g.add_node(250410, "aux", 250414, {}, {:empty=>false, :token_number => 13, :morph_features => MorphFeatures.new(',Df,lat', nil)})
+    g.add_node(250411, "sub", 250414, {}, {:empty=>false, :token_number => 14, :morph_features => MorphFeatures.new(',Nb,lat', nil)})
     g.add_node(250412, "obl", 250414, {}, {:empty=>false, :token_number => 15, :morph_features => MorphFeatures.new(',V-,lat', nil)})
     g.add_node(250413, "obl", 250412, {}, {:empty=>false, :token_number => 16, :morph_features => MorphFeatures.new(',V-,lat', nil)})
-    g.add_node(250415, "obl", 250414, {}, {:empty=>false, :token_number => 18, :morph_features => MorphFeatures.new(',,lat', nil)})
-    g.add_node(250416, "xadv", 250414, { 250411 => :sub }, {:empty=>false, :token_number => 19, :morph_features => MorphFeatures.new(',,lat', nil)})
+    g.add_node(250415, "obl", 250414, {}, {:empty=>false, :token_number => 18, :morph_features => MorphFeatures.new(',Nb,lat', nil)})
+    g.add_node(250416, "xadv", 250414, { 250411 => :sub }, {:empty=>false, :token_number => 19, :morph_features => MorphFeatures.new(',V-,lat', nil)})
     g
   end
 
@@ -97,24 +97,24 @@ class ValidatingDependencyGraphTestCase < ActiveSupport::TestCase
       # These are out of sequence and should be refused outside
       # the block. 
       g.badd_node(250398, "adv", 250414, {}, {:empty=>false, :token_number => 1, :morph_features => MorphFeatures.new(',V-,lat', nil)})
-      g.badd_node(250399, "aux", 250414, {}, {:empty=>false, :token_number => 2, :morph_features => MorphFeatures.new(',,lat', nil)})
+      g.badd_node(250399, "aux", 250414, {}, {:empty=>false, :token_number => 2, :morph_features => MorphFeatures.new(',Df,lat', nil)})
       g.badd_node(250400, "adv", 250398, {}, {:empty=>false, :token_number => 3, :morph_features => MorphFeatures.new(',V-,lat', nil)})
-      g.badd_node(250401, "aux", 250400, {}, {:empty=>false, :token_number => 4, :morph_features => MorphFeatures.new(',,lat', nil)})
-      g.badd_node(250402, "sub", 250400, {}, {:empty=>false, :token_number => 5, :morph_features => MorphFeatures.new(',,lat', nil)})
+      g.badd_node(250401, "aux", 250400, {}, {:empty=>false, :token_number => 4, :morph_features => MorphFeatures.new(',Df,lat', nil)})
+      g.badd_node(250402, "sub", 250400, {}, {:empty=>false, :token_number => 5, :morph_features => MorphFeatures.new(',Nb,lat', nil)})
       g.badd_node(250403, "adv", 250400, {}, {:empty=>false, :token_number => 6, :morph_features => MorphFeatures.new(',V-,lat', nil)})
-      g.badd_node(250404, "obl", 250403, {}, {:empty=>false, :token_number => 7, :morph_features => MorphFeatures.new(',,lat', nil)})
-      g.badd_node(250405, "atr", 250404, {}, {:empty=>false, :token_number => 8, :morph_features => MorphFeatures.new(',,lat', nil)})
+      g.badd_node(250404, "obl", 250403, {}, {:empty=>false, :token_number => 7, :morph_features => MorphFeatures.new(',Nb,lat', nil)})
+      g.badd_node(250405, "atr", 250404, {}, {:empty=>false, :token_number => 8, :morph_features => MorphFeatures.new(',A-,lat', nil)})
       g.badd_node(250406, "adv", 250414, {}, {:empty=>false, :token_number => 9, :morph_features => MorphFeatures.new(',V-,lat', nil)})
-      g.badd_node(250407, "obl", 250406, {}, {:empty=>false, :token_number => 10, :morph_features => MorphFeatures.new(',,lat', nil)})
-      g.badd_node(250408, "atr", 250407, {}, {:empty=>false, :token_number => 11, :morph_features => MorphFeatures.new(',,lat', nil)})
-      g.badd_node(250409, "apos", 250408, {}, {:empty=>false, :token_number => 12, :morph_features => MorphFeatures.new(',,lat', nil)})
-      g.badd_node(250410, "aux", 250414, {}, {:empty=>false, :token_number => 13, :morph_features => MorphFeatures.new(',,lat', nil)})
-      g.badd_node(250411, "sub", 250414, {}, {:empty=>false, :token_number => 14, :morph_features => MorphFeatures.new(',,lat', nil)})
+      g.badd_node(250407, "obl", 250406, {}, {:empty=>false, :token_number => 10, :morph_features => MorphFeatures.new(',Nb,lat', nil)})
+      g.badd_node(250408, "atr", 250407, {}, {:empty=>false, :token_number => 11, :morph_features => MorphFeatures.new(',A-,lat', nil)})
+      g.badd_node(250409, "apos", 250408, {}, {:empty=>false, :token_number => 12, :morph_features => MorphFeatures.new(',Nb,lat', nil)})
+      g.badd_node(250410, "aux", 250414, {}, {:empty=>false, :token_number => 13, :morph_features => MorphFeatures.new(',Df,lat', nil)})
+      g.badd_node(250411, "sub", 250414, {}, {:empty=>false, :token_number => 14, :morph_features => MorphFeatures.new(',Nb,lat', nil)})
       g.badd_node(250412, "obl", 250414, {}, {:empty=>false, :token_number => 15, :morph_features => MorphFeatures.new(',V-,lat', nil)})
       g.badd_node(250413, "obl", 250412, {}, {:empty=>false, :token_number => 16, :morph_features => MorphFeatures.new(',V-,lat', nil)})
       g.badd_node(250414, "pred", nil, {}, {:empty=>false, :token_number => 17, :morph_features => MorphFeatures.new(',V-,lat', nil)})
-      g.badd_node(250415, "obl", 250414, {}, {:empty=>false, :token_number => 18, :morph_features => MorphFeatures.new(',,lat', nil)})
-      g.badd_node(250416, "xadv", 250414, {250411 => "sub" }, {:empty=>false, :token_number => 19, :morph_features => MorphFeatures.new(',,lat', nil)})
+      g.badd_node(250415, "obl", 250414, {}, {:empty=>false, :token_number => 18, :morph_features => MorphFeatures.new(',Nb,lat', nil)})
+      g.badd_node(250416, "xadv", 250414, {250411 => "sub" }, {:empty=>false, :token_number => 19, :morph_features => MorphFeatures.new(',V-,lat', nil)})
     end
     l = setup_ok_graph
     assert_equal l.inspect, k.inspect
@@ -210,8 +210,8 @@ class ValidatingDependencyGraphTestCase < ActiveSupport::TestCase
   def test_proiel_validation_root_daughters
     # Break the graph by adding an ADV directly under the root
     g = ValidatingDependencyGraph.new
-    g.add_node(250414, "adv", nil, {}, { :empty => false, :morph_features => MorphFeatures.new(',,lat', nil) })
-    g.add_node(250398, "adv", 250414, {}, { :empty => false, :morph_features => MorphFeatures.new(',,lat', nil) })
+    g.add_node(250414, "adv", nil, {}, { :empty => false, :morph_features => MorphFeatures.new(',Df,lat', nil) })
+    g.add_node(250398, "adv", 250414, {}, { :empty => false, :morph_features => MorphFeatures.new(',Df,lat', nil) })
     assert_equal false, g.valid?
   end
 
