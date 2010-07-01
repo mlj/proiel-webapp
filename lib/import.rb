@@ -54,7 +54,7 @@ class TextImport
     doc = Hpricot.XML(xml_or_file)
 
     identifier = (doc/:source).first.attributes['id']
-    language_code = (doc/:source).first.attributes['language']
+    language = (doc/:source).first.attributes['language']
     # There may be elements called 'title', 'abbreviation' etc
     # elsewhere (typically inside the TEI header), so we must be
     # careful to get only the children of 'source'.
@@ -66,9 +66,6 @@ class TextImport
 
     source = Source.find_by_code(identifier)
     raise "Source #{identifier} already exists" if source
-
-    language = Language.find_by_tag(language_code)
-    raise "Language code #{language} invalid" unless language
 
     tracked_references = tracked_references.split(/\s*,\s*/).inject({}) do |v, e|
       sect, level = e.split(/\s*=\s*/)
@@ -83,12 +80,13 @@ class TextImport
       v
     end
 
-    source = language.sources.create!(:code => identifier,
-                                      :title => title,
-                                      :abbreviation => abbreviation,
-                                      :tei_header => tei_header,
-                                      :tracked_references => tracked_references,
-                                      :reference_format => reference_format)
+    source = Source.create!(:code => identifier,
+                            :language => language,
+                            :title => title,
+                            :abbreviation => abbreviation,
+                            :tei_header => tei_header,
+                            :tracked_references => tracked_references,
+                            :reference_format => reference_format)
 
     # We do not need versioning for imports, so disable it.
     Sentence.disable_auditing

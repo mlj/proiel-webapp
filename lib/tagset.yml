@@ -1,0 +1,74 @@
+---
+parts_of_speech:
+  Pp:
+    abbreviated_summary: pers. pron.
+    summary: personal pronoun
+  Ne:
+    abbreviated_summary: proper noun
+    summary: proper noun
+  A-:
+    abbreviated_summary: adj.
+    summary: adjective
+  V-:
+    abbreviated_summary: verb
+    summary: verb
+  Pr:
+    abbreviated_summary: rel. pron.
+    summary: relative pronoun
+  Mo:
+    abbreviated_summary: ord. num.
+    summary: ordinal numeral
+  Df:
+    abbreviated_summary: adv.
+    summary: adverb
+  Dq:
+    abbreviated_summary: rel. adv.
+    summary: relative adverb
+  Ps:
+    abbreviated_summary: poss. pron.
+    summary: possessive pronoun
+  Pi:
+    abbreviated_summary: interrog. pron.
+    summary: interrogative pronoun
+  Pt:
+    abbreviated_summary: poss. refl. pron.
+    summary: possessive reflexive pronoun
+  I-:
+    abbreviated_summary: interj.
+    summary: interjection
+  S-:
+    abbreviated_summary: art.
+    summary: article
+  R-:
+    abbreviated_summary: prep.
+    summary: preposition
+  Pk:
+    abbreviated_summary: pers. refl. pron.
+    summary: personal reflexive pronoun
+  Du:
+    abbreviated_summary: interrog. adv.
+    summary: interrogative adverb
+  G-:
+    abbreviated_summary: subj.
+    summary: subjunction
+  F-:
+    abbreviated_summary: foreign word
+    summary: foreign word
+  Px:
+    abbreviated_summary: indef. pron.
+    summary: indefinite pronoun
+  Pc:
+    abbreviated_summary: recipr. pron.
+    summary: reciprocal pronoun
+  Pd:
+    abbreviated_summary: dem. pron.
+    summary: demonstrative pronoun
+  Nb:
+    abbreviated_summary: common noun
+    summary: common noun
+  Ma:
+    abbreviated_summary: card. num.
+    summary: cardinal numeral
+  C-:
+    abbreviated_summary: conj.
+    summary: conjunction

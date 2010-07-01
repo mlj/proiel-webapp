@@ -27,10 +27,6 @@
   <%= semantic_tags_summary(@semantic_tags) %>
 <% end %>
 
-<% layer_if @morphology_stats, 'morphology' do -%>
-  <%= statistics "Morphology", "token", @morphology_stats %>
-<% end %>
-
 <% layer 'tokens' do -%>
   <%= render_tabular @tokens, nil, :partial => 'annotations/annotation', :css_class => 'concordance' %>
 <% end %>

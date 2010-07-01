@@ -1,49 +1,49 @@
 amen:
   id: 1
   form: amen
-  morphology_id: 1
+  morphology: ----------n
   lemma: amen,I-
-  language_id: 1
+  language: lat
   manual_rule: true
 cumC:
   id: 2
   form: cum
-  morphology_id: 1
+  morphology: ----------n
   lemma: cum,C-
-  language_id: 1
+  language: lat
   manual_rule: true
 cumDq:
   id: 3
   form: cum
-  morphology_id: 1
+  morphology: ----------n
   lemma: cum,Dq
-  language_id: 1
+  language: lat
   manual_rule: true
 cumR:
   id: 4
   form: cum
-  morphology_id: 1
+  morphology: ----------n
   lemma: cum,R-
-  language_id: 1
+  language: lat
   manual_rule: true
 neC:
   id: 5
   form: ne
-  morphology_id: 1
+  morphology: ----------n
   lemma: ne,C-
-  language_id: 1
+  language: lat
   manual_rule: true
 neDf:
   id: 6
   form: ne
-  morphology_id: 1
+  morphology: ----------n
   lemma: ne,Df
-  language_id: 1
+  language: lat
   manual_rule: true
 neI:
   id: 7
   form: ne
-  morphology_id: 1
+  morphology: ----------n
   lemma: ne,I-
-  language_id: 1
+  language: lat
   manual_rule: true

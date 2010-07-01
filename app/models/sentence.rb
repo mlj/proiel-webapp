@@ -291,27 +291,11 @@ class Sentence < ActiveRecord::Base
   end
 
   def morphological_annotation(overlaid_features = {})
+    p overlaid_features
     tokens.morphology_annotatable.map do |token|
-      pick, *suggestions = token.inferred_morph_features
+      suggestions = token.guess_morphology!(overlaid_features["morph-features-#{token.id}".to_sym]) #FIXME
 
-      # Figure out which morph-features to use as the displayed value.
-      # Anything already set in the editor or, alternatively, in the
-      # morph-features trumphs whatever the tagger spews out.
-      if x = overlaid_features["morph-features-#{token.id}".to_sym] #FIXME
-        set = MorphFeatures.new(x)
-        state = :annotated
-      elsif token.morph_features
-        set = token.morph_features
-        state = :annotated
-      elsif pick
-        set = pick
-        state = suggestions.length > 1 ? :ambiguous : :unambiguous
-      else
-        set = nil
-        state = :ambiguous
-      end
-
-      [token, set, suggestions, state]
+      [token, suggestions]
     end
   end
 

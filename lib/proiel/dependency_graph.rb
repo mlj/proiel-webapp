@@ -606,10 +606,10 @@ module PROIEL
 
     HEAD_DEPENDENT_CONSTRAINTS = {
       # FIXME: ATR should be excluded from anything but participles
-      'V-' => [:adv, :ag, :apos, :arg, :aux, :comp, :nonsub, :obj, :obl, :per, :piv, :sub, :xadv, :xobj, :atr],
-      'N-' => [:adnom, :apos, :atr, :aux, :comp, :narg, :part, :rel],
-      'A-' => [:adv, :apos, :atr, :aux, :comp, :obl, :part],
-      'P-' => [:apos, :atr, :aux, :part, :rel],
+      'V' => [:adv, :ag, :apos, :arg, :aux, :comp, :nonsub, :obj, :obl, :per, :piv, :sub, :xadv, :xobj, :atr],
+      'N' => [:adnom, :apos, :atr, :aux, :comp, :narg, :part, :rel],
+      'A' => [:adv, :apos, :atr, :aux, :comp, :obl, :part],
+      'P' => [:apos, :atr, :aux, :part, :rel],
     }
 
     def valid?(msg_handler = lambda { |token_ids, msg| })
@@ -665,8 +665,8 @@ module PROIEL
 
       #FIXME: special handling of non-part. vs. part.
       #FIXME: empty nodes can be verbs, but have to be excluded for now
-      HEAD_DEPENDENT_CONSTRAINTS.each_pair do |pos, relations|
-        test_head_dependent(pos, *relations)
+      HEAD_DEPENDENT_CONSTRAINTS.each_pair do |pos_major, relations|
+        test_head_dependent(pos_major, *relations)
       end
 
       #FIXME
@@ -677,10 +677,9 @@ module PROIEL
 
     # Verifies that all tokens that match the morphtag mask only have dependents related
     # to it by one of the given relations.
-    def test_head_dependent(pos_mask, *dependent_relations)
-      # FIXME: language code in contradicts clause is a bad hack
+    def test_head_dependent(pos_major, *dependent_relations)
       test_token("may only be the head in a #{dependent_relations.to_sentence(:words_connector => ', ', :two_words_connector => ' or ', :last_word_connector => ', or ')} relation",
-                 lambda { |t| !t.is_empty? and !t.data[:morph_features].contradict?(MorphFeatures.new(",#{pos_mask},lat", nil)) }) do |t|
+                 lambda { |t| !t.is_empty? and t.data[:morph_features].lemma.part_of_speech.major == pos_major }) do |t|
         t.dependents.all? { |t| dependent_relations.include?(t.relation) }
       end
     end

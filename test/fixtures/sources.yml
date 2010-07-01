@@ -1,7 +1,7 @@
 one:
   id: 1
   title: Vulgate
-  language_id: 1
+  language: lat
   tei_header: "<tei></tei>"
   reference_format: ""
   tracked_references: "---
@@ -13,7 +13,7 @@ source_division:
 two:
   id: 2
   title: Greek New Testament
-  language_id: 2
+  language: grc
   tei_header: "<tei></tei>"
   reference_format: ""
   tracked_references: "---
@@ -26,7 +26,7 @@ three:
   id: 3
   title: Plautus, Amphitruo
   abbreviation: Plaut., Amph.
-  language_id: 2
+  language: grc
   tei_header: "<tei></tei>"
   reference_format: ""
   tracked_references: "---

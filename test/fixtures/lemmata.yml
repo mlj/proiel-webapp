@@ -2,35 +2,35 @@ one:
   id: 1
   lemma: cum
   variant:
-  language_id: 1
-  part_of_speech_id: 3
+  language: lat
+  part_of_speech: R-
 two:
   id: 2
   lemma: cum
   variant:
-  language_id: 1
-  part_of_speech_id: 4
+  language: lat
+  part_of_speech: C-
 lemma_3:
   id: 3
   lemma: bellum
   variant:
-  language_id: 1
-  part_of_speech_id: 1
+  language: lat
+  part_of_speech: Nb
 lemma_4:
   id: 4
   lemma: belligero
   variant:
-  language_id: 1
-  part_of_speech_id: 6
+  language: lat
+  part_of_speech: V-
 lemma_5:
   id: 5
   lemma: cedo
   variant: 1
-  language_id: 1
-  part_of_speech_id: 6
+  language: lat
+  part_of_speech: V-
 lemma_6:
   id: 6
   lemma: Cedron
   variant:
-  language_id: 1
-  part_of_speech_id: 2
+  language: lat
+  part_of_speech: Ne

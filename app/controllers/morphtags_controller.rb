@@ -31,7 +31,7 @@ class MorphtagsController < ApplicationController
       params.keys.select { |key| key[/^morph-features-/] }.each do |key|
         token_id = key.sub(/^morph-features-/, '')
         token = Token.find(token_id)
-        x, y, z, w = ActiveSupport::JSON.decode(params[key]).split(/,\s*/) #FIXME
+        x, y, z, w = params[key].split(/,\s*/) #FIXME
         token.morph_features = MorphFeatures.new([x,y,z].join(','), w)
       end
     end
@@ -43,7 +43,11 @@ class MorphtagsController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => invalid 
     flash[:error] = invalid.record.errors.full_messages
-    # FIXME: ensure that "edit" respects our current settings?
-    redirect_to :action => 'edit', :wizard => params[:wizard]
+    # FIXME: nasty way of ensuring that "edit" respects our current settings
+    uf = {}
+    params.keys.select { |key| key[/^morph-features-/] }.each do |key|
+      uf[key] = params[key]
+    end
+    redirect_to uf.merge({ :action => 'edit', :wizard => params[:wizard] })
   end
 end

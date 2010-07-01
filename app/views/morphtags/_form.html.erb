@@ -21,15 +21,15 @@
   <%= render :partial => 'morphtags/legend' %>
 
   <div id="tokens">
-    <% @sentence.morphological_annotation(params).each do |token, set, suggestions, state| %>
+    <% @sentence.morphological_annotation(params).each do |token, suggestions| %>
       <div id="item-<%= token.id %>" class="item" onclick="onTokenSelect(<%= token.id %>)">
         <p class="form"><%= format_token_form(token) %></p>
-        <div class="morph-lemma-tags m<%= state %>">
+        <div class="morph-lemma-tags <%= token.changed? ? (suggestions.length > 1 ? 'mambiguous' : 'munambiguous') : 'mannotated' %>">
           <p class="pos">&nbsp;</p>
           <p class="morphology">&nbsp;</p>
           <p class="lemma" lang="<%= @sentence.language.tag %>">&nbsp;</p>
         </div>
-        <%= hidden_field_tag "morph-features-#{token.id}", set.to_s %>
+        <%= hidden_field_tag "morph-features-#{token.id}", token.morph_features.to_s %>
         <%= hidden_field_tag "suggestions-#{token.id}", suggestions.map(&:to_s).to_json %>
       </div>
     <% end %>

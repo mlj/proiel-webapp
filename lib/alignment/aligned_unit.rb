@@ -28,12 +28,10 @@
 # smaller the unit is, the more likely the token alignments are to be
 # correct
 
-
-
 require 'memoize'
 include Memoize
 
-GRC = Language.find_by_tag('grc')
+GRC = Language.new('grc')
 
 class AlignedUnit < Hash
   POS_DISTANCES = {

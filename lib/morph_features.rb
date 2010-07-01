@@ -1,21 +1,51 @@
 require 'positional_tag'
 
-class POSPositionalTag < PositionalTag
+class Morphology < PositionalTag
+  def morphology
+    tag
+  end
+
+  def size
+    11
+  end
+
   def fields
-    MorphFeatures::POS_POSITIONAL_TAG_SEQUENCE
+    [:person, :number, :tense, :mood, :voice, :gender, :case,
+     :degree, :animacy, :strength, :inflection]
   end
 end
 
-class MorphologyPositionalTag < PositionalTag
+class PartOfSpeech < PositionalTag
+  @@tags = YAML.load_file(Rails.root.join('lib', 'tagset.yml'))["parts_of_speech"]
+
+  def valid?
+    @@tags.has_key?(tag)
+  end
+
+  def summary
+    @@tags[tag]["summary"] if valid?
+  end
+
+  def abbreviated_summary
+    @@tags[tag]["abbreviated_summary"] if valid?
+  end
+
+  def self.all
+    @@tags.keys.map { |tag| PartOfSpeech.new(tag) }
+  end
+
+  def part_of_speech
+    tag
+  end
+
   def fields
-    MorphFeatures::MORPHOLOGY_POSITIONAL_TAG_SEQUENCE
+    [:major, :minor]
   end
 end
 
 # Aggregation class for morphological annotation.
 class MorphFeatures
   POS_LENGTH = 2
-  POS_POSITIONAL_TAG_SEQUENCE = [:major, :minor]
   MORPHOLOGY_LENGTH = 11
   MORPHOLOGY_POSITIONAL_TAG_SEQUENCE = [
     :person, :number, :tense, :mood, :voice, :gender, :case,
@@ -35,20 +65,16 @@ class MorphFeatures
       base_and_variant, pos, language = lemma.split(',')
       raise ArgumentError, "missing language" if language.blank?
 
-      language = Language.find_by_tag(language)
+      language = Language.find(language)
       raise ArgumentError, "invalid language" unless language
 
       base, variant = base_and_variant.split('#')
       raise ArgumentError, "invalid variant" unless variant.nil? or variant.to_i > 0
 
       if pos and pos.gsub('-', '') != ''
-        raise ArgumentError, "invalid part of speech" if pos.length > POS_LENGTH
-        tag = pos.ljust(POS_LENGTH, '-')
+        part_of_speech = PartOfSpeech.new(pos)
 
-        part_of_speech = PartOfSpeech.find_by_tag(tag)
-        part_of_speech ||= PartOfSpeech.new({ :tag => tag })
-
-        @lemma = part_of_speech.lemmata.find_by_lemma_and_variant_and_language_id(base, variant, language.id) if part_of_speech
+        @lemma = Lemma.find_by_part_of_speech_and_lemma_and_variant_and_language(part_of_speech, base, variant, language) if part_of_speech
       else
         part_of_speech = nil
       end
@@ -71,10 +97,7 @@ class MorphFeatures
       @morphology = nil
     when String
       if morphology and morphology.gsub('-', '') != ''
-        raise ArgumentError, "invalid morphology" if morphology.length > MORPHOLOGY_LENGTH
-        tag = morphology.ljust(MORPHOLOGY_LENGTH, '-')
-        @morphology = Morphology.find_by_tag(tag)
-        @morphology ||= Morphology.new({ :tag => tag })
+        @morphology = Morphology.new(morphology)
       else
         @morphology = nil
       end
@@ -332,8 +355,8 @@ class MorphFeatures
     raise ArgumentError unless o.language_s == language_s
     raise ArgumentError if o.lemma.export_form and lemma.export_form and o.lemma.export_form != lemma.export_form
 
-    new_pos = POSPositionalTag.new(pos_s).union(o.pos_s)
-    new_morphology = MorphologyPositionalTag.new(morphology_s).union(o.morphology_s)
+    new_pos = PartOfSpeech.new(pos_s).union(o.pos_s)
+    new_morphology = Morphology.new(morphology_s).union(o.morphology_s)
 
     MorphFeatures.new([@lemma.export_form || o.lemma.export_form, new_pos, language_s].join(','), new_morphology.to_s)
   end
@@ -341,8 +364,8 @@ class MorphFeatures
   def contradict?(o)
     raise ArgumentError unless o.class == MorphFeatures
 
-    return true if POSPositionalTag.new(pos_s).contradicts?(POSPositionalTag.new(o.pos_s))
-    return true if MorphologyPositionalTag.new(morphology_s).contradicts?(MorphologyPositionalTag.new(o.morphology_s))
+    return true if PartOfSpeech.new(pos_s).contradicts?(PartOfSpeech.new(o.pos_s))
+    return true if Morphology.new(morphology_s).contradicts?(Morphology.new(o.morphology_s))
 
     if lemma.lemma and o.lemma.lemma
       return true if lemma.lemma != o.lemma.lemma
@@ -450,7 +473,7 @@ class MorphFeatures
 
   # Returns an integer, -1, 0 or 1, suitable for sorting morph-features.
   def <=>(o)
-    raise "incompatible languages" if language != o.language
+    raise "incompatible languages #{language.inspect} and #{o.language.inspect}" if language != o.language
 
     s = pos_s <=> o.pos_s
     s = morphology_s <=> o.morphology_s if s.zero?

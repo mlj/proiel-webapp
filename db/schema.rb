@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100712192147) do
+ActiveRecord::Schema.define(:version => 20100712192150) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -63,56 +63,41 @@ ActiveRecord::Schema.define(:version => 20100712192147) do
   end
 
   create_table "inflections", :force => true do |t|
-    t.integer  "language_id",                 :default => 0,     :null => false
-    t.string   "form",          :limit => 64
-    t.string   "lemma",         :limit => 64
+    t.string   "language",    :limit => 3,  :default => "",    :null => false
+    t.string   "form",        :limit => 64
+    t.string   "lemma",       :limit => 64
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "manual_rule",                 :default => false, :null => false
-    t.integer  "morphology_id",                                  :null => false
+    t.boolean  "manual_rule",               :default => false, :null => false
+    t.string   "morphology",  :limit => 11, :default => "",    :null => false
   end
 
-  add_index "inflections", ["language_id", "form", "morphology_id", "lemma"], :name => "idx_inflections_lfml", :unique => true
-  add_index "inflections", ["language_id", "form"], :name => "idx_inflections_lf"
-  add_index "inflections", ["morphology_id"], :name => "idx_inflections_m"
-
-  create_table "languages", :force => true do |t|
-    t.string "tag",  :limit => 3,  :default => "", :null => false
-    t.string "name", :limit => 32, :default => "", :null => false
-  end
-
-  add_index "languages", ["tag"], :name => "index_languages_on_iso_code", :unique => true
+  add_index "inflections", ["language", "form", "morphology", "lemma"], :name => "idx_inflections_lfml", :unique => true
+  add_index "inflections", ["language", "form"], :name => "idx_inflections_lf"
+  add_index "inflections", ["morphology"], :name => "idx_inflections_m"
 
   create_table "lemmata", :force => true do |t|
-    t.string   "lemma",             :limit => 64, :default => "", :null => false
-    t.integer  "variant",           :limit => 2
+    t.string   "lemma",          :limit => 64, :default => "", :null => false
+    t.integer  "variant",        :limit => 2
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "short_gloss",       :limit => 64
+    t.string   "short_gloss",    :limit => 64
     t.text     "full_gloss"
-    t.string   "sort_key",          :limit => 16
+    t.string   "sort_key",       :limit => 16
     t.text     "foreign_ids"
     t.boolean  "conjecture"
     t.boolean  "unclear"
     t.boolean  "reconstructed"
     t.boolean  "nonexistant"
     t.boolean  "inflected"
-    t.integer  "language_id",                     :default => 0,  :null => false
-    t.integer  "part_of_speech_id",                               :null => false
+    t.string   "language",       :limit => 3,  :default => "", :null => false
+    t.string   "part_of_speech", :limit => 2,  :default => "", :null => false
   end
 
-  add_index "lemmata", ["language_id"], :name => "index_lemmata_on_language_id"
-  add_index "lemmata", ["lemma", "part_of_speech_id", "variant", "language_id"], :name => "lemmata_uniqueness", :unique => true
+  add_index "lemmata", ["language"], :name => "index_lemmata_on_language_id"
+  add_index "lemmata", ["lemma", "part_of_speech", "variant", "language"], :name => "lemmata_uniqueness", :unique => true
   add_index "lemmata", ["lemma"], :name => "index_lemmata_on_lemma"
   add_index "lemmata", ["variant"], :name => "index_lemmata_on_variant"
-
-  create_table "morphologies", :force => true do |t|
-    t.string "tag",                 :limit => 11,  :null => false
-    t.string "summary",             :limit => 128, :null => false
-    t.string "abbreviated_summary", :limit => 64,  :null => false
-  end
-
-  add_index "morphologies", ["tag"], :name => "index_morphologies_on_tag", :unique => true
 
   create_table "notes", :force => true do |t|
     t.string   "notable_type",    :limit => 64, :default => "", :null => false
@@ -125,14 +110,6 @@ ActiveRecord::Schema.define(:version => 20100712192147) do
   end
 
   add_index "notes", ["notable_id", "notable_type"], :name => "idx_notes_notable"
-
-  create_table "parts_of_speech", :force => true do |t|
-    t.string "tag",                 :limit => 2,   :null => false
-    t.string "summary",             :limit => 64,  :null => false
-    t.string "abbreviated_summary", :limit => 128, :null => false
-  end
-
-  add_index "parts_of_speech", ["tag"], :name => "index_parts_of_speech_on_tag", :unique => true
 
   create_table "relation_equivalences", :id => false, :force => true do |t|
     t.integer "subrelation_id",   :null => false
@@ -218,14 +195,14 @@ ActiveRecord::Schema.define(:version => 20100712192147) do
   end
 
   create_table "sources", :force => true do |t|
-    t.string  "code",               :limit => 64,  :default => "", :null => false
-    t.string  "title",              :limit => 128, :default => "", :null => false
-    t.string  "abbreviation",       :limit => 64,  :default => "", :null => false
-    t.integer "language_id",                       :default => 0,  :null => false
-    t.text    "tei_header",                                        :null => false
-    t.string  "tracked_references", :limit => 128, :default => "", :null => false
-    t.string  "reference_fields",   :limit => 128, :default => "", :null => false
-    t.string  "reference_format",   :limit => 256, :default => "", :null => false
+    t.string "code",               :limit => 64,  :default => "", :null => false
+    t.string "title",              :limit => 128, :default => "", :null => false
+    t.string "abbreviation",       :limit => 64,  :default => "", :null => false
+    t.string "language",           :limit => 3,   :default => "", :null => false
+    t.text   "tei_header",                                        :null => false
+    t.string "tracked_references", :limit => 128, :default => "", :null => false
+    t.string "reference_fields",   :limit => 128, :default => "", :null => false
+    t.string "reference_format",   :limit => 256, :default => "", :null => false
   end
 
   create_table "tokens", :force => true do |t|
@@ -248,7 +225,7 @@ ActiveRecord::Schema.define(:version => 20100712192147) do
     t.integer  "dependency_alignment_id"
     t.integer  "antecedent_id"
     t.integer  "relation_id"
-    t.integer  "morphology_id"
+    t.string   "morphology",                :limit => 11
     t.string   "reference_fields",          :limit => 128, :default => "",    :null => false
   end
 
@@ -258,7 +235,7 @@ ActiveRecord::Schema.define(:version => 20100712192147) do
   add_index "tokens", ["form"], :name => "index_tokens_on_form"
   add_index "tokens", ["head_id"], :name => "index_tokens_on_head_id"
   add_index "tokens", ["lemma_id"], :name => "index_tokens_on_lemma_id"
-  add_index "tokens", ["morphology_id"], :name => "index_tokens_on_morphology_id"
+  add_index "tokens", ["morphology"], :name => "index_tokens_on_morphology_id"
   add_index "tokens", ["relation_id"], :name => "index_tokens_on_relation_id"
   add_index "tokens", ["sentence_id", "token_number"], :name => "idx_tokens_sid_tnur", :unique => true
   add_index "tokens", ["token_alignment_id"], :name => "idx_tokens_tokalid"

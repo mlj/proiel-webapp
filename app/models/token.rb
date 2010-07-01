@@ -1,3 +1,27 @@
+#--
+#
+# Copyright 2007, 2008, 2009, 2010 University of Oslo
+# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
+#
+# This file is part of the PROIEL web application.
+#
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+#++
+# Model for a lemma. Each lemma has a base (non-inflected) form, a language code
+# and may additionally be differentiated from other lemmata in the same language
+# with the same base form using a integer variant identifier.
 class Token < ActiveRecord::Base
   INFO_STATUSES = %w{new acc acc_gen acc_sit acc_inf old old_inact
     no_info_status info_unannotatable}
@@ -10,7 +34,6 @@ class Token < ActiveRecord::Base
   belongs_to :head, :class_name => 'Token'
   has_many :dependents, :class_name => 'Token', :foreign_key => 'head_id'
   belongs_to :relation
-  belongs_to :morphology
 
   has_many :slash_out_edges, :class_name => 'SlashEdge', :foreign_key => 'slasher_id', :dependent => :destroy
   has_many :slash_in_edges, :class_name => 'SlashEdge', :foreign_key => 'slashee_id', :dependent => :destroy
@@ -23,6 +46,9 @@ class Token < ActiveRecord::Base
 
   has_many :anaphors, :class_name => 'Token', :foreign_key => 'antecedent_id', :dependent => :nullify
   belongs_to :antecedent, :class_name => 'Token', :foreign_key => 'antecedent_id'
+
+  composed_of :morphology, :allow_nil => true, :converter => Proc.new { |value| value.is_a?(String) ? Morphology.new(value) : value }
+  validates_length_of :morphology, :allow_nil => true, :is => MorphFeatures::MORPHOLOGY_LENGTH
 
   before_validation :before_validation_cleanup
 
@@ -211,13 +237,6 @@ class Token < ActiveRecord::Base
         self.save!
       end
     end
-  end
-
-  # Infers morph-features by invoking the morphological tagger. If morph-features
-  # are already present these take precedence.
-  def inferred_morph_features
-    result, pick, *suggestions = language.guess_morphology(form, morph_features || source_morph_features)
-    [pick, *suggestions]
   end
 
   # Relation predicates to be delegated to Relation.
@@ -504,5 +523,55 @@ class Token < ActiveRecord::Base
 
   def to_s
     form
+  end
+
+  # Guesses morphological features using the morphological tools that have
+  # been for the language in question. Any morphological features already
+  # set for the token will take precedence, as will any value of the
+  # +source_morph_features+ attribute. If features can be guessed, these
+  # are set for the token, but the token is not saved. The function returns
+  # a list of alternative suggestions in order of decreasing probability.
+  # To check if the guesser altered the features of the token, check the
+  # value of +changed?+.
+  def guess_morphology!(overlaid_features = nil)
+    # Guess morphology using both +morph_features+ and
+    # +source_morph_features+. The only way of making use of
+    # +source_morph_features+ is to include them here as there is no
+    # guarantee that these will be complete, so we may have to use the
+    # guesser to complete them. The motivation for also filtering the
+    # guesses using +morph_features+ is so that we can supply a
+    # 'reasonable' set of alternative suggestions (for example of
+    # alternative lemmata) along for a token with +morph_features+ already
+    # set.
+    result, pick, *suggestions = language.guess_morphology(form, morph_features || source_morph_features)
+
+    # Figure out which features to use. The following is the sequence of
+    # priority: 1) Any value set by the caller, 2) any value already set on
+    # the token. +source_morphology+ only has an effect on the guessing of
+    # morphology.
+    new_morph_features = if overlaid_features
+                           # FIXME
+                           x, y, z, w = overlaid_features.split(',')
+                           MorphFeatures.new([x, y, z].join(','), w)
+                         elsif morph_features
+                           morph_features
+                         elsif pick
+                           pick
+                         else
+                           nil
+                         end
+
+    # FIXME: find a way of unifying this with morph_features=() ideally by
+    # avoiding the implicit saving of objects.
+    if new_morph_features
+      self.morphology = new_morph_features.morphology
+      self.lemma = new_morph_features.lemma
+    else
+      self.morphology = nil
+      self.lemma = nil
+    end
+
+    # Return all suggestions but strip off the probabilities.
+    suggestions.map(&:first)
   end
 end

@@ -205,32 +205,23 @@ end
 # Importer for inflections
 class InflectionsImportExport < CSVImportExport
   def initialize
-    super :language_code, :lemma, :pos, :form, :morphologies
+    super :language, :lemma, :pos, :form, :morphologies
   end
 
   protected
 
-  def read_fields(language_code, lemma, pos, form, *morphologies)
-    @language = Language.find_by_tag(language_code) if @language_code != language_code
-
+  def read_fields(language, lemma, pos, form, *morphologies)
     morphologies.each do |morphology|
-      n = MorphFeatures.new([lemma, pos, language_code].join(","), morphology)
+      n = MorphFeatures.new([lemma, pos, language].join(","), morphology)
       if n.valid?
-        m = Morphology.find_by_tag(morphology)
-        unless m
-          m = Morphology.create!(:tag => morphology,
-                                 :summary => n.morphology_summary,
-                                 :abbreviated_summary => n.morphology_summary(:abbreviated => true))
-        end
         begin
-          @language.inflections.create!(:morphology => m,
-                                        :form => form,
-                                        :lemma => [lemma, pos].join(','))
+          Inflection.create!(:morphology => morphology, :language => language,
+                             :form => form, :lemma => [lemma, pos].join(','))
         rescue
           STDERR.puts "Disregarding rule #{form} -> #{lemma},#{pos},#{n.morphology_summary}: #{$!}"
         end
       else
-        STDERR.puts "The tag #{pos + morphology} -- #{n.morphology_summary} -- (assumed for #{form}) is invalid in #{@language.name}...ignoring"
+        STDERR.puts "The tag #{pos + morphology} -- #{n.morphology_summary} -- (assumed for #{form}) is invalid in language #{@language}...ignoring"
       end
     end
   end

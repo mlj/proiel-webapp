@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009 University of Oslo
-# Copyright 2007, 2008, 2009 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010 University of Oslo
+# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -29,7 +29,8 @@ class Source < ActiveRecord::Base
   end
   validates_presence_of :tracked_references
 
-  belongs_to :language
+  composed_of :language, :converter => Proc.new { |value| value.is_a?(String) ? Language.new(value) : value }
+
   has_many :source_divisions, :order => [:position]
   has_many :bookmarks
 

@@ -114,13 +114,11 @@ class Validator < Task
   end
 
   def check_manual_morphology(logger)
-    closed = "^(#{MorphFeatures::OPEN_MAJOR.join('|')})"
-    PartOfSpeech.find(:all, :conditions => ["tag not rlike ?", closed]).each do |pos|
-      pos.lemmata.each do |lemma|
-        language = lemma.language
-
+    closed_regexp = /^(#{MorphFeatures::OPEN_MAJOR.join('|')})/
+    PartOfSpeech.all.select { |pos| pos.tag[closed_regexp] }.each do |pos|
+      Lemma.find_by_part_of_speech(pos.tag).each do |lemma|
         lemma.tokens.each do |token|
-          unless language.inflections.exists?(:form => token.form, :morphology_id => token.morphology_id, :manual_rule => true)
+          unless Inflection.exists?(:language => lemma.language, :form => token.form, :morphology => token.morphology, :manual_rule => true)
             log_token_error(logger, token, "Closed class morph-features but no manual rule")
           end
         end

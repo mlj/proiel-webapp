@@ -4,6 +4,8 @@ Change log
 This is a list of major changes between the releases of the
 application.
 
+  * Redefined Language, Morphology and PartOfSpeech tables as aggregations
+    with static tag sets (Marius)
   * Switched from customis versioning + userstamp to upstream
     acts_as_audited since this now automatically tracks user IDs (Marius)
 

@@ -6,7 +6,7 @@ class HomeController < ApplicationController
   ANNOTATION_SEARCH_PATTERN = Regexp.new(/^\s*(\d+)\s*$/).freeze
 
   def index
-    @sources = Source.search(nil, :page => current_page, :order => 'language_id, title')
+    @sources = Source.search(nil, :page => current_page)
   end
 
   # Returns suggestions for Open Search suggestion queries.
