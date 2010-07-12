@@ -115,4 +115,7 @@ $all$ = $medials$* $finals$ ({'}:{'})?
 ALPHABET = [abgdezhqiklmncoprsjtufxyw12367\*\)\(/\\\=\|\+\:;\?\%']
 $ascii-to-lower$ = [abgdezhqiklmncoprsjtufxyw]:[ABGDEZHQIKLMNCOPRSJTUFXYW] | .*
 
-$all$ || $ascii-to-lower$+
+$word$ = $all$ || $ascii-to-lower$+
+
+$punctuation$ = [\.,:;†—\?!']
+($punctuation$)* $word$ ($punctuation$)*

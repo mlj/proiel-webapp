@@ -36,6 +36,7 @@ class TransliterationTestCase < ActiveSupport::TestCase
     assert_equal [Unicode.normalize_C("θῠϊνος")], x.transliterate_string("qu%27i+noj")
     assert_equal [Unicode.normalize_C("γεφῡρίζω")], x.transliterate_string("gefu%26ri/zw")
     assert_equal [Unicode.normalize_C("γέφῡρᾰ")], x.transliterate_string("ge/fu%26ra%27")
+    assert_equal [Unicode.normalize_C("γέφῡρᾰ;")], x.transliterate_string("ge/fu%26ra%27;")
   end
 end
     
