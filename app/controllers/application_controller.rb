@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_role(role)
-    unless user_signed_in? && @current_user.has_role?(role)
+    unless user_signed_in? && current_user.has_role?(role)
       if user_signed_in?
         flash[:error] = 'You do not have permission to access this feature.'
         redirect_to "/"
