@@ -1,5 +1,5 @@
+require File.dirname(__FILE__) + '/../test_helper'
 require 'transliterations'
-require 'test/unit'
 
 class TransliterationTestCase < ActiveSupport::TestCase
   def xlit_sentence(t, e, s)
