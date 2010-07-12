@@ -6,7 +6,7 @@
     <dt>Created at:</dt><dd><%= @audit.created_at %></dd>
   </dl>
   <%= link_to 'Index', audits_url, :class => :index %>
-  <%= link_to_if @audit.latest_revision_of_auditable?, 'Revert', @audit, :method => :delete, :confirm => 'The object will be reverted to its previous revision and the audit deleted. Are you sure?', :class => :delete %>
+  <%= link_to_if @audit.auditable.audits.last == @audit, 'Revert this change', @audit, :method => :delete, :confirm => 'The object will be reverted to its previous revision and the audit deleted. Are you sure?', :class => :delete %>
 </div>
 
 <%= render :partial => 'legend' %>

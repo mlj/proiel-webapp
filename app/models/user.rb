@@ -1,6 +1,4 @@
 class User < ActiveRecord::Base
-  model_stamper
-
   belongs_to :role
   has_many :assigned_sentences, :class_name => 'Sentence', :foreign_key => 'assigned_to'
   has_many :audits

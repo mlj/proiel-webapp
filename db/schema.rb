@@ -9,16 +9,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100625101053) do
+ActiveRecord::Schema.define(:version => 20100712192147) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
     t.string   "auditable_type"
     t.string   "action"
     t.text     "changes"
-    t.integer  "version",        :default => 0
-    t.integer  "user_id",        :default => 0
-    t.datetime "created_at",                    :null => false
+    t.integer  "version",                     :default => 0
+    t.integer  "user_id",                     :default => 0
+    t.datetime "created_at",                                 :null => false
+    t.string   "user_type",      :limit => 8
+    t.string   "username",       :limit => 8
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"

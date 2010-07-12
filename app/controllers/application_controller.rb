@@ -1,8 +1,6 @@
 class ApplicationController < ActionController::Base
   before_filter :authenticate_user!
 
-  include Userstamp
-
   helper :all
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
   filter_parameter_logging :password, :password_confirmation

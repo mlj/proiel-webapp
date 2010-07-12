@@ -6,13 +6,21 @@ class AuditsController < InheritedResources::Base
   before_filter :find_parents
 
   def destroy
-    raise "Object has been modified after this revision" unless @audit.latest_revision_of_auditable?
+    @audit = Audit.find(params[:id])
 
-    o = @audit.previous_revision_of_auditable
-    raise "Unable to revert: resulting object state is invalid" unless o.valid?
-    o.without_auditing { o.save! }
+    if @audit.auditable.audits.last == @audit
+      o = @audit.auditable.revision(:previous)
 
-    destroy!
+      if o.valid?
+        o.without_auditing { o.save! }
+        destroy!
+        flash[:notice] = 'Change was successfully reverted'
+      else
+        flash[:error] = 'Unable to revert: resulting object state is invalid'
+      end
+    else
+      flash[:error] = "Object has been modified after this revision"
+    end
   end
 
   private
@@ -22,7 +30,7 @@ class AuditsController < InheritedResources::Base
   end
 
   def collection
-    @audits = (@parent ? @parent.audits : Audit).search(params[:query], :page => current_page)
+    @audits = (@parent ? @parent.audits : Audit).paginate :page => current_page
   end
 
   protected

@@ -4,6 +4,9 @@ Change log
 This is a list of major changes between the releases of the
 application.
 
+  * Switched from customis versioning + userstamp to upstream
+    acts_as_audited since this now automatically tracks user IDs (Marius)
+
 Release 20100602
 ----------------
 
