@@ -112,7 +112,7 @@ $finals$  = $final-base-letters$  $diacritics$
 
 $all$ = $medials$* $finals$ ({'}:{'})?
 
-ALPHABET = [abgdezhqiklmncoprsjtufxw12367\*\)\(/\\\=\|\+\:;\?\%']
-$ascii-to-lower$ = [abgdezhqiklmncoprsjtufxw]:[ABGDEZHQIKLMNCOPRSJTUFXW] | .*
+ALPHABET = [abgdezhqiklmncoprsjtufxyw12367\*\)\(/\\\=\|\+\:;\?\%']
+$ascii-to-lower$ = [abgdezhqiklmncoprsjtufxyw]:[ABGDEZHQIKLMNCOPRSJTUFXYW] | .*
 
 $all$ || $ascii-to-lower$+
