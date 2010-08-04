@@ -23,8 +23,8 @@
 # and may additionally be differentiated from other lemmata in the same language
 # with the same base form using a integer variant identifier.
 class Token < ActiveRecord::Base
-  INFO_STATUSES = %w{new acc acc_gen acc_sit acc_inf old old_inact
-    no_info_status info_unannotatable}
+  INFO_STATUSES = %w{new kind acc_gen acc_sit acc_inf old old_inact
+    no_info_status info_unannotatable non_spec non_spec_inf non_spec_old}
 
   belongs_to :sentence
   belongs_to :lemma

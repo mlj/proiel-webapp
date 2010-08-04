@@ -7,12 +7,14 @@ var InfoStatus = function() {
 
     // private variables
 
-    var categories = new Array('new', 'acc', 'acc-gen', 'acc-sit', 'acc-inf', 'old', 'old-inact', 'no-info-status', 'info-unannotatable');
+    var categories = new Array('new', 'kind', 'acc-gen', 'acc-sit', 'acc-inf', 'old', 'old-inact', 'no-info-status', 'info-unannotatable');
+    var non_spec_categories = new Array('non-spec', 'non-spec-inf', 'non-spec-old');
     var annotatables = null;
     var unannotatables = null;
     var selected_token = null;
     var selected_token_index = null;
     var first_numerical_code = 49; // keycode for the 1 key
+    var first_alphabetic_code = 88; // keycode for the x key
 
     // private functions
 
@@ -73,13 +75,13 @@ var InfoStatus = function() {
     /////////////////////////////////////
 
     function setInfoStatusClass(klass) {
-        categories.each(function(removed_class) {
+        non_spec_categories.concat(categories).each(function(removed_class) {
             selected_token.removeClassName(removed_class);
         });
         selected_token.addClassName(klass);
         selected_token.addClassName('info-changed');
 
-        if(klass !== 'old') {
+        if(klass !== 'old' && klass !== 'non-spec-old' && klass !== 'non-spec-inf') {
             var antecedentClass = AnaphoraAndContrast.getAntecedentClassFor(selected_token);
             if(antecedentClass) {
                 // Remove anaphoric link if we change info status, since only old tokens can have them
@@ -93,8 +95,15 @@ var InfoStatus = function() {
         document.observe('keydown', function(event) {
             if(!selected_token) return;
 
-            if(event.keyCode >= first_numerical_code && event.keyCode < first_numerical_code + categories.length) {
-                var css = categories[event.keyCode - first_numerical_code];
+            if((event.keyCode >= first_numerical_code && event.keyCode < first_numerical_code + categories.length) || (event.keyCode >= first_alphabetic_code && event.keyCode < first_alphabetic_code + non_spec_categories.length)) {
+                var css;
+                if (event.keyCode >= first_numerical_code && event.keyCode < first_numerical_code + categories.length) {
+                    css = categories[event.keyCode - first_numerical_code];
+                }
+                else {
+                    css = non_spec_categories[event.keyCode - first_alphabetic_code];
+                }
+
                 setInfoStatusClass(css);
 
                 if(css == 'info-unannotatable') {
@@ -107,7 +116,7 @@ var InfoStatus = function() {
                     // from the annotatables
                     InfoStatus.selectToken(annotatables[selected_token_index === annotatables.length ? 0 : selected_token_index]);
                 }
-                else if(css != 'old') {
+                else if(css != 'old' && css != 'acc-inf' && css != 'non-spec-old' && css != 'non-spec-inf') {
                     InfoStatus.selectToken(annotatables[selected_token_index === annotatables.length - 1 ? 0 : selected_token_index + 1]);
                 }
 
@@ -146,7 +155,7 @@ var InfoStatus = function() {
                 // Find the class name that denotes an information structure category
                 for(var i = 0; i < classes.length; i++) {
                     var klass = classes[i];
-                    if(categories.include(klass)) {
+                    if(categories.include(klass) || non_spec_categories.include(klass)) {
                         category = klass;
                         break;
                     }

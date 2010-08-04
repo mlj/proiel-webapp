@@ -3,7 +3,7 @@
    background-color: yellow;
    color: black;
 }
-.acc {
+.kind {
    background-color: blue;
    color: white;
 }
@@ -27,6 +27,22 @@
    background-color: pink;
    color: black;
 }
+
+.non-spec {
+    background-color: aqua;
+    color: black;
+}
+
+.non-spec-inf {
+    background-color: navy;
+    color: white;
+}
+
+.non-spec-old {
+    background-color: olive;
+    color: black;
+}
+
 
 /* Other stuff */
 
