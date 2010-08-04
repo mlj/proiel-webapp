@@ -2,6 +2,6 @@
   <b><%=h @sentence.citation %></b> <%= readable_completion(@sentence, :checkmark => :only) %> (<%= current_user.assigned_sentences.length %> sentences in queue)<br/>
   <%= external_text_links(@sentence) %><br/>
   <p>
-    <%= highlight(format_sentence(@sentence, { :sentence_numbers => true, :token_numbers => true}), 'nd') %>
+    <%= format_sentence(@sentence, { :sentence_numbers => true, :token_numbers => true}) %>
   </p>
 <% end %>
