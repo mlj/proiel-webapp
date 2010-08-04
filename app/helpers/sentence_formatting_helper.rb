@@ -151,9 +151,7 @@ module SentenceFormattingHelper
     def to_html(language, options)
       css = extra_css || []
 
-      if link
-        link_to(LangString.new(text, language).to_h, link, :class => (css << 'token') * ' ')
-      elsif options[:information_status]
+      if options[:information_status]
         if options[:highlight].include?(token)
           css << info_status_css_class
           css << 'ant-' + token.antecedent.id.to_s if token.antecedent
@@ -162,6 +160,10 @@ module SentenceFormattingHelper
         end
         css << 'con-' + token.contrast_group if token.contrast_group
         LangString.new(text, language, :id => 'token-' + token.id.to_s, :css => css * ' ').to_h
+      elsif link
+        # FIXME: the resource path is hard coded because sentence_path
+        # doesn't work inside an object.
+        link_to(LangString.new(text, language).to_h, "/sentences/#{link.id}", :class => (css << 'token') * ' ')
       else
         content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ')
       end
@@ -237,7 +239,7 @@ module SentenceFormattingHelper
       extra_css = []
       extra_css << :highlight if options[:highlight].include?(token)
 
-      t << FormattedToken.new(token.form, (options[:ignore_links] or options[:information_status]) ? nil : token.sentence, extra_css, token)
+      t << FormattedToken.new(token.form, options[:ignore_links] ? nil : token.sentence, extra_css, token)
       t << FormattedReference.new(:token, token.token_number)
     end
 

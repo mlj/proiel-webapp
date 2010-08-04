@@ -16,7 +16,7 @@
   </div>
   <div class="sentence-divisions" id="info-status">
     <%= format_sentence(@sentence.previous_sentences(true).last(13) + [@sentence] + @sentence.next_sentences.first(1),
-      { :information_status => true, :highlight => @sentence.tokens }) %>
+      { :information_status => true, :highlight => @sentence.tokens, :ignore_links => true}) %>
   </div>
 <% else %>
   No information structure annotation
