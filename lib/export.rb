@@ -192,7 +192,6 @@ class TigerXMLExport < SourceXMLExport
     builder = Builder::XmlMarkup.new(:target => file, :indent => 2)
     builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
     builder.corpus(:id => self.identifier) do
-      builder.meta { write_meta(builder) }
       builder.head { write_head(builder) }
       builder.body { write_body(builder) }
     end
@@ -205,6 +204,7 @@ class TigerXMLExport < SourceXMLExport
   end
 
   def write_head(builder)
+    builder.meta { write_meta(builder) }
     builder.annotation do
       @features.each do |f|
         builder.feature(:name => f.first.to_s, :domain => f.last) #FIXME - we probably want to list possible values
