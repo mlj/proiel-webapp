@@ -31,7 +31,7 @@ class LegacyImport
     STDOUT.puts " * Identifier: #{import.metadata[:id]}"
     STDOUT.puts " * Language: #{import.metadata[:language]}"
     
-    language = Language.find_by_iso_code(import.metadata[:language])
+    language = Language.find_by_tag(import.metadata[:language])
     raise "Language #{import.metadata[:language]} undefined" unless language
     
     source = language.sources.find_by_code(import.metadata[:id])

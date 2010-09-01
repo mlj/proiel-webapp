@@ -33,7 +33,7 @@
 require 'memoize'
 include Memoize
 
-GRC = Language.find_by_iso_code('grc')
+GRC = Language.find_by_tag('grc')
 
 class AlignedUnit < Hash
   POS_DISTANCES = {

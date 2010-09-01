@@ -99,7 +99,7 @@ class PROIELXMLExport < SourceXMLExport
     builder = Builder::XmlMarkup.new(:target => file, :indent => 2)
     builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
 
-    builder.source(:id => identifier, :language => @source.language.iso_code) do
+    builder.source(:id => identifier, :language => @source.language.tag) do
       builder.title @source.title
       builder.abbreviation @source.abbreviation
       builder.tag!("tracked-references", @source.tracked_references.map { |k, v| v.map { |x| [x, k].join('=') }}.flatten.join(','))

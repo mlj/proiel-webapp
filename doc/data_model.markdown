@@ -79,5 +79,5 @@ Meta data
 
 Column
 ------
-`languages.iso_code`                          ISO 639-3 code for a language. See [http://www.sil.org/iso639-3/codes.asp](ISO-639-3 code table) for valid codes.
+`languages.tag`                               ISO 639-3 code for a language. See [http://www.sil.org/iso639-3/codes.asp](ISO-639-3 code table) for valid codes.
 `languages.name`                              ISO 639-3 name for a language. See [http://www.sil.org/iso639-3/codes.asp](ISO-639-3 code table) for valid names.

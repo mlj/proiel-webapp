@@ -77,11 +77,11 @@ ActiveRecord::Schema.define(:version => 20100712192147) do
   add_index "inflections", ["morphology_id"], :name => "idx_inflections_m"
 
   create_table "languages", :force => true do |t|
-    t.string "iso_code", :limit => 3,  :default => "", :null => false
-    t.string "name",     :limit => 32, :default => "", :null => false
+    t.string "tag",  :limit => 3,  :default => "", :null => false
+    t.string "name", :limit => 32, :default => "", :null => false
   end
 
-  add_index "languages", ["iso_code"], :name => "index_languages_on_iso_code", :unique => true
+  add_index "languages", ["tag"], :name => "index_languages_on_iso_code", :unique => true
 
   create_table "lemmata", :force => true do |t|
     t.string   "lemma",             :limit => 64, :default => "", :null => false

@@ -2,24 +2,24 @@
 languages_001: 
   name: Latin
   id: "1"
-  iso_code: lat
+  tag: lat
 languages_002: 
   name: Old Church Slavonic
   id: "2"
-  iso_code: chu
+  tag: chu
 languages_003: 
   name: Classical Armenian
   id: "3"
-  iso_code: xcl
+  tag: xcl
 languages_004: 
   name: Ancient Greek (to 1453)
   id: "4"
-  iso_code: grc
+  tag: grc
 languages_005: 
   name: Gothic
   id: "5"
-  iso_code: got
+  tag: got
 languages_006: 
   name: Old Norse
   id: "6"
-  iso_code: non
+  tag: non

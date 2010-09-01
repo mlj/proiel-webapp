@@ -67,7 +67,7 @@ class TextImport
     source = Source.find_by_code(identifier)
     raise "Source #{identifier} already exists" if source
 
-    language = Language.find_by_iso_code(language_code)
+    language = Language.find_by_tag(language_code)
     raise "Language code #{language} invalid" unless language
 
     tracked_references = tracked_references.split(/\s*,\s*/).inject({}) do |v, e|

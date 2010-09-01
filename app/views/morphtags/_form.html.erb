@@ -1,5 +1,5 @@
 <% stylesheet 'morphtags' %>
-<% javascript "dynamic_pos/#{@sentence.language.iso_code}", 'morphtags' %>
+<% javascript "dynamic_pos/#{@sentence.language.tag}", 'morphtags' %>
 
 <%= hidden_field_tag "token-ids", @sentence.tokens.morphology_annotatable.map(&:id).to_json %>
 
@@ -10,7 +10,7 @@
       <% ([:pos] + MorphFeatures::MORPHOLOGY_PRESENTATION_SEQUENCE).each do |field| -%>
         <select id="<%= field %>_field" name="<%= field %>_field"></select>
       <% end %>
-      <%= text_field_with_auto_complete :morphtags, :lemma, { :size => 15 }, :with => "'morphtags[lemma]=' + encodeURIComponent(element.value) + '&morphtags[language]=#{@sentence.language.iso_code}'" %>
+      <%= text_field_with_auto_complete :morphtags, :lemma, { :size => 15 }, :with => "'morphtags[lemma]=' + encodeURIComponent(element.value) + '&morphtags[language]=#{@sentence.language.tag}'" %>
     </span>
     <%= button_to_function "Update", "onPaletteUpdate()" %>
   </div>
@@ -27,7 +27,7 @@
         <div class="morph-lemma-tags m<%= state %>">
           <p class="pos">&nbsp;</p>
           <p class="morphology">&nbsp;</p>
-          <p class="lemma" lang="<%= @sentence.language.iso_code %>">&nbsp;</p>
+          <p class="lemma" lang="<%= @sentence.language.tag %>">&nbsp;</p>
         </div>
         <%= hidden_field_tag "morph-features-#{token.id}", set.to_s %>
         <%= hidden_field_tag "suggestions-#{token.id}", suggestions.map(&:to_s).to_json %>

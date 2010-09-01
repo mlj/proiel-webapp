@@ -16,7 +16,7 @@ class TaggerTest < ActiveSupport::TestCase
   fixtures :inflections
 
   def setup
-    @lat = Language.find_by_iso_code('lat')
+    @lat = Language.find_by_tag('lat')
     @amen_fs = MorphFeatures.new("amen,I-,lat", "----------n")
     @cum_c_fs = MorphFeatures.new("cum,C-,lat", "----------n")
     @cum_r_fs = MorphFeatures.new("cum,R-,lat", "----------n")

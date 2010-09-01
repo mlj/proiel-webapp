@@ -35,7 +35,7 @@ class MorphFeatures
       base_and_variant, pos, language = lemma.split(',')
       raise ArgumentError, "missing language" if language.blank?
 
-      language = Language.find_by_iso_code(language)
+      language = Language.find_by_tag(language)
       raise ArgumentError, "invalid language" unless language
 
       base, variant = base_and_variant.split('#')
@@ -86,7 +86,7 @@ class MorphFeatures
   end
 
   def lemma_s
-    [@lemma.export_form, pos_s, @lemma.language.iso_code].join(',')
+    [@lemma.export_form, pos_s, @lemma.language.tag].join(',')
   end
 
   # Returns the morphology as a positional tag.

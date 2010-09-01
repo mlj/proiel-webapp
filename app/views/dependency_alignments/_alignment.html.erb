@@ -20,7 +20,7 @@
         <table>
           <tr><th><%= @aligned_sentence.citation %></th></tr>
           <% @aligned_sentence.tokens.dependency_annotatable.each do |t| %>
-            <tr><td id="w<%= t.id %>" class="groupable" lang="<%= t.language.iso_code %>"><%= t.form %></td></tr>
+            <tr><td id="w<%= t.id %>" class="groupable" lang="<%= t.language.tag %>"><%= t.form %></td></tr>
           <% end %>
         </table>
       </div>
@@ -31,7 +31,7 @@
         <table>
           <tr><th><%= @sentence.citation %></th></tr>
           <% @sentence.tokens.dependency_annotatable.each do |t| %>
-            <tr><td id="w<%= t.id %>" class="selectable groupable" lang="<%= t.language.iso_code %>"><%= t.form %></td></tr>
+            <tr><td id="w<%= t.id %>" class="selectable groupable" lang="<%= t.language.tag %>"><%= t.form %></td></tr>
           <% end %>
         </table>
       </div>

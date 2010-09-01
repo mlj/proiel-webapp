@@ -61,7 +61,7 @@ class Token < ActiveRecord::Base
   validates_length_of :source_morphology, :allow_nil => true, :is => MorphFeatures::MORPHOLOGY_LENGTH
 
   # FIXME: validate morphology vs language?
-  #validates_inclusion_of :morphology, :in => MorphFeatures.morphology_tag_space(language.iso_code)
+  #validates_inclusion_of :morphology, :in => MorphFeatures.morphology_tag_space(language.tag)
 
   # form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
@@ -185,7 +185,7 @@ class Token < ActiveRecord::Base
     # to pass along the language, as the +source_lemma+ attribute is a
     # serialized lemma specification without language code.
     if source_lemma or source_morphology
-      MorphFeatures.new([source_lemma, language.iso_code].join(','), source_morphology)
+      MorphFeatures.new([source_lemma, language.tag].join(','), source_morphology)
     else
       nil
     end

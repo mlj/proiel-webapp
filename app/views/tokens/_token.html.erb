@@ -1,5 +1,5 @@
 <tr>
-  <td class="form" lang="<%= token.language.iso_code %>"><%= highlight(token.form, params[:query]) || '&nbsp;' %></td>
+  <td class="form" lang="<%= token.language.tag %>"><%= highlight(token.form, params[:query]) || '&nbsp;' %></td>
   <td><%= token.token_number %></td>
   <% if token.morph_features %>
     <td><%= token.morph_features.pos_summary.capitalize %></td>

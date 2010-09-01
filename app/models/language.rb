@@ -5,16 +5,16 @@ class Language < ActiveRecord::Base
   has_many :sources
   has_many :inflections
 
-  validates_presence_of :iso_code
-  validates_length_of :iso_code, :is => 3
-  validates_uniqueness_of :iso_code
+  validates_presence_of :tag
+  validates_length_of :tag, :is => 3
+  validates_uniqueness_of :tag
   validates_presence_of :name
   validates_uniqueness_of :name
 
   # Returns the language code as a string. Equivalent to
-  # +language.iso_code+.
+  # +language.tag+.
   def to_s
-    iso_code
+    tag
   end
 
   # Returns inferred morphology for a word form in the language.
@@ -25,7 +25,7 @@ class Language < ActiveRecord::Base
   #                          e.g. <tt>:manual_rules</tt> for manual rules. All other
   #                          methods are disabled.
   def guess_morphology(form, existing_tags, options = {})
-    TAGGER.tag_token(iso_code.to_sym, form, existing_tags)
+    TAGGER.tag_token(tag.to_sym, form, existing_tags)
   rescue Exception => e
     logger.error { "Tagger failed: #{e}" }
     [:failed, nil]
@@ -33,7 +33,7 @@ class Language < ActiveRecord::Base
 
   # Returns a transliterator for the language or +nil+ if none exists.
   def transliterator
-    t = TRANSLITERATORS[iso_code.to_sym]
+    t = TRANSLITERATORS[tag.to_sym]
     t ? TransliteratorFactory::get_transliterator(t) : nil
   end
 
@@ -62,7 +62,7 @@ class Language < ActiveRecord::Base
   # as two arrays: one with the transliterations of the query and one
   # with completions.
   def self.find_lemma_completions(language_code, query)
-    language = Language.find_by_iso_code(language_code)
+    language = Language.find_by_tag(language_code)
     language ? language.find_lemma_completions(query) : [[query], []]
   end
 

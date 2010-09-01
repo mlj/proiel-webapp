@@ -211,7 +211,7 @@ class InflectionsImportExport < CSVImportExport
   protected
 
   def read_fields(language_code, lemma, pos, form, *morphologies)
-    @language = Language.find_by_iso_code(language_code) if @language_code != language_code
+    @language = Language.find_by_tag(language_code) if @language_code != language_code
 
     morphologies.each do |morphology|
       n = MorphFeatures.new([lemma, pos, language_code].join(","), morphology)
@@ -238,7 +238,7 @@ class InflectionsImportExport < CSVImportExport
   def write_fields
     Inflection.find_each do |inflection|
       lemma, pos = inflection.lemma.split(/,/)
-      yield inflection.language.iso_code, lemma, pos, inflection.form, inflection.morphology
+      yield inflection.language.tag, lemma, pos, inflection.form, inflection.morphology
     end
   end
 end

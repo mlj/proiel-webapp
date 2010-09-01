@@ -271,7 +271,7 @@ class Sentence < ActiveRecord::Base
       [token.id, {
         # FIXME: refactor
         :morph_features => mh.merge({
-          :language => language.iso_code,
+          :language => language.tag,
           :finite => ['i', 's', 'm', 'o'].include?(mh[:mood]),
           :form => token.form,
           :lemma => token.lemma ? token.lemma.lemma : nil,

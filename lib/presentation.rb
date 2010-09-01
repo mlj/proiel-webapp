@@ -51,7 +51,7 @@ module Presentation
   # will also use a less rich form of HTML.
   def presentation_as_html(options = {})
     xsl_params = {
-      :language_code => "#{language.iso_code.to_s}",
+      :language_code => "#{language.tag.to_s}",
       :default_language_code => "en"
     }
     xsl_params[:sectionNumbers] = "1" if options[:section_numbers]
