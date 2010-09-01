@@ -1,7 +1,7 @@
 <% roundedbox do -%>
   <dt>Part of speech</dt><dd class="pos"><%= @part_of_speech.summary %></dd>
   <dt>Tag</dt><dd class="tag"><%= @part_of_speech.tag %></dd>
-  <dt>Languages</dt><dd class="language"><%= link_to_languages(@part_of_speech.languages) %></dd>
+  <dt>Languages</dt><dd><%= @part_of_speech.languages.name %></dd>
   <dt>Frequency</dt><dd><%= pluralize(@part_of_speech.lemmata.count, "lemma") + ', ' + pluralize(@part_of_speech.tokens.count, "token") %></dd>
 <% end %>
   

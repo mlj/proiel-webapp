@@ -1,6 +1,6 @@
 <% roundedbox(@lemma) do -%>
   <dt>Lemma:</dt><dd><span class="lemma" lang="<%= @lemma.language.iso_code %>"><%= @lemma.export_form %></span></dd>
-  <dt>Language:</dt><dd class="language"><%= link_to_language @lemma.language %></dd>
+  <dt>Language:</dt><dd><%= @lemma.language.name %></dd>
   <dt>Part of speech:</dt><dd><%= @lemma.pos_summary.capitalize %></dd>
   <dt>Frequency:</dt><dd><%= pluralize(@lemma.tokens.count, 'token') %></dd>
   <% if @lemma.short_gloss %>

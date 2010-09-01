@@ -1,6 +1,6 @@
 <tr>
   <td class="title"><%= highlight(source.title, params[:query]) %> <%= show_completion_rate(source.completion, :checkmark => :only) %></td>
-  <td class="language"><%= link_to_language source.language %></td>
+  <td><%= source.language.name %></td>
   <td><%= link_to 'Browse', :controller => "source_divisions", :source => source.id %></td>
   <td><%= link_to 'Details', source %></td>
 </tr>
