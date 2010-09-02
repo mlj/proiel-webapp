@@ -88,7 +88,7 @@ namespace :proiel do
       File.open(ENV['FILE']) { |f| TextImport.instance.read(f) }
     end
 
-    desc "Export a PROIEL source text. Optional options: ID=source_identifier FORMAT={proiel|maltxml|tigerxml} MODE={all|reviewed} DIRECTORY=destination_directory INFO={semtags|info|both} SOURCE_DIVISION=source division title regexp"
+    desc "Export a PROIEL source text. Optional options: ID=source_identifier FORMAT={proiel|maltxml|tigerxml|tiger2} MODE={all|reviewed} DIRECTORY=destination_directory INFO={semtags|info|both} SOURCE_DIVISION=source division title regexp REMOVE_CYCLES={none|heads|all}"
     task(:export => :environment) do
       source = ENV['ID']
       format = ENV['FORMAT']
@@ -111,6 +111,9 @@ namespace :proiel do
       when 'proiel'
         klass = PROIELXMLExport
         suffix = ''
+      when 'tiger2'
+        klass = Tiger2Export
+        suffix = '-tiger2'
       else
         raise "Invalid format"
       end
@@ -123,6 +126,9 @@ namespace :proiel do
       else
         raise "Invalid mode"
       end
+
+      options[:cycles] = ENV['REMOVE_CYCLES']
+      options[:cycles] ||= 'none'
 
       case info
       when 'semtags'

@@ -12,4 +12,13 @@ class SlashEdge < ActiveRecord::Base
   validates_presence_of :relation
 
   acts_as_audited
+
+  # Returns +true+ if the slash points to the slasher's head.
+  def points_to_head?
+    slashee == slasher.head
+  end
+
+  def cyclic?
+    slashee.subgraph_set.include?(slasher)
+  end
 end

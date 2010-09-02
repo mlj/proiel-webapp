@@ -41,7 +41,7 @@ class SourceXMLExport
   # sem_tags:: Include semantic tags. Default: +false+.
   # info:: Include information structure. Default: +false+.
   def initialize(source, options = {})
-    options.assert_valid_keys(:reviewed_only, :sem_tags, :source_division, :info)
+    options.assert_valid_keys(:reviewed_only, :sem_tags, :source_division, :info, :cycles)
     options.reverse_merge! :reviewed_only => false
 
     @source = source
@@ -103,7 +103,7 @@ class PROIELXMLExport < SourceXMLExport
       builder.title @source.title
       builder.abbreviation @source.abbreviation
       builder.tag!("tracked-references", @source.tracked_references.map { |k, v| v.map { |x| [x, k].join('=') }}.flatten.join(','))
-      builder.tag!("tei-header") { @metadata.write(builder) }
+      builder.tag!("tei-header") { @metadata.write(builder) if @metadata }
 
       filtered_source_divisions.each do |sd|
         write_source_division(builder, sd)
@@ -137,14 +137,7 @@ class PROIELXMLExport < SourceXMLExport
         attributes[f.to_s.gsub('_', '-').to_sym] = v.to_s if v
       end
 
-      # Add semantic tags if wanted
-      if @options[:sem_tags]
-        sem_tags = t.semantic_tags
-        sem_tags += t.lemma.semantic_tags.reject { |tag| sem_tags.map(&:semantic_attribute).include?(tag.semantic_attribute) } if t.lemma
-        sem_tags.each do |st|
-          attributes[st.semantic_attribute.tag] = st.semantic_attribute_value.tag
-        end
-      end
+      attributes.merge!(sem_tags_to_hash) if @options[:sem_tags]
 
       unless t.slashees.empty? # this extra test avoids <token></token> style XML
         builder.token attributes do
@@ -171,11 +164,11 @@ class TigerXMLExport < SourceXMLExport
 
   def initialize(source, options = {})
     super(source, options)
-
+    @ident = 'id'
     @features = ([:lemma, :pos] + MORPHOLOGY_BUNDLES).inject([]) { |m, f| m << [f, 'FREC'] }
 
     if @options[:sem_tags]
-      # FIXME: what if there is a conflect between features
+      # FIXME: what if there is a conflict between features
       SemanticAttribute.all.each { |sa| @features << [sa.tag.downcase.to_sym, 'FREC'] }
     end
 
@@ -191,16 +184,38 @@ class TigerXMLExport < SourceXMLExport
   def do_export(file)
     builder = Builder::XmlMarkup.new(:target => file, :indent => 2)
     builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
-    builder.corpus(:id => self.identifier) do
+    write_corpus(builder)
+  end
+
+  private
+
+  def write_corpus(builder)
+    builder.corpus(@ident => self.identifier) do
       builder.head { write_head(builder) }
       builder.body { write_body(builder) }
     end
   end
 
-  private
-
   def write_meta(builder)
     builder.name(@source.title)
+  end
+
+  def declare_primary_edges(builder)
+    builder.value(:name => '--')
+    Relation.primary.each do |relation|
+      builder.value({:name => relation.tag}, relation.summary)
+    end
+  end
+
+  def  declare_secedges(builder)
+    Relation.all.each do |relation|
+      builder.value({:name => relation.tag}, relation.summary)
+    end
+  end
+
+  def declare_edgelabels(builder)
+    builder.edgelabel { declare_primary_edges(builder) }
+    builder.secedgelabel { declare_secedges(builder) }
   end
 
   def write_head(builder)
@@ -209,21 +224,7 @@ class TigerXMLExport < SourceXMLExport
       @features.each do |f|
         builder.feature(:name => f.first.to_s, :domain => f.last) #FIXME - we probably want to list possible values
       end
-
-      builder.edgelabel do
-        builder.value(:name => '--')
-        Relation.primary.each do |relation|
-          builder.comment! relation.summary
-          builder.value(:name => relation.tag)
-        end
-      end
-
-      builder.secedgelabel do
-        Relation.all.each do |relation|
-          builder.comment! relation.summary
-          builder.value(:name => relation.tag)
-        end
-      end
+      declare_edgelabels(builder)
     end
   end
 
@@ -231,9 +232,7 @@ class TigerXMLExport < SourceXMLExport
     attrs = @features.select { |f| f.last == 'FREC' or f.last == type }.map(&:first).inject({}) { |m, o| m[o] = nil; m }
 
     attrs.keys.each do |attr|
-      if attr == :tiger
-        attrs[attr] = t.id
-      elsif [:word, :cat].include?(attr)
+      if [:word, :cat].include?(attr)
         if t.empty_token_sort == 'P'
           attrs[attr] = "PRO-#{t.relation.tag.upcase}"
         elsif t.form
@@ -263,54 +262,169 @@ class TigerXMLExport < SourceXMLExport
 
   protected
 
+  def write_terminals(s, builder)
+    builder.terminals do
+      (@options[:info] ? s.tokens_with_dependents_and_info_structure.with_prodrops_in_place.reject { |t| ['C', 'V'].include?(t.empty_token_sort) } : s.tokens.morphology_annotatable).each do |t|
+        builder.t(token_attrs(s, t, 'T').merge({ @ident => "w#{t.id}"}))
+      end
+    end
+  end
+
+  def write_edges(t, builder)
+    # Add an edge between this node and the correspoding terminal node unless
+    # this is not a morphtaggable node.
+    builder.edge(:idref => "w#{t.id}", :label => '--') if t.is_morphtaggable? or (@options[:info] and t.empty_token_sort == 'P')
+
+    # Add primary dependency edges including empty pro tokens if we are exporting info structure as well
+    (@options[:info] ? t.dependents : t.dependents.reject { |p| p.empty_token_sort == 'P' }).each { |d| builder.edge(:idref => "p#{d.id}", :label => d.relation.tag) }
+
+    # Add secondary dependency edges
+    get_slashes(t).each do |se|
+      builder.secedge(:idref => "p#{se.slashee_id}", :label => se.relation.tag)
+    end
+  end
+
+  def get_slashes(t)
+    SlashEdge.find_all_by_slasher_id(t.id).reject do |se|
+      case @options[:cycles]
+      when 'all'
+        se.cyclic?
+      when 'heads'
+        se.points_to_head?
+      else
+        false
+      end
+    end
+  end
+
+  def write_root_edge(t, builder)
+    builder.edge(:idref => "p#{t.id}", :label => t.relation.tag)
+  end
+
+  def write_nonterminals(s, builder)
+    builder.nonterminals do
+      # Emit the empty root node
+      h = @features.select { |f| ['FREC', 'NT'].include?(f.last) }.map(&:first).inject({}) { |m, o| m[o] = '--'; m }.merge({@ident => "s#{s.id}_root" })
+      builder.nt(h) do
+        s.tokens.dependency_annotatable.reject(&:head).each do |t|
+          write_root_edge(t, builder)
+        end
+      end
+
+      # Do the actual nodes including pro drops if we are
+      # exporting info structure as well
+      (@options[:info] ? s.tokens_with_dependents_and_info_structure.with_prodrops_in_place : s.tokens.dependency_annotatable).each do |t|
+        builder.nt(token_attrs(s, t, 'NT').merge({ @ident => "p#{t.id}"})) do
+          write_edges(t, builder)
+        end
+      end
+    end
+  end
+
   def write_body(builder)
     filtered_sentences.each do |s|
-      builder.s(:id => "s#{s.id}") do
-        root_node_id = "s#{s.id}_root"
-
-        builder.graph(:root => root_node_id) do
-          builder.terminals do
-            (@options[:info] ? s.tokens_with_dependents_and_info_structure.with_prodrops_in_place.reject { |t| ['C', 'V'].include?(t.empty_token_sort) } : s.tokens.morphology_annotatable).each do |t|
-              builder.t(token_attrs(s, t, 'T').merge({ :id => "w#{t.id}"}))
-            end
-          end
-
-          if s.has_dependency_annotation?
-            builder.nonterminals do
-              # Emit the empty root node
-              h = @features.select { |f| ['FREC', 'NT'].include?(f.last) }.map(&:first).inject({}) { |m, o| m[o] = '--'; m }.merge({:id => root_node_id })
-              builder.nt(h) do
-                s.tokens.dependency_annotatable.reject(&:head).each do |t|
-                  builder.edge(:idref => "p#{t.id}", :label => t.relation.tag)
-                end
-              end
-
-              # Do the actual nodes including pro drops if we are
-              # exporting info structure as well
-              (@options[:info] ? s.tokens_with_dependents_and_info_structure.with_prodrops_in_place : s.tokens.dependency_annotatable).each do |t|
-                builder.nt(token_attrs(s, t, 'NT').merge({ :id => "p#{t.id}"})) do
-                  # Add an edge between this node and the correspoding terminal node unless
-                  # this is not a morphtaggable node.
-                  builder.edge(:idref => "w#{t.id}", :label => '--') if t.is_morphtaggable? or (@options[:info] and t.empty_token_sort == 'P')
-
-                  # Add primary dependency edges including empty pro tokens if we are exporting info structure as well
-                  (@options[:info] ? t.dependents : t.dependents.reject { |p| p.empty_token_sort == 'P' }).each { |d| builder.edge(:idref => "p#{d.id}", :label => d.relation.tag) }
-
-                  # Add secondary dependency edges, ignoring those
-                  # pointing upwards, since they are only there for
-                  # validation purposes
-                  SlashEdge.find_all_by_slasher_id(t.id).reject { |se| se.slashee_id == t.head_id }. each do |se|
-                    builder.secedge(:idref => "p#{se.slashee_id}", :label => se.relation.tag)
-                  end
-                end
-              end
-            end
-          end
+      builder.s(@ident => "s#{s.id}") do
+        builder.graph(:root => "s#{s.id}_root") do
+          write_terminals(s, builder)
+          write_nonterminals(s, builder) if s.has_dependency_annotation?
         end
       end
     end
   end
 end
+
+
+class Tiger2Export < TigerXMLExport
+
+  def initialize(source, options = {})
+    super(source, options)
+    @features.delete_if { |o| o.first == 'antecedent_id' }
+    @ident = 'xml:id'
+  end
+
+  private
+
+  def write_corpus(builder)
+    builder.corpus(@ident => self.identifier, :tiger_version => 2) do
+      builder.head { write_head(builder) }
+      if filtered_source_divisions.size == 1
+        builder.body { write_source_division(builder, filtered_sentences) }
+      else
+        builder.body
+        write_body(builder)
+      end
+    end
+  end
+
+  def write_meta(builder)
+    builder.name(@source.title)
+    builder.author('The PROIEL project')
+    builder.date(Time.now)
+    builder.description
+    builder.format
+    builder.history
+  end
+
+  def declare_edgelabels(builder)
+    builder.feature(:name => "label", :type => "prim", :domain => "edge") do
+      declare_primary_edges(builder)
+    end
+    builder.feature(:name => "label", :type => "sec", :domain => "edge") do
+      declare_secedges(builder)
+    end
+
+    if @options[:info]
+      builder.feature(:name => "label", :type => "coref", :domain => "edge") do
+        builder.value(:name => "antecedent")
+        builder.value(:name => "inference")
+      end
+    end
+  end
+
+  def write_source_division(builder, sentences)
+    sentences.each do |s|
+      builder.s(@ident => "s#{s.id}") do
+        builder.graph(:root => "s#{s.id}_root") do
+          write_terminals(s, builder)
+          write_nonterminals(s, builder) if s.has_dependency_annotation?
+        end
+      end
+    end
+  end
+
+  def write_body(builder)
+    filtered_source_divisions.each do |sd|
+      builder.subcorpus(@ident => "sd#{sd.id}") do
+        builder.body do
+          write_source_division(builder, filter_sentences(sd))
+        end
+      end
+    end
+  end
+
+  def write_root_edge(t, builder)
+    builder.edge(:type => "prim", :target => "p#{t.id}", :label => t.relation.tag)
+  end
+
+  def write_edges(t, builder)
+    # Add an edge between this node and the correspoding terminal node unless
+    # this is not a morphtaggable node.
+    builder.edge(:type => "prim", :target => "w#{t.id}", :label => '--') if t.is_morphtaggable? or (@options[:info] and t.empty_token_sort == 'P')
+
+    # Add primary dependency edges including empty pro tokens if we are exporting info structure as well
+    (@options[:info] ? t.dependents : t.dependents.reject { |p| p.empty_token_sort == 'P' }).each { |d| builder.edge(:type => "prim", :target => "p#{d.id}", :label => d.relation.tag) }
+
+    # Add secondary dependency edges
+    get_slashes(t).each do |se|
+      builder.edge(:type => "sec", :target => "p#{se.slashee_id}", :label => se.relation.tag)
+    end
+    if @options[:info] and t.antecedent
+      builder.edge(:type => "coref", :target => t.antecedent_id, :label => (t.info_status == 'acc_inf' ? "inference" : "antecedent") )
+    end
+  end
+end
+
+
 
 # Source exporter for the MaltXML format
 # (http://w3.msi.vxu.se/~nivre/research/MaltXML.html).

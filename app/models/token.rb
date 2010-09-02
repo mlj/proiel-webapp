@@ -574,4 +574,14 @@ class Token < ActiveRecord::Base
     # Return all suggestions but strip off the probabilities.
     suggestions.map(&:first)
   end
+
+  def sem_tags_to_hash
+    res = {}
+    sem_tags = semantic_tags
+    sem_tags += lemma.semantic_tags.reject { |tag| sem_tags.map(&:semantic_attribute).include?(tag.semantic_attribute) } if lemma
+    sem_tags.each do |st|
+      res[st.semantic_attribute.tag] = st.semantic_attribute_value.tag
+    end
+    res
+  end
 end
