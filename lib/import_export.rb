@@ -16,7 +16,7 @@ class CSVImportExport
     Token.transaction do
       File.open(file_name) do |f|
         f.each_line do |l|
-          values = l.chomp.gsub(/#.*$/, '').split(/\s*,\s*/, @fields.length)
+          values = l.chomp.split(/\s*,\s*/, @fields.length)
           next if values.length.zero? # skip empty lines and commented lines
           read_fields(*values)
         end
