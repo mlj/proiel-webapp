@@ -22,3 +22,6 @@ config.action_view.cache_template_loading = true
 config.log_level = :warn
 
 config.action_mailer.default_url_options = { :host => 'foni.uio.no:3000' }
+
+# Include recipients of exception notifications here
+ExceptionNotification::Notifier.exception_recipients = %w()

@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include ExceptionNotification::Notifiable
+
   before_filter :authenticate_user!
 
   helper :all

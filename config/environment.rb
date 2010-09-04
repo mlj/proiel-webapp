@@ -77,6 +77,7 @@ Rails::Initializer.run do |config|
   config.gem 'inherited_resources', :version => '~> 1.0.3'
   config.gem 'haml'
   config.gem 'acts_as_audited', :lib => false
+  config.gem 'exception_notification'
 end
 
 # Release number
