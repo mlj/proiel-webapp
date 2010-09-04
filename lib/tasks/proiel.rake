@@ -298,7 +298,7 @@ namespace :proiel do
       i.read(file_name)
     end
 
-    desc "Export info statuses. Options: FILE=csv_file. Optional options: SOURCE_DIVISION=source_division_id FORMAT={csv|xml}"
+    desc "Export info statuses. Options: FILE=csv_file SOURCE_DIVISION=source_division_id FORMAT={csv|xml}"
     task(:export => :myenvironment) do
       file_name = ENV['FILE']
       raise "Missing argument FILE" unless file_name
