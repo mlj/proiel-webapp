@@ -205,7 +205,7 @@ end
 # Importer for inflections
 class InflectionsImportExport < CSVImportExport
   def initialize
-    super :language_code, :lemma, :variant, :pos, :form, :morphologies
+    super :language_code, :lemma, :pos, :form, :morphologies
   end
 
   protected
