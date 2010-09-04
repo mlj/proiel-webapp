@@ -2,10 +2,10 @@
   Removed
 <% else %>
   <table class="diff">
-    <% diff.changes.each do |attribute, values| %>
+    <% diff.changes.each do |attribute, (old, new)| %>
       <tr>
         <td><%= attribute %></td>
-        <%= format_change(attribute, *values) %>
+        <%= format_change(attribute, old, new) %>
       </tr>
     <% end %>
   </table>
