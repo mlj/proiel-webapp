@@ -221,7 +221,7 @@ module Lingua
       @postponed_nodes[head_identifier] ||= { :dependent_ids => [] }
       @postponed_nodes[head_identifier][:dependent_ids] << identifier
 
-      returning @postponed_nodes[identifier] do |n|
+      @postponed_nodes[identifier].tap do |n|
         n[:slashes_and_interpretations] = slashes_and_interpretations
       end
     end

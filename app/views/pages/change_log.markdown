@@ -4,6 +4,7 @@ Change log
 This is a list of major changes between the releases of the
 application.
 
+  * Upgraded to Rails 2.3.9 (Marius)
   * Redefined Language, Morphology and PartOfSpeech tables as aggregations
     with static tag sets (Marius)
   * Switched from customis versioning + userstamp to upstream

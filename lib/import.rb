@@ -144,8 +144,8 @@ class TextImport
   private
 
   def add_sentence(sd, position, presentation)
-    returning(sd.sentences.new(:sentence_number => position,
-                               :presentation => presentation)) do |s|
+    sd.sentences.new(:sentence_number => position,
+                     :presentation => presentation).tap do |s|
       s.reindex!
     end
   end

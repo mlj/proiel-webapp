@@ -41,7 +41,7 @@ class User < ActiveRecord::Base
   end
 
   def shift_assigned_sentence!
-    returning(assigned_sentences.first) do |s|
+    assigned_sentences.first.tap do |s|
       s.assigned_to = nil
       s.save!
     end

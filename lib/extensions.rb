@@ -2,32 +2,13 @@
 #
 # extensions.rb - Core extensions
 #
-# Written by Marius L. Jøhndal <mariuslj at ifi.uio.no>, 2008
+# Written by Marius L. Jøhndal <mariuslj at ifi.uio.no>, 2008, 2010.
 #
 class Object
-  def tap
-    yield self
-    self
-  end if RUBY_VERSION < '1.8.7'
-
   def using(object, &block)
     object.instance_eval(&block)
     object
   end
-
-  # K combinator
-  #
-  # Examples
-  #
-  # def foo
-  #   returning [] { |values| values << 'foo' }
-  # end
-  #
-  # Is defined in Rails/Active Support.
-  def returning(value)
-    yield(value)
-    value
-  end unless defined?(ActiveSupport)
 end
 
 module Kernel
