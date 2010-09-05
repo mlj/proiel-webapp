@@ -14,14 +14,14 @@ class TaggerTest < ActiveSupport::TestCase
   fixtures :inflections
 
   def setup
-    @amen_fs = MorphFeatures.new("amen,I-,lat", "----------n")
-    @cum_c_fs = MorphFeatures.new("cum,C-,lat", "----------n")
-    @cum_r_fs = MorphFeatures.new("cum,R-,lat", "----------n")
-    @cum_dq_fs = MorphFeatures.new("cum,Dq,lat", "----------n")
-    @ne_c_fs = MorphFeatures.new("ne,C,lat", "----------n")
-    @ne_i_fs = MorphFeatures.new("ne,I,lat", "----------n")
-    @ne_df_fs = MorphFeatures.new("ne,Df,lat", "----------n")
-    @neo_df_fs = MorphFeatures.new("neo,Df,lat", "----------n")
+    @amen_fs = MorphFeatures.new("amen,I-,lat", "---------n")
+    @cum_c_fs = MorphFeatures.new("cum,C-,lat", "---------n")
+    @cum_r_fs = MorphFeatures.new("cum,R-,lat", "---------n")
+    @cum_dq_fs = MorphFeatures.new("cum,Dq,lat", "---------n")
+    @ne_c_fs = MorphFeatures.new("ne,C,lat", "---------n")
+    @ne_i_fs = MorphFeatures.new("ne,I,lat", "---------n")
+    @ne_df_fs = MorphFeatures.new("ne,Df,lat", "---------n")
+    @neo_df_fs = MorphFeatures.new("neo,Df,lat", "---------n")
     @incomplete_d_fs = MorphFeatures.new(",D,lat", nil)
   end
 

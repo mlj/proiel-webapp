@@ -34,7 +34,7 @@ class TokenTest < ActiveSupport::TestCase
     s = Sentence.first # associate our tokens with a random sentence
 
     t = Token.new(:sentence => s, :form => 'foo')
-    t.morph_features = MorphFeatures.new('foo,V-,lat', '----------n')
+    t.morph_features = MorphFeatures.new('foo,V-,lat', '---------n')
     assert t.verb?
     assert t.verb?(true)
     assert t.verb?(false)
@@ -45,18 +45,18 @@ class TokenTest < ActiveSupport::TestCase
     assert !t.article?
     assert !t.pronoun?
 
-    t.morph_features = MorphFeatures.new('foo,C-,lat', '----------n')
+    t.morph_features = MorphFeatures.new('foo,C-,lat', '---------n')
     assert t.conjunction?
     assert t.conjunction?(true)
     assert t.conjunction?(false)
 
-    t.morph_features = MorphFeatures.new('foo,Nb,lat', '----------n')
+    t.morph_features = MorphFeatures.new('foo,Nb,lat', '---------n')
     assert t.noun?
 
-    t.morph_features = MorphFeatures.new('foo,S-,grc', '----------n')
+    t.morph_features = MorphFeatures.new('foo,S-,grc', '---------n')
     assert t.article?
 
-    t.morph_features = MorphFeatures.new('foo,Pr,lat', '----------n')
+    t.morph_features = MorphFeatures.new('foo,Pr,lat', '---------n')
     assert t.pronoun?
 
     # Test empty tokens

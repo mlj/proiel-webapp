@@ -4,6 +4,8 @@ Change log
 This is a list of major changes between the releases of the
 application.
 
+  * Dropped SFST in favour of static YAML files for morphological tagset
+    definition (Dag)
   * Upgraded to Rails 2.3.9 (Marius)
   * Redefined Language, Morphology and PartOfSpeech tables as aggregations
     with static tag sets (Marius)

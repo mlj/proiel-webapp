@@ -2,35 +2,35 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class MorphFeaturesTestCase < ActiveSupport::TestCase
   def setup
-    @dq = MorphFeatures.new(',Dq,lat', '-----------')
+    @dq = MorphFeatures.new(',Dq,lat', '----------')
     @cum_dq = MorphFeatures.new('cum,Dq,lat', '-----------')
-    @cum1_dq = MorphFeatures.new('cum#1,Dq,lat', '-----------')
-    @sine1_dq = MorphFeatures.new('sine#1,Dq,lat', '-----------')
-    @cur1_a  = MorphFeatures.new('cur#1,A,lat', '-----------')
-    @cur_dq = MorphFeatures.new('cur,Dq,lat', '-----------')
-    @cur1_dq = MorphFeatures.new('cur#1,Dq,lat', '-----------')
-    @cur1_dq_n = MorphFeatures.new('cur#1,Dq,lat', '----------n')
-    @cur2_dq = MorphFeatures.new('cur#2,Dq,lat', '-----------')
-    @cur1_pr = MorphFeatures.new('cur#1,Pr,lat', '-----------')
-    @dq_n = MorphFeatures.new(',Dq,lat', '----------n')
-    @dq_i = MorphFeatures.new(',Dq,lat', '----------i')
-    @_i = MorphFeatures.new(',,lat', '----------i')
-    @some_verb = MorphFeatures.new('foo,V-,lat', '3s-ip-----i')
+    @cum1_dq = MorphFeatures.new('cum#1,Dq,lat', '----------')
+    @sine1_dq = MorphFeatures.new('sine#1,Dq,lat', '----------')
+    @cur1_a  = MorphFeatures.new('cur#1,A,lat', '----------')
+    @cur_dq = MorphFeatures.new('cur,Dq,lat', '----------')
+    @cur1_dq = MorphFeatures.new('cur#1,Dq,lat', '----------')
+    @cur1_dq_n = MorphFeatures.new('cur#1,Dq,lat', '---------n')
+    @cur2_dq = MorphFeatures.new('cur#2,Dq,lat', '----------')
+    @cur1_pr = MorphFeatures.new('cur#1,Pr,lat', '----------')
+    @dq_n = MorphFeatures.new(',Dq,lat', '---------n')
+    @dq_i = MorphFeatures.new(',Dq,lat', '---------i')
+    @_i = MorphFeatures.new(',,lat', '---------i')
+    @some_verb = MorphFeatures.new('foo,V-,lat', '3s-ip----i')
     @empty = MorphFeatures.new(',,lat', nil)
   end
 
   def test_separate_initialisation
-    m = MorphFeatures.new('cur,Dq,lat', '----------n')
+    m = MorphFeatures.new('cur,Dq,lat', '---------n')
     assert_equal 'cur,Dq,lat', m.lemma_s
     assert_equal 'Dq', m.pos_s
     assert_equal 'lat', m.language_s
-    assert_equal '----------n', m.morphology_s
+    assert_equal '---------n', m.morphology_s
 
     assert_equal 'cur', m.lemma.lemma
     assert_equal 'Dq', m.lemma.part_of_speech.tag
     assert_equal nil, m.lemma.variant
 
-    assert_equal "cur,Dq,lat,----------n", m.to_s
+    assert_equal "cur,Dq,lat,---------n", m.to_s
   end
 
   def test_separate_initialisation_with_variant_number
@@ -38,13 +38,13 @@ class MorphFeaturesTestCase < ActiveSupport::TestCase
     assert_equal 'cur#2,Dq,lat', m.lemma_s
     assert_equal 'Dq', m.pos_s
     assert_equal 'lat', m.language_s
-    assert_equal '-----------', m.morphology_s
+    assert_equal '----------', m.morphology_s
 
     assert_equal 'cur', m.lemma.lemma
     assert_equal 'Dq', m.lemma.part_of_speech.tag
     assert_equal 2, m.lemma.variant
 
-    assert_equal "cur#2,Dq,lat,-----------", m.to_s
+    assert_equal "cur#2,Dq,lat,----------", m.to_s
   end
 
   def test_separate_initialisation_with_abbreviated_morphology
@@ -52,13 +52,13 @@ class MorphFeaturesTestCase < ActiveSupport::TestCase
     assert_equal 'cur,Dq,lat', m.lemma_s
     assert_equal 'Dq', m.pos_s
     assert_equal 'lat', m.language_s
-    assert_equal 'h----------', m.morphology_s
+    assert_equal 'h---------', m.morphology_s
 
     assert_equal 'cur', m.lemma.lemma
     assert_equal 'Dq', m.lemma.part_of_speech.tag
     assert_equal nil, m.lemma.variant
 
-    assert_equal "cur,Dq,lat,h----------", m.to_s
+    assert_equal "cur,Dq,lat,h---------", m.to_s
   end
 
   def test_separate_initialisation_without_morphology
@@ -66,33 +66,33 @@ class MorphFeaturesTestCase < ActiveSupport::TestCase
     assert_equal 'cur,Dq,lat', m.lemma_s
     assert_equal 'Dq', m.pos_s
     assert_equal 'lat', m.language_s
-    assert_equal '-----------', m.morphology_s
+    assert_equal '----------', m.morphology_s
 
     assert_equal 'cur', m.lemma.lemma
     assert_equal 'Dq', m.lemma.part_of_speech.tag
     assert_equal nil, m.lemma.variant
 
-    assert_equal "cur,Dq,lat,-----------", m.to_s
+    assert_equal "cur,Dq,lat,----------", m.to_s
   end
 
   def test_separate_initialisation_without_lemma_but_pos
-    m = MorphFeatures.new(',Dq,lat', '----------n')
+    m = MorphFeatures.new(',Dq,lat', '---------n')
     assert_equal ',Dq,lat', m.lemma_s
     assert_equal 'Dq', m.pos_s
     assert_equal 'lat', m.language_s
-    assert_equal '----------n', m.morphology_s
+    assert_equal '---------n', m.morphology_s
 
     assert_equal nil, m.lemma.lemma
     assert_equal 'Dq', m.lemma.part_of_speech.tag
     assert_equal nil, m.lemma.variant
 
-    assert_equal ",Dq,lat,----------n", m.to_s
+    assert_equal ",Dq,lat,---------n", m.to_s
   end
 
   def test_uninitialized_pos_or_morphology
-    m = MorphFeatures.new(',--,lat', '-----------')
+    m = MorphFeatures.new(',--,lat', '----------')
     assert_equal '--', m.pos_s
-    assert_equal '-----------', m.morphology_s
+    assert_equal '----------', m.morphology_s
   end
 
   def test_comparison
@@ -163,9 +163,9 @@ class MorphFeaturesTestCase < ActiveSupport::TestCase
   end
 
   def test_morphology_s
-    assert_equal '-------p---', MorphFeatures.new(',Df,lat','-------p').morphology_s
-    assert_equal '-------p---', MorphFeatures.new(',Df,lat','-------p-').morphology_s
-    assert_equal '-------p---', MorphFeatures.new(',Df,lat','-------p--').morphology_s
+    assert_equal '-------p--', MorphFeatures.new(',Df,lat','-------p').morphology_s
+    assert_equal '-------p--', MorphFeatures.new(',Df,lat','-------p-').morphology_s
+    assert_equal '-------p--', MorphFeatures.new(',Df,lat','-------p--').morphology_s
   end
 
   def test_morphology_abbrev_s
@@ -212,49 +212,46 @@ class MorphFeaturesTestCase < ActiveSupport::TestCase
   end
 
   def test_validity
-    assert_equal false, MorphFeatures.new('foo,A-,lat', '-s---na---i').valid?
-    assert_equal false, MorphFeatures.new('foo,A-,grc', '-s---na---i').valid?
-    assert_equal true,  MorphFeatures.new('foo,A-,lat', '-p---mdp--i').valid?
-    assert_equal false, MorphFeatures.new('foo,V-,lat', '3piie-----i').valid?
-    assert_equal true,  MorphFeatures.new('foo,V-,grc', '3piie-----i').valid?
-    assert_equal true,  MorphFeatures.new('foo,Pd,lat', '-p---nd---i').valid?
-    assert_equal true,  MorphFeatures.new('foo,Pi,lat', '-p---mn---i').valid?
-    assert_equal true,  MorphFeatures.new('foo,Pk,lat', '3p---mb---i').valid? # personal reflexive
-    assert_equal true,  MorphFeatures.new('foo,V-,lat', '-pppama---i').valid? # present participle
-    assert_equal true,  MorphFeatures.new('foo,V-,lat', '2sfip-----i').valid? # future indicative
-    assert_equal true,  MorphFeatures.new('foo,V-,lat', '---u--d---i').valid? # supine, dative
+    assert_equal false, MorphFeatures.new('foo,A-,lat', '-s---na--i').valid?
+    assert_equal false, MorphFeatures.new('foo,A-,grc', '-s---na--i').valid?
+    assert_equal true,  MorphFeatures.new('foo,A-,lat', '-p---mdp-i').valid?
+    assert_equal false, MorphFeatures.new('foo,V-,lat', '3piie----i').valid?
+    assert_equal true,  MorphFeatures.new('foo,V-,grc', '3piie----i').valid?
+    assert_equal true,  MorphFeatures.new('foo,Pd,lat', '-p---nd--i').valid?
+    assert_equal true,  MorphFeatures.new('foo,Pi,lat', '-p---mn--i').valid?
+    assert_equal true,  MorphFeatures.new('foo,Pk,lat', '3p---mb--i').valid? # personal reflexive
+    assert_equal true,  MorphFeatures.new('foo,V-,lat', '-pppama--i').valid? # present participle
+    assert_equal true,  MorphFeatures.new('foo,V-,lat', '2sfip----i').valid? # future indicative
+    assert_equal true,  MorphFeatures.new('foo,V-,lat', '---u--d--i').valid? # supine, dative
   end
 
   def test_union
     m = MorphFeatures.new(',D,lat', nil)
-    n = MorphFeatures.new('bar,-f,lat', '-------p--i')
-    assert_equal 'bar,Df,lat,-------p--i', m.union(n).to_s
+    n = MorphFeatures.new('bar,-f,lat', '-------p-i')
+    assert_equal 'bar,Df,lat,-------p-i', m.union(n).to_s
   end
 
   def test_completions
     assert_equal [
-      "foo,Nb,lat,-s---mn---i",
-      "foo,Ne,lat,-s---mn---i"
-    ], MorphFeatures.new('foo,N-,lat', '-s---mn----').completions.map(&:to_s).sort
+      "foo,Nb,lat,-s---mn--i",
+      "foo,Ne,lat,-s---mn--i"
+    ], MorphFeatures.new('foo,N-,lat', '-s---mn---').completions.map(&:to_s).sort
 
     assert_equal [
-      "foo,Nb,lat,-p---mn---i",
-      "foo,Nb,lat,-s---mn---i"
-    ], MorphFeatures.new('foo,Nb,lat', '-----mn---i').completions.map(&:to_s).sort
+      "foo,Nb,lat,-p---mn--i",
+      "foo,Nb,lat,-s---mn--i"
+    ], MorphFeatures.new('foo,Nb,lat', '-----mn--i').completions.map(&:to_s).sort
 
     assert_equal [
-      "foo,Nb,chu,-d---ma-a-i",
-      "foo,Nb,chu,-d---ma-i-i",
-      "foo,Nb,chu,-p---ma-a-i",
-      "foo,Nb,chu,-p---ma-i-i",
-      "foo,Nb,chu,-s---ma-a-i",
-      "foo,Nb,chu,-s---ma-i-i"
-    ], MorphFeatures.new('foo,Nb,chu', '-----ma---i').completions.map(&:to_s).sort
+      "foo,Nb,chu,-d---ma--i",
+      "foo,Nb,chu,-p---ma--i",
+      "foo,Nb,chu,-s---ma--i",
+    ], MorphFeatures.new('foo,Nb,chu', '-----ma--i').completions.map(&:to_s).sort
 
     assert_equal [
-      "foo,Nb,chu,-d---mn---i",
-      "foo,Nb,chu,-p---mn---i",
-      "foo,Nb,chu,-s---mn---i"
-    ], MorphFeatures.new('foo,Nb,chu', '-----mn---i').completions.map(&:to_s).sort
+      "foo,Nb,chu,-d---mn--i",
+      "foo,Nb,chu,-p---mn--i",
+      "foo,Nb,chu,-s---mn--i"
+    ], MorphFeatures.new('foo,Nb,chu', '-----mn--i').completions.map(&:to_s).sort
   end
 end

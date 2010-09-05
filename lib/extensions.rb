@@ -165,6 +165,21 @@ class Array
   def shuffle
     sort { rand(3) - 1 }
   end if RUBY_VERSION < '1.8.7'
+
+  def product(*enums)
+    enums.unshift self
+    result = [[]]
+    while [] != enums
+      t, result = result, []
+      b, *enums = enums
+      t.each do |a|
+        b.each do |n|
+          result << a + [n]
+        end
+      end
+    end
+    result
+  end
 end
 
 class String

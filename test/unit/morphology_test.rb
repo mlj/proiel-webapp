@@ -2,9 +2,9 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class MorphologyTestCase < ActiveSupport::TestCase
   def setup
-    @tag1 = '3srip-----i'
-    @tag2 = '-s---mg---i'
-    @tag3 = '-----------'
+    @tag1 = '3srip----i'
+    @tag2 = '-s---mg--i'
+    @tag3 = '----------'
     @m1 = Morphology.new(@tag1)
     @m2 = Morphology.new(@tag2)
     @m3 = Morphology.new(@tag3)

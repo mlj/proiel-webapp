@@ -6,12 +6,12 @@ class Morphology < PositionalTag
   end
 
   def size
-    11
+    10
   end
 
   def fields
     [:person, :number, :tense, :mood, :voice, :gender, :case,
-     :degree, :animacy, :strength, :inflection]
+     :degree, :strength, :inflection]
   end
 end
 
@@ -46,14 +46,14 @@ end
 # Aggregation class for morphological annotation.
 class MorphFeatures
   POS_LENGTH = 2
-  MORPHOLOGY_LENGTH = 11
+  MORPHOLOGY_LENGTH = 10
   MORPHOLOGY_POSITIONAL_TAG_SEQUENCE = [
     :person, :number, :tense, :mood, :voice, :gender, :case,
-    :degree, :animacy, :strength, :inflection
+    :degree, :strength, :inflection
   ]
   MORPHOLOGY_PRESENTATION_SEQUENCE = [
     :inflection, :mood, :tense, :voice, :degree, :case,
-    :person, :number, :gender, :animacy, :strength
+    :person, :number, :gender, :strength
   ]
 
   attr_reader :lemma
@@ -196,10 +196,6 @@ class MorphFeatures
       'c' => 'comparative',
       's' => 'superlative',
     },
-    :animacy => {
-      'i' => 'inanimate',
-      'a' => 'animate',
-    },
     :strength => {
       'w' => 'weak',
       's' => 'strong',
@@ -278,10 +274,6 @@ class MorphFeatures
       'c' => 'comp.',
       's' => 'sup.',
     },
-    :animacy => {
-      'i' => 'inanim.',
-      'a' => 'anim.',
-    },
     :strength => {
       'w' => 'weak',
       's' => 'strong',
@@ -347,7 +339,7 @@ class MorphFeatures
   end
 
   def valid?
-    @lemma.lemma and @lemma.part_of_speech and @morphology and PROIEL::MorphtagConstraints.instance.is_valid?(pos_s + morphology_s, language_s.to_sym)
+    @lemma.lemma and @lemma.part_of_speech and @morphology and MorphtagConstraints.instance.is_valid?(pos_s + morphology_s, language_s.to_sym)
   end
 
   def union(o)
@@ -376,7 +368,7 @@ class MorphFeatures
   end
 
   def self.pos_and_morphology_tag_space(language)
-    PROIEL::MorphtagConstraints::instance.tag_space(language.to_sym).inject({}) do |k, tag|
+    MorphtagConstraints::instance.tag_space(language.to_sym).inject({}) do |k, tag|
       k[tag[0, 2]] ||= []
       k[tag[0, 2]] << tag[2, 11]
       k
@@ -386,14 +378,10 @@ class MorphFeatures
   # Generates all possible completions of the possibly incomplete tag.
   def completions
     x = Regexp.new(/#{(pos_s + morphology_s).gsub("-", ".")}/)
-    PROIEL::MorphtagConstraints::instance.tag_space(language_s.to_sym).select { |t| x.match(t) }.map do |tag|
+    MorphtagConstraints::instance.tag_space(language_s.to_sym).select { |t| x.match(t) }.map do |tag|
       pos, morphology = tag[0, 2], tag[2, 11]
       MorphFeatures.new([lemma.export_form, pos, language_s].join(','), morphology)
     end
-  end
-
-  def to_features
-    PROIEL::MorphtagConstraints.instance.to_features(self.to_s)
   end
 
   def blank?
