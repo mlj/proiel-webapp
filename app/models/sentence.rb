@@ -291,7 +291,6 @@ class Sentence < ActiveRecord::Base
   end
 
   def morphological_annotation(overlaid_features = {})
-    p overlaid_features
     tokens.morphology_annotatable.map do |token|
       suggestions = token.guess_morphology!(overlaid_features["morph-features-#{token.id}".to_sym]) #FIXME
 
