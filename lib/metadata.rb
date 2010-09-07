@@ -2,8 +2,8 @@
 #
 # metadata.rb - TEI metadata functions for PROIEL sources
 #
-# Copyright 2008, 2009 University of Oslo
-# Copyright 2008, 2009 Marius L. Jøhndal
+# Copyright 2008, 2009, 2010 University of Oslo
+# Copyright 2008, 2009, 2010 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -41,6 +41,12 @@ class Metadata
       parser = XML::Parser.string(header)
       begin
         @header = parser.parse
+
+        unless @header.find("/teiHeader").length == 1
+          @error_message = 'Header top element is invalid'
+          @valid = false
+          @header = nil
+        end
       rescue LibXML::XML::Parser::ParseError => p
         @error_message = p
         @valid = false

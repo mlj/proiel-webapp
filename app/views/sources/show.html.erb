@@ -9,5 +9,9 @@
 <% end %>
 
 <% layer :metadata do -%>
-  <%= @source.metadata.to_html %>
+  <% if @source.valid? %>
+    <%= @source.metadata.to_html %>
+  <% else %>
+    Metadata is invalid
+  <% end %>
 <% end %>
