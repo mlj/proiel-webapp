@@ -19,6 +19,7 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
+require 'ucodes'
 
 module References
   EN_DASH = Unicode::U2013
