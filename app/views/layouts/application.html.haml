@@ -77,4 +77,6 @@
       release
       = PROIEL_RELEASE
       - if Rails.env == 'development'
-        (in development mode)
+        %p
+          %tt
+            != debug(params)
