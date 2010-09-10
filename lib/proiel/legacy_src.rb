@@ -19,7 +19,7 @@ module PROIEL
 
       t = @doc.at("text")
       @metadata[:id] = t.attributes["id"]
-      @metadata[:language] = t.attributes["lang"].to_sym
+      @metadata[:language] = t.attributes["lang"]
       @metadata[:filename] = uri
     end
 
