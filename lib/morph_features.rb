@@ -134,11 +134,13 @@ class MorphFeatures
       '1' => "first person",
       '2' => "second person",
       '3' => "third person",
+      'x' => "uncertain person",
     },
     :number => {
       's' => 'singular',
       'd' => 'dual',
       'p' => 'plural',
+      'x' => 'uncertain number',
     },
     :tense => {
       'p' => 'present',
@@ -150,6 +152,7 @@ class MorphFeatures
       't' => 'future perfect',
       's' => 'resultative',
       'u' => 'past',
+      'x' => 'uncertain tense',
     },
     :mood => {
       'i' => 'indicative',
@@ -162,6 +165,7 @@ class MorphFeatures
       'd' => 'gerund',
       'g' => 'gerundive',
       'u' => 'supine',
+      'x' => 'uncertain mood',
     },
     :voice => {
       'a' => 'active',
@@ -178,6 +182,7 @@ class MorphFeatures
       'm' => 'masculine',
       'f' => 'feminine',
       'n' => 'neuter',
+      'x' => 'uncertain gender',
     },
     :case => {
       'n' => 'nominative',
@@ -190,11 +195,13 @@ class MorphFeatures
       'l' => 'locative',
 
       'c' => 'genitive or dative',
+      'x' => 'uncertain case'
     },
     :degree => {
       'p' => 'positive',
       'c' => 'comparative',
       's' => 'superlative',
+      'x' => 'uncertain degree',
     },
     :strength => {
       'w' => 'weak',
@@ -212,11 +219,13 @@ class MorphFeatures
       '1' => "1st p.",
       '2' => "2nd p.",
       '3' => "3rd p.",
+      'x' => "unc. p.",
     },
     :number => {
       's' => 'sg.',
       'd' => 'du.',
       'p' => 'pl.',
+      'x' => 'unc. nb.'
     },
     :tense => {
       'p' => 'pres.',
@@ -228,6 +237,7 @@ class MorphFeatures
       't' => 'fut. perf.',
       's' => 'result.',
       'u' => 'past',
+      'x' => 'unc. tense',
     },
     :mood => {
       'i' => 'ind.',
@@ -240,6 +250,7 @@ class MorphFeatures
       'd' => 'gerund',
       'g' => 'gerundive',
       'u' => 'sup.',
+      'x' => 'unc. mood',
     },
     :voice => {
       'a' => 'act.',
@@ -256,6 +267,7 @@ class MorphFeatures
       'm' => 'm.',
       'f' => 'f.',
       'n' => 'n.',
+      'x' => 'unc. gender',
     },
     :case => {
       'n' => 'nom.',
@@ -268,11 +280,13 @@ class MorphFeatures
       'l' => 'loc.',
 
       'c' => 'gen./dat.',
+      'x' => 'unc. case'
     },
     :degree => {
       'p' => 'pos.',
       'c' => 'comp.',
       's' => 'sup.',
+      'x' => 'unc. deg.'
     },
     :strength => {
       'w' => 'weak',

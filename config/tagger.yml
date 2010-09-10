@@ -1,4 +1,11 @@
 :languages:
+  :non:
+    :instance_frequencies:
+      true
+    :inflections_table:
+      true
+    :source_tag_pattern_filtering:
+      true
   :xcl:
     :instance_frequencies:
       true
