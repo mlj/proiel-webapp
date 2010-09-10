@@ -182,8 +182,8 @@ module PROIEL
                 when 'lemma'
                   a[:lemma] = [v, t.attributes["morphtag"][0,2]].join(",")
                 when 'morphtag'
-                  a[:morphtag] = v[2,11]
-                  a[:morphtag] += "-" * (11 - a[:morphtag].size)
+                  a[:morphtag] = v[2,MorphFeatures::MORPHOLOGY_LENGTH]
+                  a[:morphtag] += "-" * (MorphFeatures::MORPHOLOGY_LENGTH - a[:morphtag].size)
                 when 'foreign-ids'
                   a[:foreign_ids] = v
                 when 'presentation-span', 'contraction', 'emendation', 'abbreviation', 'capitalisation', 'sort', 'nospacing', 'presentation-form', 'verse', 'chapter'
