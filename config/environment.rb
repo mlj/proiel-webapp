@@ -62,6 +62,7 @@ Rails::Initializer.run do |config|
   config.gem 'oniguruma'
   config.gem 'builder'
   config.gem 'nokogiri'
+  config.gem 'hpricot', :version => '0.8.1' # only needed for legacy_import
   config.gem 'gchartrb', :lib => 'google_chart'
   config.gem 'diff-lcs', :lib => 'diff/lcs'
   config.gem 'ruby-sfst', :lib => 'sfst'
