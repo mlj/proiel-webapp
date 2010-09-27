@@ -75,3 +75,191 @@ parts_of_speech:
   C-:
     abbreviated_summary: conj.
     summary: conjunction
+morph_features:
+  :mood:
+    m:
+      abbreviated_summary: imp.
+      summary: imperative
+    x:
+      abbreviated_summary: unc. mood
+      summary: uncertain mood
+    n:
+      abbreviated_summary: inf.
+      summary: infinitive
+    o:
+      abbreviated_summary: opt.
+      summary: optative
+    d:
+      abbreviated_summary: gerund
+      summary: gerund
+    p:
+      abbreviated_summary: part.
+      summary: participle
+    g:
+      abbreviated_summary: gerundive
+      summary: gerundive
+    s:
+      abbreviated_summary: subj.
+      summary: subjunctive
+    i:
+      abbreviated_summary: ind.
+      summary: indicative
+    u:
+      abbreviated_summary: sup.
+      summary: supine
+  :inflection:
+    n:
+      abbreviated_summary: non-infl.
+      summary: non-inflecting
+    i:
+      abbreviated_summary: infl.
+      summary: inflecting
+  :number:
+    x:
+      abbreviated_summary: unc. nb.
+      summary: uncertain number
+    d:
+      abbreviated_summary: du.
+      summary: dual
+    p:
+      abbreviated_summary: pl.
+      summary: plural
+    s:
+      abbreviated_summary: sg.
+      summary: singular
+  :voice:
+    a:
+      abbreviated_summary: act.
+      summary: active
+    m:
+      abbreviated_summary: mid.
+      summary: middle
+    e:
+      abbreviated_summary: mid./pass.
+      summary: middle or passive
+    p:
+      abbreviated_summary: pass.
+      summary: passive
+  :case:
+    v:
+      abbreviated_summary: voc.
+      summary: vocative
+    a:
+      abbreviated_summary: acc.
+      summary: accusative
+    l:
+      abbreviated_summary: loc.
+      summary: locative
+    b:
+      abbreviated_summary: abl.
+      summary: ablative
+    x:
+      abbreviated_summary: unc. case
+      summary: uncertain case
+    n:
+      abbreviated_summary: nom.
+      summary: nominative
+    c:
+      abbreviated_summary: gen./dat.
+      summary: genitive or dative
+    d:
+      abbreviated_summary: dat.
+      summary: dative
+    g:
+      abbreviated_summary: gen.
+      summary: genitive
+    i:
+      abbreviated_summary: ins.
+      summary: instrumental
+  :degree:
+    x:
+      abbreviated_summary: unc. deg.
+      summary: uncertain degree
+    c:
+      abbreviated_summary: comp.
+      summary: comparative
+    p:
+      abbreviated_summary: pos.
+      summary: positive
+    s:
+      abbreviated_summary: sup.
+      summary: superlative
+  :gender:
+    m:
+      abbreviated_summary: m.
+      summary: masculine
+    x:
+      abbreviated_summary: unc. gender
+      summary: uncertain gender
+    n:
+      abbreviated_summary: n.
+      summary: neuter
+    o:
+      abbreviated_summary: m./n.
+      summary: masculine or neuter
+    p:
+      abbreviated_summary: m./f.
+      summary: masculine or feminine
+    q:
+      abbreviated_summary: m./f./n.
+      summary: masculine, feminine or neuter
+    f:
+      abbreviated_summary: f.
+      summary: feminine
+    r:
+      abbreviated_summary: f./n.
+      summary: feminine or neuter
+  :strength:
+    w:
+      abbreviated_summary: weak
+      summary: weak
+    s:
+      abbreviated_summary: strong
+      summary: strong
+    t:
+      abbreviated_summary: weak/strong
+      summary: weak or strong
+  :person:
+    x:
+      abbreviated_summary: unc. p.
+      summary: uncertain person
+    "1":
+      abbreviated_summary: 1st p.
+      summary: first person
+    "2":
+      abbreviated_summary: 2nd p.
+      summary: second person
+    "3":
+      abbreviated_summary: 3rd p.
+      summary: third person
+  :tense:
+    l:
+      abbreviated_summary: ppf.
+      summary: pluperfect
+    a:
+      abbreviated_summary: aor.
+      summary: aorist
+    x:
+      abbreviated_summary: unc. tense
+      summary: uncertain tense
+    p:
+      abbreviated_summary: pres.
+      summary: present
+    f:
+      abbreviated_summary: fut.
+      summary: future
+    r:
+      abbreviated_summary: perf.
+      summary: perfect
+    s:
+      abbreviated_summary: result.
+      summary: resultative
+    i:
+      abbreviated_summary: imperf.
+      summary: imperfect
+    t:
+      abbreviated_summary: fut. perf.
+      summary: future perfect
+    u:
+      abbreviated_summary: past
+      summary: past
