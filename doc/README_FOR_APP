@@ -1,8 +1,17 @@
 = The PROIEL web application
 
+The PROIEL web application used the Ruby on Rails framework. If you are
+unfamiliar with this, you should consulta general introduction to Ruby on
+Rails first. link:http://rubyonrails.org/ and
+linkhttp://guides.rubyonrails.org/ are good starting points. Note that this
+version of the PROIEL web application requires Rails 2.3.x.
+
 == Installation
 
-You need Rails 2.3.8 installed as a RubyGem for this application to work.
+If you already have Ruby, RubyGems and Ruby on Rails installed,
+installation of the PROIEL web application consist of the following steps.
+
+=== Step 1: Dependencies
 
 The application has a number of other dependencies that should be handled
 automatically by Rails' dependency tracker. Use
@@ -13,29 +22,25 @@ to have the dependency tracker automatically install all dependencies.
 
 You should also install +graphviz+ from link:http://www.graphviz.org/ to
 get dependency graph visualisations. Version 2.26.3 is known to work with
-this release of the PROIEL application. +graphviz+ must be complied with
-SVG support. The recommended configuration settings are
+this release of the PROIEL application, but more recent versions should
+also work. +graphviz+ must be compiled with SVG support. The recommended
+configuration settings are
 
     --with-fontconfig --with-freetype2 --with-pangocairo --with-rsvg
 
-To be able to compile morphological rules, you will need the +SFST+ toolkit
-from
-link:http://www.ims.uni-stuttgart.de/projekte/gramotron/SOFTWARE/SFST.html.
-This release of the application is designed to work with version 1.3 of
-+SFST+. As this is only required if you plan to complile new morphological
-rules, this step is optional.
+=== Step 2: Generate support files
 
 Before starting the application for the first time, you must run
     make -C lib
 to build the support files.
 
-== Configuring the database
+== Step 3: Configure the database
 
 Copy +config/database.yml.example+ to +config/database.yml+ and customize
 if needed. The default setup creates SQLite databases in the +db+
 directory.
 
-Inititialize a new database by running
+Initialize a new database by running
 
     $ rake db:setup
 
@@ -49,7 +54,18 @@ interface:
     >> u.save!
     >> u.confirm!
 
+=== Step 4 (optional): Enable morphological rules
+
+If you plan to compile your own morphological rules, you will need the
++SFST+ toolkit from
+link:http://www.ims.uni-stuttgart.de/projekte/gramotron/SOFTWARE/SFST.html.
+This release of the PROIEL web application is designed to work with version
+1.3 of +SFST+.
+
 == License
 
 The PROIEL web application is licensed under the terms of the GNU General
 Public License version 2. See the file +COPYING+ for details.
+
+The application was written by Marius L. Jøhndal (University of Cambridge),
+Dag Haug (University of Oslo) and Anders Nøklestad (University of Oslo).
