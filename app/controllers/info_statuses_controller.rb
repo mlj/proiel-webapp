@@ -127,11 +127,11 @@ class InfoStatusesController < ApplicationController
   end
 
   def create_prodrop_relation(prodrop_id, prodrop_attr)
-    @sentence.append_new_token!.tap(
+    @sentence.append_new_token!(
       :head_id => prodrop_attr[:verb_id],
       :relation => prodrop_attr[:relation],
       :empty_token_sort => 'P',
-      :info_status => prodrop_attr[:info_status]) do
+      :info_status => prodrop_attr[:info_status]).tap do
 
       # This is needed after saving a new graph node to the database
       # in order to make sure that the new node is included in the
