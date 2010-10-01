@@ -5,9 +5,10 @@ class JavascriptsController < ApplicationController
   # morphology drop-downs.
   def dynamic_pos
     @language = params[:id].to_sym
-    @pos_summaries = Hash[*PartOfSpeech.all.map { |pos| [pos.tag, pos.summary] }.flatten]
-    @pos_abbreviated_summaries = Hash[*PartOfSpeech.all.map { |pos| [pos.tag, pos.abbreviated_summary] }.flatten]
-    @pos_values = PartOfSpeech.all.map(&:tag)
+    poses = MorphtagConstraints.instance.tag_space(@language).map { |tag| tag[0..1] }.uniq.map { |tag| PartOfSpeech.new(tag) }
+    @pos_summaries = Hash[*poses.map { |pos| [pos.tag, pos.summary] }.flatten]
+    @pos_abbreviated_summaries = Hash[*poses.map { |pos| [pos.tag, pos.abbreviated_summary] }.flatten]
+    @pos_values = poses.map(&:tag)
   end
 
   # Returns a Javascript representation of valid dependency relations
