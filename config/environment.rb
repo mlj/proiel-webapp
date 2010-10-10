@@ -80,6 +80,7 @@ Rails::Initializer.run do |config|
   config.gem 'acts_as_audited', :lib => false
   config.gem 'exception_notification'
   config.gem 'iso-codes', :lib => 'iso_codes'
+  config.gem 'differ'
 end
 
 # Release number
