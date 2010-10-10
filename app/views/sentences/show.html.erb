@@ -47,7 +47,8 @@
 
   <% layer("sentence_division", :actions => [
            link_to_if(is_annotator?, "Edit", :action => :resegment_edit),
-           link_to_if(is_annotator?, "Merge with next", :action => :merge)]) do -%>
+           link_to_if(is_annotator?, "Merge with next", { :action => :merge },
+                      :confirm => 'Are you sure that you want to merge this sentence with the next?')]) do -%>
     <%= render :partial => 'sentence_divisions/show' %>
   <% end %>
 

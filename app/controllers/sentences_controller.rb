@@ -43,10 +43,14 @@ class SentencesController < InheritedResources::Base
     @sentence = Sentence.find(params[:id])
 
     if @sentence.has_next?
-      @sentence.append_next_sentence!
-      flash[:notice] = 'Sentences successfully merged.'
+      if @sentence.valid? and @sentence.next.valid?
+        @sentence.append_next_sentence!
+        flash[:notice] = 'Sentences successfully merged.'
+      else
+        flash[:error] = 'One of the sentences is invalid.'
+      end
     else
-      flash[:error] = 'Sentence cannot be merged.'
+      flash[:error] = 'Next sentence not found.'
     end
 
     respond_to do |format|
