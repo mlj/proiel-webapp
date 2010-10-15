@@ -1,45 +1,6 @@
 require 'ucodes'
 
 module SentenceFormattingHelper
-  # Formats an array of sentences as HTML using their presentation
-  # format.
-  #
-  # ==== Options
-  #
-  # <tt>:section_numbers</tt> -- If true, will display section
-  # numbers.
-  #
-  # <tt>:sentence_numbers</tt> -- If true, will display sentence
-  # numbers.
-  #
-  # <tt>:highlight</tt> -- If set to an array of sentences, will
-  # highlight those sentences.
-  #
-  # <tt>:ignore_links</tt> -- If true, will not produce links to other
-  # resources, e.g. to annotation views for sentences, in the
-  # sentence.
-  def format_presentation_text(sentences, options = {})
-    options.reverse_merge! :section_numbers => false,
-      :sentence_numbers => false, :highlight => []
-
-    current_sentence_number = nil
-
-    markup = sentences.map do |sentence|
-      m = ''
-      if options[:sentence_numbers] and sentence.sentence_number and current_sentence_number != sentence.sentence_number
-        current_sentence_number == sentence.sentence_number
-        m = "<section type='sentence-number' n='#{sentence.sentence_number}'/>&nbsp;"
-      end
-
-      s = sentence.presentation_as_html(options)
-      s = '<span class="highlight">' + s + '</span>' if options[:highlight].include?(sentence)
-      s = link_to(s, sentence) unless options[:ignore_links]
-      m + s
-    end.join(' ')
-
-    "<span class='formatted-text'>#{markup}</span>"
-  end
-
   # Formats one or more sentences as HTML using their content format.
   # +value+ may either be an array of +Sentence+ objects, a single
   # +Sentence+ object or an array of +Token+ objects.

@@ -101,15 +101,9 @@ class Sentence < ActiveRecord::Base
 
   include Presentation
 
-  # Returns the sentence and its context as an array of sentences. +n+
-  # specifies the number of sentences to count as the sentence's
-  # 'context'.
-  def sentences_in_context(n = 5)
-    previous_sentences.last(n) + [self] + next_sentences.first(n)
-  end
-
   #FIXME:DRY generalise < token
 
+  # Deprecated
   def previous_sentences(include_previous_sd = false)
     ps = source_division.sentences.find(:all,
                                    :conditions => [ "sentence_number < ?", sentence_number ],
@@ -118,10 +112,23 @@ class Sentence < ActiveRecord::Base
     ps
   end
 
-  def next_sentences
-    source_division.sentences.find(:all,
-                                   :conditions => [ "sentence_number > ?", sentence_number ],
-                                   :order => "sentence_number ASC")
+  def prev_sentences(limit = nil)
+    options = {
+      :conditions => ["sentence_number < ?", sentence_number],
+      :order => "sentence_number DESC"
+    }
+    options[:limit] = limit if limit
+    source_division.sentences.find(:all, options).reverse
+  end
+
+  def next_sentences(limit = nil)
+    options = {
+      :conditions => ["sentence_number > ?", sentence_number],
+      :order => "sentence_number ASC"
+    }
+    options[:limit] = limit if limit
+
+    source_division.sentences.find(:all, options)
   end
 
   # Returns the previous sentence in the linearisation sequence. Returns +nil+
@@ -185,19 +192,6 @@ class Sentence < ActiveRecord::Base
 
       save_without_validation!
     end
-  end
-
-  # Remove all dependency annotation from a sentence and save the changes.
-  # This will also do away with any empty tokens in the sentence, and
-  # change the annotation and review state of the sentence.
-  def clear_dependencies!
-    tokens.each { |token| token.update_attributes!(:relation => nil, :head => nil) }
-
-    # Remove all empty tokens from a sentence
-    Token.delete_all :sentence_id => self.id, :form => nil
-
-    remove_annotation_metadata!
-    save!
   end
 
   def syntactic_annotation=(dependency_graph)
@@ -530,26 +524,6 @@ class Sentence < ActiveRecord::Base
   end
 
   public
-
-  # Move the +n+ first tokens from the next sentence to the end of
-  # this sentence and save the affected records.
-  def append_first_tokens_from_next_sentence!(n = 1)
-    if self.has_next_sentence?
-      append_tokens!(self.next_sentence.tokens.first(n))
-    else
-      raise "No next sentence"
-    end
-  end
-
-  # Move the +n+ last token from the previous sentence to the
-  # beginning of this sentence and save the affected records.
-  def prepend_last_tokens_from_previous_sentence!(n = 1)
-    if self.has_previous_sentence?
-      prepend_tokens!(self.previous_sentence.tokens.last(n))
-    else
-      raise "No previous sentence"
-    end
-  end
 
   # Returns +true+ if sentence has been annotated.
   def is_annotated?

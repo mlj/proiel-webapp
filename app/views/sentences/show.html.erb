@@ -11,7 +11,6 @@
 <% if is_annotator? or @sentence.is_reviewed? %>
   <!-- ul id="tabs" class="tabs">
     <li><a href="#metadata"><span>Metadata</span></a></li>
-    <li><a href="#sentence_division"><span>Sentence division</span></a></li>
     <li><a href="#tokenization"><span>Tokenization</span></a></li>
     <li><a href="#morphology"><span>Morphology</span></a></li>
     <li><a href="#dependencies"><span>Dependencies</span></a></li>
@@ -49,7 +48,11 @@
            link_to_if(is_annotator?, "Edit", :action => :resegment_edit),
            link_to_if(is_annotator?, "Merge with next", { :action => :merge },
                       :confirm => 'Are you sure that you want to merge this sentence with the next?')]) do -%>
-    <%= render :partial => 'sentence_divisions/show' %>
+    <%= @sentence.prev_sentences(5).map(&:presentation_as_html).join(' | ') %>
+    | <span style="border-bottom: solid red">
+      <%= @sentence.presentation_as_html %>
+    </span> |
+    <%= @sentence.next_sentences(5).map(&:presentation_as_html).join(' | ') %>
   <% end %>
 
   <% layer("morphology", :actions => [

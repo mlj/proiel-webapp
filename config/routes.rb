@@ -28,7 +28,6 @@ ActionController::Routing::Routes.draw do |map|
     :tokenize => :get,
     :resegment_edit => :get,
   } do |annotation|
-    annotation.resource :sentence_division
     annotation.resource :dependency_alignments
     annotation.resource :morphtags
     annotation.resource :dependencies
