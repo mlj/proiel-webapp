@@ -4,6 +4,9 @@ Change log
 This is a list of major changes between the releases of the
 application.
 
+Release 20101016
+----------------
+
   * Dropped SFST in favour of static YAML files for morphological tagset
     definition (Dag)
   * Upgraded to Rails 2.3.9 (Marius)
