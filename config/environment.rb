@@ -16,7 +16,7 @@ UNICODE_NORMALIZATION_FORM = :c
 # Default user preferences.
 DEFAULT_USER_PREFERENCES = { :graph_format => "png", :graph_method => "unsorted" }
 
-RAILS_GEM_VERSION = '2.3.9' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.10' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -29,7 +29,7 @@ Rails::Initializer.run do |config|
 
   # Skip frameworks you're not going to use (only works if using vendor/rails).
   # To use Rails without a database, you must remove the Active Record framework
-#  config.frameworks -= [ :active_resource ]
+  config.frameworks -= [ :active_resource ]
 
   # Only load the plugins named here, in the order given. By default, all plugins
   # in vendor/plugins are loaded in alphabetical order.
