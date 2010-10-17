@@ -305,20 +305,16 @@ class Sentence < ActiveRecord::Base
   # Appends the next sentence onto this sentence and destroys the old
   # sentence. This also removes all dependency annotation from both
   # sentences to ensure validity.
-  def append_next_sentence!(nondestructive = true)
+  def append_next_sentence!
     if has_next?
       Sentence.transaction do
-        if nondestructive
-          append_tokens!(next_sentence.tokens)
-          remove_syntax_and_info_structure!
-        else
-          detokenize!
-          # next_sentence's tokens will be removed when sentence is destroyed.
-        end
+        remove_syntax_and_info_structure!
+        next_sentence.remove_syntax_and_info_structure!
+
+        append_tokens!(next_sentence.tokens)
 
         self.presentation = self.presentation + '<s> </s>' + self.next_sentence.presentation
         save!
-        tokenize! unless nondestructive
 
         next_sentence.destroy
       end
@@ -326,7 +322,6 @@ class Sentence < ActiveRecord::Base
       raise "No next sentence"
     end
   end
-
 
   # Creates a new token and appends it to the end of the sentence. The
   # function is equivalent to +create!+ except for the automatic
