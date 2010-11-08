@@ -8,13 +8,13 @@ var InfoStatus = function() {
     // private variables
 
     var categories = new Array('new', 'kind', 'acc-gen', 'acc-sit', 'acc-inf', 'old', 'old-inact', 'no-info-status', 'info-unannotatable');
-    var non_spec_categories = new Array('non-spec', 'non-spec-inf', 'non-spec-old');
+    var non_spec_categories = new Array('quant', 'non-spec', 'non-spec-inf', 'non-spec-old');
     var annotatables = null;
     var unannotatables = null;
     var selected_token = null;
     var selected_token_index = null;
     var first_numerical_code = 49; // keycode for the 1 key
-    var first_alphabetic_code = 88; // keycode for the x key
+    var first_alphabetic_code = 87; // keycode for the w key
 
     // private functions
 
