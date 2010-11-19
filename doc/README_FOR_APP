@@ -54,7 +54,12 @@ interface:
     >> u.save!
     >> u.confirm!
 
-=== Step 4 (optional): Enable morphological rules
+=== Step 4: Set run-time configuration settings
+
+Inspect +config/app_config.yml+ and make changes as necessary. It is
+essential that you change the +base_url+ and the +dc_*+ fields.
+
+=== Step 5 (optional): Enable morphological rules
 
 If you plan to compile your own morphological rules, you will need the
 +SFST+ toolkit from

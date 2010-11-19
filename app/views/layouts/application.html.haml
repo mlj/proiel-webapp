@@ -15,10 +15,10 @@
     %link{:rel => 'schema.DCTERMS', :href => 'http://purl.org/dc/terms/'}
     %meta{:name => 'DC.type', :scheme => 'DCTERMS.DCMIType', :content => 'Text'}
     %meta{:name => 'DC.format', :content => 'text/html; charset=utf-8'}
-    %meta{:name => 'DC.title', :lang => 'en', :content => CONFIG[:dc_title]}
-    %meta{:name => 'DC.subject', :lang => 'en', :content => CONFIG[:dc_subject]}
-    %meta{:name => 'DC.publisher', :content => CONFIG[:dc_publisher]}
-    %meta{:name => 'DC.identifier', :scheme => 'DCTERMS.URI', :content => CONFIG[:base_url]}
+    %meta{:name => 'DC.title', :lang => 'en', :content => CONFIG.dc_title}
+    %meta{:name => 'DC.subject', :lang => 'en', :content => CONFIG.dc_subject}
+    %meta{:name => 'DC.publisher', :content => CONFIG.dc_publisher}
+    %meta{:name => 'DC.identifier', :scheme => 'DCTERMS.URI', :content => CONFIG.base_url}
 
     %meta{"http-equiv"=>"Content-Type", :content=>"text/html; charset=utf-8"}
 
