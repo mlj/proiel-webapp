@@ -572,14 +572,6 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  # Returns +true+ if sentence has information structure annotation.
-  def has_information_structure_annotation?
-    # FIXME: Should probably be improved. At least we can tell that we
-    # won't have any annotation unless dependency annotation is
-    # present.
-    has_dependency_annotation?
-  end
-
   # Returns +true+ if sentence has dependency annotation.
   def has_dependency_annotation?
     tokens.dependency_annotatable.first && !tokens.dependency_annotatable.first.relation.nil?
