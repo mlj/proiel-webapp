@@ -41,7 +41,7 @@ class SourceXMLExport
   # sem_tags:: Include semantic tags. Default: +false+.
   # info:: Include information structure. Default: +false+.
   def initialize(source, options = {})
-    options.assert_valid_keys(:reviewed_only, :sem_tags, :source_division, :info, :cycles)
+    options.assert_valid_keys(:reviewed_only, :sem_tags, :source_division, :info, :cycles, :ignore_nils)
     options.reverse_merge! :reviewed_only => false
 
     @source = source
@@ -255,9 +255,9 @@ class TigerXMLExport < SourceXMLExport
       else
         raise "Do not know how to get required attribute #{attr}"
       end
-      attrs[attr] ||= "--"
+      attrs[attr] ||= "--" unless @options[:ignore_nils]
     end
-    attrs
+    attrs.delete_if { |k, v| v.nil? }
   end
 
   protected
