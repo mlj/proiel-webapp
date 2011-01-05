@@ -370,11 +370,14 @@ module PROIEL
     # Returns the interpretation of a slash -- existing or potential --
     # from the node to another node +slashee+.
     def interpret_slash(slashee)
+      raise ArgumentError, "invalid slashee" if slashee.blank?
+
       if self.is_empty? and self.is_verbal? and slashee.is_verbal? and self.relation == slashee.relation
         :pid
       elsif [:xadv, :xobj].include?(self.relation)
         :xsub
       else
+        raise ArgumentError, "slashee has no relation" if slashee.relation.blank?
         slashee.relation
       end
     end
