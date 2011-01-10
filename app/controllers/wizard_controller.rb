@@ -37,9 +37,14 @@ class WizardController < ApplicationController
   end
 
   def verify
-    @sentence.set_annotated!(current_user)
+    begin
+      @sentence.set_annotated!(current_user)
 
-    next_sentence
+      next_sentence
+    rescue ActiveRecord::RecordInvalid => invalid
+      flash[:error] = invalid.record.errors.full_messages.join('<br>')
+      show_dependencies
+    end
   end
 
   def next_sentence
