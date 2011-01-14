@@ -727,4 +727,10 @@ class Sentence < ActiveRecord::Base
   def to_s
     presentation_as_text
   end
+
+  # Returns the maximum depth of the dependency graph, i.e. the maximum
+  # distance from the root to a node in the graph in number of edges.
+  def max_depth
+    tokens.map(&:depth).max
+  end
 end

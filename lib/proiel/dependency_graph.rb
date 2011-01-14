@@ -66,17 +66,6 @@ module PROIEL
       @identifier == :root
     end
 
-    # Returns the `depth' of the node, i.e. the distance from the root in number of edges,
-    # or, if conceptualised as a tree, the depth of the node relative to the rood node.
-    def depth
-      @identifier == :root ? 0 : head.depth + 1
-    end
-
-    # Returns the maximum `depth' of the subgraph constituted by this node and its dependents.
-    def max_depth
-      dependents.empty? ? depth : dependents.collect(&:max_depth).max
-    end
-
     # Returns +true+ if this node dominates another node +x+,
     # including if +x+ is identical to this node.
     def dominates?(x)
@@ -301,11 +290,6 @@ module PROIEL
       @nodes[identifier]
     end
 
-    # Returns the maximum `depth' of the graph.
-    def max_depth
-      @root.max_depth
-    end
-
     def empty?
       @nodes.empty?
     end
@@ -415,176 +399,6 @@ module PROIEL
 
     def self.id_to_i(id)
       id[/^new/] ? id : id.to_i
-    end
-
-    public
-
-    # Produces an image visualising the dependency graph.
-    #
-    # ==== Options
-    # fontname:: Forces the use of a particular font.
-    # fontsize:: Forces the use of a particular font size.
-    # linearized:: Visualises the graph in a linearized fashion.
-    def visualize(format = :png, options = {})
-      raise ArgumentError, "Invalid format #{format}" unless format == :png || format == :svg
-
-      node_options = {}
-      node_options[:fontname] = options[:fontname] if options[:fontname]
-      node_options[:fontsize] = options[:fontsize] if options[:fontsize]
-
-      Open3.popen3("dot -T#{format}") do |dot, img, err|
-        options[:linearized] ? self.linearisation_dot(dot, node_options) : self.regular_dot(dot, node_options)
-        @image = img.read
-      end
-      @image
-    end
-
-    protected
-
-    DEFAULT_STYLE = {
-      :default => {
-        :nodes => { :fontcolor => 'black', },
-        :edges => { :color => 'orange', :fontcolor => 'black' },
-        :secondary_edges => { :color => 'blue', :fontcolor => 'black', :style => 'dashed' },
-      },
-      :empty => {
-        'V' => { :nodes => { :label => 'V', :shape => 'circle', }, },
-        'C' => { :nodes => { :label => 'C', :shape => 'diamond', }, },
-        'P' => { :nodes => { :label => 'PRO', :shape => 'hexagon', }, :ignore => true },
-        :root => { :nodes => { :label => '', :shape => 'circle', }, },
-      },
-      :coordinator => { :nodes => { :shape => 'diamond' }, },
-      :others => { :nodes => { :shape => 'box' }, },
-    }.freeze
-
-    def regular_dot(dot, node_options)
-      @f = dot
-      @f.puts "digraph G {"
-      @f.puts "  charset=\"UTF-8\";"
-      @f.puts "  graph [truecolor bgcolor=\"#ff000000\"];"
-
-      default_edge_style = DEFAULT_STYLE[:default][:edges] || {}
-      default_edge_style.merge!(node_options)
-      default_secondary_edge_style = DEFAULT_STYLE[:default][:secondary_edges] || {}
-      default_secondary_edge_style.merge!(node_options)
-      default_node_style = DEFAULT_STYLE[:default][:nodes] || {}
-      default_node_style.merge!(node_options)
-
-      make_styled_node(:root, '', default_node_style, DEFAULT_STYLE[:empty][:root][:nodes]) unless DEFAULT_STYLE[:empty][:root][:ignore]
-
-      @nodes.values.each do |node|
-        identifier, relation, head, slashes_with_interpretations, empty = node.identifier, node.relation, node.head, node.slashes_with_interpretations, node.data[:empty]
-
-        chosen_style = if empty
-          DEFAULT_STYLE[:empty][empty]
-        elsif node.is_coordinator? and node.has_dependents?
-          DEFAULT_STYLE[:coordinator]
-        else
-          DEFAULT_STYLE[:others]
-        end
-
-        make_styled_node(identifier, node.data[:form],
-                         default_node_style,
-                         chosen_style[:nodes]) unless chosen_style[:ignore]
-        make_styled_edge(head.identifier, identifier, relation.to_s.upcase,
-                         default_edge_style.merge({ :weight => 1.0, }),
-                         chosen_style[:edges]) if head and relation and not chosen_style[:ignore]
-
-        slashes_with_interpretations.each do |slashee, interpretation|
-          make_styled_edge(identifier, slashee.identifier, interpretation.to_s.upcase,
-                           default_secondary_edge_style.merge({ :weight => 0.0 }),
-                           chosen_style[:secondary_edges])
-        end
-      end
-
-      @f.puts "}"
-      @f.close
-    end
-
-    def linearisation_dot(dot, node_options)
-      @f = dot
-      @f.puts "digraph G {"
-      @f.puts "  charset=\"UTF-8\"; rankdir=TD; ranksep=.0005; nodesep=.05;"
-      @f.puts "  graph [truecolor bgcolor=\"#ff000000\"];"
-
-      @f.puts "node [shape=none]; {"
-      x = (0..self.max_depth).to_a
-      @f.puts x.collect { |d| "depth#{d}" }.join(' -> ')
-      @f.puts "-> WORDS [style=invis]; }"
-      @f.puts "node [shape=point]; { rank = same; depth0 [label=\"\"]; root; }"
-
-      nodes_by_depth = @nodes.values.classify(&:depth)
-      nodes_by_depth.sort.each do |depth, nodes|
-        @f.puts "node [shape=point]; { rank = same; "
-        make_node("depth#{depth}", { :label => '' })
-        nodes.each do |node|
-          make_node("#{node.identifier}", { })
-        end
-        @f.puts "}"
-      end
-
-      @f.puts "node [shape=none]; { rank = same; WORDS [label=\"\"]; "
-      @nodes.values.reject { |n| n.is_empty? }.sort_by { |n| n.token_number }.each do |node|
-        make_node("f#{node.identifier}", { :label => node.data[:form] })
-      end
-      @f.puts "}"
-
-      @nodes.values.each do |node|
-        identifier, relation, head, slashes_with_interpretations = node.identifier, node.relation, node.head, node.slashes_with_interpretations
-        form, empty = node.data.values_at(:form, :empty)
-
-        if head and relation
-          make_edge(head.identifier, identifier,
-                    { :label => relation.to_s.upcase, :fontcolor => 'black', :fontsize => 10 })
-        end
-
-        # Hook up the word forms with their nodes
-        make_edge("f#{node.identifier}", node.identifier, { :arrowhead => 'none', :color => 'lightgrey' }) unless node.is_empty?
-
-        slashes_with_interpretations.each do |slashee, interpretation|
-          make_edge(identifier, slashee.identifier,
-                    node_options.merge({ :label => interpretation.to_s.upcase, :color => "blue", :weight => 0.0, :style => "dotted", :fontsize => 10 }))
-        end
-      end
-
-      @nodes.values.reject(&:is_empty?).sort_by(&:token_number).each_cons(2) do |n1, n2|
-        make_edge("f#{n1.identifier}", "f#{n2.identifier}", { :weight => 10.0, :style => 'invis' })
-      end
-
-      @f.puts "}"
-      @f.close
-    end
-
-    # Creates a styled node with identifier +identifier+. The label is
-    # set to +default_label+ unless overridden by styling in +default_style+
-    # or +local_style+. Remaining styling is determined by +default_style+
-    # and +local_style+. Both +default_style+ and +local_style+ may be
-    # +nil+ if not set.
-    def make_styled_node(identifier, default_label, default_style = nil, local_style = nil)
-      make_node(identifier,
-                { :label => default_label }.merge(default_style || {}).merge(local_style || {}))
-    end
-
-    # Creates a styled edge from identifier +identifier1+ to identifier
-    # +identifier2+. The label is set to +default_label+ unless overridden by
-    # styling in +default_style+ or +local_style+. Remaining styling is
-    # determined by +default_style+ and +local_style+. Both +default_style+
-    # and +local_style+ may be +nil+ if not set.
-    def make_styled_edge(identifier1, identifier2, default_label, default_style = nil, local_style = nil)
-      make_edge(identifier1, identifier2,
-                { :label => default_label }.merge(default_style || {}).merge(local_style || {}))
-    end
-
-    def make_node(obj, attrs)
-      @f.puts "  #{obj} [#{join_attributes(attrs)}];"
-    end
-
-    def make_edge(obj1, obj2, attrs)
-      @f.puts "  #{obj1} -> #{obj2} [#{join_attributes(attrs)}];"
-    end
-
-    def join_attributes(attrs)
-      attrs.collect { |attr, value| "#{attr}=\"#{value}\"" }.join(',')
     end
 
     public

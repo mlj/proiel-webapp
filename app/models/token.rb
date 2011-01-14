@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010 University of Oslo
-# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -54,10 +54,15 @@ class Token < ActiveRecord::Base
 
   searchable_on :form
 
+  named_scope :non_pro, :conditions => ["empty_token_sort IS NULL OR empty_token_sort != 'P'"]
+  named_scope :non_empty, :conditions => ["empty_token_sort IS NOT NULL"]
+
+  # Deprecated
   named_scope :word, :conditions => ["empty_token_sort IS NULL"]
   named_scope :morphology_annotatable, :conditions => ["empty_token_sort IS NULL"]
   named_scope :dependency_annotatable, :conditions => ["empty_token_sort IS NULL OR empty_token_sort != 'P'"]
   named_scope :morphology_annotated, :conditions => [ "lemma_id IS NOT NULL" ]
+
 
   # Tokens that are candidate root nodes in dependency graphs.
   named_scope :root_dependency_tokens, :conditions => [ "head_id IS NULL" ]
@@ -264,9 +269,9 @@ class Token < ActiveRecord::Base
     (include_empty_tokens && empty_token_sort == 'V') || (morph_features and morph_features.verb?)
   end
 
-  # Returns true if the token is a conjunction. If +include_empty_tokens+ is
-  # true, also returns true for an empty node with its empty token
-  # sort set to conjunction.
+  # Returns +true+ if the token is a conjunction. If +include_empty_tokens+
+  # is true, also returns +true+ for an empty node with its empty token
+  # sort set to conjunction, i.e. for asyndetic conjunctions.
   def conjunction?(include_empty_tokens = true)
     (include_empty_tokens && empty_token_sort == 'C') || (morph_features and morph_features.conjunction?)
   end
@@ -583,5 +588,14 @@ class Token < ActiveRecord::Base
       res[st.semantic_attribute.tag] = st.semantic_attribute_value.tag
     end
     res
+  end
+
+  # Returns the depth of the node, i.e. the distance from the root in number of edges.
+  def depth
+    if head
+      head.depth + 1
+    else
+      0
+    end
   end
 end

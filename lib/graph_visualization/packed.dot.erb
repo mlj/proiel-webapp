@@ -1,0 +1,27 @@
+digraph G {
+  charset="UTF-8";
+  graph [truecolor bgcolor="#ff000000"];
+  root [label="",shape=none];
+  <% @tokens.non_pro.each do |token| %>
+    <% if token.conjunction? %>
+      <%= node token.id, token.form || token.empty_token_sort, :shape => :none %>
+    <% elsif token.is_empty? %>
+      <%= node token.id, token.empty_token_sort, :shape => :none %>
+    <% else %>
+      <%= node token.id, token.form, :shape => :none %>
+    <% end %>
+
+    <% if token.head and token.relation %>
+      <%= edge token.head.id, token.id, token.relation.to_s.upcase,
+          :weight => 0.0, :color => :purple %>
+    <% elsif token.relation %>
+      <%= edge :root, token.id, token.relation.to_s.upcase,
+          :weight => 0.0, :color => :purple %>
+    <% end %>
+
+    <% token.slash_out_edges.each do |slash_edge| %>
+      <%= edge token.id, slash_edge.slashee.id, slash_edge.relation.to_s.upcase,
+          :weight => 0.0, :color => :purple, :style => :dashed %>
+    <% end %>
+  <% end %>
+}

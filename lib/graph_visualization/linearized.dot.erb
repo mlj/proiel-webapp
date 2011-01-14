@@ -1,0 +1,57 @@
+digraph G {
+  charset="UTF-8"; rankdir=TD; ranksep=.0005; nodesep=.05;
+  graph [truecolor bgcolor="#ff000000"];
+
+  node [shape=none]; {
+    depthR [style=invis] ->
+    <% (0..@sentence.max_depth).each do |depth| %>
+      depth<%= depth %> ->
+    <% end %>
+    WORDS [style=invis];
+  }
+
+  node [shape=point]; {
+    rank = same;
+    depthR [label=""];
+    root;
+  }
+
+  <% @tokens.non_pro.classify(&:depth).sort.each do |depth, tokens| %>
+    node [shape=point]; {
+      rank = same;
+      <%= node "depth#{depth}" %>
+      <% tokens.each do |t| %>
+        <%= node t.id %>
+      <% end %>
+    }
+  <% end %>
+
+  node [shape=none]; {
+    rank = same;
+    WORDS [label=""];
+    <% @tokens.non_pro.reject { |t| t.is_empty? }.sort_by { |t| t.token_number }.each do |t| %>
+      <%= node "f#{t.id}", t.form %>
+    <% end %>
+  }
+
+  <% @tokens.non_pro.each do |t| %>
+    <% if t.head and t.relation %>
+      <%= edge t.head.id, t.id, t.relation.to_s.upcase, :fontcolor => :black, :fontsize => 10 %>
+    <% else %>
+      <%= edge :root, t.id, t.relation.to_s.upcase, :fontcolor => :black, :fontsize => 10 %>
+    <% end %>
+
+    <% unless t.is_empty? %>
+      <%= edge "f#{t.id}", t.id, '', :arrowhead => :none, :color => :lightgrey %>
+    <% end %>
+
+    <% t.slash_out_edges.each do |slash_edge| %>
+      <%= edge t.id, slash_edge.slashee.id, slash_edge.relation.to_s.upcase,
+        :color => :blue, :weight => 0.0, :style => :dotted, :fontsize => 10 %>
+    <% end %>
+  <% end %>
+
+  <% @tokens.non_empty.sort_by(&:token_number).each_cons(2) do |n1, n2| %>
+    <%= edge "f#{n1.id}", "f#{n2.id}", '', :weight => 10.0, :style => :invis %>
+  <% end %>
+}

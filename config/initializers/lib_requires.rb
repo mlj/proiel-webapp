@@ -1,3 +1,4 @@
+require 'graph_visualization'
 require 'markdown_template_handler'
 require 'xml_parser'
 require 'google_chart'

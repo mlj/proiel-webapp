@@ -1,0 +1,9 @@
+en:
+  preferences:
+    edit:
+      png: "PNG (bitmap)"
+      svg: "SVG (vectorized)"
+      unsorted: "Unsorted"
+      linearized: "Linearized"
+      packed: "Packed"
+      full: "Full (including PRO and lemma)"

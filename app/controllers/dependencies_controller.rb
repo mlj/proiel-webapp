@@ -1,26 +1,27 @@
 class DependenciesController < ApplicationController
   before_filter :is_annotator?, :only => [:edit, :update]
 
-  def show 
-    @sentence = Sentence.find(params[:sentence_id])
-
-    graph_options = { :fontname => 'Legendum' }
-    graph_options[:linearized] = user_preferences[:graph_method] == "linearized"
+  def show
+    @sentence = Sentence.find(params[:sentence_id], :include => :tokens)
+    visualization = Visualization.new(@sentence, :fontname => 'Legendum')
+    mode = user_preferences[:graph_method] ? user_preferences[:graph_method].to_sym : :unsorted
 
     respond_to do |format|
-      format.svg  { send_data @sentence.dependency_graph.visualize(:svg, graph_options),
+      format.svg  { send_data visualization.generate(:format => :svg, :mode => mode),
         :filename => "#{params[:id]}.svg", :disposition => 'inline', :type => :svg }
-      format.png  { send_data @sentence.dependency_graph.visualize(:png, graph_options),
+      format.png  { send_data visualization.generate(:format => :png, :mode => mode),
         :filename => "#{params[:id]}.png", :disposition => 'inline', :type => :png }
+      format.dot  { send_data visualization.generate(:format => :dot, :mode => mode),
+        :filename => "#{params[:id]}.dot", :disposition => 'inline', :type => :dot }
     end
   end
-  
-  def edit 
+
+  def edit
     @sentence = Sentence.find(params[:sentence_id])
   end
 
   # Saves changes to relations and has the user review the new structure.
-  def update 
+  def update
     @sentence = Sentence.find(params[:sentence_id])
 
     if @sentence.is_reviewed? and not user_is_reviewer?
@@ -54,7 +55,7 @@ class DependenciesController < ApplicationController
       flash[:error] = 'Invalid dependency structure'
       redirect_to :action => 'edit', :wizard => params[:wizard]
     end
-  rescue ActiveRecord::RecordInvalid => invalid 
+  rescue ActiveRecord::RecordInvalid => invalid
     flash[:error] = invalid.record.errors.full_messages.join('<br>')
     redirect_to :action => 'edit', :wizard => params[:wizard], :output => params[:output]
   end
