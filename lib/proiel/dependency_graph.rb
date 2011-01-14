@@ -2,13 +2,13 @@
 #
 # dependency_graph.rb - Dependency graph manipulation and validation
 #
-# Written by Marius L. Jøhndal, 2007, 2008.
+# Written by Marius L. Jøhndal, 2007, 2008, 2011.
 #
 require 'extensions'
 require 'enumerator'
 require 'open3'
 
-module Lingua
+module PROIEL
   class DependencyGraphNode
     attr_reader :relation
     attr_reader :head
@@ -134,145 +134,7 @@ module Lingua
     def slashes_with_interpretations
       @slashes
     end
-  end
 
-  class DependencyGraph
-    attr_reader :root
-
-    def initialize(options = {})
-      @node_class ||= DependencyGraphNode
-      @nodes = {}
-      @root = @node_class.new(:root, nil, nil)
-
-      if block_given?
-        @postponed_nodes = {}
-
-        yield self
-
-        # Traverse the stored postponed nodes and add them
-        add_postponed_subgraph
-
-        # Add in the slashes if we are about to end the recursion
-        @postponed_nodes.each_pair do |identifier, values|
-          next unless values[:slashes_and_interpretations]
-          values[:slashes_and_interpretations].each do |slash_id, slash_interpretation|
-            @nodes[identifier].add_slash(@nodes[slash_id], slash_interpretation || @nodes[identifier].interpret_slash(@nodes[slash_id]))
-          end
-        end
-
-        @postponed_nodes = nil
-      end
-    end
-
-    private
-
-    def add_postponed_subgraph(identifier = :root, head_identifier = nil)
-      node = @postponed_nodes[identifier]
-      # Add nodes without their slashes
-      add_node(identifier, node[:relation], head_identifier, {}, node[:data]) unless identifier == :root
-      node[:dependent_ids].each { |dependent_id| add_postponed_subgraph(dependent_id, identifier) }
-    end
-
-    public
-
-    def [](identifier)
-      @nodes[identifier]
-    end
-
-    # Returns the maximum `depth' of the graph.
-    def max_depth
-      @root.max_depth
-    end
-
-    def empty?
-      @nodes.empty?
-    end
-
-    def each(&block)
-      @root.each_dependent(&block)
-    end
-
-    def select(&block)
-      r = []
-      self.each do |n|
-        r << n if block.call(n)
-      end
-      r
-    end
-
-    def nodes
-      r = []
-      self.each { |n| r << n }
-      r
-    end
-
-    # Returns an array with all the node identifiers.
-    def identifiers
-      nodes.map(&:identifier)
-    end
-
-    def badd_node(identifier, relation, head_identifier = nil, slashes_and_interpretations = {}, data = {})
-      # Merge data about this token into the result structure
-      @postponed_nodes[identifier] ||= { :dependent_ids => [] }
-      @postponed_nodes[identifier].merge!({ :relation => relation, :data => data })
-
-      # Attach this token to its head's list of dependents
-      head_identifier ||= :root
-      @postponed_nodes[head_identifier] ||= { :dependent_ids => [] }
-      @postponed_nodes[head_identifier][:dependent_ids] << identifier
-
-      @postponed_nodes[identifier].tap do |n|
-        n[:slashes_and_interpretations] = slashes_and_interpretations
-      end
-    end
-
-    def add_node(identifier, relation, head_identifier = nil, slash_ids_and_interpretations = {}, data = {})
-      if @nodes[identifier]
-        raise "Node with ID #{identifier} already exists"
-      else
-        if head_identifier and head_identifier != :root
-          raise "Head node with ID #{head_identifier} does not exist" unless @nodes[head_identifier]
-          @nodes[identifier] = @node_class.new(identifier, relation, @nodes[head_identifier], data)
-          @nodes[head_identifier].add_dependent(@nodes[identifier])
-        else
-          @nodes[identifier] = @node_class.new(identifier, relation, @root, data)
-          @root.add_dependent(@nodes[identifier])
-        end
-      end
-
-      slash_ids_and_interpretations.each do |i, interpretation|
-        raise "Slash node with ID #{i} does not exist" unless @nodes[i]
-        raise "Slash to node with ID #{i} does not have an interpretation" if interpretation.blank?
-        @nodes[identifier].add_slash(@nodes[i], interpretation)
-      end
-
-      @nodes[identifier]
-    end
-
-    def remove_node(identifier)
-      identifier = identifier.to_i
-      node = @nodes[identifier]
-      return unless node   # Will happen if the prodrop token was not saved before it was removed
-
-      if node.head
-        @nodes[node.head.identifier].remove_dependent(identifier)
-      end
-      @nodes.delete(identifier)
-    end
-
-    def valid?
-      # FIXME: check for cycles
-      true
-    end
-
-    def inspect
-      root.inspect_subgraph
-    end
-  end
-end
-
-module PROIEL
-  class ValidatingDependencyGraphNode < Lingua::DependencyGraphNode
     def is_empty?
       (@data[:empty] or identifier == :root) ? true : false
     end
@@ -397,12 +259,136 @@ module PROIEL
     end
   end
 
-  class ValidatingDependencyGraph < Lingua::DependencyGraph
-    attr_reader :node_class
+  class DependencyGraph
+    attr_reader :root
 
-    def initialize
-      @node_class = ValidatingDependencyGraphNode
-      super
+    def initialize(options = {})
+      @nodes = {}
+      @root = DependencyGraphNode.new(:root, nil, nil)
+
+      if block_given?
+        @postponed_nodes = {}
+
+        yield self
+
+        # Traverse the stored postponed nodes and add them
+        add_postponed_subgraph
+
+        # Add in the slashes if we are about to end the recursion
+        @postponed_nodes.each_pair do |identifier, values|
+          next unless values[:slashes_and_interpretations]
+          values[:slashes_and_interpretations].each do |slash_id, slash_interpretation|
+            @nodes[identifier].add_slash(@nodes[slash_id], slash_interpretation || @nodes[identifier].interpret_slash(@nodes[slash_id]))
+          end
+        end
+
+        @postponed_nodes = nil
+      end
+    end
+
+    private
+
+    def add_postponed_subgraph(identifier = :root, head_identifier = nil)
+      node = @postponed_nodes[identifier]
+      # Add nodes without their slashes
+      add_node(identifier, node[:relation], head_identifier, {}, node[:data]) unless identifier == :root
+      node[:dependent_ids].each { |dependent_id| add_postponed_subgraph(dependent_id, identifier) }
+    end
+
+    public
+
+    def [](identifier)
+      @nodes[identifier]
+    end
+
+    # Returns the maximum `depth' of the graph.
+    def max_depth
+      @root.max_depth
+    end
+
+    def empty?
+      @nodes.empty?
+    end
+
+    def each(&block)
+      @root.each_dependent(&block)
+    end
+
+    def select(&block)
+      r = []
+      self.each do |n|
+        r << n if block.call(n)
+      end
+      r
+    end
+
+    def nodes
+      r = []
+      self.each { |n| r << n }
+      r
+    end
+
+    # Returns an array with all the node identifiers.
+    def identifiers
+      nodes.map(&:identifier)
+    end
+
+    def badd_node(identifier, relation, head_identifier = nil, slashes_and_interpretations = {}, data = {})
+      # Merge data about this token into the result structure
+      @postponed_nodes[identifier] ||= { :dependent_ids => [] }
+      @postponed_nodes[identifier].merge!({ :relation => relation, :data => data })
+
+      # Attach this token to its head's list of dependents
+      head_identifier ||= :root
+      @postponed_nodes[head_identifier] ||= { :dependent_ids => [] }
+      @postponed_nodes[head_identifier][:dependent_ids] << identifier
+
+      @postponed_nodes[identifier].tap do |n|
+        n[:slashes_and_interpretations] = slashes_and_interpretations
+      end
+    end
+
+    def add_node(identifier, relation, head_identifier = nil, slash_ids_and_interpretations = {}, data = {})
+      if @nodes[identifier]
+        raise "Node with ID #{identifier} already exists"
+      else
+        if head_identifier and head_identifier != :root
+          raise "Head node with ID #{head_identifier} does not exist" unless @nodes[head_identifier]
+          @nodes[identifier] = DependencyGraphNode.new(identifier, relation, @nodes[head_identifier], data)
+          @nodes[head_identifier].add_dependent(@nodes[identifier])
+        else
+          @nodes[identifier] = DependencyGraphNode.new(identifier, relation, @root, data)
+          @root.add_dependent(@nodes[identifier])
+        end
+      end
+
+      slash_ids_and_interpretations.each do |i, interpretation|
+        raise "Slash node with ID #{i} does not exist" unless @nodes[i]
+        raise "Slash to node with ID #{i} does not have an interpretation" if interpretation.blank?
+        @nodes[identifier].add_slash(@nodes[i], interpretation)
+      end
+
+      @nodes[identifier]
+    end
+
+    def remove_node(identifier)
+      identifier = identifier.to_i
+      node = @nodes[identifier]
+      return unless node   # Will happen if the prodrop token was not saved before it was removed
+
+      if node.head
+        @nodes[node.head.identifier].remove_dependent(identifier)
+      end
+      @nodes.delete(identifier)
+    end
+
+    def valid?
+      # FIXME: check for cycles
+      true
+    end
+
+    def inspect
+      root.inspect_subgraph
     end
 
     def to_h
@@ -410,7 +396,7 @@ module PROIEL
     end
 
     def self.new_from_editor(editor_output)
-      ValidatingDependencyGraph.new do |g|
+      DependencyGraph.new do |g|
         (rec = lambda do |subtree, head_id|
           unless subtree.nil?
             subtree.each_pair do |id, values|
@@ -630,8 +616,8 @@ module PROIEL
       end
 
       test_tokens('There can only be one PRED node under the root',
-      		  lambda { |t| t.is_daughter_of_root? and t.relation == :pred } ) do |ts|
-	ts.size < 2 ? [] : ts
+                  lambda { |t| t.is_daughter_of_root? and t.relation == :pred } ) do |ts|
+        ts.size < 2 ? [] : ts
       end
 
       test_token_by_relation('The head of a PARPRED relation must be the root node or a valid coordination', :parpred) do |t|

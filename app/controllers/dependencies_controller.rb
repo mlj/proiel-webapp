@@ -41,10 +41,10 @@ class DependenciesController < ApplicationController
         # Convert output to a more flexible representation. IDs will match those in
         # the database, except for any new empty dependency nodes, which will have
         # IDs on the form 'newX'.
-        @sentence.syntactic_annotation = PROIEL::ValidatingDependencyGraph.new_from_editor(ActiveSupport::JSON.decode(params[:output]))
+        @sentence.syntactic_annotation = PROIEL::DependencyGraph.new_from_editor(ActiveSupport::JSON.decode(params[:output]))
         @sentence.save!
       end
-    
+
       if params[:wizard]
         redirect_to :controller => :wizard, :action => :save_dependencies, :wizard => true
       else
