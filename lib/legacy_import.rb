@@ -59,7 +59,7 @@ class LegacyImport
       if sentence_number != attributes[:sentence_number]
         sentence_number = attributes[:sentence_number]
         sentence = sd.sentences.create!(:sentence_number => sentence_number, 
-                                        :presentation => attributes[:sentence_presentation].gsub(/(<\/*)(seg>)/, '\1w>').gsub(/(<\/*)(expan[^>]*>)/, '\1w>').gsub(/<\/*add[^>]*>/,"").gsub(/<\/*segmented[^>]*>/, "").gsub(/<\/*del[^>]*>/,"").gsub(/<s> <\/s>(<s> <\/s>)+/, "<s> <\/s>")
+                                        :presentation => attributes[:sentence_presentation].gsub(/(<\/*)(seg>)/, '\1w>').gsub(/<\/*add[^>]*>/,"").gsub(/<\/*del[^>]*>/,"").gsub(/<s> <\/s>(<s> <\/s>)+/, "<s> <\/s>")
 
 
 )
