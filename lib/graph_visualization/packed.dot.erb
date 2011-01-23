@@ -2,7 +2,7 @@ digraph G {
   charset="UTF-8";
   graph [truecolor bgcolor="#ff000000"];
   root [label="",shape=none];
-  <% @tokens.non_pro.each do |token| %>
+  <% @tokens.select { |t| t.empty_token_sort != 'P' }.each do |token| %>
     <% if token.conjunction? %>
       <%= node token.id, token.form || token.empty_token_sort, :shape => :none %>
     <% elsif token.is_empty? %>
