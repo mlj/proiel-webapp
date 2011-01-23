@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010 University of Oslo
-# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -70,15 +70,9 @@ class SourceDivision < ActiveRecord::Base
     end
   end
 
-  include References
-
-  def reference_parent
-    parent
-  end
-
-  # Re-indexes the references.
-  def reindex!
-    SourceDivision.transaction { sentences.find_each(&:reindex!) }
+  # Returns a citation for the source division.
+  def citation
+    [source.citation_part, [sentences.first.tokens.first.citation_part, sentences.last.tokens.last.citation_part].join(Unicode::U2013)].join(' ')
   end
 
   include Presentation

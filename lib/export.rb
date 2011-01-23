@@ -1,9 +1,7 @@
 #--
 #
-# export.rb - Export functions for PROIEL sources
-#
-# Copyright 2007, 2008, 2009, 2010 University of Oslo
-# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
 # Copyright 2010 Dag Haug
 #
 # This file is part of the PROIEL web application.
@@ -102,7 +100,6 @@ class PROIELXMLExport < SourceXMLExport
     builder.source(:id => identifier, :language => @source.language.tag) do
       builder.title @source.title
       builder.abbreviation @source.abbreviation
-      builder.tag!("tracked-references", @source.tracked_references.map { |k, v| v.map { |x| [x, k].join('=') }}.flatten.join(','))
       builder.tag!("tei-header") { @metadata.write(builder) if @metadata }
 
       filtered_source_divisions.each do |sd|

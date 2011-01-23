@@ -37,10 +37,6 @@ class ApplicationConfig
     @presentation_as_text_stylesheet ||= XSLT::Stylesheet.new(XML::Document.file(@config.presentation_as_text_stylesheet))
   end
 
-  def presentation_as_reference_stylesheet
-    @presentation_as_reference_stylesheet ||= XSLT::Stylesheet.new(XML::Document.file(@config.presentation_as_reference_stylesheet))
-  end
-
   def presentation_as_tokens_stylesheet
     @presentation_as_tokens_stylesheet ||= XSLT::Stylesheet.new(XML::Document.file(@config.presentation_as_tokens_stylesheet))
   end

@@ -1,0 +1,8 @@
+%tr
+  %td
+    != sentence.citation
+    != readable_completion sentence, :checkmark => :only
+  %td.form{:lang => sentence.language}
+    != sentence.presentation_as_html :length_limit => 10
+  %td
+    != link_to 'Details', sentence

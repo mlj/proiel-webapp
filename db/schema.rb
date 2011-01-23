@@ -133,19 +133,23 @@ ActiveRecord::Schema.define(:version => 20120212215933) do
   add_index "semantic_tags", ["taggable_type"], :name => "idx_semtags_taggable_type"
 
   create_table "sentences", :force => true do |t|
-    t.integer  "sentence_number",                      :default => 0,     :null => false
+    t.integer  "sentence_number",       :default => 0,     :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "annotated_by"
     t.datetime "annotated_at"
     t.integer  "reviewed_by"
     t.datetime "reviewed_at"
+<<<<<<< HEAD
     t.boolean  "unalignable",                          :default => false, :null => false
     t.boolean  "automatic_alignment"
+=======
+    t.boolean  "unalignable",           :default => false, :null => false
+    t.boolean  "automatic_alignment",   :default => false
+>>>>>>> da2a0b3... Replaced reference_fields, reference_format, tracked_references with a precomputed citation (excluding legacy support).
     t.integer  "sentence_alignment_id"
-    t.integer  "source_division_id",                   :default => 0,     :null => false
-    t.text     "presentation",                                            :null => false
-    t.string   "reference_fields",      :limit => 128, :default => "",    :null => false
+    t.integer  "source_division_id",    :default => 0,     :null => false
+    t.text     "presentation",                             :null => false
     t.integer  "assigned_to"
   end
 
@@ -169,24 +173,19 @@ ActiveRecord::Schema.define(:version => 20120212215933) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "presentation",                                              :null => false
-    t.string   "reference_fields",           :limit => 128, :default => "", :null => false
   end
 
   create_table "sources", :force => true do |t|
-    t.string "code",               :limit => 64,  :default => "", :null => false
-    t.string "title",              :limit => 128, :default => "", :null => false
-    t.string "abbreviation",       :limit => 64,  :default => "", :null => false
-    t.string "language",           :limit => 3,   :default => "", :null => false
-    t.text   "tei_header",                                        :null => false
-    t.string "tracked_references", :limit => 128, :default => "", :null => false
-    t.string "reference_fields",   :limit => 128, :default => "", :null => false
-    t.string "reference_format",   :limit => 256, :default => "", :null => false
+    t.string "code",          :limit => 64,  :default => "", :null => false
+    t.string "title",         :limit => 128, :default => "", :null => false
+    t.string "citation_part", :limit => 64,  :default => "", :null => false
+    t.string "language",      :limit => 3,   :default => "", :null => false
+    t.text   "tei_header",                                   :null => false
   end
 
   create_table "tokens", :force => true do |t|
-    t.integer  "sentence_id",                              :default => 0,     :null => false
-    t.integer  "verse"
-    t.integer  "token_number",                             :default => 0,     :null => false
+    t.integer  "sentence_id",                             :default => 0,     :null => false
+    t.integer  "token_number",                            :default => 0,     :null => false
     t.string   "form",                      :limit => 64
     t.integer  "lemma_id"
     t.integer  "head_id"
@@ -199,12 +198,12 @@ ActiveRecord::Schema.define(:version => 20120212215933) do
     t.string   "empty_token_sort",          :limit => 1
     t.string   "contrast_group"
     t.integer  "token_alignment_id"
-    t.boolean  "automatic_token_alignment",                :default => false
+    t.boolean  "automatic_token_alignment",               :default => false
     t.integer  "dependency_alignment_id"
     t.integer  "antecedent_id"
     t.integer  "relation_id"
     t.string   "morphology",                :limit => 11
-    t.string   "reference_fields",          :limit => 128, :default => "",    :null => false
+    t.string   "citation_part",             :limit => 64, :default => "",    :null => false
   end
 
   add_index "tokens", ["antecedent_id"], :name => "index_tokens_on_antecedent_id"

@@ -102,30 +102,6 @@ module Presentation
     presentation_as(APPLICATION_CONFIG.presentation_as_text_stylesheet)
   end
 
-  # Returns the presentation level as a sequence of references. The
-  # references are returned as a hash with reference units as keys and
-  # reference values as values.
-  def presentation_as_reference
-    refs = presentation_as(APPLICATION_CONFIG.presentation_as_reference_stylesheet)
-
-    refs.gsub(/\s+/, ' ').split(/\s*,\s*/).reject { |t| t.blank? }.inject({}) do |fields, field|
-      r, v = field.split('=')
-
-      case fields[r]
-      when NilClass
-        fields[r] = v
-      when Array
-        fields[r] << v
-        fields[r].sort!
-        fields[r].uniq!
-      else
-        fields[r] = [fields[r], v].sort.uniq
-      end
-
-      fields
-    end
-  end
-
   # Returns the presentation string as an array of tokens. This
   # presupposes that the presentation string already contains
   # tokenization markup.

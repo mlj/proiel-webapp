@@ -69,7 +69,7 @@ class Token < ActiveRecord::Base
     { :conditions => { :sentence_id => source.source_divisions.map(&:sentences).flatten.map(&:id) } }
   }
 
-  acts_as_audited :except => [:source_morphology, :source_lemma, :tracked_references]
+  acts_as_audited :except => [:source_morphology, :source_lemma, :citation_part]
 
   # General schema-defined validations
   validates_presence_of :sentence_id
@@ -277,10 +277,9 @@ class Token < ActiveRecord::Base
     sentence
   end
 
-  include References
-
-  def reference_parent
-    sentence
+  # Returns a citation for the token.
+  def citation
+    [sentence.source_division.source.citation_part, citation_part].join(' ')
   end
 
   # Returns true if this is an empty token, i.e. a token used for empty nodes

@@ -1,34 +1,18 @@
 one:
   id: 1
   title: Vulgate
+  citation_part: Vulg.
   language: lat
   tei_header: "<tei></tei>"
-  reference_format: ""
-  tracked_references: "---
-sentence:
-- verse
-source_division:
-- book
-- chapter"
 two:
   id: 2
   title: Greek New Testament
+  citation_part: GNT
   language: grc
   tei_header: "<tei></tei>"
-  reference_format: ""
-  tracked_references: "---
-sentence:
-- verse
-source_division:
-- book
-- chapter"
 three:
   id: 3
   title: Plautus, Amphitruo
-  abbreviation: Plaut., Amph.
+  citation_part: Pl. Am.
   language: grc
   tei_header: "<tei></tei>"
-  reference_format: ""
-  tracked_references: "---
-sentence:
-- line"

@@ -1,3 +1,24 @@
+#--
+#
+# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
+#
+# This file is part of the PROIEL web application.
+#
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+#++
 class Sentence < ActiveRecord::Base
   belongs_to :source_division
   has_many :bookmarks
@@ -93,11 +114,31 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  acts_as_audited :except => [:annotated_by, :annotated_at, :reviewed_by, :reviewed_at, :reference_fields]
+  acts_as_audited :except => [:annotated_by, :annotated_at, :reviewed_by, :reviewed_at]
 
   # Returns the language for the sentence.
   def language
     source_division.language
+  end
+
+  # Returns a citation for the sentence.
+  def citation
+    # Try to be a little bit intelligent about this and cater for a common
+    # scenario: If +x+ and +y+ have the same prefix (the prefix being
+    # separated from the rest of the +citation_part+ by spaces), only show
+    # it once. And if the suffix is the same, don't show this as an
+    # interval at all.
+    x, y = tokens.first.citation_part.split(/\s+/, 2), tokens.last.citation_part.split(/\s+/, 2)
+
+    rest = if x == y
+             [x.join(' ')]
+           elsif x.first == y.first
+             [x.join(' '), y.last]
+           else
+             [x.join(' '), y.join(' ')]
+           end
+
+    [source_division.source.citation_part, rest.join(Unicode::U2013)].join(' ')
   end
 
   include Presentation
@@ -169,30 +210,6 @@ class Sentence < ActiveRecord::Base
   # source division.
   def parent
     source_division
-  end
-
-  include References
-
-  def reference_parent
-    parent
-  end
-
-  # Re-indexes the references.
-  def reindex!
-    Sentence.transaction do
-      unless has_previous?
-        self.reference_fields = self.presentation_as_reference
-        source_division.save_without_validation!
-      else
-        # Merge with what we had in the last sentence, but only keep
-        # the last element in arrays or ranges, and always overwrite
-        # with new information.
-        self.reference_fields = previous.last_of_reference_fields.merge(presentation_as_reference)
-        raise "Referencing inconsistency: source division unexpectedly changed" if source_division.changed?
-      end
-
-      save_without_validation!
-    end
   end
 
   def syntactic_annotation=(dependency_graph)
@@ -380,22 +397,21 @@ class Sentence < ActiveRecord::Base
     self.detokenize!
     self.presentation = presentation_strings[0]
     self.save!
-    self.reindex!
+    # TODO: citation
     self.tokenize!
 
     1.upto(presentation_strings.size - 1).map do |i|
       s = parent.sentences.create!(:sentence_number => sentence_number + i,
                                    :presentation => presentation_strings[i],
                                    :assigned_to => self.assigned_to)
-      s.reference_fields = self.reference_fields
+      # TODO: citation
       s.save!
-      s.reindex!
       s.tokenize!
     end
   end
 
   # Split the sentence into a number of sentences non-destructively,
-  # ie. keeping the tokenization.
+  # i.e. keeping the tokenization.
   def split_with_tokens!(presentation_strings)
     # This can only be done to sentences that are actually tokenized and have a valid tokenization
     raise "Sentence is untokenized" unless tokenized?
@@ -404,7 +420,7 @@ class Sentence < ActiveRecord::Base
     self.tokens.reload
     self.presentation = presentation_strings[0]
     self.save!
-    self.reindex!
+    # TODO: citation
 
     used_tokens = self.presentation_as_tokens.size
 
@@ -412,9 +428,8 @@ class Sentence < ActiveRecord::Base
       s = parent.sentences.create!(:sentence_number => sentence_number + i,
                                    :presentation => presentation_strings[i],
                                    :assigned_to => self.assigned_to)
-      s.reference_fields = self.reference_fields
+      # TODO: citation
       s.save!
-      s.reindex!
       sentence_tokens = self.tokens.slice(used_tokens...used_tokens + s.presentation_as_tokens.size)
       sentence_tokens.each do |t|
         t.sentence_id = s.id
@@ -626,7 +641,7 @@ class Sentence < ActiveRecord::Base
       detokenize! if tokenized?
 
       presentation_as_tokens.each_with_index do |form, position|
-        # FIXME: Deal with reference_fields.
+        # TODO: citation
         tokens.create! :form => form, :token_number => position, :empty_token_sort => nil
       end
     end

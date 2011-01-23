@@ -1,0 +1,28 @@
+- roundedbox do
+  = @source.citation
+  != show_completion_rate @source.completion, :checkmark => :only
+  %br
+  %dt
+    Title:
+  %dd.title
+    = @source.title
+  %dt
+    Citation part:
+  %dd.title
+    = @source.citation_part
+  %dt
+    Tag:
+  %dd.tag
+    = @source.code
+  %dt
+    Language:
+  %dd
+    != @source.language.name
+
+  != link_to_resources @source, :index, :statistics, :edit
+
+- layer :metadata do
+  - if @source.valid?
+    != @source.metadata.to_html
+  - else
+    Metadata is invalid

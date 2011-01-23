@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010 University of Oslo
-# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -27,7 +27,9 @@ class Source < ActiveRecord::Base
   validates_each :metadata do |record, attr, value|
     record.errors.add :tei_header, "invalid: #{value.error_message}" unless value.valid?
   end
-  validates_presence_of :tracked_references
+  validates_presence_of :citation_part
+
+  acts_as_audited :except => [:citation_part]
 
   composed_of :language, :converter => Proc.new { |value| value.is_a?(String) ? Language.new(value) : value }
 
@@ -35,8 +37,6 @@ class Source < ActiveRecord::Base
   has_many :bookmarks
 
   composed_of :metadata, :class_name => 'Metadata', :mapping => %w(tei_header)
-  serialize :tracked_references
-  serialize :reference_format
 
   has_many :dependency_alignment_terminations
 
@@ -52,15 +52,9 @@ class Source < ActiveRecord::Base
     end
   end
 
-  include References
-
-  def reference_parent
-    nil
-  end
-
-  # Re-indexes the references.
-  def reindex!
-    Source.transaction { source_divisions.find_each(&:reindex!) }
+  # Returns a citation for the source.
+  def citation
+    citation_part
   end
 
   def to_s

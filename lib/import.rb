@@ -1,7 +1,5 @@
 #--
 #
-# import.rb - Import functions for PROIEL sources
-#
 # Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
 # Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
 #
@@ -63,10 +61,8 @@ class TextImport
     source = Source.create!(:code => identifier,
                             :language => language,
                             :title => title,
-                            :abbreviation => abbreviation,
-                            :tei_header => tei_header,
-                            :tracked_references => tracked_references,
-                            :reference_format => reference_format)
+                            :citation_part => abbreviation,
+                            :tei_header => tei_header)
 
     # We do not need versioning for imports, so disable it.
     Sentence.disable_auditing
@@ -96,6 +92,7 @@ class TextImport
               :token_number => token_position
             t.morph_features = token.attributes['morph-features']
             t.source_morph_features = token.attributes['source-morph-features']
+            # TODO: citation
             t.save!
 
             token_id_map[token.attributes['id']] = t
@@ -126,7 +123,7 @@ class TextImport
   def add_sentence(sd, position, presentation)
     sd.sentences.new(:sentence_number => position,
                      :presentation => presentation).tap do |s|
-      s.reindex!
+      # TODO: citation
     end
   end
 end

@@ -88,16 +88,9 @@ module ApplicationHelper
 
   # Returns links to external sites for a sentence.
   def external_text_links(sentence)
-    # FIXME: hard-coded for now. Change this when I figure out this is
-    # really supposed to work.
-    keys = sentence.reference_fields.slice("book", "chapter", "verse")
-
-    if keys["chapter"]
-      [ link_to('Biblos',     BiblosExternalLinkMapper.instance.to_url(keys), :class => 'external'),
-        link_to('bibelen.no', BibelenNOExternalLinkMapper.instance.to_url(keys), :class => 'external'), ] * '&nbsp;';
-    else
-      ''
-    end
+    ExternalLinkMapper.get_mappings(sentence.citation).map do |mapping|
+      link_to mapping.name, mapping.to_url(sentence.citation), :class => :external
+    end * '&nbsp;'
   end
 
   # Generates a rounded box with a description list inside.

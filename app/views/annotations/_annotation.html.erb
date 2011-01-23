@@ -2,7 +2,7 @@
   <% stylesheet 'concordance' %>
 
   <td class="reference">
-    <%= annotation.citation(:abbreviated => true) %>
+    <%= annotation.citation %>
     <%= readable_completion(annotation.sentence, :checkmark => :only) %>
   </td>
   <td class="left"><%= format_sentence(annotation.previous_tokens, :length_limit => -5, :ignore_links => true) %></td>

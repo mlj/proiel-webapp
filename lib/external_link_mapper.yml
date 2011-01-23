@@ -1,4 +1,5 @@
 biblos:
+  :name: "Biblos"
   :url: http://biblos.com/
   :books:
     2JOHN: 2_john
@@ -29,6 +30,7 @@ biblos:
     1JOHN: 1_john
     1COR: 1_corinthians
 "bibelen.no":
+  :name: "bibelen.no"
   :url: http://bibelen.no/
   :books:
     MATT: MAT

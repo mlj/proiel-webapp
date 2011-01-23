@@ -7,6 +7,7 @@ one:
   lemma_id: 1
   relation: MyText
   head: 1
+  citation_part: "1.1"
 two:
   id: 2
   token_number: 2
@@ -16,6 +17,7 @@ two:
   lemma_id: 2
   relation: MyText
   head: 1
+  citation_part: "1.2"
 three:
   id: 3
   token_number: 3
@@ -25,6 +27,7 @@ three:
   lemma_id: 2
   relation: MyText
   head: 1
+  citation_part: "1.3"
 four:
   id: 4
   token_number: 4
@@ -34,3 +37,4 @@ four:
   lemma_id: 2
   relation: MyText
   head: 1
+  citation_part: "1.4"

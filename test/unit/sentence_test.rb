@@ -9,13 +9,6 @@ class SentenceTest < ActiveSupport::TestCase
     assert_kind_of Sentence, @sentence
   end
 
-  def test_presentation_as_reference
-    s = Sentence.first
-    s.presentation = "<milestone n=\"1\" unit=\"act\" /><milestone n=\"prol\" unit=\"scene\" /> <speaker>Mercvrivs</speaker> <milestone n=\"1\" unit=\"line\" ed=\"TLN\" /><lb />Vt vos in vostris voltis mercimoniis <milestone n=\"2\" unit=\"line\" ed=\"TLN\" /><lb />emundis vendundisque me laetum lucris <milestone n=\"3\" unit=\"line\" ed=\"TLN\" /><lb />adficere atque adiuvare in rebus omnibus"
-    assert_equal "act=1,scene=prol,line=1,line=2,line=3,", s.send(:presentation_as, APPLICATION_CONFIG.presentation_as_reference_stylesheet)
-    assert_equal({"line"=>["1", "2", "3"], "scene"=>"prol", "act"=>"1"}, s.presentation_as_reference)
-  end
-
   def test_presentation_as_editable_html
     s = Sentence.first
     s.presentation = "<w>sic</w><s> </s><w>vocibus</w><s> </s><w>consulis</w><pc>,</pc><s> </s><w>terrore</w><s> </s><w>praesentis</w><s> </s><w>exercitus</w><pc>,</pc><s> </s><w>minis</w><s> </s><w>amicorum</w><s> </s><w>Pompei</w><s> </s><w>pleri</w><w>que</w><s> </s><w>compulsi</w><s> </s><w>inviti</w><s> </s><w>et</w><s> </s><w>coacti</w><s> </s><w>Scipionis</w><s> </s><w>sententiam</w><s> </s><w>sequuntur</w>"
