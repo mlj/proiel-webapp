@@ -43,7 +43,7 @@ class WizardController < ApplicationController
       next_sentence
     rescue ActiveRecord::RecordInvalid => invalid
       flash[:error] = invalid.record.errors.full_messages.join('<br>')
-      show_dependencies
+      save_dependencies
     end
   end
 
