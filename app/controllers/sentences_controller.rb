@@ -108,5 +108,8 @@ class SentencesController < InheritedResources::Base
     end
 
     redirect_to @sentence
+  rescue ActiveRecord::RecordInvalid => invalid
+    flash[:error] = invalid.record.errors.full_messages.join('<br>')
+    redirect_to :action => 'resegment_edit'
   end
 end
