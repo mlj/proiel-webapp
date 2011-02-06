@@ -56,6 +56,9 @@ class SentencesController < InheritedResources::Base
     respond_to do |format|
       format.html { redirect_to @sentence }
     end
+  rescue ActiveRecord::RecordInvalid => invalid
+    flash[:error] = invalid.record.errors.full_messages.join('<br>')
+    redirect_to :action => 'show'
   end
 
   def flag_as_reviewed
