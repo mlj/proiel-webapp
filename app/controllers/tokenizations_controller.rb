@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2009 University of Oslo
-# Copyright 2009 Marius L. Jøhndal
+# Copyright 2009, 2010, 2011 University of Oslo
+# Copyright 2009, 2010, 2011 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -26,24 +26,13 @@ class TokenizationsController < ApplicationController
     @sentence = Sentence.find(params[:sentence_id])
   end
 
-  USE_XML = false
-
   def update
     @sentence = Sentence.find(params[:sentence_id])
 
     parser = XML::Parser.string('<presentation>' + params[:new_presentation] + '</presentation>')
+    xml = parser.parse
 
-    begin
-      xml = parser.parse
-    rescue LibXML::XML::Parser::ParseError => p
-      raise "Invalid presentation string"
-    end
-
-    if USE_XML
-      s = APPLICATION_CONFIG.presentation_from_editable_xml_stylesheet.apply(xml, {}).to_s
-    else
-      s = APPLICATION_CONFIG.presentation_from_editable_html_stylesheet.apply(xml, {}).to_s
-    end
+    s = APPLICATION_CONFIG.presentation_from_editable_html_stylesheet.apply(xml, {}).to_s
 
     # FIXME: libxslt-ruby bug #21615: XML decl. shows up in the output
     # even when omit-xml-declaration is set
@@ -68,5 +57,11 @@ class TokenizationsController < ApplicationController
 
     flash[:notice] = 'Tokenization updated.'
     redirect_to @sentence
+  rescue LibXML::XML::Parser::ParseError => p
+    flash[:error] = "Error parsing XML"
+    redirect_to :action => 'edit'
+  rescue ActiveRecord::RecordInvalid => invalid
+    flash[:error] = invalid.record.errors.full_messages.join('<br>')
+    redirect_to :action => 'edit'
   end
 end
