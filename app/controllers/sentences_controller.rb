@@ -57,7 +57,7 @@ class SentencesController < InheritedResources::Base
       format.html { redirect_to @sentence }
     end
   rescue ActiveRecord::RecordInvalid => invalid
-    flash[:error] = invalid.record.errors.full_messages.join('<br>')
+    flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} with #{invalid.record.id}: #{m}" }.join('<br>')
     redirect_to :action => 'show'
   end
 
@@ -68,7 +68,7 @@ class SentencesController < InheritedResources::Base
     flash[:notice] = 'Sentence was successfully updated.'
     redirect_to @sentence
   rescue ActiveRecord::RecordInvalid => invalid
-    flash[:error] = invalid.record.errors.full_messages.join('<br>')
+    flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} with #{invalid.record.id}: #{m}" }.join('<br>')
     redirect_to @sentence
   end
 
@@ -91,6 +91,9 @@ class SentencesController < InheritedResources::Base
       flash[:notice] = 'Sentence was successfully tokenized.'
       format.html { redirect_to @sentence }
     end
+  rescue ActiveRecord::RecordInvalid => invalid
+    flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} with #{invalid.record.id}: #{m}" }.join('<br>')
+    redirect_to @sentence
   end
 
   def resegment_edit
@@ -109,7 +112,7 @@ class SentencesController < InheritedResources::Base
 
     redirect_to @sentence
   rescue ActiveRecord::RecordInvalid => invalid
-    flash[:error] = invalid.record.errors.full_messages.join('<br>')
+    flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} with #{invalid.record.id}: #{m}" }.join('<br>')
     redirect_to :action => 'resegment_edit'
   end
 end
