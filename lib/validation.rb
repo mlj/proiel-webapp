@@ -2,7 +2,7 @@
 #
 # validation.rb - Extra (i.e. non-model) data validation
 #
-# Written by Marius L. Jøhndal, 2008.
+# Written by Marius L. Jøhndal, 2008, 2011.
 #
 require 'jobs'
 
@@ -14,8 +14,8 @@ class Validator < Task
   protected
 
   def run!(logger)
-    check_segmentation(logger)
-    check_tokenization(logger)
+#    check_segmentation(logger)
+#    check_tokenization(logger)
 #    check_manual_morphology(logger)
     check_lemmata(logger)
     check_orphaned_tokens(logger)
@@ -105,9 +105,9 @@ class Validator < Task
       o.destroy
     end
 
-    candidates = Lemma.find(:all, :conditions => [ "variant IS NOT NULL" ])
+    candidates = Lemma.find(:all, :conditions => ["variant IS NOT NULL"])
     candidates.each do |o|
-      if c = o.language.lemmata.find(:first, :conditions => [ "lemma = ? and variant is null", o.lemma ])
+      if c = Lemma.find(:first, :conditions => ["lemma = ? and variant is null and language = ?", o.lemma, o.language])
         logger.warn { "Lemma base form #{o.lemma} occurs both with and without variant numbers" }
       end
     end
