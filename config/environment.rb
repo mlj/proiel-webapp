@@ -56,7 +56,7 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
 
   config.gem 'warden', :version => '~> 0.9'
-  config.gem 'devise', :version => '~> 1.0.0'
+  config.gem 'devise', :version => '~> 1.0.8'
   config.gem 'will_paginate', :version => '~> 2.3.2'
   config.gem 'unicode'
   config.gem 'oniguruma'
