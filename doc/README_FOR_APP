@@ -74,3 +74,21 @@ Public License version 2. See the file +COPYING+ for details.
 
 The application was written by Marius L. Jøhndal (University of Cambridge),
 Dag Haug (University of Oslo) and Anders Nøklestad (University of Oslo).
+
+== Modifying the application
+
+This details some ways in which you may want to modify or extend the
+application.
+
+=== Adding a dependency graph visualization method
+
+The default supported visualization method uses +graphviz+. As long as you
+are able to use the +dot+ engine from +graphviz+, adding new visualizations
+is trivial:
+
+  1. Create a new visualization template in +lib/graph_visualization/+.
+     Have a look at the existing ones to see how the system works.
+  2. Add a new visualization choice in
+     +app/views/preferences/edit.html.haml+. This will enable users to select
+     the visualization method.
+  3. Add a new description of the visualization method in +config/locales/en.yml+.

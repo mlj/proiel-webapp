@@ -7,6 +7,9 @@ application.
   * Dropped Dictionary, DictionaryReference and DictionaryEntry models
     (Marius)
   * Upgraded to Rails 2.3.11 (Marius)
+  * More careful handling of exceptions in annotation-related controllers
+    (Marius)
+  * Refactored graph visualisation (Marius)
   * Upgraded to Rails 2.3.10 (Marius)
 
 Release 20101016

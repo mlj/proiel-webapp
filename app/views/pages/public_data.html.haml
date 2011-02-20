@@ -1,0 +1,22 @@
+%h1 Downloads
+
+%p
+
+  These data files are generated daily from the subset of our data that has
+  been reviewed. Please take the time to read our page on
+  != link_to "licensing and attribution", site_path("attributions")
+  before downloading any of the data files.
+
+%ul
+  %li
+    != link_to "Schema file", "/exports/text.xsd"
+  - Source.find(:all).each do |s|
+    %li
+      = s.title
+      %ul
+        %li
+          != link_to "PROIEL XML", "/exports/#{s.code}.xml"
+        %li
+          != link_to "TigerXML", "/exports/#{s.code}-tiger.xml"
+        %li
+          != link_to "MaltXML", "/exports/#{s.code}-malt.xml"

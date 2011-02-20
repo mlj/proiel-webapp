@@ -6,9 +6,7 @@ New features
 For next iteration
 ------------------
 
-  * Fix visualization which is still based on interpretation
-
-  * More UI stuff for semantic features [currently no online edititing of tags; create/edit/delete of 
+  * More UI stuff for semantic features [currently no online edititing of tags; create/edit/delete of
     As and AVs must be done in SQL]
 
     This becomes much easier with forthcoming Rails 2.3.
@@ -31,7 +29,7 @@ For next iteration
     The following are some bits and pieces that should go in:
 
     ~~~
-    
+
     Our text builds on Ulrik Sandborg-Petersen's electronic edition which
     is intended to faithfully represent the printed text in Tischendorf's
     Editio Octava Critica Maior, Leipzig 1869-1872. But in the following
@@ -54,13 +52,13 @@ For next iteration
 
   * Token alignment
 
-    The basic functions are completed, but some adjustments and experiments 
-    necessary. We need to integrate the alignments in the system: should automatic 
+    The basic functions are completed, but some adjustments and experiments
+    necessary. We need to integrate the alignments in the system: should automatic
     alignments be generated nightly? Or every time sentence annotation is changed?
     The underlying dictionary could also be generated nightly, but currently
     there is only a python script to create it.
 
-  * Interpretive functions for subgraph alignment 
+  * Interpretive functions for subgraph alignment
 
     Function set to interpret subgraphs alignment and inheritance of such.
 
@@ -125,7 +123,7 @@ Wishlist
   * Clean up failed Gothic lemma import
 
     Some Gothic lemmata were originally imported with `pos.length == 0`
-    or `pos.length == 1`. This has lead to massive (~ 100) duplication 
+    or `pos.length == 1`. This has lead to massive (~ 100) duplication
     which has to be cleaned out manually by merging lemmata. The lemma
     to be kept will have `foreign_ids` set. Multiple complications
     exits: sometimes the POS will be different since PROIEL annotation
@@ -135,7 +133,7 @@ Wishlist
     where we do not use a variant number and vice versa (this is of course
     a general problem too which should spawn its own item in this list).
 
-  * Lemma base form mismatches (Streitberg != wulfila.be) in Gothic 
+  * Lemma base form mismatches (Streitberg != wulfila.be) in Gothic
 
     For a number of Gothic lemmata the imported wulfila.be data includes
     corrections that make the lemma different from the headword in
@@ -157,7 +155,7 @@ Wishlist
       * and-weihan, and-waihan*
 
     Class 2: the XML dictionary contains multiple headwords in the
-    form-element and so cannot be correctly cross-referenced. 
+    form-element and so cannot be correctly cross-referenced.
 
       * Antiaukia, Antiaukia*, Antiokia*
       * Ater, Ater*, Ateir*
@@ -169,7 +167,7 @@ Wishlist
     Lemmata.Lemma != Lemmata.WSLemma -- and thus the list above, but I am
     not sure how that has come about.
 
-  * Gothic MS variants 
+  * Gothic MS variants
 
     The Gothic text includes text from multiple witnesses. Our current
     version includes all witnesses with markup identifying their provenance,
@@ -197,7 +195,7 @@ Wishlist
 
   * Perseus links
 
-    Linking code to Perseus exists, but it has no home. This should be 
+    Linking code to Perseus exists, but it has no home. This should be
     reintroduced in the Lemma#show view alongside references to other
     dictionaries.
 
@@ -209,7 +207,7 @@ Wishlist
 
   * Administrative sentence division
 
-    Sentence division is tricky only so far as to find a way GUI-wise to 
+    Sentence division is tricky only so far as to find a way GUI-wise to
     do it reliably. Does it belong in the `SentencesController`? As
     a `create` method? Where then does the `token_id` come from?
 
@@ -217,7 +215,7 @@ Wishlist
 
   * Class morphology in the web interface
 
-  * `to_xml` and PROIEL xml 
+  * `to_xml` and PROIEL xml
 
     If this can be done without breaking anything, it would be a lot more consistent
     if PROIEL XML could be emitted from `to_xml` on models. This would clean up the
@@ -233,7 +231,7 @@ Wishlist
     in `corrections.patch` that belong in `proiel.patch`. These are all concerned with
     punctuation.
 
-  * Make validation error messages more comprehensible 
+  * Make validation error messages more comprehensible
 
     Most of the validation error messages that are concerned with dependency relations
     border on the incomprehensible. This is mostly becuase the validation code could
@@ -256,7 +254,7 @@ Wishlist
     Also, those lemmata that secondarily reference others have been imported, but
     these should, by policy, not be available and have to be purged.
 
-  * Verify that manual rules for closed parts of speech match annotation for Latin, 
+  * Verify that manual rules for closed parts of speech match annotation for Latin,
     Gothic and OCS
 
   * Wiki
@@ -343,7 +341,7 @@ this
      false}}, \"empty\": false}}, \"empty\": false}}, \"empty\": false}},
      \"empty\": false}}, \"empty\": false}}", "controller"=>"dependencies"}
      * Rails root: /hf/foni/tekstlab/home/mariuslj/live/production
-   
+
    -------------------------------
    Session:
    -------------------------------
@@ -354,7 +352,7 @@ this
         :csrf_id=>"4ef1502dc2e4b5e6b87ce593b30568b8",
         "flash"=>{},
         :user_id=>60}
-   
+
    -------------------------------
    Environment:
    -------------------------------
@@ -394,10 +392,10 @@ this
      * SERVER_PORT         : 3000
      * SERVER_PROTOCOL     : HTTP/1.1
      * SERVER_SOFTWARE     : Mongrel 1.1.5
-     
+
      * Process: 17171
      * Server : foni
-   
+
    -------------------------------
    Backtrace:
    -------------------------------
@@ -414,17 +412,17 @@ It may also be related to this problem.
 > tro hva som skjer? Er det bare foni som er for treig? Ingrid på gotisk
 > har rapportert om liknende problemer.
 > Dag
-> 
-> 
+>
+>
 > -------- Forwarded Message --------
 > > From: eirik.welo@ifikk.uio.no
 > > To: Dagmar S Wodtko <dagmar.s.wodtko@mail.uni-freiburg.de>
 > > Cc: d.t.t.haug@ifikk.uio.no
 > > Subject: Computer problems
 > > Date: Fri, 26 Sep 2008 09:16:20 +0200 (CEST)
-> > 
+> >
 > > Dear Dagmar,
-> > 
+> >
 > > I absolutely agree about the computer problem: it is meaningless to
 > > wait
 > > for hours just to save the sentences. I have looked through the
@@ -432,14 +430,14 @@ It may also be related to this problem.
 > > annotated in Ephesians so far and things seem generally ok, only in
 > > 3:14-19 and 3:1-7 the syntactic analysis has not been recorded, only
 > > morphology.
-> > 
+> >
 > > Is the problem with your own computer? Anyway, skip the longer
 > > sentences
 > > for now and Dag and I will try and come up with a solution.
-> > 
+> >
 > > Yours,
 > > Eirik
-> > 
+> >
 > > > Dear Eirik,
 > > > thank you for the Ephesians. The computer took more than
 > > > two hours yesterday and the day before to process the long

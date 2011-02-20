@@ -19,9 +19,6 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
-# Model for a lemma. Each lemma has a base (non-inflected) form, a language code
-# and may additionally be differentiated from other lemmata in the same language
-# with the same base form using a integer variant identifier.
 class Token < ActiveRecord::Base
   INFO_STATUSES = %w{new kind acc_gen acc_sit acc_inf old old_inact
     no_info_status info_unannotatable quant non_spec non_spec_inf non_spec_old}
