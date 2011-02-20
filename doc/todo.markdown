@@ -201,15 +201,6 @@ Wishlist
     reintroduced in the Lemma#show view alongside references to other
     dictionaries.
 
-  * Dictionary links
-
-    We have links to Streitberg in Gothic lemmata, links to Strong can 
-    easily be deduces for Greek, and, with some detective work, we can 
-    reconstruct links to Lewis and Short for Latin. We have electronic 
-    versions of Streitberg, Strong, the abridged Lewis, the abridged 
-    Liddell and Scott and a scanned version of Cejtlin. Much can be 
-    done to make use of these resources.
-
   * Class morphology for OCS
 
     The test suite for OCS fails in about half a dozen places, does

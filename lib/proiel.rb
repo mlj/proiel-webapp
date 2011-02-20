@@ -1,5 +1,4 @@
 require 'extensions'
 require 'proiel/tagsets'
-require 'proiel/src'
 require 'proiel/dependency_graph'
 require 'proiel/tagger'

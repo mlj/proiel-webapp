@@ -13,16 +13,6 @@ namespace :proiel do
     v.execute!
   end
 
-  namespace :dictionary do
-    desc "Import a PROIEL dictionary. Options: FILE=data_file"
-    task(:import => :environment) do
-      require 'import'
-
-      raise "Filename required" unless ENV['FILE']
-      DictionaryImport.instance.read(ENV['FILE'])
-    end
-  end
-
   namespace :text do
     namespace :tei do
       desc "List TEI source texts available for import. Options: TEI_BASE=root TEI directory"

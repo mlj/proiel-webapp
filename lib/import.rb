@@ -2,8 +2,8 @@
 #
 # import.rb - Import functions for PROIEL sources
 #
-# Copyright 2007, 2008, 2009, 2010 University of Oslo
-# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -24,26 +24,6 @@
 require 'proiel/src'
 require 'singleton'
 require 'nokogiri'
-
-class DictionaryImport
-  include Singleton
-
-  # Reads import data. The data source +file+ may be any URI supported
-  # by open-uri.
-  def read(file)
-    import = PROIEL::Dictionary.new(file)
-    import.read_lemmata do |attributes, references|
-      begin
-        lemma = Lemma.create!(attributes)
-        references.each do |reference|
-          lemma.dictionary_references.create!(reference)
-        end
-      rescue Exception => e
-        raise "Error creating lemma #{attributes["lemma"]}: #{e}"
-      end
-    end
-  end
-end
 
 class TextImport
   include Singleton

@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010 University of Oslo
-# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -24,7 +24,6 @@
 # with the same base form using a integer variant identifier.
 class Lemma < ActiveRecord::Base
   has_many :tokens
-  has_many :dictionary_references
   has_many :notes, :as => :notable, :dependent => :destroy
   has_many :semantic_tags, :as => :taggable, :dependent => :destroy
   composed_of :language, :converter => Proc.new { |value| value.is_a?(String) ? Language.new(value) : value }

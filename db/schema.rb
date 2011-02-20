@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100906132522) do
+ActiveRecord::Schema.define(:version => 20110220182909) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -32,28 +32,6 @@ ActiveRecord::Schema.define(:version => 20100906132522) do
 
   add_index "dependency_alignment_terms", ["source_id"], :name => "idx_depalterms_source_id"
   add_index "dependency_alignment_terms", ["token_id"], :name => "idx_depaliterms_token_id"
-
-  create_table "dictionaries", :force => true do |t|
-    t.string "identifier", :limit => 32,  :default => "", :null => false
-    t.string "title",      :limit => 128, :default => "", :null => false
-    t.text   "fulltitle"
-    t.text   "source"
-  end
-
-  create_table "dictionary_entries", :force => true do |t|
-    t.integer "dictionary_id",               :default => 0,  :null => false
-    t.string  "identifier",    :limit => 32, :default => "", :null => false
-    t.text    "data",                                        :null => false
-  end
-
-  create_table "dictionary_references", :force => true do |t|
-    t.integer  "lemma_id",            :default => 0, :null => false
-    t.string   "dictionary"
-    t.string   "entry"
-    t.integer  "dictionary_entry_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "import_sources", :force => true do |t|
     t.string   "tag",        :limit => 16, :default => "", :null => false
