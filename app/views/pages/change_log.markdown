@@ -4,6 +4,9 @@ Change log
 This is a list of major changes between the releases of the
 application.
 
+Release 20110220
+----------------
+
   * Dropped Dictionary, DictionaryReference and DictionaryEntry models
     (Marius)
   * Upgraded to Rails 2.3.11 (Marius)
