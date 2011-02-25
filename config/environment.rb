@@ -86,3 +86,7 @@ end
 # Release number
 PROIEL_RELEASE_FILE = File.join(RAILS_ROOT, "RELEASE")
 PROIEL_RELEASE = File.readable?(PROIEL_RELEASE_FILE) ? IO.read(PROIEL_RELEASE_FILE).strip : "unreleased"
+
+
+# Monkeypatch exception notifier
+ExceptionNotification::Notifier.view_paths = ActionView::Base.process_view_paths(ExceptionNotification::Notifier.view_paths)
