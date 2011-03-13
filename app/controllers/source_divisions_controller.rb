@@ -20,7 +20,8 @@ class SourceDivisionsController < InheritedResources::Base
   private
 
   def collection
-    criteria = {:title => params[:query], :source_id => params[:source] }.delete_if { |k,v| v.nil? }
-    @source_divisions = SourceDivision.search(criteria, :page => current_page)
+    criteria = { :title => params[:query], :source_id => params[:source] }.delete_if { |k, v| v.nil? }
+
+    @source_divisions = SourceDivision.search(criteria, :page => current_page, :order => "position")
   end
 end
