@@ -291,7 +291,7 @@
 - :criteria: # non-inflecting adverbs are auxiliaries
     :head_pos: V-
     :dependent_pos: D.
-    :dependent_inflecting: n
+    :dependent_inflection: n
   :actions:
     :inferred_relation: aux
 - :criteria: # other adverbs are adverbials
