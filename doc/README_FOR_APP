@@ -92,3 +92,24 @@ is trivial:
      +app/views/preferences/edit.html.haml+. This will enable users to select
      the visualization method.
   3. Add a new description of the visualization method in +config/locales/en.yml+.
+
+Early testing of new visualisations is probably best done using the Rails
+console. To see the +dot+ file produced before it is passed to +graphviz+,
+you can try the following:
+
+    $ ./script/console
+    Loading development environment (Rails 2.3.11)
+    >> puts Visualization.new(Sentence.find(47625)).generate(:format => :dot,
+           :mode => :linearized)
+
+To run it through +graphviz+, try changing the format to +svg+, which in
+this case revealed a syntax error in the generated +dot+ file.
+
+    >> Visualization.new(Sentence.find(47625)).generate(:format => :svg,
+          :mode => :linearized)
+    VisualizationError: graphviz exited: Error: <stdin>:6: syntax error near
+    line 6
+    context:     depthR [style=invis] >>>  -> <<<
+
+      from /home/mlj/src/proiel/lib/graph_visualization.rb:70:in `generate'
+        from (irb):1
