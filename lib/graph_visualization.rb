@@ -47,6 +47,7 @@ class Visualization
     template_file = File.join(File.dirname(__FILE__), 'graph_visualization', "#{options[:mode]}.dot.erb")
     content = File.read(template_file)
     template = ERB.new(content)
+    template.filename = template_file
 
     case options[:format]
     when :dot
