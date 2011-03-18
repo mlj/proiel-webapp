@@ -78,7 +78,7 @@ Rails::Initializer.run do |config|
   config.gem 'inherited_resources', :version => '~> 1.0.3'
   config.gem 'haml'
   config.gem 'acts_as_audited', :lib => false
-  config.gem 'exception_notification'
+  config.gem 'exception_notification', :version => '~> 2.3.3' # 2.4.0 and higher are Rails 3 only
   config.gem 'iso-codes', :lib => 'iso_codes'
   config.gem 'differ'
 end
@@ -87,6 +87,10 @@ end
 PROIEL_RELEASE_FILE = File.join(RAILS_ROOT, "RELEASE")
 PROIEL_RELEASE = File.readable?(PROIEL_RELEASE_FILE) ? IO.read(PROIEL_RELEASE_FILE).strip : "unreleased"
 
-
-# Monkeypatch exception notifier
-ExceptionNotification::Notifier.view_paths = ActionView::Base.process_view_paths(ExceptionNotification::Notifier.view_paths)
+# Monkeypatch exception notifier. This is necessary as per
+# exception_notification 2.3.3.0 to work around an issue with mailer
+# template loading when an exception occurs.
+if defined?(ExceptionNotification::Notifier)
+  puts "Monkey patching ExceptionNotification"
+  ExceptionNotification::Notifier.view_paths = ActionView::Base.process_view_paths(ExceptionNotification::Notifier.view_paths)
+end
