@@ -3,7 +3,7 @@ digraph G {
   graph [truecolor bgcolor="#ff000000"];
 
   node [shape=none]; {
-    depthR [style=invis] ->
+    depthR ->
     <% (0..@sentence.max_depth).each do |depth| %>
       depth<%= depth %> ->
     <% end %>
@@ -51,7 +51,7 @@ digraph G {
     <% end %>
   <% end %>
 
-  <% @tokens.reject { |t| t.empty_token_sort.blank? }.sort_by(&:token_number).each_cons(2) do |n1, n2| %>
+  <% @tokens.select { |t| t.empty_token_sort.blank? }.sort_by(&:token_number).each_cons(2) do |n1, n2| %>
     <%= edge "f#{n1.id}", "f#{n2.id}", '', :weight => 10.0, :style => :invis %>
   <% end %>
 }
