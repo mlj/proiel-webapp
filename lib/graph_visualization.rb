@@ -23,6 +23,9 @@
 #++
 require 'erb'
 
+class VisualizationError < Exception
+end
+
 class Visualization
   SUPPORTED_FORMATS = [:png, :svg, :dot]
 
@@ -54,11 +57,18 @@ class Visualization
       template.result(binding)
     else
       result = nil
+      errors = nil
+
       Open3.popen3("dot -T#{options[:format]}") do |dot, img, err|
         dot.write template.result(binding)
         dot.close
+
         result = img.read
+        errors = err.read
       end
+
+      raise VisualizationError, "graphviz exited: #{errors}" unless errors.blank?
+
       result
     end
   end
