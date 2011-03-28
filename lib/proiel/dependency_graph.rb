@@ -466,6 +466,11 @@ module PROIEL
         t.relation == :comp or t.relation == :adv or t.relation == :apos or t.relation == :aux
       end
 
+      nodes.select { |t| t.has_slashes? and t.slashes.any?(&:nil?) }.each do |t|
+        @valid = false
+        @msg_handler.call([t.identifier], "All slashes must point to tokens in the same sentence")
+      end
+
       #FIXME: special handling of non-part. vs. part.
       #FIXME: empty nodes can be verbs, but have to be excluded for now
       HEAD_DEPENDENT_CONSTRAINTS.each_pair do |pos_major, relations|
