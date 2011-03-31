@@ -91,6 +91,5 @@ PROIEL_RELEASE = File.readable?(PROIEL_RELEASE_FILE) ? IO.read(PROIEL_RELEASE_FI
 # exception_notification 2.3.3.0 to work around an issue with mailer
 # template loading when an exception occurs.
 if defined?(ExceptionNotification::Notifier)
-  puts "Monkey patching ExceptionNotification"
   ExceptionNotification::Notifier.view_paths = ActionView::Base.process_view_paths(ExceptionNotification::Notifier.view_paths)
 end
