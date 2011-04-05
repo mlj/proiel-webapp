@@ -54,7 +54,7 @@ end
 
 class InfoStatusesImportExport < CSVImportExport
   def initialize(sd = nil)
-    @sd = SourceDivision.find(sd)
+    @sd = (sd ? SourceDivision.find(sd) : nil)
     super :token, :info_status, :antecedent
   end
 
@@ -65,10 +65,11 @@ class InfoStatusesImportExport < CSVImportExport
     if token =~ /\+/
       head_id, relation = token.split(/\+/)
       s = Sentence.find(Token.find(head_id).sentence_id)
-      tts =  s.tokens.find(:all, :conditions => [ "head_id = ? and relation_id = ?", head_id, Relation.find_by_tag(relation).id ] )
+      relation = Relation.find_by_tag(relation)
+      tts =  s.tokens.find(:all, :conditions => [ "head_id = ? and relation_id = ?", head_id, relation.id ] )
       case tts.size
       when 0
-        t = create_prodrop_relation(s, "new3", relation, head_id)
+        t = create_prodrop_relation(s, relation, head_id)
       when 1
         t = tts.last
       else
@@ -86,11 +87,12 @@ class InfoStatusesImportExport < CSVImportExport
         ac = Token.find(antecedent)
       else
         head_id, relation = antecedent.split(/\+/)
+        relation = Relation.find_by_tag(relation)
         s2 = Token.find(head_id).sentence
-        acs = s2.tokens.find(:all, :conditions => [ "head_id = ? and relation_id = ?", head_id, Relation.find_by_tag(relation).id ])
+        acs = s2.tokens.find(:all, :conditions => [ "head_id = ? and relation_id = ?", head_id, relation.id ])
         case acs.size
         when 0
-          ac = create_prodrop_relation(s2, "new3", relation, head_id)
+          ac = create_prodrop_relation(s2, relation, head_id)
         when 1
           ac = acs.last
         else
@@ -102,28 +104,21 @@ class InfoStatusesImportExport < CSVImportExport
     end
   end
 
-  def create_prodrop_relation(sentence, prodrop_id, relation, verb_id, info_status = nil)
-    graph = sentence.dependency_graph
-    verb_node = graph[verb_id]
-    verb_token = Token.find(verb_id)
-    graph.add_node(prodrop_id, relation, verb_token.id)
-    sentence.syntactic_annotation = graph
+  def create_prodrop_relation(sentence, relation, verb_id, info_status = nil)
+    sentence.append_new_token!(
+                               :head_id => verb_id,
+                               :relation => relation,
+                               :empty_token_sort => 'P',
+                               :info_status => info_status).tap do
 
-    # syntactic_annotation= will have created a token at the end of the sentence
-    prodrop_token = Token.find(sentence.tokens.last.id)
-    prodrop_token.verse = verb_token.verse
-    prodrop_token.form = nil
-    prodrop_token.info_status = info_status
-    prodrop_token.empty_token_sort = 'P'
-    prodrop_token.save!
-
-    # This is apparently needed after saving a new graph node to the database in order to make
-    # sure that the new node is included in the dependency_tokens collection. Otherwise,
-    # the node will be deleted the next time we run syntactic_annotation= (e.g., if we try to
-    # create more than one prodrop token as part of the same save operation).
-    sentence.dependency_tokens.reload
-
-    prodrop_token
+      # This is needed after saving a new graph node to the database
+      # in order to make sure that the new node is included in the
+      # tokens.dependency_annotatable collection. Otherwise, the node
+      # will be deleted the next time we run syntactic_annotation=
+      # (e.g., if we try to create more than one prodrop token as part
+      # of the same save operation).
+      sentence.tokens.reload
+    end
   end
 
   def write_fields

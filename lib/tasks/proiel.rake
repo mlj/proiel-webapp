@@ -282,16 +282,36 @@ namespace :proiel do
   end
 
   namespace :info_statuses do
-    desc "Import info statuses. Options: FILE=csv_file. Optional options MODE={overwrite|recreate}"
+    desc "Import info statuses. Options: FILE=csv_file."
     task(:import => :myenvironment) do
       require 'import_export'
       file_name = ENV['FILE']
       raise "Missing argument" unless file_name
-      execute("UPDATE tokens SET info_status = NULL, antecedent_id = NULL WHERE info_status is not null") if ENV['MODE'] == "recreate"
-      overwrite = false
-      overwrite = true if ENV['MODE'] == "overwrite"
+
       i = InfoStatusesImportExport.new
       i.read(file_name)
+    end
+
+    desc "Delete info statuses. Options: SOURCE_DIVISION=source_division_id"
+    task(:delete => :myenvironment) do
+      sd = ENV['SOURCE_DIVISION']
+      raise "Missing argument SOURCE_DIVISION" unless sd
+
+      Token.find(:all,
+                 :conditions => ["empty_token_sort = 'P' AND sentences.source_division_id = ? ", sd],
+                 :include => :sentence).each do |t|
+        t.destroy
+      end
+
+
+      Token.find(:all,
+                 :conditions => ["info_status IS NOT NULL AND sentences.source_division_id = ?", sd],
+                 :include => :sentence).each do |t|
+        STDERR.puts "Removing info_status from #{t} (#{t.id})"
+        t.info_status = nil
+        t.antecedent_id = nil
+        t.save!
+      end
     end
 
     desc "Export info statuses. Options: FILE=csv_file SOURCE_DIVISION=source_division_id FORMAT={csv|xml}"
