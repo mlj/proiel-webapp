@@ -48,6 +48,7 @@ class Lemma < ActiveRecord::Base
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
   validates_presence_of :part_of_speech
+  validates_inclusion_of :part_of_speech, :in => PartOfSpeech.all, :message => "%{value} is not a valid part of speech"
   # FIXME: broken for language and part_of_speech, which are YAMLified
   # because of +ActiveRecord::ConnectionAdapters::Quoting#quote+.
   validates_uniqueness_of :lemma, :scope => [:language, :part_of_speech, :variant]
