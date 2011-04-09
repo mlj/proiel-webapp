@@ -26,10 +26,13 @@ module Tagger
     end
 
     def analyze(form)
-      # Keep MIN(tokens.id) in the SELECT-clause to apease Oracle et al.
-      x = Token.connection.select_all("SELECT MIN(tokens.id) AS token_id, count(*) AS frequency FROM tokens LEFT JOIN sentences ON sentence_id = sentences.id LEFT JOIN lemmata ON lemma_id = lemmata.id WHERE form = #{Token.sanitize(form)} AND lemmata.language = #{Token.sanitize(@language.to_s)} AND reviewed_by IS NOT NULL GROUP BY morphology, lemma_id", 'Token')
-      sum = x.map { |i| i["frequency"].to_i }.sum.to_f
-      x.map { |i| [Token.find(i["token_id"]).morph_features, i["frequency"].to_i / sum] }
+      x = Token.count(:all,
+                      :include => [:lemma, :sentence],
+                      :conditions => ['form = ? AND lemmata.language = ? AND sentences.reviewed_by IS NOT NULL',
+                        form, @language.to_s],
+                      :group => [:lemma_id, :morphology]).map { |(l, m), f| [MorphFeatures.new(Lemma.find(l), m), f] }
+      sum = x.map(&:last).sum
+      x.map { |m, f| [m, f / sum.to_f] }
     end
   end
 end
