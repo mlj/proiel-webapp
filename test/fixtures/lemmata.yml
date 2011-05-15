@@ -34,3 +34,9 @@ lemma_6:
   variant:
   language: lat
   part_of_speech: Ne
+lemma_7:
+  id: 7
+  lemma: Cedron
+  variant: 2
+  language: lat
+  part_of_speech: Ne

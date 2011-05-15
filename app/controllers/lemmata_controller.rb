@@ -27,9 +27,16 @@ class LemmataController < InheritedResources::Base
   def merge
     @lemma = Lemma.find(params[:id])
     @other_lemma = Lemma.find(params[:other_id])
-    @lemma.merge!(@other_lemma)
-    flash[:notice] = "Lemmata sucessfully merged"
-    redirect_to @lemma
+
+    if @lemma.mergable?(@other_lemma)
+      @lemma.merge!(@other_lemma)
+
+      flash[:notice] = "Lemmata sucessfully merged"
+      redirect_to @lemma
+    else
+      flash[:error] = "Lemmata cannot be merged because base form, language or part of speech do not match"
+      redirect_to :action => 'show'
+    end
   end
 
   private

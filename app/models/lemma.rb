@@ -81,11 +81,18 @@ class Lemma < ActiveRecord::Base
   # similar' is defined in terms of what will not violate constraints:
   # two lemmata with different part of speech, for example, cannot be
   # merged since this will affect the annotation of morphology for any
-  # associated tokens. Two tokens are 'mergeable' iff they belong to
+  # associated tokens. Two tokens are 'mergable' iff they belong to
   # the same language, have the same base form (variant number may be
   # different) and have identical part of speech.
   def mergeable_lemmata
     Lemma.find(:all, :conditions => { :part_of_speech => part_of_speech.tag, :lemma => lemma, :language => language.to_s }) - [self]
+  end
+
+  # Tests if lemma can be merged with another lemma +other_lemma+.
+  def mergable?(other_lemma)
+    self.lemma == other_lemma.lemma and
+      self.language == other_lemma.language and
+      self.part_of_speech == other_lemma.part_of_speech
   end
 
   # Merges another lemma into this lemma and saves the results. The two lemmata
@@ -93,9 +100,7 @@ class Lemma < ActiveRecord::Base
   # All tokens belonging to the lemma to be merged will have their lemma references
   # changed, and the lemma without tokens deleted.
   def merge!(other_lemma)
-    raise "Different base forms" unless self.lemma == other_lemma.lemma
-    raise "Different languages" unless self.language == other_lemma.language
-    raise "Different morphology" unless self.part_of_speech == other_lemma.part_of_speech
+    raise ArgumentError, "Lemmata cannot be merged" unless mergable?(other_lemma)
 
     Token.transaction do
       other_lemma.tokens.each do |t|
