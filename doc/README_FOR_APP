@@ -1,15 +1,20 @@
 = The PROIEL web application
 
-The PROIEL web application used the Ruby on Rails framework. If you are
-unfamiliar with this, you should consulta general introduction to Ruby on
-Rails first. link:http://rubyonrails.org/ and
-linkhttp://guides.rubyonrails.org/ are good starting points. Note that this
-version of the PROIEL web application requires Rails 2.3.x.
+The PROIEL web application (henceforth proiel-web) is a tool for
+collaborative treebank annotation in a dependency-grammar formalism.
 
 == Installation
 
-If you already have Ruby, RubyGems and Ruby on Rails installed,
-installation of the PROIEL web application consist of the following steps.
+proiel-web uses the Ruby on Rails framework and some familiarity with this
+framework is useful. You can find a general introduction to Ruby on Rails
+on link:http://rubyonrails.org/ and link:http://guides.rubyonrails.org/.
+
+Note that proiel-web requires a specific version of Rails. If there is a
+mismatch between the version you have installed and the version required,
+an error message will be issued when the application is started.
+
+Assuming that Ruby, RubyGems and Ruby on Rails are already installed,
+proiel-web is installed, configured and customised in the following steps.
 
 === Step 1: Dependencies
 
@@ -113,3 +118,5 @@ this case revealed a syntax error in the generated +dot+ file.
 
       from /home/mlj/src/proiel/lib/graph_visualization.rb:70:in `generate'
         from (irb):1
+
+== Support and contributions
