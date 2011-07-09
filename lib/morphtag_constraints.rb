@@ -54,7 +54,7 @@ class MorphtagConstraints
               pos_tagset[:morphology][mask][f]
             end
           end
-        end 
+        end
         all_tags += [pos].product(*vals).map(&:join)
       end
     end

@@ -1,6 +1,6 @@
 #--
 #
-# Copyright 2009 Marius L. Jøhndal
+# Copyright 2009, 2010, 2011 Marius L. Jøhndal
 #
 # The program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -31,5 +31,5 @@ module ActionView
     end
   end
 end
- 
+
 ActionView::Template.register_template_handler 'markdown', ActionView::TemplateHandlers::Markdown

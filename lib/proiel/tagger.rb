@@ -40,10 +40,10 @@ module Tagger
     class Tagger
       WEIGHTS = {
         # The weight given to a rule from the inflections table.
-        :inflections_table => 1.0, 
+        :inflections_table => 1.0,
 
         # The weight given to an FST rule
-        :fst => 0.2, 
+        :fst => 0.2,
 
         # The weight given to a hand-written rule from rule files
         :manual_rules => 1.0,
@@ -62,7 +62,7 @@ module Tagger
       #
       # ==== Options
       # data_directory:: Specifies the directory in which to look for data files. The default
-      # is the current directory. 
+      # is the current directory.
       def initialize(configuration_file, options = {})
         @data_directory = options[:data_directory] || '.'
 
@@ -75,7 +75,7 @@ module Tagger
         if @configuration[:languages]
           @configuration[:languages].each_pair do |language, methods|
             @methods[language] = []
-            @analysis_methods[language] = {} 
+            @analysis_methods[language] = {}
 
             methods.each_pair do |method, args|
               case method
@@ -90,10 +90,10 @@ module Tagger
                 @analysis_methods[language][method] =
                   InstanceFrequencyMethod.new(language)
                 @methods[language] << lambda { |form| analyze_form(language, method, form) }
-              
+
               # Includes candidates from an FST guesser/analyzer.
               when :fst
-                @analysis_methods[language][method] = FSTMethod.new(language, 
+                @analysis_methods[language][method] = FSTMethod.new(language,
                   File.join(@data_directory, args[:analysis]),
                   args[:normalisation] ? File.join(@data_directory, args[:normalisation]) : nil,
                   args[:orthography] ? File.join(@data_directory, args[:orthography]) : nil)
@@ -127,7 +127,7 @@ module Tagger
       #                          methods are disabled.
       def tag_token(language, form, existing = nil, options = {})
         raise ArgumentError unless language.class == Symbol
-        raise "Undefined language #{language}" unless @methods.has_key?(language) 
+        raise "Undefined language #{language}" unless @methods.has_key?(language)
 
         raw_candidates = unless options[:force_method]
                            @methods[language].collect { |method| method.call(form) }.flatten
@@ -152,7 +152,7 @@ module Tagger
                 found = true
               end
             end
-              
+
             if found and existing.valid? and !existing.lemma.nil?
               raw_candidates << WeightedMorphFeatures.new(existing, EXISTING_TAG_WEIGHT, :source) if found
             end
@@ -168,10 +168,10 @@ module Tagger
               c.weight = c.weight * CONTRADICTION_RATIO if c.morph_features.contradict?(existing)
             end
           end
-        end 
+        end
 
-        # Filter out duplicates, accumulating scores 
-        candidates = raw_candidates.inject({}) do |candidates, raw_candidate| 
+        # Filter out duplicates, accumulating scores
+        candidates = raw_candidates.inject({}) do |candidates, raw_candidate|
           candidates[raw_candidate.morph_features] ||= 0.0
           candidates[raw_candidate.morph_features] += raw_candidate.weight
           candidates
@@ -183,13 +183,13 @@ module Tagger
 
         # If the first candidate in the ordered list has the same as the next,
         # we're unable to decide, so pick none but return all as suggestions. Otherwise,
-        # pick the first and return the remainder as suggestions. 
+        # pick the first and return the remainder as suggestions.
         if ordered_candidates.length > 1 and ordered_candidates[0][1] == ordered_candidates[1][1]
           [:ambiguous, nil] + ordered_candidates
         elsif ordered_candidates.length == 0
           [:failed, nil]
         else
-          [ordered_candidates.tail.length == 0 ? :unambiguous : :ambiguous, 
+          [ordered_candidates.tail.length == 0 ? :unambiguous : :ambiguous,
             ordered_candidates.head.first] + ordered_candidates
         end
       end

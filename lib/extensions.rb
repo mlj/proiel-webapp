@@ -46,14 +46,14 @@ class Hash
     reject { |k, v| not yield(k, v) }
   end
 
-  def collect 
+  def collect
     r = []
     each_pair { |key, value| r << yield(key, value) }
     r
   end
 
   # Returns a new hash with only those key-value pairs that correspond to the given keys.
-  # [Equivalent to Hash#slice in Facets but with messy Rails adapatations] 
+  # [Equivalent to Hash#slice in Facets but with messy Rails adapatations]
   def slice(*k)
     h = {}
     if defined? HashWithIndifferentAccess and self.is_a? HashWithIndifferentAccess
@@ -194,7 +194,7 @@ class String
   # Example
   #   "foobar".common_prefix("foobaz")    # "fooba"
   #   "foobar".common_prefix("foobaz", 3) # "foo"
-  #   "foobar".common_prefix("bazfoo", 3) # "" 
+  #   "foobar".common_prefix("bazfoo", 3) # ""
   #
   def common_prefix(s, max = nil)
     l1, l2 = self.size, s.size
@@ -271,7 +271,7 @@ if $0 == __FILE__
     def test_to_proc
       assert_equal [:sdfgsdfg, :foo, :bazar, :bara], %w'sdfgsdfg foo bazar bara'.map(&:to_sym)
     end
-    
+
     def test_to_h
       h = { :a => 1, :b => 2, :c => 3 }
       assert_equal h, Array[[:b, 2], [:a, 1], [:c, 3]].to_h
@@ -292,12 +292,12 @@ if $0 == __FILE__
     end
 
     def test_count
-      assert_equal Hash[:foo => 2, :bar => 5], 
+      assert_equal Hash[:foo => 2, :bar => 5],
         [:foo, :bar, :bar, :foo, :bar, :bar, :bar].count
     end
 
     def test_classify
-      assert_equal Hash[:odd => [1, 3, 5, 7], :even => [2, 4, 6]], 
+      assert_equal Hash[:odd => [1, 3, 5, 7], :even => [2, 4, 6]],
         [1, 2, 3, 4, 5, 6, 7].classify { |x| x % 2 == 0 ? :even : :odd }
     end
 
@@ -312,7 +312,7 @@ if $0 == __FILE__
     def test_common_prefix
       assert_equal "fooba", "foobar".common_prefix("foobaz") # fooba
       assert_equal "foo", "foobar".common_prefix("foobaz", 3) # "foo"
-      assert_equal "", "foobar".common_prefix("bazfoo", 3) # "" 
+      assert_equal "", "foobar".common_prefix("bazfoo", 3) # ""
     end
 
     def test_rekey
@@ -324,7 +324,7 @@ if $0 == __FILE__
 
       assert_equal expect1, foo.rekey('a', :a)
       assert_equal expect2, foo.rekey('b', :b)
-  
+
       foo = { :name => 'Gavin', :wife => :Lisa }
       expect = { "name" => "Gavin", "wife" => :Lisa }
       assert_equal expect, foo.rekey { |k| k.to_s }
@@ -343,7 +343,7 @@ if $0 == __FILE__
 
       foo.rekey!('b', :b)
       assert_equal expect2, foo
-  
+
       foo = { :name => 'Gavin', :wife => :Lisa }
       foo.rekey! { |k| k.to_s }
       expect = { "name" => "Gavin", "wife" => :Lisa }

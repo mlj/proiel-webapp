@@ -39,15 +39,15 @@ module StatisticsHelper
       # Now replace with empty entries except for roughly every skip'th entry
       x_labels.each_index { |i| x_labels[i] = nil unless i % skips == 0 }
     end
- 
+
     average = data.length > 0 ? (data.values.sum / data.length).to_i : 0
     alfa, beta = least_squares((0..data.length-1).to_a, data.values)
     lsq = (0..data.length - 1).to_a.map { |x| alfa + beta * x }
 
     image_tag(GoogleChart::LineChart.new("630x200", title, false) do |lc|
-      lc.data "Annotations", data.values, COLORS[0] 
-      lc.data "Average", [average] * data.length, COLORS[1] 
-      lc.data "Trend", lsq, COLORS[2] 
+      lc.data "Annotations", data.values, COLORS[0]
+      lc.data "Average", [average] * data.length, COLORS[1]
+      lc.data "Trend", lsq, COLORS[2]
       lc.axis :x, :labels => x_labels, :color => "000000"
       lc.axis :y, :range => [data.values.min, data.values.max], :color => "000000"
     end.to_url)

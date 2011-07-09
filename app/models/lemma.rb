@@ -57,7 +57,7 @@ class Lemma < ActiveRecord::Base
 
   # Returns the export-form of the lemma.
   def export_form
-    self.variant ? "#{self.lemma}##{self.variant}" : self.lemma 
+    self.variant ? "#{self.lemma}##{self.variant}" : self.lemma
   end
 
   # Returns a summary description for the part of speech. This is a

@@ -438,7 +438,7 @@ class MaltXMLExport < SourceXMLExport
     builder.treebank(:id => self.identifier,
                      'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
                      'xmlns:treebank' => "http://www.msi.vxu.se/~rics/treebank",
-                     'xsi:schemaLocation' => "http://www.msi.vxu.se/~rics/treebank treebank.xsd") do 
+                     'xsi:schemaLocation' => "http://www.msi.vxu.se/~rics/treebank treebank.xsd") do
       builder.head do
         builder.annotation do
           builder.attribute(:name => "head")
@@ -458,7 +458,7 @@ class MaltXMLExport < SourceXMLExport
         filtered_sentences.each do |s|
           builder.sentence(:id => s.id) do
             # Create a mapping from PROIEL token IDs to one-based, sentence
-            # internal IDs. (I don't like reusing the same id attribute values in 
+            # internal IDs. (I don't like reusing the same id attribute values in
             # XML in this manner, but what can one do...) The ID 1 is reserved
             # for an empty root node to be added later, so we start the mapping at
             # ID 2.
@@ -466,7 +466,7 @@ class MaltXMLExport < SourceXMLExport
             local_token_ids = Hash[*ids.zip((2..(ids.length + 1)).to_a).flatten]
 
             # Add another one to function as a root node. This is necessary
-            # since MaltXML requires there to be a single `root word' with 
+            # since MaltXML requires there to be a single `root word' with
             # its deprel attribute set to `ROOT'. We also need to emit this
             # word in the XML file.
             local_token_ids[nil] = 1

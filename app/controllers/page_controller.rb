@@ -1,4 +1,4 @@
-# Controller for static pages. 
+# Controller for static pages.
 #
 # Idea taken from http://giantrobots.thoughtbot.com/2008/4/2/static-pages-for-the-enterprise.
 class PageController < ApplicationController

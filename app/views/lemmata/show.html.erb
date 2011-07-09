@@ -13,7 +13,7 @@
   <ul>
     <% @mergeable_lemmata.each do |l| -%>
       <li>
-        <%= link_to l.export_form, l %> <%= button_to "Merge", :action => 'merge', :id => @lemma, :other_id => l.id %> 
+        <%= link_to l.export_form, l %> <%= button_to "Merge", :action => 'merge', :id => @lemma, :other_id => l.id %>
       </li>
     <% end %>
   </ul>
@@ -22,7 +22,7 @@
 <% layer_unless @lemma.notes.empty?, "notes" do -%>
   <%= notes_summary(@lemma.notes) %>
 <% end %>
- 
+
 <% layer_unless @semantic_tags.empty?, 'semantic_tags' do -%>
   <%= semantic_tags_summary(@semantic_tags) %>
 <% end %>

@@ -108,7 +108,7 @@ class SourceDivision < ActiveRecord::Base
   protected
 
   def self.search(query, options = {})
-    options[:conditions] ||= query.inject([nil,[]]) do |m,v| 
+    options[:conditions] ||= query.inject([nil,[]]) do |m,v|
       [[m.first, (case v[0]
                  when :source_id
                    'source_id = ?'

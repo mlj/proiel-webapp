@@ -106,7 +106,7 @@ function updateFieldOptions(field, pos, pattern) {
   options.length = 0;
 
   field_values.each(function(value) {
-    if (value != '-')  
+    if (value != '-')
       options[options.length] = new Option(getFieldValueSummary(field, value), value);
   });
 
@@ -133,7 +133,7 @@ function cascadedFieldUpdate(updated_field, new_field_values) {
     var element = $(field + '_field');
 
     var field_selection = null;
-    
+
     if (new_field_values)
       field_selection = new_field_values[field];
 
@@ -144,7 +144,7 @@ function cascadedFieldUpdate(updated_field, new_field_values) {
 
     // Ensure that noe "bad value" flags are left floating around.
     element.removeClassName('bad-field-value');
-      
+
     if (field_selection) {
       for (var j = 0; j < element.options.length; j++) {
         if (element.options[j].value == field_selection) {
@@ -197,7 +197,7 @@ function present_tags(morphtag) {
 
   if (s.length == 0)
     return '&nbsp;';
-  else 
+  else
     return s.join(', ');
 }
 

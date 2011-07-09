@@ -121,7 +121,7 @@ class Token < ActiveRecord::Base
   def language
     sentence.language
   end
-  
+
   # Returns the nearest anaphor for the token.
   def anaphor
     anaphors.min { |x, y| Token.word_distance_between(self, x) <=> Token.word_distance_between(self, y) }

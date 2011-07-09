@@ -20,7 +20,7 @@ module AnnotationsHelper
   # time:: Include time of actions.
   def format_reviewer(sentence, options = {})
     s = ''
-    if @sentence.is_reviewed? 
+    if @sentence.is_reviewed?
       s += "Reviewed by #{link_to_user(@sentence.reviewer)}"
       s += " (#{@sentence.reviewed_at})" if options[:time]
     end

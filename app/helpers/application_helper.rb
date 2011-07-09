@@ -42,9 +42,9 @@ module ApplicationHelper
 
     html_options.symbolize_keys!
     function = update_page(&block) if block_given?
-    tag(:input, html_options.merge({ 
+    tag(:input, html_options.merge({
         :type => "radio", :name => name, :value => value, :checked => checked,
-        :onclick => (html_options[:onclick] ? "#{html_options[:onclick]}; " : "") + "#{function};" 
+        :onclick => (html_options[:onclick] ? "#{html_options[:onclick]}; " : "") + "#{function};"
     }))
   end
 
@@ -147,14 +147,14 @@ module ApplicationHelper
   end
 
   # Generates a link if the condition +condition+ is +true+, otherwise
-  # takes no action. The remaining arguments are the same as those 
+  # takes no action. The remaining arguments are the same as those
   # for +link_to+.
   def show_link_to_if(condition, *args)
     condition ? link_to(*args) : ''
   end
 
   # Generates a link if the current user has the role +role+, otherwise
-  # takes no action. The remaining arguments are the same as those for 
+  # takes no action. The remaining arguments are the same as those for
   # +link_to+.
   def show_link_to_for_role(role, *args)
     show_link_to_if(current_user.has_role?(role), *args)

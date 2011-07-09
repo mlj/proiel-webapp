@@ -20,7 +20,7 @@ function _testCriteria(head, dependent, criteria) {
       a = $H(dependent);
     else {
       alert("Unknown inference criterion " + pair.key);
-      return true; 
+      return true;
     }
 
     var v = null;
@@ -51,7 +51,7 @@ function _getInference(head, dependent) {
       return true;
   });
 
-  if (c) 
+  if (c)
     return $H(c).get('actions');
   else
     return null;

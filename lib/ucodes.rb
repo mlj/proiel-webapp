@@ -18,7 +18,7 @@ module Unicode
   #
   # Derived from code from http://www.davidflanagan.com/blog/2007_08.html.
   #
-  def self.const_missing(name)  
+  def self.const_missing(name)
     if name.to_s =~ CONSTANT_REGEXP
       const_set(name, [$1.to_i(16)].pack("U").freeze)
     else

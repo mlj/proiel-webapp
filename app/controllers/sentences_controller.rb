@@ -31,7 +31,7 @@ class SentencesController < InheritedResources::Base
   end
 
   private
-  
+
   def collection
     @sentences = (@parent ? Sentence.by_source(@parent) : Sentence).search(params[:query], :page => current_page)
   end

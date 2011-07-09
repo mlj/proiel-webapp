@@ -76,7 +76,7 @@
 <% layer_if((is_reviewer? and not @sentence.notes.empty?), "notes") do -%>
   <%= notes_summary(@sentence.notes) %>
 <% end %>
- 
+
 <% layer_if(is_annotator?, "tokenization", :actions => [
            link_to_if(is_annotator?, "Edit", edit_sentence_tokenizations_path(@sentence))]) do -%>
   <%= tokens_table @tokens %>

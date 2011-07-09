@@ -40,7 +40,7 @@ module PROIEL
       (@doc/:text/:source_division).each do |sd|
         ref_fields = tracked_references.values.flatten.inject({}) { |res, u| res[u] = nil; res }
 
-        sd_title = sd.attributes["title"] 
+        sd_title = sd.attributes["title"]
         sd_abbreviated_title = sd.attributes["abbreviated_title"]
         sd_abbreviated_title ||= sd_title
         sd_presentation = []
@@ -49,15 +49,15 @@ module PROIEL
           tracked_references["source_division"].each { |tr| raise "Missing reference_field #{tr}" unless sd.attributes.has_key?(tr) }
           changes = sd.attributes.slice(*tracked_references["source_division"]).inject({}) { |m, v| m[v[0]] = v[1] if v[1] != ref_fields[v[0]] ; m }
           ref_fields.update(changes)
-          sd_presentation[0] = (tracked_references["source_division"] & changes.keys).map { |u| "<milestone unit='#{u}' n='#{ref_fields[u]}'/>" }.join         
+          sd_presentation[0] = (tracked_references["source_division"] & changes.keys).map { |u| "<milestone unit='#{u}' n='#{ref_fields[u]}'/>" }.join
         end
         # start the first sentence with the milestones that changed
-        
+
         (sd/:sentence).each_with_index do |s,i|
           sd_presentation[i] ||= ""
           # get the relevant reference fields, noting which ones changed
           if tracked_references["sentence"]
-            tracked_references["sentence"].each { |tr| raise "Missing reference_field #{tr}" unless s.attributes.has_key?(tr) } 
+            tracked_references["sentence"].each { |tr| raise "Missing reference_field #{tr}" unless s.attributes.has_key?(tr) }
             changes = s.attributes.slice(*tracked_references["sentence"]).inject({}) { |m, v| m[v[0]] = v[1] if v[1] != ref_fields[v[0]] ; m }
             ref_fields.update(changes)
             sd_presentation[i] += (tracked_references["sentence"] & changes.keys).map { |u| "<milestone unit='#{u}' n='#{ref_fields[u]}'/>" }.join
@@ -67,7 +67,7 @@ module PROIEL
           # information necessary for the creation of the sentence
           token_number = 0
           skip_tokens = 0
-          
+
           (s/:token).each_with_index do |t, j|
             if skip_tokens > 0
               skip_tokens -= 1
@@ -76,12 +76,12 @@ module PROIEL
             # get the relevant reference fields, noting which ones changed
             if tracked_references["token"]
               #puts t.inspect
-              tracked_references["token"].each { |tr| raise "Missing reference_field #{tr}" unless t.attributes.has_key?(tr) } 
+              tracked_references["token"].each { |tr| raise "Missing reference_field #{tr}" unless t.attributes.has_key?(tr) }
               changes = t.attributes.slice(*tracked_references["token"]).inject({}) { |m, v| m[v[0]] = v[1] if v[1] != ref_fields[v[0]] ; m }
               ref_fields.update(changes)
               sd_presentation[i] += (tracked_references["token"] & changes.keys).map { |u| "<milestone unit='#{u}' n='#{ref_fields[u]}'/>" }.join
             end
-            
+
             case t.attributes["sort"]
             when "lacuna_start"
               sd_presentation[i] += '<gap/>'
@@ -105,10 +105,10 @@ module PROIEL
             when "text"
               f = ""
               pure_segmentation = false
-              if t.attributes["presentation-span"] 
+              if t.attributes["presentation-span"]
                 skip_tokens = t.attributes["presentation-span"].to_i - 1
               end
-              
+
               # Tokens with presentation-form set
               if t.attributes["presentation-form"]
                 # treat tokens without presentation-span set as having a span of 1
@@ -133,14 +133,14 @@ module PROIEL
                   f += (s/:token).slice(j...(j + span)).map { |tt| "<seg>#{LegacySource.escape(tt.attributes["form"])}</seg>"}.join
                   f += "</segmented>" unless pure_segmentation
                 end
-                
-                # Tokens without presentation-form  
+
+                # Tokens without presentation-form
               else
                 f = "<w>#{LegacySource.escape(t.attributes["form"])}</w>"
               end
-              
+
               raise "Token with sort = text should not have the nospacing attribute set" if t.attributes["nospacing"]
-              
+
               # Add a space if appropriate
               f += "<s> </s>" if (s/:token).slice(j + 1) and not (s/:token).slice(j + 1).attributes["nospacing"] == 'before'
               sd_presentation[i] += f
@@ -149,9 +149,9 @@ module PROIEL
             end
           end
         end
-        
+
         # next pass, sending tokenization
-        
+
         (sd/:sentence).each_with_index do |s, i|
           ref_fields.update(s.attributes.slice(*tracked_references["sentence"]))
 
@@ -160,21 +160,21 @@ module PROIEL
             ref_fields.update(t.attributes.slice(*tracked_references["token"]))
 
             if t.attributes["sort"] == "text"
-              
-              a = { :sentence_number => i, 
+
+              a = { :sentence_number => i,
                 :token_number => j + 1,
-                :reference_fields => ref_fields, 
+                :reference_fields => ref_fields,
                 :sd_title => sd_title,
                 :sd_abbreviated_title => sd_abbreviated_title }
               a[:source_division_presentation] = sd_presentation if i == 0 and first_token
               a[:sentence_presentation] = sd_presentation[i] if first_token
               first_token = false
-              
+
               (t/:notes/:note).each do |n|
                 a[:notes] ||= []
                 a[:notes] << { :origin => n.attributes['origin'], :contents => n.inner_html }
               end
-              
+
               t.attributes.each_pair do |k, v|
                 case k
                 when 'form', 'references'

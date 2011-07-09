@@ -7,7 +7,7 @@
 #
 
 # Set KCODE to UTF8 and grab active_support to get hold of real
-# string functions. Ye gods, how silly... 
+# string functions. Ye gods, how silly...
 $KCODE = 'UTF8'
 require 'active_support'
 require 'unicode'
@@ -159,7 +159,7 @@ if $0 == __FILE__
       assert_equal 'μηδὲ', Lingua::GRC::acute_to_grave('μηδέ')
       assert_equal 'μηδὲ', Lingua::GRC::acute_to_grave('μηδέ', :final_only => true)
       assert_equal 'μηδὲ', Lingua::GRC::acute_to_grave('μηδέ', :final_only => false)
-      
+
       assert_equal 'αὐτοὺς', Lingua::GRC::acute_to_grave('αὐτούς')
       assert_equal 'αὐτούς', Lingua::GRC::acute_to_grave('αὐτούς', :final_only => true)
       assert_equal 'σὐτοὺς', Lingua::GRC::acute_to_grave('σὐτούς', :final_only => false)

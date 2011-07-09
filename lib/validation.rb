@@ -100,7 +100,7 @@ class Validator < Task
 
   def check_lemmata(logger)
     orphans = Lemma.find(:all, :include => [:tokens], :conditions => ["lemmata.foreign_ids IS NULL and tokens.id IS NULL"])
-    orphans.each do |o| 
+    orphans.each do |o|
       logger.warn { "Lemma #{o.id} (#{o.export_form}) is orphaned. Destroying." }
       o.destroy
     end

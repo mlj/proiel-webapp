@@ -41,7 +41,7 @@ class MorphtagsController < ApplicationController
     else
       redirect_to @sentence
     end
-  rescue ActiveRecord::RecordInvalid => invalid 
+  rescue ActiveRecord::RecordInvalid => invalid
     flash[:error] = invalid.record.errors.full_messages
     # FIXME: nasty way of ensuring that "edit" respects our current settings
     uf = {}
