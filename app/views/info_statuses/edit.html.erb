@@ -9,11 +9,11 @@
   <div class="prodrop-menu-item obl">Insert pro-drop oblique</div>
 </div>
 
-<%= render :partial => 'shared/location', :locals => { :sentence => @sentence, :value => 'Information status' } %>
+<%= render 'shared/location', :sentence => @sentence, :value => 'Information status' %>
 
 <% if @sentence.is_reviewed? %>
-  <%= render :partial => 'info_statuses/legend_edit' %>
-  <%= render :partial => 'info_statuses/show' %>
+  <%= render 'info_statuses/legend_edit' %>
+  <%= render 'info_statuses/show' %>
 <% else %>
   Sentence not yet annotated and reviewed.
 <% end %>

@@ -18,7 +18,7 @@
   <div id="guesses">
   </div>
 
-  <%= render :partial => 'morphtags/legend' %>
+  <%= render 'morphtags/legend' %>
 
   <div id="tokens">
     <% @sentence.morphological_annotation(params).each do |token, suggestions| %>

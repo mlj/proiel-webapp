@@ -1,7 +1,7 @@
 <% if @sentence.has_dependency_annotation? %>
   <%= stylesheet 'dependencies' %>
 
-  <%= render :partial => 'dependencies/legend' %>
+  <%= render 'dependencies/legend' %>
 
   <div class="dependencies-image">
     <% if user_preferences[:graph_format] == "svg" %>
