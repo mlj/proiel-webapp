@@ -4,6 +4,7 @@ Change log
 This is a list of major changes between the releases of the
 application.
 
+  * Removed outdated option to quick search for 'source divisions' (Marius)
   * Upgraded to Rails 2.3.12 (Marius)
 
 Release 20110220

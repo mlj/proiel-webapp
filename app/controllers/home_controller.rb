@@ -2,9 +2,6 @@ class HomeController < ApplicationController
   before_filter :is_annotator?, :only => [ :annotation ]
   before_filter :is_reviewer?, :except => [ :quick_search, :quick_search_suggestions, :search, :help, :annotation, :index ]
 
-  LOCATION_SEARCH_PATTERN = Regexp.new(/^\s*(\w+)\s+([A-Za-z]+)\s*$/).freeze
-  ANNOTATION_SEARCH_PATTERN = Regexp.new(/^\s*(\d+)\s*$/).freeze
-
   def index
     @sources = Source.search(nil, :page => current_page)
   end
@@ -30,21 +27,10 @@ class HomeController < ApplicationController
     query = params[:q] || ""
     query.strip!
 
-    if m = query.match(LOCATION_SEARCH_PATTERN)
-      all, source, book = m.to_a
-      source = Source.find(:first, :conditions => [ "code like ? or abbreviation like ?", "#{source}%", "#{source}%" ])
-      if source
-        d = source.source_divisions.find(:first, :conditions => [ "title LIKE ? OR abbreviated_title LIKE ?", "#{book}%", "#{book}%" ])
-        if d
-          redirect_to source_division_url(d)
-        else
-          redirect_to source_divisions_url
-        end
-      end
-    elsif m = query.match(ANNOTATION_SEARCH_PATTERN)
-      redirect_to sentence_url($1)
-    else
-      # A token or lemma.
+    case query
+    when /^\d+$/ # We're guessing this is a sentence ID
+      redirect_to sentence_url(query.to_i)
+    else # We're taking this to be a token
       redirect_to :controller => 'home', :action => 'search', :query => query, :mode => 'tokens'
     end
   end
