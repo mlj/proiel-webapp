@@ -4,6 +4,8 @@ Change log
 This is a list of major changes between the releases of the
 application.
 
+  * Upgraded to Rails 2.3.12 (Marius)
+
 Release 20110220
 ----------------
 
