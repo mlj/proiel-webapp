@@ -135,8 +135,12 @@ module Presentation
 
   # Returns true if the presentation XML is well-formed.
   def presentation_well_formed?
-    x = XMLParser.instance.parse('<presentation>' + presentation + '</presentation>')
-    !x.nil?
+    if presentation
+      x = XMLParser.instance.parse('<presentation>' + presentation + '</presentation>')
+      !x.nil?
+    else
+      false
+    end
   end
 
   protected

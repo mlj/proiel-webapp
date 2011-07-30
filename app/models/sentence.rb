@@ -88,7 +88,7 @@ class Sentence < ActiveRecord::Base
   validate :check_invariants
   validate do |s|
     unless s.presentation_well_formed?
-      s.errors.add_to_base('Presentation string is not well-formed.')
+      s.errors.add(:presentation, 'is not well-formed.')
     end
   end
 

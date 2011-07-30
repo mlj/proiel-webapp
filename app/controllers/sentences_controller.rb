@@ -57,7 +57,8 @@ class SentencesController < InheritedResources::Base
       format.html { redirect_to @sentence }
     end
   rescue ActiveRecord::RecordInvalid => invalid
-    flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} with #{invalid.record.id}: #{m}" }.join('<br>')
+    flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} #{invalid.record.id}: #{m}" }.join('<br>')
+
     redirect_to :action => 'show'
   end
 
@@ -68,7 +69,7 @@ class SentencesController < InheritedResources::Base
     flash[:notice] = 'Sentence was successfully updated.'
     redirect_to @sentence
   rescue ActiveRecord::RecordInvalid => invalid
-    flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} with #{invalid.record.id}: #{m}" }.join('<br>')
+    flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} #{invalid.record.id}: #{m}" }.join('<br>')
     redirect_to @sentence
   end
 
@@ -92,7 +93,7 @@ class SentencesController < InheritedResources::Base
       format.html { redirect_to @sentence }
     end
   rescue ActiveRecord::RecordInvalid => invalid
-    flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} with #{invalid.record.id}: #{m}" }.join('<br>')
+    flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} #{invalid.record.id}: #{m}" }.join('<br>')
     redirect_to @sentence
   end
 
@@ -112,7 +113,12 @@ class SentencesController < InheritedResources::Base
 
     redirect_to @sentence
   rescue ActiveRecord::RecordInvalid => invalid
-    flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} with #{invalid.record.id}: #{m}" }.join('<br>')
+    if invalid.record.id.nil?
+      flash[:error] = invalid.record.errors.full_messages.map { |m| "New #{invalid.record.class}: #{m}" }.join('<br>')
+    else
+      flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} #{invalid.record.id}: #{m}" }.join('<br>')
+    end
+
     redirect_to :action => 'resegment_edit'
   end
 end
