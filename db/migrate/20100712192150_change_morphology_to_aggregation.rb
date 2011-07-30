@@ -10,6 +10,9 @@ class ChangeMorphologyToAggregation < ActiveRecord::Migration
         change_column tab, :morphology_id, :string, :limit => 11, :null => false, :default => ""
       end
       rename_column tab, :morphology_id, :morphology
+
+      say_with_time "Updating morphology values in #{tab}"
+
       MORPHOLOGY_MAP.each do |old_key, new_key|
         execute("UPDATE #{tab} SET morphology = '#{new_key}' WHERE morphology = #{old_key}")
       end
@@ -28,6 +31,8 @@ class ChangeMorphologyToAggregation < ActiveRecord::Migration
     add_index "morphologies", ["tag"], :name => "index_morphologies_on_tag", :unique => true
 
     MORPHOLOGY_TABLES.each do |tab|
+      say_with_time "Updating morphology values in #{tab}"
+
       MORPHOLOGY.each do |old_key, new_key|
         execute("UPDATE #{tab} SET morphology = '#{old_key}' WHERE morphology = #{new_key}")
       end

@@ -6,6 +6,9 @@ class ChangeLanguageToAggregation < ActiveRecord::Migration
     LANGUAGE_TABLES.each do |tab|
       change_column tab, :language_id, :string, :limit => 3, :null => false, :default => ""
       rename_column tab, :language_id, :language
+
+      say_with_time "Updating languages in #{tab}"
+
       LANGUAGE_MAP.each do |old_key, new_key|
         execute("UPDATE #{tab} SET language = '#{new_key}' WHERE language = #{old_key}")
       end
@@ -23,9 +26,12 @@ class ChangeLanguageToAggregation < ActiveRecord::Migration
     add_index "languages", ["iso_code"], :name => "index_languages_on_iso_code", :unique => true
 
     LANGUAGE_TABLES.each do |tab|
+      say_with_time "Updating languages in #{tab}"
+
       LANGUAGE_MAP.each do |old_key, new_key|
         execute("UPDATE #{tab} SET language = '#{old_key}' WHERE language = #{new_key}")
       end
+
       change_column tab, :language, :integer, :null => false, :default => 0
       rename_column tab, :language, :language_id
     end
