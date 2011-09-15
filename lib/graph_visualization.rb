@@ -75,14 +75,14 @@ class Visualization
 
   # Creates a node with identifier +identifier+.
   def node(identifier, label = '', options = {})
-    attrs = { :label => label }.merge(options).merge(@default_options)
+    attrs = { :label => label.gsub('"', '\\"') }.merge(options).merge(@default_options)
     "#{identifier} [#{join_attributes(attrs)}];"
   end
 
   # Creates an edge from identifier +identifier1+ to identifier
   # +identifier2+.
   def edge(identifier1, identifier2, label = '', options = {})
-    attrs = { :label => label }.merge(options).merge(@default_options)
+    attrs = { :label => label.gsub('"', '\\"') }.merge(options).merge(@default_options)
     "#{identifier1} -> #{identifier2} [#{join_attributes(attrs)}];"
   end
 
