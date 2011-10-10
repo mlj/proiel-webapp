@@ -146,48 +146,6 @@ Example:
 
     $ rake proiel:text:import FILE=wulfila-gothicnt.xml
 
-`proiel:text:tei:list`
-----------------------
-
-This task is used to list TEI sources that have been registered and
-are available for import.
-
-Set `TEI_BASE` to the directory containing the TEI files.
-
-Example:
-
-    $ TEI_BASE=$HOME/share/perseus/texts rake proiel:text:tei:list
-    Available sources
-    Identifier        Filename                       Title
-    ----------------------------------------------------------------------
-    caes-civ        + Caesar/caes.bc_lat.xml         Caesar, commentarii belli civilis
-    caes-gall       + Caesar/caes.bg_lat.xml         Caesar, commentarii belli Gallici
-    ...
-
-`proiel:text:tei:dump`
-----------------------
-
-This task dumps a TEI source text as PROIEL XML by running it through
-the same conversion process that is applied when importing a TEI text.
-
-Set `TEI_BASE` to the directory containing the TEI files, and provide
-the text identifier in `ID`.
-
-`proiel:text:tei:import`
-------------------------
-
-This task imports a TEI source text.
-
-Set `TEI_BASE` to the directory containing the TEI files, and provide
-the text identifier in `ID`.
-
-`proiel:text:tei:import:all`
-----------------------------
-
-Imports all available TEI source texts. If the task encounters a TEI
-source whose identifier already exists in the database, the source is
-ignored.
-
 `proiel:schemata:export`
 ------------------------
 
