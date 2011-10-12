@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120212215933) do
+ActiveRecord::Schema.define(:version => 20111010193248) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -133,24 +133,20 @@ ActiveRecord::Schema.define(:version => 20120212215933) do
   add_index "semantic_tags", ["taggable_type"], :name => "idx_semtags_taggable_type"
 
   create_table "sentences", :force => true do |t|
-    t.integer  "sentence_number",       :default => 0,     :null => false
+    t.integer  "sentence_number",                     :default => 0,     :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "annotated_by"
     t.datetime "annotated_at"
     t.integer  "reviewed_by"
     t.datetime "reviewed_at"
-<<<<<<< HEAD
-    t.boolean  "unalignable",                          :default => false, :null => false
-    t.boolean  "automatic_alignment"
-=======
-    t.boolean  "unalignable",           :default => false, :null => false
-    t.boolean  "automatic_alignment",   :default => false
->>>>>>> da2a0b3... Replaced reference_fields, reference_format, tracked_references with a precomputed citation (excluding legacy support).
+    t.boolean  "unalignable",                         :default => false, :null => false
+    t.boolean  "automatic_alignment",                 :default => false
     t.integer  "sentence_alignment_id"
-    t.integer  "source_division_id",    :default => 0,     :null => false
-    t.text     "presentation",                             :null => false
+    t.integer  "source_division_id",                  :default => 0,     :null => false
     t.integer  "assigned_to"
+    t.string   "presentation_before",   :limit => 64
+    t.string   "presentation_after",    :limit => 64
   end
 
   add_index "sentences", ["assigned_to"], :name => "index_sentences_on_assigned_to"
@@ -172,7 +168,8 @@ ActiveRecord::Schema.define(:version => 20120212215933) do
     t.integer  "aligned_source_division_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "presentation",                                              :null => false
+    t.text     "presentation_before"
+    t.text     "presentation_after"
   end
 
   create_table "sources", :force => true do |t|
@@ -204,6 +201,8 @@ ActiveRecord::Schema.define(:version => 20120212215933) do
     t.integer  "relation_id"
     t.string   "morphology",                :limit => 11
     t.string   "citation_part",             :limit => 64, :default => "",    :null => false
+    t.string   "presentation_before",       :limit => 32
+    t.string   "presentation_after",        :limit => 32
   end
 
   add_index "tokens", ["antecedent_id"], :name => "index_tokens_on_antecedent_id"
