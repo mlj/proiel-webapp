@@ -180,6 +180,8 @@ table.diff { border: 1px solid gray; }
 .layer {
   margin-top: 1em;
   margin-bottom: 1em;
+  border: 1px solid #bcd2e6;
+  padding: 1em;
 }
 
 h1.layer-title { display: inline; }
