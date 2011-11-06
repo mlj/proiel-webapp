@@ -75,10 +75,10 @@ Rails::Initializer.run do |config|
   config.gem 'log4r'
   config.gem 'mlj-unicode_normalization_validation', :lib => 'unicode_normalization_validation', :source => 'http://gems.github.com'
   config.gem 'bluecloth'
-  config.gem 'formtastic'
+  config.gem 'formtastic', :version => '1.2.4'
   config.gem 'inherited_resources', :version => '1.0.6'
   config.gem 'haml'
-  config.gem 'acts_as_audited', :lib => false
+  config.gem 'acts_as_audited', :lib => false, :version => '1.1.1'
   config.gem 'exception_notification', :version => '~> 2.3.3' # 2.4.0 and higher are Rails 3 only
   config.gem 'iso-codes', :lib => 'iso_codes'
   config.gem 'differ'
