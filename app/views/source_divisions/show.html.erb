@@ -10,7 +10,3 @@
 </div>
 
 <%= render_tabular @sentences, ['Location', 'Text', '&nbsp;'] %>
-
-<% layer_if(is_reviewer?, "low_level_data") do -%>
-  <%= low_level_data_table(@source_division, :id, :position, :source, :title, :abbreviated_title, :aligned_source_division, :presentation, :reference_fields, :created_at, :updated_at) %>
-<% end %>

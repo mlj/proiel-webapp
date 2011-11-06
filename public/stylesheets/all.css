@@ -272,25 +272,6 @@ div.statistics img { float: left; }
 div.statistics table { width: 50%; float: right; }
 div.statistics br { clear: both; }
 
-/* Low level data tables. */
-table.low_level_data {
-  width: 90%;
-}
-
-table.low_level_data td, th {
-  padding-left: 0.25em;
-  padding-right: 0.25em;
-}
-
-table.low_level_data th {
-  border-bottom: 1px solid black;
-}
-
-table.low_level_data {
-  border-top: 2px solid black;
-  border-bottom: 2px solid black;
-}
-
 /* Styled button */
 input.styled {
   display: block;

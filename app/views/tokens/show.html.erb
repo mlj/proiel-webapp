@@ -29,10 +29,6 @@
   <%= semantic_tags_summary(@semantic_tags) %>
 <% end %>
 
-<% layer_if(is_reviewer?, "low_level_data") do -%>
-  <%= low_level_data_table(@token, :id, :sentence, :created_at, :updated_at, :token_number, :empty_token_sort, :form, :head, :relation, :lemma, :morphology, :source_morphology, :source_lemma, :foreign_ids, :reference_fields) %>
-<% end %>
-
 <% layer_unless @token.audits.empty?, "revisions" do -%>
   <%= audits_summary @token.audits %>
 <% end %>
