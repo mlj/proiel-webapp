@@ -64,6 +64,10 @@
   <%= notes_summary(@sentence.notes) %>
 <% end %>
 
+<% layer_unless @semantic_tags.empty?, 'semantic_tags' do -%>
+  <%= semantic_tags_summary(@semantic_tags) %>
+<% end %>
+
 <% layer_if(is_annotator?, "tokenization", :actions => [
            link_to_if(is_annotator?, "Edit", edit_sentence_tokenizations_path(@sentence))]) do -%>
   <%= tokens_table @tokens %>

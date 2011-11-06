@@ -11,6 +11,7 @@ class SentencesController < InheritedResources::Base
     @sentence = Sentence.find(params[:id])
 
     @tokens = @sentence.tokens.search(params[:query], :page => current_page)
+    @semantic_tags = @sentence.semantic_tags
 
     show!
   end

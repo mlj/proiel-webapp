@@ -270,6 +270,8 @@ class SemanticTagImportExport < CSVImportExport
       klass = Token
     when "Lemma"
       klass = Lemma
+    when "Sentence"
+      klass = Sentence
     else
       raise "Invalid taggable type #{taggable_type}"
     end

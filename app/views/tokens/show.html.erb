@@ -29,6 +29,14 @@
   <%= semantic_tags_summary(@semantic_tags) %>
 <% end %>
 
+<% layer_unless @outgoing_semantic_relations.empty?, 'outgoing_semantic_relations' do -%>
+  <%= semantic_relations_summary(@outgoing_semantic_relations, incoming = false) %>
+<% end %>
+
+<% layer_unless @incoming_semantic_relations.empty?, 'incoming_semantic_relations' do -%>
+  <%= semantic_relations_summary(@incoming_semantic_relations) %>
+<% end %>
+
 <% layer_unless @token.audits.empty?, "revisions" do -%>
   <%= audits_summary @token.audits %>
 <% end %>
