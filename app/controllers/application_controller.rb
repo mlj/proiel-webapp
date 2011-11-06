@@ -53,4 +53,9 @@ class ApplicationController < ActionController::Base
   def is_reader?
     check_role(:reader)
   end
+
+  def record_not_found
+    flash[:error] = 'No such object'
+    redirect_to :root
+  end
 end

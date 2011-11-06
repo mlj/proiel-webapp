@@ -5,6 +5,8 @@ class TokensController < InheritedResources::Base
   before_filter :is_administrator?, :only => [ :edit, :update ]
   before_filter :find_parents
 
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+
   protected
 
   def find_parents

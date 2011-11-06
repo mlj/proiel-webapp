@@ -3,6 +3,8 @@ class LemmataController < InheritedResources::Base
 
   before_filter :is_reviewer?, :except => [:index, :show]
 
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+
   def show
     @lemma = Lemma.find(params[:id])
     @semantic_tags = @lemma.semantic_tags

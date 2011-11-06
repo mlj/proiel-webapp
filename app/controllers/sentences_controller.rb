@@ -5,8 +5,11 @@ class SentencesController < InheritedResources::Base
   before_filter :is_annotator?, :only => [:merge, :tokenize, :resegment_edit, :resegment_update]
   before_filter :is_reviewer?, :only => [:edit, :update, :flag_as_reviewed, :flag_as_not_reviewed]
 
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+
   def show
     @sentence = Sentence.find(params[:id])
+
     @tokens = @sentence.tokens.search(params[:query], :page => current_page)
 
     show!
