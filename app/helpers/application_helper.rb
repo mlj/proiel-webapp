@@ -29,12 +29,6 @@ module ApplicationHelper
     _select_tag_db(name, Source, :citation, value, options)
   end
 
-  # Enters Markaby "mode"; actually just a wrapper for the-semi ugly Markaby + helper hack.
-  # Borrowed from http://railscasts.com/episodes/69.
-  def markaby(&block)
-    Markaby::Builder.new({}, self, &block)
-  end
-
   # Returns a radio button with a function as onclick handler.
   def radio_button_to_function(name, value, checked, *args, &block)
     html_options = args.extract_options!
