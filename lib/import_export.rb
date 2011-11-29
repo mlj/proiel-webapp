@@ -96,7 +96,7 @@ class InfoStatusesImportExport < CSVImportExport
         when 1
           ac = acs.last
         else
-          raise "Antecedent problems"
+          raise "Antecedent problem: token #{head_id} has more than one #{relation.tag}"
         end
       end
       t.antecedent_id = ac.id
