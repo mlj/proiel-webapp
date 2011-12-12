@@ -1,7 +1,0 @@
-<% roundedbox do -%>
-  <%=h @source_division.citation %> <%= show_completion_rate(@source_division.completion, :checkmark => :only) %><br/>
-  <%= link_to_resources @source_division, :previous, :next, :index, :statistics, :edit, :parent %>
-  <%= link_to_if @source_division.aligned_source_division, "Sentence alignments", alignment_path(@source_division) %>
-<% end %>
-
-<%= render_tabular @sentences, ['Location', 'Text', '&nbsp;'] %>

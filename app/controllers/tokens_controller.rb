@@ -1,45 +1,75 @@
-class TokensController < InheritedResources::Base
-  actions :all, :except => [ :new, :create, :destroy ]
+#--
+#
+# Copyright 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2009, 2010, 2011, 2012 Marius L. Jøhndal
+#
+# This file is part of the PROIEL web application.
+#
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+#++
 
+class TokensController < ApplicationController
+  respond_to :html
   before_filter :is_reviewer?
-  before_filter :is_administrator?, :only => [ :edit, :update ]
-  before_filter :find_parents
+  before_filter :is_administrator?, :only => [:edit, :update]
 
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
-  protected
-
-  def find_parents
-    @parent = @source = Source.find(params[:source_id]) unless params[:source_id].blank?
-  end
-
-  private
-
-  def collection
-    @tokens = (@parent ? Token.by_source(@source) : Token).search(params[:query], :page => current_page, :include => [:lemma])
-  end
-
-  public
-
   def show
-    @token = Token.find(params[:id])
+    @token = Token.includes(:sentence => [:source_division => [:source]]).find(params[:id])
 
-    @semantic_tags = @token.semantic_tags
-    # Add semantic tags from lemma not present in the token's semantic tags.
-    @semantic_tags += @token.lemma.semantic_tags.reject { |tag| @semantic_tags.map(&:semantic_attribute).include?(tag.semantic_attribute) } if @token.lemma
+    if @token.nil?
+      raise ActiveRecord::RecordNotFound
+    else
+      @sentence = @token.sentence
+      @source_division = @sentence.source_division
+      @source = @source_division.source
 
-    show!
+      @semantic_tags = @token.semantic_tags
+      # Add semantic tags from lemma not present in the token's semantic tags.
+      @semantic_tags += @token.lemma.semantic_tags.reject { |tag| @semantic_tags.map(&:semantic_attribute).include?(tag.semantic_attribute) } if @token.lemma
+
+      @outgoing_semantic_relations = @token.outgoing_semantic_relations
+      @incoming_semantic_relations = @token.incoming_semantic_relations
+
+      respond_with @token
+    end
+  end
+
+  def edit
+    @token = Token.includes(:sentence => [:source_division => [:source]]).find(params[:id])
+
+    if @token.nil?
+      raise ActiveRecord::RecordNotFound
+    else
+      @sentence = @token.sentence
+      @source_division = @sentence.source_division
+      @source = @source_division.source
+
+      respond_with @token
+    end
   end
 
   def update
-    if params[:token]
-      params[:token][:form] = params[:token][:form].mb_chars.normalize(UNICODE_NORMALIZATION_FORM)
-    end
+    normalize_unicode_params! params[:token], :presentation_before, :presentation_after, :form
 
-    update!
+    @token = Token.find(params[:id])
+    @token.update_attributes(params[:token])
+
+    respond_with @token
   end
-
-  public
 
   def dependency_alignment_group
     @token = Token.find(params[:id])

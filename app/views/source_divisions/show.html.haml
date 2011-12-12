@@ -1,0 +1,20 @@
+- javascript 'application'
+
+- context_bar do
+  .breadcrumbs
+    != breadcrumbs ['Contents', sources_path], @source, @source_division
+    != completion_rate @source_division.completion
+  .resources
+    != link_to_resources @source_division, :edit, :previous, :next
+
+  - if @source_division.aligned_source_division
+    != link_to 'Show sentence alignments', alignment_path(@source_division)
+
+  - if @source_division.has_discourse_annotation?
+    != link_to 'Show discourse annotations', source_division_discourse_path(@source_division)
+
+%p
+  != will_paginate @sentences
+
+%p
+  != format_sentence @sentences.all, :citations => true, :sentence_numbers => true, :link_to => :sentences

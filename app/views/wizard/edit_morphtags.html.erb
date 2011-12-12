@@ -1,7 +1,0 @@
-<%= render 'context' %>
-
-<% form_tag({ :controller => 'morphtags', :action => 'update', :sentence_id => @sentence, :wizard => true}, :id => "morphtag-form", :method => :put) do -%>
-  <%= render 'morphtags/form' %>
-  <%= submit_tag "Save" %>
-<% end %>
-<%= button_to('Skip', :action => "next_sentence") %>

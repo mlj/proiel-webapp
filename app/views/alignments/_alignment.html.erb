@@ -1,5 +1,6 @@
-<% javascript 'alignment' %>
 <% stylesheet 'alignment' %>
+<% javascript "prototype", "scriptaculous", "utils", "effects", "dragdrop", "controls" %>
+<% javascript 'alignment' %>
 
 <% javascript_tag do -%>
   var authenticity_token = '<%= form_authenticity_token %>';
@@ -12,7 +13,7 @@
         <% a.left.each do |sentence_group| %>
           <% sentence_group.each do |sentence| %>
             <div id="sentence-<%= sentence.id %>" class="droppable">
-              <%= format_sentence(sentence, { :sentence_numbers => true, }) %>
+              <%= format_sentence(sentence, { :sentence_numbers => true }) %>
             </div>
           <% end %>
         <% end %>
@@ -29,7 +30,7 @@
               <%= alignable_button sentence %>
             <% end %>
             <div id="sentence-<%= sentence.id %>" class="draggable">
-              <%= format_sentence(sentence, { :sentence_numbers => true, :ignore_links => true, }) %>
+              <%= format_sentence(sentence, { :sentence_numbers => true }) %>
             </div>
           <% end %>
         <% end %>

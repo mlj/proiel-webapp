@@ -1,5 +1,4 @@
-Short-cut keys
-==============
+# Short-cut keys
 
 Using access keys you can quickly navigate directly to a specific page
 or part of a page using the keyboard. In most browsers you will have

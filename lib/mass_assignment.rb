@@ -37,7 +37,7 @@ class MassTokenAssignment < MassAssignment
     super(Token)
   end
 
-  # Changes the value of the +source_morphology+ attribute from one
+  # Changes the value of the +source_morphology_tag+ attribute from one
   # value to another for all tokens.  If +old_value+ is nil, all
   # values will be reassigned.
   def reassign_source_morphology!(field, old_value, new_value)

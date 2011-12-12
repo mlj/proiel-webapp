@@ -1,7 +1,0 @@
-<% search_form_tag tokens_path do %>
-  <label>Source</label><%= source_select_tag :source_id, params[:source_id], :include_blank => true %>
-  <label>Form</label><%= text_field_tag :query, params[:query] %>
-  <!-- label>Exact match</label><%= check_box_tag :exact, 'yes', params[:exact] %> -->
-<% end %>
-
-<%= tokens_table @tokens %>

@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# -*- encoding: utf-8 -*-
 #
 # ucodes.rb - Unicode code point constants and character class helpers
 #
@@ -35,8 +36,6 @@ module Unicode
 end
 
 if $0 == __FILE__
-  $KCODE = 'u'
-
   require 'test/unit'
 
   class ConstantsTestCase < Test::Unit::TestCase

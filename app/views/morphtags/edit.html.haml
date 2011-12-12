@@ -1,0 +1,12 @@
+- context_bar do
+  .breadcrumbs
+    != breadcrumbs ['Contents', sources_path], @source, @source_division, @sentence, 'Morphology'
+    != completion_rate @sentence.completion
+  .resources
+    != link_to_resources @sentence, :previous, :next
+  %p
+    != external_text_links @sentence
+
+= form_tag({ :controller => 'morphtags', :action => 'update', :sentence_id => @sentence, :wizard => params[:wizard]}, :id => "morphtag-form", :method => :put) do
+  != render 'morphtags/form'
+  != submit_tag "Save", :class => :button

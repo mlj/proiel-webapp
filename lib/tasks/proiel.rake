@@ -1,4 +1,4 @@
-DEFAULT_EXPORT_DIRECTORY = File.join(RAILS_ROOT, 'public', 'exports')
+DEFAULT_EXPORT_DIRECTORY = Rails.root.join('public', 'exports')
 
 namespace :proiel do
   task(:myenvironment => :environment) do
@@ -17,7 +17,7 @@ namespace :proiel do
     desc "Validate a PROIEL source text. Options: FILE=data_file"
     task(:validate => :environment) do
       raise "Filename required" unless ENV['FILE']
-      `xmllint --schema #{File.join(RAILS_ROOT, 'lib', 'text.xsd')} --noout #{ENV['FILE']}`
+      `xmllint --schema #{Rails.root.join('lib', 'text.xsd')} --noout #{ENV['FILE']}`
     end
 
     desc "Import a PROIEL source text. Options: FILE=data_file"
@@ -109,7 +109,7 @@ namespace :proiel do
     end
 
     desc "Import a source text in legacy format. Options: FILE=data_file, FORMAT={proiel}"
-    task(:legacy_import => :environment) do 
+    task(:legacy_import => :environment) do
       require 'legacy_import'
       raise "Filename require" unless ENV['FILE']
       format = ENV['FORMAT']
@@ -126,7 +126,7 @@ namespace :proiel do
       directory ||= DEFAULT_EXPORT_DIRECTORY
 
       Dir::mkdir(directory) unless File::directory?(directory)
-      File::copy(File.join(RAILS_ROOT, 'lib', 'text.xsd'),
+      File::copy(Rails.root.join('lib', 'text.xsd'),
                  File.join(directory, 'text.xsd'))
     end
   end
@@ -195,7 +195,7 @@ namespace :proiel do
       file_name = ENV['FILE']
       file_name ||= STDOUT
       raise "Missing argument DICTIONARY" unless ENV['DICTIONARY']
-      dictionary = Lingua::Collocations.new(File.join(RAILS_ROOT, "lib", ENV['DICTIONARY']))
+      dictionary = Lingua::Collocations.new(Rails.root.join("lib", ENV['DICTIONARY']))
 
       source = ENV['SOURCE']
       source_division = ENV['SOURCE_DIVISION']
@@ -316,6 +316,45 @@ namespace :proiel do
       NoteImportExport.new.read(file_name)
     end
   end
+
+  namespace :semantic_relations do
+    desc "Import semantic relatinos. Options: FILE=csv_file"
+    task(:import => :myenvironment) do
+      require 'import_export'
+      file_name = ENV['FILE']
+      raise "Missing argument" unless file_name
+
+      i = SemanticRelationImportExport.new
+      i.read(file_name)
+    end
+
+    desc "Export semantic relations. Options: FILE=csv_file"
+    task(:export => :myenvironment) do
+      require 'import_export'
+      file_name = ENV['FILE']
+      raise "Missing argument" unless file_name
+
+      i = SemanticRelationImportExport.new
+      i.write(file_name)
+    end
+
+    desc "Delete semantic relations. Options: SOURCE_DIVISION=source_division_id, TYPE=semantic_relation_type"
+    task(:delete => :myenvironment) do
+      sd = ENV['SOURCE_DIVISION'].to_i
+      raise "Missing argument SOURCE_DIVISION" unless sd
+      type = SemanticRelationType.find_by_tag(ENV['TYPE']).id
+      raise "Missing semantic relation type" unless type
+      SemanticRelation.find(:all,
+                 :conditions => ["semantic_relation_tags.semantic_relation_type_id = ?", type],
+                 :include => :semantic_relation_tag).each do |sr|
+                   if sr.controller.sentence.source_division_id == sd
+                     STDERR.puts "Destroying tag #{sr}"
+                     sr.destroy
+                   end
+                 end
+      end
+  end
+
 
   namespace :semantic_tags do
     desc "Import semantic tags. Options: FILE=csv_file"

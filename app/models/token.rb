@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -19,10 +19,8 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
-class Token < ActiveRecord::Base
-  INFO_STATUSES = %w{new kind acc_gen acc_sit acc_inf old old_inact
-    no_info_status info_unannotatable quant non_spec non_spec_inf non_spec_old}
 
+class Token < ActiveRecord::Base
   belongs_to :sentence
   belongs_to :lemma
   has_many :notes, :as => :notable, :dependent => :destroy
@@ -37,6 +35,9 @@ class Token < ActiveRecord::Base
   has_many :slashees, :through => :slash_out_edges
   has_many :slashers, :through => :slash_in_edges
 
+  has_many :outgoing_semantic_relations, :class_name => 'SemanticRelation', :foreign_key => 'controller_id', :dependent => :destroy
+  has_many :incoming_semantic_relations, :class_name => 'SemanticRelation', :foreign_key => 'target_id', :dependent => :destroy
+
   belongs_to :token_alignment, :class_name => 'Token', :foreign_key => 'token_alignment_id'
   belongs_to :dependency_alignment, :class_name => 'Token', :foreign_key => 'dependency_alignment_id'
   has_many :dependency_alignment_terminations
@@ -44,31 +45,11 @@ class Token < ActiveRecord::Base
   has_many :anaphors, :class_name => 'Token', :foreign_key => 'antecedent_id', :dependent => :nullify
   belongs_to :antecedent, :class_name => 'Token', :foreign_key => 'antecedent_id'
 
-  composed_of :morphology, :allow_nil => true, :converter => Proc.new { |value| value.is_a?(String) ? Morphology.new(value) : value }
-  validates_length_of :morphology, :allow_nil => true, :is => MorphFeatures::MORPHOLOGY_LENGTH
+  composed_of :morphology, :mapping => %w(morphology_tag to_s), :allow_nil => true, :converter => Proc.new { |x| Morphology.new(x) }
 
   before_validation :before_validation_cleanup
 
-  searchable_on :form
-
-  named_scope :non_pro, :conditions => ["empty_token_sort IS NULL OR empty_token_sort != 'P'"]
-  named_scope :non_empty, :conditions => ["empty_token_sort IS NOT NULL"]
-
-  # Deprecated
-  named_scope :word, :conditions => ["empty_token_sort IS NULL"]
-  named_scope :morphology_annotatable, :conditions => ["empty_token_sort IS NULL"]
-  named_scope :dependency_annotatable, :conditions => ["empty_token_sort IS NULL OR empty_token_sort != 'P'"]
-  named_scope :morphology_annotated, :conditions => [ "lemma_id IS NOT NULL" ]
-
-  # Tokens that are candidate root nodes in dependency graphs.
-  named_scope :root_dependency_tokens, :conditions => [ "head_id IS NULL" ]
-
-  # Tokens that belong to source +source+.
-  named_scope :by_source, lambda { |source|
-    { :conditions => { :sentence_id => source.source_divisions.map(&:sentences).flatten.map(&:id) } }
-  }
-
-  acts_as_audited :except => [:source_morphology, :source_lemma, :citation_part]
+  change_logging :except => [:source_morphology_tag, :source_lemma, :citation_part]
 
   # General schema-defined validations
   validates_presence_of :sentence_id
@@ -84,19 +65,40 @@ class Token < ActiveRecord::Base
   # Constraint: t.head_id => t.relation
   validates_presence_of :relation, :if => lambda { |t| !t.head_id.nil? }
 
-  # If set, source_morphology must have the correct length.
-  validates_length_of :source_morphology, :allow_nil => true, :is => MorphFeatures::MORPHOLOGY_LENGTH
-
-  # FIXME: validate morphology vs language?
-  #validates_inclusion_of :morphology, :in => MorphFeatures.morphology_tag_space(language.tag)
-
   # form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
 
-  validates_inclusion_of :info_status, :allow_nil => true, :in => INFO_STATUSES
+#  validates_tag_set_inclusion_of :source_morphology_tag, :morphology, :allow_nil => true, :message => "%{value} is not a valid source morphology tag"
+#  validates_tag_set_inclusion_of :morphology_tag, :morphology, :allow_nil => true, :message => "%{value} is not a valid morphology tag"
+  validates_tag_set_inclusion_of :info_status, :information_structure, :allow_nil => true, :message => "%{value} is not a valid information status tag"
 
   # Specific validations
   validate :validate_sort
+
+  # A visible token, i.e. is a non-empty token.
+  def self.visible
+    where(:empty_token_sort => nil)
+  end
+
+  # An invisible token, i.e. an empty token.
+  def self.invisible
+    where("empty_token_sort IS NOT NULL")
+  end
+
+  # A token that can be annotated with morphology.
+  def self.takes_morphology
+    visible
+  end
+
+  # A token that can be annotated with syntax (i.e. dependency relations).
+  def self.takes_syntax
+    where("empty_token_sort IS NULL OR empty_token_sort != 'P'")
+  end
+
+  # A token that is at the root of the dependency tree.
+  def self.dependency_root
+    where("head_id IS NULL")
+  end
 
   # Sets the relation for the token. The relation may be a Relation
   # object, a string with the relation tag or a symbol with the
@@ -121,37 +123,29 @@ class Token < ActiveRecord::Base
     sentence.language
   end
 
-  # Returns the nearest anaphor for the token.
-  def anaphor
-    anaphors.min { |x, y| Token.word_distance_between(self, x) <=> Token.word_distance_between(self, y) }
+  # Returns the nearest anaphor or an empty array if there is none.
+  def nearest_anaphor
+    anaphors.min { |x, y| word_distance_between(x) <=> word_distance_between(y) }
   end
 
   def previous_tokens
-    self.sentence.tokens.find(:all,
-                              :conditions => [ "token_number < ?", self.token_number ],
-                              :order => "token_number ASC")
+    sentence.tokens.where("token_number < ?", token_number).order("token_number ASC")
   end
 
   def next_tokens
-    self.sentence.tokens.find(:all,
-                              :conditions => [ "token_number > ?", self.token_number ],
-                              :order => "token_number ASC")
+    sentence.tokens.where("token_number > ?", token_number).order("token_number ASC")
   end
 
   # Returns the previous token in the linearisation sequence. Returns +nil+
   # if there is no previous token.
   def previous_token
-    self.sentence.tokens.find(:first,
-                              :conditions => [ "token_number < ?", self.token_number ],
-                              :order => "token_number DESC")
+    sentence.tokens.where("token_number < ?", token_number).order("token_number DESC").first
   end
 
   # Returns the next token in the linearisation sequence. Returns +nil+
   # if there is no next token.
   def next_token
-    self.sentence.tokens.find(:first,
-                              :conditions => [ "token_number > ?", self.token_number ],
-                              :order => "token_number ASC")
+    sentence.tokens.where("token_number > ?", token_number).order("token_number ASC").first
   end
 
   alias :next :next_token
@@ -211,8 +205,8 @@ class Token < ActiveRecord::Base
     # relevant fields are set we should return an object. We will have
     # to pass along the language, as the +source_lemma+ attribute is a
     # serialized lemma specification without language code.
-    if source_lemma or source_morphology
-      MorphFeatures.new([source_lemma, language.tag].join(','), source_morphology)
+    if source_lemma or source_morphology_tag
+      MorphFeatures.new([source_lemma, language.tag].join(','), source_morphology_tag)
     else
       nil
     end
@@ -226,14 +220,14 @@ class Token < ActiveRecord::Base
   def source_morph_features=(f)
     Token.transaction do
       if f.nil?
-        self.source_morphology = nil
+        self.source_morphology_tag = nil
         self.source_lemma = nil
         self.save!
       elsif f.is_a?(String)
         s1, s2, s3, s4 = f.split(',')
         self.source_morph_features = MorphFeatures.new([s1, s2, s3].join(','), s4)
-      elsif self.source_morphology != f.morphology or f.lemma_s != self.source_lemma
-        self.source_morphology = f.morphology
+      elsif self.source_morphology_tag != f.morphology or f.lemma_s != self.source_lemma
+        self.source_morphology_tag = f.morphology
         self.source_lemma = f.lemma_s
         self.save!
       end
@@ -389,8 +383,6 @@ class Token < ActiveRecord::Base
                       "AND tokens.sentence_id = sentences.id AND sentences.source_division_id = #{source_division.id}")
   end
 
-  private
-
   def self.tokens_in_same_source?(t1, t2)
     t1.sentence.source_division.source == t2.sentence.source_division.source
   end
@@ -399,98 +391,71 @@ class Token < ActiveRecord::Base
     t1.sentence.source_division.source.source_divisions.count(:all, :conditions => ['position between ? and ?', t1.sentence.source_division.position, t2.sentence.source_division.position]) < 3
   end
 
-  public
+  # True if the token +t+ belongs to the same sentence as this token.
+  def belongs_to_same_sentence?(t)
+    sentence == t.sentence
+  end
 
-  # Returns the distance between two tokens measured in number of sentences.
-  # first_token is supposed to precede second_token.
-  def self.sentence_distance_between(first_token, second_token)
-    raise "Tokens must be in the same source" unless self.tokens_in_same_source?(first_token, second_token)
-    raise "The two tokens are not in contiguous source divisions" unless self.tokens_in_contiguous_source_divisions?(first_token, second_token)
+  # True if the token +t+ belongs to the same source division as this token.
+  def belongs_to_same_source_division?(t)
+    sentence.source_division == t.sentence.source_division
+  end
 
-    if first_token.sentence.source_division == second_token.sentence.source_division
-      first_token.sentence.source_division.sentences.count(:all, :conditions => ['sentence_number BETWEEN ? AND ?',
-                                                                                 first_token.sentence.sentence_number,
-                                                                                 second_token.sentence.sentence_number]) - 1
+  # Returns the distance between this token and the token +t+ measured in
+  # number of sentences.
+  def sentence_distance_between(t)
+    if belongs_to_same_source_division?(t)
+      i = [sentence.sentence_number, t.sentence.sentence_number].sort
+      sentence.source_division.sentences.where('sentence_number >= ? AND sentence_number < ?', *i).count
     else
-      first_token.sentence.source_division.sentences.count(:all, :conditions => ['sentence_number > ?',
-                                                                                 first_token.sentence.sentence_number]) + second_token.sentence.source_division.sentences.count(:all, :conditions => ['sentence_number < ?', second_token.sentence.sentence_number ]) + 1
+      raise ArgumentError, "token does not belong to the same source division"
     end
   end
 
-  # Returns the distance between two tokens measured in number of words.
-  # first_token must precede second_token.
-  def self.word_distance_between(first_token, second_token)
-    raise "Tokens must be in the same source" unless self.tokens_in_same_source?(first_token, second_token)
-    raise "The two tokens are not in contiguous source divisions" unless self.tokens_in_contiguous_source_divisions?(first_token, second_token)
+  # Returns the distance between this token and another token measured in
+  # number of words.
+  def word_distance_between(t)
+    x = self
+    y = t
 
-    first_token = first_token.head if first_token.empty_token_sort == 'P'
-    second_token = second_token.head if second_token.empty_token_sort == 'P'
+    x = x.head if x.empty_token_sort == 'P'
+    y = y.head if y.empty_token_sort == 'P'
 
-    if first_token.sentence.sentence_number == second_token.sentence.sentence_number and first_token.sentence.source_division == second_token.sentence.source_division
-      num_words = first_token.sentence.tokens.word.count(:conditions => ['token_number BETWEEN ? AND ?',
-                                                                         first_token.token_number,
-                                                                         second_token.token_number - 1])
+    if x.belongs_to_same_sentence?(y)
+      i = [x.token_number, y.token_number].sort
+
+      sentence.tokens.visible.where('token_number >= ? AND token_number < ?', *i).count
+    elsif x.belongs_to_same_source_division?(y)
+      x, y = y, x if x.sentence.sentence_number > y.sentence.sentence_number
+
+      x.sentence.tokens.visible.where('token_number >= ?', x.token_number).count +
+        y.sentence.tokens.visible.where('token_number < ?', y.token_number).count +
+        Token.where(:sentence_id => x.sentence.source_division.sentences.where('sentence_number > ? AND sentence_number < ?', x.sentence.sentence_number, y.sentence.sentence_number)).visible.count
     else
-      # Find the number of words following (and including) the first token in its sentence
-      num_words = first_token.sentence.tokens.word.count(:conditions => ['token_number >= ?', first_token.token_number])
-
-      # Find the number of words preceding the second token in its sentence
-      num_words += second_token.sentence.tokens.word.count(:conditions => ['token_number < ?', second_token.token_number])
-
-      # Check whether the two tokens are in the same source_division
-      if first_token.sentence.source_division == second_token.sentence.source_division
-        # Find the number of words in intervening sentences of the same source_division
-        first_token.sentence.source_division.sentences.find(:all, :conditions => ['sentence_number BETWEEN ? AND ?',
-                                                                                  first_token.sentence.sentence_number + 1,
-                                                                                  second_token.sentence.sentence_number - 1]).each do |sentence|
-          num_words += sentence.tokens.word.count
-        end
-      else
-        # Find the number of words in sentences following the first token's sentence in its source_division
-        first_token.sentence.source_division.sentences.find(:all, :conditions => ['sentence_number > ?',
-                                                                                  first_token.sentence.sentence_number]).each do |sentence|
-          num_words += sentence.tokens.word.count
-        end
-        # Find the number of words preceding the second token in its source_division
-        second_token.sentence.source_division.sentences.find(:all, :conditions => ['sentence_number < ?',
-                                                                                   second_token.sentence.sentence_number]).each do |sentence|
-          num_words += sentence.tokens.word.count
-        end
-      end
-    end
-    num_words
-  end
-
-  protected
-
-  def self.search(query, options = {})
-    if query.blank?
-      paginate options
-    else
-      search_on(query).paginate options
+      raise ArgumentError, "token does not belong to the same source division"
     end
   end
 
   private
 
   def validate_sort
-    # morphology, source_morphology, lemma and source_lemma may only
+    # morphology, source_morphology_tag, lemma and source_lemma may only
     # be set if token is morphtaggable
     unless is_morphtaggable?
       errors.add(:morphology, "not allowed on non-morphtaggable token") unless morphology.nil?
-      errors.add(:source_morphology, "not allowed on non-morphtaggable token") unless morphology.nil?
+      errors.add(:source_morphology_tag, "not allowed on non-morphtaggable token") unless morphology.nil?
       errors.add(:lemma, "not allowed on non-morphtaggable token") unless lemma.nil?
       errors.add(:source_lemma, "not allowed on non-morphtaggable token") unless source_lemma.nil?
     end
 
     # if morph-features are set, are they valid?
     if m = morph_features
-      errors.add_to_base("morph-features #{m.to_s} are invalid") unless m.valid?
+      errors[:base] << "morph-features #{m.to_s} are invalid" unless m.valid?
     end
 
     # sort :empty_dependency_token <=> form.nil?
     if is_empty? or form.nil?
-      errors.add_to_base("Empty tokens must have NULL form") unless is_empty? and form.nil?
+      errors[:base] << "Empty tokens must have NULL form" unless is_empty? and form.nil?
     end
   end
 
@@ -499,7 +464,7 @@ class Token < ActiveRecord::Base
   def before_validation_cleanup
     self.morphology = nil if morphology.blank?
     self.lemma_id = nil if lemma_id.blank?
-    self.source_morphology = nil if source_morphology.blank?
+    self.source_morphology_tag = nil if source_morphology_tag.blank?
     self.source_lemma = nil if source_lemma.blank?
     self.foreign_ids = nil if foreign_ids.blank?
     self.empty_token_sort = nil if empty_token_sort.blank?
@@ -508,64 +473,9 @@ class Token < ActiveRecord::Base
 
   public
 
-  # Synthesises the running text of the token.
-  #
-  # The <tt>mode</tt> is :text_and_presentation if both the token form and
-  # the presentation data should be included in the resulting string.
-  # :text_and_presentation_with_markup produces the same result but also
-  # includes markup that distinguishes the form from presentation data.
-  # :text_only includes only the token form. The default is :text_only.
-  #
-  # The behaviour for tokens that are flagged as empty is undefined.
-
-  def to_s(mode = :text_only)
-    case mode
-    when :text_only
-      form
-    when :text_and_presentation
-      presentation_stream.map(&:last).join
-    when :text_and_presentation_with_markup
-      presentation_stream.map { |t, v| "<#{t}>#{v}</#{t}>" }.join
-    else
-      raise ArgumentError
-    end
+  def to_s
+    [presentation_before, form, presentation_after].compact.join
   end
-
-  # Returns an array containing the <tt>presentation_before</tt>,
-  # <tt>form</tt> and <tt>presentation_after</tt> columns and with an
-  # interpretation of the presentation data.
-  #
-  # The array consists of pairs of interpretation and value. Only the
-  # presentation columns that have non-empty values are included in the
-  # array. The interpretation is :pc for punctuation, :s for spaces and :w
-  # for a (token/word) form.
-  #
-  # Example return value when <tt>presentation_before</tt> is nil or an
-  # empty string:
-  #
-  #     [[:w, 'done'], [:pc, '. ']]
-  #
-
-  def presentation_stream
-    [[presentation_sym(presentation_before), presentation_before],
-     [:w, form],
-     [presentation_sym(presentation_after), presentation_after]].select(&:first)
-  end
-
-  private
-
-  def presentation_sym(s)
-    case s
-    when NilClass, ''
-      nil
-    when /^\s+$/
-      :s
-    else
-      :pc
-    end
-  end
-
-  public
 
   # Tests if token can be joined with the following token.
   #
@@ -695,7 +605,7 @@ class Token < ActiveRecord::Base
 
     # Figure out which features to use. The following is the sequence of
     # priority: 1) Any value set by the caller, 2) any value already set on
-    # the token. +source_morphology+ only has an effect on the guessing of
+    # the token. +source_morphology_tag+ only has an effect on the guessing of
     # morphology.
     new_morph_features = if overlaid_features
                            # FIXME
@@ -740,5 +650,91 @@ class Token < ActiveRecord::Base
     else
       0
     end
+  end
+
+  # Find ancestor among the primary relations of the dependency graph.
+  def find_dependency_ancestor(&block)
+    if head
+      if block.call(head)
+        head
+      else
+        head.find_dependency_ancestor(&block)
+      end
+    else
+      nil
+    end
+  end
+
+  # Iterate ancestors among the primary relations of the dependency graph.
+  def each_dependency_ancestor(&block)
+    if head
+      block.call
+      head.each_dependency_ancestor(&block)
+    end
+  end
+
+  def find_semantic_relation_head(srt)
+    if has_outgoing_relation_type?(srt)
+      self
+    elsif head
+      head.find_semantic_relation_head(srt)
+    else
+      nil
+    end
+  end
+
+
+  def semantic_relation_span(srt)
+    raise "Token #{id} has no semantic relation of type #{srt.tag}" unless has_relation_type?(srt)
+    sr_span(srt).flatten.sort { |x,y| x.token_number <=> y.token_number }
+  end
+
+  def label_semantic_relation_span(srt, slice = 5)
+    res = []
+    span = semantic_relation_span(srt)
+    span.reject(&:is_empty?).each_with_index do |tk, i|
+      res << tk.form
+      res << "..." if tk.next and (i + 1) < span.size and span[i + 1] != tk.next
+    end
+    id.to_s + '\n' + sentence.citation + '\n' + res.each_slice(slice).to_a.map { |i| i.join(' ') }.join('\n')
+  end
+
+  protected
+
+  def sr_span(srt)
+    ([self] + dependents.reject do |d|
+       d.is_empty? or d.has_relation_type?(srt)
+     end.map do |dd|
+       dd.sr_span(srt)
+     end).flatten
+  end
+
+  public
+
+  def has_relation_type?(srt)
+    has_incoming_relation_type?(srt) or has_outgoing_relation_type?(srt)
+  end
+
+  def has_incoming_relation_type?(srt)
+    incoming_semantic_relations.any? { |sr| sr.semantic_relation_type == srt }
+  end
+
+  def has_outgoing_relation_type?(srt)
+    outgoing_semantic_relations.any? { |sr| sr.semantic_relation_type == srt }
+  end
+
+  # Returns the completion state.
+  def completion
+    sentence.completion
+  end
+
+  # Tests if the token is the first non-empty token in its sentence.
+  def first_visible_in_sentence?
+    not sentence.tokens.where("token_number < ? AND empty_token_sort IS NULL", token_number).exists?
+  end
+
+  # Tests if the token is the last non-empty token in its sentence.
+  def last_visible_in_sentence?
+    not sentence.tokens.where("token_number > ? AND empty_token_sort IS NULL", token_number).exists?
   end
 end

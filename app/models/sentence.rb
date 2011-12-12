@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -19,9 +19,9 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
+
 class Sentence < ActiveRecord::Base
   belongs_to :source_division
-  has_many :bookmarks
   has_many :notes, :as => :notable, :dependent => :destroy
   has_many :semantic_tags, :as => :taggable, :dependent => :destroy
 
@@ -78,25 +78,30 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  # Sentences that have not been annotated.
-  named_scope :unannotated, :conditions => ["annotated_by IS NULL"]
+  # A sentence that has not been annotated.
+  def self.unannotated
+    where("annotated_by IS NULL")
+  end
 
-  # Sentences that have been annotated.
-  named_scope :annotated, :conditions => ["annotated_by IS NOT NULL"]
+  # A sentences that has been annotated.
+  def self.annotated
+    where("annotated_by IS NOT NULL")
+  end
 
-  # Sentences that have not been reviewed.
-  named_scope :unreviewed, :conditions => ["reviewed_by IS NULL"]
+  # A sentences that has not been reviewed.
+  def self.unreviewed
+    where("reviewed_by IS NULL")
+  end
 
-  # Sentences that have been reviewed.
-  named_scope :reviewed, :conditions => ["reviewed_by IS NOT NULL"]
+  # A sentence that has been reviewed.
+  def self.reviewed
+    where("reviewed_by IS NOT NULL")
+  end
 
-  # Sentences that belong to source +source+.
-  named_scope :by_source, lambda { |source|
-    { :conditions => { :source_division_id => source.source_divisions.map(&:id) } }
-  }
-
-  # Sentences that have been black-listed in sentence alignment.
-  named_scope :unalignable, :conditions => { "unalignable" => true }
+  # A sentences that belongs to a source.
+  def self.by_source(source)
+    where(:source_division_id => source.source_divisions.map(&:id))
+  end
 
   # General schema-defined validations
   validates_presence_of :source_division_id
@@ -104,7 +109,7 @@ class Sentence < ActiveRecord::Base
 
   validate :check_invariants
 
-  acts_as_audited :except => [:annotated_by, :annotated_at, :reviewed_by, :reviewed_at]
+  change_logging :except => [:annotated_by, :annotated_at, :reviewed_by, :reviewed_at]
 
   # Returns the language for the sentence.
   def language
@@ -118,50 +123,53 @@ class Sentence < ActiveRecord::Base
                           tokens.last.citation_part)].join(' ')
   end
 
-  #FIXME:DRY generalise < token
+  # All sentences within a window of +before_limit+ sentences before and
+  # +after_limit+ sentences after the sentence within the source division in
+  # the order of presentation.
+  #
+  # Options
+  #
+  # <tt>include_previous_source_division</tt>: include sentences from previous
+  #      source divisions in the same source.
+  #
+  def sentence_window(before_limit = 5, after_limit = 5, options = {})
+    # Grab the sentence IDs we want in separate statements because the
+    # expressions are sensitive to ordering.
+    s = prev_sentences.limit(before_limit).pluck(:id)
 
-  # Deprecated
-  def previous_sentences(include_previous_sd = false)
-    ps = source_division.sentences.find(:all,
-                                   :conditions => [ "sentence_number < ?", sentence_number ],
-                                   :order => "sentence_number ASC")
-    ps = source_division.previous.sentences.find(:all, :order => "sentence_number ASC" ) + ps if include_previous_sd and source_division.previous
-    ps
+    if options[:include_previous_source_division] and !source_division.previous.nil? and s.count < before_limit
+      s += source_division.previous.sentences.order('sentence_number DESC').limit(before_limit - s.count).pluck(:id)
+    end
+
+    s += next_sentences.limit(after_limit).pluck(:id)
+    s += [id]
+
+    Sentence.joins(:source_division).order('source_divisions.position, sentence_number ASC').where(:id => s)
   end
 
-  def prev_sentences(limit = nil)
-    options = {
-      :conditions => ["sentence_number < ?", sentence_number],
-      :order => "sentence_number DESC"
-    }
-    options[:limit] = limit if limit
-    source_division.sentences.find(:all, options).reverse
+  # Returns the previous sentences in the linearisation sequence from the same
+  # source division. Note that the sentences are returned in reversed
+  # order.
+  def prev_sentences
+    source_division.sentences.where("sentence_number < ?", sentence_number).order("sentence_number DESC")
   end
 
-  def next_sentences(limit = nil)
-    options = {
-      :conditions => ["sentence_number > ?", sentence_number],
-      :order => "sentence_number ASC"
-    }
-    options[:limit] = limit if limit
-
-    source_division.sentences.find(:all, options)
+  # Returns the next sentences in the linearisation sequence from the same
+  # source division.
+  def next_sentences
+    source_division.sentences.where("sentence_number > ?", sentence_number).order("sentence_number ASC")
   end
 
   # Returns the previous sentence in the linearisation sequence. Returns +nil+
   # if there is no previous sentence.
   def previous_sentence
-    source_division.sentences.find(:first,
-                                   :conditions => [ "sentence_number < ?", sentence_number ],
-                                   :order => "sentence_number DESC")
+    prev_sentences.first
   end
 
   # Returns the next sentence in the linearisation sequence. Returns +nil+
   # if there is no next sentence.
   def next_sentence
-    source_division.sentences.find(:first,
-                                   :conditions => [ "sentence_number > ?", sentence_number ],
-                                   :order => "sentence_number ASC")
+    next_sentences.first
   end
 
   alias :next :next_sentence
@@ -187,6 +195,17 @@ class Sentence < ActiveRecord::Base
     source_division
   end
 
+  # Returns the completion state.
+  def completion
+    if is_reviewed?
+      :reviewed
+    elsif is_annotated?
+      :annotated
+    else
+      :unannotated
+    end
+  end
+
   def syntactic_annotation=(dependency_graph)
     # This is a two step process: first figure out if any tokens have been added or
     # removed (this only applies to empty dependency tokens). Then update each token
@@ -197,7 +216,7 @@ class Sentence < ActiveRecord::Base
 
     # Work inside a transaction since we have lots of small pieces that must go together.
     Token.transaction do
-      ts = tokens.dependency_annotatable
+      ts = tokens.takes_syntax
 
       removed_token_ids = ts.map(&:id) - dependency_graph.nodes.map(&:identifier)
       added_token_ids = dependency_graph.nodes.map(&:identifier) - ts.map(&:id)
@@ -252,7 +271,7 @@ class Sentence < ActiveRecord::Base
 
   def syntactic_annotation_with_tokens(overlaid_features = {})
     d = {}
-    d[:tokens] = Hash[*tokens.dependency_annotatable.collect do |token|
+    d[:tokens] = Hash[*tokens.takes_syntax.collect do |token|
       mh = token.morph_features ? token.morph_features.morphology_to_hash : {}
 
       [token.id, {
@@ -278,7 +297,7 @@ class Sentence < ActiveRecord::Base
   end
 
   def morphological_annotation(overlaid_features = {})
-    tokens.morphology_annotatable.map do |token|
+    tokens.takes_morphology.map do |token|
       suggestions = token.guess_morphology!(overlaid_features["morph-features-#{token.id}".to_sym]) #FIXME
 
       [token, suggestions]
@@ -333,17 +352,25 @@ class Sentence < ActiveRecord::Base
     tokens.create!(attrs.merge({ :token_number => max_token_number + 1 }))
   end
 
-  def is_splitable_after?(t)
+  # Tests if the sentence can be split at a given token. The given token
+  # is assumed to be the first token of a new sentence if the original
+  # sentence were split.
+  def is_splitable?(t)
     raise ArgumentError unless tokens.include?(t)
 
     t2 = t.next_token
 
-    t2 and not t2.is_empty?
+    not t.is_empty? and t.previous_token and not t.previous_token.is_empty?
   end
 
   # Split the sentence into two successive sentences. The point to split
   # the sentence at is given by a token. The token will be the first token
   # of a new sentence.
+  #
+  #      Original sentence        Truncated sentence   New sentence
+  #      t1 t2 t3 t4 t5      →        t1 t2 t3       |    t4 t5
+  #               ^
+  #           split here
   #
   # Single-token annotation is not altered. Multi-token annotation is
   # checked for validity. If valid, it is preserved to the extent possible.
@@ -353,20 +380,14 @@ class Sentence < ActiveRecord::Base
   #
   # The new sentence inherits the +assigned_to+ field from the current
   # sentence.
-  #
-  # TODO: update all callers with remove_annotation_metadata!
+
   def split_sentence!(split_token)
     raise ArgumentError unless tokens.include?(split_token)
     raise "sentence is invalid" unless valid? # this is necessary to avoid trouble with the invariant at the end
 
     Sentence.transaction do
-      new_sentence = insert_new_sentence! :assigned_to => assigned_to, :presentation_after => presentation_after
-      self.presentation_after = nil
-
-      self.tokens.reload
-
-      # Determine which tokens to put in the new sentence: all non-empty
-      # after and including +token+ and empty tokens that are direct
+      # Determine which tokens to keep in the new sentence: all non-empty
+      # tokens up to but not incuding token and empty tokens that are direct
       # descendants of one of these.
       us, them = tokens.partition do |t|
         if t.is_empty? and t.head
@@ -376,31 +397,42 @@ class Sentence < ActiveRecord::Base
         end
       end
 
-      them.each do |t|
-        new_sentence.tokens << t
-        t.save! # FIXME: is it already saved?
-      end
-
-      # Check multi-token annotation in both sentences. Start with the new
-      # one. If a token has a head outside the sentence, detach it (so that
-      # it becomes a root daughter instead) and give it the relation PRED
+      # If a token has a head outside the set it belongs to, detach it so
+      # that it becomes a root daughter and give it the relation PRED
       # unless it already has the relation VOC or PARPRED.
-      [new_sentence, self].each do |s|
-        s.tokens.each do |t|
-          unless s.tokens.include?(t.head)
+      [us, them].each do |s|
+        s.each do |t|
+          unless s.include?(t.head)
             t.head_id = nil
             t.relation = 'pred' if t.relation and !['voc', 'parpred'].include?(t.relation.tag)
             t.save!
           end
         end
-
-        # Check if both sentences are still valid. If not, we remove
-        # annotation.
-        s.remove_syntax_and_info_structure! unless s.valid?
       end
 
-      # Check invariant
-      raise "sentence is invalid after splitting" unless new_sentence.valid? and valid?
+      # Construct new sentence by moving tokens from the old sentence,
+      # inheriting assigned_to and taking over presentation_after from the
+      # old sentence. Then ditch annotation unless result is invalid.
+      new_sentence = insert_new_sentence! :assigned_to => assigned_to,
+        :presentation_after => presentation_after
+
+      them.each do |t|
+        new_sentence.tokens << t
+        t.save!
+      end
+
+      new_sentence.remove_syntax_and_info_structure! unless new_sentence.valid?
+
+      # Update old sentence by clearing presentation_after and reloading
+      # token association so that any cached tokens do not appear in both
+      # old and new sentence associations. Then ditch annotation unless
+      # result is valid.
+      self.presentation_after = nil
+      self.tokens.reload
+      self.remove_syntax_and_info_structure! unless self.valid?
+
+      # Now double-check that sentences are valid.
+      raise "sentence is invalid after splitting" unless new_sentence.valid? and self.valid?
     end
   end
 
@@ -438,8 +470,10 @@ class Sentence < ActiveRecord::Base
     save!
   end
 
-  # Deletes all syntactic and information structural annotation from
-  # the sentence and reloads the tokens
+  public
+
+  # Deletes syntactic annotaton, information structure annotation and
+  # annotation metadata from sentence and reloads token association.
   def remove_syntax_and_info_structure!
     self.tokens.each do |t|
       if t.is_empty?
@@ -536,7 +570,7 @@ class Sentence < ActiveRecord::Base
   # Returns the dependency graph for the sentence.
   def dependency_graph
     PROIEL::DependencyGraph.new do |g|
-      tokens.dependency_annotatable.each { |t| g.badd_node(t.id, t.relation.tag, t.head ? t.head.id : nil,
+      tokens.takes_syntax.each { |t| g.badd_node(t.id, t.relation.tag, t.head ? t.head.id : nil,
                                                            Hash[*t.slash_out_edges.map { |se| [se.slashee.id, se.relation.tag ] }.flatten],
                                                            { :empty => t.empty_token_sort || false,
                                                              :token_number => t.token_number,
@@ -547,7 +581,7 @@ class Sentence < ActiveRecord::Base
 
   # Returns +true+ if sentence has dependency annotation.
   def has_dependency_annotation?
-    tokens.dependency_annotatable.first && !tokens.dependency_annotatable.first.relation.nil?
+    tokens.takes_syntax.first && !tokens.takes_syntax.first.relation.nil?
   end
 
   # Returns +true+ if sentence has morphological annotation (i.e.
@@ -555,7 +589,7 @@ class Sentence < ActiveRecord::Base
   def has_morphological_annotation?
     # Assumed invariant: morphologically annotated sentence <=> all
     # morphology tokens have non-nil morphology and lemma_id attributes.
-    tokens.morphology_annotatable.first && !tokens.morphology_annotatable.first.morphology.nil?
+    tokens.takes_morphology.first && !tokens.takes_morphology.first.morphology.nil?
   end
 
   # Returns the root token in the dependency graph or +nil+ if none
@@ -563,16 +597,8 @@ class Sentence < ActiveRecord::Base
   def root_dependency_token
     # TODO: add a validation rule that verifies that root_dependency_tokens only matches one
     # token?
-    tokens.dependency_annotatable.root_dependency_tokens.first
+    tokens.takes_syntax.dependency_root.first
   end
-
-  protected
-
-  def self.search(query, options = {})
-    paginate options
-  end
-
-  private
 
   def check_invariants
     # FIXME? This breaks creation of new sentences
@@ -590,22 +616,22 @@ class Sentence < ActiveRecord::Base
 
     # Invariant: sentence is reviewed => sentence is annotated
     if is_reviewed? and not is_annotated?
-      errors.add_to_base("Reviewed sentence must be annotated")
+      errors[:base] << "Reviewed sentence must be annotated"
     end
 
     # Invariant: sentence is annotated => sentence is dependency annotated
     if is_annotated? and not has_dependency_annotation?
-      errors.add_to_base("Annotated sentence must have dependency annotation")
+      errors[:base] << "Annotated sentence must have dependency annotation"
     end
 
     # Invariant: sentence is dependency annotated <=>
     # all dependency tokens have non-nil relation attributes <=> there exists one
     # dependency token with non-nil relation.
-    if tokens.dependency_annotatable.any?(&:relation) and not tokens.dependency_annotatable.all?(&:relation)
-      errors.add_to_base("Dependency annotation must be complete")
+    if tokens.takes_syntax.any?(&:relation) and not tokens.takes_syntax.all?(&:relation)
+      errors[:base] << "Dependency annotation must be complete"
     end
 
-    tokens.dependency_annotatable.each do |t|
+    tokens.takes_syntax.each do |t|
       t.slash_out_edges.each do |se|
         add_dependency_error("Unconnected slash edge", [t]) if se.slashee.nil?
         add_dependency_error("Unlabeled slash edge", [t]) if se.relation.nil?
@@ -616,114 +642,42 @@ class Sentence < ActiveRecord::Base
     # but that leads to confusing error messages for users.
     tokens.each do |t|
       unless t.valid?
-        t.errors.each_full { |msg| add_dependency_error(msg, [t]) }
+        t.errors.to_a.each { |msg| add_dependency_error(msg, [t]) }
       end
     end
 
     # Invariant: sentence is dependency annotated => dependency graph is valid
     if has_dependency_annotation?
-      dependency_graph.valid?(lambda { |token_ids, msg| add_dependency_error(msg, Token.find(token_ids)) })
+      begin
+        dependency_graph.valid?(lambda { |token_ids, msg| add_dependency_error(msg, Token.find(token_ids)) })
+      rescue
+        errors[:base] << "An inconsistency in the dependency graph prevented validation"
+      end
     end
   end
 
   def add_dependency_error(msg, tokens)
     ids = tokens.collect(&:token_number)
-    errors.add_to_base("Token #{ids.length == 1 ? 'number' : 'numbers'} #{ids.to_sentence}: #{msg}")
+    errors[:base] << "Token #{ids.length == 1 ? 'number' : 'numbers'} #{ids.to_sentence}: #{msg}"
   end
 
-  public
-
-  # Synthesises the running text of the sentence.
-  #
-  # The <tt>mode</tt> is :text_and_presentation if both token forms and the
-  # presentation data should be included in the resulting string.
-  # Presentation data from token objects and the sentence object is
-  # included. :text_and_presentation_with_markup produces the same result
-  # but also includes markup that distinguishes token forms from
-  # presentation data. :text_only includes only token forms. Each token
-  # form is then separated by a single space. The default is
-  # :text_and_presentation.
-  #
-  # Whichever the value of <tt>mode</tt>, only tokens that are flagged as
-  # non-empty contribute to the resulting string.
-
-  def to_s(mode = :text_and_presentation)
-    case mode
-    when :text_only
-      tokens.word.map { |token| token.to_s(:text_only) }.join(' ')
-    when :text_and_presentation
-      presentation_stream.map(&:last).join
-    when :text_and_presentation_with_markup
-      presentation_stream.map { |t, v| "<#{t}>#{v}</#{t}>" }.join
-    else
-      raise ArgumentError
-    end
-  end
-
-  # Returns an array containing the <tt>presentation_before</tt>,
-  # <tt>form</tt> and <tt>presentation_after</tt> columns and with an
-  # interpretation of the presentation data. The presentation columns on
-  # both tokens and sentences are included.
-  #
-  # The array consists of pairs of interpretation and value. Only the
-  # presentation columns that have non-empty values are included in the
-  # array. The interpretation is :pc for punctuation, :s for spaces and :w
-  # for a (token/word) form.
-  #
-
-  def presentation_stream
-    t = []
-
-    t << [:pc, presentation_before] if presentation_before
-
-    tokens.word.each do |token|
-      t += token.presentation_stream
-    end
-
-    t << [:pc, presentation_after] if presentation_after
-    t
-  end
-
-  def self.parse_presentation_markup(s)
-    Nokogiri::XML("<wrap>#{s}</wrap>") do |config|
-      config.strict
-    end.xpath('/wrap/*').map do |n|
-      [n.name.to_sym, n.children.to_s]
-    end
-  end
-
-  def self.diff_presentation_stream(p1, p2)
-    unless p1.map(&:last).join == p2.map(&:last).join
-      raise ArgumentError, "presentation strings differ"
-    end
-
-    Diff::LCS.sdiff(p1, p2).map { |c| [c.old_element, c.new_element] }
-  end
-
-  def diff_tokenization(new_tokenization)
-    # Ensure that new_tokenization is modifiable without side-effects for
-    # the caller.
-    new_tokenization.dup!
-
-    # Trim Sentence.presentation_before and Sentence.presentation_after from the array.
-    new_tokenization.shift if new_tokenization.first.first == :pc and new_tokenization.first.last == presentation_before
-    new_tokenization.pop if new_tokenization.last.first == :pc and new_tokenization.last.last == presentation_after
-
-    Sentence.transaction do
-      tokens.each do |t|
-        if new_tokenization
-          if new_tokenization.first == :w
-          else
-          end
-        else
-        end
-      end
-    end
+  def to_s
+    [presentation_before, tokens.visible.all.map(&:to_s).join, presentation_after].compact.join
   end
 
   # Returns the maximum depth of the dependency graph, i.e. the maximum
   # distance from the root to a node in the graph in number of edges.
   def max_depth
     tokens.map(&:depth).max
+  end
+
+  # Tests if the sentence is the first in its source division.
+  def first_in_source_division?
+    not source_division.sentences.where("sentence_number < ?", sentence_number).exists?
+  end
+
+  # Tests if the sentence is the last in its source division.
+  def last_in_source_division?
+    not source_division.sentences.where("sentence_number > ?", sentence_number).exists?
   end
 end

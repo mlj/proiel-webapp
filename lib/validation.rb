@@ -29,7 +29,7 @@ class Validator < Task
     # can be handled by validation of Changeset
     changes = Audit.find(:all)
     changes.each do |change|
-      change.errors.each_full { |msg| logger.error { "Audit #{change.id}: #{msg}" } } unless change.valid?
+      change.errors.to_a.each { |msg| logger.error { "Audit #{change.id}: #{msg}" } } unless change.valid?
 
       # Remove changes from "X" to "X"
       if change.action != 'destroy'

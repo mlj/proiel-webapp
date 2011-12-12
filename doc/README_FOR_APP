@@ -1,49 +1,68 @@
 = The PROIEL web application
 
-The PROIEL web application (henceforth proiel-web) is a tool for
-collaborative treebank annotation in a dependency-grammar formalism.
+The PROIEL web application (<tt>proiel-web</tt>) is a tool for
+collaborative treebank annotation using a dependency-grammar formalism.
 
 == Installation
 
-proiel-web uses the Ruby on Rails framework and some familiarity with this
-framework is useful. You can find a general introduction to Ruby on Rails
-on link:http://rubyonrails.org/ and link:http://guides.rubyonrails.org/.
+<tt>proiel-web</tt> uses the Ruby on Rails framework and some familiarity
+with this framework is necessary. You can find general introductions to
+Ruby on Rails on link:http://rubyonrails.org/ and
+link:http://guides.rubyonrails.org/.
 
-Note that proiel-web requires a specific version of Rails. If there is a
-mismatch between the version you have installed and the version required,
-an error message will be issued when the application is started.
+This version of <tt>proiel-web</tt> uses Rails 3.2. It is a prerequisite
+that you have a functioning Ruby environment and a recent version of
+RubyGems installed. The application is designed to work with Ruby 1.8.7 and
+Ruby 1.9.2.
 
-Assuming that Ruby, RubyGems and Ruby on Rails are already installed,
-proiel-web is installed, configured and customised in the following steps.
+=== Step 1: Install Rails and dependencies
 
-=== Step 1: Dependencies
+Make sure that the <tt>bundler</tt> gem is installed on your system.
 
-The application has a number of other dependencies that should be handled
-automatically by Rails' dependency tracker. Use
+    $ gem install bundler
 
-    rake gems:install
+Run the command
 
-to have the dependency tracker automatically install all dependencies.
+    $ bundle
+
+to install all required dependencies.
+
+Note that if you only intend to run the application (and perhaps extend its
+functionality with plugins), you will not need support for the
+application's testing mode. You can use the command
+
+    $ bundle install --without test
+
+to avoid installing the dependencies that are only used by the testing
+version of the application.
+
+=== Step 2: External binaries
 
 You should also install +graphviz+ from link:http://www.graphviz.org/ to
 get dependency graph visualisations. Version 2.26.3 is known to work with
-this release of the PROIEL application, but more recent versions should
-also work. +graphviz+ must be compiled with SVG support. The recommended
+this release of the PROIEL application, but more recent versions may also
+work. +graphviz+ must be compiled with SVG support. The recommended
 configuration settings are
 
     --with-fontconfig --with-freetype2 --with-pangocairo --with-rsvg
 
-=== Step 2: Generate support files
+You will also need the +SFST+ toolkit from
+link:http://www.ims.uni-stuttgart.de/projekte/gramotron/SOFTWARE/SFST.html.
+This release of the PROIEL web application is designed to work with version
+1.3 of +SFST+.
+
+=== Step 3: Generate support files
 
 Before starting the application for the first time, you must run
-    make -C lib
-to build the support files.
 
-== Step 3: Configure the database
+    $ make -C lib
+
+to build the application's support files.
+
+== Step 4: Configure the database
 
 Copy +config/database.yml.example+ to +config/database.yml+ and customize
-if needed. The default setup creates SQLite databases in the +db+
-directory.
+if needed. The default setup assumes a MySQL databases called +proiel+.
 
 Initialize a new database by running
 
@@ -52,25 +71,14 @@ Initialize a new database by running
 Add an administrator account. This should be done using Rails' console
 interface:
 
-    $ ./script/console
-    Loading development environment (Rails 2.3.8)
-    >> u = User.new :login => "username", :first_name => "Foo", :last_name => "Bar", :email => "foo@bar", :password => "foo"
-    >> u.role_id = 4
-    >> u.save!
-    >> u.confirm!
+    $ ./script/rails c
+    Loading development environment (Rails 3.1.3)
+    >> User.create_confirmed_administrator! :login => "username", :first_name => "Foo", :last_name => "Bar", :email => "foo@bar", :password => "foo"
 
-=== Step 4: Set run-time configuration settings
+=== Step 5: Set run-time configuration settings
 
 Inspect +config/app_config.yml+ and make changes as necessary. It is
 essential that you change the +base_url+ and the +dc_*+ fields.
-
-=== Step 5 (optional): Enable morphological rules
-
-If you plan to compile your own morphological rules, you will need the
-+SFST+ toolkit from
-link:http://www.ims.uni-stuttgart.de/projekte/gramotron/SOFTWARE/SFST.html.
-This release of the PROIEL web application is designed to work with version
-1.3 of +SFST+.
 
 == License
 
@@ -87,12 +95,12 @@ application.
 
 === Adding a dependency graph visualization method
 
-The default supported visualization method uses +graphviz+. As long as you
-are able to use the +dot+ engine from +graphviz+, adding new visualizations
-is trivial:
+The default plugin for visualization of dependency graphs uses +graphviz+.
+As long as you are able to use the +dot+ engine from +graphviz+, adding new
+visualizations is trivial:
 
-  1. Create a new visualization template in +lib/graph_visualization/+.
-     Have a look at the existing ones to see how the system works.
+  1. Create a new visualization template in +plugins/graph_visualizers/graphviz+.
+     Have a look at the existing ones to see how the templates work.
   2. Add a new visualization choice in
      +app/views/preferences/edit.html.haml+. This will enable users to select
      the visualization method.
@@ -104,13 +112,13 @@ you can try the following:
 
     $ ./script/console
     Loading development environment (Rails 2.3.11)
-    >> puts Visualization.new(Sentence.find(47625)).generate(:format => :dot,
+    >> puts GraphvizVisualization.new(Sentence.find(47625)).generate(:format => :dot,
            :mode => :linearized)
 
 To run it through +graphviz+, try changing the format to +svg+, which in
 this case revealed a syntax error in the generated +dot+ file.
 
-    >> Visualization.new(Sentence.find(47625)).generate(:format => :svg,
+    >> GraphvizVisualization.new(Sentence.find(47625)).generate(:format => :svg,
           :mode => :linearized)
     VisualizationError: graphviz exited: Error: <stdin>:6: syntax error near
     line 6
@@ -118,5 +126,3 @@ this case revealed a syntax error in the generated +dot+ file.
 
       from /home/mlj/src/proiel/lib/graph_visualization.rb:70:in `generate'
         from (irb):1
-
-== Support and contributions

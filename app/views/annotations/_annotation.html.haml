@@ -1,0 +1,12 @@
+%tr
+  %td{:class => "reference"}
+    = annotation.citation
+    != completion_rate annotation.sentence.completion
+  %td{:class => "left"}
+    != format_sentence annotation.previous_tokens, :length_limit => -5
+  %td{:class => "centre highlight"}
+    != format_token_form annotation
+  %td{:class => "right"}
+    != format_sentence annotation.next_tokens, :length_limit => 5
+  %td
+    != link_to 'Details', annotation.sentence

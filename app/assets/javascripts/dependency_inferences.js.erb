@@ -1,0 +1,58 @@
+var relation_inferences = <%= PROIEL::INFERENCES.to_json %>;
+
+function _testCriteria(head, dependent, criteria) {
+  var failure = $H(criteria).find(function(pair) {
+    var k = pair.key.split("_");
+    var a = null;
+
+    if (k == 'language' || k[0] == "head")
+      a = $H(head);
+    else if (k[0] == "dependent")
+      a = $H(dependent);
+    else {
+      alert("Unknown inference criterion " + pair.key);
+      return true;
+    }
+
+    var v = null;
+    if (k == 'language')
+      v = a.get(k);
+    else
+      v = a.get(k[1]);
+
+    if (!v) // Treat the absence of a value as false
+      v = false;
+
+    var c = new RegExp(pair.value);
+
+    return !c.test(v);
+  });
+
+  return failure ? false : true;
+}
+
+function _getInference(head, dependent) {
+  var c = $A(relation_inferences).find(function(clause) {
+    var criteria = $H(clause).get('criteria');
+
+    if (!criteria)
+      return true;
+
+    if (_testCriteria(head, dependent, criteria))
+      return true;
+  });
+
+  if (c)
+    return $H(c).get('actions');
+  else
+    return null;
+}
+
+function inferRelation(head, dependent) {
+  var i = _getInference(head, dependent);
+
+  if (i)
+    return $H(i).get('inferred_relation');
+  else
+    alert("Relation inference failed");
+}

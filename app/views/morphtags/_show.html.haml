@@ -1,0 +1,16 @@
+- if @sentence.has_morphological_annotation?
+  .morphtags
+    #tokens
+      - @sentence.tokens.takes_morphology.each do |token|
+        .item{:id => "item-#{token.id}"}
+          .form!= format_token_form token
+          - if token.morph_features
+            .morph-lemma-tags
+              .pos= token.morph_features.pos_summary :abbreviated => true
+              .morphology= token.morph_features.morphology_summary :abbreviated => true, :skip_inflection => true
+              .lemma!= link_to_lemma token.lemma
+              - if token.lemma.short_gloss
+                %q= token.lemma.short_gloss
+      %br
+- else
+  No morphological annotation

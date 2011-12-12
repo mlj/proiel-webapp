@@ -1,0 +1,11 @@
+- context_bar do
+  .breadcrumbs
+    != breadcrumbs ['Contents', sources_path], @source, @source_division, 'Edit'
+
+= semantic_form_for @source_division do |form|
+  != form.input :title
+  != form.input :abbreviated_title, :required => false
+  != form.input :presentation_before, :required => false, :label => 'Presentation text before source division'
+  != form.input :presentation_after, :required => false, :label => 'Presentation text after source division'
+  != form.input :aligned_source_division, :collection => @source_division.alignment_candidates, :label_function => :citation
+  != form.submit "Update"

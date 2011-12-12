@@ -1,5 +1,0 @@
-<% search_form_tag users_path do %>
-  <label>User name</label><%= text_field_tag :login, params[:login] %>
-<% end %>
-
-<%= render_tabular @users, [ 'User name', 'Full name', 'E-mail address', 'Role', 'Sign in count', 'Last sign in', '&nbsp;' ] %>

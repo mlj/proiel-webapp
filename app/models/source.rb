@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -19,35 +19,24 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
+
 class Source < ActiveRecord::Base
   validates_presence_of :code
   validates_presence_of :title
   validates_uniqueness_of :title
-  validates_presence_of :language
   validates_presence_of :citation_part
 
-  acts_as_audited :except => [:citation_part]
+  change_logging
 
-  composed_of :language, :converter => Proc.new { |value| value.is_a?(String) ? Language.new(value) : value }
+  composed_of :language, :mapping => %w(language_tag to_s), :converter => Proc.new { |x| Language.new(x) }
 
-  has_many :source_divisions, :order => [:position]
-  has_many :bookmarks
+  has_many :source_divisions
 
   composed_of :metadata, :class_name => 'Metadata', :mapping => %w(tei_header)
 
   has_many :dependency_alignment_terminations
 
-  # Returns the completion state of the source division.
-  def completion
-    c = source_divisions.map(&:completion).uniq
-    if c.include?(:unannotated)
-      :unannotated
-    elsif c.include?(:annotated)
-      :annotated
-    else
-      :reviewed
-    end
-  end
+  validates_tag_set_inclusion_of :language_tag, :language, :allow_nil => false, :message => "%{value} is not a valid language tag"
 
   # Returns a citation for the source.
   def citation
@@ -58,11 +47,40 @@ class Source < ActiveRecord::Base
     title
   end
 
-  protected
+  # Returns an array of all languages represented in sources.
+  def self.represented_languages
+    Source.uniq.pluck(:language_tag).map { |l| Language.new(l) }.sort_by(&:to_label)
+  end
 
-  def self.search(query, options)
-    options[:conditions] ||= ["title LIKE ?", "%#{query}%"] unless query.blank?
+  def to_label
+    title
+  end
 
-    paginate options
+  # Returns the name of the language of the source.
+  def language_name
+    language.name
+  end
+
+  # Returns a hash with the proportions of unannotated, annotated and
+  # reviewed sentences.
+  def completion_statistics
+    @completion_statistics ||= {
+      :reviewed => Sentence.where('source_division_id IN (?) AND reviewed_by IS NOT NULL', source_divisions).count,
+      :annotated => Sentence.where('source_division_id IN (?) AND annotated_by IS NOT NULL AND reviewed_by IS NULL', source_divisions).count,
+      :unannotated => Sentence.where('source_division_id IN (?) AND annotated_by IS NULL', source_divisions).count
+    }
+  end
+
+  # Returns the completion state.
+  def completion
+    s = completion_statistics
+
+    if s[:unannotated] > 0
+      :unannotated
+    elsif s[:annotated] > 0
+      :annotated
+    else
+      :reviewed
+    end
   end
 end

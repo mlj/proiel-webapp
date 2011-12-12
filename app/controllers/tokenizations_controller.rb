@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2009, 2010, 2011 University of Oslo
-# Copyright 2009, 2010, 2011 Marius L. Jøhndal
+# Copyright 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2009, 2010, 2011, 2012 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -19,11 +19,14 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
+
 class TokenizationsController < ApplicationController
   before_filter :is_annotator?, :only => [:edit, :update]
 
   def edit
-    @sentence = Sentence.find(params[:sentence_id])
+    @sentence = Sentence.includes(:source_division => [:source]).find(params[:sentence_id])
+    @source_division = @sentence.try(:source_division)
+    @source = @source_division.try(:source)
   end
 
   def update
@@ -77,7 +80,7 @@ class TokenizationsController < ApplicationController
       end
 
     when 'split_sentence'
-      if @sentence.valid? and @sentence.is_splitable_after?(@target_token)
+      if @sentence.valid? and @sentence.is_splitable?(@target_token)
         @sentence.split_sentence!(@target_token)
         flash[:notice] = 'Sentence split.'
       else

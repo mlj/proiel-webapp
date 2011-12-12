@@ -1,0 +1,13 @@
+- context_bar do
+  .breadcrumbs
+    != breadcrumbs ['Contents', sources_path], @source, 'Edit'
+
+= semantic_form_for @source do |form|
+  != form.input :code
+  != form.input :author, :as => :string
+  != form.input :title, :as => :string
+  != form.input :edition, :as => :string
+  != form.input :citation_part
+  != form.input :language_tag, :label => 'Language', :collection => Language.all
+  != form.input :tei_header, :label => 'TEI header'
+  != form.submit 'Update'

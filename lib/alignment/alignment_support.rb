@@ -112,7 +112,7 @@ end
 class Alignable < Array
   def weight
     # Sum up the number of words in this sentence
-    @weight ||= sum { |sentence| sentence.tokens.morphology_annotatable.count }
+    @weight ||= sum { |sentence| sentence.tokens.takes_morphology.count }
   end
 end
 

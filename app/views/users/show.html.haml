@@ -1,0 +1,38 @@
+- context_bar do
+  .breadcrumbs
+    != breadcrumbs 'Users'
+
+- roundedbox do -
+  %dt User name:
+  %dd
+    = @user.login
+  %dt First name:
+  %dd
+    = @user.first_name
+  %dt Last name:
+  %dd
+    = @user.last_name
+  %dt E-mail address:
+  %dd
+    = @user.email
+  %dt Role:
+  %dd
+    = @user.role.titlecase
+  %dt Created:
+  %dd
+    = @user.created_at
+  %dt Updated:
+  %dd
+    = @user.updated_at
+  %dt Confirmed:
+  %dd
+    = @user.confirmed_at || 'Not confirmed'
+  %dt Sign ins:
+  %dd
+    = pluralize(@user.sign_in_count, 'times')
+  %dt Last sign in:
+  %dd
+    - unless @user.last_sign_in_at.blank?
+      = "#{@user.last_sign_in_at} from #{@user.last_sign_in_ip}"
+    - else
+      Never

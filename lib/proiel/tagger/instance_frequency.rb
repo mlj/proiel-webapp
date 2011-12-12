@@ -19,6 +19,7 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
+
 module Tagger
   class InstanceFrequencyMethod < TaggerAnalysisMethod
     def initialize(language)
@@ -28,9 +29,9 @@ module Tagger
     def analyze(form)
       x = Token.count(:all,
                       :include => [:lemma, :sentence],
-                      :conditions => ['form = ? AND lemmata.language = ? AND sentences.reviewed_by IS NOT NULL',
+                      :conditions => ['form = ? AND lemmata.language_tag = ? AND sentences.reviewed_by IS NOT NULL',
                         form, @language.to_s],
-                      :group => [:lemma_id, :morphology]).map { |(l, m), f| [MorphFeatures.new(Lemma.find(l), m), f] }
+                      :group => [:lemma_id, :morphology_tag]).map { |(l, m), f| [MorphFeatures.new(Lemma.find(l), m), f] }
       sum = x.map(&:last).sum
       x.map { |m, f| [m, f / sum.to_f] }
     end

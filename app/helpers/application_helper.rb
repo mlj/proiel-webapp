@@ -1,4 +1,25 @@
+# coding:utf-8
 module ApplicationHelper
+  # Returns true if the current user is an administrator.
+  def is_administrator?
+    current_user.try(:has_role?, :administrator)
+  end
+
+  # Returns true if the current user is a reviewer.
+  def is_reviewer?
+    current_user.try(:has_role?, :reviewer)
+  end
+
+  # Returns true if the current user is an annotator.
+  def is_annotator?
+    current_user.try(:has_role?, :annotator)
+  end
+
+  # Returns true if the current user is a reader.
+  def is_reader?
+    current_user.try(:has_role?, :reader)
+  end
+
   def message(level, header, body = '')
     content_tag(:div, content_tag(:b, header) + body, :id => level)
   end
@@ -7,9 +28,9 @@ module ApplicationHelper
     if options[:include_blank]
       options.delete(:include_blank)
       if value.nil? or value == ''
-        select_tag name, "<option value='' selected='selected'></options>" + option_tags, options
+        select_tag name, "<option value='' selected='selected'></options>".html_safe + option_tags, options
       else
-        select_tag name, "<option value=''></options>" + option_tags, options
+        select_tag name, "<option value=''></options>".html_safe + option_tags, options
       end
     else
       select_tag name, option_tags, options
@@ -42,40 +63,12 @@ module ApplicationHelper
     }))
   end
 
-  # Generates a human readable representation of a completion rate for a sentence.
-  def readable_completion(sentence, options = {})
-    if sentence.is_reviewed?
-      show_completion_rate(:reviewed, options)
-    elsif sentence.is_annotated?
-      show_completion_rate(:annotated, options)
-    else
-      show_completion_rate(:unannotated, options)
-    end
-  end
-
   # Generates a human readable representation of a completion rate.
-  def show_completion_rate(rate, options = {})
-    case rate
-    when :unannotated
-      s = "Not annotated"
-    when :annotated
-      s = "Annotated"
-    when :reviewed
-      s = "Reviewed"
-    end
-
-    if options[:checkmark]
-      if options[:checkmark] == :only
-        c = '&nbsp;'
-      else
-        c = s
-      end
-
-      content_tag(:span, c, :class => rate.to_s)
-    else
-      s
-    end
+  def completion_rate(rate)
+    raise ArgumentError, "invalid rate #{rate}" unless rate == :unannotated or rate == :annotated or rate == :reviewed
+    content_tag(:span, '', :class => rate)
   end
+
   # Generates a human readable representation of a relation code.
   def readable_relation(relation)
     "<span class='relation'><abbr title='#{relation.summary.capitalize}'>#{relation.tag}</abbr></span>"
@@ -88,31 +81,35 @@ module ApplicationHelper
 
   # Returns links to external sites for a sentence.
   def external_text_links(sentence)
-    ExternalLinkMapper.get_mappings(sentence.citation).map do |mapping|
-      link_to mapping.name, mapping.to_url(sentence.citation), :class => :external
-    end * '&nbsp;'
+    PROIEL::external_link_mappers.map do |l|
+      if l.applies?(sentence.citation)
+        link_to l.name, l.to_url(sentence.citation), :class => :external
+      else
+        nil
+      end
+    end.compact * ' '
   end
 
   # Generates a rounded box with a description list inside.
   def roundedbox(object = nil, &block)
     content = capture(&block)
-    concat("<div class='roundedbox'><dl style='float: left; width: 90%'>")
+    concat("<div class='roundedbox'><dl style='float: left; width: 90%'>".html_safe)
     concat(content)
-    concat("</dl><br style='clear: both' /></div>")
+    concat("</dl><br style='clear: both' /></div>".html_safe)
   end
 
   # Generates a title header and a set of associated links directly
   # next to the header.
   def layer(id, options = {}, &block)
     title = options[:title]
-    title ||= id.humanize
+    title ||= id.to_s.humanize
     actions = options[:actions]
     actions = "(#{actions.join(' | ')})" if actions
 
     content = capture(&block)
-    concat("<div id='#{id}' class='layer'><h1 class='layer-title'>#{title}</h1> <span class='layer-actions'>#{actions}</span><div class='layer-content'>")
+    concat("<div id='#{id}' class='layer'><h1 class='layer-title'>#{title}</h1> <span class='layer-actions'>#{actions}</span><div class='layer-content'>".html_safe)
     concat(content)
-    concat("</div></div>")
+    concat("</div></div>".html_safe)
   end
 
   # Generates a title header and a set of associated links directly
@@ -147,17 +144,12 @@ module ApplicationHelper
 
   # Formats a token form with HTML language attributes.
   def format_token_form(token)
-    LangString.new(token.form, token.language).to_h
+    content_tag(:span, token.form, :lang => token.language.to_s)
   end
 
   # Formats a lemma form with HTML language attributes.
   def format_lemma_form(lemma)
-    LangString.new(lemma.lemma, lemma.language).to_h
-  end
-
-  # Formats a language-dependent string with HTML language attributes.
-  def format_language_string(s, language)
-    LangString.new(s, language).to_h
+    content_tag(:span, lemma.lemma, :lang => lemma.language.to_s)
   end
 
   # Creates resource links for an object. +actions+ contains a list of
@@ -189,7 +181,7 @@ module ApplicationHelper
 
   # Creates a resource index link for an object.
   def link_to_index(object)
-    link_to('Show index', send("#{object.class.to_s.underscore.pluralize}_url"), :class => :index)
+    link_to('Index', send("#{object.class.to_s.underscore.pluralize}_url"), :class => :index)
   end
 
   # Creates a resource index link for an object or a model.
@@ -200,7 +192,7 @@ module ApplicationHelper
 
   # Creates a resource edit link for an object.
   def link_to_edit(object)
-    link_to('Edit', send("edit_#{object.class.to_s.underscore}_url"), :class => :edit)
+    link_to '', send("edit_#{object.class.to_s.underscore}_url"), :class => :edit
   end
 
   # Creates a resource delete link for an object.
@@ -213,26 +205,68 @@ module ApplicationHelper
   # respond to +has_previous?+ and +previous+. The link will be tied
   # to an access key.
   def link_to_previous(object)
-    link_to_if(object.has_previous?, 'Show previous', object.previous, :class => :previous, :accesskey => 'p')
+    if object.has_previous?
+      link_to '', object.previous, :class => :previous, :accesskey => 'p'
+    end
   end
 
   # Creates a resource next link for an object. This is only shown if
   # there is a next object. This requires the model to respond to
   # +has_next?+ and +next+. The link will be tied to an access key.
   def link_to_next(object)
-    link_to_if(object.has_next?, 'Show next', object.next, :class => :next, :accesskey => 'n')
+    if object.has_next?
+      link_to '', object.next, :class => :next, :accesskey => 'n'
+    end
   end
 
   # Creates a resource parent link for an object. This requires the
   # model to respond to +parent+. The link will be tied to an access
   # key.
   def link_to_parent(object)
-    link_to('Show parent', object.parent, :class => :parent, :accesskey => 'u')
+    link_to('Parent', object.parent, :class => :parent, :accesskey => 'u')
   end
 
   # Creates a resource statistics link for an object or a model.
   def link_to_statistics(object_or_model)
     klass = object_or_model.is_a?(Class) ? object_or_model : object_or_model.class
     link_to('Statistics', send("#{klass.to_s.underscore}_statistics_url", object_or_model), :class => :statistics)
+  end
+
+  def breadcrumb_title_for(object)
+    case object
+    when Source
+      [object.author, object.title].compact.join(': ')
+    when SourceDivision
+      object.title
+    when Sentence
+      "Sentence #{object.sentence_number}"
+    when Token
+      "Token #{object.token_number}"
+    when Lemma
+      content_tag(:em, object.export_form, :lang => object.language_tag) +
+        " (#{object.pos_summary})" +
+        (@lemma.short_gloss ? " '#{@lemma.short_gloss}'" : "")
+    when String
+      object
+    else
+      raise ArgumentError, "invalid class #{object.class}"
+    end
+  end
+
+  def breadcrumb_link_to(object)
+    if object.is_a?(String)
+      object
+    elsif object.is_a?(Array)
+      link_to *object
+    else
+      link_to breadcrumb_title_for(object), object
+    end
+  end
+
+  def breadcrumbs(*objects)
+    *parents, current = objects
+    crumbs = parents.map { |o| breadcrumb_link_to(o) }
+    crumbs << breadcrumb_title_for(current)
+    crumbs.join(' » ')
   end
 end

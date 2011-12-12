@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2009, 2010, 2011 University of Oslo
-# Copyright 2009, 2010, 2011 Marius L. Jøhndal
+# Copyright 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2009, 2010, 2011, 2012 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -20,36 +20,42 @@
 #
 #++
 
-class SentencesController < InheritedResources::Base
-  actions :all, :except => [:new, :create, :edit, :update]
-
-  before_filter :find_parents
+class SentencesController < ApplicationController
+  respond_to :html
   before_filter :is_reviewer?, :only => [:edit, :update, :flag_as_reviewed, :flag_as_not_reviewed]
 
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def show
-    @sentence = Sentence.find(params[:id])
+    @sentence = Sentence.includes(:source_division => [:source],
+                                  :tokens => [:lemma, :audits, :notes],
+                                  :notes => [],
+                                  :audits => [:auditable]).find(params[:id])
+    @source_division = @sentence.source_division
+    @source = @source_division.try(:source)
 
-    @tokens = @sentence.tokens.search(params[:query], :page => current_page)
+    @sentence_window = @sentence.sentence_window.includes(:tokens)
     @semantic_tags = @sentence.semantic_tags
 
-    show!
+    respond_with @sentence
   end
 
-  protected
+  def edit
+    @sentence = Sentence.includes(:source_division => [:source]).find(params[:id])
+    @source_division = @sentence.try(:source_division)
+    @source = @source_division.try(:source)
 
-  def find_parents
-    @parent = @source = Source.find(params[:source_id]) if params[:source_id]
+    respond_with @sentence
   end
 
-  private
+  def update
+    normalize_unicode_params! params[:sentence], :presentation_before, :presentation_after
 
-  def collection
-    @sentences = (@parent ? Sentence.by_source(@parent) : Sentence).search(params[:query], :page => current_page)
+    @sentence = Sentence.find(params[:id])
+    @sentence.update_attributes(params[:sentence])
+
+    respond_with @sentence
   end
-
-  public
 
   def flag_as_reviewed
     @sentence = Sentence.find(params[:id])

@@ -1,12 +1,25 @@
-#!/usr/bin/env ruby
+# encoding: UTF-8
+#--
 #
-# dependency_graph.rb - Dependency graph manipulation and validation
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
 #
-# Written by Marius L. Jøhndal, 2007, 2008, 2011.
+# This file is part of the PROIEL web application.
 #
-require 'extensions'
-require 'enumerator'
-require 'open3'
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+#++
 
 module PROIEL
   class DependencyGraphNode
@@ -233,12 +246,6 @@ module PROIEL
       end
     end
 
-    # Returns a `relinearisation' of the subgraph constituted by this node and its dependents.
-    def relinearise
-      n = [self] + dependents
-      n.sort_by { |t| t.token_number || -1 }.collect { |t| t == self ? self : t.relinearise }.flatten
-    end
-
     def to_h
       { :dependents => Hash[*dependents.collect { |d| [d.identifier, d.to_h] }.flatten],
         :relation => @relation,
@@ -402,10 +409,6 @@ module PROIEL
     end
 
     public
-
-    def relinearise
-      @root.relinearise
-    end
 
     HEAD_DEPENDENT_CONSTRAINTS = {
       # FIXME: ATR should be excluded from anything but participles

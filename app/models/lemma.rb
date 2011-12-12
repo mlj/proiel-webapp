@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -19,45 +19,56 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
-# Model for a lemma. Each lemma has a base (non-inflected) form, a language code
-# and may additionally be differentiated from other lemmata in the same language
-# with the same base form using a integer variant identifier.
+
 class Lemma < ActiveRecord::Base
   has_many :tokens
   has_many :notes, :as => :notable, :dependent => :destroy
   has_many :semantic_tags, :as => :taggable, :dependent => :destroy
-  composed_of :language, :converter => Proc.new { |value| value.is_a?(String) ? Language.new(value) : value }
-  composed_of :part_of_speech, :converter => Proc.new { |value| value.is_a?(String) ? PartOfSpeech.new(value) : value }, :allow_nil => true
+
+  composed_of :language, :mapping => %w(language_tag to_s), :converter => Proc.new { |x| Language.new(x) }
+
+  composed_of :part_of_speech, :mapping => %w(part_of_speech_tag to_s), :converter => Proc.new { |x| PartOfSpeech.new(x) }, :allow_nil => true
 
   before_validation :before_validation_cleanup
 
-  searchable_on :lemma
-
-  # Limits the scope to a language.
-  named_scope :by_language, lambda { |language| { :conditions => { :language => language }}}
-
-  # Limits the scope to a variant.
-  named_scope :by_variant, lambda { |variant| { :conditions => { :variant => variant }}}
-
-  # Limits the scope to potential completions of +queries+. +queries+
-  # should be an array of strings on the form +foo+ or +foo#1+, where
-  # +foo+ is a prefix of all lemmata to be returned, and +1+ is a
-  # variant number required to be present.
-  named_scope :by_completions, lambda { |language_code, queries| { :conditions => build_completion_terms(language_code, queries) } }
-
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
-  validates_presence_of :part_of_speech
-  validates_inclusion_of :part_of_speech, :in => PartOfSpeech.all, :message => "%{value} is not a valid part of speech"
-  # FIXME: broken for language and part_of_speech, which are YAMLified
-  # because of +ActiveRecord::ConnectionAdapters::Quoting#quote+.
-  validates_uniqueness_of :lemma, :scope => [:language, :part_of_speech, :variant]
+  validates_uniqueness_of :lemma, :scope => [:language_tag, :part_of_speech_tag, :variant]
 
-  acts_as_audited
+  validates_tag_set_inclusion_of :part_of_speech_tag, :part_of_speech, :allow_nil => false, :message => "%{value} is not a valid part of speech tag"
+  validates_tag_set_inclusion_of :language_tag, :language, :allow_nil => false, :message => "%{value} is not a valid language tag"
+
+  change_logging
+
+  # A lemma that matches a prefix. The prefixes are given in +queries+,
+  # which should be an array of strings on the form +foo+ or +foo#1+, where
+  # +foo+ is a prefix of all lemmata to be matched, and +1+ is a variant
+  # number required to be present.
+  def self.by_completions(queries)
+    statement = queries.map do |query|
+      lemma, variant = query.split('#')
+      variant.blank? ? '(lemma LIKE ?)' : '(lemma LIKE ? AND variant = ?)'
+    end.join(' OR ')
+
+    terms = queries.map do |query|
+      lemma, variant = query.split('#')
+      if variant.blank?
+        "#{lemma}%"
+      else
+        ["#{lemma}%", variant]
+      end
+    end.flatten
+
+    where(statement, *terms)
+  end
 
   # Returns the export-form of the lemma.
   def export_form
     self.variant ? "#{self.lemma}##{self.variant}" : self.lemma
+  end
+
+  def to_label
+    export_form
   end
 
   # Returns a summary description for the part of speech. This is a
@@ -76,23 +87,22 @@ class Lemma < ActiveRecord::Base
     MorphFeatures.new(self, nil)
   end
 
-  # Returns a list of lemmata that are 'sufficiently similar' to this
-  # lemma to be candidates for being merged with it. 'Sufficiently
-  # similar' is defined in terms of what will not violate constraints:
-  # two lemmata with different part of speech, for example, cannot be
-  # merged since this will affect the annotation of morphology for any
-  # associated tokens. Two tokens are 'mergable' iff they belong to
-  # the same language, have the same base form (variant number may be
-  # different) and have identical part of speech.
+  # Lemmata that are 'sufficiently similar' to this lemma to be candidates
+  # for being merged with it. 'Sufficiently similar' is defined in terms of
+  # what will not violate constraints: two lemmata with different part of
+  # speech, for example, cannot be merged since this will affect the
+  # annotation of morphology for any associated tokens. Two tokens are
+  # 'mergeable' iff they belong to the same language, have the same base
+  # form (variant number may be different) and have identical part of
+  # speech.
   def mergeable_lemmata
-    Lemma.find(:all, :conditions => { :part_of_speech => part_of_speech.tag, :lemma => lemma, :language => language.to_s }) - [self]
+    Lemma.where(:part_of_speech_tag => part_of_speech_tag, :lemma => lemma, :language_tag => language_tag).where("id != ?", id)
   end
 
   # Tests if lemma can be merged with another lemma +other_lemma+.
-  def mergable?(other_lemma)
-    self.lemma == other_lemma.lemma and
-      self.language == other_lemma.language and
-      self.part_of_speech == other_lemma.part_of_speech
+  def mergeable?(other_lemma)
+    lemma == other_lemma.lemma and language_tag == other_lemma.language_tag and
+      part_of_speech_tag == other_lemma.part_of_speech_tag
   end
 
   # Merges another lemma into this lemma and saves the results. The two lemmata
@@ -100,54 +110,17 @@ class Lemma < ActiveRecord::Base
   # All tokens belonging to the lemma to be merged will have their lemma references
   # changed, and the lemma without tokens deleted.
   def merge!(other_lemma)
-    raise ArgumentError, "Lemmata cannot be merged" unless mergable?(other_lemma)
+    raise ArgumentError, "Lemmata cannot be merged" unless mergeable?(other_lemma)
 
     Token.transaction do
       other_lemma.tokens.each do |t|
-        t.lemma_id = self.id
-        t.save!
+        t.update_attributes! :lemma_id => self.id
       end
       other_lemma.destroy
     end
   end
 
-  protected
-
-  def self.search(query, options = {})
-    options[:order] ||= 'language ASC, sort_key ASC, lemma ASC, variant ASC, part_of_speech ASC'
-
-    if query.blank?
-      paginate options
-    else
-      lemma, variant = query.split('#')
-      if variant
-        by_variant(variant).search_on(lemma).paginate options
-      else
-        search_on(lemma).paginate options
-      end
-    end
-  end
-
   private
-
-  # Returns conditions for a completion query.
-  def self.build_completion_terms(language_code, queries)
-    q = queries.map { |query| query.split('#') }
-
-    statement = q.map do |lemma, variant|
-      variant.blank? ? 'lemma LIKE ?' : 'lemma LIKE ? AND variant = ?'
-    end.map { |s| "(language = '#{language_code}' AND #{s})" }.join(' OR ')
-
-    terms = q.map do |lemma, variant|
-      if variant.blank?
-        "#{lemma}%"
-      else
-        ["#{lemma}%", variant]
-      end
-    end.flatten
-
-    [statement] + terms
-  end
 
   def before_validation_cleanup
     self.variant = nil if variant.blank?
@@ -159,5 +132,14 @@ class Lemma < ActiveRecord::Base
 
   def to_s
     [export_form, part_of_speech.to_s].join(',')
+  end
+
+  # Returns an array of all parts of speech represented in lemmata.
+  def self.represented_parts_of_speech
+    Lemma.uniq.pluck(:part_of_speech_tag).map { |p| PartOfSpeech.new(p) }.sort_by(&:to_label)
+  end
+
+  def language_name
+    Language.new(language_tag).try(:name)
   end
 end

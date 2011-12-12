@@ -4,11 +4,6 @@ module SemanticTagsHelper
     content_tag(:ul, render(:partial => 'semantic_tags/summary', :collection => semantic_tags))
   end
 
-  # Creates a table view of a collection of semantic attribute values.
-  def semantic_tags_table(semantic_tags)
-    render_tabular semantic_tags, ['Reference', 'Tag', '&nbsp;']
-  end
-
   # Creates a readable semantic attribute + attribute-value pair.
   def readable_semantic_attribute_value(semantic_attribute, semantic_attribute_value, hlight = nil)
     content_tag(:span, [semantic_attribute.tag, highlight(semantic_attribute_value.tag, hlight)].join(' = '), :class => 'tag')

@@ -2,6 +2,6 @@
   %td
     = sentence.citation
     = truncate(sentence.to_s, :length => 70, :omission => Unicode::U2026)
-    != readable_completion sentence, :checkmark => :only
+    != completion_rate sentence.completion
   %td
     != link_to 'Details', sentence

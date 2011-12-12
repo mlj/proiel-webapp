@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010 University of Oslo
-# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -19,25 +19,22 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
-# Model for a lemma. Each lemma has a base (non-inflected) form, a language code
-# and may additionally be differentiated from other lemmata in the same language
-# with the same base form using a integer variant identifier.
+
 class Inflection < ActiveRecord::Base
-  composed_of :language, :converter => Proc.new { |value| value.is_a?(String) ? Language.new(value) : value }
-  validates_presence_of :language
+  composed_of :language, :mapping => %w(language_tag to_s), :converter => Proc.new { |x| Language.new(x) }
+  validates_presence_of :language_tag
+
   validates_presence_of :form
-  validates_presence_of :morphology
-  validates_length_of :morphology, :is => MorphFeatures::MORPHOLOGY_LENGTH
-  composed_of :morphology, :allow_nil => true, :converter => Proc.new { |value| value.is_a?(String) ? Morphology.new(value) : value }
+
+  composed_of :morphology, :mapping => %w(morphology_tag to_s), :allow_nil => true, :converter => Proc.new { |x| Morphology.new(x) }
+  validates_presence_of :morphology_tag
+  validates_length_of :morphology_tag, :is => MorphFeatures::MORPHOLOGY_LENGTH
+
   validates_presence_of :lemma
 
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
-  # FIXME: validate morphology vs language?
-  #validates_inclusion_of :morphology, :in => MorphFeatures.morphology_tag_space(language.tag)
-  # FIXME: broken for language and part_of_speech, which are YAMLified
-  # because of +ActiveRecord::ConnectionAdapters::Quoting#quote+.
-  validates_uniqueness_of :form, :scope => [:language, :morphology, :lemma]
+  validates_uniqueness_of :form, :scope => [:language_tag, :morphology_tag, :lemma]
 
   # Returns the morphological features. These will never be nil.
   def morph_features

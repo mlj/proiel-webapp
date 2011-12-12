@@ -2,17 +2,17 @@ one:
   id: 1
   title: Vulgate
   citation_part: Vulg.
-  language: lat
+  language_tag: lat
   tei_header: "<tei></tei>"
 two:
   id: 2
   title: Greek New Testament
   citation_part: GNT
-  language: grc
+  language_tag: grc
   tei_header: "<tei></tei>"
 three:
   id: 3
   title: Plautus, Amphitruo
   citation_part: Pl. Am.
-  language: grc
+  language_tag: grc
   tei_header: "<tei></tei>"

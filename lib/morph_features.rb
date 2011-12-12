@@ -15,32 +15,60 @@ class Morphology < PositionalTag
   end
 end
 
-class PartOfSpeech < PositionalTag
-  @@tags = YAML.load_file(Rails.root.join('lib', 'tagset.yml'))["parts_of_speech"]
+class PartOfSpeech
+  attr_reader :tag, :summary, :abbreviated_summary
+
+  alias :to_s :tag
+  alias :to_label :summary
+
+  def initialize(tag)
+    @tag = tag
+
+    t = TagSets[:part_of_speech][tag]
+
+    if t
+      @summary = t['summary']
+      @abbreviated_summary = t['abbreviated_summary']
+    else
+      @summary = nil
+      @abbreviated_summary = nil
+    end
+  end
 
   def valid?
-    @@tags.has_key?(tag)
+    TagSets[:part_of_speech].has_key?(tag)
   end
 
-  def summary
-    @@tags[tag]["summary"] if valid?
-  end
-
-  def abbreviated_summary
-    @@tags[tag]["abbreviated_summary"] if valid?
-  end
-
+  # Returns an array of all parts of speech.
   def self.all
-    @@tags.keys.map { |tag| PartOfSpeech.new(tag) }
-  end
-
-  def part_of_speech
-    tag
+    TagSets[:part_of_speech].tags.sort.map { |tag| PartOfSpeech.new(tag) }
   end
 
   def fields
     [:major, :minor]
   end
+
+  # Returns a hash with part of speech tags as keys and summaries as
+  # values.
+  def self.tag_and_summary_hash
+    TagSets[:part_of_speech].all
+  end
+
+  def major
+    @tag.split('').first
+  end
+
+  def minor
+    @tag.split('').last
+  end
+
+  def contradicts?(tag)
+    @tag.split('').zip(tag.tag.split('')).any? do |x, y|
+      x && x != '-' && y && y != '-' && x != y
+    end
+  end
+
+  alias :part_of_speech :tag
 end
 
 # Aggregation class for morphological annotation.
@@ -129,12 +157,12 @@ class MorphFeatures
     morphology_abbrev_s.gsub('-', '_') + '%'
   end
 
-  MORPHOLOGY_SUMMARIES = YAML.load_file(Rails.root.join('lib', 'tagset.yml'))["morph_features"].inject({}) do |m, v|
+  MORPHOLOGY_SUMMARIES = YAML.load_file(Rails.root.join('lib', 'tagset', 'morphology.yml')).inject({}) do |m, v|
     m[v[0]] = v[1].inject({}) { |m2, v2| m2[v2[0]] = v2[1]["summary"]; m2 }
     m
   end
 
-  MORPHOLOGY_ABBREVIATED_SUMMARIES = YAML.load_file(Rails.root.join('lib', 'tagset.yml'))["morph_features"].inject({}) do |m, v|
+  MORPHOLOGY_ABBREVIATED_SUMMARIES = YAML.load_file(Rails.root.join('lib', 'tagset', 'morphology.yml')).inject({}) do |m, v|
     m[v[0]] = v[1].inject({}) { |m2, v2| m2[v2[0]] = v2[1]["abbreviated_summary"]; m2 }
     m
   end
@@ -194,17 +222,6 @@ class MorphFeatures
 
   def valid?
     @lemma.lemma and @lemma.part_of_speech and @morphology and MorphtagConstraints.instance.is_valid?(pos_s + morphology_s, language_s.to_sym)
-  end
-
-  def union(o)
-    raise ArgumentError unless o.class == MorphFeatures
-    raise ArgumentError unless o.language_s == language_s
-    raise ArgumentError if o.lemma.export_form and lemma.export_form and o.lemma.export_form != lemma.export_form
-
-    new_pos = PartOfSpeech.new(pos_s).union(o.pos_s)
-    new_morphology = Morphology.new(morphology_s).union(o.morphology_s)
-
-    MorphFeatures.new([@lemma.export_form || o.lemma.export_form, new_pos, language_s].join(','), new_morphology.to_s)
   end
 
   def contradict?(o)

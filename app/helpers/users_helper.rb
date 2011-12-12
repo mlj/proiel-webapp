@@ -8,25 +8,7 @@ module UsersHelper
   end
 
   # Returns a link to a user.
-  #
-  # ==== Options
-  # role:: Includes the user's role.
-  def link_to_user(user, options = {})
-    link_to(user.full_name, user) + (options[:role] ? " (#{user.role.description})" : '')
-  end
-
-  # Returns true if the current user is an administrator.
-  def is_administrator?
-    current_user.has_role?(:administrator)
-  end
-
-  # Returns true if the current user is a reviewer.
-  def is_reviewer?
-    current_user.has_role?(:reviewer)
-  end
-
-  # Returns true if the current user is an annotator.
-  def is_annotator?
-    current_user.has_role?(:annotator)
+  def link_to_user(user)
+    link_to(user.full_name, user)
   end
 end

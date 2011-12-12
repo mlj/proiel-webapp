@@ -1,5 +1,34 @@
+#--
+#
+# Copyright 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2009, 2010, 2011, 2012 Marius L. Jøhndal
+#
+# This file is part of the PROIEL web application.
+#
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+#++
+
 class User < ActiveRecord::Base
-  belongs_to :role
+  devise :database_authenticatable, :registerable,
+    :recoverable, :rememberable, :trackable, :validatable,
+    :encryptable
+
+  attr_accessible :login, :first_name, :last_name, :email,
+    :password, :password_confirmation, :role,
+    :graph_method, :graph_format
+
   has_many :assigned_sentences, :class_name => 'Sentence', :foreign_key => 'assigned_to'
   has_many :audits
   has_many :notes, :as => :originator
@@ -10,30 +39,32 @@ class User < ActiveRecord::Base
   validates_presence_of :first_name, :message => 'cannot be blank.'
   validates_presence_of :last_name, :message => 'cannot be blank.'
 
-  serialize :preferences
-
-  devise :database_authenticatable, :confirmable, :recoverable, :rememberable,
-    :trackable, :validatable, :registerable
-
-  attr_accessible :login, :first_name, :last_name, :email, :password, :password_confirmation
+  store :preferences, accessors: [:graph_format, :graph_method]
 
   # Returns the user's full name.
   def full_name
     "#{first_name} #{last_name}"
   end
 
-  # Role management
+  # Tests whether the user has a particular role.
   def has_role?(r)
-    case r
+    case r.to_sym
     when :reader
-      role.code.to_sym == :reader || has_role?(:annotator)
+      true # All users are readers
     when :annotator
-      role.code.to_sym == :annotator || has_role?(:reviewer)
+      role == 'annotator' || role == 'reviewer' || role == 'administrator'
     when :reviewer
-      role.code.to_sym == :reviewer || has_role?(:administrator)
+      role == 'reviewer' || role == 'administrator'
     when :administrator
-      role.code.to_sym == :administrator
+      role == 'administrator'
+    else
+      raise ArgumentError, 'invalid role'
     end
+  end
+
+  # Create a new, confirmed administrator user.
+  def self.create_confirmed_administrator!(attrs)
+    User.create! attrs.merge({ :confirmed_at => Time.now, :role => 'administrator' })
   end
 
   def first_assigned_sentence
@@ -49,14 +80,5 @@ class User < ActiveRecord::Base
 
   def to_s
     login
-  end
-
-  protected
-
-  def self.search(query, options = {})
-    options[:conditions] = ["login LIKE ?", "%#{query}%"] unless query.blank?
-    options[:order] = 'login ASC'
-
-    paginate options
   end
 end

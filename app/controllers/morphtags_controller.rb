@@ -21,7 +21,9 @@ class MorphtagsController < ApplicationController
   end
 
   def edit
-    @sentence = Sentence.find(params[:sentence_id])
+    @sentence = Sentence.includes(:source_division => [:source]).find(params[:sentence_id])
+    @source_division = @sentence.try(:source_division)
+    @source = @source_division.try(:source)
   end
 
   def update

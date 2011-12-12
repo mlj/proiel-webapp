@@ -1,11 +1,8 @@
 class ApplicationController < ActionController::Base
-  include ExceptionNotification::Notifiable
-
+  protect_from_forgery
   before_filter :authenticate_user!
 
   helper :all
-  protect_from_forgery # See ActionController::RequestForgeryProtection for details
-  filter_parameter_logging :password, :password_confirmation
 
   layout 'application'
 
@@ -15,9 +12,9 @@ class ApplicationController < ActionController::Base
 
   helper_method :user_preferences
 
-  # Returns the current user's preference settings.
+  # Returns the user's preference settings.
   def user_preferences
-    current_user.preferences || DEFAULT_USER_PREFERENCES
+    current_user.try(:preferences) || { :graph_format => "png", :graph_method => "unsorted" }
   end
 
   helper_method :current_page

@@ -1,9 +1,0 @@
-<h2>Reset password</h2>
-
-<% semantic_form_for resource_name, resource, :url => password_path(resource_name) do |f| %>
-  <%= f.error_messages %>
-  <%= f.input :email, :label => 'E-mail address' %>
-  <%= f.submit "Reset" %>
-<% end %>
-
-<%= render "shared/devise_links" %>

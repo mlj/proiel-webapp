@@ -215,16 +215,6 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
     assert_equal false, g.valid?
   end
 
-  def test_relinearisation
-    g = DependencyGraph.new
-    g.add_node(1, :pred, nil, {}, { :empty => false, :token_number => 2})
-    g.add_node(11, :sub, 1, {}, { :empty => false, :token_number => 1})
-    g.add_node(12, :adv, 1, {}, { :empty => false, :token_number => 3})
-    g.add_node(121, :adv, 12, {}, { :empty => false, :token_number => 0})
-    g.add_node(122, :adv, 12, {}, { :empty => false, :token_number => 4})
-    assert_equal [:root, 11, 1, 121, 12, 122], g.relinearise.collect(&:identifier)
-  end
-
   def test_all_slashes
     # Simple, ordinary case: a non-empty xobj with a slash
     g = DependencyGraph.new

@@ -7,6 +7,5 @@
 require 'yaml'
 
 module PROIEL
-  DATADIR = File.expand_path(File.dirname(__FILE__))
-  INFERENCES = YAML::load_file(File.join(DATADIR, 'inferences.yml')).freeze
+  INFERENCES = YAML::load_file(File.join(File.expand_path(File.dirname(__FILE__)), 'inferences.yml')).freeze
 end

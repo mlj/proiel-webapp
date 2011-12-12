@@ -135,7 +135,7 @@ class InfoStatusesImportExport < CSVImportExport
 
       # This is needed after saving a new graph node to the database
       # in order to make sure that the new node is included in the
-      # tokens.dependency_annotatable collection. Otherwise, the node
+      # tokens.takes_syntax collection. Otherwise, the node
       # will be deleted the next time we run syntactic_annotation=
       # (e.g., if we try to create more than one prodrop token as part
       # of the same save operation).
@@ -250,6 +250,32 @@ class InflectionsImportExport < CSVImportExport
     end
   end
 end
+
+class SemanticRelationImportExport < CSVImportExport
+  def initialize
+    super :type, :tag, :controller, :target
+  end
+
+  protected
+
+  def read_fields(typus, taggus, controller_id, target_id)
+    type = SemanticRelationType.find_by_tag(typus)
+    raise "Unknown semantic relation type #{typus}" unless type
+    tag = SemanticRelationTag.find_by_tag(taggus)
+    raise "Unknown semantic relation tag #{taggus}" unless tag
+    raise "The semantic relation tag #{taggus} has the wrong type #{tag.semantic_relation_type.tag} != #{type.tag}" unless tag.semantic_relation_type == type
+    raise "No controller of id #{controller_id} found" unless Token.find(controller_id)
+    raise "No target of id #{target_id} found" unless Token.find(target_id)
+    SemanticRelation.create!(:controller_id => controller_id, :target_id => target_id, :semantic_relation_tag => tag)
+  end
+
+  def write_fields
+    SemanticRelation.find(:all).each do |rel|
+      yield rel.semantic_relation_type.tag, rel.semantic_relation_tag.tag, rel.controller_id, rel.target_id
+    end
+  end
+end
+
 
 # Importer for semantic tags
 class SemanticTagImportExport < CSVImportExport

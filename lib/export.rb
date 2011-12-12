@@ -20,6 +20,7 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
+
 require 'builder'
 require 'metadata'
 
@@ -43,7 +44,6 @@ class SourceXMLExport
     options.reverse_merge! :reviewed_only => false
 
     @source = source
-    @metadata = source.metadata if source.metadata.valid?
     @options = options
   end
 
@@ -100,7 +100,10 @@ class PROIELXMLExport < SourceXMLExport
     builder.source(:id => identifier, :language => @source.language.tag) do
       builder.title @source.title
       builder.abbreviation @source.citation_part
-      builder.tag!("tei-header") { @metadata.write(builder) if @metadata }
+      builder.tag!("tei-header") do
+        builder << @source.metadata.export_form if @source.metadata
+      end
+
 
       filtered_source_divisions.each do |sd|
         write_source_division(builder, sd)
@@ -126,7 +129,7 @@ class PROIELXMLExport < SourceXMLExport
   end
 
   def write_sentence(builder, s)
-    (@options[:info] ? s.tokens : s.tokens.dependency_annotatable).each do |t|
+    (@options[:info] ? s.tokens : s.tokens.takes_syntax).each do |t|
       attributes = {}
       features = %w(id form presentation_before presentation_after empty_token_sort  foreign_ids citation_part)
       features += %w(morph_features head_id relation) if (@options[:reviewed_only] and s.is_reviewed?) or (!@options[:reviewed_only] and s.has_dependency_annotation?)
@@ -136,7 +139,7 @@ class PROIELXMLExport < SourceXMLExport
         attributes[f.to_s.gsub('_', '-').to_sym] = v.to_s if v
       end
 
-      attributes.merge!(sem_tags_to_hash) if @options[:sem_tags]
+      attributes.merge!(t.sem_tags_to_hash) if @options[:sem_tags]
 
       unless t.slashees.empty? # this extra test avoids <token></token> style XML
         builder.token attributes do
@@ -263,7 +266,7 @@ class TigerXMLExport < SourceXMLExport
 
   def write_terminals(s, builder)
     builder.terminals do
-      (@options[:info] ? s.tokens_with_dependents_and_info_structure.with_prodrops_in_place.reject { |t| ['C', 'V'].include?(t.empty_token_sort) } : s.tokens.morphology_annotatable).each do |t|
+      (@options[:info] ? s.tokens_with_dependents_and_info_structure.with_prodrops_in_place.reject { |t| ['C', 'V'].include?(t.empty_token_sort) } : s.tokens.takes_morphology).each do |t|
         builder.t(token_attrs(s, t, 'T').merge({ @ident => "w#{t.id}"}))
       end
     end
@@ -305,14 +308,14 @@ class TigerXMLExport < SourceXMLExport
       # Emit the empty root node
       h = @features.select { |f| ['FREC', 'NT'].include?(f.last) }.map(&:first).inject({}) { |m, o| m[o] = '--'; m }.merge({@ident => "s#{s.id}_root" })
       builder.nt(h) do
-        s.tokens.dependency_annotatable.reject(&:head).each do |t|
+        s.tokens.takes_syntax.reject(&:head).each do |t|
           write_root_edge(t, builder)
         end
       end
 
       # Do the actual nodes including pro drops if we are
       # exporting info structure as well
-      (@options[:info] ? s.tokens_with_dependents_and_info_structure.with_prodrops_in_place : s.tokens.dependency_annotatable).each do |t|
+      (@options[:info] ? s.tokens_with_dependents_and_info_structure.with_prodrops_in_place : s.tokens.takes_syntax).each do |t|
         builder.nt(token_attrs(s, t, 'NT').merge({ @ident => "p#{t.id}"})) do
           write_edges(t, builder)
         end
@@ -461,7 +464,7 @@ class MaltXMLExport < SourceXMLExport
             # XML in this manner, but what can one do...) The ID 1 is reserved
             # for an empty root node to be added later, so we start the mapping at
             # ID 2.
-            ids = s.tokens.dependency_annotatable.map(&:id)
+            ids = s.tokens.takes_syntax.map(&:id)
             local_token_ids = Hash[*ids.zip((2..(ids.length + 1)).to_a).flatten]
 
             # Add another one to function as a root node. This is necessary
@@ -471,7 +474,7 @@ class MaltXMLExport < SourceXMLExport
             local_token_ids[nil] = 1
             builder.word({ :id => 1, :head => 0, :deprel => 'ROOT' })
 
-            s.tokens.dependency_annotatable.each do |t|
+            s.tokens.takes_syntax.each do |t|
               attrs = { :id => local_token_ids[t.id]}
               attrs.merge!({ :form => t.form }) if t.form
 

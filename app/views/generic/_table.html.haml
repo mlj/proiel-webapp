@@ -1,0 +1,23 @@
+.tabular
+  - unless no_pagination
+    != will_paginate(collection) || ""
+
+  %table{:class => "odd-even-line #{css_class}"}
+    - if fields
+      %thead
+        %tr
+          - fields.each do |field|
+            %th= field
+
+    %tbody
+      - if partial
+        != render :partial => partial, :collection => collection
+      - else
+        != render :partial => collection
+
+    - if new
+      %tfoot
+        - (fields.length - 1).times do
+          %td
+        %td
+          != link_to 'Add new', new

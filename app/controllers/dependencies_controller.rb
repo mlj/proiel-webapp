@@ -2,22 +2,21 @@ class DependenciesController < ApplicationController
   before_filter :is_annotator?, :only => [:edit, :update]
 
   def show
-    @sentence = Sentence.find(params[:sentence_id], :include => :tokens)
-    visualization = Visualization.new(@sentence, :fontname => 'Legendum')
+    @sentence = Sentence.includes(:tokens => [:lemma]).find(params[:sentence_id])
     mode = user_preferences[:graph_method] ? user_preferences[:graph_method].to_sym : :unsorted
+    visualizer = PROIEL::graph_visualizers.first # FIXME
 
     respond_to do |format|
-      format.svg  { send_data visualization.generate(:format => :svg, :mode => mode),
-        :filename => "#{params[:id]}.svg", :disposition => 'inline', :type => :svg }
-      format.png  { send_data visualization.generate(:format => :png, :mode => mode),
-        :filename => "#{params[:id]}.png", :disposition => 'inline', :type => :png }
-      format.dot  { send_data visualization.generate(:format => :dot, :mode => mode),
-        :filename => "#{params[:id]}.dot", :disposition => 'inline', :type => :dot }
+      format.svg  { send_data visualizer.generate(@sentence, :format => :svg, :fontname => 'Legendum', :mode => mode), :filename => "#{params[:id]}.svg", :disposition => 'inline', :type => :svg }
+      format.png  { send_data visualizer.generate(@sentence, :format => :png, :fontname => 'Legendum', :mode => mode).force_encoding('BINARY'), :filename => "#{params[:id]}.png", :disposition => 'inline', :type => :png }
+      format.dot  { send_data visualizer.generate(@sentence, :format => :dot, :mode => mode), :filename => "#{params[:id]}.dot", :disposition => 'inline', :type => :dot }
     end
   end
 
   def edit
-    @sentence = Sentence.find(params[:sentence_id])
+    @sentence = Sentence.includes(:source_division => [:source]).find(params[:sentence_id])
+    @source_division = @sentence.try(:source_division)
+    @source = @source_division.try(:source)
   end
 
   # Saves changes to relations and has the user review the new structure.
@@ -30,7 +29,13 @@ class DependenciesController < ApplicationController
       return
     end
 
-    unless params[:output].blank? || ActiveSupport::JSON.decode(params[:output]).blank?
+    # FIXME: calling ActiveSupport::JSON.decode can trigger a max nesting
+    # level error because our hashes can be very deeply nested and there is
+    # no way to pass an option to disable the nesting-level check to the
+    # JSON library through multi_json. The work around is to call the json
+    # gem directly and hope for the best.
+    #unless params[:output].blank? || ActiveSupport::JSON.decode(params[:output], :max_nesting => false).blank?
+    unless params[:output].blank? || JSON.parse(params[:output], :max_nesting => false).blank?
       # Start a new transaction. Unfortunately, this hacky approach is
       # vital if validation is going to have any effect.
       # synctactic_annotation= will update a number of non-Sentence
@@ -42,9 +47,13 @@ class DependenciesController < ApplicationController
         # Convert output to a more flexible representation. IDs will match those in
         # the database, except for any new empty dependency nodes, which will have
         # IDs on the form 'newX'.
-        @sentence.syntactic_annotation = PROIEL::DependencyGraph.new_from_editor(ActiveSupport::JSON.decode(params[:output]))
+        # FIXME: see FIXME above
+        #@sentence.syntactic_annotation = PROIEL::DependencyGraph.new_from_editor(ActiveSupport::JSON.decode(params[:output]))
+        @sentence.syntactic_annotation = PROIEL::DependencyGraph.new_from_editor(JSON.parse(params[:output], :max_nesting => false))
         @sentence.save!
       end
+
+      @sentence.set_annotated!(current_user)
 
       if params[:wizard]
         redirect_to :controller => :wizard, :action => :save_dependencies, :wizard => true

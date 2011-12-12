@@ -1,59 +1,92 @@
-ActionController::Routing::Routes.draw do |map|
-  map.devise_for :users
-  map.resources :users
+Proiel::Application.routes.draw do
+  devise_for :users
+  resources :users, :only => [:index, :show]
 
-  map.resources :audits
-  map.resource :statistics
-  map.resources :sources do |s|
-    s.resource :statistics
-  end
-  map.resources :source_divisions do |s|
-    s.resource :statistics
-  end
-  map.resources :alignments, :member => {
-    :commit => :post,
-    :uncommit => :post,
-  }
-  map.resources :lemmata, :singular => 'lemma', :member => {
-    :merge => :post,
-  }
-  map.resources :tokens, :member => {
-    :dependency_alignment_group => :get,
-  }
-  map.resources :parts_of_speech
-  map.resources :languages
+  resource :profile, :only => [:edit, :update]
 
-  map.resources :sentences  do |annotation|
-    annotation.resource :dependency_alignments
-    annotation.resource :morphtags
-    annotation.resource :dependencies
-    annotation.resource :info_status, :collection => {
-      :delete_contrast => :post,
-      :delete_prodrop => :post
-    }
-    annotation.resource :tokenizations
+  resources :audits, :only => [:index, :destroy]
+
+  resource :statistics, :only => [:show]
+
+  resources :sources, :only => [:index, :show, :edit, :update]
+
+  resources :source_divisions, :only => [:show, :edit, :update] do
+    resource :discourse
   end
 
-  map.resources :import_sources
-  map.resources :notes
-  map.resources :semantic_tags
-  map.resource :preferences
+  resources :semantic_relations, :only => [:show, :edit, :update]
+
+  resources :alignments, :only => [:show, :edit] do
+    member do
+      post :commit
+      post :uncommit
+    end
+  end
+
+  resources :dictionaries, :only => [:index, :show]
+
+  resources :lemmata, :only => [:show, :edit, :update] do
+    member do
+      post :merge
+    end
+  end
+
+  resources :tokens, :only => [:show, :edit, :update] do
+    member do
+      get :dependency_alignment_group
+    end
+  end
+
+  resources :sentences, :only => [:show, :edit, :update] do
+    member do
+      get :merge
+      get :tokenize
+      get :resegment_edit
+      get :flag_as_not_reviewed # FIXME: should be post
+      get :flag_as_reviewed     # FIXME: should be post
+    end
+
+    resource :dependency_alignments, :only => [:show, :edit, :update]
+
+    resource :morphtags, :only => [:show, :edit, :update] do
+      member do
+        post :auto_complete_for_morphtags_lemma
+      end
+    end
+
+    resource :dependencies, :only => [:show, :edit, :update]
+
+    resource :info_status, :only => [:edit, :update] do
+      collection do
+        post :delete_contrast
+        post :delete_prodrop
+      end
+    end
+
+    resource :tokenizations, :only => [:edit, :update]
+  end
+
+  resources :notes, :only => [:show, :edit, :update, :destroy]
+
+  resources :semantic_tags, :only => [:index, :show]
+
+  resource :search, :only => [:show]
+
+  # Wizard
+  match '/wizard/:action', :to => 'wizard#:action'
+  match '/wizard',         :to => 'wizard#index'
 
   # Permalinks
-  map.connect 'permalinks/sentence/:id', :controller => 'annotations', :action => 'show'
+  match '/permalinks/sentence/:id', :to => 'annotations#show'
+
+  # Static pages and exported files.
+  resources :pages
+  match '/exports/:id.:format' => 'pages#export', :as => :export, :via => :get
 
   # Quick search and search suggestions
-  map.connect 'search', :controller => 'home', :action => 'quick_search'
-  map.connect 'search_suggestions.:format', :controller => 'home', :action => 'quick_search_suggestions'
-
-  # Legacy
-  map.connect ':controller/:action.:format'
-  map.connect ':controller/:action/:id.:format'
-  map.connect ':controller/:action/:id'
-
-  # Static pages. Link to individual pages using link_to 'Help', site_path('help').
-  map.site 'site/:name', :controller => 'page', :action => 'show'
+  match '/quick_search', :to => 'searches#quick_search', :as => :quick_search
+  match '/quick_search_suggestions.:format', :to => 'searches#quick_search_suggestions'
 
   # Default page
-  map.root :controller => 'home', :action => 'index'
+  root :to => 'sources#index'
 end

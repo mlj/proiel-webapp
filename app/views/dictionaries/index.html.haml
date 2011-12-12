@@ -1,0 +1,5 @@
+%ul.toc1level
+  - @dictionaries.each do |dictionary|
+    %li
+      %span.toc-title= dictionary.name
+      %span.toc-link!= link_to 'Browse', dictionary_path(dictionary)

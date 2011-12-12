@@ -1,9 +1,0 @@
-<%= render 'context' %>
-
-<%= render 'morphtags/show' %>
-
-<%= render 'dependencies/show' %>
-
-<%= button_to('Edit morphology', :action => "edit_morphtags", :sentence_id => params[:sentence_id], :wizard => true) %>
-<%= button_to('Edit dependencies', :action => "edit_dependencies", :sentence_id => params[:sentence_id], :wizard => true) %>
-<%= button_to('Verify', :action => "verify", :sentence_id => params[:sentence_id]) %>

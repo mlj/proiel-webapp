@@ -1,0 +1,9 @@
+var valid_relations = <%= Relation.primary.map(&:tag).to_json %>;
+
+function isValidRelation(relation) {
+  for (var i = 0; i < valid_relations.length; i++)
+    if (valid_relations[i] == relation.toLowerCase())
+      return true;
+
+  return false;
+}

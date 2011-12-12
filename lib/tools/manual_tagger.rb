@@ -18,7 +18,7 @@ class ManualTagger < Task
     Source.find(@source_ids).each do |source|
       logger.info { "Working on source #{source.code}..." }
       source.sentences.annotated.each do |sentence|
-        sentence.tokens.morphology_annotatable.each do |token|
+        sentence.tokens.takes_morphology.each do |token|
           mf = token.morph_features
 
           if mf and mf.is_closed?

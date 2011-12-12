@@ -6,10 +6,10 @@ class Relation < ActiveRecord::Base
   validates_uniqueness_of :tag
   validates_presence_of :summary
 
-  named_scope :primary, :conditions => { :primary_relation => true }, :order => 'tag'
-  named_scope :secondary, :conditions => { :secondary_relation => true }, :order => 'tag'
+  scope :primary, :conditions => { :primary_relation => true }, :order => 'tag'
+  scope :secondary, :conditions => { :secondary_relation => true }, :order => 'tag'
 
-  acts_as_audited
+  change_logging
 
   PREDICATIVE_RELATIONS = %w(xobj xadv)
   APPOSITIVE_RELATIONS = %w(apos)
@@ -33,6 +33,10 @@ class Relation < ActiveRecord::Base
   end
 
   def to_s
+    tag
+  end
+
+  def to_label
     tag
   end
 end

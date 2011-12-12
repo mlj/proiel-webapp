@@ -1,5 +1,4 @@
-Font setup
-==========
+# Font setup
 
 For your browser to correctly render our pages, you will need fonts
 that support the scripts that occur in our texts. On most modern
@@ -7,14 +6,13 @@ systems this should work fairly well without any manual intervention,
 but should you see misplaced diacritics or odd-looking boxes, like in
 the picture below, it is likely that you need to update your fonts.
 
-![Bad font example](/images/help-bad-fonts.png)
+![Bad font example](/assets/help-bad-fonts.png)
 
 For some languages, we rely on very recent additions to the Unicode
 standard (we use Unicode 5.1), which means that the range of available
 fonts with full support for our character set is still limited.
 
-Old Church Slavonic
--------------------
+## Old Church Slavonic
 
 These are the fonts we are currently aware of that support our Old
 Church Slavonic character repertoire and our system has been

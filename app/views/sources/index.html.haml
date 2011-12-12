@@ -1,0 +1,14 @@
+!= will_paginate @sources
+
+%ul.toc2level.toc-l1
+  - @sources.group_by { |source| source.language.name }.sort.each do |language_name, sources|
+    %li
+      %span.toc-language= language_name
+      %ul.toc-l2
+        - sources.each do |source|
+          %li
+            %span.toc-title
+              -if source.author
+                ="#{source.author}: "
+              =source.title
+            %span.toc-link!= link_to 'Browse', source

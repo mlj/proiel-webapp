@@ -7,11 +7,7 @@ class WizardController < ApplicationController
   end
 
   def edit_morphtags
-    if @sentence
-      if @sentence.is_annotated?
-        render :show_dependencies
-      end
-    else
+    unless @sentence
       render :text => 'End of assigned text reached', :layout => true
     end
   end
@@ -56,5 +52,10 @@ class WizardController < ApplicationController
 
   def find_sentence
     @sentence = current_user.first_assigned_sentence
+    if @sentence
+      @sentence_window = @sentence.sentence_window.includes(:tokens).all
+      @source_division = @sentence.source_division
+      @source = @source_division.source
+    end
   end
 end

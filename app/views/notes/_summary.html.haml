@@ -1,0 +1,3 @@
+%li
+  != [link_to_originator(summary.originator), truncate(summary.contents, :length => 200)].join(': ')
+  != "(#{link_to("Details", summary)})"

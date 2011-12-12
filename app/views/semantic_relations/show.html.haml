@@ -1,0 +1,5 @@
+- roundedbox(@semantic_relation) do
+  = readable_semantic_relation(@semantic_relation.semantic_relation_type, @semantic_relation.semantic_relation_tag, @semantic_relation.controller, @semantic_relation.target)
+  (
+  = link_to 'Edit', :controller => "semantic_relations", :action => "edit", :id => @semantic_relation.id
+  )

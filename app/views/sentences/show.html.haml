@@ -1,92 +1,81 @@
-%div{:class => 'roundedbox'}
-  %dl{:style => 'float: left; width: 90%'}
-    = @sentence.citation
-    != readable_completion @sentence, :checkmark => :only
-    %br
+- javascript 'application'
+
+- context_bar do
+  .breadcrumbs
+    != breadcrumbs ['Contents', sources_path], @source, @source_division, @sentence
+    != completion_rate @sentence.completion
+  .resources
+    != link_to_resources @sentence, :edit, :previous, :next
+  %p
     != external_text_links @sentence
-    %br
-    != link_to_resources @sentence, :index, :previous, :next, :parent, :delete
-  %br{:style => 'clear: both'}
 
-%br
+%p
+  .section-heading
+    %h1 Sentence in context
+    - if is_annotator?
+      != link_to " (Change tokenization or sentence division)", edit_sentence_tokenizations_path(@sentence), :method => :get
 
-- if is_annotator? or @sentence.is_reviewed?
-  - @sentence.prev_sentences(5).map(&:to_s).each do |s|
-    != s
-    = "|"
-  %span{:style => "border-bottom: solid red"}
-    != @sentence.to_s
-  - @sentence.next_sentences(5).map(&:to_s).each do |s|
-    = "|"
-    != s
+  != format_sentence @sentence_window, :citations => true, :sentence_numbers => true, :highlight => @sentence, :sentence_breaks => true, :link_to => :tokens
 
-  - if is_annotator?
-    != button_to "Change tokenization", edit_sentence_tokenizations_path(@sentence), :method => :get
-
-  %div{:class => 'layer'}
-    %h1 Annotation
-
+  .section-heading
+    %h1 Annotation status
     - if @sentence.is_annotated? and is_reviewer?
       - if @sentence.is_reviewed?
-        != link_to "Change to not reviewed", :action => 'flag_as_not_reviewed', :id => @sentence, :method => :put
+        != link_to "(Change to not reviewed)", flag_as_not_reviewed_sentence_path(@sentence)
       - else
-        != link_to "Change to reviewed", :action => 'flag_as_reviewed', :id => @sentence, :method => :put
+        != link_to "(Change to reviewed)", flag_as_reviewed_sentence_path(@sentence)
 
+  %p
+    != format_annotator_and_time @sentence
+    %br
+    != format_reviewer_and_time @sentence
+
+  - if @sentence.is_reviewed?
     %p
-      != format_annotator_and_time @sentence
-      %br
-      != format_reviewer_and_time @sentence
+      - if @sentence.valid?
+        Annotation is valid.
 
-    - if @sentence.is_reviewed?
-      %p
-        - if @sentence.valid?
-          Annotation is valid.
-        - else
-          %span{:style => 'color: red;'}
-            Annotation is invalid.
-            %ol
-              - @sentence.tokens.each do |obj|
-                - obj.errors.full_messages.each do |msg|
-                  %li= msg
-
+  .section-heading
     %h1 Morphology
-
     - if is_annotator?
-      != link_to "Edit morphology", edit_sentence_morphtags_url(@sentence)
+      != link_to "(Edit)", edit_sentence_morphtags_url(@sentence)
+  %p
+    != render 'morphtags/show'
 
-    %p
-      != render 'morphtags/show'
-
+  .section-heading
     %h1 Syntax
-
     - if is_annotator?
-      != link_to "Edit syntax", edit_sentence_dependencies_url(@sentence)
+      != link_to "(Edit)", edit_sentence_dependencies_url(@sentence)
+  %p
+    != render 'dependencies/show'
 
-    %p
-      != render 'dependencies/show'
-
-    - unless @semantic_tags.empty?
+  - unless @semantic_tags.empty?
+    .section-heading
       %h1 Semantic tags
-
-      %p
-        != semantic_tags_summary @semantic_tags
-
-    %h1 Information structure
-
-    - if is_annotator?
-      != link_to "Edit information structure", edit_sentence_info_status_url(@sentence)
-
     %p
-      != render 'info_statuses/show'
+      != semantic_tags_summary @semantic_tags
 
-- else
-  Sentence not yet annotated and reviewed.
+  .section-heading
+    %h1 Information structure
+    - if is_annotator?
+      != link_to "(Edit)", edit_sentence_info_status_url(@sentence)
+  %p
+    != render 'info_statuses/show'
 
 - if is_reviewer?
   %h2 Notes
-  != notes_summary @sentence.notes
+  %ol
+    - unless @sentence.notes.empty?
+      != render :partial => 'notes/summary', :collection => @sentence.notes
+    - @sentence.tokens.each do |token|
+      - unless token.notes.empty?
+        != render :partial => 'notes/summary', :collection => token.notes
 
-- if is_reviewer?
   %h2 History
-  - unless @sentence.audits.empty?
-    != audits_summary @sentence.audits
+  != render 'audits/legend'
+  %ol
+    - unless @sentence.audits.empty?
+      != render :partial => 'audits/summary', :collection => @sentence.audits
+    - @sentence.tokens.each do |token|
+      - unless token.audits.empty?
+        != render :partial => 'audits/summary', :collection => token.audits

@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# -*- encoding: utf-8 -*-
 #
 # normalisation.rb - Language specific orthographic normalisation
 # and manipulation
@@ -6,9 +7,6 @@
 # Written by Marius L. Jøhndal, 2007, 2008
 #
 
-# Set KCODE to UTF8 and grab active_support to get hold of real
-# string functions. Ye gods, how silly...
-$KCODE = 'UTF8'
 require 'active_support'
 require 'unicode'
 require 'ucodes'

@@ -2,6 +2,7 @@
 #
 # Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
 # Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
+# Copyright 2011 Dag Haug
 #
 # This file is part of the PROIEL web application.
 #
@@ -19,22 +20,25 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
+
 require 'differ'
 
 class SourceDivision < ActiveRecord::Base
   belongs_to :source
-  has_many :sentences, :order => 'sentence_number ASC'
+  has_many :sentences
   has_many :tokens, :through => :sentences, :order => 'sentences.sentence_number ASC, token_number ASC'
   belongs_to :aligned_source_division, :class_name => "SourceDivision"
 
+  change_logging
+
   # Returns the previous source division in a source.
   def previous
-    source.source_divisions.find(:first, :conditions =>  ["position < ?", position], :order => "position DESC")
+    source.source_divisions.where("position < ?", position).order("position DESC").first
   end
 
   # Returns the next source division in a source.
   def next
-    source.source_divisions.find(:first, :conditions =>  ["position > ?", position], :order => "position ASC")
+    source.source_divisions.where("position > ?", position).order("position ASC").first
   end
 
   include Ordering
@@ -51,17 +55,6 @@ class SourceDivision < ActiveRecord::Base
   # source.
   def parent
     source
-  end
-
-  # Returns the completion state of the source division.
-  def completion
-    if sentences.exists?(["reviewed_at IS NULL and annotated_at IS NULL"])
-      :unannotated
-    elsif sentences.exists?(["reviewed_at IS NULL"])
-      :annotated
-    else
-      :reviewed
-    end
   end
 
   SD_CITATION_PREFIX_DIVIDERS = /([\s\.]+)/u
@@ -120,5 +113,80 @@ class SourceDivision < ActiveRecord::Base
   # alignment with this source division.
   def alignment_candidates
     SourceDivision.find(:all, :conditions => ["source_id != ?", self.source.id])
+  end
+
+  def visualize_semantic_relation(srt)
+    result = nil
+    errors = nil
+
+    Open3.popen3("dot -Tsvg") do |dot, img, err|
+      dot.write semantic_relation_dot(srt)
+      dot.close
+      result = img.read
+      errors = err.read
+    end
+
+    raise VisualizationError, "graphviz exited: #{errors}" unless errors.blank?
+
+    result
+  end
+
+  private
+
+  def semantic_relation_heads(srt)
+    tokens.select do |t|
+     t.outgoing_semantic_relations.any? { |osa| osa.semantic_relation_type == srt} or t.incoming_semantic_relations.any? { |isa| isa.semantic_relation_type == srt }
+    end.uniq
+  end
+
+  def semantic_relation_dot(srt)
+    srh = semantic_relation_heads(srt)
+    "digraph discourse {\n" +
+     "\trankdir=TD;\n" +
+      "\tnode [shape = ellipse];\n" +
+      (srh.map do |head|
+         l = "\t#{head.id} [label = " + '"' + head.label_semantic_relation_span(srt) + '"];' + "\n" +
+           "\tH#{head.id} [label = " + '"", shape=none];' + "\n" +
+           "\t#{head.id} -> H#{head.id} [style=invis];"
+         if head.outgoing_semantic_relations.empty? and head.find_semantic_relation_head(srt)
+           l += "\n\t#{head.find_semantic_relation_head(srt).id} -> #{head.id} [label = " + '"CONTAINS", style=dashed];'
+         end
+         l += (head.outgoing_semantic_relations.map do |sr|
+                 "\t#{sr.target.id} -> #{sr.controller.id} [ label = " + '"' + sr.semantic_relation_tag.tag + '"];'
+                 end.join("\n"))
+         l
+       end.join("\n")) +
+      "\n}"
+  end
+
+  public
+
+  def has_discourse_annotation?
+    tokens.any? do |t|
+      t.has_relation_type?(SemanticRelationType.find_by_tag('Discourse'))
+    end
+  end
+
+  # Tests if review is complete.
+  def review_complete?
+    not sentences.where('reviewed_by IS NULL').exists?
+  end
+
+  # Tests if annotation is complete.
+  def annotation_complete?
+    not sentences.where('annotated_by IS NULL').exists?
+  end
+
+  # Returns the completion state.
+  def completion
+    if annotation_complete?
+      if review_complete?
+        :reviewed
+      else
+        :annotated
+      end
+    else
+      :unannotated
+    end
   end
 end

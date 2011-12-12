@@ -59,7 +59,9 @@ class Transliterator
   end
 
   def transliterate_string(string, options = {})
-    s = @machine.analyse(string)
+    s = @machine.analyse(string).map do |t|
+      t.force_encoding("UTF-8") # FIXME: deal with broken ruby-sfst
+    end
     r = @decomposed ? s.map { |c| Unicode.normalize_C(c) } : s
     r
   end

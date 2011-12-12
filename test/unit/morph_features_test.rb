@@ -159,7 +159,6 @@ class MorphFeaturesTestCase < ActiveSupport::TestCase
   def test_pos_s
     assert_equal 'Df', MorphFeatures.new(',Df,lat', nil).pos_s
     assert_equal 'R-', MorphFeatures.new(',R-,lat', nil).pos_s
-    assert_equal 'R-', MorphFeatures.new(',R,lat', nil).pos_s
   end
 
   def test_morphology_s
@@ -223,12 +222,6 @@ class MorphFeaturesTestCase < ActiveSupport::TestCase
     assert_equal true,  MorphFeatures.new('foo,V-,lat', '-pppama--i').valid? # present participle
     assert_equal true,  MorphFeatures.new('foo,V-,lat', '2sfip----i').valid? # future indicative
     assert_equal true,  MorphFeatures.new('foo,V-,lat', '---u--d--i').valid? # supine, dative
-  end
-
-  def test_union
-    m = MorphFeatures.new(',D,lat', nil)
-    n = MorphFeatures.new('bar,-f,lat', '-------p-i')
-    assert_equal 'bar,Df,lat,-------p-i', m.union(n).to_s
   end
 
   def test_completions

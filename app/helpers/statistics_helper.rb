@@ -1,16 +1,7 @@
 module StatisticsHelper
   def statistics(title, unit, data)
     data = data.sort_by { |k, v| v }.reverse
-    content_tag(:div, pie_chart(title, data) + statistics_table(title, unit, data, :percentage => true) + "<br/>", :class => "statistics")
-  end
-
-  def statistics_table(title, unit, data, options = {})
-    total = data.map { |k, v| v}.sum if options[:percentage]
-    unless total.zero?
-      content_tag(:table, data.map { |k, v| content_tag(:tr, content_tag(:td, k.is_a?(Symbol) ? k.humanize : k) + content_tag(:td, pluralize(v, unit)) + (total ? content_tag(:td, "#{(v * 100.0 / total).to_i}%") : ""), :class => cycle('even', 'odd')) }.join)
-    else
-      ''
-    end
+    pie_chart(title, data)
   end
 
   # Veerle's top colour scheme from http://beta.dailycolorscheme.com/archive/2006/09/20
@@ -23,7 +14,7 @@ module StatisticsHelper
       end
       data.each_with_index do |data, i|
         k, v = *data
-        pc.data k.is_a?(Symbol) ? k.humanize : k, v, COLORS[i]
+        pc.data k.is_a?(Symbol) ? k.to_s.humanize : k, v, COLORS[i]
       end
     end.to_url)
   end
@@ -31,7 +22,7 @@ module StatisticsHelper
   def line_chart(title, data)
     raise ArgumentError, "No data" if data.length.zero?
 
-    x_labels = data.keys
+    x_labels = data.keys.sort
 
     # If many labels, reduce the number to be more manageable.
     if x_labels.length > 6
@@ -44,7 +35,7 @@ module StatisticsHelper
     alfa, beta = least_squares((0..data.length-1).to_a, data.values)
     lsq = (0..data.length - 1).to_a.map { |x| alfa + beta * x }
 
-    image_tag(GoogleChart::LineChart.new("630x200", title, false) do |lc|
+    image_tag(GoogleChart::LineChart.new("740x200", title, false) do |lc|
       lc.data "Annotations", data.values, COLORS[0]
       lc.data "Average", [average] * data.length, COLORS[1]
       lc.data "Trend", lsq, COLORS[2]

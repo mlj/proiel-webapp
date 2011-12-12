@@ -1,5 +1,0 @@
-<%= form.input :form %>
-<%= form.input :empty_token_sort, :required => false %>
-<%= form.input :morphology, :label_method => :abbreviated_summary, :required => false %>
-<%= form.input :lemma, :collection => Lemma.by_language(@token.language).find(:all, :order => ["lemma ASC"]), :label_method => :export_form, :required => false %>
-<%= form.input :foreign_ids, :hint => 'A comma-separated list of key-value pairs that link the lemma to some external resource.', :label => 'Foreign IDs', :required => false %>

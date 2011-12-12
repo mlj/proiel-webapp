@@ -1,0 +1,8 @@
+%p.centered-images
+  - if @activity_stats.length > 1
+    != line_chart "Recent activity", @activity_stats
+
+%p.centered-images
+  != statistics "Completion", "sentence", @sentence_completion_stats
+  != statistics "Annotators", "sentence", @annotated_by_stats
+  != statistics "Reviewers", "sentence", @reviewed_by_stats

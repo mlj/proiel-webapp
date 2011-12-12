@@ -1,0 +1,50 @@
+- javascript "prototype", "scriptaculous", "utils", "effects", "dragdrop", "controls"
+- javascript 'dependency_inferences', 'dependency_relations', "tree", "dependencies"
+- stylesheet "dependencies"
+
+%div{:id => "annotation", :class => "annotation"}
+  != hidden_field_tag 'input-tokens', @sentence.syntactic_annotation_with_tokens(params[:output])[:tokens].to_json
+  != hidden_field_tag 'input-structure', @sentence.syntactic_annotation_with_tokens(params[:output])[:structure].to_json
+  != hidden_field_tag 'input-relations', @sentence.syntactic_annotation_with_tokens(params[:output])[:relations].map(&:tag).to_json
+
+  %div{:class => "actions"}
+    != button_to_function "Delete subtree", "", :id => 'button-delete', :disabled => true
+    != button_to_function "Cut subtree", "", :id => 'button-cut', :disabled => true
+    != button_to_function "Paste subtree", "", :id => 'button-paste', :disabled => true
+    != button_to_function "Clear", "", :id => "button-clear"
+    != button_to_function "Reset", "", :id => "button-reset"
+    != button_to_function "Add asyndetic conjunction", "", :id => "button-insert-empty-conjunction-node"
+    != button_to_function "Add empty verbal node", "", :id => "button-insert-empty-verbal-node"
+    != button_to_function "Add slash", "", :id => 'button-add-slash', :disabled => true
+    != button_to_function "Remove slashes", "", :id => 'button-remove-slashes', :disabled => true
+
+  %div{:class => "actions"}
+    %label Build direction
+    != radio_button_to_function "direction", "down", true, "onChangeDirectionClick()", :id => 'build-down'
+    Downwards
+    != radio_button_to_function "direction", "up", false, "onChangeDirectionClick()", :id => 'build-up'
+    Upwards
+
+  %div{:id => "palette"}
+    - @sentence.syntactic_annotation_with_tokens(params[:output])[:relations].each do |v|
+      %label{:for => v.tag}
+        %input{:type => "radio", :name => "relation-palette", :id => v.tag, :value => v.tag}
+        %span
+          != readable_relation(v)
+
+  %div{:id => "words"}
+    - @sentence.tokens.takes_morphology.each do |t|
+      %label{:for => "word-#{t.id}"}
+        %input{:type => "radio", :name => "token-palette", :id => "word-#{t.id}", :value => t.id}
+        %span
+          %span{:class => "form"}
+            != format_token_form(t)
+          %span{:class => "token-number"}
+            = t.token_number
+
+  %ul{:id => "relations", :lang => @sentence.language.tag, :class => "tree"}
+
+  .button-row
+    != form_tag({ :controller => 'dependencies', :action => 'update', :sentence_id => @sentence, :wizard => params[:wizard]}, :method => :put, :id => 'dependencies-form') do
+      != hidden_field_tag 'output', ''
+      != submit_tag 'Save'

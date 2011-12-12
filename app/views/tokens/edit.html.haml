@@ -1,0 +1,20 @@
+- context_bar do
+  %p.breadcrumbs
+    != breadcrumbs @source, @source_division, @sentence, @token, 'Edit'
+    != completion_rate @token.completion
+  %p
+    != external_text_links @token.sentence
+
+= semantic_form_for @token do |f|
+  = f.inputs do
+    != f.input :form
+    != f.input :presentation_before, :required => false, :label => 'Presentation text before token'
+    != f.input :presentation_after, :required => false, :label => 'Presentation text after token'
+    != f.input :citation_part, :required => false, :label => 'Citation', :hint => 'The part of the citation that is not shared between all tokens in the source'
+    != f.input :lemma, :collection => @token.language.lemmata, :required => false
+    != f.input :morphology, :required => false
+    != f.input :empty_token_sort, :required => false
+    != f.input :foreign_ids, :hint => 'A comma-separated list of key-value pairs that link the lemma to some external resource.', :label => 'Foreign IDs', :required => false
+
+  = f.actions do
+    != f.submit 'Update'

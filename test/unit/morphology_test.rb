@@ -37,7 +37,7 @@ class MorphologyTestCase < ActiveSupport::TestCase
     t.save
 
     assert_equal @m1, t.morphology
-    assert_equal @tag1, t.read_attribute(:morphology)
+    assert_equal @tag1, t.morphology_tag
     assert_equal @m1, t.morph_features.morphology
     assert_equal @tag1, t.morph_features.morphology.to_s
     assert_equal @tag1, t.morph_features.morphology_s
@@ -46,7 +46,7 @@ class MorphologyTestCase < ActiveSupport::TestCase
     t.save
 
     assert_equal @m2, t.morphology
-    assert_equal @tag2, t.read_attribute(:morphology)
+    assert_equal @tag2, t.morphology_tag
     assert_equal @m2, t.morph_features.morphology
     assert_equal @tag2, t.morph_features.morphology.to_s
     assert_equal @tag2, t.morph_features.morphology_s
@@ -58,7 +58,7 @@ class MorphologyTestCase < ActiveSupport::TestCase
     t.save
 
     assert_equal @m1, t.morphology
-    assert_equal @tag1, t.read_attribute(:morphology)
+    assert_equal @tag1, t.morphology_tag
     assert_equal @m1, t.morph_features.morphology
     assert_equal @tag1, t.morph_features.morphology.to_s
     assert_equal @tag1, t.morph_features.morphology_s
@@ -67,7 +67,7 @@ class MorphologyTestCase < ActiveSupport::TestCase
     t.save
 
     assert_equal @m2, t.morphology
-    assert_equal @tag2, t.read_attribute(:morphology)
+    assert_equal @tag2, t.morphology_tag
     assert_equal @m2, t.morph_features.morphology
     assert_equal @tag2, t.morph_features.morphology.to_s
     assert_equal @tag2, t.morph_features.morphology_s

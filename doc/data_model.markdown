@@ -1,8 +1,20 @@
 % Data model
 % Marius L. Jøhndal
+% 9 March 2012
 
-Alignment
-=========
+# General conventions
+
+## Languages
+
+Columns named `language_tag` contain an ISO-639-3 (three letter) language
+tag. Valid tags are all tags defined in the most recent version of the
+ISO-639-3 standard.
+
+
+
+
+
+# Alignment
 
 For all alignments the directionality of the alignment relations is from the
 secondary source, i.e. the assumed translation, to the primary source, i.e. the

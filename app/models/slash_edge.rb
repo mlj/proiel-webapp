@@ -11,7 +11,7 @@ class SlashEdge < ActiveRecord::Base
     :message => 'Slash edge already exists in dependency structure'
   validates_presence_of :relation
 
-  acts_as_audited
+  change_logging
 
   # Returns +true+ if the slash points to the slasher's head.
   def points_to_head?

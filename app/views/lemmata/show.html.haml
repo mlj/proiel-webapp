@@ -1,0 +1,22 @@
+- context_bar do
+  .breadcrumbs
+    != breadcrumbs ['Dictionary', dictionary_path], [@lemma.language_name, dictionary_path(@lemma.language_tag)], @lemma
+  .resources
+    != link_to_resources @lemma, :edit
+
+- layer_if((is_reviewer? and !@mergeable_lemmata.empty?), "similar_lemmata") do
+  %ul
+    - @mergeable_lemmata.each do |l|
+      %li
+        != link_to l.export_form, l
+        != button_to "Merge", :action => 'merge', :id => @lemma, :other_id => l.id
+
+- layer_unless @lemma.notes.empty?, "notes" do
+  != notes_summary @lemma.notes
+
+!= semantic_tags_summary @semantic_tags
+
+!= render_tabular @tokens, nil, :partial => 'annotations/annotation', :css_class => 'concordance'
+
+- layer_if  (is_reviewer? and !@lemma.audits.empty?), "revisions" do
+  != audits_summary @lemma.audits

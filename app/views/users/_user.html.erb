@@ -1,9 +1,0 @@
-<tr>
-  <td><%= user.login %></td>
-  <td><%= user.full_name %></td>
-  <td><%= user.email %></td>
-  <td><%= user.role.description %></td>
-  <td><%= user.sign_in_count %> <%= user.confirmed_at.blank? ? '(Not confirmed)' : '' %></td>
-  <td><%= user.last_sign_in_at.blank? ? '' : "#{user.last_sign_in_at} (#{user.last_sign_in_ip})" %></td>
-  <td><%= link_to 'Details', user %></td>
-</tr>

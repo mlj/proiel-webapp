@@ -1,0 +1,13 @@
+- context_bar do
+  .breadcrumbs
+    != breadcrumbs ['Annotation', wizard_path], "#{remaining_assigned_sentences} in annotation queue"
+  %p
+    != external_text_links @sentence
+
+!= render 'context'
+
+!= form_tag({ :controller => 'morphtags', :action => 'update', :sentence_id => @sentence, :wizard => true}, :id => "morphtag-form", :method => :put) do
+  != render 'morphtags/form'
+  != submit_tag 'Save'
+
+!= button_to 'Skip', :action => 'next_sentence'

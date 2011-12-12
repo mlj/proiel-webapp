@@ -1,7 +1,8 @@
+# encoding: UTF-8
 #--
 #
-# Copyright 2011 University of Oslo
-# Copyright 2011 Marius L. Jøhndal
+# Copyright 2011, 2012 University of Oslo
+# Copyright 2011, 2012 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #

@@ -1,0 +1,7 @@
+- javascript 'application'
+
+!= semantic_form_for @user, :url => profile_path, :html => { :method => :put } do |f|
+  != f.inputs :name => 'Your profile' do
+    != f.input :graph_format, :as => :radio, :collection => %w(PNG SVG), :label => 'Image format'
+    != f.input :graph_method, :as => :radio, :collection => %w(unsorted linearized packed full), :label => 'Method'
+    != f.submit 'Update'

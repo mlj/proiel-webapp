@@ -1,4 +1,0 @@
-/* Projection specific stuff */
-
-/* Hide headline and footer. They take a lot of space. */
-#headline, #footer { display: none; }

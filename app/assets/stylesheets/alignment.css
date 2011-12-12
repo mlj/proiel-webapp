@@ -1,0 +1,9 @@
+table.alignment { border-spacing: 0.5em 1em; }
+
+table.alignment a.unalign {
+  padding-left: 16px;
+  background: transparent image_url(sweetie/16-square-red-remove.png) no-repeat center left;
+  margin-right: 1em;
+}
+
+table.alignment .draggable, table.alignment .droppable { display: inline; }

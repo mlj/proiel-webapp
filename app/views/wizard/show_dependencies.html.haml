@@ -1,0 +1,33 @@
+- context_bar do
+  .breadcrumbs
+    != breadcrumbs ['Annotation', wizard_path], @source, @source_division, @sentence, 'Verify annotation'
+  %p
+    = remaining_assigned_sentences
+    in annotation queue
+  %p
+    != external_text_links @sentence
+
+%p
+  .section-heading
+    %h1 Sentence in context
+    - if is_annotator?
+      != link_to " (Change tokenization or sentence division)", edit_sentence_tokenizations_path(@sentence), :method => :get
+
+  != format_sentence @sentence_window, :citations => true, :sentence_numbers => true, :highlight => @sentence, :sentence_breaks => true, :link_to => :sentences
+
+  .section-heading
+    %h1 Morphology
+    - if is_annotator?
+      != link_to "(Edit)", :action => "edit_morphtags", :sentence_id => params[:sentence_id], :wizard => true
+  %p
+    != render 'morphtags/show'
+
+  .section-heading
+    %h1 Syntax
+    - if is_annotator?
+      != link_to "(Edit)", :action => "edit_dependencies", :sentence_id => params[:sentence_id], :wizard => true
+  %p
+    != render 'dependencies/show'
+
+.button-row
+  != button_to 'Verify', :action => "verify", :sentence_id => params[:sentence_id]

@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010 University of Oslo
-# Copyright 2007, 2008, 2009, 2010 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -19,10 +19,15 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
+
 class Language
   include Comparable
 
   attr_reader :tag
+
+  def self.all
+    ISOCodes.all_iso_639_3_codes.map { |l| Language.new(l) }.sort_by(&:name)
+  end
 
   def self.find(tag)
     if ISOCodes.find_language(tag)
@@ -89,7 +94,7 @@ class Language
         completion_candidates = query
       end
 
-      completions = Lemma.by_completions(language_code, completion_candidates)
+      completions = Lemma.where(:language_tag => language_code).by_completions(completion_candidates)
 
       [results.sort.uniq, completions]
     else
@@ -99,5 +104,17 @@ class Language
 
   def <=>(x)
     self.tag <=> x.tag
+  end
+
+  def errors
+    ActiveModel::Errors.new(self)
+  end
+
+  def lemmata
+    Lemma.where(:language_tag => tag).order('lemma ASC')
+  end
+
+  def to_label
+    name
   end
 end

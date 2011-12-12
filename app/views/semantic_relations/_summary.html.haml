@@ -1,0 +1,5 @@
+%li= readable_semantic_relation(summary.semantic_relation_type, summary.semantic_relation_tag, summary.controller, summary.target, params[:query])
+(
+=link_to 'Details', :controller => 'semantic_relations', :action => 'show', :id => summary.id
+=link_to 'Edit', :controller => 'semantic_relations', :action => 'edit', :id => summary.id
+)

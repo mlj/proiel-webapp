@@ -2,7 +2,7 @@ one:
   id: 1
   token_number: 1
   sentence_id: 1
-  morphology: ---------n
+  morphology_tag: ---------n
   form: cum
   presentation_after: ", "
   lemma_id: 1
@@ -13,7 +13,7 @@ two:
   id: 2
   token_number: 2
   sentence_id: 1
-  morphology: ---------n
+  morphology_tag: ---------n
   form: cum
   presentation_after: " "
   lemma_id: 2
@@ -24,7 +24,7 @@ three:
   id: 3
   token_number: 3
   sentence_id: 1
-  morphology: ---------n
+  morphology_tag: ---------n
   form: cum
   presentation_before: "("
   presentation_after: ") "
@@ -36,7 +36,7 @@ four:
   id: 4
   token_number: 4
   sentence_id: 1
-  morphology: ---------n
+  morphology_tag: ---------n
   form: cum
   presentation_after: "!"
   lemma_id: 2
@@ -59,3 +59,48 @@ greek_single_letter_word:
   sentence_id: 200
   token_number: 3
   form: ἢ
+information_structure_antecedent:
+  id: 10001
+  token_number: 1
+  sentence_id: 2
+  form: first
+  citation_part: "2.0"
+information_structure_filler1:
+  id: 10002
+  token_number: 2
+  sentence_id: 2
+  form: second
+  citation_part: "2.0"
+information_structure_anaphor1:
+  id: 10003
+  token_number: 3
+  sentence_id: 2
+  form: third
+  citation_part: "2.0"
+  antecedent_id: 10001
+information_structure_filler2:
+  id: 10004
+  token_number: 4
+  sentence_id: 2
+  form: forth
+  citation_part: "2.0"
+information_structure_anaphor2:
+  id: 10005
+  token_number: 5
+  sentence_id: 2
+  form: fifth
+  citation_part: "2.0"
+  antecedent_id: 10001
+information_structure_filler3:
+  id: 10006
+  token_number: 1
+  sentence_id: 3
+  form: second
+  citation_part: "2.0"
+information_structure_anaphor3:
+  id: 10007
+  token_number: 2
+  sentence_id: 3
+  form: third
+  citation_part: "2.0"
+  antecedent_id: 10001

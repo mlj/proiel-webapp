@@ -1,0 +1,44 @@
+- context_bar do
+  %p.breadcrumbs
+    != breadcrumbs @source, @source_division, @sentence, @token
+    != completion_rate @token.completion
+  .resources
+    != link_to_resources @token, :edit, :previous, :next
+  %p
+    != external_text_links @token.sentence
+
+- layer "annotation" do
+  - if @token.form
+    %dt Form:
+    %dd.foreign-word!= format_token_form @token
+  - if @token.is_morphtaggable? and @token.morph_features
+    %dt Part of speech:
+    %dd= @token.morph_features.pos_summary.capitalize
+    %dt Morphology:
+    %dd= @token.morph_features.morphology_summary.capitalize
+    %dt Lemma:
+    - if @token.lemma
+      %dd.foreign-word!=link_to_lemma @token.lemma
+    - else
+      &nbsp;
+  - if @token.relation
+    %dt Dependency relation:
+    %dd!= readable_dependency @token.relation, (@token.head ? link_to(@token.head.id, @token.head) : nil)
+  - if @token.foreign_ids
+    %dt Foreign IDs:
+    %dd.tag= @token.foreign_ids
+
+- layer_unless @token.notes.empty?, "notes" do
+  != notes_summary @token.notes
+
+- layer_unless @semantic_tags.empty?, 'semantic_tags' do
+  != semantic_tags_summary @semantic_tags
+
+- layer_unless @outgoing_semantic_relations.empty?, 'outgoing_semantic_relations' do
+  != semantic_relations_summary @outgoing_semantic_relations
+
+- layer_unless @incoming_semantic_relations.empty?, 'incoming_semantic_relations' do
+  != semantic_relations_summary @incoming_semantic_relations
+
+- layer_unless @token.audits.empty?, "revisions" do
+  != audits_summary @token.audits

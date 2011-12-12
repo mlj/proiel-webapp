@@ -189,8 +189,8 @@ module Tagger
         elsif ordered_candidates.length == 0
           [:failed, nil]
         else
-          [ordered_candidates.tail.length == 0 ? :unambiguous : :ambiguous,
-            ordered_candidates.head.first] + ordered_candidates
+          [ordered_candidates.length == 1 ? :unambiguous : :ambiguous,
+            ordered_candidates.first.first] + ordered_candidates
         end
       end
 

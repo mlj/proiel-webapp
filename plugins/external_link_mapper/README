@@ -1,0 +1,3 @@
+External linkers are plugins that map text citations to external URLs.
+These external URLs will be linked to in the relevant annotation views in
+the web application.

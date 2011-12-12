@@ -257,12 +257,6 @@ Wishlist
   * Verify that manual rules for closed parts of speech match annotation for Latin,
     Gothic and OCS
 
-  * Wiki
-
-  * Re-write silly `bookmark` system as a true assignment system.
-
-    Blocked by lack of first-order text division objects in the data model.
-
   * User-configurable transliteration functions
 
   * Add transliteration to search boxes

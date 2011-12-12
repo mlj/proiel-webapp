@@ -1,0 +1,12 @@
+- javascript 'application'
+
+- roundedbox do
+  %dl
+    %dt Originator:
+    %dd!= link_to_originator @note.originator
+    %dt Reference:
+    %dd!= link_to_notable @note.notable
+  != link_to_resources @note, :edit, :delete
+
+- layer 'contents' do
+  = @note.contents

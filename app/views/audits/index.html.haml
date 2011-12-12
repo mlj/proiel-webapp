@@ -1,0 +1,12 @@
+.tabular
+  != will_paginate @audits
+
+  %table.odd-even-line
+    %thead
+      %tr
+        %th Created by
+        %th Created at
+        %th Changed object
+
+    %tbody
+      != render @audits

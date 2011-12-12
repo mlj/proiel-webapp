@@ -2,41 +2,41 @@ one:
   id: 1
   lemma: cum
   variant:
-  language: lat
-  part_of_speech: R-
+  language_tag: lat
+  part_of_speech_tag: R-
 two:
   id: 2
   lemma: cum
   variant:
-  language: lat
-  part_of_speech: C-
+  language_tag: lat
+  part_of_speech_tag: C-
 lemma_3:
   id: 3
   lemma: bellum
   variant:
-  language: lat
-  part_of_speech: Nb
+  language_tag: lat
+  part_of_speech_tag: Nb
 lemma_4:
   id: 4
   lemma: belligero
   variant:
-  language: lat
-  part_of_speech: V-
+  language_tag: lat
+  part_of_speech_tag: V-
 lemma_5:
   id: 5
   lemma: cedo
   variant: 1
-  language: lat
-  part_of_speech: V-
+  language_tag: lat
+  part_of_speech_tag: V-
 lemma_6:
   id: 6
   lemma: Cedron
   variant:
-  language: lat
-  part_of_speech: Ne
+  language_tag: lat
+  part_of_speech_tag: Ne
 lemma_7:
   id: 7
   lemma: Cedron
   variant: 2
-  language: lat
-  part_of_speech: Ne
+  language_tag: lat
+  part_of_speech_tag: Ne

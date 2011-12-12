@@ -1,9 +1,11 @@
 !!! Strict
 %html{:xmlns => 'http://www.w3.org/1999/xhtml', 'xml:lang' => 'en', :lang => 'en'}
-
   %head
     %title
-      = "The PROIEL corpus"
+      - if show_title?
+        = ['The PROIEL corpus', yield(:title)].join(': ')
+      - else
+        The PROIEL corpus
 
     %link{:rel => 'shortcut icon', :href => '/favicon.ico'}
     %link{:rel => 'search', :type => 'application/opensearchdescription+xml', :title => 'Search the PROIEL corpus', :href => '/search.xml'}
@@ -20,59 +22,55 @@
     %meta{:name => 'DC.publisher', :content => CONFIG.dc_publisher}
     %meta{:name => 'DC.identifier', :scheme => 'DCTERMS.URI', :content => CONFIG.base_url}
 
-    %meta{"http-equiv"=>"Content-Type", :content=>"text/html; charset=utf-8"}
+    %meta{"http-equiv" => "Content-Type", :content=>"text/html; charset=utf-8"}
 
-    != javascript_include_tag "prototype", "scriptaculous", "utils", "effects", "dragdrop", "controls", :cache => "base"
-    != stylesheet_link_tag "all"
-    != stylesheet_link_tag "pagination"
-    != stylesheet_link_tag "message_block"
+    != csrf_meta_tag
+
     != stylesheet_link_tag "screen",     :media => "screen"
-    != stylesheet_link_tag "print",      :media => "print"
-    != stylesheet_link_tag "projection", :media => "projection"
 
     != yield :head
 
   %body
     #headline
-    #user-navbar{:class => 'navbar'}
-      - if user_signed_in?
-        %span{:style => "float:left"}
-          != link_to 'Contents', '/', :accesskey => 't', :accesskey => '1'
-          - if current_user.has_role?(:annotator)
-            != link_to 'Annotation', :controller => :wizard
-          - if current_user.has_role?(:annotator)
-            != link_to 'Statistics', statistics_path
-          != link_to 'Search', { :controller => :home, :action => :search }, :accesskey => 's', :style => 'display: none'
-          != link_to 'Downloads', site_path('public_data')
-          != link_to 'Preferences', edit_preferences_path
-          != link_to 'Your profile', edit_user_registration_path
+
+    #navigation-bar
+      .left
+        != link_to 'Contents', root_path, :accesskey => 't', :accesskey => '1'
+        != link_to 'Dictionary', dictionaries_path
+        != link_to 'Search', search_path
+        - if is_annotator?
+          != link_to 'Annotation', wizard_path
+          != link_to 'Statistics', statistics_path
+        - if is_reviewer?
+          != link_to 'Changelog', audits_path
+          != link_to 'Users', users_path
+        - if user_signed_in?
+          != link_to 'Your profile', edit_profile_path
+      .right
+        - if user_signed_in?
           != link_to 'Logout', destroy_user_session_path
-          != link_to 'Help', site_path('help'), :accesskey => '6'
-        %span{:style => "float:right"}
-          - form_tag({ :controller => "home", :action => "quick_search" }, { :style => 'display: inline; padding: 0 0 0 0;' }) do
-            != text_field_tag :q, params[:q], :size => 15
-            != submit_tag 'Search'
-        %br{:style => "clear:both"}
+        - else
+          != link_to 'Sign in', new_user_session_path
+        != link_to 'Help', page_path('help'), :accesskey => '6'
+        != link_to 'Downloads', page_path('public_data')
+
+    - if show_context_bar?
+      #context-bar
+        != yield(:context_bar)
+
+    - if show_message_block?
+      #message-block
+        != message_block
+
+    #contents
+      - if controller_name == 'pages'
+        .markdown
+          != yield
       - else
-        &nbsp;
-    - if current_user and current_user.has_role?(:reviewer)
-      #admin-navbar{:class => 'navbar'}
-        != link_to 'History', audits_path
-        != link_to 'Users', users_path
-        != link_to 'Sources', sources_path
-        != link_to 'Sentences', sentences_path
-        != link_to 'Tokens', tokens_path
-        != link_to 'Lemmata', lemmata_path
-        != link_to 'Notes', notes_path
-
-    #body
-      != message_block :flash_types => [:alert, :notice, :back, :confirm, :error, :info, :warn]
-
-      - if show_title?
-        %h1= yield :title
-      != yield
+        != yield
 
     #footer
-      %span{ :class => "tag"} proiel
-      release
-      = PROIEL_RELEASE
+      %span.tag proiel-webtool
+      != "release #{PROIEL_RELEASE}."
+      %br
+      This application is Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo, Marius L. Jøhndal, Dag Haug and Anders Nøklestad, and released under the GNU General Public License version 2.

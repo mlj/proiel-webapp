@@ -1,9 +1,8 @@
+# encoding: UTF-8
 #--
 #
-# metadata.rb - TEI metadata functions for PROIEL sources
-#
-# Copyright 2008, 2009, 2010 University of Oslo
-# Copyright 2008, 2009, 2010 Marius L. Jøhndal
+# Copyright 2008, 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -25,7 +24,10 @@
 class Metadata
   attr_reader :error_message
 
-  TEI_HEADER_HTML_STYLESHEET = File.join(Rails.root, 'lib', 'teiheader.xsl')
+  HTML_STYLESHEET_FILE_NAME = Rails.root.join('lib', 'metadata.xsl')
+  HTML_STYLESHEET = Nokogiri::XSLT(File.read(HTML_STYLESHEET_FILE_NAME))
+  NAMESPACE = 'http://www.tei-c.org/ns/1.0'
+  ROOT_PATH = '/TEI.2/teiHeader'
 
   # Creates a new instance from an XML fragment containing the header. The header
   # should be a TEI header and the top level element in the XML fragment must be
@@ -38,23 +40,19 @@ class Metadata
       @error_message = nil
       @valid = true
 
-      parser = XML::Parser.string(header)
-      begin
-        @header = parser.parse
+      @header = Nokogiri::XML(header)
 
-        unless @header.find("/teiHeader").length == 1
+      if @header.errors.empty?
+        unless @header./(ROOT_PATH).length == 1
           @error_message = 'Header top element is invalid'
           @valid = false
           @header = nil
         end
-      rescue LibXML::XML::Parser::ParseError => p
-        @error_message = p
+      else
+        @error_message = @header.errors.join(', ')
         @valid = false
       end
     end
-
-    stylesheet_doc = XML::Document.file(TEI_HEADER_HTML_STYLESHEET)
-    @stylesheet = XSLT::Stylesheet.new(stylesheet_doc)
   end
 
   # Checks if the metadata header is valid.
@@ -66,26 +64,23 @@ class Metadata
     @header ? @header.to_s : nil
   end
 
-  # Writes the metadata header using an XML builder. The function takes care
-  # of setting up the necessary namespace.
-  def write(builder)
-    builder.teiHeader(:xmlns => "http://www.tei-c.org/ns/1.0") { write_header(builder) }
-  end
-
   # Coverts the header to TEI using a stylesheet.
   def to_html
     if @header
-      xml_doc = XML::Document.new
-      xml_doc.root = (XML::Node.new('TEI.2') << @header.root.copy(true))
-      @stylesheet.apply(xml_doc)
+      HTML_STYLESHEET.transform(@header).to_s
     else
       nil
     end
   end
 
-  private
-
-  def write_header(builder)
-    @header and @header.find("/teiHeader/*").each { |e| builder << e.to_s }
+  # Returns the header on a format that is suitable for embedding within
+  # other XML documents, e.g. in text exports. The top-level element is
+  # +teiHeader+ and it contains the correct namespace attribute.
+  def export_form
+    if @header
+      h = @header./(ROOT_PATH).first.dup
+      h.default_namespace = NAMESPACE
+      h.to_s
+    end
   end
 end

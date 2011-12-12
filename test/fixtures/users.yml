@@ -8,7 +8,7 @@ quentin:
   confirmed_at: <%= 5.days.ago.to_s :db %>
   last_name: Tarantino
   first_name: Quentin
-  role_id: 1
+  role: reader
 aaron:
   id: 2
   login: aaron
@@ -18,4 +18,4 @@ aaron:
   created_at: <%= 1.days.ago.to_s :db %>
   last_name: Aaronsen
   first_name: Aaron
-  role_id: 1
+  role: reader

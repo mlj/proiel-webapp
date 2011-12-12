@@ -1,9 +1,61 @@
-class AuditsController < InheritedResources::Base
-  actions :index, :show, :destroy
+#--
+#
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
+#
+# This file is part of the PROIEL web application.
+#
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+#++
 
+class AuditsController < ApplicationController
+  respond_to :html, :xml
   before_filter :is_annotator?
   before_filter :is_administrator?, :only => [:destroy]
-  before_filter :find_parents
+
+  def index
+    if params[:sentence_id]
+      # Grab changes related to this sentence, i.e. the object itself and
+      # its tokens.
+
+      @sentence = Sentence.find(params[:sentence_id])
+      @tokens = @sentence.tokens.includes(:lemma)
+
+      objs = []
+      objs << [Sentence, [@sentence]]
+      objs << [Token, @tokens]
+      s = objs.map { |k, v| "(auditable_type = '#{k}' AND auditable_id IN (?))" }.join(' OR ')
+      v = objs.map { |k, v| v }
+
+      @audits = Audit.where(s, *v).page(current_page)
+    elsif params[:user_id]
+      # Grab changes by this user.
+      @user = User.find(params[:user_id])
+      @audits = @user.audits.page(current_page)
+    else
+      @audits = Audit.page(current_page)
+    end
+
+    respond_with @audits
+  end
+
+  def show
+    @audit = Audit.find(params[:id])
+
+    respond_with @audit
+  end
 
   def destroy
     @audit = Audit.find(params[:id])
@@ -21,21 +73,5 @@ class AuditsController < InheritedResources::Base
     else
       flash[:error] = "Object has been modified after this revision"
     end
-  end
-
-  private
-
-  def object
-    @audit = Audit.find(params[:id])
-  end
-
-  def collection
-    @audits = (@parent ? @parent.audits : Audit).paginate :page => current_page
-  end
-
-  protected
-
-  def find_parents
-    @parent = @user = User.find(params[:user_id]) unless params[:user_id].blank?
   end
 end

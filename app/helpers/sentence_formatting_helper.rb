@@ -7,33 +7,34 @@ module SentenceFormattingHelper
   #
   # ==== Options
   #
-  # <tt>:sentence_numbers</tt> -- If true, will insert sentence
-  # numbers between the words of the sentence. Each number will be
-  # contained within a +span+ of class +sentence-number+.
+  # <tt>:sentence_numbers</tt> -- If true, will insert sentence numbers in
+  # the text between the words of the sentence.
   #
-  # <tt>:token_numbers</tt> -- If true, will insert token numbers
-  # after each token. Each number will be contained within a +span+ of
-  # class +token_number+.
+  # <tt>:token_numbers</tt> -- If true, will insert token numbers in the
+  # text after each token.
   #
-  # <tt>:length_limit</tt> -- If not +nil+, will limit the length of
-  # the formatted sentence to the given number of words and append an
-  # ellipsis if the sentence exceeds that limit. If a negative number
-  # is given, the ellipis is prepended to the sentence.
+  # <tt>:citations</tt> -- If true, will insert citations whenever these
+  # change.
   #
-  # <tt>:highlight</tt> -- If set to an array of tokens, will
-  # highlight those tokens.
+  # <tt>:sentence_breaks</tt> -- If true, will flag sentence breaks.
   #
-  # <tt>:information_status</tt> -- If true, will put each token
-  # inside a span with a class named as
-  # "info-status-#{token.info_status}"
+  # <tt>:length_limit</tt> -- If not +nil+, will limit the length of the
+  # formatted sentence to the given number of words and append an ellipsis
+  # if the sentence exceeds that limit. If a negative number is given, the
+  # ellipis is prepended to the sentence.
   #
-  # <tt>:ignore_links</tt> -- If true, will not produce links to other
-  # resources, e.g. to annotation views for sentences, in the
-  # sentence.
-  def format_sentence(value, options = {})
+  # <tt>:highlight</tt> -- A token or sentence object or an array of such
+  # objects to highlight.
+  #
+  # <tt>:link_to</tt> -- If <tt>:tokens</tt>, will link to tokens. If
+  # <tt>:sentences</tt>, will link to sentences.
+  def format_sentence(value, options = {}, &block)
     options.reverse_merge! :highlight => []
+    options[:highlight] = [options[:highlight]] if options[:highlight].is_a?(Token) or options[:highlight].is_a?(Sentence)
 
     x = nil
+
+    value = value.all if value.is_a?(ActiveRecord::Relation)
 
     if value.is_a?(Sentence)
       x = value.tokens_with_dependents_and_info_structure.with_prodrops_in_place
@@ -47,20 +48,17 @@ module SentenceFormattingHelper
       end
     end
 
-    raise "Invalid value of type #{value.class}" if x.nil?
-
-    markup = format_tokens(x, x.first.language, options)
-    "<span class='formatted-text'>#{markup}</span>"
+    if x and x.length > 0
+      markup = format_tokens(x, options, &block)
+      "<div class='formatted-text' lang='#{x.first.language}'>#{markup}</div>".html_safe
+    else
+      ""
+    end
   end
 
   private
 
   UNICODE_HORIZONTAL_ELLIPSIS = Unicode::U2026
-
-  FORMATTED_REFERENCE_CLASSES = {
-    :sentence => 'sentence-number',
-    :token => 'token-number',
-  }.freeze
 
   FormattedReference = Struct.new(:reference_type, :reference_value)
 
@@ -68,7 +66,7 @@ module SentenceFormattingHelper
     include ActionView::Helpers::TagHelper
 
     def spacing_before?
-      reference_type != :token
+      reference_type != :token_number
     end
 
     def spacing_after?
@@ -77,25 +75,34 @@ module SentenceFormattingHelper
 
     def selected?(options)
       case reference_type
-      when :sentence
+      when :sentence_break
+        options[:sentence_breaks]
+      when :sentence_number
         options[:sentence_numbers]
-      when :token
+      when :token_number
         options[:token_numbers]
+      when :citation
+        options[:citations]
       else
         raise ArgumentError, 'invalid reference type'
       end
     end
 
-    def to_html(language, options)
-      content_tag(:span, reference_value, :class => FORMATTED_REFERENCE_CLASSES[reference_type])
+    def to_html(options)
+      if reference_value.to_s.empty?
+        ''
+      else
+        content_tag(:span, reference_value.to_s, :class => reference_type.to_s.dasherize, :lang => 'en')
+      end
     end
   end
 
-  FormattedToken = Struct.new(:text, :link, :extra_css, :token)
+  FormattedToken = Struct.new(:token, :extra_attributes, :object_path)
 
   class FormattedToken
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::UrlHelper
+    include ApplicationHelper
 
     def spacing_before?
       true
@@ -109,37 +116,52 @@ module SentenceFormattingHelper
       true
     end
 
-    def to_html(language, options)
-      css = extra_css || []
+    def to_html(options)
+      presentation_attributes = {}
+      form_attributes = presentation_attributes.merge(extra_attributes || {})
+      form_attributes[:class] ||= ''
+      form_attributes[:class] += ' token'
 
-      if options[:information_status]
-        if options[:highlight].include?(token)
-          css << info_status_css_class
-          css << 'ant-' + token.antecedent.id.to_s if token.antecedent
-          css << 'con-' + token.contrast_group if token.contrast_group
-          css << 'verb' if token.verb?
-        end
-        css << 'con-' + token.contrast_group if token.contrast_group
-        LangString.new(text, language, :id => 'token-' + token.id.to_s, :css => css * ' ').to_h
-      elsif link
-        # FIXME: the resource path is hard coded because sentence_path
-        # doesn't work inside an object.
-        link_to(LangString.new(text, language).to_h, "/sentences/#{link.id}", :class => (css << 'token') * ' ')
-      else
-        content_tag(:span, LangString.new(text, language).to_h, :class => css * ' ')
+      if options[:highlight].include?(token) or options[:highlight].include?(token.sentence)
+        presentation_attributes[:class] = 'highlight'
+        form_attributes[:class] += ' highlight'
       end
-    end
 
-    private
+      form_attributes[:class].strip!
 
-    def info_status_css_class
-      @info_status_css_class ||= if token.info_status && token.info_status != 'info_unannotatable'
-                                   'info-annotatable ' + token.info_status.gsub('_', '-')
-                                 elsif token.is_annotatable?
-                                   'info-annotatable no-info-status'
-                                 else
-                                   'info-unannotatable'
-                                 end
+      before = []
+      if token.first_visible_in_sentence?
+        if token.sentence.first_in_source_division?
+          before << token.sentence.source_division.presentation_before
+        end
+        before << token.sentence.presentation_before
+      end
+      before << token.presentation_before
+      before.compact!
+
+      after = []
+      after << token.presentation_after
+      if token.last_visible_in_sentence?
+        after << token.sentence.presentation_after
+        if token.sentence.last_in_source_division?
+          after << token.sentence.source_division.presentation_after
+        end
+      end
+      after.compact!
+
+      s = ''
+      s += content_tag :span, before.join, presentation_attributes unless before.empty?
+
+      case options[:link_to]
+      when :tokens, :sentences
+        s += link_to token.form, object_path, form_attributes
+      else
+        s += content_tag :span, token.form, form_attributes
+      end
+
+      s += content_tag :span, after.join, presentation_attributes unless after.empty?
+
+      s
     end
   end
 
@@ -149,11 +171,11 @@ module SentenceFormattingHelper
     def spacing_before?; false end
     def spacing_after?; false end
     def selected?(options); true end
-    def to_html(language, options); '' end
+    def to_html(options); '' end
   end
 
-  def format_tokens(tokens, language, options)
-    sequence = convert_to_presentation_sequence(tokens, options).select { |p| p.selected?(options) }
+  def format_tokens(tokens, options, &block)
+    sequence = convert_to_presentation_sequence(tokens, options, &block).select { |p| p.selected?(options) }
 
     sequence << EmptyFormattedToken.instance # add an extra non-rendering element so that each_cons doesn't miss the last token
 
@@ -161,24 +183,17 @@ module SentenceFormattingHelper
 
     if length_limit and sequence.length > length_limit
       if length_limit < 0
-        UNICODE_HORIZONTAL_ELLIPSIS + join_sequence(sequence.last(-length_limit), language, options)
+        UNICODE_HORIZONTAL_ELLIPSIS + join_sequence(sequence.last(-length_limit), options)
       else
-        join_sequence(sequence.first(length_limit), language, options) + UNICODE_HORIZONTAL_ELLIPSIS
+        join_sequence(sequence.first(length_limit), options) + UNICODE_HORIZONTAL_ELLIPSIS
       end
     else
-      join_sequence(sequence, language, options)
+      join_sequence(sequence, options)
     end
   end
 
-  def join_sequence(sequence, language, options)
-    result = ''
-
-    sequence.each_cons(2) do |x, y|
-      result += x.to_html(language, options)
-      result += "\n" if x.spacing_after? and y.spacing_before?
-    end
-
-    result
+  def join_sequence(sequence, options)
+    sequence.map { |x| x.to_html(options) }.join
   end
 
   def check_reference_update(state, reference_type, reference_id, reference_value)
@@ -190,18 +205,26 @@ module SentenceFormattingHelper
     end
   end
 
-  def convert_to_presentation_sequence(tokens, options)
-    state = {}
+  def convert_to_presentation_sequence(tokens, options, &block)
+    state = { }
     t = []
 
-    tokens.reject { |token| options[:information_status] ? (token.is_empty? and token.empty_token_sort != 'P' ) : token.is_empty? }.each do |token|
-      t << check_reference_update(state, :sentence, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
+    tokens.reject { |token| options[:information_status] ? (token.is_empty? and token.empty_token_sort != 'P' ) : token.is_empty? }.each_with_index do |token, i|
+      t << check_reference_update(state, :sentence_break, token.sentence.id, i.zero? ? '' : '|')
+      t << check_reference_update(state, :citation, token.citation_part, token.citation_part)
+      t << check_reference_update(state, :sentence_number, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
 
-      extra_css = []
-      extra_css << :highlight if options[:highlight].include?(token)
+      extra_attributes = block ? block.call(token) : nil
 
-      t << FormattedToken.new(token.form, options[:ignore_links] ? nil : token.sentence, extra_css, token)
-      t << FormattedReference.new(:token, token.token_number)
+      case options[:link_to]
+      when :tokens
+        t << FormattedToken.new(token, extra_attributes, token_path(token))
+      when :sentences
+        t << FormattedToken.new(token, extra_attributes, sentence_path(token.sentence))
+      else
+        t << FormattedToken.new(token, extra_attributes, nil)
+      end
+      t << FormattedReference.new(:token_number, token.token_number)
     end
 
     t.compact

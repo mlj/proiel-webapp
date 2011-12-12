@@ -1,0 +1,4 @@
+%tr
+  %td.user!= link_to_audit_user audit.user
+  %td.timestamp= audit.created_at
+  %td!= link_to_auditable audit.auditable

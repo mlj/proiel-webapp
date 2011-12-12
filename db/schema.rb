@@ -1,28 +1,35 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file,
-# please use the migrations feature of Active Record to incrementally modify your database, and
-# then regenerate this schema definition.
+# encoding: UTF-8
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your database schema. If you need
-# to create the application database on another system, you should be using db:schema:load, not running
-# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111010193248) do
+ActiveRecord::Schema.define(:version => 20120510120155) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
     t.string   "auditable_type"
     t.string   "action"
-    t.text     "changes"
-    t.integer  "version",                     :default => 0
-    t.integer  "user_id",                     :default => 0
-    t.datetime "created_at",                                 :null => false
-    t.string   "user_type",      :limit => 8
-    t.string   "username",       :limit => 8
+    t.text     "audited_changes"
+    t.integer  "version",                      :default => 0
+    t.integer  "user_id",                      :default => 0
+    t.datetime "created_at",                                  :null => false
+    t.string   "user_type",       :limit => 8
+    t.string   "username",        :limit => 8
+    t.string   "comment"
+    t.string   "remote_address"
+    t.integer  "associated_id"
+    t.string   "associated_type"
   end
 
+  add_index "audits", ["associated_id", "associated_type"], :name => "associated_index"
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
 
   create_table "dependency_alignment_terms", :force => true do |t|
@@ -41,39 +48,39 @@ ActiveRecord::Schema.define(:version => 20111010193248) do
   end
 
   create_table "inflections", :force => true do |t|
-    t.string   "language",    :limit => 3,  :default => "",    :null => false
-    t.string   "form",        :limit => 64
-    t.string   "lemma",       :limit => 64
+    t.string   "language_tag",   :limit => 3,  :default => "",    :null => false
+    t.string   "form",           :limit => 64
+    t.string   "lemma",          :limit => 64
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "manual_rule",               :default => false, :null => false
-    t.string   "morphology",  :limit => 11, :default => "",    :null => false
+    t.boolean  "manual_rule",                  :default => false, :null => false
+    t.string   "morphology_tag", :limit => 11, :default => "",    :null => false
   end
 
-  add_index "inflections", ["language", "form", "morphology", "lemma"], :name => "idx_inflections_lfml", :unique => true
-  add_index "inflections", ["language", "form"], :name => "idx_inflections_lf"
-  add_index "inflections", ["morphology"], :name => "idx_inflections_m"
+  add_index "inflections", ["language_tag", "form", "morphology_tag", "lemma"], :name => "idx_inflections_lfml", :unique => true
+  add_index "inflections", ["language_tag", "form"], :name => "idx_inflections_lf"
+  add_index "inflections", ["morphology_tag"], :name => "idx_inflections_m"
 
   create_table "lemmata", :force => true do |t|
-    t.string   "lemma",          :limit => 64, :default => "", :null => false
-    t.integer  "variant",        :limit => 2
+    t.string   "lemma",              :limit => 64, :default => "", :null => false
+    t.integer  "variant",            :limit => 2
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "short_gloss",    :limit => 64
+    t.string   "short_gloss",        :limit => 64
     t.text     "full_gloss"
-    t.string   "sort_key",       :limit => 16
+    t.string   "sort_key",           :limit => 16
     t.text     "foreign_ids"
     t.boolean  "conjecture"
     t.boolean  "unclear"
     t.boolean  "reconstructed"
     t.boolean  "nonexistant"
     t.boolean  "inflected"
-    t.string   "language",       :limit => 3,  :default => "", :null => false
-    t.string   "part_of_speech", :limit => 2,  :default => "", :null => false
+    t.string   "language_tag",       :limit => 3,  :default => "", :null => false
+    t.string   "part_of_speech_tag", :limit => 2,  :default => "", :null => false
   end
 
-  add_index "lemmata", ["language"], :name => "index_lemmata_on_language_id"
-  add_index "lemmata", ["lemma", "part_of_speech", "variant", "language"], :name => "lemmata_uniqueness", :unique => true
+  add_index "lemmata", ["language_tag"], :name => "index_lemmata_on_language_id"
+  add_index "lemmata", ["lemma", "part_of_speech_tag", "variant", "language_tag"], :name => "lemmata_uniqueness", :unique => true
   add_index "lemmata", ["lemma"], :name => "index_lemmata_on_lemma"
   add_index "lemmata", ["variant"], :name => "index_lemmata_on_variant"
 
@@ -101,11 +108,6 @@ ActiveRecord::Schema.define(:version => 20111010193248) do
     t.boolean "secondary_relation",                :default => false, :null => false
   end
 
-  create_table "roles", :force => true do |t|
-    t.string "code",        :limit => 16, :default => "", :null => false
-    t.string "description", :limit => 64, :default => "", :null => false
-  end
-
   create_table "semantic_attribute_values", :force => true do |t|
     t.integer  "semantic_attribute_id",               :default => 0,  :null => false
     t.string   "tag",                   :limit => 64, :default => "", :null => false
@@ -119,6 +121,21 @@ ActiveRecord::Schema.define(:version => 20111010193248) do
     t.string   "tag",        :limit => 64, :default => "", :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "semantic_relation_tags", :force => true do |t|
+    t.string  "tag"
+    t.integer "semantic_relation_type_id"
+  end
+
+  create_table "semantic_relation_types", :force => true do |t|
+    t.string "tag"
+  end
+
+  create_table "semantic_relations", :force => true do |t|
+    t.integer "target_id"
+    t.integer "controller_id"
+    t.integer "semantic_relation_tag_id"
   end
 
   create_table "semantic_tags", :force => true do |t|
@@ -176,8 +193,10 @@ ActiveRecord::Schema.define(:version => 20111010193248) do
     t.string "code",          :limit => 64,  :default => "", :null => false
     t.string "title",         :limit => 128, :default => "", :null => false
     t.string "citation_part", :limit => 64,  :default => "", :null => false
-    t.string "language",      :limit => 3,   :default => "", :null => false
+    t.string "language_tag",  :limit => 3,   :default => "", :null => false
     t.text   "tei_header",                                   :null => false
+    t.text   "author",        :limit => 255
+    t.text   "edition",       :limit => 255
   end
 
   create_table "tokens", :force => true do |t|
@@ -188,7 +207,7 @@ ActiveRecord::Schema.define(:version => 20111010193248) do
     t.integer  "head_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "source_morphology",         :limit => 17
+    t.string   "source_morphology_tag",     :limit => 11
     t.string   "source_lemma",              :limit => 32
     t.text     "foreign_ids"
     t.string   "info_status",               :limit => 20
@@ -199,7 +218,7 @@ ActiveRecord::Schema.define(:version => 20111010193248) do
     t.integer  "dependency_alignment_id"
     t.integer  "antecedent_id"
     t.integer  "relation_id"
-    t.string   "morphology",                :limit => 11
+    t.string   "morphology_tag",            :limit => 11
     t.string   "citation_part",             :limit => 64, :default => "",    :null => false
     t.string   "presentation_before",       :limit => 32
     t.string   "presentation_after",        :limit => 32
@@ -211,36 +230,36 @@ ActiveRecord::Schema.define(:version => 20111010193248) do
   add_index "tokens", ["form"], :name => "index_tokens_on_form"
   add_index "tokens", ["head_id"], :name => "index_tokens_on_head_id"
   add_index "tokens", ["lemma_id"], :name => "index_tokens_on_lemma_id"
-  add_index "tokens", ["morphology"], :name => "index_tokens_on_morphology_id"
+  add_index "tokens", ["morphology_tag"], :name => "index_tokens_on_morphology_id"
   add_index "tokens", ["relation_id"], :name => "index_tokens_on_relation_id"
   add_index "tokens", ["sentence_id", "token_number"], :name => "idx_tokens_sid_tnur", :unique => true
   add_index "tokens", ["token_alignment_id"], :name => "idx_tokens_tokalid"
 
   create_table "users", :force => true do |t|
-    t.string   "login",                              :default => "", :null => false
-    t.string   "email",                              :default => "", :null => false
-    t.string   "encrypted_password",   :limit => 40, :default => "", :null => false
-    t.string   "password_salt",                      :default => "", :null => false
-    t.datetime "created_at",                                         :null => false
-    t.datetime "updated_at",                                         :null => false
+    t.string   "login",                                :default => "", :null => false
+    t.string   "email",                                :default => "", :null => false
+    t.string   "encrypted_password",     :limit => 40, :default => "", :null => false
+    t.string   "password_salt",                        :default => "", :null => false
+    t.datetime "created_at",                                           :null => false
+    t.datetime "updated_at",                                           :null => false
     t.datetime "confirmed_at"
-    t.string   "last_name",            :limit => 60, :default => "", :null => false
-    t.string   "first_name",           :limit => 60, :default => "", :null => false
+    t.string   "last_name",              :limit => 60, :default => "", :null => false
+    t.string   "first_name",             :limit => 60, :default => "", :null => false
     t.string   "preferences"
-    t.integer  "role_id",                            :default => 1,  :null => false
-    t.string   "confirmation_token",   :limit => 20
+    t.string   "confirmation_token",     :limit => 20
     t.datetime "confirmation_sent_at"
-    t.string   "reset_password_token", :limit => 20
-    t.string   "remember_token",       :limit => 20
+    t.string   "reset_password_token",   :limit => 20
     t.datetime "remember_created_at"
     t.integer  "sign_in_count"
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.integer  "failed_attempts",                    :default => 0
-    t.string   "unlock_token",         :limit => 20
+    t.integer  "failed_attempts",                      :default => 0
+    t.string   "unlock_token",           :limit => 20
     t.datetime "locked_at"
+    t.string   "role",                                 :default => "", :null => false
+    t.datetime "reset_password_sent_at"
   end
 
   add_index "users", ["confirmation_token"], :name => "idx_users_conf_token", :unique => true

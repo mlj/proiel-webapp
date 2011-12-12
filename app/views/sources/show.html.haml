@@ -1,28 +1,21 @@
-- roundedbox do
-  = @source.citation
-  != show_completion_rate @source.completion, :checkmark => :only
-  %br
-  %dt
-    Title:
-  %dd.title
-    = @source.title
-  %dt
-    Citation part:
-  %dd.title
-    = @source.citation_part
-  %dt
-    Tag:
-  %dd.tag
-    = @source.code
-  %dt
-    Language:
-  %dd
-    != @source.language.name
+- javascript 'application'
 
-  != link_to_resources @source, :index, :statistics, :edit
+- context_bar do
+  .breadcrumbs
+    != breadcrumbs ['Contents', sources_path], @source
+  .resources
+    != link_to_resources @source, :edit
 
-- layer :metadata do
-  - if @source.valid?
-    != @source.metadata.to_html
-  - else
-    Metadata is invalid
+  - if @source.metadata.valid?
+    %p
+      #metadata.toggle-hidden{:title => 'metadata'}
+        != @source.metadata.to_html
+
+%p
+  != will_paginate @source_divisions
+
+%ul.toc1level
+  - @source_divisions.each do |source_division|
+    %li
+      %span.toc-title= source_division.title
+      %span.toc-link!= link_to 'Browse', source_division

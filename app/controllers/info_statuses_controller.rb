@@ -4,9 +4,11 @@ class InfoStatusesController < ApplicationController
 
   # GET /sentences/1/info_status/edit
   def edit
+    @source_division = @sentence.source_division
+    @source = @source_division.source
+
     set_contrast_options_for(@sentence.source_division)
   end
-
 
   # PUT /sentences/1/info_status
   def update
@@ -98,9 +100,12 @@ class InfoStatusesController < ApplicationController
           when /^prodrop-(.+?)-token-(\d+)/
             relation = $1
             verb_id = $2
-          when /^ant-/: antecedent_id = part.slice('ant-'.length..-1)
-          when /^con-/: contrast_group = part.slice('con-'.length..-1)
-          when 'null':  # the "category" of a member of a contrast group which is from a non-focussed sentence
+          when /^ant-/
+            antecedent_id = part.slice('ant-'.length..-1)
+          when /^con-/
+            contrast_group = part.slice('con-'.length..-1)
+          when 'null'
+            # the "category" of a member of a contrast group which is from a non-focussed sentence
           else category = part
           end
         end
@@ -135,7 +140,7 @@ class InfoStatusesController < ApplicationController
 
       # This is needed after saving a new graph node to the database
       # in order to make sure that the new node is included in the
-      # tokens.dependency_annotatable collection. Otherwise, the node
+      # tokens.takes_syntax collection. Otherwise, the node
       # will be deleted the next time we run syntactic_annotation=
       # (e.g., if we try to create more than one prodrop token as part
       # of the same save operation).

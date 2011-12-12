@@ -1,5 +1,4 @@
-Maintenance tasks
-=================
+# Maintenance tasks
 
 A list of all the maintenance tasks can be obtained by running the command `rake -T proiel`:
 
@@ -92,7 +91,7 @@ respect to the secondary source with ID 2.
 `proiel:semantic_tags:import` and `proiel:semantic_tags:export`
 ---------------------------------------------------------------
 
-These tasks can be used for mass-import and -export of semantic tags. The data file is 
+These tasks can be used for mass-import and -export of semantic tags. The data file is
 expected to be a comma-separated file with the following fields:
 
   * Taggable type (string, either `Token` or `Lemma`)
