@@ -3,5 +3,5 @@ class SemanticAttributeValue < ActiveRecord::Base
   has_many :semantic_tags
 
   validates_presence_of :tag
-  validates_uniqueness_of :tag, :scope => :semantic_attribute
+  validates_uniqueness_of :tag, :scope => :semantic_attribute_id
 end
