@@ -4,8 +4,14 @@ class MorphtagsController < ApplicationController
 
   # Returns potential renderings of transliterated lemmata.
   def auto_complete_for_morphtags_lemma
-    @transliterations, c = Language.find_lemma_completions(params[:morphtags][:language], params[:morphtags][:lemma])
-    @completions = c.map(&:export_form).sort.uniq
+    if params[:morphtags][:lemma].empty?
+      # Prevent completion functions from looking up all possible lemmata
+      @transliterations = []
+      @completions = []
+    else
+      @transliterations, c = Language.find_lemma_completions(params[:morphtags][:language], params[:morphtags][:lemma])
+      @completions = c.map(&:export_form).sort.uniq
+    end
 
     render :partial => "transliterations/input"
   end
