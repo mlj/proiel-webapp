@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110220182909) do
+ActiveRecord::Schema.define(:version => 20120212215933) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -141,7 +141,7 @@ ActiveRecord::Schema.define(:version => 20110220182909) do
     t.integer  "reviewed_by"
     t.datetime "reviewed_at"
     t.boolean  "unalignable",                          :default => false, :null => false
-    t.boolean  "automatic_alignment",                  :default => false
+    t.boolean  "automatic_alignment"
     t.integer  "sentence_alignment_id"
     t.integer  "source_division_id",                   :default => 0,     :null => false
     t.text     "presentation",                                            :null => false

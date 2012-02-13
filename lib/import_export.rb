@@ -52,6 +52,28 @@ class NoteImportExport < CSVImportExport
   end
 end
 
+class TokenAlignmentImportExport < CSVImportExport
+  def initialize
+    super :token_id, :token_alignment_id, :automatic_token_alignment
+  end
+
+  def read_fields(token_id, token_alignment_id, automatic_token_alignment)
+    t = Token.find(token_id)
+    t.token_alignment = Token.find(token_alignment_id)
+    # for some reason this line is needed to make rails find the set method in the following line
+    t.automatic_token_alignment 
+    t.automatic_token_alignment = false unless automatic_token_alignment == "true"
+    t.save!
+  end
+
+  def write_fields
+    Token.find_each(:conditions => "token_alignment_id IS NOT NULL") do |t|
+      yield t.id, t.token_alignment_id, t.automatic_token_alignment
+    end
+  end
+end
+
+
 class InfoStatusesImportExport < CSVImportExport
   def initialize(sd = nil)
     @sd = (sd ? SourceDivision.find(sd) : nil)

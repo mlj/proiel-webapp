@@ -118,18 +118,19 @@ class AlignedUnit < Hash
     Token.transaction do
       self.each do |tword, oword|
         raise "#{tword.form} is a Greek word" if tword.language == GRC
-        raise "Token already has manual alignment" unless tword.automatic_token_alignment != 0
-        unless oword
-          log(@changes) {STDERR.puts "#{tword.form} (#{tword.id}) is now unaligned (used to be aligned to #{tword.token_alignment.form} (#{tword.token_alignment_id}))" if tword.token_alignment_id }
-          tword.token_alignment_id = nil
-          tword.automatic_token_alignment = 1
-          tword.save!
-        else
-          raise "#{oword.form} is not a Greek word" unless oword.language == GRC
-          log(@changes) {STDERR.puts "Changed alignment: #{tword.form} (#{tword.id}) belongs to #{oword.form} (#{oword.id}) (used to be #{tword.token_alignment ? tword.token_alignment.form : nil} (#{tword.token_alignment_id}))" unless oword.id == tword.token_alignment_id }
-          tword.token_alignment_id = oword.id
-          tword.automatic_token_alignment = 1
-          tword.save!
+        unless tword.automatic_token_alignment == false 
+          unless oword
+            log(@changes) {STDERR.puts "#{tword.form} (#{tword.id}) is now unaligned (used to be aligned to #{tword.token_alignment.form} (#{tword.token_alignment_id}))" if tword.token_alignment_id }
+            tword.token_alignment_id = nil
+            tword.automatic_token_alignment = true 
+            tword.save!
+          else
+            raise "#{oword.form} is not a Greek word" unless oword.language == GRC
+            log(@changes) {STDERR.puts "Changed alignment: #{tword.form} (#{tword.id}) belongs to #{oword.form} (#{oword.id}) (used to be #{tword.token_alignment ? tword.token_alignment.form : nil} (#{tword.token_alignment_id}))" unless oword.id == tword.token_alignment_id }
+            tword.token_alignment_id = oword.id
+            tword.automatic_token_alignment = true
+            tword.save!
+          end
         end
       end
     end

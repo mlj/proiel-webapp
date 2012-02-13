@@ -217,6 +217,26 @@ namespace :proiel do
       ta = TokenAligner.new(dictionary, format, sds, file_name)
       ta.execute
     end
+
+    desc "Read token alignments from file. Options: FILE=alignment csv file"
+    task(:import => :myenvironment) do
+      require 'import_export'
+      file_name = ENV['FILE']
+      raise "Missing argument" unless file_name
+
+      i = TokenAlignmentImportExport.new
+      i.read(file_name)
+    end
+    
+    desc "Write token alignments to file. Options: FILE = outfile"
+    task(:export => :myenvironment) do
+      require 'import_export'
+      file_name = ENV['FILE']
+      raise "Missing argument" unless file_name
+
+      i = TokenAlignmentImportExport.new
+      i.write(file_name)
+    end
   end
 
   namespace :dependency_alignments do
