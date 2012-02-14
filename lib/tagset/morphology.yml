@@ -104,7 +104,7 @@
     abbreviated_summary: pos.
     summary: positive
   s:
-    abbreviated_summary: sup.
+    abbreviated_summary: supl.
     summary: superlative
 :gender:
   m:

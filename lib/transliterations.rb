@@ -58,6 +58,10 @@ class Transliterator
     @decomposed = options[:decomposed] || false
   end
 
+  def generate_string(string)
+    @machine.generate(Unicode.normalize_D(string))
+  end
+
   def transliterate_string(string, options = {})
     s = @machine.analyse(string).map do |t|
       t.force_encoding("UTF-8") # FIXME: deal with broken ruby-sfst

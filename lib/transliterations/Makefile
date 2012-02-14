@@ -1,4 +1,4 @@
-all: chu-ascii.a got-ascii.a got-ascii-word.a grc-ascii.a grc-betacode.a
+all: chu-ascii.a got-ascii.a got-ascii-word.a grc-ascii.a grc-betacode.a grc-simple.a
 
 clean:
 	rm -f *.a

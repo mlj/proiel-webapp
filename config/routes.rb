@@ -44,6 +44,7 @@ Proiel::Application.routes.draw do
       get :resegment_edit
       get :flag_as_not_reviewed # FIXME: should be post
       get :flag_as_reviewed     # FIXME: should be post
+      get :export
     end
 
     resource :dependency_alignments, :only => [:show, :edit, :update]

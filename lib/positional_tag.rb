@@ -8,6 +8,7 @@
 # A positional tag.
 class PositionalTag
   include Comparable
+  include Enumerable
 
   # Creates a new positional tag object. The new object may
   # have a new value +o+ assigned to it. The new value may
@@ -98,5 +99,9 @@ class PositionalTag
 
   def tag=(o)
     self.value = o
+  end
+
+  def each &block
+    @values.each &block
   end
 end

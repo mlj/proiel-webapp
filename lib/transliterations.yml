@@ -55,3 +55,16 @@
     - :latn
   :machine:
     "got-ascii.a"
+"grc-simple":
+  :mode:
+    :all
+  :human_readable_name:
+    "Standard example transliteration"
+  :languages:
+    - :grc
+  :scripts:
+    - :Grek
+  :machine:
+    "grc-simple.a"
+  :decomposed:
+    true

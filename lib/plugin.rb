@@ -22,24 +22,31 @@
 #++
 
 require 'singleton'
+require 'stringio'
 
 module PROIEL
   @@external_link_mappers = []
   @@graph_visualizers = []
+  @@exporters = []
 
   def self.register_plugin(klass)
     raise ArgumentError, 'not a klass' unless klass.is_a?(Class)
 
     begin
       instance = klass.instance
-    rescue Exception => msg
-      Rails.logger.error "Error initializing plugin #{klass}: #{msg}"
+    rescue Exception => e
+      Rails.logger.error "Error initializing plugin #{klass}: #{e}"
+      Rails.logger.error e.backtrace.join("\n")
+      STDERR.puts "Error initializing plugin #{klass}: #{e}"
+      STDERR.puts e.backtrace.join("\n")
     else
       case instance
       when ExternalLinkMapper
         @@external_link_mappers << instance
       when GraphVisualizer
         @@graph_visualizers << instance
+      when Exporter
+        @@exporters << instance
       else
         Rails.logger.error "Error initializing plugin #{c}: not a valid plugin class"
       end
@@ -52,6 +59,10 @@ module PROIEL
 
   def self.graph_visualizers
     @@graph_visualizers
+  end
+
+  def self.exporters
+    @@exporters
   end
 
   def self.load_plugins
@@ -68,6 +79,7 @@ module PROIEL
 
     Rails.logger.info "Registered #{self.external_link_mappers.count} external link mappers"
     Rails.logger.info "Registered #{self.graph_visualizers.count} graph visualizers"
+    Rails.logger.info "Registered #{self.exporters.count} exporters"
   end
 
   class Plugin
@@ -102,6 +114,25 @@ module PROIEL
     # can check this by testing +applies?+ on the citation.
     def to_url(citation)
       raise ArgumentError, 'cannot map citation to link'
+    end
+  end
+
+  class Exporter < Plugin
+    # True if this exporter applies to the provided object. Provided
+    # objects will be sources, source divisions, sentences, tokens or
+    # lemmata.
+    def applies?(object)
+      false
+    end
+
+    # Returns the MIME type for the export of the provided object.
+    def mime_type(object)
+      nil
+    end
+
+    # Generates an export form for the provided object.
+    def generate(object, options = {})
+      raise ArgumentError, 'cannot export object'
     end
   end
 end

@@ -90,6 +90,17 @@ module ApplicationHelper
     end.compact * ' '
   end
 
+  # Returns links to exporters of a sentence.
+  def export_links(sentence)
+    PROIEL::exporters.map do |l|
+      if l.applies?(sentence)
+        link_to l.name, { :action => 'export', :exporter_name => l.identifier }
+      else
+        nil
+      end
+    end.compact * ' '
+  end
+
   # Generates a rounded box with a description list inside.
   def roundedbox(object = nil, &block)
     content = capture(&block)
