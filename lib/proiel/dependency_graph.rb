@@ -409,7 +409,7 @@ module PROIEL
 
     HEAD_DEPENDENT_CONSTRAINTS = {
       # FIXME: ATR should be excluded from anything but participles
-      :V => [:adv, :ag, :apos, :arg, :aux, :comp, :nonsub, :obj, :obl, :per, :piv, :sub, :xadv, :xobj, :atr],
+      :V => [:adv, :ag, :apos, :arg, :aux, :comp, :nonsub, :obj, :obl, :per, :piv, :sub, :xadv, :xobj, :atr, :part],
       :N => [:adnom, :apos, :atr, :aux, :comp, :narg, :part, :rel],
       :A => [:adv, :apos, :atr, :aux, :comp, :obl, :part],
       :P => [:apos, :atr, :aux, :part, :rel],
