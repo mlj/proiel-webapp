@@ -60,7 +60,6 @@ class Token < ActiveRecord::Base
   named_scope :dependency_annotatable, :conditions => ["empty_token_sort IS NULL OR empty_token_sort != 'P'"]
   named_scope :morphology_annotated, :conditions => [ "lemma_id IS NOT NULL" ]
 
-
   # Tokens that are candidate root nodes in dependency graphs.
   named_scope :root_dependency_tokens, :conditions => [ "head_id IS NULL" ]
 
@@ -293,19 +292,6 @@ class Token < ActiveRecord::Base
     empty_token_sort.nil?
   end
 
-  # Merges the token with the token linearly subsequent to it. The succeeding
-  # token is destroyed, and the original token's word form is updated. All
-  # other data is left as-is. Returns the new merged token.
-  def merge!(separator = ' ')
-    Token.transaction do
-      n = self.next_token
-      self.form = [self.form, n.form].join(separator)
-      self.save!
-      n.destroy
-    end
-    self
-  end
-
   # Returns the dependency subgraph for the token as an unordered list.
   def subgraph_set
     [self] + dependents.map(&:subgraph_set).flatten
@@ -522,8 +508,169 @@ class Token < ActiveRecord::Base
 
   public
 
-  def to_s
-    form
+  # Synthesises the running text of the token.
+  #
+  # The <tt>mode</tt> is :text_and_presentation if both the token form and
+  # the presentation data should be included in the resulting string.
+  # :text_and_presentation_with_markup produces the same result but also
+  # includes markup that distinguishes the form from presentation data.
+  # :text_only includes only the token form. The default is :text_only.
+  #
+  # The behaviour for tokens that are flagged as empty is undefined.
+
+  def to_s(mode = :text_only)
+    case mode
+    when :text_only
+      form
+    when :text_and_presentation
+      presentation_stream.map(&:last).join
+    when :text_and_presentation_with_markup
+      presentation_stream.map { |t, v| "<#{t}>#{v}</#{t}>" }.join
+    else
+      raise ArgumentError
+    end
+  end
+
+  # Returns an array containing the <tt>presentation_before</tt>,
+  # <tt>form</tt> and <tt>presentation_after</tt> columns and with an
+  # interpretation of the presentation data.
+  #
+  # The array consists of pairs of interpretation and value. Only the
+  # presentation columns that have non-empty values are included in the
+  # array. The interpretation is :pc for punctuation, :s for spaces and :w
+  # for a (token/word) form.
+  #
+  # Example return value when <tt>presentation_before</tt> is nil or an
+  # empty string:
+  #
+  #     [[:w, 'done'], [:pc, '. ']]
+  #
+
+  def presentation_stream
+    [[presentation_sym(presentation_before), presentation_before],
+     [:w, form],
+     [presentation_sym(presentation_after), presentation_after]].select(&:first)
+  end
+
+  private
+
+  def presentation_sym(s)
+    case s
+    when NilClass, ''
+      nil
+    when /^\s+$/
+      :s
+    else
+      :pc
+    end
+  end
+
+  public
+
+  # Tests if token can be joined with the following token.
+  #
+  # The token and its following token are joinable if
+  #   1. both tokens are non-empty,
+  #   2. intervening presentation data is empty or whitespace only, and
+  #   3. both tokens have the same citation data.
+
+  def is_joinable?
+    t2 = next_token
+    not is_empty? and t2 and not t2.is_empty? and
+      (presentation_after.nil? or presentation_after[/^\s*$/]) and
+      (t2.presentation_before.nil? or t2.presentation_before[/^\s*$/]) and
+      (t2.citation_part == citation_part)
+  end
+
+  # Joins the token with the token following it in the linearisation of
+  # tokens within the sentence. The succeeding token is destroyed, and the
+  # original token's word form is updated. All other data is left
+  # unchanged.
+  #
+  # The function returns the joined token.
+
+  def join_with_next_token!
+    raise ArgumentError unless is_joinable?
+
+    t2 = self.next_token
+
+    Sentence.transaction do
+      sentence.remove_syntax_and_info_structure!
+
+      self.form = [self.form, self.presentation_after,
+        t2.presentation_before, t2.form].compact.join
+      self.presentation_after = t2.presentation_after
+      self.save!
+
+      t2.destroy
+    end
+
+    self
+  end
+
+  # Tests if token can be split.
+  #
+  # The token can be split if
+  #   1. it is non-empty and
+  #   2. it's <tt>form</tt> is non-empty.
+
+  def is_splitable?
+    not is_empty? and form.mb_chars.length > 1
+  end
+
+  def split_token!
+    ts = form.split(/\s+/u)
+    divider = ' '
+
+    unless ts.length > 1
+      ts = form.split(//u)
+      divider = ''
+    end
+
+    if ts.length > 1
+      Sentence.transaction do
+        sentence.remove_syntax_and_info_structure!
+
+        ts_first, *ts_rest = ts
+
+        first_token = self
+
+        last_token = ts_rest.inject(first_token) do |current_token, new_form|
+                       current_token.insert_new_token! :form => new_form,
+                         :presentation_after => divider,
+                         :citation_part => citation_part
+                     end
+
+        last_token.presentation_after = first_token.presentation_after
+        last_token.save!
+
+        first_token.form = ts_first
+        first_token.presentation_after = divider
+        first_token.save!
+      end
+    end
+  end
+
+  # Inserts a new token after the current token. Attributes to the
+  # new token can be given in +attributes+ (except +token_number+,
+  # which is automatically computed).
+  #
+  # The function returns the new token.
+  def insert_new_token!(attributes = {})
+    new_token = nil
+
+    Token.transaction do
+      parent.tokens.find(:all, :conditions => ["token_number > ?", token_number]).sort do |x, y|
+        y.token_number <=> x.token_number
+      end.each do |s|
+        s.token_number += 1
+        s.save!
+      end
+
+      new_token = parent.tokens.create!(attributes.merge({ :token_number => token_number + 1 }))
+    end
+
+    new_token
   end
 
   # Guesses morphological features using the morphological tools that have

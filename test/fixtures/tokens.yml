@@ -4,6 +4,7 @@ one:
   sentence_id: 1
   morphology: ---------n
   form: cum
+  presentation_after: ", "
   lemma_id: 1
   relation: MyText
   head: 1
@@ -14,6 +15,7 @@ two:
   sentence_id: 1
   morphology: ---------n
   form: cum
+  presentation_after: " "
   lemma_id: 2
   relation: MyText
   head: 1
@@ -24,6 +26,8 @@ three:
   sentence_id: 1
   morphology: ---------n
   form: cum
+  presentation_before: "("
+  presentation_after: ") "
   lemma_id: 2
   relation: MyText
   head: 1
@@ -34,7 +38,24 @@ four:
   sentence_id: 1
   morphology: ---------n
   form: cum
+  presentation_after: "!"
   lemma_id: 2
   relation: MyText
   head: 1
   citation_part: "1.4"
+latin_word:
+  sentence_id: 200
+  token_number: 0
+  form: puella
+empty:
+  sentence_id: 200
+  token_number: 1
+  empty_token_sort: C
+latin_single_letter_word:
+  sentence_id: 200
+  token_number: 2
+  form: p
+greek_single_letter_word:
+  sentence_id: 200
+  token_number: 3
+  form: ἢ

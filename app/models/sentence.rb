@@ -78,8 +78,6 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  before_validation :before_validation_cleanup
-
   # Sentences that have not been annotated.
   named_scope :unannotated, :conditions => ["annotated_by IS NULL"]
 
@@ -104,15 +102,7 @@ class Sentence < ActiveRecord::Base
   validates_presence_of :source_division_id
   validates_presence_of :sentence_number
 
-  # Presentation string must be on the appropriate Unicode normalization form
-  validates_unicode_normalization_of :presentation, :form => UNICODE_NORMALIZATION_FORM
-
   validate :check_invariants
-  validate do |s|
-    unless s.presentation_well_formed?
-      s.errors.add(:presentation, 'is not well-formed.')
-    end
-  end
 
   acts_as_audited :except => [:annotated_by, :annotated_at, :reviewed_by, :reviewed_at]
 
@@ -123,25 +113,10 @@ class Sentence < ActiveRecord::Base
 
   # Returns a citation for the sentence.
   def citation
-    # Try to be a little bit intelligent about this and cater for a common
-    # scenario: If +x+ and +y+ have the same prefix (the prefix being
-    # separated from the rest of the +citation_part+ by spaces), only show
-    # it once. And if the suffix is the same, don't show this as an
-    # interval at all.
-    x, y = tokens.first.citation_part.split(/\s+/, 2), tokens.last.citation_part.split(/\s+/, 2)
-
-    rest = if x == y
-             [x.join(' ')]
-           elsif x.first == y.first
-             [x.join(' '), y.last]
-           else
-             [x.join(' '), y.join(' ')]
-           end
-
-    [source_division.source.citation_part, rest.join(Unicode::U2013)].join(' ')
+    [source_division.source.citation_part,
+      citation_make_range(tokens.first.citation_part,
+                          tokens.last.citation_part)].join(' ')
   end
-
-  include Presentation
 
   #FIXME:DRY generalise < token
 
@@ -320,24 +295,33 @@ class Sentence < ActiveRecord::Base
     self.tokens.minimum(:token_number)
   end
 
+  def is_next_sentence_appendable?
+    has_next? and presentation_after.nil? and next_sentence.presentation_before.nil?
+  end
+
   # Appends the next sentence onto this sentence and destroys the old
   # sentence. This also removes all dependency annotation from both
   # sentences to ensure validity.
   def append_next_sentence!
-    if has_next?
-      Sentence.transaction do
-        remove_syntax_and_info_structure!
-        next_sentence.remove_syntax_and_info_structure!
+    raise ArgumentError unless is_next_sentence_appendable?
 
-        append_tokens!(next_sentence.tokens)
+    Sentence.transaction do
+      remove_syntax_and_info_structure!
+      next_sentence.remove_syntax_and_info_structure!
 
-        self.presentation = self.presentation + '<s> </s>' + self.next_sentence.presentation
-        save!
+      # Ensure that there is at least a single space after any punctuation
+      # at the end of the sentence
+      last_token = tokens.last
 
-        next_sentence.destroy
+      if last_token
+        last_token.presentation_after =
+          (last_token.presentation_after || '').sub(/\s*$/, ' ')
+        last_token.save!
       end
-    else
-      raise "No next sentence"
+
+      append_tokens!(next_sentence.tokens)
+
+      next_sentence.destroy
     end
   end
 
@@ -349,126 +333,98 @@ class Sentence < ActiveRecord::Base
     tokens.create!(attrs.merge({ :token_number => max_token_number + 1 }))
   end
 
-  # Split the sentence into a number of sentences. The symbol or
-  # regular expression used for segment splits is given in
-  # +segment_divider+. If the new segmentation produces only one
-  # segment, the presentation string for this sentence is updated but
-  # no new sentence objects are created. It the sentence has valid
-  # tokenization, the old tokens are preserved with their
-  # morphological annotation; else, the tokenization is undone and
-  # all annotation removed.
-  def split_sentence!(presentation_string, segment_divider = /\s*\|\s*/)
-    raise ArgumentError if presentation_string.blank?
+  def is_splitable_after?(t)
+    raise ArgumentError unless tokens.include?(t)
 
-    presentation_strings = presentation_string.split(segment_divider)
+    t2 = t.next_token
 
-    n = presentation_strings.length - 1
+    t2 and not t2.is_empty?
+  end
 
-    if n.zero?
-      self.presentation = presentation_string
-      self.save!
-    else
-      Sentence.transaction do
-        remove_annotation_metadata!
+  # Split the sentence into two successive sentences. The point to split
+  # the sentence at is given by a token. The token will be the first token
+  # of a new sentence.
+  #
+  # Single-token annotation is not altered. Multi-token annotation is
+  # checked for validity. If valid, it is preserved to the extent possible.
+  #
+  # It is the callers responsibility to update any affected annotation
+  # flags (i.e. reviewed/non-reviewed).
+  #
+  # The new sentence inherits the +assigned_to+ field from the current
+  # sentence.
+  #
+  # TODO: update all callers with remove_annotation_metadata!
+  def split_sentence!(split_token)
+    raise ArgumentError unless tokens.include?(split_token)
+    raise "sentence is invalid" unless valid? # this is necessary to avoid trouble with the invariant at the end
 
-        # We need to shift all sentence numbers after this one first. Do it in
-        # reverse order to avoid confusing the indices.
-        ses = parent.sentences.find(:all, :conditions => ["sentence_number > ?", sentence_number])
-        ses.sort { |x, y| y.sentence_number <=> x.sentence_number }.each do |s|
-          s.sentence_number += n
-          s.save!
-        end
+    Sentence.transaction do
+      new_sentence = insert_new_sentence! :assigned_to => assigned_to, :presentation_after => presentation_after
+      self.presentation_after = nil
 
-        if tokenized? and tokenization_valid?
-          split_with_tokens!(presentation_strings)
+      self.tokens.reload
+
+      # Determine which tokens to put in the new sentence: all non-empty
+      # after and including +token+ and empty tokens that are direct
+      # descendants of one of these.
+      us, them = tokens.partition do |t|
+        if t.is_empty? and t.head
+          t.head.token_number < split_token.token_number
         else
-          split_without_tokens!(presentation_strings)
+          t.token_number < split_token.token_number
         end
       end
+
+      them.each do |t|
+        new_sentence.tokens << t
+        t.save! # FIXME: is it already saved?
+      end
+
+      # Check multi-token annotation in both sentences. Start with the new
+      # one. If a token has a head outside the sentence, detach it (so that
+      # it becomes a root daughter instead) and give it the relation PRED
+      # unless it already has the relation VOC or PARPRED.
+      [new_sentence, self].each do |s|
+        s.tokens.each do |t|
+          unless s.tokens.include?(t.head)
+            t.head_id = nil
+            t.relation = 'pred' if t.relation and !['voc', 'parpred'].include?(t.relation.tag)
+            t.save!
+          end
+        end
+
+        # Check if both sentences are still valid. If not, we remove
+        # annotation.
+        s.remove_syntax_and_info_structure! unless s.valid?
+      end
+
+      # Check invariant
+      raise "sentence is invalid after splitting" unless new_sentence.valid? and valid?
     end
   end
 
   private
 
-  # Split the sentence into a number of sentences destructively,
-  # ie. undoing and regenerating the tokenization.
-  def split_without_tokens!(presentation_strings)
+  # Inserts a new sentence after the current sentence. Attributes to the
+  # new sentence can be given in +attributes+ (except +sentence_number+,
+  # which is automatically computed).
+  def insert_new_sentence!(attributes = {})
+    # FIXME: is this necessary? Find out in tests?
+    new_sentence = nil
 
-    self.detokenize!
-    self.presentation = presentation_strings[0]
-    self.save!
-    # TODO: citation
-    self.tokenize!
-
-    1.upto(presentation_strings.size - 1).map do |i|
-      s = parent.sentences.create!(:sentence_number => sentence_number + i,
-                                   :presentation => presentation_strings[i],
-                                   :assigned_to => self.assigned_to)
-      # TODO: citation
-      s.save!
-      s.tokenize!
-    end
-  end
-
-  # Split the sentence into a number of sentences non-destructively,
-  # i.e. keeping the tokenization.
-  def split_with_tokens!(presentation_strings)
-    # This can only be done to sentences that are actually tokenized and have a valid tokenization
-    raise "Sentence is untokenized" unless tokenized?
-    raise "Invalid tokenization" unless tokenization_valid?
-
-    self.tokens.reload
-    self.presentation = presentation_strings[0]
-    self.save!
-    # TODO: citation
-
-    used_tokens = self.presentation_as_tokens.size
-
-    1.upto(presentation_strings.size - 1).map do |i|
-      s = parent.sentences.create!(:sentence_number => sentence_number + i,
-                                   :presentation => presentation_strings[i],
-                                   :assigned_to => self.assigned_to)
-      # TODO: citation
-      s.save!
-      sentence_tokens = self.tokens.slice(used_tokens...used_tokens + s.presentation_as_tokens.size)
-      sentence_tokens.each do |t|
-        t.sentence_id = s.id
-        # Make tokens that have heads outside the sentence daughters
-        # of the root, with pred relations unless they happen to be
-        # vocatives or parpreds
-        unless sentence_tokens.include?(t.head)
-          t.head_id = nil
-          t.relation = Relation.find_by_tag('pred') if t.relation and !['voc', 'parpred'].include?(t.relation.tag)
-        end
-        t.save!
-      end
-      # now check if there are empty tokens somewhere in the subgraph
-      # that have not been included among the sentence tokens; if so,
-      # include them to this sentence
-      sentence_tokens.map(&:subgraph_set).flatten.uniq.select { |d| !d.empty_token_sort.nil? }.each do |t|
-        t.sentence_id = s.id
-        t.save!
-      end
-      s.tokens.reload
-      # Try to save the sentence. If it passes validation, we're fine,
-      # else we'll have to remove the syntax and information structure
-      # and try again
-      begin
-        s.save!
-      rescue
-        s.remove_syntax_and_info_structure!
+    Sentence.transaction do
+      parent.sentences.find(:all, :conditions => ["sentence_number > ?", sentence_number]).sort do |x, y|
+        y.sentence_number <=> x.sentence_number
+      end.each do |s|
+        s.sentence_number += 1
         s.save!
       end
-      used_tokens += s.presentation_as_tokens.size
+
+      new_sentence = parent.sentences.create!(attributes.merge({ :sentence_number => sentence_number + 1 }))
     end
-    # Finally, check if the original sentence is still valid after all
-    # the token removals; if not, delete its syntax
-    begin
-      self.save!
-    rescue
-      self.remove_syntax_and_info_structure!
-      self.save!
-    end
+
+    new_sentence
   end
 
   protected
@@ -479,6 +435,7 @@ class Sentence < ActiveRecord::Base
     self.annotated_at = nil
     self.reviewed_by = nil
     self.reviewed_at = nil
+    save!
   end
 
   # Deletes all syntactic and information structural annotation from
@@ -538,7 +495,7 @@ class Sentence < ActiveRecord::Base
 
   # Returns +true+ if sentence has been annotated.
   def is_annotated?
-    !annotated_by.nil?
+    !annotated_at.nil?
   end
 
   # Flags the sentence as annotated and saves the sentence.
@@ -552,7 +509,7 @@ class Sentence < ActiveRecord::Base
 
   # Returns +true+ if sentence has been reviewed.
   def is_reviewed?
-    !reviewed_by.nil?
+    !reviewed_at.nil?
   end
 
   # Flags the sentence as reviewed and saves the sentence. If the sentence has
@@ -580,11 +537,11 @@ class Sentence < ActiveRecord::Base
   def dependency_graph
     PROIEL::DependencyGraph.new do |g|
       tokens.dependency_annotatable.each { |t| g.badd_node(t.id, t.relation.tag, t.head ? t.head.id : nil,
-                                               Hash[*t.slash_out_edges.map { |se| [se.slashee.id, se.relation.tag] }.flatten],
-                                               { :empty => t.empty_token_sort || false,
-                                                 :token_number => t.token_number,
-                                                 :morph_features => t.morph_features,
-                                                 :form => t.form }) }
+                                                           Hash[*t.slash_out_edges.map { |se| [se.slashee.id, se.relation.tag ] }.flatten],
+                                                           { :empty => t.empty_token_sort || false,
+                                                             :token_number => t.token_number,
+                                                             :morph_features => t.morph_features,
+                                                             :form => t.form }) }
     end
   end
 
@@ -607,71 +564,6 @@ class Sentence < ActiveRecord::Base
     # TODO: add a validation rule that verifies that root_dependency_tokens only matches one
     # token?
     tokens.dependency_annotatable.root_dependency_tokens.first
-  end
-
-  # Tokenizes the sentence using the current tokenization rules.
-  # The function has no effect on a sentence that has already been
-  # tokenized.
-  def guess_tokenization!
-    # TODO: Major FIXME: this is specific to Latin and does not even
-    # do a good job with that language. But it has to do for now...
-    presentation_as_text.gsub('á', 'a').gsub('é', 'e').gsub('í', 'i').gsub('ó', 'o').gsub('ú', 'u').gsub(/[†#\?\[\]]/, '').gsub(/\s*["'—]\s*/,' ').gsub(/[\.]\s*$/, '').gsub(/[,;:]\s*/, ' ').gsub('onust', 'onus est').gsub(/(occasio)st/, '\1 est').gsub(/(aeris|senatus|re|rem|rei|res)\s+(alieni|consulto|publica|publicam|publicae)/, '\1#\2').split(/\s+/).map do |t|
-      if t[/^(.*)que$/]
-        base = $1
-        unless t[/^pler(us|um|i|o|a|am|ae|os|orum|is|as|arum)que$/] or t[/^([Aa]t|[Ii]ta|[Nn]e)que$/]
-          [base, '-que']
-        else
-          t
-        end
-      else
-        t.gsub('#', ' ')
-      end
-    end.flatten.each_with_index do |form, position|
-      self.tokens.create! :form => form, :token_number => position, :empty_token_sort => nil
-    end
-  end
-
-  # Tokenizes a sentence using the tokenization mark-up in the
-  # presentation string.
-  #
-  # If invoked on a sentence that has been tokenized before, the
-  # existing tokenization is undone and all annotation is removed.
-  def tokenize!
-    Sentence.transaction do
-      detokenize! if tokenized?
-
-      presentation_as_tokens.each_with_index do |form, position|
-        # TODO: citation
-        tokens.create! :form => form, :token_number => position, :empty_token_sort => nil
-      end
-    end
-  end
-
-  # Compares tokenization based on the presentation string with actual
-  # tokenization, if any. Returns true if the tokenization is
-  # identical, i.e. valid, or if the sentence has not been tokenized.
-  def tokenization_valid?
-    # This will be ordered by token number, and that is all we need except the form.
-    t = tokens.word.map(&:form)
-    p = presentation_as_tokens
-
-    !tokenized? or p == t
-  end
-
-  # Undoes any tokenization of the sentence. All annotation is also
-  # removed.
-  def detokenize!
-    Sentence.transaction do
-      tokens.map(&:destroy)
-      tokens.reload
-      remove_annotation_metadata!
-      save!
-    end
-  end
-
-  # Returns true if the sentence has been tokenized, false otherwise.
-  def tokenized?
-    !tokens.word.length.zero?
   end
 
   protected
@@ -713,6 +605,13 @@ class Sentence < ActiveRecord::Base
       errors.add_to_base("Dependency annotation must be complete")
     end
 
+    tokens.dependency_annotatable.each do |t|
+      t.slash_out_edges.each do |se|
+        add_dependency_error("Unconnected slash edge", [t]) if se.slashee.nil?
+        add_dependency_error("Unlabeled slash edge", [t]) if se.relation.nil?
+      end
+    end
+
     # Check each token for validity (this could of course also be done with validates_associated),
     # but that leads to confusing error messages for users.
     tokens.each do |t|
@@ -732,16 +631,94 @@ class Sentence < ActiveRecord::Base
     errors.add_to_base("Token #{ids.length == 1 ? 'number' : 'numbers'} #{ids.to_sentence}: #{msg}")
   end
 
-  private
-
-  def before_validation_cleanup
-    self.presentation = nil if presentation.blank?
-  end
-
   public
 
-  def to_s
-    presentation_as_text
+  # Synthesises the running text of the sentence.
+  #
+  # The <tt>mode</tt> is :text_and_presentation if both token forms and the
+  # presentation data should be included in the resulting string.
+  # Presentation data from token objects and the sentence object is
+  # included. :text_and_presentation_with_markup produces the same result
+  # but also includes markup that distinguishes token forms from
+  # presentation data. :text_only includes only token forms. Each token
+  # form is then separated by a single space. The default is
+  # :text_and_presentation.
+  #
+  # Whichever the value of <tt>mode</tt>, only tokens that are flagged as
+  # non-empty contribute to the resulting string.
+
+  def to_s(mode = :text_and_presentation)
+    case mode
+    when :text_only
+      tokens.word.map { |token| token.to_s(:text_only) }.join(' ')
+    when :text_and_presentation
+      presentation_stream.map(&:last).join
+    when :text_and_presentation_with_markup
+      presentation_stream.map { |t, v| "<#{t}>#{v}</#{t}>" }.join
+    else
+      raise ArgumentError
+    end
+  end
+
+  # Returns an array containing the <tt>presentation_before</tt>,
+  # <tt>form</tt> and <tt>presentation_after</tt> columns and with an
+  # interpretation of the presentation data. The presentation columns on
+  # both tokens and sentences are included.
+  #
+  # The array consists of pairs of interpretation and value. Only the
+  # presentation columns that have non-empty values are included in the
+  # array. The interpretation is :pc for punctuation, :s for spaces and :w
+  # for a (token/word) form.
+  #
+
+  def presentation_stream
+    t = []
+
+    t << [:pc, presentation_before] if presentation_before
+
+    tokens.word.each do |token|
+      t += token.presentation_stream
+    end
+
+    t << [:pc, presentation_after] if presentation_after
+    t
+  end
+
+  def self.parse_presentation_markup(s)
+    Nokogiri::XML("<wrap>#{s}</wrap>") do |config|
+      config.strict
+    end.xpath('/wrap/*').map do |n|
+      [n.name.to_sym, n.children.to_s]
+    end
+  end
+
+  def self.diff_presentation_stream(p1, p2)
+    unless p1.map(&:last).join == p2.map(&:last).join
+      raise ArgumentError, "presentation strings differ"
+    end
+
+    Diff::LCS.sdiff(p1, p2).map { |c| [c.old_element, c.new_element] }
+  end
+
+  def diff_tokenization(new_tokenization)
+    # Ensure that new_tokenization is modifiable without side-effects for
+    # the caller.
+    new_tokenization.dup!
+
+    # Trim Sentence.presentation_before and Sentence.presentation_after from the array.
+    new_tokenization.shift if new_tokenization.first.first == :pc and new_tokenization.first.last == presentation_before
+    new_tokenization.pop if new_tokenization.last.first == :pc and new_tokenization.last.last == presentation_after
+
+    Sentence.transaction do
+      tokens.each do |t|
+        if new_tokenization
+          if new_tokenization.first == :w
+          else
+          end
+        else
+        end
+      end
+    end
   end
 
   # Returns the maximum depth of the dependency graph, i.e. the maximum

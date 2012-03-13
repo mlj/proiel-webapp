@@ -1,0 +1,92 @@
+%div{:class => 'roundedbox'}
+  %dl{:style => 'float: left; width: 90%'}
+    = @sentence.citation
+    != readable_completion @sentence, :checkmark => :only
+    %br
+    != external_text_links @sentence
+    %br
+    != link_to_resources @sentence, :index, :previous, :next, :parent, :delete
+  %br{:style => 'clear: both'}
+
+%br
+
+- if is_annotator? or @sentence.is_reviewed?
+  - @sentence.prev_sentences(5).map(&:to_s).each do |s|
+    != s
+    = "|"
+  %span{:style => "border-bottom: solid red"}
+    != @sentence.to_s
+  - @sentence.next_sentences(5).map(&:to_s).each do |s|
+    = "|"
+    != s
+
+  - if is_annotator?
+    != button_to "Change tokenization", edit_sentence_tokenizations_path(@sentence), :method => :get
+
+  %div{:class => 'layer'}
+    %h1 Annotation
+
+    - if @sentence.is_annotated? and is_reviewer?
+      - if @sentence.is_reviewed?
+        != link_to "Change to not reviewed", :action => 'flag_as_not_reviewed', :id => @sentence, :method => :put
+      - else
+        != link_to "Change to reviewed", :action => 'flag_as_reviewed', :id => @sentence, :method => :put
+
+    %p
+      != format_annotator_and_time @sentence
+      %br
+      != format_reviewer_and_time @sentence
+
+    - if @sentence.is_reviewed?
+      %p
+        - if @sentence.valid?
+          Annotation is valid.
+        - else
+          %span{:style => 'color: red;'}
+            Annotation is invalid.
+            %ol
+              - @sentence.tokens.each do |obj|
+                - obj.errors.full_messages.each do |msg|
+                  %li= msg
+
+    %h1 Morphology
+
+    - if is_annotator?
+      != link_to "Edit morphology", edit_sentence_morphtags_url(@sentence)
+
+    %p
+      != render 'morphtags/show'
+
+    %h1 Syntax
+
+    - if is_annotator?
+      != link_to "Edit syntax", edit_sentence_dependencies_url(@sentence)
+
+    %p
+      != render 'dependencies/show'
+
+    - unless @semantic_tags.empty?
+      %h1 Semantic tags
+
+      %p
+        != semantic_tags_summary @semantic_tags
+
+    %h1 Information structure
+
+    - if is_annotator?
+      != link_to "Edit information structure", edit_sentence_info_status_url(@sentence)
+
+    %p
+      != render 'info_statuses/show'
+
+- else
+  Sentence not yet annotated and reviewed.
+
+- if is_reviewer?
+  %h2 Notes
+  != notes_summary @sentence.notes
+
+- if is_reviewer?
+  %h2 History
+  - unless @sentence.audits.empty?
+    != audits_summary @sentence.audits

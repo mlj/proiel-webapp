@@ -1,0 +1,13 @@
+#presentation {
+  border: 1px solid black;
+  padding: 1em 1em 1em 1em;
+  margin: 3em 3em 3em 3em;
+  line-height: 4em;
+  display: block;
+}
+
+.w {
+  border: 1px solid grey;
+  padding: .25em .25em .25em .25em;
+  margin: 1px 1px 1px 1px;
+}

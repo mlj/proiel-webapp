@@ -35,36 +35,6 @@ Column                                        Description
 `dependency_alignment_terminations.token_id`  The token whose dependency subgraph has a termination, i.e. which is not part of its heads dependency subgraph alignment.
 `dependency_alignment_terminations.source_id` The target source for the termination in `dependency_alignment_terminations.token_id`. This is required since terminations can occur in both primary and secondary sources, and only for those from secondary sources can the relationship between the alignments be inferred automatically.
 
-Presentational data and tokenisation
-====================================
-
-All text columns are expected to be on Unicode Normalisation Form C.
-
-Subset of TEI P4 used in presentation strings
----------------------------------------------
-
-See the [http://www.tei-c.org/release/doc/tei-p4-doc/html/](TEI P4
-documentation) for details.
-
-Element      Attributes       TEI manual reference  Comment
--------      ----------       --------------------  -------
-`num`        `value`          Section 6.4.3         Only for numbers that are not already on the correct natural-language form.
-`expan`      `abbr`, `type`   Section 6.4.5         Only for actual abbreviations, i.e. not for host-clitic pairs, for example. `type` is `initial` if this is a proper name abbreviated.
-`corr`       `sic`            Section 6.5.1
-`reg`        `orig`           Section 6.5.2         Both for orthographic normalization and for removal of capitalization at the beginning of sentences.
-`gap`                         Section 6.5.3
-`add`                         Section 6.5.3
-`del`                         Section 6.5.3
-`unclear`                     Section 6.5.3
-`milestone`  `n`, `unit`      Section 6.9
-`speaker`                     Section 6.11
-`w`                           Section 15.1          Indicates forced tokenization of material that would otherwise not be tokenized.
-`segmented`  `orig`           Non-TEI               Semantically similar to `reg` except that this is not a normalization of orthography or capitalization but an expansion of a contraction. Will always contain two or more `w` elements with the proper segmentation of the expanded contraction.
-
-The elements `expan`, `corr`, and `reg`, rather than `abbr`, `sic` and `orig`,
-are used to allow permutations of these and the element `w` used for indicating
-forced tokenization.
-
 External data references
 ========================
 

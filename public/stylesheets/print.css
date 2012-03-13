@@ -15,11 +15,4 @@ div#footer {
 
 a { text-decoration: underline; }
 
-.text-view {
-  margin-left: 0em;
-  margin-right: 0em;
-}
-
-.text-view a { text-decoration: none; }
-
 .actions, .pagination { display: none; }

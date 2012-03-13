@@ -27,12 +27,6 @@ class SourceDivision < ActiveRecord::Base
   has_many :tokens, :through => :sentences, :order => 'sentences.sentence_number ASC, token_number ASC'
   belongs_to :aligned_source_division, :class_name => "SourceDivision"
 
-  validate do |s|
-    unless s.presentation_well_formed?
-      s.errors.add_to_base('Presentation string is not well-formed.')
-    end
-  end
-
   # Returns the previous source division in a source.
   def previous
     source.source_divisions.find(:first, :conditions =>  ["position < ?", position], :order => "position DESC")
@@ -61,21 +55,23 @@ class SourceDivision < ActiveRecord::Base
 
   # Returns the completion state of the source division.
   def completion
-    if sentences.exists?(["reviewed_by IS NULL and annotated_by IS NULL"])
+    if sentences.exists?(["reviewed_at IS NULL and annotated_at IS NULL"])
       :unannotated
-    elsif sentences.exists?(["reviewed_by IS NULL"])
+    elsif sentences.exists?(["reviewed_at IS NULL"])
       :annotated
     else
       :reviewed
     end
   end
 
+  SD_CITATION_PREFIX_DIVIDERS = /([\s\.]+)/u
+
   # Returns a citation for the source division.
   def citation
-    [source.citation_part, [sentences.first.tokens.first.citation_part, sentences.last.tokens.last.citation_part].join(Unicode::U2013)].join(' ')
+    [source.citation_part,
+      citation_make_range(sentences.first.tokens.first.citation_part,
+                          sentences.last.tokens.last.citation_part)].join(' ')
   end
-
-  include Presentation
 
   # Returns sentence alignments for the source division.
   #
@@ -119,35 +115,6 @@ class SourceDivision < ActiveRecord::Base
   end
 
   public
-
-  def segmentation_diff
-    Differ.diff_by_char(segmentation_derived_from_data,
-                        segmentation_derived_from_presentation)
-  end
-
-  # Compares segmentation based on the presentation string with actual
-  # segmentation, if any. Returns true if the segmentation is
-  # identical, i.e. valid, or if the sentence has not been segmented.
-  def segmentation_valid?
-    !segmented? or segmentation_derived_from_presentation == segmentation_derived_from_data
-  end
-
-  # Returns an array of segments as derived from stored data.
-  # Eliminates extra whitespace to facilitate comparison.
-  def segmentation_derived_from_data
-    sentences.map(&:presentation_as_text).flatten.join(' ').gsub(/\s+/, ' ').sub(/ $/, '')
-  end
-
-  # Returns an array of segments as derived from the presentation
-  # string. Eliminates extra whitespace to facilitate comparison.
-  def segmentation_derived_from_presentation
-    presentation_as_text.gsub(/\s+/, ' ').sub(/ $/, '')
-  end
-
-  # Returns true if the source division has been segmented, false otherwise.
-  def segmented?
-    true # FIXME: for future use, always return true for now
-  end
 
   # Returns a collection of source divisions that are candidates for
   # alignment with this source division.

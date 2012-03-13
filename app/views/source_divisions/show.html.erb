@@ -4,9 +4,4 @@
   <%= link_to_if @source_division.aligned_source_division, "Sentence alignments", alignment_path(@source_division) %>
 <% end %>
 
-<div class='page_info'><%= page_entries_info(@sentences) %></div><%= will_paginate(@sentences) %>
-<div class="text-view">
-  <%= @source_division.presentation_as_html %>
-</div>
-
 <%= render_tabular @sentences, ['Location', 'Text', '&nbsp;'] %>

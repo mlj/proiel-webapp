@@ -63,7 +63,6 @@ Rails::Initializer.run do |config|
   config.gem 'oniguruma'
   config.gem 'builder'
   config.gem 'nokogiri'
-  config.gem 'hpricot', :version => '0.8.1' # only needed for legacy_import
   config.gem 'gchartrb', :lib => 'google_chart'
   config.gem 'diff-lcs', :lib => 'diff/lcs'
   config.gem 'ruby-sfst', :lib => 'sfst'
@@ -81,7 +80,6 @@ Rails::Initializer.run do |config|
   config.gem 'acts_as_audited', :lib => false, :version => '1.1.1'
   config.gem 'exception_notification', :version => '~> 2.3.3' # 2.4.0 and higher are Rails 3 only
   config.gem 'iso-codes', :lib => 'iso_codes'
-  config.gem 'differ'
 end
 
 # Release number

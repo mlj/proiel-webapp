@@ -29,39 +29,78 @@ class TokenizationsController < ApplicationController
   def update
     @sentence = Sentence.find(params[:sentence_id])
 
-    parser = XML::Parser.string('<presentation>' + params[:new_presentation] + '</presentation>')
-    xml = parser.parse
+    if params[:op_id]
+      @target_token = Token.find(params[:op_id])
 
-    s = APPLICATION_CONFIG.presentation_from_editable_html_stylesheet.apply(xml, {}).to_s
-
-    # FIXME: libxslt-ruby bug #21615: XML decl. shows up in the output
-    # even when omit-xml-declaration is set
-    s.gsub!(/<\?xml version="1\.0" encoding="UTF-8"\?>\s+/, '')
-
-    # FIXME: The xslt processor ignores all instructions and inserts
-    # non-sense "\n" characters all over the place. That seriously
-    # messes with out code. Try to mend it by removing all "\n"
-    # characters.
-    s.gsub!("\n", '')
-
-    # Check the invariant: the content-level text must remain constant
-    t1 = @sentence.presentation_as_text
-    t2 = @sentence.presentation_as_text
-    raise "Presentation invariant failed:\n#{t1} !=\n#{t2}" unless t1 == t2
-
-    Sentence.transaction do
-      @sentence.presentation = s
-      @sentence.save!
-      @sentence.tokenize!
+      unless @sentence.tokens.include?(@target_token)
+        flash[:error] = 'Token does not belong to sentence'
+        redirect_to :action => 'edit'
+        return
+      end
     end
 
-    flash[:notice] = 'Tokenization updated.'
-    redirect_to @sentence
-  rescue LibXML::XML::Parser::ParseError => p
-    flash[:error] = "Error parsing XML"
-    redirect_to :action => 'edit'
+    case params[:op]
+    when 'split'
+      unless @target_token.is_splitable?
+        flash[:error] = 'Token cannot be split'
+        redirect_to :action => 'edit'
+        return
+      end
+
+      flash[:notice] = 'Tokenization updated.'
+      @target_token.split_token!
+
+    when 'join'
+      unless @target_token.is_joinable?
+        flash[:error] = 'Token cannot be joined'
+        redirect_to :action => 'edit'
+        return
+      end
+
+      flash[:notice] = 'Tokenization updated.'
+      @target_token.join_with_next_token!
+
+    when 'merge_with_next_sentence'
+      if @sentence.is_next_sentence_appendable?
+        if @sentence.valid? and @sentence.next.valid?
+          @sentence.append_next_sentence!
+          flash[:notice] = 'Sentences merged.'
+        else
+          flash[:error] = 'One of the sentences is invalid.'
+          redirect_to :action => 'edit'
+          return
+        end
+      else
+        flash[:error] = 'Next sentence not found.'
+        redirect_to :action => 'edit'
+        return
+      end
+
+    when 'split_sentence'
+      if @sentence.valid? and @sentence.is_splitable_after?(@target_token)
+        @sentence.split_sentence!(@target_token)
+        flash[:notice] = 'Sentence split.'
+      else
+        flash[:error] = 'Sentence cannot be split.'
+        redirect_to :action => 'edit'
+        return
+      end
+    else
+      flash[:error] = 'Invalid tokenization operation'
+      redirect_to :action => 'edit'
+      return
+    end
+
+    respond_to do |format|
+      format.html { redirect_to :action => 'edit' }
+    end
   rescue ActiveRecord::RecordInvalid => invalid
-    flash[:error] = invalid.record.errors.full_messages.join('<br>')
+    if invalid.record.id.nil?
+      flash[:error] = invalid.record.errors.full_messages.map { |m| "New #{invalid.record.class}: #{m}" }.join('<br>')
+    else
+      flash[:error] = invalid.record.errors.full_messages.map { |m| "#{invalid.record.class} #{invalid.record.id}: #{m}" }.join('<br>')
+    end
+
     redirect_to :action => 'edit'
   end
 end

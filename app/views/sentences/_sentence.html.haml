@@ -1,8 +1,7 @@
 %tr
   %td
-    != sentence.citation
+    = sentence.citation
+    = truncate(sentence.to_s, :length => 70, :omission => Unicode::U2026)
     != readable_completion sentence, :checkmark => :only
-  %td.form{:lang => sentence.language}
-    != sentence.presentation_as_html :length_limit => 10
   %td
     != link_to 'Details', sentence

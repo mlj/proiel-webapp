@@ -3,11 +3,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 class TokenTest < ActiveSupport::TestCase
   fixtures :tokens
 
-  # Replace this with your real tests.
-  def test_truth
-    assert true
-  end
-
   def test_relation_predicates
     s = Sentence.first
 
@@ -104,5 +99,20 @@ class TokenTest < ActiveSupport::TestCase
     t.relation = 'obl'
     t.save!
     assert_equal obl.id, t.relation.id
+  end
+
+  # Splitting and merging of tokens
+  def test_is_splitable
+    t = tokens(:latin_word)
+    assert t.is_splitable?
+
+    t = tokens(:empty)
+    assert !t.is_splitable?
+
+    t = tokens(:latin_single_letter_word)
+    assert !t.is_splitable?
+
+    t = tokens(:greek_single_letter_word)
+    assert !t.is_splitable?
   end
 end

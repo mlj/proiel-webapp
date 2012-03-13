@@ -1,6 +1,7 @@
 #--
 #
 # Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011 Dag Haug
 # Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
@@ -19,7 +20,7 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
-require 'proiel/src'
+
 require 'singleton'
 require 'nokogiri'
 
@@ -31,42 +32,32 @@ class TextImport
   def read(xml_or_file)
     doc = Nokogiri::XML(xml_or_file)
 
-    identifier = (doc/:source).first.attributes['id']
-    language = (doc/:source).first.attributes['language']
-    # There may be elements called 'title', 'abbreviation' etc
-    # elsewhere (typically inside the TEI header), so we must be
-    # careful to get only the children of 'source'.
-    title = doc.search('source > title').inner_html
-    abbreviation = doc.search('source > abbreviation').inner_html
-    tracked_references = doc.search('source > tracked-references').inner_html
-    reference_format = doc.search('source > reference-format').inner_html
-    tei_header = (doc/:source/:"tei-header").to_s
+    identifier = (doc/:source).first.attributes['id'].to_s
+    language = (doc/:source).first.attributes['language'].to_s
+    STDERR.puts "Importing source #{identifier} (#{language})"
 
     source = Source.find_by_code(identifier)
-    raise "Source #{identifier} already exists" if source
 
-    tracked_references = tracked_references.split(/\s*,\s*/).inject({}) do |v, e|
-      sect, level = e.split(/\s*=\s*/)
-      v[level] ||= []
-      v[level] << sect
-      v
-    end
-
-    reference_format = reference_format.split(/,(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/).map { |s| s.tr('"', '') }.inject({}) do |v, e|
-      sect, fmt = e.split(/\s*=\s*/)
-      v[sect.to_sym] = fmt
-      v
-    end
-
-    source = Source.create!(:code => identifier,
+    unless source
+      # There may be elements called 'title', 'abbreviation' etc
+      # elsewhere (typically inside the TEI header), so we must be
+      # careful to get only the children of 'source'.
+      title = doc.search('source > title').inner_html
+      abbreviation = doc.search('source > abbreviation').inner_html
+      tei_header = (doc/:source/:"tei-header").to_s
+      source = Source.create!(:code => identifier,
                             :language => language,
                             :title => title,
                             :citation_part => abbreviation,
                             :tei_header => tei_header)
+    end
 
     # We do not need versioning for imports, so disable it.
     Sentence.disable_auditing
     Token.disable_auditing
+
+    # we need to keep track of tokens in the whole source because of anaphoric relations
+    token_id_map = {}
 
     (doc/:div).each_with_index do |div, div_position|
       sd = source.source_divisions.create! :position => div_position,
@@ -79,39 +70,58 @@ class TextImport
         end
       else
         (div/:sentence).each_with_index do |sentence, sentence_position|
-          presentation_string = (sentence/:presentation).inner_html
-          s = add_sentence(sd, sentence_position, presentation_string)
+          s = sd.sentences.create! :sentence_number => sentence_position
 
-          token_id_map = {}
-
-          # First pass to set up the token data.
+          # Set up the token data.
           (sentence/:token).each_with_index do |token, token_position|
-            t = s.tokens.create! :form => token.attributes['form'],
-              :empty_token_sort => token.attributes['empty-token-sort'],
-              :foreign_ids => token.attributes['foreign-ids'],
-              :token_number => token_position
-            t.morph_features = token.attributes['morph-features']
-            t.source_morph_features = token.attributes['source-morph-features']
-            # TODO: citation
+            t = s.tokens.create! :form => (token.attributes['form'] ? token.attributes['form'].to_s : nil),
+              :empty_token_sort => (token.attributes['empty-token-sort'] ? token.attributes['empty-token-sort'].to_s :  nil),
+              :foreign_ids => (token.attributes['foreign-ids'] ? token.attributes['foreign-ids'].to_s : nil),
+              :token_number => token_position,
+              :citation_part => (token.attributes['citation-part'] ? token.attributes['citation-part'].to_s : ''),
+              :presentation_before => token.attributes['presentation-before'].to_s ,
+              :presentation_after => token.attributes['presentation-after'].to_s,
+              :info_status => (token.attributes['info-status'] ? token.attributes['info-status'].to_s : nil)
+
+
+            t.morph_features = token.attributes['morph-features'].to_s if token.attributes['morph-features']
+            t.source_morph_features = token.attributes['source-morph-features'].to_s if token.attributes['source-morph-features']
             t.save!
 
-            token_id_map[token.attributes['id']] = t
+            token_id_map[token.attributes['id'].to_s.to_i] = t.id
           end
 
-          # Make another pass to set up dependencies.
+          # Make another pass to set up dependencies and antecedents
           (sentence/:token).each_with_index do |token, token_position|
-            t = token_id_map[token.attributes['id']]
-            t.head_id = token_id_map[token.attributes['head-id']]
-            t.relation = token.attributes['relation']
+            t = Token.find(token_id_map[token.attributes['id'].to_s.to_i])
+            raise "No head #{token.attributes['head-id'].to_s} found for #{t.id}" if token.attributes['head-id'] and !token_id_map[token.attributes['head-id'].to_s.to_i]
+            t.head_id = token_id_map[token.attributes['head-id'].to_s.to_i] if token.attributes['head-id']
+            raise "No antecedent #{token.attributes['antecedent-id'].to_s} found for #{t.id}" if token.attributes['antecedent-id'] and !token_id_map[token.attributes['antecedent-id'].to_s.to_i]
+            t.antecedent_id = token_id_map[token.attributes['antecedent-id'].to_s.to_i] if token.attributes['antecedent-id']
+            t.relation = Relation.find_by_tag(token.attributes['relation'].to_s) if token.attributes['relation']
             t.save! if t.changed?
+            (token/:slashes/:slash).each do |slash|
+              t.slash_out_edges.create! :slashee_id => token_id_map[slash.attributes['target'].to_s.to_i],
+                                :relation_id => Relation.find_by_tag(slash.attributes['label'].to_s).id
+            end
           end
 
           (sentence/:note).each do |note|
-            originator = ImportSource.find_or_create_by_tag :tag => note.attributes['originator'],
-              :summary => note.attributes['originator']
+            originator = ImportSource.find_or_create_by_tag :tag => note.attributes['originator'].to_s,
+              :summary => note.attributes['originator'].to_s
 
             s.notes.create! :contents => note.inner_html,
               :originator => originator
+          end
+          # Import status information
+          status = sentence.attributes['status'].to_s
+          if status == 'reviewed'
+            s.annotated_at = Time.now
+            s.reviewed_at = Time.now
+            s.save!
+          elsif status == 'annotated'
+            s.annotated_at = Time.now
+            s.save!
           end
         end
       end

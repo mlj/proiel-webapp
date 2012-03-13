@@ -99,7 +99,7 @@ class PROIELXMLExport < SourceXMLExport
 
     builder.source(:id => identifier, :language => @source.language.tag) do
       builder.title @source.title
-      builder.abbreviation @source.abbreviation
+      builder.abbreviation @source.citation_part
       builder.tag!("tei-header") { @metadata.write(builder) if @metadata }
 
       filtered_source_divisions.each do |sd|
@@ -116,18 +116,20 @@ class PROIELXMLExport < SourceXMLExport
       builder.abbreviation sd.abbreviated_title
 
       sd.sentences.each do |s|
-        builder.sentence do
-          builder.presentation { |x| x << s.presentation }
-          write_sentence(builder, s) if (@options[:reviewed_only] and s.is_reviewed?) or (!@options[:reviewed_only] and s.has_dependency_annotation?)
+        status = 'unannotated' unless s.is_annotated?
+        status = (s.is_reviewed? ? 'reviewed' : 'annotated') unless status
+        builder.sentence(:status => status) do
+          write_sentence(builder, s) 
         end
       end
     end
   end
 
   def write_sentence(builder, s)
-    s.tokens.dependency_annotatable.each do |t|
+    (@options[:info] ? s.tokens : s.tokens.dependency_annotatable).each do |t|
       attributes = {}
-      features = %w(id form empty_token_sort morph_features foreign_ids head_id relation)
+      features = %w(id form presentation_before presentation_after empty_token_sort  foreign_ids citation_part)
+      features += %w(morph_features head_id relation) if (@options[:reviewed_only] and s.is_reviewed?) or (!@options[:reviewed_only] and s.has_dependency_annotation?)
       features += %w(antecedent_id info_status) if @options[:info]
       features.each do |f|
         v = t.send(f)
@@ -148,7 +150,7 @@ class PROIELXMLExport < SourceXMLExport
         builder.token attributes
       end
     end
-
+    
   end
 end
 

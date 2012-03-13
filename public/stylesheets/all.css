@@ -132,16 +132,6 @@ th { font-weight: bold; }
   font-weight: bold;
 }
 
-.text-view { 
-  margin-top: 1em;
-  line-height: 1.6em; 
-  text-align: justify;
-  margin-left: 2em;
-  margin-right: 2em;
-}
-
-.text-view a:link, .text-view a:visited { color: black; }
-
 /* Tabular */
 
 .tabular form {

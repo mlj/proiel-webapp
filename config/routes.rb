@@ -23,11 +23,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :parts_of_speech
   map.resources :languages
 
-  map.resources :sentences, :member => {
-    :merge => :get,
-    :tokenize => :get,
-    :resegment_edit => :get,
-  } do |annotation|
+  map.resources :sentences  do |annotation|
     annotation.resource :dependency_alignments
     annotation.resource :morphtags
     annotation.resource :dependencies

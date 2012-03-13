@@ -1,29 +1,31 @@
 module AnnotationsHelper
-  # Returns a string identifying the annotator of a sentence, or an
-  # empty string if not annotated.
-  #
-  # ==== Options
-  # time:: Include time of actions.
-  def format_annotator(sentence, options = {})
-    s = ''
+  # Returns HTML displaying the annotator of a sentence and the time of
+  # annotation.
+  def format_annotator_and_time(sentence)
     if @sentence.is_annotated?
-      s += "Annotated by #{link_to_user(@sentence.annotator)}"
-      s += " (#{@sentence.annotated_at})" if options[:time]
+      t = " on #{@sentence.annotated_at.to_s(:long)}."
+      if @sentence.annotator
+        "Annotated by #{link_to_user(@sentence.annotator)}" + t
+      else
+        "Annotated import" + t
+      end
+    else
+      'Not annotated.'
     end
-    s
   end
 
-  # Returns a string identifying the reviewer of a sentence, or an
-  # empty string if not reviewed..
-  #
-  # ==== Options
-  # time:: Include time of actions.
-  def format_reviewer(sentence, options = {})
-    s = ''
+  # Returns HTML displaying the reviewer of a sentence and the time of
+  # review.
+  def format_reviewer_and_time(sentence)
     if @sentence.is_reviewed?
-      s += "Reviewed by #{link_to_user(@sentence.reviewer)}"
-      s += " (#{@sentence.reviewed_at})" if options[:time]
+      t = " on #{@sentence.reviewed_at.to_s(:long)}."
+      if @sentence.reviewer
+        "Reviewed by #{link_to_user(@sentence.reviewer)}" + t
+      else
+        "Reviewed import" + t
+      end
+    else
+      'Not reviewed.'
     end
-    s
   end
 end
