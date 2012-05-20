@@ -1,3 +1,5 @@
+require 'fileutils'
+
 DEFAULT_EXPORT_DIRECTORY = Rails.root.join('public', 'exports')
 
 namespace :proiel do
@@ -126,8 +128,7 @@ namespace :proiel do
       directory ||= DEFAULT_EXPORT_DIRECTORY
 
       Dir::mkdir(directory) unless File::directory?(directory)
-      File::copy(Rails.root.join('lib', 'text.xsd'),
-                 File.join(directory, 'text.xsd'))
+      FileUtils.cp(Rails.root.join('lib', 'text.xsd'), File.join(directory, 'text.xsd'))
     end
   end
 
