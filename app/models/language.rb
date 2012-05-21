@@ -91,7 +91,7 @@ class Language
         completion_candidates = results
       else
         results = []
-        completion_candidates = query
+        completion_candidates = [query]
       end
 
       completions = Lemma.where(:language_tag => language_code).by_completions(completion_candidates)
