@@ -29,7 +29,7 @@ class SourceDivisionsController < ApplicationController
   def show
     @source_division = SourceDivision.includes(:source).find(params[:id])
     @source = @source_division.source
-    @sentences = @source_division.sentences.order(:sentence_number).paginate(:page => current_page, :per_page => 90)
+    @sentences = @source_division.sentences.order(:sentence_number).page(current_page).per_page(90)
 
     respond_with @source_division
   end
