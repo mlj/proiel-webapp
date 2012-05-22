@@ -9,8 +9,8 @@
     != f.input :sentence_source_division_source_id_equals, :label => 'Source', :collection => Source.all.sort_by(&:to_label), :required => false
     != f.input :lemma_lemma_wildcard_matches, :label => 'Lemma base form', :required => false, :hint => 'Use ? to match any character or * to match any string'
     != f.input :lemma_variant_equals, :label => 'Lemma variant number', :hint => 'An integer number differentiating this lemma from other lemmata with the same base form and part of speech.', :required => false
-    != f.input :lemma_part_of_speech_tag_equals, :collection => Lemma.represented_parts_of_speech, :required => false
-    != f.input :relation_id_equals, :collection => Relation.all.sort_by(&:to_label), :required => false
+    != f.input :lemma_part_of_speech_tag_equals, :label => 'Part of speech', :collection => Lemma.represented_parts_of_speech, :required => false
+    != f.input :relation_id_equals, :label => 'Relation', :collection => Relation.all.sort_by(&:to_label), :required => false
 
   = f.actions do
     != f.submit "Search"
