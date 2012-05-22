@@ -33,7 +33,7 @@ class DictionariesController < ApplicationController
 
   def show
     @dictionary = Language.new(params[:id])
-    @search = Lemma.where(:language_tag => params[:id]).search(params[:search])
+    @search = Lemma.where(:language_tag => params[:id]).order(:lemma).search(params[:search])
     @lemmata = @search.page(current_page)
 
     respond_with @dictionary
