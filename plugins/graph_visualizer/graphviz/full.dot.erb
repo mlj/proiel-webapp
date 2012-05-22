@@ -9,7 +9,7 @@ digraph G {
     <% elsif token.is_empty? %>
       <%= node token.id, token.empty_token_sort, :shape => :none %>
     <% else %>
-      <%= node token.id, [token.form, "(#{token.morph_features.lemma.export_form})", token.morph_features.pos_summary(:abbreviated => true)].join('\n'), :shape => :none %>
+      <%= node token.id, [token.form, token.lemma.try { |s| "(#{s.export_form})" }, token.morph_features.try { |s| s.pos_summary(:abbreviated => true) }].join('\n'), :shape => :none %>
     <% end %>
 
     <% if token.head and token.relation %>
