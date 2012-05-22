@@ -27,7 +27,7 @@ class SourcesController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
-    @sources = Source.order(:language_tag).page(current_page)
+    @sources = Source.order(:language_tag).page(current_page).per_page(90)
 
     respond_with @sources
   end
