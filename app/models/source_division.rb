@@ -61,9 +61,13 @@ class SourceDivision < ActiveRecord::Base
 
   # Returns a citation for the source division.
   def citation
-    [source.citation_part,
-      citation_make_range(sentences.first.tokens.first.citation_part,
-                          sentences.last.tokens.last.citation_part)].join(' ')
+    if sentences.empty?
+      source.citation_part
+    else
+      [source.citation_part,
+        citation_make_range(sentences.first.tokens.first.citation_part,
+                            sentences.last.tokens.last.citation_part)].join(' ')
+    end
   end
 
   # Returns sentence alignments for the source division.
