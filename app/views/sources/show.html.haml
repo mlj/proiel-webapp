@@ -18,6 +18,6 @@
   - @source_divisions.each do |source_division|
     %li
       %span.toc-title
-        %em= link_to source_division.title, source_division
+        %em= source_division.title
         = "(#{source_division.citation})"
       %span.toc-link!= link_to 'Browse', source_division
