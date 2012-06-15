@@ -40,5 +40,5 @@
 - layer_unless @incoming_semantic_relations.empty?, 'incoming_semantic_relations' do
   != semantic_relations_summary @incoming_semantic_relations
 
-- layer_unless @token.audits.empty?, "revisions" do
+- layer_if (is_reviewer? and !@token.audits.empty?), "revisions" do
   != audits_summary @token.audits
