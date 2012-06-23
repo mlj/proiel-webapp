@@ -1,6 +1,36 @@
 % Data model
 % Marius L. Jøhndal
-% 9 March 2012
+% 23 June 2012
+
+# Presentation text
+
+_Presentation text_ is textual material that should be included when the
+sentence is formatted for presentation but should not itself be annotated.
+
+Presentation text is stored in the columns `presentation_before` and
+`presentation_after` in the tables `tokens`, `sentences` and `source_divisions`.
+The semantics of these columns differ from table to table. The
+`source_divisions` columns can contain any amount of text. This is therefore
+suitable for introductory material like prologues or chapter headings, which for
+one reason or another is exempted from annotation.
+
+The `sentences` and `tokens` columns are restricted to strings of a certain
+length (see the schema for the exact value). The `sentences` columns are
+intended for presentation text that is not part of the running text but indicate
+some sort of fixed break that unambiguously separate sentences. An example would
+be stage directions in drama.
+
+The `tokens` columns, on the other hand, should contain presentation text that
+intervenes in the running text. This is typically punctuation and interword
+spacing.
+
+Two sentences can be merged when there is presentation text intervening between
+the sentences but only when this is represented in the relevant `tokens`
+columns. If it is represented in the `sentences` columns, it is interpreted as a
+fixed sentence boundary. Since sentences from different source divisions cannot
+be merged, representation of presentation text in the `source_divisions` table
+plays no role in merging sentences.
+
 
 # General conventions
 

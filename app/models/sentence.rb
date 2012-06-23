@@ -314,8 +314,12 @@ class Sentence < ActiveRecord::Base
     self.tokens.minimum(:token_number)
   end
 
+  # Tests if the next sentence can be appended to this sentence using
+  # +append_next_sentence!+.
   def is_next_sentence_appendable?
-    has_next? and presentation_after.nil? and next_sentence.presentation_before.nil?
+    # There must be a next sentence, but there must be no sentence-level
+    # presentation text intervening.
+    has_next? and presentation_after.blank? and next_sentence.presentation_before.blank?
   end
 
   # Appends the next sentence onto this sentence and destroys the old
@@ -328,17 +332,12 @@ class Sentence < ActiveRecord::Base
       remove_syntax_and_info_structure!
       next_sentence.remove_syntax_and_info_structure!
 
-      # Ensure that there is at least a single space after any punctuation
-      # at the end of the sentence
-      last_token = tokens.last
-
-      if last_token
-        last_token.presentation_after =
-          (last_token.presentation_after || '').sub(/\s*$/, ' ')
-        last_token.save!
-      end
-
       append_tokens!(next_sentence.tokens)
+
+      # Move presentation_after from the next sentence to this one and destroy
+      # the next sentence.
+      self.presentation_after = next_sentence.presentation_after
+      save!
 
       next_sentence.destroy
     end
@@ -496,7 +495,7 @@ class Sentence < ActiveRecord::Base
   def append_tokens!(ts) #:nodoc:
     ts.each do |t|
       t.sentence_id = id
-      t.token_number = self.max_token_number + 1
+      t.token_number = (self.max_token_number || -1) + 1
       t.save!
     end
   end
