@@ -288,22 +288,40 @@ class Sentence < ActiveRecord::Base
   # Tests if the next sentence can be appended to this sentence using
   # +append_next_sentence!+.
   def is_next_sentence_appendable?
-    # There must be a next sentence, but there must be no sentence-level
-    # presentation text intervening.
-    has_next? and presentation_after.blank? and next_object.presentation_before.blank?
+    # There must be a next sentence, and if there is presentation text on the
+    # sentences, there must be suitable tokens to tack this text onto.
+    has_next? and
+      (presentation_after.blank? or !tokens.count.zero?) and
+      (next_sentence.presentation_before.blank? or !next_sentence.tokens.count.zero?)
   end
 
   # Appends the next sentence onto this sentence and destroys the old
   # sentence. This also removes all dependency annotation from both
   # sentences to ensure validity.
   def append_next_sentence!
-    raise ArgumentError unless is_next_sentence_appendable?
+    raise ArgumentError, "next sentence is not appendable" unless is_next_sentence_appendable?
 
     Sentence.transaction do
       remove_syntax_and_info_structure!
       next_object.remove_syntax_and_info_structure!
 
-      append_tokens!(next_object.tokens)
+      # Tack presentation_after from this sentence onto the last token of this
+      # sentence and presentation_before from the next sentence onto the first
+      # token of the next sentence.
+      if !presentation_after.blank?
+        last_token = tokens.last
+        last_token.presentation_after = ((last_token.presentation_after || '') + presentation_after).sub(/\s+/, ' ')
+        last_token.save!
+      end
+
+      if !next_sentence.presentation_before.blank?
+        first_token = next_sentence.tokens.first
+        first_token.presentation_before = (next_sentence.presentation_before + (first_token.presentation_before || '')).sub(/\s+/, ' ')
+        first_token.save!
+      end
+
+      # Append tokens from next_sentence to this one.
+      append_tokens!(next_sentence.tokens)
 
       # Move presentation_after from the next sentence to this one and destroy
       # the next sentence.

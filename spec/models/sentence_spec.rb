@@ -67,6 +67,7 @@ RSpec.describe Sentence, type: :model do
 
     assert @sentence_middle_of_sd.presentation_before.blank?
     assert_equal 'Some text', @sentence_middle_of_sd.presentation_after
+    assert_equal 'And some text', @sentence_middle_of_sd.presentation_after
 
     assert_equal 4, @sentence_middle_of_sd.tokens.count
 
@@ -108,8 +109,8 @@ RSpec.describe Sentence, type: :model do
     assert_equal 3, t3.token_number
 
     assert_equal ', ', t0.presentation_after
-    assert_equal '. ', t1.presentation_after
-    assert_equal ', ', t2.presentation_after
+    assert_equal '. Some more text', t1.presentation_after
+    assert_equal 'Even more text', t2.presentation_before
     assert_equal '. ', t3.presentation_after
   end
 end
