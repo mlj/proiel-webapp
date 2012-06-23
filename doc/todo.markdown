@@ -271,8 +271,6 @@ Wishlist
     really look like a 'text'; imposing a grid based layout should easily bring balance
     back to it.
 
-  * Fix broken MaltXML
-
   * Update morphology and dependency editors to work in IE
 
     This broke at some point. Should be trivial to fix.

@@ -30,7 +30,7 @@ namespace :proiel do
       File.open(ENV['FILE']) { |f| TextImport.instance.read(f) }
     end
 
-    desc "Export a PROIEL source text. Optional options: ID=source_identifier FORMAT={proiel|maltxml|tigerxml|tiger2} MODE={all|reviewed} DIRECTORY=destination_directory INFO={semtags|info|both} SOURCE_DIVISION=source division title regexp REMOVE_CYCLES={none|heads|all}"
+    desc "Export a PROIEL source text. Optional options: ID=source_identifier FORMAT={proiel|conll|tigerxml|tiger2} MODE={all|reviewed} DIRECTORY=destination_directory INFO={semtags|info|both} SOURCE_DIVISION=source division title regexp REMOVE_CYCLES={none|heads|all}"
     task(:export => :environment) do
       source = ENV['ID']
       format = ENV['FORMAT']
@@ -44,18 +44,18 @@ namespace :proiel do
       require 'export'
 
       case format
-      when 'maltxml'
-        klass = MaltXMLExport
-        suffix = '-malt'
+      when 'conll'
+        klass = CoNLLExport
+        suffix = '.conll'
       when 'tigerxml'
         klass = TigerXMLExport
-        suffix = '-tiger'
+        suffix = '-tiger.xml'
       when 'proiel'
         klass = PROIELXMLExport
         suffix = ''
       when 'tiger2'
         klass = Tiger2Export
-        suffix = '-tiger2'
+        suffix = '-tiger2.xml'
       else
         raise "Invalid format"
       end
@@ -106,7 +106,7 @@ namespace :proiel do
       sources.each do |source|
         options[:source_division] = source.source_divisions.select { |sd| sd.title =~ source_division }.map(&:id) if source_division
         e = klass.new(source, options)
-        e.write(File.join(directory, "#{source.code}#{suffix}.xml"))
+        e.write(File.join(directory, "#{source.code}#{suffix}"))
       end
     end
 

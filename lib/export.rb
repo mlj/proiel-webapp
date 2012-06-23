@@ -1,8 +1,8 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
-# Copyright 2010 Dag Haug
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2010, 2011, 2012 Dag Haug
 #
 # This file is part of the PROIEL web application.
 #
@@ -31,8 +31,11 @@ class String
   end
 end
 
+
+
+
 # Abstract source exporter.
-class SourceXMLExport
+class SourceExport
   # Creates a new exporter that exports the source +source+.
   #
   # ==== Options
@@ -87,10 +90,24 @@ class SourceXMLExport
   def identifier
     @source.code
   end
+
+  def each_source_division
+    filtered_source_divisions.find_each do |sd|
+      yield sd
+    end
+  end
+
+  def each_sentence
+    each_source_division do |sd|
+      filter_sentences(sd).find_each do |s|
+        yield s
+      end
+    end
+  end
 end
 
 # Source exporter for the PROIEL XML format.
-class PROIELXMLExport < SourceXMLExport
+class PROIELXMLExport < SourceExport
   protected
 
   def do_export(file)
@@ -122,7 +139,7 @@ class PROIELXMLExport < SourceXMLExport
         status = 'unannotated' unless s.is_annotated?
         status = (s.is_reviewed? ? 'reviewed' : 'annotated') unless status
         builder.sentence(:status => status) do
-          write_sentence(builder, s) 
+          write_sentence(builder, s)
         end
       end
     end
@@ -153,7 +170,7 @@ class PROIELXMLExport < SourceXMLExport
         builder.token attributes
       end
     end
-    
+
   end
 end
 
@@ -161,7 +178,7 @@ end
 # (http://www.ims.uni-stuttgart.de/projekte/TIGER/TIGERSearch/doc/html/TigerXML.html)
 # in the variant used by VISL under the name `TIGER dependency format'
 # (http://beta.visl.sdu.dk/treebanks.html#TIGER_dependency_format).
-class TigerXMLExport < SourceXMLExport
+class TigerXMLExport < SourceExport
   MORPHOLOGY_BUNDLES = [:person_number, :tense_mood_voice, :case_number, :gender, :degree, :strength, :inflection]
 
   def initialize(source, options = {})
@@ -426,73 +443,44 @@ class Tiger2Export < TigerXMLExport
   end
 end
 
-
-
-# Source exporter for the MaltXML format
-# (http://w3.msi.vxu.se/~nivre/research/MaltXML.html).
+# Exporter for the CoNLL shared task format.
 # Note that this exporter does not support secondary edges.
-class MaltXMLExport < SourceXMLExport
+class CoNLLExport < SourceExport
   protected
 
   def do_export(file)
-    builder = Builder::XmlMarkup.new(:target => file, :indent => 2)
-    builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
-    builder.treebank(:id => self.identifier,
-                     'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
-                     'xmlns:treebank' => "http://www.msi.vxu.se/~rics/treebank",
-                     'xsi:schemaLocation' => "http://www.msi.vxu.se/~rics/treebank treebank.xsd") do
-      builder.head do
-        builder.annotation do
-          builder.attribute(:name => "head")
-          builder.attribute(:name => "deprel") do
-            Relation.primary.each do |relation|
-              builder.comment! relation.summary
-              builder.value(:name => relation.tag)
-            end
-          end
-          builder.attribute(:name => "form")
-          builder.attribute(:name => "morphology")
-          builder.attribute(:name => "lemma")
-        end
+    each_sentence do |s|
+      id_to_number = s.tokens.pluck(:id).each_with_index.inject({}) do |m, (id, i)|
+        m[id] = i + 1
+        m
       end
 
-      builder.body do
-        filtered_sentences.each do |s|
-          builder.sentence(:id => s.id) do
-            # Create a mapping from PROIEL token IDs to one-based, sentence
-            # internal IDs. (I don't like reusing the same id attribute values in
-            # XML in this manner, but what can one do...) The ID 1 is reserved
-            # for an empty root node to be added later, so we start the mapping at
-            # ID 2.
-            ids = s.tokens.takes_syntax.map(&:id)
-            local_token_ids = Hash[*ids.zip((2..(ids.length + 1)).to_a).flatten]
+      s.tokens.visible.find_each do |t|
+        hr = find_lexical_head_and_relation(id_to_number, t)
 
-            # Add another one to function as a root node. This is necessary
-            # since MaltXML requires there to be a single `root word' with
-            # its deprel attribute set to `ROOT'. We also need to emit this
-            # word in the XML file.
-            local_token_ids[nil] = 1
-            builder.word({ :id => 1, :head => 0, :deprel => 'ROOT' })
-
-            s.tokens.takes_syntax.each do |t|
-              attrs = { :id => local_token_ids[t.id]}
-              attrs.merge!({ :form => t.form }) if t.form
-
-              if s.has_dependency_annotation?
-                attrs.merge!({ :head => local_token_ids[t.head_id] })
-                attrs.merge!({ :deprel => t.relation.tag })
-              end
-
-              if s.has_morphological_annotation? and t.is_morphtaggable?
-                attrs.merge!({ :morphology => t.morph_features.morphology_s,
-                               :lemma => t.morph_features.lemma_s })
-              end
-
-              builder.word(attrs)
-            end
-          end
-        end
+        file.puts([id_to_number[t.id],
+                   t.form.gsub(' ', ''),
+                   t.lemma.export_form.gsub(' ', ''),
+                   t.lemma.part_of_speech_tag.first,
+                   t.lemma.part_of_speech_tag,
+                   t.morph_features.morphology_to_hash.map { |k, v| (v == '-' or (k == :inflection and v =='i') ) ? nil : "#{k.upcase[0..3]}#{v}" }.compact.join("|"),
+                   hr.first,
+                   hr.last,
+                   "_",
+                   "_"].join("\t"))
       end
+
+      file.puts
+    end
+  end
+
+  private
+
+  def find_lexical_head_and_relation(id_to_number, t, rel = '')
+    if t.head.nil? or !t.head.is_empty?
+      [t.head ? id_to_number[t.head_id] : 0, rel + t.relation.tag]
+    else
+      find_lexical_head_and_relation(id_to_number, t.head, rel + "#{t.relation.tag}(#{id_to_number[t.head_id]})")
     end
   end
 end
