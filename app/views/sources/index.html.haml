@@ -8,7 +8,5 @@
         - sources.each do |source|
           %li
             %span.toc-title
-              -if source.author
-                ="#{source.author}: "
-              =source.title
+              =source.author_and_title
             %span.toc-link!= link_to 'Browse', source

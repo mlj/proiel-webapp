@@ -235,7 +235,7 @@ module ApplicationHelper
   def breadcrumb_title_for(object)
     case object
     when Source
-      [object.author, object.title].compact.join(': ')
+      object.author_and_title
     when SourceDivision
       object.title
     when Sentence

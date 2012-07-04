@@ -12,7 +12,7 @@
     != link_to "Schema file", "/exports/text.xsd"
   - Source.find(:all).each do |s|
     %li
-      = s.title
+      = s.author_and_title
       %ul
         %li
           != link_to "PROIEL XML", "/exports/#{s.code}.xml"

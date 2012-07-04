@@ -43,8 +43,10 @@ class Source < ActiveRecord::Base
     citation_part
   end
 
-  def to_s
-    title
+  # The author and the title of the source properly formatted as a single
+  # string.
+  def author_and_title
+    [author, title].compact.join(': ')
   end
 
   # Returns an array of all languages represented in sources.
