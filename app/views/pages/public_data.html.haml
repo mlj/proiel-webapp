@@ -1,16 +1,16 @@
 %h1 Downloads
 
 %p
-
-  These data files are generated daily from the subset of our data that has
-  been reviewed. Please take the time to read our page on
-  != link_to "licensing and attribution", page_path("attributions")
-  before downloading any of the data files.
+  These data files are generated daily from the subset of our data that has been
+  reviewed. The data files are released under the
+  != link_to "Creative Commons Attribution-Noncommercial-Share Alike 3.0", "http://creativecommons.org/licenses/by-nc-sa/3.0/us/"
+  license. Please see each text for a list of contributors.
 
 %ul
   %li
     != link_to "Schema file", "/exports/text.xsd"
-  - Source.find(:all).each do |s|
+
+  - Source.all.each do |s|
     %li
       = s.author_and_title
       %ul
