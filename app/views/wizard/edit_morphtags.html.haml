@@ -1,10 +1,10 @@
 - context_bar do
   .breadcrumbs
-    != breadcrumbs ['Annotation', wizard_path], "#{remaining_assigned_sentences} in annotation queue"
+    != breadcrumbs ['Annotation', wizard_path], @source, @source_division, @sentence, 'Edit morphology'
+    != completion_rate @sentence.completion
+    != " (#{remaining_assigned_sentences} remaining)"
   %p
     != external_text_links @sentence
-
-!= render 'context'
 
 != form_tag({ :controller => 'morphtags', :action => 'update', :sentence_id => @sentence, :wizard => true}, :id => "morphtag-form", :method => :put) do
   != render 'morphtags/form'
