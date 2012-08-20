@@ -211,7 +211,12 @@ module SentenceFormattingHelper
 
     tokens.reject { |token| options[:information_status] ? (token.is_empty? and token.empty_token_sort != 'P' ) : token.is_empty? }.each_with_index do |token, i|
       t << check_reference_update(state, :sentence_break, token.sentence.id, i.zero? ? '' : '|')
-      t << check_reference_update(state, :citation, token.citation_part, token.citation_part)
+
+      # Skip citation update for empty tokens, which will be found in the form
+      # of empty PRO tokens when formatting information structure, as these are
+      # unlikely to have a valid citation_part value.
+      t << check_reference_update(state, :citation, token.citation_part, token.citation_part) unless token.is_empty?
+
       t << check_reference_update(state, :sentence_number, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
 
       extra_attributes = block ? block.call(token) : nil
