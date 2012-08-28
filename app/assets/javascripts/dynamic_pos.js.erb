@@ -4,7 +4,7 @@ var morphology_summaries = <%= MorphFeatures::MORPHOLOGY_SUMMARIES.to_json %>;
 var morphology_abbreviated_summaries = <%= MorphFeatures::MORPHOLOGY_ABBREVIATED_SUMMARIES.to_json %>;
 
 var morphology_values_by_language = {};
-<% Source.all.map(&:language).map(&:tag).each do |language| %>
+<% Source.pluck(:language_tag).uniq.each do |language| %>
   morphology_values_by_language[<%= language.to_json %>] = <%= MorphFeatures::pos_and_morphology_tag_space(language).to_json %>;
 <% end %>
 
