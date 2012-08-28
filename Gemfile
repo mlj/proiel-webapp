@@ -1,6 +1,6 @@
 source :rubygems
 
-gem 'rails', '~> 3.2.5'
+gem 'rails', '~> 3.2.8'
 gem 'json'
 
 gem 'sass-rails', '~> 3.2.3'
