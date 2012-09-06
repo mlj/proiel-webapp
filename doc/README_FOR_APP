@@ -77,8 +77,9 @@ interface:
 
 === Step 5: Set run-time configuration settings
 
-Inspect +config/app_config.yml+ and make changes as necessary. It is
-essential that you change the +base_url+ and the +dc_*+ fields.
+Inspect +config/app_config.yml+ and make changes as necessary. Also check
++config/initializers/devise.rb+ and adjust the e-mail address for registration
+e-emails.
 
 == License
 

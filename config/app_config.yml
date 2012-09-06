@@ -1,13 +1,8 @@
 all:
-  dc_title: "Pragmatics in Indo-European Languages"
-  dc_subject: "Indo-European languages; PROIEL; linguistics; corpus linguistics; treebank; dependency grammar; Latin; Ancient Greek; Greek; Old Church Slavonic; Slavic; Slavonic; Gothic; Germanic; Armenian; New Testament"
-  dc_publisher: "University of Oslo"
+  title: "The PROIEL corpus"
 
 development:
-  base_url: "http://localhost:3000"
 
 test:
-  base_url: "http://localhost:3000"
 
 production:
-  base_url: "http://foni.uio.no:3000"

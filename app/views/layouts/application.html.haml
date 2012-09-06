@@ -3,25 +3,16 @@
   %head
     %title
       - if show_title?
-        = ['The PROIEL corpus', yield(:title)].join(': ')
+        = [CONFIG.title, yield(:title)].join(': ')
       - else
-        The PROIEL corpus
+        = CONFIG.title
 
     != favicon_link_tag
 
-    %link{:rel => 'search', :type => 'application/opensearchdescription+xml', :title => 'Search the PROIEL corpus', :href => '/search.xml'}
+    %link{:rel => 'search', :type => 'application/opensearchdescription+xml', :title => CONFIG.title, :href => '/search.xml'}
     %link{:rel => 'contents', :href => '/'}
     %link{:rel => 'index', :href => '/sentences'}
     %link{:rel => 'glossary', :href => '/lemmata'}
-
-    %link{:rel => 'schema.DC', :href => 'http://purl.org/dc/elements/1.1/'}
-    %link{:rel => 'schema.DCTERMS', :href => 'http://purl.org/dc/terms/'}
-    %meta{:name => 'DC.type', :scheme => 'DCTERMS.DCMIType', :content => 'Text'}
-    %meta{:name => 'DC.format', :content => 'text/html; charset=utf-8'}
-    %meta{:name => 'DC.title', :lang => 'en', :content => CONFIG.dc_title}
-    %meta{:name => 'DC.subject', :lang => 'en', :content => CONFIG.dc_subject}
-    %meta{:name => 'DC.publisher', :content => CONFIG.dc_publisher}
-    %meta{:name => 'DC.identifier', :scheme => 'DCTERMS.URI', :content => CONFIG.base_url}
 
     %meta{"http-equiv" => "Content-Type", :content=>"text/html; charset=utf-8"}
 
