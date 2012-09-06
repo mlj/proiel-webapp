@@ -237,23 +237,17 @@ class Token < ActiveRecord::Base
     end
   end
 
-  # Relation predicates to be delegated to Relation.
-  RELATION_TESTS = [:predicative?, :nominal?, :appositive?]
-
-  # Delegate morphological feature tests to the morph-features class.
-  def method_missing(n)
-    if MorphFeatures::POS_PREDICATES.include?(n)
-      # Morph-feature predicates to be delegated to MorphFeatures
-      morph_features and morph_features.send(n)
-    elsif MorphFeatures::MORPHOLOGY_POSITIONAL_TAG_SEQUENCE.include?(n)
-      # Morph-feature field accessors to be delegated to MorphFeatures.
-      morph_features and morph_features.send(n)
-    elsif RELATION_TESTS.include?(n)
-      relation and relation.send(n)
-    else
-      super
-    end
+  MorphFeatures::POS_PREDICATES.keys.each do |k|
+    delegate k, :to => :morph_features, :allow_nil => true
   end
+
+  MorphFeatures::MORPHOLOGY_POSITIONAL_TAG_SEQUENCE.each do |k|
+    delegate k, :to => :morph_features, :allow_nil => true
+  end
+
+  delegate :predicative?, :to => :relation, :allow_nil => true
+  delegate :nominal?, :to => :relation, :allow_nil => true
+  delegate :appositive?, :to => :relation, :allow_nil => true
 
   # Returns true if the token is a verb. If +include_empty_tokens+ is
   # true, also returns true for an empty node with its empty token
