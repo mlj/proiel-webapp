@@ -30,6 +30,7 @@ gem 'differ'
 gem 'iso-codes', :require => 'iso_codes'
 gem 'ruby-sfst', :require => 'sfst'
 gem 'colorize'
+gem 'foma'
 
 group :production, :development do
   gem 'mysql2', '> 0.3.0'
