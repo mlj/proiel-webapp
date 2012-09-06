@@ -139,7 +139,28 @@ module Tagger
         raise ArgumentError unless language.class == Symbol
         raise "Undefined language #{language}" unless @methods.has_key?(language)
 
-        raw_candidates = @methods[language].collect { |method| method.call(form) }.flatten
+        x = PROIEL::morphology_taggers.select { |t| t.applies?(language.to_s) }.map { |t| t.analyse(form) }.flatten
+
+        case x.length
+        when 0
+          [:failed, nil]
+        when 1
+          [:unambiguous, x.first] + x.map { |t| [t, 1.0] }
+        else
+          [:ambiguous, nil] + x.map { |t| [t, 1.0] }
+        end
+      end
+
+      def _old
+        raw_candidates = unless options[:force_method]
+                           @methods[language].collect { |method| method.call(form) }.flatten
+                         else
+                           # FIXME
+                           if options[:force_method] == :manual_rules
+                             form = normalise_form(language, form)
+                           end
+                           analyze_form(language, options[:force_method], form)
+                         end
         raw_candidates.sort!
 
         # Try to make sense of any existing information that we have

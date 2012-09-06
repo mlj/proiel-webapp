@@ -2,33 +2,43 @@
   i:
     abbreviated_summary: ind.
     summary: indicative
+    tag: ind
   s:
     abbreviated_summary: subj.
     summary: subjunctive
+    tag: subj
   m:
     abbreviated_summary: imp.
     summary: imperative
+    tag: imp
   o:
     abbreviated_summary: opt.
     summary: optative
+    tag: opt
   n:
     abbreviated_summary: inf.
     summary: infinitive
+    tag: inf
   p:
     abbreviated_summary: part.
     summary: participle
+    tag: part
   d:
     abbreviated_summary: gerund
     summary: gerund
+    tag: ger
   g:
     abbreviated_summary: gerundive
     summary: gerundive
+    tag: gdv
   u:
     abbreviated_summary: sup.
     summary: supine
+    tag: sup
   x:
     abbreviated_summary: unc. mood
     summary: uncertain mood
+    tag: unc
   y:
     abbreviated_summary: unspec.fin.
     summary: finiteness unspecified
@@ -48,35 +58,45 @@
   n:
     abbreviated_summary: non-infl.
     summary: non-inflecting
+    tag: noninfl
   i:
     abbreviated_summary: infl.
     summary: inflecting
+    tag: infl
 :number:
   s:
     abbreviated_summary: sg.
     summary: singular
+    tag: sg
   d:
     abbreviated_summary: du.
     summary: dual
+    tag: du
   p:
     abbreviated_summary: pl.
     summary: plural
+    tag: pl
   x:
     abbreviated_summary: unc. nb.
     summary: uncertain number
+    tag: unc
 :voice:
   a:
     abbreviated_summary: act.
     summary: active
+    tag: act
   m:
     abbreviated_summary: mid.
     summary: middle
+    tag: mid
   p:
     abbreviated_summary: pass.
     summary: passive
+    tag: pass
   e:
     abbreviated_summary: mid./pass.
     summary: middle or passive
+    tag: midpass
   x:
     abbreviated_summary: unspec.
     summary: unspecified
@@ -84,39 +104,51 @@
   n:
     abbreviated_summary: nom.
     summary: nominative
+    tag: nom
   a:
     abbreviated_summary: acc.
     summary: accusative
+    tag: acc
   o:
     abbreviated_summary: obl.
     summary: oblique
+    tag: obl
   g:
     abbreviated_summary: gen.
     summary: genitive
+    tag: gen
   c:
     abbreviated_summary: gen./dat.
     summary: genitive or dative
+    tag: gendat
   e:
     abbreviated_summary: acc./dat.
     summary: accusative or dative
+    tag: accdat
   d:
     abbreviated_summary: dat.
     summary: dative
+    tag: dat
   b:
     abbreviated_summary: abl.
     summary: ablative
+    tag: abl
   i:
     abbreviated_summary: ins.
     summary: instrumental
+    tag: ins
   l:
     abbreviated_summary: loc.
     summary: locative
+    tag: loc
   v:
     abbreviated_summary: voc.
     summary: vocative
+    tag: voc
   x:
     abbreviated_summary: unc. case
     summary: uncertain case
+    tag: unc
   z:
     abbreviated_summary: no case
     summary: no case
@@ -124,15 +156,19 @@
   p:
     abbreviated_summary: pos.
     summary: positive
+    tag: pos
   c:
     abbreviated_summary: comp.
     summary: comparative
+    tag: comp
   s:
     abbreviated_summary: supl.
     summary: superlative
+    tag: supl
   x:
     abbreviated_summary: unc. deg.
     summary: uncertain degree
+    tag: unc
   z:
     abbreviated_summary: no degree
     summary: no degree
@@ -140,78 +176,103 @@
   m:
     abbreviated_summary: m.
     summary: masculine
+    tag: m
   f:
     abbreviated_summary: f.
     summary: feminine
+    tag: f
   n:
     abbreviated_summary: n.
     summary: neuter
+    tag: n
   p:
     abbreviated_summary: m./f.
     summary: masculine or feminine
+    tag: mf
   o:
     abbreviated_summary: m./n.
     summary: masculine or neuter
+    tag: mn
   r:
     abbreviated_summary: f./n.
     summary: feminine or neuter
+    tag: fn
   q:
     abbreviated_summary: m./f./n.
     summary: masculine, feminine or neuter
+    tag: mfn
   x:
     abbreviated_summary: unc. gender
     summary: uncertain gender
+    tag: unc
 :strength:
   w:
     abbreviated_summary: weak
     summary: weak
+    tag: weak
   s:
     abbreviated_summary: strong
     summary: strong
+    tag: strong
   t:
     abbreviated_summary: weak/strong
     summary: weak or strong
+    tag: weakstrong
 :person:
   "1":
     abbreviated_summary: 1st p.
     summary: first person
+    tag: 1
   "2":
     abbreviated_summary: 2nd p.
     summary: second person
+    tag: 2
   "3":
     abbreviated_summary: 3rd p.
     summary: third person
+    tag: 3
   x:
     abbreviated_summary: unc. p.
     summary: uncertain person
+    tag: unc
 :tense:
   p:
     abbreviated_summary: pres.
     summary: present
+    tag: pres
   i:
     abbreviated_summary: imperf.
     summary: imperfect
+    tag: imperf
   r:
     abbreviated_summary: perf.
     summary: perfect
+    tag: perf
   s:
     abbreviated_summary: result.
     summary: resultative
+    tag: result
   a:
     abbreviated_summary: aor.
     summary: aorist
+    tag: aor
   u:
     abbreviated_summary: past
     summary: past
+    tag: past
   l:
     abbreviated_summary: ppf.
     summary: pluperfect
+    tag: ppf
   f:
     abbreviated_summary: fut.
     summary: future
+    tag: fut
   t:
     abbreviated_summary: fut. perf.
     summary: future perfect
+    tag: futperf
   x:
     abbreviated_summary: unc. tense
     summary: uncertain tense
+    tag: unc
