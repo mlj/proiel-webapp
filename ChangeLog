@@ -1,3 +1,8 @@
+0.9.3   09/09/2012
+
+  - Added LaTeX export for sentence objects.
+  - Switched to thin as preferred webserver.
+
 0.9.2   06/09/2012
 
   - Updated dependencies.
