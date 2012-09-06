@@ -21,12 +21,14 @@
 #++
 
 class Source < ActiveRecord::Base
+  attr_accessible :source_id, :position, :title,
+    :aligned_source_division_id, :presentation_before, :presentation_after
+  change_logging
+
   validates_presence_of :code
   validates_presence_of :title
   validates_uniqueness_of :title
   validates_presence_of :citation_part
-
-  change_logging
 
   composed_of :language, :mapping => %w(language_tag to_s), :converter => Proc.new { |x| Language.new(x) }
 

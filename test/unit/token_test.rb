@@ -6,19 +6,19 @@ class TokenTest < ActiveSupport::TestCase
   def test_relation_predicates
     s = Sentence.first
 
-    t = Token.new(:sentence => s, :form => 'foo')
+    t = s.tokens.new(:form => 'foo')
     t.relation = :xobj
     assert t.predicative?
     assert !t.appositive?
     assert !t.nominal?
 
-    t = Token.new(:sentence => s, :form => 'foo')
+    t = s.tokens.new(:form => 'foo')
     t.relation = :voc
     assert !t.predicative?
     assert !t.appositive?
     assert t.nominal?
 
-    t = Token.new(:sentence => s, :form => 'foo')
+    t = s.tokens.new(:form => 'foo')
     t.relation = :apos
     assert !t.predicative?
     assert t.appositive?
@@ -28,7 +28,7 @@ class TokenTest < ActiveSupport::TestCase
   def test_morph_feature_predicates
     s = Sentence.first # associate our tokens with a random sentence
 
-    t = Token.new(:sentence => s, :form => 'foo')
+    t = s.tokens.new(:form => 'foo')
     t.morph_features = MorphFeatures.new('foo,V-,lat', '---------n')
     assert t.verb?
     assert t.verb?(true)

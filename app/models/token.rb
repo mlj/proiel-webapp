@@ -21,6 +21,13 @@
 #++
 
 class Token < ActiveRecord::Base
+  attr_accessible :sentence_id, :token_number, :form, :lemma_id, :head_id,
+    :source_morphology_tag, :source_lemma, :foreign_ids, :info_status,
+    :empty_token_sort, :contrast_group, :token_alignment_id,
+    :automatic_token_alignment, :dependency_alignment_id, :antecedent_id,
+    :morphology_tag, :citation_part, :presentation_before, :presentation_after
+  change_logging
+
   belongs_to :sentence
   belongs_to :lemma
   has_many :notes, :as => :notable, :dependent => :destroy
@@ -48,8 +55,6 @@ class Token < ActiveRecord::Base
   composed_of :morphology, :mapping => %w(morphology_tag to_s), :allow_nil => true, :converter => Proc.new { |x| Morphology.new(x) }
 
   before_validation :before_validation_cleanup
-
-  change_logging :except => [:source_morphology_tag, :source_lemma, :citation_part]
 
   # General schema-defined validations
   validates_presence_of :sentence_id

@@ -3,6 +3,9 @@
 # of coindexing. The `slasher' is generally the element that has a `gap',
 # and the `slashee' is the element that would fill the `gap'.
 class SlashEdge < ActiveRecord::Base
+  attr_accessible :slasher_id, :slashee_id, :relation_id
+  change_logging
+
   belongs_to :slasher, :class_name => 'Token', :foreign_key => 'slasher_id'
   belongs_to :slashee, :class_name => 'Token', :foreign_key => 'slashee_id'
   belongs_to :relation
@@ -10,8 +13,6 @@ class SlashEdge < ActiveRecord::Base
   validates_uniqueness_of :slasher_id, :scope => :slashee_id,
     :message => 'Slash edge already exists in dependency structure'
   validates_presence_of :relation
-
-  change_logging
 
   # Returns +true+ if the slash points to the slasher's head.
   def points_to_head?

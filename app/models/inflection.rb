@@ -21,6 +21,8 @@
 #++
 
 class Inflection < ActiveRecord::Base
+  attr_accessible :lemma, :form, :language_tag
+
   composed_of :language, :mapping => %w(language_tag to_s), :converter => Proc.new { |x| Language.new(x) }
   validates_presence_of :language_tag
 

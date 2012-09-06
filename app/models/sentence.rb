@@ -21,6 +21,11 @@
 #++
 
 class Sentence < ActiveRecord::Base
+  attr_accessible :sentence_number, :annotated_by, :annotated_at, :reviewed_by,
+    :reviewed_at, :unalignable, :automatic_alignment, :sentence_alignment_id,
+    :source_division_id, :assigned_to, :presentation_before, :presentation_after
+  change_logging
+
   belongs_to :source_division
   has_many :notes, :as => :notable, :dependent => :destroy
   has_many :semantic_tags, :as => :taggable, :dependent => :destroy
@@ -108,8 +113,6 @@ class Sentence < ActiveRecord::Base
   validates_presence_of :sentence_number
 
   validate :check_invariants
-
-  change_logging :except => [:annotated_by, :annotated_at, :reviewed_by, :reviewed_at]
 
   # Returns the language for the sentence.
   def language

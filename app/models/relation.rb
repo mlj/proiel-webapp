@@ -1,5 +1,8 @@
 # Slash edge interpretations are the tags that label slash edges.
 class Relation < ActiveRecord::Base
+  attr_accessible :tag, :summary, :primary_relation, :secondary_relation
+  change_logging
+
   has_many :slash_edges
   has_many :tokens
 
@@ -8,8 +11,6 @@ class Relation < ActiveRecord::Base
 
   scope :primary, :conditions => { :primary_relation => true }, :order => 'tag'
   scope :secondary, :conditions => { :secondary_relation => true }, :order => 'tag'
-
-  change_logging
 
   PREDICATIVE_RELATIONS = %w(xobj xadv)
   APPOSITIVE_RELATIONS = %w(apos)

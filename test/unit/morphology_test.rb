@@ -32,7 +32,7 @@ class MorphologyTestCase < ActiveSupport::TestCase
 
   def test_token_access
     s = Sentence.first
-    t = s.tokens.new :lemma => Lemma.first, :form => 'foo'
+    t = s.tokens.new :lemma_id => Lemma.first.id, :form => 'foo'
     t.morphology = @m1
     t.save
 
@@ -53,7 +53,7 @@ class MorphologyTestCase < ActiveSupport::TestCase
   end
 
   def test_inflection_access
-    t = Inflection.new :lemma => 'cum,R-', :form => 'foo', :language => 'lat'
+    t = Inflection.new :lemma => 'cum,R-', :form => 'foo', :language_tag => 'lat'
     t.morphology = @m1
     t.save
 

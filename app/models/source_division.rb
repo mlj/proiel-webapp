@@ -24,12 +24,13 @@
 require 'differ'
 
 class SourceDivision < ActiveRecord::Base
+  attr_accessible :source_id, :position, :title, :abbreviated_title, :aligned_source_division_id, :presentation_before, :presentation_after
+  change_logging
+
   belongs_to :source
   has_many :sentences
   has_many :tokens, :through => :sentences, :order => 'sentences.sentence_number ASC, token_number ASC'
   belongs_to :aligned_source_division, :class_name => "SourceDivision"
-
-  change_logging
 
   # Returns the previous source division in a source.
   def previous

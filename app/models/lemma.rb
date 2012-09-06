@@ -21,6 +21,10 @@
 #++
 
 class Lemma < ActiveRecord::Base
+  attr_accessible :lemma, :variant, :short_gloss, :full_gloss, :sort_key,
+    :foreign_ids, :language_tag, :part_of_speech_tag
+  change_logging
+
   has_many :tokens
   has_many :notes, :as => :notable, :dependent => :destroy
   has_many :semantic_tags, :as => :taggable, :dependent => :destroy
@@ -37,8 +41,6 @@ class Lemma < ActiveRecord::Base
 
   validates_tag_set_inclusion_of :part_of_speech_tag, :part_of_speech, :allow_nil => false, :message => "%{value} is not a valid part of speech tag"
   validates_tag_set_inclusion_of :language_tag, :language, :allow_nil => false, :message => "%{value} is not a valid language tag"
-
-  change_logging
 
   # A lemma that matches a prefix. The prefixes are given in +queries+,
   # which should be an array of strings on the form +foo+ or +foo#1+, where
