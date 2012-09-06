@@ -1,3 +1,8 @@
+0.9.2   06/09/2012
+
+  - Updated dependencies.
+  - Replaced MaltXML exporter with CoNLL exporter.
+
 0.9.1   28/08/2012
 
   - Upgraded to Rails 3.2.8.
