@@ -36,10 +36,12 @@ gem 'ruby-sfst', :require => 'sfst'
 
 group :production do
   gem 'mysql2', '> 0.3.0'
+  gem 'thin'
 end
 
 group :development do
   gem 'mysql2', '> 0.3.0'
+  gem 'thin'
 end
 
 group :test do
