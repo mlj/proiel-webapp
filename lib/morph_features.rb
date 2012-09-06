@@ -1,4 +1,5 @@
 require 'positional_tag'
+require 'yaml'
 
 class Morphology < PositionalTag
   def morphology

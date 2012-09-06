@@ -274,7 +274,7 @@ module Proiel
         @postponed_nodes.each_pair do |identifier, values|
           next unless values[:slashes_and_interpretations]
           values[:slashes_and_interpretations].each do |slash_id, slash_interpretation|
-            @nodes[identifier].add_slash(@nodes[slash_id], slash_interpretation || @nodes[identifier].interpret_slash(@nodes[slash_id]))
+            @nodes[identifier].add_slash(@nodes[slash_id], slash_interpretation || @nodes[identifier].interpret_slash(@nodes[slash_id])) if @nodes[identifier]
           end
         end
 
@@ -288,7 +288,9 @@ module Proiel
       node = @postponed_nodes[identifier]
       # Add nodes without their slashes
       add_node(identifier, node[:relation], head_identifier, {}, node[:data]) unless identifier == :root
-      node[:dependent_ids].each { |dependent_id| add_postponed_subgraph(dependent_id, identifier) }
+      if node
+        node[:dependent_ids].each { |dependent_id| add_postponed_subgraph(dependent_id, identifier) }
+      end
     end
 
     public

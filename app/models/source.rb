@@ -30,7 +30,7 @@ class Source < ActiveRecord::Base
 
   tag_attribute :language, :language_tag, LanguageTag, :allow_nil => false
 
-  has_many :source_divisions
+  has_many :source_divisions, dependent: :destroy
   has_many :sentences, through: :source_divisions
 
   has_many :dependency_alignment_terminations

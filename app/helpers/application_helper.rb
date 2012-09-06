@@ -180,7 +180,7 @@ module ApplicationHelper
     when Source
       object.author_and_title
     when SourceDivision
-      object.title
+      "#{object.title} (#{object.citation})"
     when Sentence
       "Sentence #{object.id}"
     when Token

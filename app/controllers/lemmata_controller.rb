@@ -33,7 +33,11 @@ class LemmataController < ApplicationController
       raise ActiveRecord::RecordNotFound
     else
       @semantic_tags = @lemma.semantic_tags
-      @tokens = @lemma.tokens.page(current_page)
+      if params[:form]
+        @tokens = @lemma.tokens.where(:form => params[:form]).page(current_page)
+      else
+        @tokens = @lemma.tokens.page(current_page)
+      end
       @mergeable_lemmata = @lemma.mergeable_lemmata
 
       respond_with @lemma

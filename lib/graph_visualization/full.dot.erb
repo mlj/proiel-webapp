@@ -14,15 +14,20 @@ digraph G {
 
     <% if token.head and token.relation %>
       <%= edge token.head.id, token.id, token.relation.to_s.upcase,
-          :weight => 0.0, :color => :purple %>
+          :weight => 0.0, :color => :orange %>
     <% elsif token.relation %>
       <%= edge :root, token.id, token.relation.to_s.upcase,
-          :weight => 0.0, :color => :purple %>
+          :weight => 0.0, :color => :orange %>
     <% end %>
 
     <% token.slash_out_edges.each do |slash_edge| %>
       <%= edge token.id, slash_edge.slashee.id, slash_edge.relation.to_s.upcase,
-          :weight => 0.0, :color => :purple, :style => :dashed %>
+          :weight => 0.0, :color => :blue, :style => :dashed %>
+    <% end %>
+
+    <% if token.antecedent %>
+      <%= edge token.id, token.antecedent.id, '',
+          :weight => 0.0, :color => :red, :style => :solid %>
     <% end %>
   <% end %>
 }
