@@ -74,10 +74,10 @@ class LatexGlossingExporter < PROIEL::Exporter
   def gloss(token)
     res = "{"
     if token.lemma
-      res += (token.lemma.short_gloss ? token.lemma.short_gloss.split(/[.,;\/]/).first : token.lemma.export_form)
+      res += (token.lemma.short_gloss ? token.lemma.short_gloss.split(/[.,;\/]/).first : 'NOGLOSS')
     end
     g = morphology_gloss(token)
-    res += ".{\\sc #{g}}" if g
+    res += ".{\\sc #{g}}" if g != ""
     res + "}"
   end
 
@@ -85,9 +85,7 @@ class LatexGlossingExporter < PROIEL::Exporter
     if token.morph_features
       token.morph_features.morphology.map do |field, value|
         @glosses[field.to_s][value.to_s]
-      end.reject(&:nil?).map do |s|
-        ".{\\sc #{s}}"
-      end.join('')
+      end.reject(&:nil?).join('.')
     else
       ''
     end
@@ -151,10 +149,10 @@ end
 
 __END__
 mood:
-  m:
+  m: imp
   x:
-  n:
-  o:
+  n: inf
+  o: opt
   d: gnd
   p: ptcp
   g: gndv
@@ -166,42 +164,42 @@ inflection:
   i:
 number:
   x:
-  d:
-  p:
-  s:
+  d: du
+  p: pl
+  s: sg
 voice:
-  a:
-  m:
-  e:
-  p:
+  a: act
+  m: mid
+  e: mid/pas
+  p: pas
 case:
-  v:
-  a:
-  l:
-  b:
+  v: voc
+  a: acc
+  l: loc
+  b: abl
   x:
-  n:
-  c:
-  d:
-  g:
-  i:
+  n: nom
+  c: gen/dat
+  d: dat
+  g: gen
+  i: inst
 degree:
   x:
-  c:
+  c: comp
   p:
-  s:
+  s: sup
 gender:
-  m:
+  m: m
   x:
-  n:
-  o:
-  p:
-  q:
-  f:
-  r:
+  n: n
+  o: m/n
+  p: m/f
+  q: m/f/n
+  f: f
+  r: f/n
 strength:
-  w:
-  s:
+  w: weak
+  s: strong
   t:
 person:
   x:
@@ -209,13 +207,13 @@ person:
   "2": "2"
   "3": "3"
 tense:
-  l:
+  l: plupf
   a: pfv.pst
   x:
-  p:
-  f:
+  p: pres
+  f: fut
   r: prf
-  s:
-  t:
+  s: result
+  t: fut.prf
   u: pst
   i: ipfv.pst
