@@ -1,5 +1,7 @@
-var csrf_param = $$('meta[name=csrf-param]')[0].readAttribute('content'),
-    csrf_token = $$('meta[name=csrf-token]')[0].readAttribute('content');
+var csrf_param = $$('meta[name=csrf-param]')[0],
+    csrf_token = $$('meta[name=csrf-token]')[0];
+var authenticity_param = csrf_param.readAttribute('content'),
+    authenticity_token = csrf_token.readAttribute('content');
 
 // Functionality for the information status editing view
 var url_without_last_part = new RegExp(/.+\//);
@@ -191,7 +193,7 @@ var InfoStatus = function() {
                              {
                                  method: 'put',
                                  parameters: params.join('&') +
-                                     '&' + csrf_param + '=' + csrf_token,
+                                     '&' + authenticity_param + '=' + authenticity_token,
                                  onSuccess: function(response) {
                                      // Any new tokens, which have IDs on the form 'token-newX', need to get their
                                      // real ID set now that they have been saved to the database. A mapping from

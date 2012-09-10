@@ -1,3 +1,8 @@
+var csrf_param = $$('meta[name=csrf-param]')[0],
+    csrf_token = $$('meta[name=csrf-token]')[0];
+var authenticity_param = csrf_param.readAttribute('content'),
+    authenticity_token = csrf_token.readAttribute('content');
+
 // Functionality for editing prodrop tokens
 
 // Embed "private" variables and functions in an ExtJS-style object
