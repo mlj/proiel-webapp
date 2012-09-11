@@ -1,3 +1,5 @@
+  - Removed obsolete editorial columns from lemmata table.
+
 0.9.3   09/09/2012
 
   - Added LaTeX export for sentence objects.

@@ -237,23 +237,6 @@ Wishlist
     border on the incomprehensible. This is mostly becuase the validation code could
     need some refactoring, so a look at this would help in both respects.
 
-  * reconstructed, conjectures etc.
-
-    There are flags on lemmata for reconstructed forms, conjectures &c. These should be
-    employed and displayed properly and somehow worked into the system of asterisks
-    employed by Gothic annotators now.
-
-    The complete list:
-
-    * `conjecture`
-    * `unclear`
-    * `reconstructed`
-    * `nonexistent`
-    * `inflected`
-
-    Also, those lemmata that secondarily reference others have been imported, but
-    these should, by policy, not be available and have to be purged.
-
   * Verify that manual rules for closed parts of speech match annotation for Latin,
     Gothic and OCS
 
