@@ -5,11 +5,6 @@ module AuditsHelper
     content_tag(:ul, render(:partial => 'audits/summary', :collection => audits), :class => 'diff')
   end
 
-  # Creates a link to an audit.
-  def link_to_audit(audit)
-    link_to "Audit #{audit.id}", audit
-  end
-
   # Creates a link to an audit user.
   def link_to_audit_user(user)
     if user

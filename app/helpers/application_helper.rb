@@ -146,21 +146,9 @@ module ApplicationHelper
     condition ? link_to(*args) : ''
   end
 
-  # Generates a link if the current user has the role +role+, otherwise
-  # takes no action. The remaining arguments are the same as those for
-  # +link_to+.
-  def show_link_to_for_role(role, *args)
-    show_link_to_if(current_user.has_role?(role), *args)
-  end
-
   # Formats a token form with HTML language attributes.
   def format_token_form(token)
     content_tag(:span, token.form, :lang => token.language.to_s)
-  end
-
-  # Formats a lemma form with HTML language attributes.
-  def format_lemma_form(lemma)
-    content_tag(:span, lemma.lemma, :lang => lemma.language.to_s)
   end
 
   # Creates resource links for an object. +actions+ contains a list of
