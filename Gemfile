@@ -1,9 +1,9 @@
 source :rubygems
 
-gem 'rails', '~> 3.2.8'
+gem 'rails'
 gem 'json'
 
-gem 'sass-rails', '~> 3.2.3'
+gem 'sass-rails'
 #group :assets do
 #  gem 'coffee-rails', '~> 3.2.1'
 #  gem 'therubyracer'
@@ -11,9 +11,9 @@ gem 'sass-rails', '~> 3.2.3'
 #end
 
 gem 'formtastic'
-gem 'will_paginate', '~> 3.0.0'
+gem 'will_paginate'
 gem 'haml'
-gem 'devise', '~> 2.1.0'
+gem 'devise'
 gem 'devise-encryptable'
 gem 'high_voltage'
 gem 'exception_notification'
@@ -29,7 +29,7 @@ gem 'gchartrb', :require => 'google_chart'
 gem 'diff-lcs', :require => 'diff/lcs'
 gem 'alignment'
 gem 'log4r'
-gem 'redcarpet', '> 2.0.0'
+gem 'redcarpet'
 gem 'differ'
 gem 'iso-codes', :require => 'iso_codes'
 gem 'ruby-sfst', :require => 'sfst'
