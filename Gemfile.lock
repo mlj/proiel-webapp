@@ -35,7 +35,7 @@ GEM
     bcrypt-ruby (3.0.1)
     builder (3.0.4)
     daemons (1.1.9)
-    devise (2.1.2)
+    devise (2.2.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
       railties (~> 3.1)
