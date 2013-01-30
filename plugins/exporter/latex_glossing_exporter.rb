@@ -64,7 +64,7 @@ class LatexGlossingExporter < PROIEL::Exporter
                 t.generate_string(token.form).first.gsub(/^(([\^]?[aeiou])+)h/,'h\1').sub(/^([\^]?[AEIOU][aeiou]?)h(.*)$/) { |x| x.sub(/([\^]?[AEIOU][aeiou]?)h/, 'H\1').capitalize }.gsub('^', '\^')
               when 'chu', 'got'
                 t = TransliteratorFactory.get_transliterator("#{token.language.tag}-ascii")
-                t.generate_string(token.form)
+                t.generate_string(token.form).first
               else
                 token.form
               end
