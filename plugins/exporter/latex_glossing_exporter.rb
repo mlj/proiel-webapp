@@ -62,11 +62,11 @@ class LatexGlossingExporter < PROIEL::Exporter
                 # of the vowel(s) and escaping the circumflex character
                 # should really be done in the transducer itself
                 t.generate_string(token.form).first.gsub(/^(([\^]?[aeiou])+)h/,'h\1').sub(/^([\^]?[AEIOU][aeiou]?)h(.*)$/) { |x| x.sub(/([\^]?[AEIOU][aeiou]?)h/, 'H\1').capitalize }.gsub('^', '\^')
-              when 'lat'
-                token.form
-              else
-                t = TransliteratorFactory.get_transliterator("#{language.tag}-ascii")
+              when 'chu', 'got'
+                t = TransliteratorFactory.get_transliterator("#{token.language.tag}-ascii")
                 t.generate_string(token.form)
+              else
+                token.form
               end
     "{#{ex_form}}"
   end
