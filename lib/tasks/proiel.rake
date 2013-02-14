@@ -52,7 +52,7 @@ namespace :proiel do
         suffix = '-tiger.xml'
       when 'proiel'
         klass = PROIELXMLExport
-        suffix = ''
+        suffix = '.xml'
       when 'tiger2'
         klass = Tiger2Export
         suffix = '-tiger2.xml'
