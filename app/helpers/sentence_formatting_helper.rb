@@ -147,7 +147,9 @@ module SentenceFormattingHelper
 
       s += content_tag :span, after, presentation_attributes unless after.empty?
 
-      s
+      s.gsub!(Unicode::U2028, '<br>')
+      s.gsub!(Unicode::U2029, '<p>')
+      s.squish
     end
   end
 
