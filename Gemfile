@@ -45,5 +45,4 @@ end
 
 group :test do
   gem "sqlite3"
-  gem "tconsole"
 end
