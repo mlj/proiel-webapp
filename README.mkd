@@ -1,0 +1,19 @@
+# The PROIEL web application
+
+The PROIEL web application (`proiel-web`) is a tool for collaborative treebank
+annotation. It uses a dependency-grammar formalism with multiple levels of
+additional annotation, many of which are customisable.
+
+Installation, customisation and upgrade instructions, as well as description of
+the data format, are found in the `doc` directory.
+
+For user instructions, there is (some) documentation within the application
+itself (see 'Help' in the navigation bar).
+
+## License
+
+The PROIEL web application is licensed under the terms of the GNU General Public
+License version 2. See the file `COPYING` for details.
+
+The application was written by Marius L. Jøhndal (University of Cambridge), Dag
+Haug (University of Oslo) and Anders Nøklestad (University of Oslo).

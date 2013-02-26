@@ -1,4 +1,17 @@
+1.0.0   23/04/2013
+
+  - Upgraded to Rails 3.2.13.
+  - Updated dependencies.
+  - PROIEL XML format updated to version 1.0.
+  - PROIEL XML export updated.
+  - JSON export added.
+  - Plain text export added.
+  - New attributes added to token search.
+  - CSV and plain text export of search results added.
   - Removed obsolete editorial columns from lemmata table.
+  - Removed sources.code.
+  - Removed source_divisions.abbreviated_title.
+  - Table relations replaced by relation_tag.
 
 0.9.3   09/09/2012
 

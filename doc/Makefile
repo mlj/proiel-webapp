@@ -1,4 +1,4 @@
-all: morphology.html todo.html data_model.html
+all: guide.html
 
-%.html: %.markdown notes.css
-	pandoc -s -c notes.css $< > $@
+%.html: %.mkd notes.css
+	pandoc --toc -s -c notes.css $< > $@

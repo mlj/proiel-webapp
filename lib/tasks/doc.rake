@@ -1,2 +1,2 @@
 desc "Update all documentation"
-task(:doc => ["doc:diagrams", "doc:app"])
+task(:doc => "doc:app")
