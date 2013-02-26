@@ -132,28 +132,11 @@ module SentenceFormattingHelper
 
       form_attributes[:class].strip!
 
-      before = []
-      if token.first_visible_in_sentence?
-        if token.sentence.first_in_source_division?
-          before << token.sentence.source_division.presentation_before
-        end
-        before << token.sentence.presentation_before
-      end
-      before << token.presentation_before
-      before.compact!
-
-      after = []
-      after << token.presentation_after
-      if token.last_visible_in_sentence?
-        after << token.sentence.presentation_after
-        if token.sentence.last_in_source_division?
-          after << token.sentence.source_division.presentation_after
-        end
-      end
-      after.compact!
+      before = token.all_presentation_before
+      after = token.all_presentation_after
 
       s = ''
-      s += content_tag :span, before.join, presentation_attributes unless before.empty?
+      s += content_tag :span, before, presentation_attributes unless before.empty?
 
       case options[:link_to]
       when :tokens, :sentences
@@ -162,7 +145,7 @@ module SentenceFormattingHelper
         s += content_tag :span, token.form, form_attributes
       end
 
-      s += content_tag :span, after.join, presentation_attributes unless after.empty?
+      s += content_tag :span, after, presentation_attributes unless after.empty?
 
       s
     end

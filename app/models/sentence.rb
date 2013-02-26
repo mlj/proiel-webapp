@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -678,5 +678,25 @@ class Sentence < ActiveRecord::Base
   # Tests if the sentence is the last in its source division.
   def last_in_source_division?
     not source_division.sentences.where("sentence_number > ?", sentence_number).exists?
+  end
+
+  # Returns all presentation text before the sentence (including presentation
+  # text from the source division, if any). If there is no presentation text,
+  # the function returns an empty string.
+  def all_presentation_before
+    p = []
+    p << source_division.presentation_before if first_in_source_division?
+    p << presentation_before
+    p.join
+  end
+
+  # Returns all presentation text after the sentence (including presentation
+  # text from the source division, if any). If there is no presentation text,
+  # the function returns an empty string.
+  def all_presentation_after
+    p = []
+    p << presentation_after
+    p << source_division.presentation_after if last_in_source_division?
+    p.join
   end
 end

@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -733,5 +733,25 @@ class Token < ActiveRecord::Base
   # Tests if the token is the last non-empty token in its sentence.
   def last_visible_in_sentence?
     not sentence.tokens.where("token_number > ? AND empty_token_sort IS NULL", token_number).exists?
+  end
+
+  # Returns all presentation text before the token (including presentation text
+  # from the sentence and source division, if any). If there is no presentation
+  # text, the function returns an empty string.
+  def all_presentation_before
+    p = []
+    p << sentence.all_presentation_before if first_visible_in_sentence?
+    p << presentation_before
+    p.join
+  end
+
+  # Returns all presentation text after the token (including presentation text
+  # from the sentence and source division, if any). If there is no presentation
+  # text, the function returns an empty string.
+  def all_presentation_after
+    p = []
+    p << presentation_after
+    p << sentence.all_presentation_after if last_visible_in_sentence?
+    p.join
   end
 end
