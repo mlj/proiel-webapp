@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,6 +21,7 @@
 #++
 
 class AuditsController < ApplicationController
+  append_view_path AuditsResolver.new
   respond_to :html, :xml
   before_filter :is_annotator?
   before_filter :is_administrator?, :only => [:destroy]
@@ -39,26 +40,26 @@ class AuditsController < ApplicationController
       s = objs.map { |k, v| "(auditable_type = '#{k}' AND auditable_id IN (?))" }.join(' OR ')
       v = objs.map { |k, v| v }
 
-      @audits = Audit.where(s, *v).page(current_page)
+      @audits = Audited::Adapters::ActiveRecord::Audit.where(s, *v).page(current_page)
     elsif params[:user_id]
       # Grab changes by this user.
       @user = User.find(params[:user_id])
       @audits = @user.audits.page(current_page)
     else
-      @audits = Audit.page(current_page)
+      @audits = Audited::Adapters::ActiveRecord::Audit.page(current_page)
     end
 
     respond_with @audits
   end
 
   def show
-    @audit = Audit.find(params[:id])
+    @audit = Audited::Adapters::ActiveRecord::Audit.find(params[:id])
 
     respond_with @audit
   end
 
   def destroy
-    @audit = Audit.find(params[:id])
+    @audit = Audited::Adapters::ActiveRecord::Audit.find(params[:id])
 
     if @audit.auditable.audits.last == @audit
       o = @audit.auditable.revision(:previous)

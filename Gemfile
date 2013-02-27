@@ -16,7 +16,7 @@ gem 'devise'
 gem 'devise-encryptable'
 gem 'high_voltage'
 gem 'exception_notification'
-gem 'acts_as_audited', '~> 2.1.0'
+gem 'audited-activerecord', '~> 3.0'
 gem 'meta_search'
 
 gem 'unicode'
