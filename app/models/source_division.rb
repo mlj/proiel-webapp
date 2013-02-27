@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 # Copyright 2011 Dag Haug
 #
 # This file is part of the PROIEL web application.
@@ -85,11 +85,11 @@ class SourceDivision < ActiveRecord::Base
     end
   end
 
-  # Returns the language for the source division. This is a
-  # convenience method for +source_division.source.language+.
-  def language
-    source.language
-  end
+  # Language tag for the source division
+  delegate :language_tag, :to => :source
+
+  # Language for the source division
+  delegate :language, :to => :source
 
   protected
 

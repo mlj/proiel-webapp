@@ -114,10 +114,11 @@ class Sentence < ActiveRecord::Base
 
   validate :check_invariants
 
-  # Returns the language for the sentence.
-  def language
-    source_division.language
-  end
+  # Language tag for the sentence
+  delegate :language_tag, :to => :source_division
+
+  # Language for the sentence
+  delegate :language, :to => :source_division
 
   # Returns a citation for the sentence.
   def citation

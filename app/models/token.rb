@@ -126,10 +126,11 @@ class Token < ActiveRecord::Base
     end
   end
 
-  # Returns the language for the token.
-  def language
-    sentence.language
-  end
+  # Language tag for the token
+  delegate :language_tag, :to => :sentence
+
+  # Language for the token
+  delegate :language, :to => :sentence
 
   # Returns the nearest anaphor or an empty array if there is none.
   def nearest_anaphor
