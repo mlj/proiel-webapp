@@ -24,7 +24,7 @@
 require 'differ'
 
 class SourceDivision < ActiveRecord::Base
-  attr_accessible :source_id, :position, :title, :abbreviated_title, :aligned_source_division_id, :presentation_before, :presentation_after
+  attr_accessible :source_id, :position, :title, :aligned_source_division_id, :presentation_before, :presentation_after
   change_logging
 
   belongs_to :source

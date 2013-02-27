@@ -8,15 +8,12 @@
 
 %ul
   %li
-    != link_to "Schema file", "/exports/text.xsd"
+    != link_to "Schema file", "/exports/proiel.xsd"
 
+%table
   - Source.all.each do |s|
-    %li
-      = s.author_and_title
-      %ul
-        %li
-          != link_to "PROIEL XML", "/exports/#{s.code}.xml"
-        %li
-          != link_to "TigerXML", "/exports/#{s.code}-tiger.xml"
-        %li
-          != link_to "CoNLL shared task format", "/exports/#{s.code}.conll"
+    %tr
+      %td= s.author_and_title
+      %td!= link_to "PROIEL format", "/exports/#{s.human_readable_id}.xml"
+      %td!= link_to "TigerXML format", "/exports/#{s.human_readable_id}.tiger"
+      %td!= link_to "CoNLL format", "/exports/#{s.human_readable_id}.conll"

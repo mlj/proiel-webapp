@@ -1,7 +1,5 @@
 require 'fileutils'
 
-DEFAULT_EXPORT_DIRECTORY = Rails.root.join('public', 'exports')
-
 namespace :proiel do
   task(:myenvironment => :environment) do
     require 'jobs'
@@ -16,97 +14,86 @@ namespace :proiel do
   end
 
   namespace :text do
-    desc "Validate a PROIEL source text. Options: FILE=data_file"
-    task(:validate => :environment) do
-      raise "Filename required" unless ENV['FILE']
-      `xmllint --schema #{Rails.root.join('lib', 'text.xsd')} --noout #{ENV['FILE']}`
-    end
-
     desc "Import a PROIEL source text. Options: FILE=data_file"
     task(:import => :environment) do
-      require 'import'
+      require 'importer'
 
-      raise "Filename required" unless ENV['FILE']
-      File.open(ENV['FILE']) { |f| TextImport.instance.read(f) }
-    end
+      options = {}
 
-    desc "Export a PROIEL source text. Optional options: ID=source_identifier FORMAT={proiel|conll|tigerxml|tiger2} MODE={all|reviewed} DIRECTORY=destination_directory INFO={semtags|info|both} SOURCE_DIVISION=source division title regexp REMOVE_CYCLES={none|heads|all}"
-    task(:export => :environment) do
-      source = ENV['ID']
-      format = ENV['FORMAT']
-      format ||= 'proiel'
-      source_division = Regexp.new(ENV['SOURCE_DIVISION']) if ENV['SOURCE_DIVISION']
-      mode = ENV['MODE']
-      mode ||= 'all'
-      directory = ENV['DIRECTORY']
-      directory ||= DEFAULT_EXPORT_DIRECTORY
-      info = ENV['INFO']
-      require 'export'
-
-      case format
-      when 'conll'
-        klass = CoNLLExport
-        suffix = '.conll'
-      when 'tigerxml'
-        klass = TigerXMLExport
-        suffix = '-tiger.xml'
-      when 'proiel'
-        klass = PROIELXMLExport
+      case ENV['FORMAT']
+      when NilClass, 'proiel'
+        klass = PROIELXMLImporter
         suffix = '.xml'
-      when 'tiger2'
-        klass = Tiger2Export
-        suffix = '-tiger2.xml'
       else
         raise "Invalid format"
       end
 
-      case mode
-      when 'all'
-        options = {}
+      raise "Filename required" unless ENV['FILE']
+      File.open(ENV['FILE']) { |f| klass.new.read(f) }
+    end
+
+    desc "Export a PROIEL source text. Optional options: ID=database ID of source (FORMAT={proiel|conll|tigerxml|tiger2} MODE={all|reviewed} DIRECTORY=destination_directory INFO=semtags SOURCE_DIVISION=source division title regexp REMOVE_CYCLES={none|heads|all})"
+    task(:export => :environment) do
+      require 'exporter'
+
+      options = {}
+
+      case ENV['FORMAT']
+      when NilClass, 'proiel'
+        klass = PROIELXMLExporter
+        suffix = '.xml'
+      when 'conll'
+        klass = CoNLLExporter
+        suffix = '.conll'
+      when 'tigerxml'
+        klass = TigerXMLExporter
+        suffix = '.tiger'
+      when 'tiger2'
+        klass = Tiger2Exporter
+        suffix = '.tiger2'
+      when 'text'
+        klass = TextExporter
+        suffix = '.txt'
+      else
+        raise "Invalid format"
+      end
+
+      case ENV['MODE']
       when 'reviewed'
         options = { :reviewed_only => true }
+      when NilClass, 'all'
       else
         raise "Invalid mode"
       end
 
-      options[:cycles] = ENV['REMOVE_CYCLES']
-      options[:cycles] ||= 'none'
+      options[:cycles] = ENV['REMOVE_CYCLES'] || 'none'
 
-      case info
+      case ENV['INFO']
+      when NilClass, 'none'
       when 'semtags'
         options[:sem_tags] = true
-      when 'info'
-        options[:info] = true
-      when 'both'
+      when 'info' # ignore for backwards compatibility
+      when 'both' # for backwards compatibility
         options[:sem_tags] = true
-        options[:info] = true
       else
-        raise "Invalid info" if info
+        raise "invalid value for INFO"
       end
 
-      if options[:sem_tags]
-        raise "Information structure not available for maltxml" if format == 'maltxml'
-      end
-
-      if options[:info]
-        raise "Semantic tags not available for maltxml" if format == 'maltxml'
-      end
-
-      if source
-        sources = Source.find_all_by_code(source)
-      else
-        sources = Source.find(:all)
-      end
-
-      raise "Unable to find any sources to export" if sources.empty?
-
-      # Prepare destination directory and ancillary files
+      # Prepare destination directory
+      directory = ENV['DIRECTORY'] || Proiel::Application.config.export_directory_path
       Dir::mkdir(directory) unless File::directory?(directory)
 
+      # Find sources and iterate them
+      sources = ENV['ID'] ? Source.find_all_by_id(ENV['ID']) : Source.all
+
       sources.each do |source|
-        options[:source_division] = source.source_divisions.select { |sd| sd.title =~ source_division }.map(&:id) if source_division
-        e = klass.new(source, options)
-        e.write(File.join(directory, "#{source.code}#{suffix}"))
+        file_name = File.join(directory, "#{source.human_readable_id}#{suffix}")
+
+        if ENV['SOURCE_DIVISION']
+          options[:source_division] = source.source_divisions.select { |sd| sd.title =~ Regexp.new(ENV['SOURCE_DIVISION']) }.map(&:id)
+        end
+
+        klass.new(source, options).write(file_name)
       end
     end
 
@@ -121,17 +108,6 @@ namespace :proiel do
     end
   end
 
-  namespace :schemata do
-    desc "Export PROIEL schemata. Optional options: DIRECTORY=destination_directory"
-    task(:export) do
-      directory = ENV['DIRECTORY']
-      directory ||= DEFAULT_EXPORT_DIRECTORY
-
-      Dir::mkdir(directory) unless File::directory?(directory)
-      FileUtils.cp(Rails.root.join('lib', 'text.xsd'), File.join(directory, 'text.xsd'))
-    end
-  end
-
   namespace :morphology do
     desc "Force manual morphological rules. Options: SOURCES=source_identifier[,..]"
     task(:force_manual_tags => :myenvironment) do
@@ -139,7 +115,7 @@ namespace :proiel do
       raise "Source identifiers required" unless sources
 
       require 'tools/manual_tagger'
-      source_ids = sources.split(',').collect { |s| Source.find_by_code(s) }
+      source_ids = sources.split(',').collect { |s| Source.find(s) }
       v = ManualTagger.new(source_ids)
       v.execute!
     end

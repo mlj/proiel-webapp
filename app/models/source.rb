@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -25,7 +25,6 @@ class Source < ActiveRecord::Base
     :aligned_source_division_id, :presentation_before, :presentation_after
   change_logging
 
-  validates_presence_of :code
   validates_presence_of :title
   validates_uniqueness_of :title
   validates_presence_of :citation_part
@@ -85,6 +84,15 @@ class Source < ActiveRecord::Base
       :annotated
     else
       :reviewed
+    end
+  end
+
+  # Generates a human-readable ID for the source.
+  def human_readable_id
+    if citation_part.blank?
+      id.to_s
+    else
+      citation_part.downcase.gsub(/[^\w]+/, '_').sub(/_$/, '')
     end
   end
 end

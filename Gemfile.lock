@@ -72,7 +72,8 @@ GEM
     mime-types (1.21)
     multi_json (1.7.2)
     mysql2 (0.3.11)
-    nokogiri (1.5.5)
+    nokogiri (1.5.9)
+    nori (2.0.4)
     orm_adapter (0.4.0)
     polyamorous (0.5.0)
       activerecord (~> 3.0)
@@ -155,6 +156,7 @@ DEPENDENCIES
   log4r
   mysql2 (> 0.3.0)
   nokogiri
+  nori
   rails
   ransack
   redcarpet

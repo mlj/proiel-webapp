@@ -23,6 +23,7 @@ gem 'unicode'
 
 gem 'builder' # builder is faster than Nokogiri's built-in builder
 gem 'nokogiri'
+gem 'nori'
 
 gem 'gchartrb', :require => 'google_chart'
 gem 'diff-lcs', :require => 'diff/lcs'

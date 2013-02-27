@@ -42,7 +42,7 @@ class SourceDivisionsController < ApplicationController
   end
 
   def update
-    normalize_unicode_params! params[:source_division], :abbreviated_title, :presentation_before, :presentation_after
+    normalize_unicode_params! params[:source_division], :presentation_before, :presentation_after
 
     @source_division = SourceDivision.find(params[:id])
     @source_division.update_attributes(params[:source_division])

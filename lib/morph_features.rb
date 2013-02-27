@@ -214,7 +214,7 @@ class MorphFeatures
     @lemma.language
   end
 
-  # Returns the language as a language code. This is a convenience
+  # Returns the language as a language tag. This is a convenience
   # function for +MorphFeatures#language.to_s+.
   def language_s
     @lemma.language.to_s

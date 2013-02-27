@@ -6,6 +6,12 @@ require File.expand_path('../application', __FILE__)
 Proiel::Application.configure do
   # If true, will log changes to annotation objects in the changelog.
   config.auditing = true
+
+  # The location for schema files used for validating exports.
+  config.schema_file_path = Rails.root.join('public', 'exports')
+
+  # The location for exported files.
+  config.export_directory_path = Rails.root.join('public', 'exports')
 end
 
 # Initialize the rails application

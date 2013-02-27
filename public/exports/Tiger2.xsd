@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  version="V2.0.5" targetNamespace="http://korpling.german.hu-berlin.de/tiger2/V2.0.5/"
+  xmlns:tiger2="http://korpling.german.hu-berlin.de/tiger2/V2.0.5/">
+
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+    schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+  
+  <!-- include the xsds for defining the meta data part and the annotation declaration part -->
+  <xs:include schemaLocation="Meta.xsd"/>
+  <xs:include schemaLocation="Annotation.xsd"/>
+
+  <xs:element name="corpus" type="tiger2:corpusType"/>
+
+  <xs:complexType name="corpusType">
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="head" type="tiger2:headType"/>
+        <xs:element name="body" type="tiger2:bodyType"/>
+        <xs:element name="corpus" minOccurs="0" maxOccurs="unbounded" type="tiger2:corpusType"/>
+      </xs:sequence>
+      <xs:element name="external">
+        <xs:complexType>
+          <xs:attribute name="corresp" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+    <!-- deprecated, because of name of corpus is given by //meta/name, the name of a corpus does not have to be unique in entire xml document -->
+    <xs:attribute ref="xml:id" use="optional"/>
+
+  </xs:complexType>
+  <xs:complexType name="headType">
+    <xs:sequence minOccurs="0">
+      <xs:element name="meta" type="tiger2:metaType"/>
+      <xs:element minOccurs="0" name="annotation" type="tiger2:annotationType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="bodyType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="s" type="tiger2:sType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="sType">
+    <xs:sequence>
+      <xs:element name="graph" type="tiger2:graphType"/>
+    </xs:sequence>
+    <xs:attribute ref="xml:id" use="required"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="graphType">
+    <xs:sequence>
+      <xs:element name="terminals" type="tiger2:terminalsType"/>
+      <xs:element name="nonterminals" minOccurs="0" type="tiger2:nonterminalsType"/>
+    </xs:sequence>
+    <xs:attribute name="discontinuous" use="optional" type="xs:boolean" default="false"/>
+    <xs:attribute name="root" use="optional" type="xs:anyURI"/>
+    <xs:attribute ref="xml:id" use="optional"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="terminalsType">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="t" type="tiger2:tType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="tType">
+    <xs:sequence>
+      <xs:element name="edge" minOccurs="0" maxOccurs="unbounded" type="tiger2:edgeType"/>
+    </xs:sequence>
+    <xs:attribute ref="xml:id" use="required"/>
+    <xs:attribute name="type" type="xs:NCName" form="qualified"/>
+    <xs:attributeGroup ref="tiger2:attributeValuePairType"/>
+    <xs:attribute name="word" type="xs:string" form="qualified"/>
+    <xs:attribute name="corresp" type="xs:anyURI" form="qualified"/>
+  </xs:complexType>
+
+  <xs:complexType name="nonterminalsType">
+    <xs:sequence>
+      <xs:element name="nt" minOccurs="0" maxOccurs="unbounded" type="tiger2:ntType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ntType">
+    <xs:sequence>
+      <xs:element name="edge" maxOccurs="unbounded" type="tiger2:edgeType"/>
+    </xs:sequence>
+    <xs:attribute name="type" type="xs:NCName" form="qualified"/>
+    <xs:attribute ref="xml:id" use="required"/>
+    <xs:attributeGroup ref="tiger2:attributeValuePairType"/>
+  </xs:complexType>
+
+  <xs:complexType name="edgeType">
+    <xs:attribute name="target" use="required" form="qualified"/>
+    <xs:attribute name="type" use="required" type="xs:NCName" form="qualified"/>
+    <xs:attributeGroup ref="tiger2:attributeValuePairType"/>
+  </xs:complexType>
+
+
+  <xs:attributeGroup name="attributeValuePairType">
+    <xs:anyAttribute namespace="##any" processContents="skip"/>
+  </xs:attributeGroup>
+</xs:schema>

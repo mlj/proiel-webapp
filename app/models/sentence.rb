@@ -199,8 +199,12 @@ class Sentence < ActiveRecord::Base
     source_division
   end
 
-  # Returns the completion state.
   def completion
+    status # deprecated
+  end
+
+  # Returns the completion state.
+  def status
     if is_reviewed?
       :reviewed
     elsif is_annotated?

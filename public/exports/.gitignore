@@ -1,3 +1,5 @@
 *.conll
 *.xml
-text.xsd
+*.tiger
+*.tiger2
+*.txt
