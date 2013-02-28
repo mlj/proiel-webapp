@@ -41,9 +41,10 @@ class LatexGlossingExporter < PROIEL::Exporter
 
   def generate(object, options = {})
     if applies?(object)
+      language_tag = object.language_tag
       tokens = object.tokens.visible
 
-      transcribed_tokens = tokens.map { |t| transcribe(t) }.join(' ')
+      transcribed_tokens = tokens.map(&:form).map { |form| "{#{transcribe_form(form, language_tag)}}" }.join(' ')
       glosses = tokens.map { |t| gloss(t) }.join(' ')
 
       "\\exg." + [transcribed_tokens, glosses, "(#{object.citation}) %#{object.id}"].join("\\\\<br/>")
@@ -54,21 +55,20 @@ class LatexGlossingExporter < PROIEL::Exporter
 
   private
 
-  def transcribe(token)
-    ex_form = case token.language.tag
-              when 'grc'
-                t = TransliteratorFactory.get_transliterator('grc-simple')
-                # FIXME: getting the rough breathing on the right side
-                # of the vowel(s) and escaping the circumflex character
-                # should really be done in the transducer itself
-                t.generate_string(token.form).first.gsub(/^(([\^]?[aeiou])+)h/,'h\1').sub(/^([\^]?[AEIOU][aeiou]?)h(.*)$/) { |x| x.sub(/([\^]?[AEIOU][aeiou]?)h/, 'H\1').capitalize }.gsub('^', '\^')
-              when 'chu', 'got'
-                t = TransliteratorFactory.get_transliterator("#{token.language.tag}-ascii")
-                t.generate_string(token.form).first
-              else
-                token.form
-              end
-    "{#{ex_form}}"
+  def transcribe_form(form, language_tag)
+    case language_tag
+    when 'grc'
+      t = TransliteratorFactory.get_transliterator('grc-simple')
+      # FIXME: getting the rough breathing on the right side
+      # of the vowel(s) and escaping the circumflex character
+      # should really be done in the transducer itself
+      t.generate_string(form).first.gsub(/^(([\^]?[aeiou])+)h/,'h\1').sub(/^([\^]?[AEIOU][aeiou]?)h(.*)$/) { |x| x.sub(/([\^]?[AEIOU][aeiou]?)h/, 'H\1').capitalize }.gsub('^', '\^')
+    when 'chu', 'got'
+      t = TransliteratorFactory.get_transliterator("#{language_tag}-ascii")
+      t.generate_string(form).first
+    else
+      form
+    end
   end
 
   def gloss(token)
