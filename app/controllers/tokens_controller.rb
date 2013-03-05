@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -75,5 +75,23 @@ class TokensController < ApplicationController
     alignment_set, edge_count = @token.dependency_alignment_set
 
     render :json => { :alignment_set => alignment_set.map(&:id), :edge_count => edge_count }
+  end
+
+  def index
+    @search = Token.search(params[:q])
+    @tokens = @search.result.page(current_page)
+  end
+
+  def quick_search
+    q = params[:q].strip
+
+    case q
+    when '' # reload the same page
+      redirect_to :back
+    when /^\d+$/ # look up a sentence ID
+      redirect_to sentence_url(q.to_i)
+    else # match against token forms
+      redirect_to tokens_url(:q => { :form_wildcard_matches => "#{q}*" })
+    end
   end
 end

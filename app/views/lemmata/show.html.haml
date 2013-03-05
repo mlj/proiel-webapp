@@ -1,6 +1,6 @@
 - context_bar do
   .breadcrumbs
-    != breadcrumbs ['Dictionary', dictionaries_path], [@lemma.language_name, dictionary_path(@lemma.language_tag)], @lemma
+    != breadcrumbs ['Dictionary', lemmata_path], @lemma
   .resources
     != link_to_resources @lemma, :edit
 
@@ -16,7 +16,15 @@
 
 != semantic_tags_summary @semantic_tags
 
-!= render_tabular @tokens, nil, :partial => 'annotations/annotation', :css_class => 'concordance'
+%table.concordance
+  %thead
+    %tr
+      %th Location
+      %th.left
+      %th.centre Matched form
+      %th.right
+  %tbody.odd-even-line
+    != render :partial => 'annotations/annotation', :collection => @tokens
 
 - layer_if  (is_reviewer? and !@lemma.audits.empty?), "revisions" do
   != audits_summary @lemma.audits

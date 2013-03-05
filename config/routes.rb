@@ -23,18 +23,17 @@ Proiel::Application.routes.draw do
     end
   end
 
-  resources :dictionaries, :only => [:index, :show]
-
-  resources :lemmata, :only => [:show, :edit, :update] do
+  resources :lemmata, :only => [:index, :show, :edit, :update] do
     member do
       post :merge
     end
   end
 
-  resources :tokens, :only => [:show, :edit, :update] do
+  resources :tokens, :only => [:index, :show, :edit, :update] do
     member do
       get :dependency_alignment_group
     end
+    get :quick_search
   end
 
   resources :sentences, :only => [:show, :edit, :update] do
@@ -71,8 +70,6 @@ Proiel::Application.routes.draw do
 
   resources :semantic_tags, :only => [:index, :show]
 
-  resource :search, :only => [:show]
-
   # Wizard
   match '/wizard/:action', :to => 'wizard#:action'
   match '/wizard',         :to => 'wizard#index'
@@ -85,8 +82,8 @@ Proiel::Application.routes.draw do
   match '/exports/:id.:format' => 'pages#export', :as => :export, :via => :get
 
   # Quick search and search suggestions
-  match '/quick_search', :to => 'searches#quick_search', :as => :quick_search
-  match '/quick_search_suggestions.:format', :to => 'searches#quick_search_suggestions'
+  match '/quick_search', :to => 'tokens#quick_search'
+  match '/quick_search.:format', :to => 'tokens#quick_search'
 
   # Default page
   root :to => 'sources#index'

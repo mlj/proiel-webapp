@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -31,7 +31,8 @@ class SemanticTagsController < ApplicationController
   end
 
   def index
-    @semantic_tags = SemanticTag.search(params[:query], :page => current_page)
+    @search = SemanticTag.search(params[:q])
+    @semantic_tags = @search.result.includes(:semantic_attribute_value).page(current_page)
 
     respond_with @semantic_tags
   end

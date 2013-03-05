@@ -398,6 +398,9 @@ input[type='submit']:hover
   color: $bg
   background-color: $hover
 
+form.inline
+  display: inline
+
 ////////////////////////////////////////////////////////////////
 // Page layout
 ////////////////////////////////////////////////////////////////
@@ -438,6 +441,7 @@ abbr
     display: inline
 
 #navigation-bar
+  height: 2em
   font-family: Serif
   color: $navbarfg
   background-color: $navbarbg
@@ -453,10 +457,10 @@ abbr
     &:hover
       color: $navbarfghover
   .left
-    display: inline
+    vertical-align: middle
   .right
-    display: inline
     float: right
+    vertical-align: middle
 
 #context-bar
   margin: 1em 3em 1em 3em
@@ -761,15 +765,14 @@ h3
 ////////////////////////////////////////////////////////////////
 
 .concordance
-  .left
-    width: 30%
+  td.left
     text-align: right
   .centre
-    padding-left: .5em
     text-align: center
-    padding-right: .5em
-  .right
-    width: 30%
+  td.right
+    text-align: left
+  div.formatted-text
+    display: inline
 
 ////////////////////////////////////////////////////////////////
 // Message block

@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -72,5 +72,12 @@ class LemmataController < ApplicationController
     end
 
     respond_with @lemma
+  end
+
+  def index
+    @search = Lemma.order(:lemma).search(params[:q])
+    @lemmata = @search.result.page(current_page)
+
+    respond_with @dictionary
   end
 end

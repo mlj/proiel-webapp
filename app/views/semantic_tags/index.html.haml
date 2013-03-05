@@ -1,4 +1,5 @@
-- search_form_tag semantic_tags_path do
-  != query_tag :query
+= search_form_for @search, :builder => SimpleForm::FormBuilder, :class => 'simple_form' do |f|
+  != f.input :semantic_attribute_value_tag_cont, label: 'Semantic attribute value'
+  != f.submit "Search"
 
 != render_tabular @semantic_tags, ['Reference', 'Tag', '']
