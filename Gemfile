@@ -10,7 +10,7 @@ gem 'sass-rails'
 #end
 
 gem 'formtastic'
-gem 'will_paginate'
+gem 'kaminari'
 gem 'haml'
 gem 'devise'
 gem 'devise-encryptable'

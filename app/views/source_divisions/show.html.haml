@@ -14,7 +14,7 @@
     != link_to 'Show discourse annotations', source_division_discourse_path(@source_division)
 
 %p
-  != will_paginate @sentences
+  != paginate @sentences
 
 %p
   != format_sentence @sentences.all, :citations => true, :sentence_numbers => true, :link_to => :sentences

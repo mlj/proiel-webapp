@@ -12,7 +12,7 @@
         != @source.metadata.to_html
 
 %p
-  != will_paginate @source_divisions
+  != paginate @source_divisions
 
 %ul.toc1level
   - @source_divisions.each do |source_division|

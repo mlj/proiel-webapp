@@ -27,14 +27,14 @@ class SourcesController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
-    @sources = Source.order(:language_tag).page(current_page).per_page(90)
+    @sources = Source.order(:language_tag).page(current_page).per(90)
 
     respond_with @sources
   end
 
   def show
     @source = Source.includes(:source_divisions).find(params[:id])
-    @source_divisions = @source.source_divisions.order(:position).page(current_page).per_page(90)
+    @source_divisions = @source.source_divisions.order(:position).page(current_page).per(90)
 
     respond_with @source
   end

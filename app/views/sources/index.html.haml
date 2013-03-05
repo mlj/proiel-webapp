@@ -1,4 +1,4 @@
-!= will_paginate @sources
+!= paginate @sources
 
 %ul.toc2level.toc-l1
   - @sources.group_by { |source| source.language.name }.sort.each do |language_name, sources|

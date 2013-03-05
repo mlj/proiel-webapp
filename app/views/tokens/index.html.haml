@@ -20,7 +20,7 @@
     != f.submit "Search"
 
 - if @tokens
-  != will_paginate @tokens, :params => params
+  != paginate @tokens, :params => params
 
 - if @tokens
   %table.concordance

@@ -61,6 +61,9 @@ GEM
     iso-codes (0.4.0)
     journey (1.0.4)
     json (1.7.7)
+    kaminari (0.14.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     log4r (1.1.10)
     mail (2.5.3)
       i18n (>= 0.4.0)
@@ -129,7 +132,6 @@ GEM
     unicode (0.4.3)
     warden (1.2.1)
       rack (>= 1.0)
-    will_paginate (3.0.3)
 
 PLATFORMS
   ruby
@@ -149,6 +151,7 @@ DEPENDENCIES
   high_voltage
   iso-codes
   json
+  kaminari
   log4r
   mysql2 (> 0.3.0)
   nokogiri
@@ -160,4 +163,3 @@ DEPENDENCIES
   sqlite3
   thin
   unicode
-  will_paginate

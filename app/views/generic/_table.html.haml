@@ -1,6 +1,6 @@
 .tabular
   - unless no_pagination
-    != will_paginate(collection) || ""
+    != paginate(collection) || ""
 
   %table{:class => "odd-even-line #{css_class}"}
     - if fields

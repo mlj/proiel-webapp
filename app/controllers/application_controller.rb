@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_page
 
-  # Returns the current page for will_paginate based actions.
+  # Returns the current page for pagination.
   def current_page
     @page ||= params[:page].blank? ? 1 : params[:page].to_i
   end
