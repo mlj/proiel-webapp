@@ -1,0 +1,304 @@
+---
+:features:
+  :tense:
+  - p
+  - r
+  - i
+  - l
+  - f
+  - x
+  - t
+  :mood:
+  - m
+  - n
+  - p
+  - s
+  - i
+  - x
+  - g
+  :degree:
+  - c
+  - p
+  - s
+  - x
+  :case:
+  - n
+  - o
+  - x
+  :gender:
+  - m
+  - f
+  - x
+  - n
+  :person:
+  - x
+  - "1"
+  - "2"
+  - "3"
+  :number:
+  - p
+  - s
+  - x
+:constraints:
+  Pp:
+    :mask:
+    - :inflection
+    - :mood
+    - :tense
+    - :voice
+    - :degree
+    - :case
+    - :person
+    :morphology:
+      i----n1:
+        :number: :all
+      i----o1:
+        :number: :all
+      i----x1:
+        :number: :all	
+      i----n2:
+        :number: :all
+      i----o2:
+        :number: :all
+      i----x2:
+        :number: :all	
+      i----n3:
+        :gender: :all
+        :number: :all
+      i----o3:
+        :gender: :all
+        :number: :all
+      i----x3:
+        :gender: :all
+        :number: :all
+      n------: {}
+
+  Ne:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case: :all
+        :gender:
+        - m
+        - f
+        - p
+        :number: :all
+      n-: {}
+
+  V-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      ii:
+        :tense: :all
+        :person: :all
+        :number:
+        - x
+        - p
+        - s
+      ix:
+        :tense: :all
+        :person: :all
+        :number: :all
+      im:
+        :person:
+        - x
+        - "1"
+        - "2"
+        :number: :all
+      in: {}
+      ip:
+        :tense:
+        - p
+        - u
+        :case: :all
+        :gender: :all
+        :number: :all
+      nn: {}
+      ng: {}
+
+      is:
+        :tense:
+        - p
+        - i
+        :person: :all
+        :number: :all
+
+  A-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :degree: :all
+        :case: :all
+        :gender: :all
+        :number: :all
+      n-: {}
+
+  Df:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :degree: :all
+      n-: {}
+
+  Dq:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+
+  Pr:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case: :all
+        :number: :all
+        :gender: :all
+      n-: {}
+
+  Pi:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case: :all
+        :number: :all
+        :gender: :all
+      n-: {}
+
+  Pk:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case: :all
+        :number: :all
+        :gender: :all
+      n-: {}
+
+  Ps:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case: :all
+        :person:
+        - "1"
+        - "2"
+        - "3"
+        :number: :all
+        :gender: :all
+      n-: {}
+
+  S-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case: :all
+        :gender: :all
+        :number: :all
+      n-: {}
+
+  I-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+
+  R-:
+    :mask:
+    - :inflection
+    :morphology:
+      n: {}
+
+  Du:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+
+  G-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+
+  F-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+
+  Px:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case: :all
+        :gender: :all
+        :number: :all
+      n-: {}
+
+  Nb:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case: :all
+        :gender:
+        - m
+        - f
+        - p
+        :number: :all
+      n-: {}
+
+  Py:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case: :all
+        :gender: :all
+        :number: :all
+      n-: {}
+
+  Pd:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case: :all
+        :gender: :all
+        :number: :all
+      n-: {}
+
+  C-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+      

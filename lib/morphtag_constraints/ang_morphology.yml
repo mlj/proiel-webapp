@@ -1,0 +1,398 @@
+---
+:features:
+  :tense:
+  - x
+  - p
+  - u
+  :mood:
+  - m
+  - x
+  - n
+  - p
+  - s
+  - i
+  :degree:
+  - x
+  - c
+  - p
+  - s
+  - z
+  :strength:
+  - w
+  - s
+  - t
+  :case:
+  - a
+  - x
+  - n
+  - d
+  - g
+  - o
+  - i
+  - z
+  :gender:
+  - x
+  - m
+  - n
+  - o
+  - p
+  - f
+  - q
+  - r
+  :person:
+  - x
+  - "1"
+  - "2"
+  - "3"
+  :number:
+  - x
+  - p
+  - s
+  - d
+:constraints:
+  Pp:
+    :mask:
+    - :inflection
+    - :mood
+    - :tense
+    - :voice
+    - :degree
+    - :case
+    - :person
+    :morphology:
+      i----a1:
+        :number: :all
+      i----x1:
+        :number: :all
+      i----n1:
+        :number: :all
+      i----d1:
+        :number: :all
+      i----g1:
+        :number: :all	
+      i----a2:
+        :number: :all
+      i----x2:
+        :number: :all
+      i----n2:
+        :number: :all
+      i----d2:
+        :number: :all
+      i----g2:
+        :number: :all	
+      i----a3:
+        :gender: :all
+        :number: :all
+      i----x3:
+        :gender: :all
+        :number: :all
+      i----n3:
+        :gender: :all
+        :number: :all
+      i----d3:
+        :gender: :all
+        :number: :all
+      i----g3:
+        :gender: :all
+        :number: :all
+      i----nx:
+        :gender: :all
+        :number: :all
+      i----ax:
+        :gender: :all
+        :number: :all
+      i----gx:
+        :gender: :all
+        :number: :all
+      i----dx:
+        :gender: :all
+        :number: :all
+      i----xx:
+        :gender: :all
+        :number: :all
+      n------: {}
+
+  Ne:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case:
+        - n
+        - a
+        - g
+        - d
+        - x
+        - o
+        :gender: :all
+        :number:
+        - s
+        - p
+        - x
+      n-: {}
+
+  V-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      ii:
+        :tense: :all
+        :person: :all
+        :number:
+        - x
+        - p
+        - s
+      ix:
+        :tense: :all
+        :person: :all
+        :number: :all
+      im:
+        :person:
+        - x
+        - "1"
+        - "2"
+        :number:
+        - x
+        - s
+        - p
+      in: {}
+      ip:
+        :tense:
+        - p
+        - u
+        :strength: :all
+        :case: :all
+        :gender: :all
+        :number:
+        - x
+        - s
+        - p
+      nn: {}
+
+      is:
+        :tense: :all
+        :person: :all
+        :number:
+        - x
+        - p
+        - s
+  A-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :degree: :all
+        :strength: :all
+        :case: :all
+        :gender: :all
+        :number:
+        - s
+        - p
+        - x
+      n-: {}
+
+  Df:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :degree: :all
+      n-: {}
+
+  Pi:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case:
+        - n
+        - a
+        - g
+        - d
+        - i
+        - x
+        :number:
+        - x
+        - p
+        - s
+        :gender:
+        - m
+        - f
+        - n
+        - x
+      n-: {}
+
+  Ps:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case:
+        - n
+        - a
+        - g
+        - d
+        - i
+        - x
+        :person:
+        - "1"
+        - "2"
+        - "3"
+        - x
+        :number:
+        - p
+        - s
+        - x
+        :gender:
+        - m
+        - f
+        - n
+        - x
+      n-: {}
+
+  I-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+
+  R-:
+    :mask:
+    - :inflection
+    :morphology:
+      n: {}
+
+  Du:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+
+  G-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+
+  F-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+
+  Px:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case:
+        - n
+        - a
+        - g
+        - d
+        - x
+        :gender:
+        - m
+        - f
+        - n
+        - x
+        :number:
+        - p
+        - s
+        - x
+      n-: {}
+
+  Nb:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case:
+        - n
+        - a
+        - g
+        - d
+        - x
+        - o
+        :gender: :all
+        :number:
+        - s
+        - p
+        - x
+      n-: {}
+
+  Py:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :strength:
+        - w
+        - s
+        - t
+        :case:
+        - n
+        - a
+        - g
+        - d
+        - x
+        - i
+        - z
+        :gender:
+        - m
+        - f
+        - n
+        - x
+        :number:
+        - s
+        - p
+        - x
+        :degree: :all
+      n-: {}
+
+  Pd:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      i-:
+        :case:
+        - n
+        - a
+        - g
+        - d
+        - x
+        - i
+        :gender: :all
+        :number:
+        - p
+        - s
+        - x
+      n-: {}
+
+  C-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+      
+  N-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
