@@ -137,3 +137,9 @@ relations_011:
   id: "12"
   secondary_relation: "1"
   summary: argument (object or oblique)
+relations_026: 
+  tag: expl
+  primary_relation: "1"
+  id: "26"
+  secondary_relation: "1"
+  summary: expletive
