@@ -93,6 +93,9 @@
   i:
     abbreviated_summary: ins.
     summary: instrumental
+  o:
+    abbreviated_summary: obl.
+    summary: oblique
 :degree:
   x:
     abbreviated_summary: unc. deg.
