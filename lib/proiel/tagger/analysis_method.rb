@@ -5,13 +5,13 @@
 # Written by Marius L. Jøhndal, 2008.
 #
 module Tagger
-    class TaggerAnalysisMethod
-      def initialize(language)
-        @language = language
-      end
-
-      def analyze(form)
-        []
-      end
+  class TaggerAnalysisMethod
+    def initialize(language)
+      @language = language
     end
+
+    def analyze(form)
+      []
+    end
+  end
 end

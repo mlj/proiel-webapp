@@ -88,7 +88,7 @@ module Tagger
               # Includes candidates from existing annotation.
               when :instance_frequencies
                 @analysis_methods[language][method] =
-                  InstanceFrequencyMethod.new(language)
+                  InstanceFrequencyMethod.new(language, args[:completion_level] || nil)
                 @methods[language] << lambda { |form| analyze_form(language, method, form) }
 
               # Includes candidates from an FST guesser/analyzer.

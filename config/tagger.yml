@@ -1,49 +1,40 @@
 :languages:
   :fro:
     :instance_frequencies:
-      true
-    :inflections_table:
-      true
-    :source_tag_pattern_filtering:
-      true
+      :completion_level:
+        any
   :spa:
-    :instance frequencies:
-      true
-    :inflections_table:
-      true
-    :source_tag_pattern_filtering:
-      true
+    :instance_frequencies:
+      :completion_level:
+        any
   :por:
     :instance_frequencies:
-      true
-    :inflections_table:
-      true
-    :source_tag_pattern_filtering:
-      true
+      :completion_level:
+        any
   :ang:
     :instance_frequencies:
-      true
-    :inflections_table:
-      true
-    :source_tag_pattern_filtering:
-      true
+      :completion_level:
+        reviewed_only
   :non:
     :instance_frequencies:
-      true
+      :completion_level:
+        reviewed_only
     :inflections_table:
       true
     :source_tag_pattern_filtering:
       true
   :xcl:
     :instance_frequencies:
-      true
+      :completion_level:
+        reviewed_only
     :inflections_table:
       true
     :source_tag_pattern_filtering:
       true
   :got:
     :instance_frequencies:
-      true
+      :completion_level:
+        reviewed_only
     :source_tag_pattern_filtering:
       true
     :include_new_source_tags:
@@ -60,14 +51,16 @@
       true
   :chu:
     :instance_frequencies:
-      true
+      :completion_level:
+        reviewed_only
     :inflections_table:
       true
     :source_tag_pattern_filtering:
       true
   :grc:
     :instance_frequencies:
-      true
+      :completion_level:
+        reviewed_only
     :source_tag_pattern_filtering:
       true
     :include_new_source_tags:
@@ -85,7 +78,8 @@
       true
   :lat:
     :instance_frequencies:
-      true
+      :completion_level:
+        reviewed_only
     :inflections_table:
       true
     :fst:

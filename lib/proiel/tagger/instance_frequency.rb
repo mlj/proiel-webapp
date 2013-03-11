@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2008, 2009, 2010, 2011 University of Oslo
-# Copyright 2008, 2009, 2010, 2011 Marius L. Jøhndal
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -22,16 +22,25 @@
 
 module Tagger
   class InstanceFrequencyMethod < TaggerAnalysisMethod
-    def initialize(language)
-      super(language)
+    def initialize(language, completion_level)
+      super language
+      @completion_level = completion_level
     end
 
     def analyze(form)
-      x = Token.count(:all,
-                      :include => [:lemma, :sentence],
-                      :conditions => ['form = ? AND lemmata.language_tag = ? AND sentences.reviewed_by IS NOT NULL',
-                        form, @language.to_s],
-                      :group => [:lemma_id, :morphology_tag]).map { |(l, m), f| [MorphFeatures.new(Lemma.find(l), m), f] }
+      rel = Token.includes(:lemma, :sentence).where(:form => form).where("lemmata.language_tag = ?", @language.to_s)
+
+      case @completion_level
+      when 'reviewed_only'
+        rel = rel.where("sentences.reviewed_by IS NOT NULL")
+      when 'annotated_only'
+        rel = rel.where("sentences.annotated_by IS NOT NULL")
+      when 'any'
+      else
+        raise "invalid completion level specified in tagger.yml"
+      end
+
+      x = rel.group(:lemma_id, :morphology_tag).count.map { |(l, m), f| [MorphFeatures.new(Lemma.find(l), m), f] }
       sum = x.map(&:last).sum
       x.map { |m, f| [m, f / sum.to_f] }
     end
