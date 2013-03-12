@@ -14,10 +14,7 @@
 %p
   != paginate @source_divisions
 
-%ul.toc1level
-  - @source_divisions.each do |source_division|
-    %li
-      %span.toc-title
-        %em= source_division.title
-        = "(#{source_division.citation})"
-      %span.toc-link!= link_to 'Browse', source_division
+.table-of-source-divisions
+  %ul
+    - @source_divisions.each do |source_division|
+      %li!= link_to "#{source_division.title} (#{source_division.citation})", source_division

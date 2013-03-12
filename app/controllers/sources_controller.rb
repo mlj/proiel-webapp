@@ -34,7 +34,7 @@ class SourcesController < ApplicationController
 
   def show
     @source = Source.includes(:source_divisions).find(params[:id])
-    @source_divisions = @source.source_divisions.order(:position).page(current_page).per(90)
+    @source_divisions = @source.source_divisions.order(:position).page(current_page).per(300)
 
     respond_with @source
   end
