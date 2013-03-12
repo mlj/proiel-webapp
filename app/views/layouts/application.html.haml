@@ -1,27 +1,18 @@
-!!! Strict
-%html{:xmlns => 'http://www.w3.org/1999/xhtml', 'xml:lang' => 'en', :lang => 'en'}
+!!! 5
+%html{:lang => 'en'}
   %head
-    %title
-      - if show_title?
-        = [CONFIG.title, yield(:title)].join(': ')
-      - else
-        = CONFIG.title
+    %meta{:charset => 'utf-8'}
+    %meta{:name => 'viewport',:content => 'width=device-width, initial-scale=1.0'}
+    %link{:rel => 'search', :type => 'application/opensearchdescription+xml', :title => CONFIG.title, :href => '/search.xml'}
+
+    %title= show_title? ? [CONFIG.title, yield(:title)].join(': ') : CONFIG.title
 
     != favicon_link_tag
-
-    %link{:rel => 'search', :type => 'application/opensearchdescription+xml', :title => CONFIG.title, :href => '/search.xml'}
-    %link{:rel => 'contents', :href => '/'}
-    %link{:rel => 'index', :href => '/sentences'}
-    %link{:rel => 'glossary', :href => '/lemmata'}
-
-    %meta{"http-equiv" => "Content-Type", :content=>"text/html; charset=utf-8"}
-
     != csrf_meta_tag
 
     != stylesheet_link_tag "screen",     :media => "screen"
 
     != yield :head
-
   %body
     #headline
 
@@ -61,7 +52,7 @@
       - else
         != yield
 
-    #footer
+    %footer
       %span.tag proiel-webtool
       != "release #{PROIEL_RELEASE}."
       %br
