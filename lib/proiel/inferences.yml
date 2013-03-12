@@ -469,7 +469,7 @@
 - :criteria: # clitic object pronouns are objects under verbs in Portuguese
     :language: por
     :head_pos: V-
-    :dependent_lemma: o
+    :dependent_lemma: ^o$
   :actions:
     :inferred_relation: obj
 - :criteria: # clitic object pronouns are objects under verbs in Portuguese
