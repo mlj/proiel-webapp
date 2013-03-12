@@ -8,17 +8,17 @@ class LemmaTest < ActiveSupport::TestCase
   end
 
   def test_merging
-    a, b = Lemma.find(6), Lemma.find(7)
+    a, b = Lemma.find(1000006), Lemma.find(1000007)
 
-    assert_equal [7], a.mergeable_lemmata.pluck(:id)
-    assert_equal [6], b.mergeable_lemmata.pluck(:id)
+    assert_equal [1000007], a.mergeable_lemmata.pluck(:id)
+    assert_equal [1000006], b.mergeable_lemmata.pluck(:id)
 
     assert a.mergeable?(b)
     assert b.mergeable?(a)
 
     a.merge!(b)
 
-    a, b = Lemma.find(6), Lemma.find(5)
+    a, b = Lemma.find(1000006), Lemma.find(1000005)
 
     assert !a.mergeable?(b)
     assert !b.mergeable?(a)

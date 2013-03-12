@@ -75,6 +75,9 @@ class Token < ActiveRecord::Base
   # Specific validations
   validate :validate_sort
 
+  delegate :part_of_speech, :to => :lemma, :allow_nil => true
+  delegate :part_of_speech_tag, :to => :lemma, :allow_nil => true
+
   # A visible token, i.e. is a non-empty token.
   def self.visible
     where(:empty_token_sort => nil)
@@ -356,16 +359,16 @@ class Token < ActiveRecord::Base
     end
   end
 
-  PREDICATIVE_AND_APPOSITIVE_RELATIONS = %w(xobj xadv apos)
-  NOMINAL_RELATIONS = %w(part obl sub obj narg voc)
+  UNANNOTATABLE_PARTS_OF_SPEECH = /^(C-|R-|P[rd])$/ # conjunctions, prepositions, relative pronouns and demonstrative pronouns
 
   # Returns true if the token has a nominal POS or a nominal syntactic relation,
   # or if one of its dependents is an article.
   def is_annotatable?
     info_status == 'no_info_status' || # manually marked as annotatable
       (info_status != 'info_unannotatable' && \
-        !conjunction? && !relative_pronoun? && !predicative? && !appositive? &&
-        (noun? || pronoun? || nominal? || dependents.any?(&:article?)))
+       (noun? || pronoun? || nominal? || dependents.any?(&:article?)) &&
+       (part_of_speech_tag.nil? || !part_of_speech_tag[UNANNOTATABLE_PARTS_OF_SPEECH]) &&
+       !predicative? && !appositive?)
   end
 
   # Returns all contrast groups registered for the given source division
