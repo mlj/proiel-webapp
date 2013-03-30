@@ -1,4 +1,4 @@
-var valid_relations = <%= Relation.primary.map(&:tag).to_json %>;
+var valid_relations = <%= RelationTag.all.select(&:primary).map(&:tag).to_json %>;
 
 function isValidRelation(relation) {
   for (var i = 0; i < valid_relations.length; i++)

@@ -22,10 +22,11 @@
 
 class Token < ActiveRecord::Base
   attr_accessible :sentence_id, :token_number, :form, :lemma_id, :head_id,
-    :source_morphology_tag, :source_lemma, :foreign_ids, :info_status,
+    :source_morphology_tag, :source_lemma, :foreign_ids, :information_status_tag,
     :empty_token_sort, :contrast_group, :token_alignment_id,
     :automatic_token_alignment, :dependency_alignment_id, :antecedent_id,
-    :morphology_tag, :citation_part, :presentation_before, :presentation_after
+    :morphology_tag, :citation_part, :presentation_before, :presentation_after,
+    :relation_tag
   change_logging
 
   belongs_to :sentence
@@ -35,7 +36,6 @@ class Token < ActiveRecord::Base
 
   belongs_to :head, :class_name => 'Token'
   has_many :dependents, :class_name => 'Token', :foreign_key => 'head_id'
-  belongs_to :relation
 
   has_many :slash_out_edges, :class_name => 'SlashEdge', :foreign_key => 'slasher_id', :dependent => :destroy
   has_many :slash_in_edges, :class_name => 'SlashEdge', :foreign_key => 'slashee_id', :dependent => :destroy
@@ -67,15 +67,17 @@ class Token < ActiveRecord::Base
   validates_presence_of :lemma, :if => lambda { |t| t.morphology }
   validates_presence_of :morphology, :if => lambda { |t| t.lemma }
 
-  # Constraint: t.head_id => t.relation
-  validates_presence_of :relation, :if => lambda { |t| !t.head_id.nil? }
+  # Constraint: t.head_id => t.relation_tag
+  validates_presence_of :relation_tag, :if => lambda { |t| !t.head_id.nil? }
 
   # form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
 
-#  validates_tag_set_inclusion_of :source_morphology_tag, :morphology, :allow_nil => true, :message => "%{value} is not a valid source morphology tag"
-#  validates_tag_set_inclusion_of :morphology_tag, :morphology, :allow_nil => true, :message => "%{value} is not a valid morphology tag"
-  validates_tag_set_inclusion_of :info_status, :information_structure, :allow_nil => true, :message => "%{value} is not a valid information status tag"
+#  validates_tag_set_inclusion_of :source_morphology_tag, MorphologyTag, :allow_nil => true, :message => "%{value} is not a valid source morphology tag"
+#  validates_tag_set_inclusion_of :morphology_tag, MorphologyTag, :allow_nil => true
+
+  tag_attribute :information_status, :information_status_tag, InformationStatusTag, :allow_nil => true
+  tag_attribute :relation, :relation_tag, RelationTag, :allow_nil => true
 
   # Specific validations
   validate :validate_sort
@@ -106,24 +108,6 @@ class Token < ActiveRecord::Base
   # A token that is at the root of the dependency tree.
   def self.dependency_root
     where("head_id IS NULL")
-  end
-
-  # Sets the relation for the token. The relation may be a Relation
-  # object, a string with the relation tag or a symbol with the
-  # relation tag.
-  def relation=(r)
-    case r
-    when Relation
-      write_attribute(:relation_id, r.id)
-    else
-      if r.blank?
-        write_attribute(:relation_id, nil)
-      else
-        r = Relation.find_by_tag(r.to_s)
-        raise ArgumentError, 'invalid relation' unless r
-        write_attribute(:relation_id, r.id)
-      end
-    end
   end
 
   # Language tag for the token
@@ -364,8 +348,8 @@ class Token < ActiveRecord::Base
   # Returns true if the token has a nominal POS or a nominal syntactic relation,
   # or if one of its dependents is an article.
   def is_annotatable?
-    info_status == 'no_info_status' || # manually marked as annotatable
-      (info_status != 'info_unannotatable' && \
+    information_status_tag == 'no_info_status' || # manually marked as annotatable
+      (information_status_tag != 'info_unannotatable' && \
        (noun? || pronoun? || nominal? || dependents.any?(&:article?)) &&
        (part_of_speech_tag.nil? || !part_of_speech_tag[UNANNOTATABLE_PARTS_OF_SPEECH]) &&
        !predicative? && !appositive?)

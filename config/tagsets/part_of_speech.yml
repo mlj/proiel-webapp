@@ -1,0 +1,78 @@
+A-:
+  abbreviated_summary: adj.
+  summary: adjective
+Df:
+  abbreviated_summary: adv.
+  summary: adverb
+S-:
+  abbreviated_summary: art.
+  summary: article
+Ma:
+  abbreviated_summary: card. num.
+  summary: cardinal numeral
+Nb:
+  abbreviated_summary: common noun
+  summary: common noun
+C-:
+  abbreviated_summary: conj.
+  summary: conjunction
+Pd:
+  abbreviated_summary: dem. pron.
+  summary: demonstrative pronoun
+F-:
+  abbreviated_summary: foreign word
+  summary: foreign word
+Px:
+  abbreviated_summary: indef. pron.
+  summary: indefinite pronoun
+N-:
+  abbreviated_summary: inf. marker
+  summary: infinitive marker
+I-:
+  abbreviated_summary: interj.
+  summary: interjection
+Du:
+  abbreviated_summary: interrog. adv.
+  summary: interrogative adverb
+Pi:
+  abbreviated_summary: interrog. pron.
+  summary: interrogative pronoun
+Mo:
+  abbreviated_summary: ord. num.
+  summary: ordinal numeral
+Pp:
+  abbreviated_summary: pers. pron.
+  summary: personal pronoun
+Pk:
+  abbreviated_summary: pers. refl. pron.
+  summary: personal reflexive pronoun
+Ps:
+  abbreviated_summary: poss. pron.
+  summary: possessive pronoun
+Pt:
+  abbreviated_summary: poss. refl. pron.
+  summary: possessive reflexive pronoun
+R-:
+  abbreviated_summary: prep.
+  summary: preposition
+Ne:
+  abbreviated_summary: proper noun
+  summary: proper noun
+Py:
+  abbreviated_summary: quant.
+  summary: quantifier
+Pc:
+  abbreviated_summary: recipr. pron.
+  summary: reciprocal pronoun
+Dq:
+  abbreviated_summary: rel. adv.
+  summary: relative adverb
+Pr:
+  abbreviated_summary: rel. pron.
+  summary: relative pronoun
+G-:
+  abbreviated_summary: subj.
+  summary: subjunction
+V-:
+  abbreviated_summary: verb
+  summary: verb

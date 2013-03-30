@@ -1,4 +1,4 @@
-var pos_summaries = <%= PartOfSpeech.tag_and_summary_hash.to_json %>;
+var pos_summaries = <%= PartOfSpeechTag.to_hash.to_json %>;
 
 var morphology_summaries = <%= MorphFeatures::MORPHOLOGY_SUMMARIES.to_json %>;
 var morphology_abbreviated_summaries = <%= MorphFeatures::MORPHOLOGY_ABBREVIATED_SUMMARIES.to_json %>;

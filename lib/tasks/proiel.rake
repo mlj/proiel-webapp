@@ -252,10 +252,10 @@ namespace :proiel do
 
 
       Token.find(:all,
-                 :conditions => ["info_status IS NOT NULL AND sentences.source_division_id = ?", sd],
+                 :conditions => ["information_status_tag IS NOT NULL AND sentences.source_division_id = ?", sd],
                  :include => :sentence).each do |t|
-        STDERR.puts "Removing info_status from #{t} (#{t.id})"
-        t.info_status = nil
+        STDERR.puts "Removing information_status_tag from #{t} (#{t.id})"
+        t.information_status_tag = nil
         t.antecedent_id = nil
         t.save!
       end

@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -29,18 +29,14 @@ class Lemma < ActiveRecord::Base
   has_many :notes, :as => :notable, :dependent => :destroy
   has_many :semantic_tags, :as => :taggable, :dependent => :destroy
 
-  composed_of :language, :mapping => %w(language_tag to_s), :converter => Proc.new { |x| Language.new(x) }
-
-  composed_of :part_of_speech, :mapping => %w(part_of_speech_tag to_s), :converter => Proc.new { |x| PartOfSpeech.new(x) }, :allow_nil => true
+  tag_attribute :language, :language_tag, LanguageTag, :allow_nil => false
+  tag_attribute :part_of_speech, :part_of_speech_tag, PartOfSpeechTag, :allow_nil => false
 
   before_validation :before_validation_cleanup
 
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
   validates_uniqueness_of :lemma, :scope => [:language_tag, :part_of_speech_tag, :variant]
-
-  validates_tag_set_inclusion_of :part_of_speech_tag, :part_of_speech, :allow_nil => false, :message => "%{value} is not a valid part of speech tag"
-  validates_tag_set_inclusion_of :language_tag, :language, :allow_nil => false, :message => "%{value} is not a valid language tag"
 
   # A lemma that matches a prefix. The prefixes are given in +queries+,
   # which should be an array of strings on the form +foo+ or +foo#1+, where
@@ -138,10 +134,10 @@ class Lemma < ActiveRecord::Base
 
   # Returns an array of all parts of speech represented in lemmata.
   def self.represented_parts_of_speech
-    Lemma.uniq.pluck(:part_of_speech_tag).map { |p| PartOfSpeech.new(p) }.sort_by(&:to_label)
+    Lemma.uniq.pluck(:part_of_speech_tag).map { |p| PartOfSpeechTag.new(p) }.sort_by(&:to_label)
   end
 
   def language_name
-    Language.new(language_tag).try(:name)
+    LanguageTag.new(language_tag).try(:name)
   end
 end

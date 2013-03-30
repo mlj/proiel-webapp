@@ -2,29 +2,43 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class TagSetTestCase < ActiveSupport::TestCase
   def test_information_structure_tag_set_accessor
-    assert TagSets.has_tag_set?(:information_structure)
-    assert TagSets.has_tag_set?('information_structure')
-
-    assert TagSets[:information_structure].is_a?(TagSet)
-    assert TagSets['information_structure'].is_a?(TagSet)
+    assert InformationStatusTag.new('new').is_a?(TagObject)
   end
 
   def test_language_tag_set_accessor
-    assert TagSets.has_tag_set?(:language)
-    assert TagSets.has_tag_set?('language')
-
-    assert TagSets[:language].is_a?(TagSet)
-    assert TagSets['language'].is_a?(TagSet)
+    assert LanguageTag.new('lat').is_a?(TagObject)
   end
 
-  def test_language_tag_set
-    assert TagSets[:language].has_tag?(:lat)
-    assert TagSets[:language].has_tag?('lat')
+  def test_part_of_speech_tag_set_accessor
+    assert PartOfSpeechTag.new('Df').is_a?(TagObject)
+  end
 
-    assert !TagSets[:language].has_tag?(:qqq)
-    assert !TagSets[:language].has_tag?('qqq')
+  def test_language_tag_lookup
+    assert LanguageTag.include?(:lat)
+    assert LanguageTag.include?('lat')
 
-    assert_equal 'Latin', TagSets[:language][:lat]
-    assert_equal 'Latin', TagSets[:language]['lat']
+    assert !LanguageTag.include?(:qqq)
+    assert !LanguageTag.include?('qqq')
+
+    assert LanguageTag.find('lat')
+    assert LanguageTag.find(:lat)
+    assert LanguageTag[:lat]
+    assert LanguageTag['lat']
+  end
+
+  def test_language_tag_comparison
+    @lat = LanguageTag.find('lat')
+    @got = LanguageTag.find('got')
+
+    assert (@lat != @got)
+    assert (@lat > @got)
+  end
+
+  def test_language_tag_access
+    @lat = LanguageTag.find('lat')
+    @got = LanguageTag.find('got')
+
+    assert 'Latin', @lat.name
+    assert 'Gothic', @got.name
   end
 end

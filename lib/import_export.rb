@@ -77,18 +77,17 @@ end
 class InfoStatusesImportExport < CSVImportExport
   def initialize(sd = nil)
     @sd = (sd ? SourceDivision.find(sd) : nil)
-    super :token, :info_status, :antecedent
+    super :token, :information_status, :antecedent
   end
 
   protected
 
-  def read_fields(token, info_status, antecedent)
+  def read_fields(token, information_status, antecedent)
     # prodrop
     if token =~ /\+/
       head_id, relation = token.split(/\+/)
       s = Sentence.find(Token.find(head_id).sentence_id)
-      relation = Relation.find_by_tag(relation)
-      tts =  s.tokens.find(:all, :conditions => [ "head_id = ? and relation_id = ?", head_id, relation.id ] )
+      tts =  s.tokens.find(:all, :conditions => [ "head_id = ? and relation_tag = ?", head_id, relation ] )
       case tts.size
       when 0
         t = create_prodrop_relation(s, relation, head_id)
@@ -101,7 +100,7 @@ class InfoStatusesImportExport < CSVImportExport
       t = Token.find(token.to_i)
     end
 
-    t.info_status = info_status
+    t.information_status_tag = information_status
     t.save!
 
     if antecedent != "" and antecedent != "missing"
@@ -109,9 +108,8 @@ class InfoStatusesImportExport < CSVImportExport
         ac = Token.find(antecedent)
       else
         head_id, relation = antecedent.split(/\+/)
-        relation = Relation.find_by_tag(relation)
         s2 = Token.find(head_id).sentence
-        acs = s2.tokens.find(:all, :conditions => [ "head_id = ? and relation_id = ?", head_id, relation.id ])
+        acs = s2.tokens.find(:all, :conditions => [ "head_id = ? and relation_tag = ?", head_id, relation ])
         case acs.size
         when 0
           ac = create_prodrop_relation(s2, relation, head_id)
@@ -126,12 +124,12 @@ class InfoStatusesImportExport < CSVImportExport
     end
   end
 
-  def create_prodrop_relation(sentence, relation, verb_id, info_status = nil)
+  def create_prodrop_relation(sentence, relation, verb_id, information_status = nil)
     sentence.append_new_token!(
                                :head_id => verb_id,
                                :relation => relation,
                                :empty_token_sort => 'P',
-                               :info_status => info_status).tap do
+                               :information_status_tag => information_status).tap do
 
       # This is needed after saving a new graph node to the database
       # in order to make sure that the new node is included in the
@@ -145,9 +143,9 @@ class InfoStatusesImportExport < CSVImportExport
 
   def write_fields
     conditions = if @sd
-                   ["info_status is not null and info_status != 'info_unannotatable' and sentence_id in (?)", @sd.sentences]
+                   ["information_status_tag is not null and information_status_tag != 'info_unannotatable' and sentence_id in (?)", @sd.sentences]
                  else
-                   ["info_status is not null and info_status != 'info_unannotatable'"]
+                   ["information_status_tag is not null and information_status_tag != 'info_unannotatable'"]
                  end
     Token.find(:all, :conditions => conditions).each do |t|
       case t.empty_token_sort
@@ -156,7 +154,7 @@ class InfoStatusesImportExport < CSVImportExport
       else
         token = t.id.to_s
       end
-      info_status = t.info_status
+      information_status = t.information_status_tag
       if t.antecedent_id
         ac = Token.find(t.antecedent_id)
         case ac.empty_token_sort
@@ -169,7 +167,7 @@ class InfoStatusesImportExport < CSVImportExport
         antecedent = nil
       end
 
-      yield token, info_status, antecedent
+      yield token, information_status, antecedent
     end
   end
 end

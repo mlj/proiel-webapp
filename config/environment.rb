@@ -12,6 +12,9 @@ Proiel::Application.configure do
 
   # The location for exported files.
   config.export_directory_path = Rails.root.join('public', 'exports')
+
+  # The location for tagset files.
+  config.tagset_file_path = Rails.root.join('config', 'tagsets')
 end
 
 # Initialize the rails application

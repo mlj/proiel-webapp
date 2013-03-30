@@ -30,7 +30,7 @@ module PROIEL
 
     def initialize(identifier, relation, head, data = {})
       @identifier = identifier
-      @relation = relation ? relation.to_sym : nil
+      @relation = relation ? relation.to_s.to_sym : nil
       @data = data
       @head = head
       @dependents = {}

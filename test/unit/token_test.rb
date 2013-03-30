@@ -77,28 +77,25 @@ class TokenTest < ActiveSupport::TestCase
   end
 
   def test_relation_assignment
-    pred = Relation.find_by_tag('pred')
-    obl = Relation.find_by_tag('obl')
-
     t = Token.first
-    t.relation = pred
+    t.relation = 'pred'
     t.save!
-    assert_equal pred.id, t.relation.id
-
-    t = Token.first
-    t.relation = obl
-    t.save!
-    assert_equal obl.id, t.relation.id
-
-    t = Token.first
-    t.relation = :pred
-    t.save!
-    assert_equal pred.id, t.relation.id
+    assert_equal RelationTag.new('pred'), t.relation
 
     t = Token.first
     t.relation = 'obl'
     t.save!
-    assert_equal obl.id, t.relation.id
+    assert_equal RelationTag.new('obl'), t.relation
+
+    t = Token.first
+    t.relation = :pred
+    t.save!
+    assert_equal RelationTag.new('pred'), t.relation
+
+    t = Token.first
+    t.relation = 'obl'
+    t.save!
+    assert_equal RelationTag.new('obl'), t.relation
   end
 
   # Splitting and merging of tokens

@@ -6,9 +6,9 @@ module InfoStatusesHelper
       css << "con-#{token.contrast_group}" if token.contrast_group
 
       if token.sentence == @sentence
-        if token.info_status and token.info_status != 'info_unannotatable'
+        if token.information_status_tag and token.information_status_tag != 'info_unannotatable'
           css << 'info-annotatable'
-          css << token.info_status.dasherize
+          css << token.information_status_tag.dasherize
         elsif token.is_annotatable?
           css << 'info-annotatable'
           css << 'no-info-status'

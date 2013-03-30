@@ -4,8 +4,8 @@ class PartOfSpeechTestCase < ActiveSupport::TestCase
   def setup
     @tag1 = 'R-'
     @tag2 = 'Df'
-    @m1 = PartOfSpeech.new(@tag1)
-    @m2 = PartOfSpeech.new(@tag2)
+    @m1 = PartOfSpeechTag.new(@tag1)
+    @m2 = PartOfSpeechTag.new(@tag2)
   end
 
   def test_tag_reader

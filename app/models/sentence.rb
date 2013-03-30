@@ -261,16 +261,16 @@ class Sentence < ActiveRecord::Base
       dependency_graph.nodes.each do |node|
         token = tokens.find(id_map[node.identifier])
         token.head_id = id_map[node.head.identifier]
-        token.relation = node.relation
+        token.relation_tag = node.relation
 
         # Slash edges are marked as dependent on the association level, so when we
         # destroyed empty tokens, the orphaned slashes should also have gone away.
         # The remaining slashes will however have to be updated "manually".
         token.slash_out_edges.each { |edge| edge.destroy }
         node.slashes_with_interpretations.each do |slashee, interpretation|
-          SlashEdge.create!(:slasher => token,
+          SlashEdge.create!(:slasher_id => token.id,
                             :slashee_id => id_map[slashee.identifier],
-                            :relation => Relation.find_by_tag(interpretation.to_s))
+                            :relation_tag => interpretation.to_s)
         end
         token.save!
       end
@@ -299,7 +299,7 @@ class Sentence < ActiveRecord::Base
 
     d[:structure] = (overlaid_features and ActiveSupport::JSON.decode(overlaid_features)) || (has_dependency_annotation? ? dependency_graph.to_h : {})
 
-    d[:relations] = Relation.primary
+    d[:relations] = RelationTag.all.select(&:primary)
 
     d
   end
@@ -486,10 +486,10 @@ class Sentence < ActiveRecord::Base
       if t.is_empty?
         t.destroy
       else
-        t.relation_id = nil
+        t.relation_tag = nil
         t.head_id = nil
         t.slash_out_edges.each { |sl| sl.destroy }
-        t.info_status = nil
+        t.information_status_tag = nil
         t.antecedent_id = nil
         t.save!
       end
@@ -577,8 +577,8 @@ class Sentence < ActiveRecord::Base
   # Returns the dependency graph for the sentence.
   def dependency_graph
     PROIEL::DependencyGraph.new do |g|
-      tokens.takes_syntax.each { |t| g.badd_node(t.id, t.relation.tag, t.head ? t.head.id : nil,
-                                                           Hash[*t.slash_out_edges.map { |se| [se.slashee.id, se.relation.tag ] }.flatten],
+      tokens.takes_syntax.each { |t| g.badd_node(t.id, t.relation_tag, t.head ? t.head.id : nil,
+                                                           Hash[*t.slash_out_edges.map { |se| [se.slashee.id, se.relation_tag ] }.flatten],
                                                            { :empty => t.empty_token_sort || false,
                                                              :token_number => t.token_number,
                                                              :morph_features => t.morph_features,

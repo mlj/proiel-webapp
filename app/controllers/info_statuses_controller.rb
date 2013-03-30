@@ -108,7 +108,8 @@ class InfoStatusesController < ApplicationController
             contrast_group = part.slice('con-'.length..-1)
           when 'null'
             # the "category" of a member of a contrast group which is from a non-focussed sentence
-          else category = part
+          else
+            category = part
           end
         end
 
@@ -118,9 +119,10 @@ class InfoStatusesController < ApplicationController
           :antecedent_id => antecedent_id,
           :contrast_group => contrast_group
         }
+
         # Only set the info status category of the token unless it is null (which will happen if the
         # token is not part of the focussed sentence but is nevertheless included in a contrast group)
-        attr[:info_status] = category.tr('-', '_') if category
+        attr[:information_status_tag] = category.tr('-', '_') if category
 
         if id.starts_with?('new')
           new_attributes_ary << attr
@@ -136,9 +138,9 @@ class InfoStatusesController < ApplicationController
   def create_prodrop_relation(prodrop_id, prodrop_attr)
     @sentence.append_new_token!(
       :head_id => prodrop_attr[:verb_id],
-      :relation => prodrop_attr[:relation],
+      :relation_tag => prodrop_attr[:relation],
       :empty_token_sort => 'P',
-      :info_status => prodrop_attr[:info_status]).tap do
+      :information_status_tag => prodrop_attr[:information_status]).tap do
 
       # This is needed after saving a new graph node to the database
       # in order to make sure that the new node is included in the

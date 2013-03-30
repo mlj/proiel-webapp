@@ -7,6 +7,6 @@
   != form.input :title, :as => :string
   != form.input :edition, :as => :string
   != form.input :citation_part
-  != form.input :language_tag, :label => 'Language', :collection => Language.all
+  != form.input :language_tag, :label => 'Language', :collection => LanguageTag.all
   != form.input :tei_header, :label => 'TEI header'
   != form.submit 'Update'

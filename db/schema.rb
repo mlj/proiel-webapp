@@ -91,18 +91,6 @@ ActiveRecord::Schema.define(:version => 20130330195707) do
 
   add_index "notes", ["notable_id", "notable_type"], :name => "idx_notes_notable"
 
-  create_table "relation_equivalences", :id => false, :force => true do |t|
-    t.integer "subrelation_id",   :null => false
-    t.integer "superrelation_id", :null => false
-  end
-
-  create_table "relations", :force => true do |t|
-    t.string  "tag",                :limit => 64,  :default => "",    :null => false
-    t.string  "summary",            :limit => 128, :default => "",    :null => false
-    t.boolean "primary_relation",                  :default => false, :null => false
-    t.boolean "secondary_relation",                :default => false, :null => false
-  end
-
   create_table "semantic_attribute_values", :force => true do |t|
     t.integer  "semantic_attribute_id",               :default => 0,  :null => false
     t.string   "tag",                   :limit => 64, :default => "", :null => false
@@ -167,7 +155,7 @@ ActiveRecord::Schema.define(:version => 20130330195707) do
   create_table "slash_edges", :force => true do |t|
     t.integer "slasher_id"
     t.integer "slashee_id"
-    t.integer "relation_id", :default => 0, :null => false
+    t.string  "relation_tag", :limit => 8, :default => "0", :null => false
   end
 
   add_index "slash_edges", ["slasher_id", "slashee_id"], :name => "idx_slash_edges_ser_see", :unique => true
@@ -203,14 +191,14 @@ ActiveRecord::Schema.define(:version => 20130330195707) do
     t.string   "source_morphology_tag",     :limit => 11
     t.string   "source_lemma",              :limit => 32
     t.text     "foreign_ids"
-    t.string   "info_status",               :limit => 20
+    t.string   "information_status_tag",    :limit => 20
     t.string   "empty_token_sort",          :limit => 1
     t.string   "contrast_group"
     t.integer  "token_alignment_id"
     t.boolean  "automatic_token_alignment",               :default => false
     t.integer  "dependency_alignment_id"
     t.integer  "antecedent_id"
-    t.integer  "relation_id"
+    t.string   "relation_tag",              :limit => 8
     t.string   "morphology_tag",            :limit => 11
     t.string   "citation_part",             :limit => 64, :default => "",    :null => false
     t.string   "presentation_before",       :limit => 32
@@ -224,7 +212,7 @@ ActiveRecord::Schema.define(:version => 20130330195707) do
   add_index "tokens", ["head_id"], :name => "index_tokens_on_head_id"
   add_index "tokens", ["lemma_id"], :name => "index_tokens_on_lemma_id"
   add_index "tokens", ["morphology_tag"], :name => "index_tokens_on_morphology_id"
-  add_index "tokens", ["relation_id"], :name => "index_tokens_on_relation_id"
+  add_index "tokens", ["relation_tag"], :name => "index_tokens_on_relation_id"
   add_index "tokens", ["sentence_id", "token_number"], :name => "idx_tokens_sid_tnur", :unique => true
   add_index "tokens", ["token_alignment_id"], :name => "idx_tokens_tokalid"
 

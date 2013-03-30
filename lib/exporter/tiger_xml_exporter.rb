@@ -82,13 +82,13 @@ class TigerXMLExporter < XMLSourceExporter
 
   def declare_primary_edges(builder)
     builder.value(:name => '--')
-    Relation.primary.each do |relation|
+    RelationTag.all.select(&:primary).each do |relation|
       builder.value({:name => relation.tag}, relation.summary)
     end
   end
 
   def declare_secedges(builder)
-    Relation.all.each do |relation|
+    RelationTag.all.select(&:secondary).each do |relation|
       builder.value({:name => relation.tag}, relation.summary)
     end
   end

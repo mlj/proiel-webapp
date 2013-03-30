@@ -88,7 +88,7 @@ class Validator < Task
 
   def check_manual_morphology(logger)
     closed_regexp = /^(#{MorphFeatures::OPEN_MAJOR.join('|')})/
-    PartOfSpeech.all.select { |pos| pos.tag[closed_regexp] }.each do |pos|
+    PartOfSpeechTag.all.select { |pos| pos.tag[closed_regexp] }.each do |pos|
       Lemma.find_by_part_of_speech(pos.tag).each do |lemma|
         lemma.tokens.each do |token|
           unless Inflection.exists?(:language => lemma.language, :form => token.form, :morphology => token.morphology, :manual_rule => true)

@@ -4,8 +4,8 @@ class LanguageTestCase < ActiveSupport::TestCase
   def setup
     @tag1 = 'lat'
     @tag2 = 'grc'
-    @m1 = Language.new(@tag1)
-    @m2 = Language.new(@tag2)
+    @m1 = LanguageTag.new(@tag1)
+    @m2 = LanguageTag.new(@tag2)
   end
 
   def test_tag_reader

@@ -1,0 +1,114 @@
+adnom:
+  primary: true
+  secondary: true
+  summary: adnominal
+  subrelations:
+  - part
+  - rel
+  - atr
+  - apos
+  - narg
+adv:
+  primary: true
+  secondary: true
+  summary: adverbial
+ag:
+  primary: true
+  secondary: true
+  summary: agens
+apos:
+  primary: true
+  secondary: true
+  summary: apposition
+arg:
+  primary: true
+  secondary: true
+  summary: argument (object or oblique)
+  subrelations:
+  - obj
+  - obl
+atr:
+  primary: true
+  secondary: true
+  summary: attribute
+aux:
+  primary: true
+  secondary: true
+  summary: auxiliary
+comp:
+  primary: true
+  secondary: true
+  summary: complement
+expl:
+  primary: true
+  secondary: true
+  summary: expletive
+narg:
+  primary: true
+  secondary: true
+  summary: adnominal argument
+nonsub:
+  primary: true
+  secondary: true
+  summary: non-subject (object, oblique or adverbial)
+  subrelations:
+  - per
+  - arg
+obj:
+  primary: true
+  secondary: true
+  summary: object
+obl:
+  primary: true
+  secondary: true
+  summary: oblique
+parpred:
+  primary: true
+  secondary: true
+  summary: parenthetical predication
+part:
+  primary: true
+  secondary: true
+  summary: partitive
+per:
+  primary: true
+  secondary: true
+  summary: peripheral (oblique or adverbial)
+  subrelations:
+  - obl
+  - adv
+pid:
+  primary: false
+  secondary: true
+  summary: Predicate identity
+pred:
+  primary: true
+  secondary: true
+  summary: predicate
+rel:
+  primary: true
+  secondary: true
+  summary: apposition or attribute
+  subrelations:
+  - apos
+  - atr
+sub:
+  primary: true
+  secondary: true
+  summary: subject
+voc:
+  primary: true
+  secondary: true
+  summary: vocative
+xadv:
+  primary: true
+  secondary: true
+  summary: open adverbial complement
+xobj:
+  primary: true
+  secondary: true
+  summary: open objective complement
+xsub:
+  primary: false
+  secondary: true
+  summary: external subject

@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2012 University of Oslo
-# Copyright 2012 Marius L. Jøhndal
+# Copyright 2012, 2013 University of Oslo
+# Copyright 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,76 +21,123 @@
 #
 #++
 
-class TagSet
-  def initialize(name)
-    @tags = YAML.load_file(Rails.root.join('lib', 'tagset', "#{name}.yml")).stringify_keys.freeze
+module TagObjectMixin
+  class << self
+    def included(base)
+      base.extend ClassMethods
+    end
   end
 
-  def tags
-    @tags.keys
-  end
+  module ClassMethods
+    # Loads a static model from a file.
+    def model_file_name(file_name)
+      full_file_name = Rails.root.join(Proiel::Application.config.tagset_file_path, file_name)
+      #@model = JSON.parse(File.read(file_name)).freeze
+      @model = YAML.load_file(full_file_name).stringify_keys.freeze
+    end
 
-  def [](tag)
-    @tags[tag.to_s]
-  end
+    # Sets a dynamic model. The proxy generator object should behave like a
+    # Hash-like object and minimally respond to +has_key?+, +keys+, +to_hash+ and
+    # +[]+. The objects returned by +[]+ should minimally respond to valid
+    # attributes of the model and return their values.
+    def model_generator(proxy_object)
+      @model = proxy_object
+    end
 
-  def has_tag?(tag)
-    @tags.has_key?(tag.to_s)
-  end
+    def all
+      tags.map { |tag| self.new(tag.to_s) }
+    end
 
-  def all
-    @tags
+    def to_hash
+      @model.to_hash
+    end
+
+    def tags
+      @model.keys
+    end
+
+    def include?(tag)
+      if tag.nil?
+        false
+      else
+        @model.has_key?(tag.to_s)
+      end
+    end
+
+    def find(tag)
+      if tag.nil?
+        nil
+      else
+        self.new(tag.to_s)
+      end
+    end
+
+    def [](tag)
+      find(tag)
+    end
+
+    def find_model_object(tag)
+      if tag.nil?
+        nil
+      else
+        @model[tag.to_s]
+      end
+    end
   end
 end
 
-class TagSets
-  def self.load_tag_set(name)
-    @@tag_sets ||= {}
-    @@tag_sets[name.to_s] = TagSet.new(name.to_s)
+# A tag object presenting the value of a tag attribute. Tag objects are (value
+# objects)[http://c2.com/cgi/wiki?ValueObject] intended for attributes that can
+# have a value from a finite set of strings, where each string maps to
+# additional (immutable) information, e.g. a human-readable description of the
+# semantics of the attribute value in question.
+class TagObject
+  include Comparable
+  include TagObjectMixin
+
+  attr_reader :tag
+
+  def initialize(tag)
+    @tag = tag.to_s
+    @obj = self.class.find_model_object(tag.to_s)
+    raise "invalid tag #{tag}" if @obj.nil?
   end
 
-  def self.add_dynamic_tag_set(name, klass)
-    @@tag_sets ||= {}
-    @@tag_sets[name.to_s] = klass.new(name)
+  def <=>(o)
+    @tag <=> o.tag
   end
 
-  def self.has_tag_set?(name)
-    @@tag_sets.has_key?(name.to_s)
+  def to_s
+    @tag
   end
 
-  def self.[](name)
-    @@tag_sets[name.to_s]
+  def method_missing(m, *args)
+    if @obj and @obj.has_key?(m.to_s)
+      if args.empty?
+        @obj[m.to_s]
+      else
+        raise ArgumentError, "wrong number of arguments #{args.count} for 0)"
+      end
+    else
+      super m, *args
+    end
   end
 end
-
-class LanguageTagSet < TagSet
-  def initialize(name)
-    @tags = Hash[*ISOCodes.all_iso_639_3_codes.map do |tag|
-      [tag.to_s, ISOCodes.find_language(tag).reference_name]
-    end.flatten].freeze
-  end
-end
-
-class MorphologyTagSet < TagSet
-  def initialize(name)
-    @tags = {}
-  end
-end
-
-TagSets.load_tag_set 'information_structure'
-TagSets.load_tag_set 'part_of_speech'
-#TagSets.add_dynamic_tag_set 'morphology', MorphologyTagSet
-TagSets.add_dynamic_tag_set 'language', LanguageTagSet
 
 module ActiveRecord
   module Validations
     module ClassMethods
-      # Validates that the value of the specified attribute is a valid tag
-      # in the given tag set.
-      def validates_tag_set_inclusion_of(attribute, tag_set, options = {})
-        raise ArgumentError, "invalid tag set #{tag_set}" unless TagSets.has_tag_set?(tag_set)
+      def tag_attribute(part_id, attribute, tag_klass, options = {})
+        new_options = options.dup
+        new_options[:message] = "%{value} is not a valid #{tag_klass.to_s.underscore.humanize.downcase}" unless options[:message]
+        new_options[:in] = tag_klass # tag_klass responds to include?
+        validates_inclusion_of attribute, new_options
 
-        validates_inclusion_of attribute, options.merge({ :in => TagSets[tag_set].tags })
+        new_options = options.dup
+        new_options[:mapping] = [attribute, 'to_s']
+        new_options[:converter] = proc { |x| tag_klass.new(x) }
+        new_options[:class_name] = tag_klass.to_s
+        composed_of part_id, new_options
       end
     end
   end

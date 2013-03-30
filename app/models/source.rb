@@ -29,15 +29,13 @@ class Source < ActiveRecord::Base
   validates_uniqueness_of :title
   validates_presence_of :citation_part
 
-  composed_of :language, :mapping => %w(language_tag to_s), :converter => Proc.new { |x| Language.new(x) }
+  tag_attribute :language, :language_tag, LanguageTag, :allow_nil => false
 
   has_many :source_divisions
 
   composed_of :metadata, :class_name => 'Metadata', :mapping => %w(tei_header)
 
   has_many :dependency_alignment_terminations
-
-  validates_tag_set_inclusion_of :language_tag, :language, :allow_nil => false, :message => "%{value} is not a valid language tag"
 
   # Returns a citation for the source.
   def citation
@@ -52,7 +50,7 @@ class Source < ActiveRecord::Base
 
   # Returns an array of all languages represented in sources.
   def self.represented_languages
-    Source.uniq.pluck(:language_tag).map { |l| Language.new(l) }.sort_by(&:to_label)
+    Source.uniq.pluck(:language_tag).map { |l| LanguageTag.new(l) }.sort_by(&:to_label)
   end
 
   def to_label

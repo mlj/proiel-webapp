@@ -22,7 +22,6 @@ class TaggerTest < ActiveSupport::TestCase
     @ne_i_fs = MorphFeatures.new("ne,I-,lat", "---------n")
     @ne_df_fs = MorphFeatures.new("ne,Df,lat", "---------n")
     @neo_df_fs = MorphFeatures.new("neo,Df,lat", "---------n")
-    @incomplete_d_fs = MorphFeatures.new(",D-,lat", nil)
   end
 
   def test_loading
@@ -59,10 +58,12 @@ class TaggerTest < ActiveSupport::TestCase
   def test_existing_tag_influence_incomplete_tag
     tagger = Tagger::Tagger.new(TEST_CONFIG_FILE, TEST_DEFAULT_OPTIONS)
 
+    incomplete_d_fs = MorphFeatures.new(",Df,lat", nil)
+
     # Existing tag is incomplete
     assert_equal [:ambiguous, @ne_df_fs,
       [@ne_df_fs, 1.0], [@ne_i_fs, 0.5], [@ne_c_fs, 0.5],
-    ], tagger.tag_token(:lat, 'ne', @incomplete_d_fs)
+    ], tagger.tag_token(:lat, 'ne', incomplete_d_fs)
   end
 
   def test_existing_tag_influence_complete_tag_but_contradictory_lemma

@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -20,41 +20,33 @@
 #
 #++
 
-class Language
-  include Comparable
+class LanguageTag < TagObject
+  class LanguageTagProxyObject
+    def has_key?(tag)
+      not ISOCodes.find_iso_639_3_language(tag).nil?
+    end
 
-  attr_reader :tag
+    def keys
+      ISOCodes.all_iso_639_3_codes
+    end
 
-  def self.all
-    ISOCodes.all_iso_639_3_codes.map { |l| Language.new(l) }.sort_by(&:name)
-  end
+    def [](tag)
+      { 'name' => ISOCodes.find_language(tag).reference_name }
+    end
 
-  def self.find(tag)
-    if ISOCodes.find_language(tag)
-      Language.new(tag)
-    else
-      nil
+    def to_hash
+      Hash[*ISOCodes.all_iso_639_3_codes.map do |tag|
+        [tag, { 'name' => ISOCodes.find_language(tag).reference_name }]
+      end.flatten]
     end
   end
 
-  def initialize(tag)
-    raise ArgumentError, "invalid language code" if ISOCodes.find_language(tag).blank?
-    @tag = tag
-  end
+  model_generator LanguageTagProxyObject.new
 
-  # Returns the language code as a string. Equivalent to
-  # +language.tag+.
-  def to_s
-    tag
-  end
+  alias :language :tag
 
-  def language
-    tag
-  end
-
-  def name
-    # Successful lookup is verified in constructor.
-    ISOCodes.find_language(tag).reference_name
+  def to_label
+    name
   end
 
   # Returns inferred morphology for a word form in the language.
@@ -83,7 +75,7 @@ class Language
   # as two arrays: one with the transliterations of the query and one
   # with completions.
   def self.find_lemma_completions(language_code, query)
-    language = Language.new(language_code)
+    language = LanguageTag.new(language_code)
 
     if language
       if t = language.transliterator
@@ -102,19 +94,11 @@ class Language
     end
   end
 
-  def <=>(x)
-    self.tag <=> x.tag
-  end
-
   def errors
     ActiveModel::Errors.new(self)
   end
 
   def lemmata
     Lemma.where(:language_tag => tag).order('lemma ASC')
-  end
-
-  def to_label
-    name
   end
 end

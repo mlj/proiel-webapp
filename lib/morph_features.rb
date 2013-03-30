@@ -24,11 +24,10 @@ class PartOfSpeech
   def initialize(tag)
     @tag = tag
 
-    t = TagSets[:part_of_speech][tag]
-
-    if t
-      @summary = t['summary']
-      @abbreviated_summary = t['abbreviated_summary']
+    if PartOfSpeechTag.include?(tag)
+      t = PartOfSpeechTag[tag]
+      @summary = t.summary
+      @abbreviated_summary = t.abbreviated_summary
     else
       @summary = nil
       @abbreviated_summary = nil
@@ -36,12 +35,12 @@ class PartOfSpeech
   end
 
   def valid?
-    TagSets[:part_of_speech].has_key?(tag)
+    PartOfSpeechTag.include?(tag)
   end
 
   # Returns an array of all parts of speech.
   def self.all
-    TagSets[:part_of_speech].tags.sort.map { |tag| PartOfSpeech.new(tag) }
+    PartOfSpeechTag.all
   end
 
   def fields
@@ -51,7 +50,7 @@ class PartOfSpeech
   # Returns a hash with part of speech tags as keys and summaries as
   # values.
   def self.tag_and_summary_hash
-    TagSets[:part_of_speech].all
+    PartOfSpeechTag.all
   end
 
   def major
@@ -93,16 +92,17 @@ class MorphFeatures
       base_and_variant, pos, language = lemma.split(',')
       raise ArgumentError, "missing language" if language.blank?
 
-      language = Language.find(language)
+      language = LanguageTag.find(language)
       raise ArgumentError, "invalid language" unless language
 
       base, variant = base_and_variant.split('#')
       raise ArgumentError, "invalid variant" unless variant.nil? or variant.to_i > 0
 
       if pos and pos.gsub('-', '') != ''
+        pos = pos + '-' if pos.length == 1
         part_of_speech = PartOfSpeech.new(pos)
 
-        @lemma = Lemma.find_by_part_of_speech_and_lemma_and_variant_and_language(part_of_speech, base, variant, language) if part_of_speech
+        @lemma = Lemma.find_by_part_of_speech_tag_and_lemma_and_variant_and_language(part_of_speech.tag, base, variant, language) if part_of_speech
       else
         part_of_speech = nil
       end
@@ -157,12 +157,12 @@ class MorphFeatures
     morphology_abbrev_s.gsub('-', '_') + '%'
   end
 
-  MORPHOLOGY_SUMMARIES = YAML.load_file(Rails.root.join('lib', 'tagset', 'morphology.yml')).inject({}) do |m, v|
+  MORPHOLOGY_SUMMARIES = YAML.load_file(Rails.root.join(Proiel::Application.config.tagset_file_path, 'morphology.yml')).inject({}) do |m, v|
     m[v[0]] = v[1].inject({}) { |m2, v2| m2[v2[0]] = v2[1]["summary"]; m2 }
     m
   end
 
-  MORPHOLOGY_ABBREVIATED_SUMMARIES = YAML.load_file(Rails.root.join('lib', 'tagset', 'morphology.yml')).inject({}) do |m, v|
+  MORPHOLOGY_ABBREVIATED_SUMMARIES = YAML.load_file(Rails.root.join(Proiel::Application.config.tagset_file_path, 'morphology.yml')).inject({}) do |m, v|
     m[v[0]] = v[1].inject({}) { |m2, v2| m2[v2[0]] = v2[1]["abbreviated_summary"]; m2 }
     m
   end

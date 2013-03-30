@@ -6,7 +6,7 @@ one:
   form: cum
   presentation_after: ", "
   lemma_id: 1000001
-  relation: MyText
+  relation_tag: MyText
   head: 1
   citation_part: "1.1"
 two:
@@ -17,7 +17,7 @@ two:
   form: cum
   presentation_after: " "
   lemma_id: 1000002
-  relation: MyText
+  relation_tag: MyText
   head: 1
   citation_part: "1.2"
 three:
@@ -29,7 +29,7 @@ three:
   presentation_before: "("
   presentation_after: ") "
   lemma_id: 1000002
-  relation: MyText
+  relation_tag: MyText
   head: 1
   citation_part: "1.3"
 four:
@@ -40,7 +40,7 @@ four:
   form: cum
   presentation_after: "!"
   lemma_id: 1000002
-  relation: MyText
+  relation_tag: MyText
   head: 1
   citation_part: "1.4"
 latin_word:

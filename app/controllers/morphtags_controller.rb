@@ -9,7 +9,7 @@ class MorphtagsController < ApplicationController
       @transliterations = []
       @completions = []
     else
-      @transliterations, c = Language.find_lemma_completions(params[:morphtags][:language], params[:morphtags][:lemma])
+      @transliterations, c = LanguageTag.find_lemma_completions(params[:morphtags][:language], params[:morphtags][:lemma])
       @completions = c.map(&:export_form).sort.uniq
     end
 

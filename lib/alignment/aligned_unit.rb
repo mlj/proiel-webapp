@@ -31,7 +31,7 @@
 require 'memoize'
 include Memoize
 
-GRC = Language.new('grc')
+GRC = LanguageTag.new('grc')
 
 class AlignedUnit < Hash
   POS_DISTANCES = {
