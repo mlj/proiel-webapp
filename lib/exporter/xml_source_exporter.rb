@@ -1,8 +1,9 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2013 University of Oslo
-# Copyright 2013 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2010, 2011, 2012 Dag Haug
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,9 +22,14 @@
 #
 #++
 
-require 'exporter/source_exporter'
-require 'exporter/proiel_xml_exporter.rb'
-require 'exporter/text_exporter.rb'
-require 'exporter/conll_exporter.rb'
-require 'exporter/tiger_xml_exporter.rb'
-require 'exporter/tiger2_exporter.rb'
+class XMLSourceExporter < SourceExporter
+  def validate!(file_name)
+    if self.class.respond_to?(:schema_file_name)
+      unless system("xmllint --path #{Proiel::Application.config.schema_file_path} --nonet --schema #{File.join(Proiel::Application.config.schema_file_path, self.class.schema_file_name)} --noout #{file_name}")
+        raise "exported XML does not validate"
+      end
+    else
+      raise "no schema file name defined"
+    end
+  end
+end

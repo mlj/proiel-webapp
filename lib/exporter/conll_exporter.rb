@@ -33,7 +33,15 @@ class CoNLLExporter < SourceExporter
       m
     end
 
-    s.tokens.visible.find_each do |t|
+    yield [file, id_to_number]
+
+    file.puts
+  end
+
+  def write_token!(context, t)
+    file, id_to_number = context
+
+    if t.is_visible?
       hr = find_lexical_head_and_relation(id_to_number, t)
 
       file.puts([id_to_number[t.id],
@@ -47,8 +55,6 @@ class CoNLLExporter < SourceExporter
                  "_",
                  "_"].join("\t"))
     end
-
-    file.puts
   end
 
   private

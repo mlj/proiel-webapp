@@ -48,14 +48,14 @@ class SourceExporter
           sds = @source.source_divisions.order(:position)
           sds = sds.where(:id => @options[:source_division]) if @options[:source_division]
 
-          sds.find_each do |sd|
+          sds.each do |sd|
             write_source_division!(context, sd) do |context|
               ss = sd.sentences.order(:sentence_number)
               ss = ss.reviewed if @options[:reviewed_only]
 
-              ss.find_each do |s|
+              ss.each do |s|
                 write_sentence!(context, s) do |context|
-                  s.tokens.order(:token_number).includes(:lemma, :slash_out_edges).find_each do |t|
+                  s.tokens.order(:token_number).includes(:lemma, :slash_out_edges).each do |t|
                     write_token!(context, t)
                   end
                 end
@@ -91,13 +91,5 @@ class SourceExporter
   end
 
   def validate!(file_name)
-  end
-end
-
-class XMLSourceExporter < SourceExporter
-  def validate!(file_name)
-    if respond_to?(:schema_file_name)
-      `xmllint --path #{Proiel::Application.config.schema_file_path} --nonet --schema #{File.join(Proiel::Application.config.schema_file_path, schema_file_name)} --noout #{file_name}`
-    end
   end
 end

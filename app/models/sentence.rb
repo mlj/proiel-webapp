@@ -203,6 +203,23 @@ class Sentence < ActiveRecord::Base
     status # deprecated
   end
 
+  # TODO: implement this better
+  def status=(new_status, user_id = nil)
+    case new_status.to_sym
+    when :reviewed
+      annotated_at, annotated_by = Time.now, user_id
+      reviewed_at, reviewed_by = Time.now, user_id
+    when :annotated
+      annotated_at, annotated_by = Time.now, user_id
+      reviewed_at, reviewed_by = nil, nil
+    when :unannotated
+      annotated_at, annotated_by = nil, nil
+      reviewed_at, reviewed_by = nil, nil
+    else
+      raise ArgumentError, 'invalid status'
+    end
+  end
+
   # Returns the completion state.
   def status
     if is_reviewed?

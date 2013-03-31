@@ -34,7 +34,7 @@ class PROIELXMLExporter < XMLSourceExporter
     builder = Builder::XmlMarkup.new(:target => file, :indent => 2)
     builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
 
-    builder.proiel do
+    builder.proiel('export-time' => DateTime.now.xmlschema, 'schema-version' => "1.0") do
       builder.annotation do
         builder.relations do
           RelationTag.all.each do |value|
@@ -108,7 +108,7 @@ class PROIELXMLExporter < XMLSourceExporter
 
   def write_token!(builder, t)
     mandatory_features = %w(id)
-    optional_features = %w(citation_part lemma morphology head_id relation
+    optional_features = %w(citation_part lemma part_of_speech morphology head_id relation
                            antecedent_id information_status contrast_group)
 
     if t.empty_token_sort.blank?
@@ -144,14 +144,14 @@ class PROIELXMLExporter < XMLSourceExporter
     mandatory_features.each do |f|
       v = obj.send(f.to_sym)
 
-      attrs[f.to_s.gsub('_', '-')] = v.to_s
+      attrs[f.to_s.gsub('_', '-')] = (v.respond_to?(:export_form) ? v.export_form : v.to_s)
     end
 
     optional_features.each do |f|
       v = obj.send(f.to_sym)
 
       if v and v.to_s != ''
-        attrs[f.to_s.gsub('_', '-')] = v.to_s
+        attrs[f.to_s.gsub('_', '-')] = (v.respond_to?(:export_form) ? v.export_form : v.to_s)
       end
     end
 

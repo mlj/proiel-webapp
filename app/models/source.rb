@@ -26,7 +26,6 @@ class Source < ActiveRecord::Base
   change_logging
 
   validates_presence_of :title
-  validates_uniqueness_of :title
   validates_presence_of :citation_part
 
   tag_attribute :language, :language_tag, LanguageTag, :allow_nil => false

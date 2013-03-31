@@ -3,16 +3,14 @@
 <!-- PROIEL XML format version 1.0 -->
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:tei="http://www.tei-c.org/ns/1.0">
+  xmlns:tei="http://www.tei-c.org/ns/1.0">
   <xs:import namespace="http://www.w3.org/XML/1998/namespace"
              schemaLocation="http://www.w3.org/2001/xml.xsd"/>
   <xs:import namespace="http://www.tei-c.org/ns/1.0"
              schemaLocation="http://www.tei-c.org/release/xml/tei/custom/schema/xsd/teilite.xsd"/>
 
   <xs:annotation>
-    <xs:documentation xml:lang="en">
-      PROIEL XML format version 1.0
-    </xs:documentation>
+    <xs:documentation xml:lang="en">PROIEL XML format version 1.0</xs:documentation>
   </xs:annotation>
 
   <xs:complexType name="Source">
@@ -68,6 +66,7 @@
 
     <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
     <xs:attribute name="lemma" type="xs:string" use="optional"/>
+    <xs:attribute name="part-of-speech" type="xs:string" use="optional"/>
     <xs:attribute name="morphology" type="xs:string" use="optional"/>
     <xs:attribute name="citation-part" type="xs:string" use="optional"/>
     <xs:attribute name="relation" type="xs:string" use="optional"/>
@@ -165,6 +164,8 @@
       <xs:element name='annotation' minOccurs="1" maxOccurs="1" type='Annotation'/>
       <xs:element name='source' minOccurs="1" maxOccurs="unbounded" type='Source'/>
     </xs:sequence>
+    <xs:attribute name='export-time' type="xs:dateTime" use="required"/>
+    <xs:attribute name="schema-version" type="xs:decimal" use="required" fixed="1.0"/>
   </xs:complexType>
 
   <xs:element name='proiel' type='Proiel'/>

@@ -16,8 +16,6 @@ namespace :proiel do
   namespace :text do
     desc "Import a PROIEL source text. Options: FILE=data_file"
     task(:import => :environment) do
-      require 'importer'
-
       options = {}
 
       case ENV['FORMAT']
@@ -29,13 +27,11 @@ namespace :proiel do
       end
 
       raise "Filename required" unless ENV['FILE']
-      File.open(ENV['FILE']) { |f| klass.new.read(f) }
+      klass.new.read(ENV['FILE'])
     end
 
     desc "Export a PROIEL source text. Optional options: ID=database ID of source (FORMAT={proiel|conll|tigerxml|tiger2} MODE={all|reviewed} DIRECTORY=destination_directory INFO=semtags SOURCE_DIVISION=source division title regexp REMOVE_CYCLES={none|heads|all})"
     task(:export => :environment) do
-      require 'exporter'
-
       options = {}
 
       case ENV['FORMAT']
