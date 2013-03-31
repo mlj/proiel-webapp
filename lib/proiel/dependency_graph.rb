@@ -464,9 +464,9 @@ module PROIEL
         t.is_daughter_of_root? or t.head.pos == 'G-' or t.is_coordinated?
       end
 
-      test_token("A subjunction may only be the dependent in a COMP, ADV, AUX or APOS relation",
+      test_token("A subjunction may only be the dependent in a COMP, ADV, AUX, ATR or APOS relation",
                  lambda { |t| t.pos == 'G-' }) do |t|
-        t.relation == :comp or t.relation == :adv or t.relation == :apos or t.relation == :aux
+        t.relation == :comp or t.relation == :adv or t.relation == :apos or t.relation == :aux or t.relation == :atr
       end
 
       nodes.select { |t| t.has_slashes? and t.slashes.any?(&:nil?) }.each do |t|
