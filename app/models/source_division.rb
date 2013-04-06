@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #--
 #
 # Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
@@ -26,6 +27,8 @@ require 'differ'
 class SourceDivision < ActiveRecord::Base
   attr_accessible :source_id, :position, :title, :aligned_source_division_id, :presentation_before, :presentation_after
   change_logging
+  blankable_attributes :aligned_source_division_id, :created_at,
+    :presentation_after, :presentation_before, :title, :updated_at
 
   belongs_to :source
   has_many :sentences

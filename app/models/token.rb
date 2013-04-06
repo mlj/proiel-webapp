@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #--
 #
 # Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
@@ -28,6 +29,11 @@ class Token < ActiveRecord::Base
     :morphology_tag, :citation_part, :presentation_before, :presentation_after,
     :relation_tag
   change_logging
+  blankable_attributes :antecedent_id, :automatic_token_alignment,
+    :contrast_group, :created_at, :dependency_alignment_id, :empty_token_sort,
+    :foreign_ids, :form, :head_id, :information_status_tag, :lemma_id,
+    :morphology_tag, :presentation_after, :presentation_before, :relation_tag,
+    :source_lemma, :source_morphology_tag, :token_alignment_id, :updated_at
 
   belongs_to :sentence
   belongs_to :lemma
@@ -394,20 +400,6 @@ class Token < ActiveRecord::Base
       errors[:base] << "Empty tokens must have NULL form" unless is_empty? and form.nil?
     end
   end
-
-  private
-
-  def before_validation_cleanup
-    self.morphology = nil if morphology.blank?
-    self.lemma_id = nil if lemma_id.blank?
-    self.source_morphology_tag = nil if source_morphology_tag.blank?
-    self.source_lemma = nil if source_lemma.blank?
-    self.foreign_ids = nil if foreign_ids.blank?
-    self.empty_token_sort = nil if empty_token_sort.blank?
-    self.form = nil if form.blank?
-  end
-
-  public
 
   def to_s
     [presentation_before, form, presentation_after].compact.join

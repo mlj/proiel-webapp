@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #--
 #
 # Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
@@ -24,6 +25,8 @@ class Lemma < ActiveRecord::Base
   attr_accessible :lemma, :variant, :short_gloss, :full_gloss, :sort_key,
     :foreign_ids, :language_tag, :part_of_speech_tag
   change_logging
+  blankable_attributes :created_at, :foreign_ids, :full_gloss, :short_gloss,
+    :sort_key, :updated_at, :variant
 
   has_many :tokens
   has_many :notes, :as => :notable, :dependent => :destroy
@@ -31,8 +34,6 @@ class Lemma < ActiveRecord::Base
 
   tag_attribute :language, :language_tag, LanguageTag, :allow_nil => false
   tag_attribute :part_of_speech, :part_of_speech_tag, PartOfSpeechTag, :allow_nil => false
-
-  before_validation :before_validation_cleanup
 
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
@@ -117,16 +118,6 @@ class Lemma < ActiveRecord::Base
       other_lemma.destroy
     end
   end
-
-  private
-
-  def before_validation_cleanup
-    self.variant = nil if variant.blank?
-    self.short_gloss = nil if short_gloss.blank?
-    self.foreign_ids = nil if foreign_ids.blank?
-  end
-
-  public
 
   def to_s
     [export_form, part_of_speech.to_s].join(',')

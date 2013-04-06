@@ -39,6 +39,7 @@ module Proiel
 end
 
 require 'ordering'
+require 'blankable'
 
 require 'proiel/dependency_graph'
 require 'proiel/tagger'
