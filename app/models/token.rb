@@ -62,20 +62,6 @@ class Token < ActiveRecord::Base
 
   before_validation :before_validation_cleanup
 
-  # General schema-defined validations
-  validates_presence_of :sentence_id
-  validates_presence_of :token_number
-
-  # Constraint: t.sentence.reviewed_by => t.lemma_id
-  validates_presence_of :lemma, :if => lambda { |t| t.is_morphtaggable? and t.sentence.reviewed_by }
-
-  # Constraint: t.lemma_id <=> t.morphology
-  validates_presence_of :lemma, :if => lambda { |t| t.morphology }
-  validates_presence_of :morphology, :if => lambda { |t| t.lemma }
-
-  # Constraint: t.head_id => t.relation_tag
-  validates_presence_of :relation_tag, :if => lambda { |t| !t.head_id.nil? }
-
   # form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM
 
@@ -89,8 +75,8 @@ class Token < ActiveRecord::Base
   delegate :language, :to => :sentence
   delegate :language_tag, :to => :sentence
 
-  # Specific validations
-  validate :validate_sort
+  validates :sentence_id, :token_number, :presence => true
+  validates_with Proiel::TokenAnnotationValidator
 
   ordered_on :token_number, "sentence.tokens"
 
@@ -238,10 +224,12 @@ class Token < ActiveRecord::Base
     !empty_token_sort.nil?
   end
 
-  # Returns true if this is a token that takes part in morphology tagging.
-  def is_morphtaggable?
+  # Returns true if this token is visible.
+  def is_visible?
     empty_token_sort.nil?
   end
+
+  alias :is_morphtaggable? :is_visible? # deprecated
 
   # Returns the dependency subgraph for the token as an unordered list.
   def subgraph_set
@@ -375,29 +363,6 @@ class Token < ActiveRecord::Base
         Token.where(:sentence_id => x.sentence.source_division.sentences.where('sentence_number > ? AND sentence_number < ?', x.sentence.sentence_number, y.sentence.sentence_number)).visible.count
     else
       raise ArgumentError, "token does not belong to the same source division"
-    end
-  end
-
-  private
-
-  def validate_sort
-    # morphology, source_morphology_tag, lemma and source_lemma may only
-    # be set if token is morphtaggable
-    unless is_morphtaggable?
-      errors.add(:morphology, "not allowed on non-morphtaggable token") unless morphology.nil?
-      errors.add(:source_morphology_tag, "not allowed on non-morphtaggable token") unless morphology.nil?
-      errors.add(:lemma, "not allowed on non-morphtaggable token") unless lemma.nil?
-      errors.add(:source_lemma, "not allowed on non-morphtaggable token") unless source_lemma.nil?
-    end
-
-    # if morph-features are set, are they valid?
-    if m = morph_features
-      errors[:base] << "morph-features #{m.to_s} are invalid" unless m.valid?
-    end
-
-    # sort :empty_dependency_token <=> form.nil?
-    if is_empty? or form.nil?
-      errors[:base] << "Empty tokens must have NULL form" unless is_empty? and form.nil?
     end
   end
 
@@ -650,6 +615,9 @@ class Token < ActiveRecord::Base
   def has_outgoing_relation_type?(srt)
     outgoing_semantic_relations.any? { |sr| sr.semantic_relation_type == srt }
   end
+
+  delegate :is_reviewed?, :to => :sentence
+  delegate :is_annotated?, :to => :sentence
 
   # Returns the completion state.
   def completion

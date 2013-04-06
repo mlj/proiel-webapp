@@ -36,6 +36,8 @@ autoload :PROIELXMLImporter, 'importer/proiel_xml_importer'
 autoload :Metadata, 'metadata'
 
 module Proiel
+  autoload :TokenAnnotationValidator, 'annotation_validator'
+  autoload :SentenceAnnotationValidator, 'annotation_validator'
 end
 
 require 'ordering'

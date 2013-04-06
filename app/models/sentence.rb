@@ -112,11 +112,8 @@ class Sentence < ActiveRecord::Base
     where(:source_division_id => source.source_divisions.map(&:id))
   end
 
-  # General schema-defined validations
-  validates_presence_of :source_division_id
-  validates_presence_of :sentence_number
-
-  validate :check_invariants
+  validates :source_division_id, :sentence_number, :presence => true
+  validates_with Proiel::SentenceAnnotationValidator
 
   # Language tag for the sentence
   delegate :language_tag, :to => :source_division
@@ -586,67 +583,6 @@ class Sentence < ActiveRecord::Base
     # TODO: add a validation rule that verifies that root_dependency_tokens only matches one
     # token?
     tokens.takes_syntax.dependency_root.first
-  end
-
-  def check_invariants
-    # FIXME? This breaks creation of new sentences
-    # # Constraint: sentence must have at least one token.
-    # if tokens.length < 1
-    #   errors.add_to_base("Sentence must have at least one token")
-    # end
-
-    # Pairwise attributes: reviewed_by && reviewed_at
-    # Pairwise attributes: annotated_by && annotated_at
-
-    #   is_reviewed? <=> reviewed_by    sentence is reviewed
-    #   is_annotated? <=> annotated_by  sentence is annotated
-    #   has_dependency_annotation       sentence is dependency annotated
-
-    # Invariant: sentence is reviewed => sentence is annotated
-    if is_reviewed? and not is_annotated?
-      errors[:base] << "Reviewed sentence must be annotated"
-    end
-
-    # Invariant: sentence is annotated => sentence is dependency annotated
-    if is_annotated? and not has_dependency_annotation?
-      errors[:base] << "Annotated sentence must have dependency annotation"
-    end
-
-    # Invariant: sentence is dependency annotated <=>
-    # all dependency tokens have non-nil relation attributes <=> there exists one
-    # dependency token with non-nil relation.
-    if tokens.takes_syntax.any?(&:relation) and not tokens.takes_syntax.all?(&:relation)
-      errors[:base] << "Dependency annotation must be complete"
-    end
-
-    tokens.takes_syntax.each do |t|
-      t.slash_out_edges.each do |se|
-        add_dependency_error("Unconnected slash edge", [t]) if se.slashee.nil?
-        add_dependency_error("Unlabeled slash edge", [t]) if se.relation.nil?
-      end
-    end
-
-    # Check each token for validity (this could of course also be done with validates_associated),
-    # but that leads to confusing error messages for users.
-    tokens.each do |t|
-      unless t.valid?
-        t.errors.to_a.each { |msg| add_dependency_error(msg, [t]) }
-      end
-    end
-
-    # Invariant: sentence is dependency annotated => dependency graph is valid
-    if has_dependency_annotation?
-      begin
-        dependency_graph.valid?(lambda { |token_ids, msg| add_dependency_error(msg, Token.find(token_ids)) })
-      rescue
-        errors[:base] << "An inconsistency in the dependency graph prevented validation"
-      end
-    end
-  end
-
-  def add_dependency_error(msg, tokens)
-    ids = tokens.collect(&:token_number)
-    errors[:base] << "Token #{ids.length == 1 ? 'number' : 'numbers'} #{ids.to_sentence}: #{msg}"
   end
 
   def to_s
