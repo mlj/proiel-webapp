@@ -28,12 +28,14 @@ class Token < ActiveRecord::Base
     :automatic_token_alignment, :dependency_alignment_id, :antecedent_id,
     :morphology_tag, :citation_part, :presentation_before, :presentation_after,
     :relation_tag
+
   change_logging
+
   blankable_attributes :antecedent_id, :automatic_token_alignment,
-    :contrast_group, :created_at, :dependency_alignment_id, :empty_token_sort,
-    :foreign_ids, :form, :head_id, :information_status_tag, :lemma_id,
-    :morphology_tag, :presentation_after, :presentation_before, :relation_tag,
-    :source_lemma, :source_morphology_tag, :token_alignment_id, :updated_at
+    :contrast_group, :dependency_alignment_id, :empty_token_sort, :foreign_ids,
+    :form, :head_id, :information_status_tag, :lemma_id, :morphology_tag,
+    :presentation_after, :presentation_before, :relation_tag, :source_lemma,
+    :source_morphology_tag, :token_alignment_id
 
   belongs_to :sentence
   belongs_to :lemma
@@ -59,8 +61,6 @@ class Token < ActiveRecord::Base
   belongs_to :antecedent, :class_name => 'Token', :foreign_key => 'antecedent_id'
 
   composed_of :morphology, :mapping => %w(morphology_tag to_s), :allow_nil => true, :converter => Proc.new { |x| Morphology.new(x) }
-
-  before_validation :before_validation_cleanup
 
   # form must be on the appropriate Unicode normalization form
   validates_unicode_normalization_of :form, :form => UNICODE_NORMALIZATION_FORM

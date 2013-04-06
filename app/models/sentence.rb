@@ -25,11 +25,12 @@ class Sentence < ActiveRecord::Base
   attr_accessible :sentence_number, :annotated_by, :annotated_at, :reviewed_by,
     :reviewed_at, :unalignable, :automatic_alignment, :sentence_alignment_id,
     :source_division_id, :assigned_to, :presentation_before, :presentation_after
+
   change_logging
+
   blankable_attributes :annotated_at, :annotated_by, :assigned_to,
-    :automatic_alignment, :created_at, :presentation_after,
-    :presentation_before, :reviewed_at, :reviewed_by, :sentence_alignment_id,
-    :updated_at
+    :automatic_alignment, :presentation_after, :presentation_before,
+    :reviewed_at, :reviewed_by, :sentence_alignment_id
 
   belongs_to :source_division
   has_many :notes, :as => :notable, :dependent => :destroy

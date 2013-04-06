@@ -24,7 +24,9 @@
 class Source < ActiveRecord::Base
   attr_accessible :source_id, :position, :title,
     :aligned_source_division_id, :presentation_before, :presentation_after
+
   change_logging
+
   blankable_attributes :author, :edition
 
   validates_presence_of :title
