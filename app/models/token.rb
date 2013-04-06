@@ -624,33 +624,15 @@ class Token < ActiveRecord::Base
     sentence.completion
   end
 
+  presentation_on 'sentence', 'first_visible?', 'last_visible?'
+
   # Tests if the token is the first non-empty token in its sentence.
-  def first_visible_in_sentence?
-    not sentence.tokens.where("token_number < ? AND empty_token_sort IS NULL", token_number).exists?
+  def first_visible?
+    not previous_objects.where('empty_token_sort IS NULL').exists?
   end
 
   # Tests if the token is the last non-empty token in its sentence.
-  def last_visible_in_sentence?
-    not sentence.tokens.where("token_number > ? AND empty_token_sort IS NULL", token_number).exists?
-  end
-
-  # Returns all presentation text before the token (including presentation text
-  # from the sentence and source division, if any). If there is no presentation
-  # text, the function returns an empty string.
-  def all_presentation_before
-    p = []
-    p << sentence.all_presentation_before if first_visible_in_sentence?
-    p << presentation_before
-    p.join
-  end
-
-  # Returns all presentation text after the token (including presentation text
-  # from the sentence and source division, if any). If there is no presentation
-  # text, the function returns an empty string.
-  def all_presentation_after
-    p = []
-    p << presentation_after
-    p << sentence.all_presentation_after if last_visible_in_sentence?
-    p.join
+  def last_visible?
+    not next_objects.where('empty_token_sort IS NULL').exists?
   end
 end

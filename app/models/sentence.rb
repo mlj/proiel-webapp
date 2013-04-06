@@ -596,23 +596,5 @@ class Sentence < ActiveRecord::Base
     tokens.map(&:depth).max
   end
 
-  # Returns all presentation text before the sentence (including presentation
-  # text from the source division, if any). If there is no presentation text,
-  # the function returns an empty string.
-  def all_presentation_before
-    p = []
-    p << source_division.presentation_before unless has_previous?
-    p << presentation_before
-    p.join
-  end
-
-  # Returns all presentation text after the sentence (including presentation
-  # text from the source division, if any). If there is no presentation text,
-  # the function returns an empty string.
-  def all_presentation_after
-    p = []
-    p << presentation_after
-    p << source_division.presentation_after unless has_next?
-    p.join
-  end
+  presentation_on 'source_division'
 end

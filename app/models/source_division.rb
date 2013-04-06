@@ -39,6 +39,8 @@ class SourceDivision < ActiveRecord::Base
 
   ordered_on :position, "source.source_divisions"
 
+  presentation_on
+
   # Returns the parent object for the source division, which will be its
   # source.
   def parent

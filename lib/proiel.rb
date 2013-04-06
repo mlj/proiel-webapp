@@ -40,6 +40,7 @@ module Proiel
   autoload :SentenceAnnotationValidator, 'annotation_validator'
 end
 
+require 'presentation'
 require 'ordering'
 require 'blankable'
 
