@@ -58,8 +58,6 @@ class SourceDivision < ActiveRecord::Base
     source
   end
 
-  SD_CITATION_PREFIX_DIVIDERS = /([\s\.]+)/u
-
   # Returns a citation for the source division.
   def citation
     if sentences.empty?
