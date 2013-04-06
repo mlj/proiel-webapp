@@ -35,6 +35,11 @@ autoload :PROIELXMLImporter, 'importer/proiel_xml_importer'
 
 autoload :Metadata, 'metadata'
 
+module Proiel
+end
+
+require 'ordering'
+
 require 'proiel/dependency_graph'
 require 'proiel/tagger'
 

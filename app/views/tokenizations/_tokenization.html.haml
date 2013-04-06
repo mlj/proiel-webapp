@@ -1,9 +1,9 @@
-- @sentence.prev_sentences.limit(5).reverse.map(&:to_s).each do |s|
+- @sentence.previous_objects.order(:sentence_number).limit(5).map(&:to_s).each do |s|
   != s
   = "|"
 %span{:style => "border-bottom: solid red"}
   != @sentence.to_s
-- @sentence.next_sentences.limit(5).map(&:to_s).each do |s|
+- @sentence.next_objects.order(:sentence_number).limit(5).map(&:to_s).each do |s|
   = "|"
   != s
 

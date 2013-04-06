@@ -205,7 +205,7 @@ module ApplicationHelper
   # to an access key.
   def link_to_previous(object)
     if object.has_previous?
-      link_to '', object.previous, :class => :previous, :accesskey => 'p'
+      link_to '', object.previous_object, :class => :previous, :accesskey => 'p'
     end
   end
 
@@ -214,7 +214,7 @@ module ApplicationHelper
   # +has_next?+ and +next+. The link will be tied to an access key.
   def link_to_next(object)
     if object.has_next?
-      link_to '', object.next, :class => :next, :accesskey => 'n'
+      link_to '', object.next_object, :class => :next, :accesskey => 'n'
     end
   end
 

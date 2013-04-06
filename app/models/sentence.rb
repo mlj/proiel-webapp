@@ -36,12 +36,11 @@ class Sentence < ActiveRecord::Base
 
   belongs_to :sentence_alignment, :class_name => 'Sentence', :foreign_key => 'sentence_alignment_id'
 
-  # All tokens
-  has_many :tokens, :order => 'token_number', :dependent => :destroy
+  has_many :tokens, :dependent => :destroy
 
   # All tokens with dependents and information structure included
   has_many :tokens_with_dependents_and_info_structure, :class_name => 'Token',
-     :include => [:dependents, :antecedent], :order => 'tokens.token_number' do
+     :include => [:dependents, :antecedent] do
 
     def with_prodrops_in_place
       prodrops, others = find(:all).partition { |token| token.empty_token_sort == 'P' }
@@ -120,6 +119,8 @@ class Sentence < ActiveRecord::Base
   # Language for the sentence
   delegate :language, :to => :source_division
 
+  ordered_on :sentence_number, "source_division.sentences"
+
   # Returns a citation for the sentence.
   def citation
     [source_division.source.citation_part,
@@ -139,59 +140,17 @@ class Sentence < ActiveRecord::Base
   def sentence_window(before_limit = 5, after_limit = 5, options = {})
     # Grab the sentence IDs we want in separate statements because the
     # expressions are sensitive to ordering.
-    s = prev_sentences.limit(before_limit).pluck(:id)
+    s = previous_objects.order('sentence_number DESC').limit(before_limit).pluck(:id)
 
-    if options[:include_previous_source_division] and !source_division.previous.nil? and s.count < before_limit
-      s += source_division.previous.sentences.order('sentence_number DESC').limit(before_limit - s.count).pluck(:id)
+    if options[:include_previous_source_division] and !source_division.previous_object.nil? and s.count < before_limit
+      s += source_division.previous_object.sentences.order('sentence_number DESC').limit(before_limit - s.count).pluck(:id)
     end
 
-    s += next_sentences.limit(after_limit).pluck(:id)
+    s += next_objects.limit(after_limit).pluck(:id)
     s += [id]
 
     Sentence.joins(:source_division).order('source_divisions.position, sentence_number ASC').where(:id => s)
   end
-
-  # Returns the previous sentences in the linearisation sequence from the same
-  # source division. Note that the sentences are returned in reversed
-  # order.
-  def prev_sentences
-    source_division.sentences.where("sentence_number < ?", sentence_number).order("sentence_number DESC")
-  end
-
-  # Returns the next sentences in the linearisation sequence from the same
-  # source division.
-  def next_sentences
-    source_division.sentences.where("sentence_number > ?", sentence_number).order("sentence_number ASC")
-  end
-
-  # Returns the previous sentence in the linearisation sequence. Returns +nil+
-  # if there is no previous sentence.
-  def previous_sentence
-    prev_sentences.first
-  end
-
-  # Returns the next sentence in the linearisation sequence. Returns +nil+
-  # if there is no next sentence.
-  def next_sentence
-    next_sentences.first
-  end
-
-  alias :next :next_sentence
-  alias :previous :previous_sentence
-
-  include Ordering
-
-  def ordering_attribute
-    :sentence_number
-  end
-
-  def ordering_collection
-    source_division.sentences
-  end
-
-  # FIXME: backwards compatibility
-  alias :has_next_sentence? :has_next?
-  alias :has_previous_sentence? :has_previous?
 
   # Returns the parent object for the sentence, which will be its
   # source division.
@@ -344,7 +303,7 @@ class Sentence < ActiveRecord::Base
   def is_next_sentence_appendable?
     # There must be a next sentence, but there must be no sentence-level
     # presentation text intervening.
-    has_next? and presentation_after.blank? and next_sentence.presentation_before.blank?
+    has_next? and presentation_after.blank? and next_object.presentation_before.blank?
   end
 
   # Appends the next sentence onto this sentence and destroys the old
@@ -355,16 +314,16 @@ class Sentence < ActiveRecord::Base
 
     Sentence.transaction do
       remove_syntax_and_info_structure!
-      next_sentence.remove_syntax_and_info_structure!
+      next_object.remove_syntax_and_info_structure!
 
-      append_tokens!(next_sentence.tokens)
+      append_tokens!(next_object.tokens)
 
       # Move presentation_after from the next sentence to this one and destroy
       # the next sentence.
-      self.presentation_after = next_sentence.presentation_after
+      self.presentation_after = next_object.presentation_after
       save!
 
-      next_sentence.destroy
+      next_object.destroy
     end
   end
 
@@ -382,9 +341,9 @@ class Sentence < ActiveRecord::Base
   def is_splitable?(t)
     raise ArgumentError unless tokens.include?(t)
 
-    t2 = t.next_token
+    t2 = t.next_object
 
-    not t.is_empty? and t.previous_token and not t.previous_token.is_empty?
+    not t.is_empty? and t.has_previous? and not t.previous_object.is_empty?
   end
 
   # Split the sentence into two successive sentences. The point to split
@@ -695,22 +654,12 @@ class Sentence < ActiveRecord::Base
     tokens.map(&:depth).max
   end
 
-  # Tests if the sentence is the first in its source division.
-  def first_in_source_division?
-    not source_division.sentences.where("sentence_number < ?", sentence_number).exists?
-  end
-
-  # Tests if the sentence is the last in its source division.
-  def last_in_source_division?
-    not source_division.sentences.where("sentence_number > ?", sentence_number).exists?
-  end
-
   # Returns all presentation text before the sentence (including presentation
   # text from the source division, if any). If there is no presentation text,
   # the function returns an empty string.
   def all_presentation_before
     p = []
-    p << source_division.presentation_before if first_in_source_division?
+    p << source_division.presentation_before unless has_previous?
     p << presentation_before
     p.join
   end
@@ -721,7 +670,7 @@ class Sentence < ActiveRecord::Base
   def all_presentation_after
     p = []
     p << presentation_after
-    p << source_division.presentation_after if last_in_source_division?
+    p << source_division.presentation_after unless has_next?
     p.join
   end
 end

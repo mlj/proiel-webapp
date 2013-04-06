@@ -3,8 +3,8 @@
     != link_to annotation.citation, annotation.sentence
     != completion_rate annotation.sentence.completion
   %td.left
-    != format_sentence annotation.previous_tokens, :length_limit => -5
+    != format_sentence annotation.previous_objects, :length_limit => -5
   %td.centre.highlight
     != format_token_form annotation
   %td.right
-    != format_sentence annotation.next_tokens, :length_limit => 5
+    != format_sentence annotation.next_objects, :length_limit => 5

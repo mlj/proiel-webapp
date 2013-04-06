@@ -78,12 +78,15 @@ class Token < ActiveRecord::Base
 
   tag_attribute :information_status, :information_status_tag, InformationStatusTag, :allow_nil => true
   tag_attribute :relation, :relation_tag, RelationTag, :allow_nil => true
+  delegate :part_of_speech, :to => :lemma, :allow_nil => true
+  delegate :part_of_speech_tag, :to => :lemma, :allow_nil => true
+  delegate :language, :to => :sentence
+  delegate :language_tag, :to => :sentence
 
   # Specific validations
   validate :validate_sort
 
-  delegate :part_of_speech, :to => :lemma, :allow_nil => true
-  delegate :part_of_speech_tag, :to => :lemma, :allow_nil => true
+  ordered_on :token_number, "sentence.tokens"
 
   # A visible token, i.e. is a non-empty token.
   def self.visible
@@ -110,48 +113,9 @@ class Token < ActiveRecord::Base
     where("head_id IS NULL")
   end
 
-  # Language tag for the token
-  delegate :language_tag, :to => :sentence
-
-  # Language for the token
-  delegate :language, :to => :sentence
-
   # Returns the nearest anaphor or an empty array if there is none.
   def nearest_anaphor
     anaphors.min { |x, y| word_distance_between(x) <=> word_distance_between(y) }
-  end
-
-  def previous_tokens
-    sentence.tokens.where("token_number < ?", token_number).order("token_number ASC")
-  end
-
-  def next_tokens
-    sentence.tokens.where("token_number > ?", token_number).order("token_number ASC")
-  end
-
-  # Returns the previous token in the linearisation sequence. Returns +nil+
-  # if there is no previous token.
-  def previous_token
-    sentence.tokens.where("token_number < ?", token_number).order("token_number DESC").first
-  end
-
-  # Returns the next token in the linearisation sequence. Returns +nil+
-  # if there is no next token.
-  def next_token
-    sentence.tokens.where("token_number > ?", token_number).order("token_number ASC").first
-  end
-
-  alias :next :next_token
-  alias :previous :previous_token
-
-  include Ordering
-
-  def ordering_attribute
-    :token_number
-  end
-
-  def ordering_collection
-    sentence.tokens
   end
 
   # Returns the morphological features for the token or +nil+ if none
@@ -457,7 +421,7 @@ class Token < ActiveRecord::Base
   #   3. both tokens have the same citation data.
 
   def is_joinable?
-    t2 = next_token
+    t2 = next_object
     not is_empty? and t2 and not t2.is_empty? and
       (presentation_after.nil? or presentation_after[/^\s*$/]) and
       (t2.presentation_before.nil? or t2.presentation_before[/^\s*$/]) and
@@ -474,7 +438,7 @@ class Token < ActiveRecord::Base
   def join_with_next_token!
     raise ArgumentError unless is_joinable?
 
-    t2 = self.next_token
+    t2 = self.next_object
 
     Sentence.transaction do
       sentence.remove_syntax_and_info_structure!

@@ -29,28 +29,10 @@ class SourceDivision < ActiveRecord::Base
 
   belongs_to :source
   has_many :sentences
-  has_many :tokens, :through => :sentences, :order => 'sentences.sentence_number ASC, token_number ASC'
+  has_many :tokens, :through => :sentences
   belongs_to :aligned_source_division, :class_name => "SourceDivision"
 
-  # Returns the previous source division in a source.
-  def previous
-    source.source_divisions.where("position < ?", position).order("position DESC").first
-  end
-
-  # Returns the next source division in a source.
-  def next
-    source.source_divisions.where("position > ?", position).order("position ASC").first
-  end
-
-  include Ordering
-
-  def ordering_attribute
-    :position
-  end
-
-  def ordering_collection
-    source.source_divisions
-  end
+  ordered_on :position, "source.source_divisions"
 
   # Returns the parent object for the source division, which will be its
   # source.

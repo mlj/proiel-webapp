@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,14 +21,75 @@
 #
 #++
 
-module Ordering
-  # Returns true if there is a previous object in the collection.
-  def has_previous?
-    ordering_collection.exists?(["#{ordering_attribute} < ?", self.send(ordering_attribute)])
-  end
+module Proiel
+  module OrderedObjects
+    def self.included(base)
+      base.extend(ClassMethods)
+    end
 
-  # Returns true if there is a next object in the collection.
-  def has_next?
-    ordering_collection.exists?(["#{ordering_attribute} > ?", self.send(ordering_attribute)])
+    module ClassMethods
+      def ordered_on(field, collection)
+        self.cattr_accessor :ordered_on_field
+        self.ordered_on_field = field.to_sym
+
+        class_eval <<-EOV
+          include ::Proiel::OrderedObjects::InstanceMethods
+
+          def ordering_field
+            #{field}
+          end
+
+          def ordering_collection
+            #{collection}
+          end
+        EOV
+      end
+    end
+
+    module InstanceMethods
+      # Returns true if there is a previous object in the ordering.
+      def has_previous?
+        previous_objects.exists?
+      end
+
+      # Returns true if there is a next object in the ordering.
+      def has_next?
+        next_objects.exists?
+      end
+
+      def first?
+        !has_previous?
+      end
+
+      def last?
+        !has_next?
+      end
+
+      # Returns previous objects in the ordering. The objects are not necessarily
+      # returned in order.
+      def previous_objects
+        ordering_collection.where("#{ordered_on_field} < ?", ordering_field)
+      end
+
+      # Returns next objects in the ordering. The objects are not necessarily
+      # returned in order.
+      def next_objects
+        ordering_collection.where("#{ordered_on_field} > ?", ordering_field)
+      end
+
+      # Returns the previous object in the ordering. Returns +nil+ if there is no
+      # previous object.
+      def previous_object
+        previous_objects.order(ordered_on_field).last
+      end
+
+      # Returns the next object in the ordering. Returns +nil+ if there is no next
+      # object.
+      def next_object
+        next_objects.order(ordered_on_field).first
+      end
+    end
   end
 end
+
+ActiveRecord::Base.send(:include, Proiel::OrderedObjects)
