@@ -60,10 +60,11 @@ module SentenceFormattingHelper
 
   UNICODE_HORIZONTAL_ELLIPSIS = Unicode::U2026
 
-  FormattedReference = Struct.new(:reference_type, :reference_value)
+  FormattedReference = Struct.new(:reference_type, :reference_value, :reference_url)
 
   class FormattedReference
     include ActionView::Helpers::TagHelper
+    include ActionView::Helpers::UrlHelper
 
     def spacing_before?
       reference_type != :token_number
@@ -91,13 +92,15 @@ module SentenceFormattingHelper
     def to_html(options)
       if reference_value.to_s.empty?
         ''
+      elsif reference_url
+        link_to reference_value.to_s, reference_url, :class => reference_type.to_s.dasherize, :lang => 'en'
       else
-        content_tag(:span, reference_value.to_s, :class => reference_type.to_s.dasherize, :lang => 'en')
+        content_tag :span, reference_value.to_s, :class => reference_type.to_s.dasherize, :lang => 'en'
       end
     end
   end
 
-  FormattedToken = Struct.new(:token, :extra_attributes, :object_path)
+  FormattedToken = Struct.new(:token, :extra_attributes, :object_url)
 
   class FormattedToken
     include ActionView::Helpers::TagHelper
@@ -154,7 +157,7 @@ module SentenceFormattingHelper
 
       case options[:link_to]
       when :tokens, :sentences
-        s += link_to token.form, object_path, form_attributes
+        s += link_to token.form, object_url, form_attributes
       else
         s += content_tag :span, token.form, form_attributes
       end
@@ -196,10 +199,10 @@ module SentenceFormattingHelper
     sequence.map { |x| x.to_html(options) }.join
   end
 
-  def check_reference_update(state, reference_type, reference_id, reference_value)
+  def check_reference_update(state, reference_type, reference_id, reference_value, reference_object = nil)
     if reference_id and state[reference_type] != reference_id
       state[reference_type] = reference_id
-      FormattedReference.new(reference_type, reference_value)
+      FormattedReference.new(reference_type, reference_value, url_for(reference_object))
     else
       nil
     end
@@ -217,19 +220,19 @@ module SentenceFormattingHelper
       # unlikely to have a valid citation_part value.
       t << check_reference_update(state, :citation, token.citation_part, token.citation_part) unless token.is_empty?
 
-      t << check_reference_update(state, :sentence_number, token.sentence.sentence_number, token.sentence.sentence_number.to_i)
+      t << check_reference_update(state, :sentence_number, token.sentence.sentence_number, token.sentence.sentence_number.to_i, token.sentence)
 
       extra_attributes = block ? block.call(token) : nil
 
       case options[:link_to]
       when :tokens
-        t << FormattedToken.new(token, extra_attributes, token_path(token))
+        t << FormattedToken.new(token, extra_attributes, url_for(token))
       when :sentences
-        t << FormattedToken.new(token, extra_attributes, sentence_path(token.sentence))
+        t << FormattedToken.new(token, extra_attributes, url_for(token.sentence))
       else
-        t << FormattedToken.new(token, extra_attributes, nil)
+        t << FormattedToken.new(token, extra_attributes)
       end
-      t << FormattedReference.new(:token_number, token.token_number)
+      t << FormattedReference.new(:token_number, token.token_number, url_for(token))
     end
 
     t.compact
