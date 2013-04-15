@@ -66,23 +66,19 @@ class Validator < Task
   end
 
   def check_orphaned_tokens(logger)
-    Token.find_each(:include => [ :sentence ], :conditions => [ "sentences.id is null" ]) do |t|
-      logger.warn { "Token #{t.id} is orphaned" }
+    Token.includes(:sentence).where("sentences.id is null").each do |t|
+      logger.warn { "Token #{t.id} (#{t.to_s}) is orphaned" }
     end
   end
 
   def check_lemmata(logger)
-    orphans = Lemma.find(:all, :include => [:tokens], :conditions => ["lemmata.foreign_ids IS NULL and tokens.id IS NULL"])
-    orphans.each do |o|
-      logger.warn { "Lemma #{o.id} (#{o.export_form}) is orphaned. Destroying." }
+    Lemma.includes(:tokens).where('lemmata.foreign_ids IS NULL and tokens.id IS NULL').each do |o|
+      logger.warn { "Lemma #{o.id} (#{o.to_s}) is orphaned. Destroying." }
       o.destroy
     end
 
-    candidates = Lemma.find(:all, :conditions => ["variant IS NOT NULL"])
-    candidates.each do |o|
-      if c = Lemma.find(:first, :conditions => ["lemma = ? and variant is null and language = ?", o.lemma, o.language])
-        logger.warn { "Lemma base form #{o.lemma} occurs both with and without variant numbers" }
-      end
+    Lemma.joins("left join lemmata as b on lemmata.lemma = b.lemma and lemmata.part_of_speech_tag = b.part_of_speech_tag and lemmata.language_tag = b.language_tag").where(:variant => nil).where("b.variant IS NOT NULL").each do |l|
+      puts "Lemma #{l.lemma} of language #{l.language_tag} occurs both with and without variant numbers"
     end
   end
 

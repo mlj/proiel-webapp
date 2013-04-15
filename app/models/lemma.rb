@@ -88,14 +88,18 @@ class Lemma < ActiveRecord::Base
     MorphFeatures.new(self, nil)
   end
 
-  # Lemmata that are 'sufficiently similar' to this lemma to be candidates
-  # for being merged with it. 'Sufficiently similar' is defined in terms of
-  # what will not violate constraints: two lemmata with different part of
-  # speech, for example, cannot be merged since this will affect the
-  # annotation of morphology for any associated tokens. Two tokens are
-  # 'mergeable' iff they belong to the same language, have the same base
-  # form (variant number may be different) and have identical part of
-  # speech.
+  # Returns lemmata that are sufficiently similar to be candidates for being
+  # merged. Two lemmata are sufficiently similar iff they belong to the same
+  # language, have the same part of speech tag and have the same base (the
+  # variant number, on the other hand, may be different).
+  def self.mergeable_lemmata(lemma_form, part_of_speech_tag, language_tag)
+    Lemma.where(:part_of_speech_tag => part_of_speech_tag, :lemma => lemma, :language_tag => language_tag)
+  end
+
+  # Returns lemmata that are sufficiently similar to be candidates for being
+  # merged. Two lemmata are sufficiently similar iff they belong to the same
+  # language, have the same part of speech tag and have the same base (the
+  # variant number, on the other hand, may be different).
   def mergeable_lemmata
     Lemma.where(:part_of_speech_tag => part_of_speech_tag, :lemma => lemma, :language_tag => language_tag).where("id != ?", id)
   end
