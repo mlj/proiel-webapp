@@ -105,6 +105,26 @@ class Token < ActiveRecord::Base
     where("head_id IS NULL")
   end
 
+  # A token belonging to a sentence that has not been annotated.
+  def self.unannotated
+    joins(:sentence).where(:sentences => { :status_tag => 'unannotated' })
+  end
+
+  # A token belonging to a sentence that has been annotated.
+  def self.annotated
+    joins(:sentence).where(:sentences => { :status_tag => ['annotated', 'reviewed'] })
+  end
+
+  # A token belonging to a sentence that has not been reviewed.
+  def self.unreviewed
+    joins(:sentence).where(:sentences => { :status_tag => ['annotated', 'unannotated'] })
+  end
+
+  # A token belonging to a sentence that has been reviewed.
+  def self.reviewed
+    joins(:sentence).where(:sentences => { :status_tag => 'reviewed' })
+  end
+
   # Returns the nearest anaphor or an empty array if there is none.
   def nearest_anaphor
     anaphors.min { |x, y| word_distance_between(x) <=> word_distance_between(y) }
@@ -618,11 +638,8 @@ class Token < ActiveRecord::Base
 
   delegate :is_reviewed?, :to => :sentence
   delegate :is_annotated?, :to => :sentence
-
-  # Returns the completion state.
-  def completion
-    sentence.completion
-  end
+  delegate :status, :to => :sentence
+  delegate :status_tag, :to => :sentence
 
   presentation_on 'sentence', 'first_visible?', 'last_visible?'
 

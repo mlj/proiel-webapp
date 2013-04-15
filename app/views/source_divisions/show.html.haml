@@ -3,7 +3,7 @@
 - context_bar do
   .breadcrumbs
     != breadcrumbs ['Contents', sources_path], @source, @source_division
-    != completion_rate @source_division.completion
+    != completion_rate @source_division.aggregate_status
   .resources
     != link_to_resources @source_division, :edit, :previous, :next
 

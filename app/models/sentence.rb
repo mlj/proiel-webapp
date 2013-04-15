@@ -24,7 +24,8 @@
 class Sentence < ActiveRecord::Base
   attr_accessible :sentence_number, :annotated_by, :annotated_at, :reviewed_by,
     :reviewed_at, :unalignable, :automatic_alignment, :sentence_alignment_id,
-    :source_division_id, :assigned_to, :presentation_before, :presentation_after
+    :source_division_id, :assigned_to, :presentation_before, :presentation_after,
+    :status_tag
 
   change_logging
 
@@ -43,6 +44,8 @@ class Sentence < ActiveRecord::Base
   belongs_to :sentence_alignment, :class_name => 'Sentence', :foreign_key => 'sentence_alignment_id'
 
   has_many :tokens, :dependent => :destroy
+
+  tag_attribute :status, :status_tag, StatusTag, :allow_nil => false
 
   # All tokens with dependents and information structure included
   has_many :tokens_with_dependents_and_info_structure, :class_name => 'Token',
@@ -90,25 +93,25 @@ class Sentence < ActiveRecord::Base
 
   # A sentence that has not been annotated.
   def self.unannotated
-    where("annotated_by IS NULL")
+    where(:status_tag => 'unannotated')
   end
 
-  # A sentences that has been annotated.
+  # A sentence that has been annotated.
   def self.annotated
-    where("annotated_by IS NOT NULL")
+    where(:status_tag => ['annotated', 'reviewed'])
   end
 
-  # A sentences that has not been reviewed.
+  # A sentence that has not been reviewed.
   def self.unreviewed
-    where("reviewed_by IS NULL")
+    where(:status_tag => ['annotated', 'unannotated'])
   end
 
   # A sentence that has been reviewed.
   def self.reviewed
-    where("reviewed_by IS NOT NULL")
+    where(:status_tag => 'reviewed')
   end
 
-  # A sentences that belongs to a source.
+  # A sentence that belongs to a source.
   def self.by_source(source)
     where(:source_division_id => source.source_divisions.map(&:id))
   end
@@ -159,38 +162,6 @@ class Sentence < ActiveRecord::Base
   # source division.
   def parent
     source_division
-  end
-
-  def completion
-    status # deprecated
-  end
-
-  # TODO: implement this better
-  def status=(new_status, user_id = nil)
-    case new_status.to_sym
-    when :reviewed
-      annotated_at, annotated_by = Time.now, user_id
-      reviewed_at, reviewed_by = Time.now, user_id
-    when :annotated
-      annotated_at, annotated_by = Time.now, user_id
-      reviewed_at, reviewed_by = nil, nil
-    when :unannotated
-      annotated_at, annotated_by = nil, nil
-      reviewed_at, reviewed_by = nil, nil
-    else
-      raise ArgumentError, 'invalid status'
-    end
-  end
-
-  # Returns the completion state.
-  def status
-    if is_reviewed?
-      :reviewed
-    elsif is_annotated?
-      :annotated
-    else
-      :unannotated
-    end
   end
 
   def syntactic_annotation=(dependency_graph)
@@ -432,28 +403,15 @@ class Sentence < ActiveRecord::Base
     new_sentence = nil
 
     Sentence.transaction do
-      parent.sentences.find(:all, :conditions => ["sentence_number > ?", sentence_number]).sort do |x, y|
-        y.sentence_number <=> x.sentence_number
-      end.each do |s|
+      next_objects.order("sentence_number DESC").each do |s|
         s.sentence_number += 1
         s.save!
       end
 
-      new_sentence = parent.sentences.create!(attributes.merge({ :sentence_number => sentence_number + 1 }))
+      new_sentence = parent.sentences.create!(attributes.merge({ :sentence_number => sentence_number + 1, :status_tag => 'unannotated' }))
     end
 
     new_sentence
-  end
-
-  protected
-
-  # removes information about when and by whom the sentence was annotated
-  def remove_annotation_metadata!
-    self.annotated_by = nil
-    self.annotated_at = nil
-    self.reviewed_by = nil
-    self.reviewed_at = nil
-    save!
   end
 
   public
@@ -461,20 +419,19 @@ class Sentence < ActiveRecord::Base
   # Deletes syntactic annotaton, information structure annotation and
   # annotation metadata from sentence and reloads token association.
   def remove_syntax_and_info_structure!
-    self.tokens.each do |t|
-      if t.is_empty?
-        t.destroy
-      else
-        t.relation_tag = nil
-        t.head_id = nil
-        t.slash_out_edges.each { |sl| sl.destroy }
-        t.information_status_tag = nil
-        t.antecedent_id = nil
-        t.save!
-      end
+    update_attributes! status_tag: 'unannotated',
+      annotated_by: nil, annotated_at: nil,
+      reviewed_by: nil, reviewed_at: nil
+
+    tokens.each do |t|
+      t.slash_out_edges.each { |sl| sl.destroy }
+      t.destroy if t.is_empty?
     end
+
+    tokens.update_all :relation_tag => nil, :head_id => nil,
+      :information_status_tag => nil, :antecedent_id => nil
+
     tokens.reload
-    remove_annotation_metadata!
   end
 
   private
@@ -513,43 +470,38 @@ class Sentence < ActiveRecord::Base
 
   public
 
-  # Returns +true+ if sentence has been annotated.
+  # Returns true if sentence has been annotated.
   def is_annotated?
-    !annotated_at.nil?
+    status_tag == 'annotated' or status_tag == 'reviewed'
   end
 
   # Flags the sentence as annotated and saves the sentence.
   def set_annotated!(user)
     unless is_annotated?
-      self.annotated_by = user.id
-      self.annotated_at = Time.now
-      save!
+      update_attributes! status_tag: 'annotated',
+        annotated_by: (annotated_by || user.id), annotated_at: (annotated_at || Time.new)
     end
   end
 
-  # Returns +true+ if sentence has been reviewed.
+  # Returns true if sentence has been reviewed.
   def is_reviewed?
-    !reviewed_at.nil?
+    status_tag == 'reviewed'
   end
 
-  # Flags the sentence as reviewed and saves the sentence. If the sentence has
-  # not already been annotated, it will be flagged as annotated as well.
+  # Flags the sentence as reviewed and saves the sentence.
   def set_reviewed!(user)
     unless is_reviewed?
-      set_annotated!(user)
-
-      self.reviewed_by = user.id
-      self.reviewed_at = Time.now
-      save!
+      update_attributes! status_tag: 'reviewed',
+        annotated_by: (annotated_by || user.id), annotated_at: (annotated_at || Time.new),
+        reviewed_by: (reviewed_by || user.id), reviewed_at: (reviewed_at || Time.now)
     end
   end
 
-  # "Unflags" the sentence as reviewed and saves the sentence.
+  # Flags the sentence as not reviewed and saves the sentence.
   def unset_reviewed!(user)
     if is_reviewed?
-      self.reviewed_by = nil
-      self.reviewed_at = nil
-      save!
+      update_attributes! status_tag: 'annotated',
+        reviewed_by: nil, reviewed_at: nil
     end
   end
 

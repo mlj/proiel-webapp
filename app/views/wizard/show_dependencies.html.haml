@@ -1,7 +1,7 @@
 - context_bar do
   .breadcrumbs
     != breadcrumbs ['Annotation', wizard_path], @source, @source_division, @sentence, 'Verify annotation'
-    != completion_rate @sentence.completion
+    != completion_rate @sentence.status
     != " (#{remaining_assigned_sentences} remaining)"
   %p
     != external_text_links @sentence

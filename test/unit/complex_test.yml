@@ -11,6 +11,7 @@ Sentence:
     sentence_number: 1
     annotated_by: 1
     annotated_at: 2008-05-09 14:01:03.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 14:01:04.000000000 Z
     unalignable: false
@@ -22,6 +23,7 @@ Sentence:
     sentence_number: 2
     annotated_by: 1
     annotated_at: 2008-05-09 14:01:03.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 14:01:04.000000000 Z
     unalignable: false
@@ -33,6 +35,7 @@ Sentence:
     sentence_number: 3
     annotated_by: 12
     annotated_at: 2008-03-05 18:04:59.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 14:01:53.000000000 Z
     unalignable: false
@@ -44,6 +47,7 @@ Sentence:
     sentence_number: 4
     annotated_by: 12
     annotated_at: 2008-03-05 18:19:00.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 14:05:47.000000000 Z
     unalignable: false
@@ -55,6 +59,7 @@ Sentence:
     sentence_number: 5
     annotated_by: 1
     annotated_at: 2008-05-09 14:25:26.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 14:25:26.000000000 Z
     unalignable: false
@@ -66,6 +71,7 @@ Sentence:
     sentence_number: 6
     annotated_by: 1
     annotated_at: 2008-05-09 14:25:26.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 14:25:26.000000000 Z
     unalignable: false
@@ -77,6 +83,7 @@ Sentence:
     sentence_number: 7
     annotated_by: 12
     annotated_at: 2008-03-05 18:21:06.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 14:25:48.000000000 Z
     unalignable: false
@@ -88,6 +95,7 @@ Sentence:
     sentence_number: 8
     annotated_by: 12
     annotated_at: 2008-03-05 18:28:21.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 14:39:59.000000000 Z
     unalignable: false
@@ -99,6 +107,7 @@ Sentence:
     sentence_number: 9
     annotated_by: 12
     annotated_at: 2008-03-05 18:32:06.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 14:40:22.000000000 Z
     unalignable: false
@@ -110,6 +119,7 @@ Sentence:
     sentence_number: 10
     annotated_by: 1
     annotated_at: 2008-05-09 14:44:13.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 14:44:13.000000000 Z
     unalignable: false
@@ -121,6 +131,7 @@ Sentence:
     sentence_number: 11
     annotated_by: 1
     annotated_at: 2008-05-09 14:44:13.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 14:44:13.000000000 Z
     unalignable: false
@@ -132,6 +143,7 @@ Sentence:
     sentence_number: 12
     annotated_by: 12
     annotated_at: 2008-03-05 18:42:43.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 14:44:46.000000000 Z
     unalignable: false
@@ -143,6 +155,7 @@ Sentence:
     sentence_number: 13
     annotated_by: 12
     annotated_at: 2008-03-05 18:55:09.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 15:50:51.000000000 Z
     unalignable: false
@@ -154,6 +167,7 @@ Sentence:
     sentence_number: 14
     annotated_by: 12
     annotated_at: 2008-03-06 14:25:17.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 15:51:28.000000000 Z
     unalignable: false
@@ -165,6 +179,7 @@ Sentence:
     sentence_number: 15
     annotated_by: 12
     annotated_at: 2008-03-06 14:33:45.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 15:52:49.000000000 Z
     unalignable: false
@@ -176,6 +191,7 @@ Sentence:
     sentence_number: 16
     annotated_by: 12
     annotated_at: 2008-03-06 14:39:59.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 15:53:30.000000000 Z
     unalignable: false
@@ -187,6 +203,7 @@ Sentence:
     sentence_number: 17
     annotated_by: 1
     annotated_at: 2008-05-09 16:05:43.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:05:43.000000000 Z
     unalignable: false
@@ -198,6 +215,7 @@ Sentence:
     sentence_number: 18
     annotated_by: 1
     annotated_at: 2008-05-09 16:05:43.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:05:43.000000000 Z
     unalignable: false
@@ -209,6 +227,7 @@ Sentence:
     sentence_number: 19
     annotated_by: 1
     annotated_at: 2008-05-09 16:06:42.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:06:42.000000000 Z
     unalignable: false
@@ -220,6 +239,7 @@ Sentence:
     sentence_number: 20
     annotated_by: 1
     annotated_at: 2010-01-04 09:52:45.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2010-01-04 09:52:45.000000000 Z
     unalignable: false
@@ -231,6 +251,7 @@ Sentence:
     sentence_number: 21
     annotated_by: 1
     annotated_at: 2010-01-04 09:56:00.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2010-01-04 09:56:00.000000000 Z
     unalignable: false
@@ -242,6 +263,7 @@ Sentence:
     sentence_number: 23
     annotated_by: 12
     annotated_at: 2008-03-06 15:21:06.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:07:54.000000000 Z
     unalignable: false
@@ -253,6 +275,7 @@ Sentence:
     sentence_number: 24
     annotated_by: 1
     annotated_at: 2008-05-09 16:10:32.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:10:32.000000000 Z
     unalignable: false
@@ -264,6 +287,7 @@ Sentence:
     sentence_number: 25
     annotated_by: 1
     annotated_at: 2008-05-09 16:10:32.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:10:32.000000000 Z
     unalignable: false
@@ -275,6 +299,7 @@ Sentence:
     sentence_number: 26
     annotated_by: 1
     annotated_at: 2008-05-09 16:12:54.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:12:54.000000000 Z
     unalignable: false
@@ -286,6 +311,7 @@ Sentence:
     sentence_number: 27
     annotated_by: 1
     annotated_at: 2008-05-09 16:18:08.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:18:08.000000000 Z
     unalignable: false
@@ -297,6 +323,7 @@ Sentence:
     sentence_number: 28
     annotated_by: 1
     annotated_at: 2008-05-09 16:18:08.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:18:08.000000000 Z
     unalignable: false
@@ -308,6 +335,7 @@ Sentence:
     sentence_number: 29
     annotated_by: 12
     annotated_at: 2008-03-06 15:30:14.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:18:28.000000000 Z
     unalignable: false
@@ -319,6 +347,7 @@ Sentence:
     sentence_number: 30
     annotated_by: 12
     annotated_at: 2008-03-06 15:34:43.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:18:51.000000000 Z
     unalignable: false
@@ -330,6 +359,7 @@ Sentence:
     sentence_number: 31
     annotated_by: 12
     annotated_at: 2008-03-06 15:36:47.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:19:43.000000000 Z
     unalignable: false
@@ -341,6 +371,7 @@ Sentence:
     sentence_number: 32
     annotated_by: 12
     annotated_at: 2008-03-06 15:55:14.000000000 Z
+    status_tag: reviewed
     reviewed_by: 1
     reviewed_at: 2008-05-09 16:21:08.000000000 Z
     unalignable: false

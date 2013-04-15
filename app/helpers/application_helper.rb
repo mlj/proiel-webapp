@@ -63,10 +63,10 @@ module ApplicationHelper
     }))
   end
 
-  # Generates a human readable representation of a completion rate.
+  # Generates a human readable representation of a completion rate/sentence
+  # status.
   def completion_rate(rate)
-    raise ArgumentError, "invalid rate #{rate}" unless rate == :unannotated or rate == :annotated or rate == :reviewed
-    content_tag(:span, '', :class => rate)
+    content_tag(:span, '', :class => rate.to_s)
   end
 
   # Generates a human readable representation of a relation code.

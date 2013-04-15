@@ -3,7 +3,7 @@
 - context_bar do
   .breadcrumbs
     != breadcrumbs @source, @source_division, @sentence, 'Tokenization'
-    != completion_rate @sentence.completion
+    != completion_rate @sentence.status
   %p
     != external_text_links @sentence
 

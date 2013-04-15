@@ -4,19 +4,19 @@ class SentenceTest < ActiveSupport::TestCase
   def setup
     @sd = Source.first.source_divisions.create!
 
-    @sentence_first_in_sd = @sd.sentences.create! :sentence_number => 0
+    @sentence_first_in_sd = @sd.sentences.create! :sentence_number => 0, :status_tag => 'unannotated'
 
-    @sentence_middle_of_sd = @sd.sentences.create! :sentence_number => 1
+    @sentence_middle_of_sd = @sd.sentences.create! :sentence_number => 1, :status_tag => 'unannotated'
     @t0 = @sentence_middle_of_sd.tokens.create! :token_number => 0, :form => 'foo', :presentation_after => ', '
     @t1 = @sentence_middle_of_sd.tokens.create! :token_number => 1, :form => 'foo', :presentation_after => '. '
     @sentence_middle_of_sd.tokens.reload
 
-    @sentence_last_in_sd = @sd.sentences.create! :sentence_number => 2, :presentation_after => 'Some text'
+    @sentence_last_in_sd = @sd.sentences.create! :sentence_number => 2, :presentation_after => 'Some text', :status_tag => 'unannotated'
     @t2 = @sentence_last_in_sd.tokens.create! :token_number => 0, :form => 'foo', :presentation_after => ', '
     @t3 = @sentence_last_in_sd.tokens.create! :token_number => 1, :form => 'foo', :presentation_after => '. '
     @sentence_last_in_sd.tokens.reload
 
-    @sentence_extra_last_in_sd = @sd.sentences.create! :sentence_number => 3
+    @sentence_extra_last_in_sd = @sd.sentences.create! :sentence_number => 3, :status_tag => 'unannotated'
   end
 
   def test_next_previous

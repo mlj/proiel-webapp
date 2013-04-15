@@ -3,7 +3,7 @@
 
 %p.breadcrumbs
   != breadcrumbs @source, @source_division, @sentence, 'Information structure'
-  != completion_rate @sentence.completion
+  != completion_rate @sentence.status
 
 %div{:id => "prodrop-menu", :style => "position: absolute; width: 150px; border: 2px solid black; display:none"}
   %div{:class => "prodrop-menu-item sub"}

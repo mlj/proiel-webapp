@@ -65,27 +65,14 @@ class Source < ActiveRecord::Base
     language.name
   end
 
-  # Returns a hash with the proportions of unannotated, annotated and
-  # reviewed sentences.
-  def completion_statistics
-    @completion_statistics ||= {
-      :reviewed => Sentence.where('source_division_id IN (?) AND reviewed_by IS NOT NULL', source_divisions).count,
-      :annotated => Sentence.where('source_division_id IN (?) AND annotated_by IS NOT NULL AND reviewed_by IS NULL', source_divisions).count,
-      :unannotated => Sentence.where('source_division_id IN (?) AND annotated_by IS NULL', source_divisions).count
-    }
+  # Returns a hash with aggregated status statistics for the source.
+  def aggregated_status_statistics
+    Sentence.where(:source_division_id => source_divisions).count(:group => :status_tag)
   end
 
-  # Returns the completion state.
-  def completion
-    s = completion_statistics
-
-    if s[:unannotated] > 0
-      :unannotated
-    elsif s[:annotated] > 0
-      :annotated
-    else
-      :reviewed
-    end
+  # Returns a hash with aggregated status statistics for all sources.
+  def self.aggregated_status_statistics
+    Sentence.count(:group => :status_tag)
   end
 
   # Generates a human-readable ID for the source.

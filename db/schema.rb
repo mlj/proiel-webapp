@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130330195707) do
+ActiveRecord::Schema.define(:version => 20130415085522) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -147,10 +147,12 @@ ActiveRecord::Schema.define(:version => 20130330195707) do
     t.integer  "assigned_to"
     t.string   "presentation_before",   :limit => 64
     t.string   "presentation_after",    :limit => 64
+    t.string   "status_tag",            :limit => 12,                    :null => false
   end
 
   add_index "sentences", ["assigned_to"], :name => "index_sentences_on_assigned_to"
   add_index "sentences", ["source_division_id", "sentence_number"], :name => "idx_sentences_sdid_snu"
+  add_index "sentences", ["status_tag"], :name => "index_tokens_on_status_tag"
 
   create_table "slash_edges", :force => true do |t|
     t.integer "slasher_id"

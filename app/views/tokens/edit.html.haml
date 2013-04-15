@@ -1,7 +1,7 @@
 - context_bar do
   %p.breadcrumbs
     != breadcrumbs @source, @source_division, @sentence, @token, 'Edit'
-    != completion_rate @token.completion
+    != completion_rate @token.status
   %p
     != external_text_links @token.sentence
 

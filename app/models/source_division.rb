@@ -138,26 +138,13 @@ class SourceDivision < ActiveRecord::Base
     end
   end
 
-  # Tests if review is complete.
-  def review_complete?
-    not sentences.where('reviewed_by IS NULL').exists?
-  end
-
-  # Tests if annotation is complete.
-  def annotation_complete?
-    not sentences.where('annotated_by IS NULL').exists?
-  end
-
-  # Returns the completion state.
-  def completion
-    if annotation_complete?
-      if review_complete?
-        :reviewed
-      else
-        :annotated
-      end
+  def aggregate_status
+    if sentences.unannotated.exists?
+      'unannotated'
+    elsif sentences.unreviewed.exists?
+      'annotated'
     else
-      :unannotated
+      'reviewed'
     end
   end
 

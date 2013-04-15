@@ -2,14 +2,15 @@ one:
   id: 1
   source_division_id: 1
   sentence_number: 0
+  status_tag: annotated
   annotated_by: 1
-  reviewed_by: 1
   presentation_before: "Junky text "
   presentation_after: " txet yknuJ"
 information_structure1:
   id: 2
   source_division_id: 1
   sentence_number: 1
+  status_tag: reviewed
   annotated_by: 1
   reviewed_by: 1
   presentation_before:
@@ -18,6 +19,7 @@ information_structure2:
   id: 3
   source_division_id: 1
   sentence_number: 2
+  status_tag: reviewed
   annotated_by: 1
   reviewed_by: 1
   presentation_before:

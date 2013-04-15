@@ -28,13 +28,13 @@ module Tagger
     end
 
     def analyze(form)
-      rel = Token.includes(:lemma, :sentence).where(:form => form).where("lemmata.language_tag = ?", @language.to_s)
+      rel = Token.where(:form => form).joins(:lemma).where(:lemmata => { :language_tag => @language.to_s })
 
       case @completion_level
       when 'reviewed_only'
-        rel = rel.where("sentences.reviewed_by IS NOT NULL")
+        rel = rel.reviewed
       when 'annotated_only'
-        rel = rel.where("sentences.annotated_by IS NOT NULL")
+        rel = rel.annotated
       when 'any'
       else
         raise "invalid completion level specified in tagger.yml"
