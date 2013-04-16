@@ -1,7 +1,8 @@
+# encoding: UTF-8
 #--
 #
-# Copyright 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -50,10 +51,11 @@ class NotesController < ApplicationController
 
   def destroy
     @note = Note.find(params[:id])
+    notable = @note.notable
 
     @note.destroy
     flash[:notice] = 'Note deleted'
 
-    respond_with @note
+    redirect_to notable
   end
 end
