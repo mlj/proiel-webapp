@@ -54,6 +54,8 @@ class SentencesController < ApplicationController
     @sentence = Sentence.find(params[:id])
     @sentence.update_attributes(params[:sentence])
 
+    flash[:notice] = 'Sentence was successfully updated.'
+
     respond_with @sentence
   end
 
