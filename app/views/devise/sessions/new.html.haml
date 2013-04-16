@@ -1,7 +1,9 @@
 = semantic_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
   = f.inputs "Sign in" do
-    != f.input :login, :label => 'User name'
-    != f.input :password
+    ._50
+      != f.input :login, :label => 'User name'
+    ._50
+      != f.input :password
     != f.submit "Sign in"
     %br
     != link_to "Register new account", new_registration_path(resource_name)

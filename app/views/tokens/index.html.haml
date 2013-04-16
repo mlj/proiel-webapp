@@ -2,19 +2,32 @@
   .breadcrumbs
     != breadcrumbs 'Search'
 
-= search_form_for @search, :builder => Formtastic::FormBuilder, :class => 'formtastic' do |f|
+= search_form_for @search, :builder => Formtastic::FormBuilder, :class => 'formtastic wide' do |f|
   = f.inputs do
-    != f.input :form_wildcard_matches, :label => 'Token form', :required => false, :hint => 'Use ? to match any character or * to match any string'
-    - if Source.represented_languages.count > 1
-      != f.input :sentence_source_division_source_language_tag_eq, :label => 'Language', :collection => Source.represented_languages, :required => false
-    - if Source.all.count > 1
-      != f.input :sentence_source_division_source_id_eq, :label => 'Source', :collection => Source.all.sort_by(&:to_label), :required => false
-    != f.input :lemma_lemma_wildcard_matches, :label => 'Lemma base form', :required => false, :hint => 'Use ? to match any character or * to match any string'
-    != f.input :lemma_variant_eq, :label => 'Lemma variant number', :hint => 'An integer number differentiating this lemma from other lemmata with the same base form and part of speech.', :required => false
-    != f.input :lemma_part_of_speech_tag_eq, :label => 'Part of speech', :collection => Lemma.represented_parts_of_speech, :required => false
-    != f.input :relation_tag_eq, :label => 'Relation', collection: RelationTag.all.map(&:to_label), :required => false
-    - MorphFeatures::MORPHOLOGY_PRESENTATION_SEQUENCE.each do |field|
-      != f.input "morphology_tag_char#{MorphFeatures::MORPHOLOGY_POSITIONAL_TAG_SEQUENCE.index(field)}_matches", label: field.to_s.capitalize, collection: MorphFeatures::MORPHOLOGY_SUMMARIES[field].map { |x, y| [y, x] }, required: false
+    ._25
+      - if Source.represented_languages.count > 1
+        != f.input :sentence_source_division_source_language_tag_eq, :label => 'Language', :collection => Source.represented_languages, :required => false
+      - if Source.all.count > 1
+        != f.input :sentence_source_division_source_id_eq, :label => 'Source', :collection => Source.all.sort_by(&:to_label), :required => false
+    ._25
+      != f.input :form_wildcard_matches, :label => 'Token form', :required => false, :hint => '? matches any character, * any string'
+      %div
+        ._l67
+          != f.input :lemma_lemma_wildcard_matches, :label => 'Lemma form', :required => false
+        ._r33
+          != f.input :lemma_variant_eq, :label => 'Variant', :required => false
+        .inline-hints
+          ? matches any character, * any string
+      != f.input :lemma_part_of_speech_tag_eq, :label => 'Part of speech', :collection => Lemma.represented_parts_of_speech, :required => false
+      != f.input :relation_tag_eq, :label => 'Relation', collection: RelationTag.all.map(&:to_label), :required => false
+    ._25
+      - MorphFeatures::MORPHOLOGY_PRESENTATION_SEQUENCE.each_with_index do |field, i|
+        - if i < 5
+          != f.input "morphology_tag_char#{MorphFeatures::MORPHOLOGY_POSITIONAL_TAG_SEQUENCE.index(field)}_matches", label: field.to_s.capitalize, collection: MorphFeatures::MORPHOLOGY_SUMMARIES[field].map { |x, y| [y, x] }, required: false
+    ._25
+      - MorphFeatures::MORPHOLOGY_PRESENTATION_SEQUENCE.each_with_index do |field, i|
+        - if i >= 5
+          != f.input "morphology_tag_char#{MorphFeatures::MORPHOLOGY_POSITIONAL_TAG_SEQUENCE.index(field)}_matches", label: field.to_s.capitalize, collection: MorphFeatures::MORPHOLOGY_SUMMARIES[field].map { |x, y| [y, x] }, required: false
 
   = f.actions do
     != f.submit "Search"
