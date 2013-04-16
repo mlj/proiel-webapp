@@ -18,6 +18,8 @@ module SentenceFormattingHelper
   #
   # <tt>:sentence_breaks</tt> -- If true, will flag sentence breaks.
   #
+  # <tt>:sentence_statuses</tt> -- If true, will show sentence statuses.
+  #
   # <tt>:length_limit</tt> -- If not +nil+, will limit the length of the
   # formatted sentence to the given number of words and append an ellipsis
   # if the sentence exceeds that limit. If a negative number is given, the
@@ -78,6 +80,8 @@ module SentenceFormattingHelper
       case reference_type
       when :sentence_break
         options[:sentence_breaks]
+      when :sentence_status
+        options[:sentence_statuses]
       when :sentence_number
         options[:sentence_numbers]
       when :token_number
@@ -90,12 +94,17 @@ module SentenceFormattingHelper
     end
 
     def to_html(options)
-      if reference_value.to_s.empty?
-        ''
-      elsif reference_url
-        link_to reference_value.to_s, reference_url, :class => reference_type.to_s.dasherize, :lang => 'en'
+      case reference_type
+      when :sentence_status
+        link_to '', reference_url, :class => reference_value
       else
-        content_tag :span, reference_value.to_s, :class => reference_type.to_s.dasherize, :lang => 'en'
+        if reference_value.to_s.empty?
+          ''
+        elsif reference_url
+          link_to reference_value.to_s, reference_url, :class => reference_type.to_s.dasherize, :lang => 'en'
+        else
+          content_tag :span, reference_value.to_s, :class => reference_type.to_s.dasherize, :lang => 'en'
+        end
       end
     end
   end
@@ -187,7 +196,7 @@ module SentenceFormattingHelper
   def check_reference_update(state, reference_type, reference_id, reference_value, reference_object = nil)
     if reference_id and state[reference_type] != reference_id
       state[reference_type] = reference_id
-      FormattedReference.new(reference_type, reference_value, url_for(reference_object))
+      FormattedReference.new(reference_type, reference_value, reference_object ? url_for(reference_object) : reference_object)
     else
       nil
     end
@@ -203,9 +212,9 @@ module SentenceFormattingHelper
       # Skip citation update for empty tokens, which will be found in the form
       # of empty PRO tokens when formatting information structure, as these are
       # unlikely to have a valid citation_part value.
-      t << check_reference_update(state, :citation, token.citation_part, token.citation_part) unless token.is_empty?
-
-      t << check_reference_update(state, :sentence_number, token.sentence.sentence_number, token.sentence.sentence_number.to_i, token.sentence)
+      t << check_reference_update(state, :citation, token.citation_part, token.citation_part, url_for(token.sentence)) unless token.is_empty?
+      t << check_reference_update(state, :sentence_status, token.sentence.id, token.sentence.status, url_for(token.sentence))
+      t << check_reference_update(state, :sentence_number, token.sentence.sentence_number, token.sentence.sentence_number.to_i, url_for(token.sentence))
 
       extra_attributes = block ? block.call(token) : nil
 

@@ -6,10 +6,13 @@
   .resources
     != link_to_resources @source, :edit
 
-  - if @source.metadata.valid?
-    %p
+  %p
+    - if @source.metadata.valid?
       #metadata.toggle-hidden{:title => 'metadata'}
         != @source.metadata.to_html
+
+    %a{:href => '#', :id => 'toggle-sentence-status'}
+      Show annotation status
 
 %p
   != paginate @source_divisions
@@ -17,4 +20,6 @@
 .table-of-source-divisions
   %ul
     - @source_divisions.each do |source_division|
-      %li!= link_to "#{source_division.title} (#{source_division.citation})", source_division
+      %li
+        != completion_rate source_division.aggregate_status
+        != link_to "#{source_division.title} (#{source_division.citation})", source_division

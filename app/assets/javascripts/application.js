@@ -8,6 +8,17 @@
 //= require jquery_ujs
 
 $(function() {
+  $(".formatted-text .reviewed, .formatted-text .annotated, .formatted-text .unannotated").hide();
+  $(".table-of-source-divisions .reviewed, .table-of-source-divisions .annotated, .table-of-source-divisions .unannotated").hide();
+
+  if ($('#toggle-sentence-status')) {
+    $('#toggle-sentence-status').click(function() {
+      $(".formatted-text .reviewed, .formatted-text .annotated, .formatted-text .unannotated").toggle();
+      $(".table-of-source-divisions .reviewed, .table-of-source-divisions .annotated, .table-of-source-divisions .unannotated").toggle();
+      return false;
+    });
+  }
+
   $(".toggle-hidden").each(function(i, el) {
     $(el).hide();
     $('<a href="#">Show ' + $(el).attr('title') + ' </a>').insertBefore(el).click(function() {

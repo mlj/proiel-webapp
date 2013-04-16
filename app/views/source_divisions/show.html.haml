@@ -6,15 +6,18 @@
     != completion_rate @source_division.aggregate_status
   .resources
     != link_to_resources @source_division, :edit, :previous, :next
+  %p
+    - if @source_division.aligned_source_division
+      != link_to 'Show sentence alignments', alignment_path(@source_division)
 
-  - if @source_division.aligned_source_division
-    != link_to 'Show sentence alignments', alignment_path(@source_division)
+    - if @source_division.has_discourse_annotation?
+      != link_to 'Show discourse annotations', source_division_discourse_path(@source_division)
 
-  - if @source_division.has_discourse_annotation?
-    != link_to 'Show discourse annotations', source_division_discourse_path(@source_division)
+    %a{:href => '#', :id => 'toggle-sentence-status'}
+      Show annotation status
 
 %p
   != paginate @sentences
 
 %p
-  != format_sentence @sentences.all, :citations => true, :sentence_numbers => true, :link_to => :sentences
+  != format_sentence @sentences.all, :citations => true, :sentence_numbers => true, :link_to => :sentences, :sentence_statuses => true
