@@ -7,7 +7,10 @@ class InfoStatusesController < ApplicationController
     @source_division = @sentence.source_division
     @source = @source_division.source
 
-    set_contrast_options_for(@sentence.source_division)
+    s = @source_division.contrast_groups.map(&:to_i).sort.uniq.map do |contrast|
+      %Q(<option value="#{contrast}">#{contrast}</option>)
+    end.join
+    @contrast_options = ('<option selected="selected"></option>' + s).html_safe
   end
 
   # PUT /sentences/1/info_status
@@ -47,10 +50,9 @@ class InfoStatusesController < ApplicationController
     render :text => new_token_ids.to_json
   end
 
-
   # POST /sentences/1/info_status/delete_contrast
   def delete_contrast
-    Token.delete_contrast(params[:contrast], @sentence.source_division)
+    @sentence.source_division.delete_contrast_group!(params[:contrast])
   rescue
     render :text => $!, :status => 500
     raise
@@ -145,12 +147,6 @@ class InfoStatusesController < ApplicationController
       # (e.g., if we try to create more than one prodrop token as part
       # of the same save operation).
       @sentence.tokens.reload
-    end
-  end
-
-  def set_contrast_options_for(source_division)
-    @contrast_options = ['<option selected="selected"></option>'] + Token.contrast_groups_for(source_division).map(&:to_i).uniq.sort.map do |contrast|
-      %Q(<option value="#{contrast}">#{contrast}</option>)
     end
   end
 

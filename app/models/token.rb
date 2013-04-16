@@ -370,21 +370,6 @@ class Token < ActiveRecord::Base
        !predicative? && !appositive?)
   end
 
-  # Returns all contrast groups registered for the given source division
-  def self.contrast_groups_for(source_division)
-    connection.select_all("SELECT DISTINCT contrast_group FROM tokens, sentences " + \
-                          "WHERE tokens.contrast_group IS NOT NULL AND tokens.sentence_id = sentences.id AND sentences.source_division_id = #{source_division.id}"
-                          ).map { |record| record['contrast_group'] }
-  end
-
-  def self.delete_contrast(contrast_number, source_division)
-    contrast_number = contrast_number.to_i
-    raise 'Invalid contrast number' unless contrast_number > 0  # in case we receive something strange as params[:contrast_number]
-
-    connection.update("UPDATE tokens, sentences SET tokens.contrast_group = NULL WHERE tokens.contrast_group LIKE '#{contrast_number}%' " + \
-                      "AND tokens.sentence_id = sentences.id AND sentences.source_division_id = #{source_division.id}")
-  end
-
   def self.tokens_in_same_source?(t1, t2)
     t1.sentence.source_division.source == t2.sentence.source_division.source
   end

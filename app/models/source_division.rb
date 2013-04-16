@@ -192,4 +192,17 @@ class SourceDivision < ActiveRecord::Base
       :unannotated
     end
   end
+
+  # Returns all contrast groups defined in the source division.
+  def contrast_groups
+    tokens.where('contrast_group IS NOT NULL').uniq.pluck(:contrast_group)
+  end
+
+  # Delete contrast group from source division.
+  def delete_contrast_group!(contrast_number)
+    contrast_number = contrast_number.to_i
+    raise 'Invalid contrast number' unless contrast_number > 0
+
+    tokens.where('contrast_group LIKE ?', "#{contrast_number}%").update_all :contrast_group => nil
+  end
 end
