@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #--
 #
 # Copyright 2013 University of Oslo
@@ -22,4 +23,8 @@
 
 class InformationStatusTag < TagObject
   model_file_name 'information_status.yml'
+
+  def to_label
+    summary
+  end
 end

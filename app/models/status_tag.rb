@@ -23,4 +23,8 @@
 
 class StatusTag < TagObject
   model_file_name 'status.yml'
+
+  def to_label
+    summary
+  end
 end

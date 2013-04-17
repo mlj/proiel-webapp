@@ -9,6 +9,7 @@
         != f.input :sentence_source_division_source_language_tag_eq, :label => 'Language', :collection => Source.represented_languages, :required => false
       - if Source.all.count > 1
         != f.input :sentence_source_division_source_id_eq, :label => 'Source', :collection => Source.all.sort_by(&:to_label), :required => false
+      != f.input :sentence_status_tag_eq, :label => 'Sentence status', collection: StatusTag.all.map { |t| [t.to_label, t.tag] }, :required => false
     ._25
       != f.input :form_wildcard_matches, :label => 'Token form', :required => false, :hint => '? matches any character, * any string'
       %div
@@ -19,7 +20,8 @@
         .inline-hints
           ? matches any character, * any string
       != f.input :lemma_part_of_speech_tag_eq, :label => 'Part of speech', :collection => Lemma.represented_parts_of_speech, :required => false
-      != f.input :relation_tag_eq, :label => 'Relation', collection: RelationTag.all.map(&:to_label), :required => false
+      != f.input :relation_tag_eq, :label => 'Relation', collection: RelationTag.all.map { |t| [t.to_label, t.tag] }, :required => false
+      != f.input :information_status_tag_eq, :label => 'Information status', collection: InformationStatusTag.all.map { |t| [t.to_label, t.tag] }, :required => false
     ._25
       - MorphFeatures::MORPHOLOGY_PRESENTATION_SEQUENCE.each_with_index do |field, i|
         - if i < 5
@@ -34,6 +36,8 @@
 
 - if @tokens
   != paginate @tokens, :params => params
+  .pagination-totals
+    != page_entries_info @tokens, :entry_name => 'matches'
 
 - if @tokens
   %table.concordance

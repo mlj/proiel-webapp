@@ -4,13 +4,20 @@
 
 = search_form_for @search, :builder => Formtastic::FormBuilder, :class => 'formtastic' do |f|
   != f.input :language_tag_eq, label: 'Language', required: false, collection: Lemma.group(:language_tag).map(&:language)
-  != f.input :lemma_wildcard_matches, :label => 'Lemma base form', :required => false, :hint => 'Use ? to match any character or * to match any string'
-  != f.input :variant_eq, :label => 'Lemma variant', :required => false
+  %div
+    ._l67
+      != f.input :lemma_wildcard_matches, :label => 'Lemma base form', :required => false
+    ._r33
+      != f.input :variant_eq, :label => 'Lemma variant', :required => false
+    .inline-hints
+      ? matches any character, * any string
   != f.input :part_of_speech_tag_eq, :label => 'Part of speech', :collection => Lemma.represented_parts_of_speech, :required => false
   != f.submit "Search"
 
 .tabular
   != paginate @lemmata
+  .pagination-totals
+    != page_entries_info @lemmata, :entry_name => 'matches'
 
   %table.odd-even-line
     %thead
