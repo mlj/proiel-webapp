@@ -20,10 +20,8 @@ div#words input:checked + span { background: orange; color: white; }
   vertical-align: sub;
   font-weight: bold;
   font-size: 60%;
-  color: #F7A700;
+  color: blue;
 }
-
-#relations .selected > .user-value { background: #9999ff; }
 
 #cut-buffer { display: none; }
 
@@ -40,3 +38,4 @@ ul.tree, ul.tree ul { list-style-type: none; background: image_url("vline.png") 
 ul.tree ul { margin-left: 10px; } 
 ul.tree li { margin: 0; padding: 0 12px; line-height: 20px; background: image_url("node.png") no-repeat; } 
 ul.tree li:last-child { background: #fff image_url("lastnode.png") no-repeat; }
+ul.tree .selected { background: #ccccff; }
