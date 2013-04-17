@@ -1,6 +1,11 @@
 - context_bar do
   .breadcrumbs
     != breadcrumbs 'Search'
+  %p
+    - unless @tokens.empty? or @search.result.count > 5000
+      != link_to 'Download results as CSV', params.merge(:format => :csv)
+      = ' '
+      != link_to 'Download results as text file', params.merge(:format => :txt)
 
 = search_form_for @search, :builder => Formtastic::FormBuilder, :class => 'formtastic wide' do |f|
   = f.inputs do

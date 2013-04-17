@@ -538,8 +538,9 @@ class Sentence < ActiveRecord::Base
     tokens.takes_syntax.dependency_root.first
   end
 
-  def to_s
-    [presentation_before, tokens.visible.all.map(&:to_s).join, presentation_after].compact.join
+  def to_s(options = {})
+    tokens_text = tokens.visible.all.map { |t| t.to_s(options) }.join
+    [presentation_before, tokens_text, presentation_after].compact.join
   end
 
   # Returns the maximum depth of the dependency graph, i.e. the maximum

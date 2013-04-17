@@ -386,8 +386,22 @@ class Token < ActiveRecord::Base
     end
   end
 
-  def to_s
-    [presentation_before, form, presentation_after].compact.join
+  def to_s(options = {})
+    token_text = if [*options[:highlight_tokens]].include?(self.id)
+                   "*#{form}*"
+                 else
+                   form
+                 end
+
+    [presentation_before, token_text, presentation_after].compact.join
+  end
+
+  def self.presentation_form
+    pluck("CONCAT(IFNULL(presentation_before, ''), form, IFNULL(presentation_after, ''))")
+  end
+
+  def sentence_context_to_s
+    [previous_objects.order(:token_number).presentation_form.join + (presentation_before || ''), form, (presentation_after || '') + next_objects.order(:token_number).presentation_form.join]
   end
 
   # Tests if token can be joined with the following token.

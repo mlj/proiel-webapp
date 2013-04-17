@@ -79,7 +79,22 @@ class TokensController < ApplicationController
 
   def index
     @search = Token.search(params[:q])
-    @tokens = @search.result.page(current_page)
+
+    respond_to do |format|
+      format.html do
+        @tokens = @search.result.page(current_page)
+      end
+      format.csv do
+        if @search.result.count > 5000
+          head :no_content
+        end
+      end
+      format.txt do
+        if @search.result.count > 5000
+          head :no_content
+        end
+      end
+    end
   end
 
   def quick_search
