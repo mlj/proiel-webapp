@@ -22,6 +22,9 @@ namespace :proiel do
       when NilClass, 'proiel'
         klass = PROIELXMLImporter
         suffix = '.xml'
+      when 'json'
+        klass = JSONImporter
+        suffix = '.json'
       else
         raise "Invalid format"
       end
@@ -50,6 +53,9 @@ namespace :proiel do
       when 'text'
         klass = TextExporter
         suffix = '.txt'
+      when 'json'
+        klass = JSONExporter
+        suffix = '.json'
       else
         raise "Invalid format"
       end

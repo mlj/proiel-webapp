@@ -27,7 +27,7 @@ class Token < ActiveRecord::Base
     :empty_token_sort, :contrast_group, :token_alignment_id,
     :automatic_token_alignment, :dependency_alignment_id, :antecedent_id,
     :morphology_tag, :citation_part, :presentation_before, :presentation_after,
-    :relation_tag
+    :relation_tag, :created_at, :updated_at
 
   change_logging
 

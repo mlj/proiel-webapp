@@ -28,10 +28,12 @@ autoload :TextExporter, 'exporter/text_exporter'
 autoload :CoNLLExporter, 'exporter/conll_exporter'
 autoload :TigerXMLExporter, 'exporter/tiger_xml_exporter'
 autoload :Tiger2Exporter, 'exporter/tiger2_exporter'
+autoload :JSONExporter, 'exporter/json_exporter'
 
 autoload :SourceImporter, 'importer/source_importer'
 autoload :XMLSourceImporter, 'importer/xml_source_importer'
 autoload :PROIELXMLImporter, 'importer/proiel_xml_importer'
+autoload :JSONImporter, 'importer/json_importer'
 
 autoload :Metadata, 'metadata'
 

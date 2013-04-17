@@ -25,7 +25,7 @@ class Sentence < ActiveRecord::Base
   attr_accessible :sentence_number, :annotated_by, :annotated_at, :reviewed_by,
     :reviewed_at, :unalignable, :automatic_alignment, :sentence_alignment_id,
     :source_division_id, :assigned_to, :presentation_before, :presentation_after,
-    :status_tag
+    :status_tag, :created_at, :updated_at
 
   change_logging
 
@@ -39,7 +39,7 @@ class Sentence < ActiveRecord::Base
 
   belongs_to :annotator, :class_name => 'User', :foreign_key => 'annotated_by'
   belongs_to :reviewer, :class_name => 'User', :foreign_key => 'reviewed_by'
-  belongs_to :assigned_to, :class_name => 'User', :foreign_key => 'assigned_to'
+  belongs_to :assignee, :class_name => 'User', :foreign_key => 'assigned_to'
 
   belongs_to :sentence_alignment, :class_name => 'Sentence', :foreign_key => 'sentence_alignment_id'
 

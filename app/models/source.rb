@@ -23,7 +23,8 @@
 
 class Source < ActiveRecord::Base
   attr_accessible :source_id, :position, :title,
-    :aligned_source_division_id, :presentation_before, :presentation_after
+    :aligned_source_division_id, :presentation_before, :presentation_after,
+    :language_tag, :citation_part, :created_at, :updated_at
 
   change_logging
 
