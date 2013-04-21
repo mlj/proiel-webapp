@@ -1,9 +1,15 @@
 - javascript "prototype", "scriptaculous", "utils", "effects", "dragdrop", "controls"
 - javascript 'info_statuses', 'prodrop', 'wz_jsgraphics', 'anaphora'
 
-%p.breadcrumbs
-  != breadcrumbs @source, @source_division, @sentence, 'Information structure'
-  != completion_rate @sentence.status
+- context_bar do
+  .breadcrumbs
+    != breadcrumbs @source, @source_division, @sentence, 'Information structure'
+    != completion_rate @sentence.status
+  .resources
+    - if @sentence.has_previous?
+      != link_to '', edit_sentence_info_status_path(@sentence.previous_object), :class => :previous, :accesskey => 'p'
+    - if @sentence.has_next?
+      != link_to '', edit_sentence_info_status_path(@sentence.next_object), :class => :next, :accesskey => 'n'
 
 %div{:id => "prodrop-menu", :style => "position: absolute; width: 150px; border: 2px solid black; display:none"}
   %div{:class => "prodrop-menu-item sub"}
