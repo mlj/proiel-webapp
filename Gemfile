@@ -1,4 +1,6 @@
 source "https://rubygems.org"
+#ruby "1.9.3"
+
 gem 'rails'
 gem 'json'
 
@@ -34,12 +36,7 @@ gem 'differ'
 gem 'iso-codes', :require => 'iso_codes'
 gem 'ruby-sfst', :require => 'sfst'
 
-group :production do
-  gem 'mysql2', '> 0.3.0'
-  gem 'thin'
-end
-
-group :development do
+group :production, :development do
   gem 'mysql2', '> 0.3.0'
   gem 'thin'
 end
