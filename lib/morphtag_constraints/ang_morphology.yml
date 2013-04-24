@@ -203,6 +203,13 @@
         :degree: :all
       n-: {}
 
+  Dq:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+
   Pi:
     :mask:
     - :inflection
