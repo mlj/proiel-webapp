@@ -61,7 +61,7 @@ class CoNLLExporter < SourceExporter
 
   def find_lexical_head_and_relation(id_to_number, t, rel = '')
     if t.head.nil? or !t.head.is_empty?
-      [t.head ? id_to_number[t.head_id] : 0, rel + t.relation.tag]
+      [t.head ? id_to_number[t.head_id] : 0, rel + t.relation_tag]
     else
       find_lexical_head_and_relation(id_to_number, t.head, rel + "#{t.relation.tag}(#{id_to_number[t.head_id]})")
     end
