@@ -95,7 +95,12 @@ namespace :proiel do
           options[:source_division] = source.source_divisions.select { |sd| sd.title =~ Regexp.new(ENV['SOURCE_DIVISION']) }.map(&:id)
         end
 
-        klass.new(source, options).write(file_name)
+        begin
+          klass.new(source, options).write(file_name)
+        rescue Exception => e
+          STDERR.puts "Error exporting text #{source.human_readable_id} using #{klass}: #{e}"
+          STDERR.puts e.backtrace.join("\n")
+        end
       end
     end
 
