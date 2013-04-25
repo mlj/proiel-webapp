@@ -68,6 +68,10 @@ function updateMorphtagPattern(pattern, field, value) {
   return stringReplaceChar(pattern, position, value);
 }
 
+function extractLegalPOSValues(language) {
+  return _.keys(morphology_values_by_language[language]).sort();
+}
+
 function extractLegalFieldValues(language, pos, pattern, field) {
   var r = new RegExp("^" + pattern);
   var position = morphology_field_positions[field];
@@ -100,7 +104,7 @@ function updateFieldOptions(language, field, pos, pattern) {
   var field_values;
 
   if (field == "pos")
-    field_values = _.keys(pos_summaries).sort();
+    field_values = extractLegalPOSValues(language);
   else
     field_values = extractLegalFieldValues(language, pos, pattern, field);
 
