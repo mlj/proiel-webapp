@@ -1,20 +1,36 @@
-%h1 Downloads
+%h1 Downloadable data files
 
 %p
   These data files are generated daily from the subset of our data that has been
-  reviewed. The data files are released under the
-  != link_to "Creative Commons Attribution-Noncommercial-Share Alike 3.0", "http://creativecommons.org/licenses/by-nc-sa/3.0/us/"
-  license. Please see each text for a list of contributors.
+  reviewed. If a file is unavailable, the text in question has not yet been reviewed.
 
-%ul
-  %li
-    != link_to "Schema file", "/exports/proiel.xsd"
+%p
+  All data files are released under the
+  != link_to "CC BY-NC-SA 3.0", "http://creativecommons.org/licenses/by-nc-sa/3.0/us/"
+  license. Please make sure that you are familiar with the terms of this license before downloading any of the files below.
+
+%h2 Data files
 
 %table
   - Source.all.each do |s|
     %tr
-      %td= s.author_and_title
-      %td!= link_to "PROIEL format", "/exports/#{s.human_readable_id}.xml"
-      %td!= link_to "TigerXML format", "/exports/#{s.human_readable_id}.tiger"
-      %td!= link_to "CoNLL format", "/exports/#{s.human_readable_id}.conll"
-      %td!= link_to "Text format", "/exports/#{s.human_readable_id}.txt"
+      %td!= link_to s.author_and_title, s
+      %td!= link_to_if export_file_available?("#{s.human_readable_id}.xml"), "PROIEL format", "/exports/#{s.human_readable_id}.xml"
+      %td!= link_to_if export_file_available?("#{s.human_readable_id}.tiger"), "TigerXML format", "/exports/#{s.human_readable_id}.tiger"
+      %td!= link_to_if export_file_available?("#{s.human_readable_id}.conll"), "CoNLL format", "/exports/#{s.human_readable_id}.conll"
+      %td!= link_to_if export_file_available?("#{s.human_readable_id}.txt"), "Text format", "/exports/#{s.human_readable_id}.txt"
+
+%h2 Schema files and documentation
+
+%ul
+  %li
+    PROIEL format:
+    != link_to 'proiel.xsd', '/exports/proiel.xsd'
+  %li
+    TigerXML format:
+    != link_to 'TigerXML.xsd', '/exports/TigerXML.xsd'
+    != link_to 'TigerXMLHeader.xsd', '/exports/TigerXMLHeader.xsd'
+    != link_to 'TigerXMLSubcorpus.xsd', '/exports/TigerXMLSubcorpus.xsd'
+  %li
+    CoNLL format:
+    != link_to 'Description of format', 'http://ilk.uvt.nl/conll/#dataformat'

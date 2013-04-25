@@ -268,4 +268,8 @@ module ApplicationHelper
     crumbs << breadcrumb_title_for(current)
     crumbs.join(' » ')
   end
+
+  def export_file_available?(file_name)
+    File.exists?(File.join(Proiel::Application.config.export_directory_path, file_name))
+  end
 end
