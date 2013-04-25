@@ -23,6 +23,8 @@
 #++
 
 class Tiger2Exporter < TigerXMLExporter
+  only_exports :reviewed
+
   def initialize(source, options = {})
     super(source, options)
 

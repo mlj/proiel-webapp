@@ -25,6 +25,8 @@
 # Exporter for the CoNLL shared task format.
 # Note that this exporter does not support secondary edges.
 class CoNLLExporter < SourceExporter
+  only_exports :reviewed
+
   protected
 
   def write_sentence!(file, s)

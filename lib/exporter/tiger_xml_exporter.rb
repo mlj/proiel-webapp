@@ -27,6 +27,8 @@
 # in the variant used by VISL under the name 'TIGER dependency format'
 # (http://beta.visl.sdu.dk/treebanks.html#TIGER_dependency_format).
 class TigerXMLExporter < XMLSourceExporter
+  only_exports :reviewed
+
   def initialize(source, options = {})
     super(source, options)
     @ident = 'id'

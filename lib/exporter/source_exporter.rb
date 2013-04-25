@@ -27,6 +27,9 @@ require 'metadata'
 
 # Abstract source exporter.
 class SourceExporter
+  self.cattr_accessor :exportable_sentence_statuses
+  self.exportable_sentence_statuses = %w(unannotated annotated reviewed)
+
   # Creates a new exporter that exports the source +source+.
   #
   # ==== Options
@@ -42,21 +45,24 @@ class SourceExporter
 
   # Writes exported data to a file.
   def write(file_name)
-    File.open(file_name, 'w') do |file|
-      write_toplevel!(file) do |context|
-        write_source!(context, @source) do |context|
-          sds = @source.source_divisions.order(:position)
-          sds = sds.where(:id => @options[:source_division]) if @options[:source_division]
+    if Sentence.where(:status_tag => self.exportable_sentence_statuses).joins(:source_division => [:source]).where(:source_divisions => {:source_id => @source.id}).exists?
+      File.open(file_name, 'w') do |file|
+        write_toplevel!(file) do |context|
+          write_source!(context, @source) do |context|
+            sds = @source.source_divisions.order(:position)
+            sds = sds.where(:id => @options[:source_division]) if @options[:source_division]
 
-          sds.each do |sd|
-            write_source_division!(context, sd) do |context|
-              ss = sd.sentences.order(:sentence_number)
-              ss = ss.reviewed if @options[:reviewed_only]
+            sds.each do |sd|
+              write_source_division!(context, sd) do |context|
+                ss = sd.sentences.order(:sentence_number)
+                ss = ss.where(:status_tag => self.exportable_sentence_statuses)
+                ss = ss.reviewed if @options[:reviewed_only]
 
-              ss.each do |s|
-                write_sentence!(context, s) do |context|
-                  s.tokens.order(:token_number).includes(:lemma, :slash_out_edges).each do |t|
-                    write_token!(context, t)
+                ss.each do |s|
+                  write_sentence!(context, s) do |context|
+                    s.tokens.order(:token_number).includes(:lemma, :slash_out_edges).each do |t|
+                      write_token!(context, t)
+                    end
                   end
                 end
               end
@@ -64,9 +70,11 @@ class SourceExporter
           end
         end
       end
-    end
 
-    validate!(file_name)
+      validate!(file_name)
+    else
+      STDERR.puts "Source #{@source.human_readable_id} has no data available for export on this format"
+    end
   end
 
   protected
@@ -91,5 +99,24 @@ class SourceExporter
   end
 
   def validate!(file_name)
+  end
+
+  def self.exportable_sentence
+    if self.responds?(:exportable_sentence_statuses)
+      Sentence.where(:status_tag => self.exportable_sentence_statuses)
+    else
+      Sentence
+    end
+  end
+
+  def self.only_exports(status_tag)
+    case status_tag.to_s
+    when 'reviewed'
+      self.exportable_sentence_statuses = %w(reviewed)
+    when 'annotated'
+      self.exportable_sentence_statuses = %w(reviewed annotated)
+    else
+      raise ArgumentError, 'invalid status tag'
+    end
   end
 end

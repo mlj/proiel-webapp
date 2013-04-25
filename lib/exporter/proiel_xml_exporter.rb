@@ -28,6 +28,8 @@ class PROIELXMLExporter < XMLSourceExporter
     'proiel.xsd'
   end
 
+  only_exports :reviewed
+
   protected
 
   def write_toplevel!(file)
