@@ -46,7 +46,7 @@ class SourceExporter
   # Writes exported data to a file.
   def write(file_name)
     if Sentence.where(:status_tag => self.exportable_sentence_statuses).joins(:source_division => [:source]).where(:source_divisions => {:source_id => @source.id}).exists?
-      File.open(file_name, 'w') do |file|
+      File.open("#{file_name}.tmp", 'w') do |file|
         write_toplevel!(file) do |context|
           write_source!(context, @source) do |context|
             sds = @source.source_divisions.order(:position)
@@ -72,6 +72,8 @@ class SourceExporter
       end
 
       validate!(file_name)
+
+      File.rename("#{file_name}.tmp", file_name)
     else
       STDERR.puts "Source #{@source.human_readable_id} has no data available for export on this format"
     end
