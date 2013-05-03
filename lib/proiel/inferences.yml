@@ -620,10 +620,14 @@
     :language: grc
     :dependent_pos: D.
     :dependent_inflection: n
+  :actions:
+    :inferred_relation: aux
 - :criteria: #non-inflecting adverbs are aux in Latin
     :language: lat
     :dependent_pos: D.
     :dependent_inflection: n
+  :actions:
+    :inferred_relation: aux
 - :criteria: # adverb ne is AUX in Old English
     :language: ang
     :head_pos: V-
