@@ -16,12 +16,17 @@
 
 != semantic_tags_summary @semantic_tags
 
+.tabular
+  != paginate @tokens
+  .pagination-totals
+    != page_entries_info @tokens, :entry_name => 'tokens'
+
 %table.concordance
   %thead
     %tr
       %th Location
       %th.left
-      %th.centre Matched form
+      %th.centre Matched token
       %th.right
   %tbody.odd-even-line
     != render :partial => 'annotations/annotation', :collection => @tokens
