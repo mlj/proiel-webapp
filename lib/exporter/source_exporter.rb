@@ -53,15 +53,17 @@ class SourceExporter
             sds = sds.where(:id => @options[:source_division]) if @options[:source_division]
 
             sds.each do |sd|
-              write_source_division!(context, sd) do |context|
-                ss = sd.sentences.order(:sentence_number)
-                ss = ss.where(:status_tag => self.exportable_sentence_statuses)
-                ss = ss.reviewed if @options[:reviewed_only]
+              if Sentence.where(:status_tag => self.exportable_sentence_statuses).joins(:source_division).where(:source_division_id => sd.id).exists?
+                write_source_division!(context, sd) do |context|
+                  ss = sd.sentences.order(:sentence_number)
+                  ss = ss.where(:status_tag => self.exportable_sentence_statuses)
+                  ss = ss.reviewed if @options[:reviewed_only]
 
-                ss.each do |s|
-                  write_sentence!(context, s) do |context|
-                    s.tokens.order(:token_number).includes(:lemma, :slash_out_edges).each do |t|
-                      write_token!(context, t)
+                  ss.each do |s|
+                    write_sentence!(context, s) do |context|
+                      s.tokens.order(:token_number).includes(:lemma, :slash_out_edges).each do |t|
+                        write_token!(context, t)
+                      end
                     end
                   end
                 end
