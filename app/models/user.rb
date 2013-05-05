@@ -64,7 +64,10 @@ class User < ActiveRecord::Base
 
   # Create a new, confirmed administrator user.
   def self.create_confirmed_administrator!(attrs)
-    User.create! attrs.merge({ :confirmed_at => Time.now, :role => 'administrator' })
+    u = User.new attrs
+    u.confirmed_at = Time.now
+    u.role = 'administrator'
+    u.save!
   end
 
   def first_assigned_sentence
