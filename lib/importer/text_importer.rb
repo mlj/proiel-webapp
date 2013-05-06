@@ -70,7 +70,7 @@ class TextImporter < SourceImporter
         s = sd.sentences.create! :status_tag => 'unannotated', :sentence_number => s_number
         s_number += 1
 
-        sentence_text.scan(/([^\w]+)?(\w+)([^\w]+)/).each_with_index do |(before, form, after), i|
+        sentence_text.scan(/([^\p{Word}]+)?(\p{Word}+)([^\p{Word}]+)/).each_with_index do |(before, form, after), i|
           s.tokens.create! :citation_part => citation_part,
             :presentation_before => before,
             :form => form,
