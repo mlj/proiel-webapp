@@ -97,10 +97,12 @@ class PROIELXMLImporter < XMLSourceImporter
     # Verify annotation scheme
     annotation = top_level['annotation']
 
-    test_annotation_values(annotation['relations'], RelationTag)
-    test_annotation_values(annotation['parts_of_speech'], PartOfSpeechTag)
-    test_annotation_values(annotation['information_statuses'], InformationStatusTag)
-    # TODO: morphology
+    if annotation
+      test_annotation_values(annotation['relations'], RelationTag)
+      test_annotation_values(annotation['parts_of_speech'], PartOfSpeechTag)
+      test_annotation_values(annotation['information_statuses'], InformationStatusTag)
+      # TODO: morphology
+    end
 
     # Process sources
     arrify(top_level['source']).each_with_index do |source, source_position|
@@ -122,7 +124,7 @@ class PROIELXMLImporter < XMLSourceImporter
           arrify(div['sentence']).each_with_index do |sentence, sentence_position|
             s = create_with_attrs!(sd.sentences, sentence, SENTENCE_ATTRS,
                                    :sentence_number => sentence_position,
-                                   :status_tag => 'unannotated')
+                                   :status_tag => sentence['status'] || 'unannotated')
 
             arrify(sentence['token']).each_with_index do |token, token_position|
               t = create_with_attrs!(s.tokens, token, TOKEN_ATTRS,

@@ -45,10 +45,10 @@
     <xs:sequence>
       <xs:element name="token" minOccurs="1" maxOccurs="unbounded" type="Token"/>
     </xs:sequence>
-    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="optional"/>
     <xs:attribute name="presentation-before" type="xs:string" use="optional"/>
     <xs:attribute name="presentation-after" type="xs:string" use="optional"/>
-    <xs:attribute name="status" type="SentenceStatus" use="required"/>
+    <xs:attribute name="status" type="SentenceStatus" use="optional"/>
   </xs:complexType>
 
   <xs:simpleType name="SentenceStatus">
@@ -64,7 +64,7 @@
       <xs:element name="slash" minOccurs="0" maxOccurs="unbounded" type="Slash"/>
     </xs:sequence>
 
-    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="optional"/>
     <xs:attribute name="lemma" type="xs:string" use="optional"/>
     <xs:attribute name="part-of-speech" type="xs:string" use="optional"/>
     <xs:attribute name="morphology" type="xs:string" use="optional"/>
@@ -161,10 +161,10 @@
 
   <xs:complexType name="Proiel">
     <xs:sequence>
-      <xs:element name='annotation' minOccurs="1" maxOccurs="1" type='Annotation'/>
+      <xs:element name='annotation' minOccurs="0" maxOccurs="1" type='Annotation'/>
       <xs:element name='source' minOccurs="1" maxOccurs="unbounded" type='Source'/>
     </xs:sequence>
-    <xs:attribute name='export-time' type="xs:dateTime" use="required"/>
+    <xs:attribute name='export-time' type="xs:dateTime" use="optional"/>
     <xs:attribute name="schema-version" type="xs:decimal" use="required" fixed="1.0"/>
   </xs:complexType>
 
