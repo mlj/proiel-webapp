@@ -35,6 +35,7 @@ gem 'redcarpet'
 gem 'differ'
 gem 'iso-codes', :require => 'iso_codes'
 gem 'ruby-sfst', :require => 'sfst'
+gem 'colorize'
 
 group :production, :development do
   gem 'mysql2', '> 0.3.0'

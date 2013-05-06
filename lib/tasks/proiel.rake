@@ -25,6 +25,9 @@ namespace :proiel do
       when 'json'
         klass = JSONImporter
         suffix = '.json'
+      when 'text'
+        klass = TextImporter
+        suffix = '.txt'
       else
         raise "Invalid format"
       end

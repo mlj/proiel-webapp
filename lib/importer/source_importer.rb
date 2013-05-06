@@ -21,6 +21,8 @@
 #
 #++
 
+require 'colorize'
+
 # Abstract source importer.
 class SourceImporter
   def initialize
@@ -32,7 +34,13 @@ class SourceImporter
     validate!(file_name)
 
     File.open(file_name, 'r') do |file|
-      parse(file)
+      begin
+        Source.transaction do
+          parse(file)
+        end
+      rescue SourceImporterParseError => e
+        puts "Parse error: #{e}".red
+      end
     end
   end
 
@@ -41,4 +49,7 @@ class SourceImporter
 
   def parse(file)
   end
+end
+
+class SourceImporterParseError < StandardError
 end

@@ -25,12 +25,12 @@ class TextExporter < SourceExporter
   protected
 
   def write_source!(file, s)
-    file.puts "% #{Time.now}"
-    file.puts "% #{s.title}"
-    file.puts "% #{s.author}"
-    file.puts "% #{s.edition}"
-    file.puts "% #{s.citation_part}"
-    file.puts "% #{s.language_tag}"
+    file.puts "% export_time = #{Time.now}"
+    file.puts "% title = #{s.title}"
+    file.puts "% author = #{s.author}"
+    file.puts "% edition = #{s.edition}"
+    file.puts "% citation_part = #{s.citation_part}"
+    file.puts "% language = #{s.language_tag}"
 
     yield file
   end

@@ -26,35 +26,33 @@ class JSONImporter < SourceImporter
   protected
 
   def parse(file)
-    Source.transaction do
-      # A mapping from old (= export/import file) ID to new (= database) ID for each type of object
-      id_map = {}
+    # A mapping from old (= export/import file) ID to new (= database) ID for each type of object
+    id_map = {}
 
-      # First pass: make objects without associations and no validations
-      parse_lines(file) do |klass, old_id, attrs|
-        attrs.delete_if { |k, v| k[/_(id|by|to)$/] }
-        attrs["status_tag"] = "unannotated" if klass == Sentence
+    # First pass: make objects without associations and no validations
+    parse_lines(file) do |klass, old_id, attrs|
+      attrs.delete_if { |k, v| k[/_(id|by|to)$/] }
+      attrs["status_tag"] = "unannotated" if klass == Sentence
 
-        obj = klass.new attrs
-        obj.save(:validate => false)
+      obj = klass.new attrs
+      obj.save(:validate => false)
 
-        id_map[klass] ||= {}
-        raise "#{klass} object with ID #{id} already defined" if id_map[klass].has_key?(old_id)
-        id_map[klass][old_id] = obj.id
-      end
+      id_map[klass] ||= {}
+      raise "#{klass} object with ID #{id} already defined" if id_map[klass].has_key?(old_id)
+      id_map[klass][old_id] = obj.id
+    end
 
-      file.rewind
+    file.rewind
 
-      # Second pass: update objects with associations and perform validations
-      parse_lines(file) do |klass, old_id, attrs|
-        new_id = id_map[klass][old_id]
+    # Second pass: update objects with associations and perform validations
+    parse_lines(file) do |klass, old_id, attrs|
+      new_id = id_map[klass][old_id]
 
-        attrs.delete_if { |k, v| !k[/_(id|by|to)$/] }
-        attrs.each { |k, v| attrs[k] = id_map[klass][v] }
+      attrs.delete_if { |k, v| !k[/_(id|by|to)$/] }
+      attrs.each { |k, v| attrs[k] = id_map[klass][v] }
 
-        obj = klass.find(new_id)
-        obj.update_attributes!
-      end
+      obj = klass.find(new_id)
+      obj.update_attributes!
     end
   end
 

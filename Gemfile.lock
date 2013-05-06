@@ -36,6 +36,7 @@ GEM
       audited (= 3.0.0)
     bcrypt-ruby (3.0.1)
     builder (3.0.4)
+    colorize (0.5.8)
     daemons (1.1.9)
     devise (2.2.3)
       bcrypt-ruby (~> 3.0)
@@ -141,6 +142,7 @@ DEPENDENCIES
   alignment
   audited-activerecord (~> 3.0)
   builder
+  colorize
   devise
   devise-encryptable
   diff-lcs

@@ -33,6 +33,7 @@ autoload :JSONExporter, 'exporter/json_exporter'
 autoload :SourceImporter, 'importer/source_importer'
 autoload :XMLSourceImporter, 'importer/xml_source_importer'
 autoload :PROIELXMLImporter, 'importer/proiel_xml_importer'
+autoload :TextImporter, 'importer/text_importer'
 autoload :JSONImporter, 'importer/json_importer'
 
 autoload :Metadata, 'metadata'
