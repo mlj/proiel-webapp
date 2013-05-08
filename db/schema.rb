@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130415085522) do
+ActiveRecord::Schema.define(:version => 20130508140200) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -180,6 +180,7 @@ ActiveRecord::Schema.define(:version => 20130415085522) do
     t.text   "tei_header",                                   :null => false
     t.text   "author",        :limit => 255
     t.text   "edition",       :limit => 255
+    t.string "code",          :limit => 32,                  :null => false
   end
 
   create_table "tokens", :force => true do |t|

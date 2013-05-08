@@ -22,7 +22,7 @@
 #++
 
 class Source < ActiveRecord::Base
-  attr_accessible :source_id, :position, :title,
+  attr_accessible :source_id, :code, :position, :title,
     :aligned_source_division_id, :presentation_before, :presentation_after,
     :language_tag, :citation_part, :created_at, :updated_at
 
@@ -78,10 +78,6 @@ class Source < ActiveRecord::Base
 
   # Generates a human-readable ID for the source.
   def human_readable_id
-    if citation_part.blank?
-      id.to_s
-    else
-      citation_part.downcase.gsub(/[^\w]+/, '_').sub(/_$/, '')
-    end
+    code
   end
 end

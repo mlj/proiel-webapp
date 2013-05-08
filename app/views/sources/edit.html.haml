@@ -3,6 +3,7 @@
     != breadcrumbs ['Contents', sources_path], @source, 'Edit'
 
 = semantic_form_for @source do |form|
+  != form.input :code, :as => :string
   != form.input :author, :as => :string
   != form.input :title, :as => :string
   != form.input :edition, :as => :string
