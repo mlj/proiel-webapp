@@ -114,8 +114,11 @@ class PROIELXMLImporter < XMLSourceImporter
 
         token_id_map = {} # map imported token IDs to database token IDs
         tei_header = tei_headers[source_position] # match the TEI header
+        code = source['@id']
 
-        sr = create_with_attrs!(Source, source, SOURCE_ATTRS, :tei_header => tei_header)
+        sr = create_with_attrs!(Source, source, SOURCE_ATTRS,
+                                :tei_header => tei_header,
+                                :code => code)
 
         arrify(source['div']).each_with_index do |div, div_position|
           sd = create_with_attrs!(sr.source_divisions, div, SOURCE_DIVISION_ATTRS,
