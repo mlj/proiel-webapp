@@ -80,4 +80,41 @@ class Source < ActiveRecord::Base
   def human_readable_id
     code
   end
+
+  # Move all source divisions from +other_source_ to this source. If +position+
+  # is +:append+, the source divisions from +other_source+ will be placed after
+  # existing ones in this source. If +position+ is +:preprend:, they will be
+  # placed before them.
+  def merge_with_source!(other_source, position = :append)
+    Source.transaction do
+      case position
+      when :append
+        reassign_source_divisions!(other_source, source_divisions.maximum(:position) + 1)
+      when :prepend
+        #self.tokens.sort { |x, y| y.token_number <=> x.token_number }.each do |t|
+        position_base = other_source.source_divisions.count
+
+        self.source_divisions.order('position DESC').each do |sd|
+          sd.update_attributes! :position => sd.position + position_base
+        end
+
+        reassign_source_divisions!(other_source)
+      else
+        raise ArgumentError, 'invalid position' unless position == :append or position == :prepend
+      end
+    end
+
+    other_source.reload
+    self.reload
+  end
+
+  private
+
+  def reassign_source_divisions!(other_source, position_base = 0)
+    Source.transaction do
+      other_source.source_divisions.order(:position).each_with_index do |sd, i|
+        sd.update_attributes! :position => i + position_base, :source_id => self.id
+      end
+    end
+  end
 end
