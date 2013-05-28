@@ -127,7 +127,7 @@ class PROIELXMLImporter < XMLSourceImporter
           arrify(div['sentence']).each_with_index do |sentence, sentence_position|
             s = create_with_attrs!(sd.sentences, sentence, SENTENCE_ATTRS,
                                    :sentence_number => sentence_position,
-                                   :status_tag => sentence['status'] || 'unannotated')
+                                   :status_tag => 'unannotated')
 
             arrify(sentence['token']).each_with_index do |token, token_position|
               t = create_with_attrs!(s.tokens, token, TOKEN_ATTRS,
@@ -173,7 +173,7 @@ class PROIELXMLImporter < XMLSourceImporter
 
             # Finally, set the correct sentence status, which may trigger
             # validation of annotation
-            set_attrs!(s, sentence, ['@status'])
+            set_attrs!(s, sentence, ['@status']) if sentence['@status']
             s.save!
           end
         end
