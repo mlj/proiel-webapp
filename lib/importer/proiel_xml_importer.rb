@@ -39,7 +39,7 @@ class PROIELXMLImporter < XMLSourceImporter
 
   TOKEN_ATTRS = %w(@citation_part @relation @information_status
                    @contrast_group @empty_token_sort @form @presentation_before
-                   @presentation_after)
+                   @presentation_after @foreign_ids)
 
   def set_attrs!(ar_obj, xml_obj, attrs)
     attrs.each { |attr| ar_obj.send("#{attr.sub('@', '')}=", xml_obj[attr]) }
