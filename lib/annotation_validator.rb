@@ -116,7 +116,7 @@ module Proiel
       end
 
       # Invariant: sentence is dependency annotated => dependency graph is valid
-      if record.has_dependency_annotation?
+      if record.is_annotated? and record.has_dependency_annotation?
         begin
           record.dependency_graph.valid?(lambda { |token_ids, msg| add_dependency_error(record, msg, Token.find(token_ids)) })
         rescue
