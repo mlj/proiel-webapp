@@ -4,9 +4,7 @@
 #
 # Written by Marius L. Jøhndal, 2008.
 #
-require 'jobs'
-
-class ManualTagger < Task
+class ManualTagger
   def initialize(*source_ids)
     super('manual-tagger')
     @source_ids = source_ids.flatten

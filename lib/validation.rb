@@ -4,9 +4,7 @@
 #
 # Written by Marius L. Jøhndal, 2008, 2011.
 #
-require 'jobs'
-
-class Validator < Task
+class Validator
   def initialize
     super('validator')
   end
@@ -72,11 +70,6 @@ class Validator < Task
   end
 
   def check_lemmata(logger)
-    Lemma.includes(:tokens).where('lemmata.foreign_ids IS NULL and tokens.id IS NULL').each do |o|
-      logger.warn { "Lemma #{o.id} (#{o.to_s}) is orphaned. Destroying." }
-      o.destroy
-    end
-
     Lemma.joins("left join lemmata as b on lemmata.lemma = b.lemma and lemmata.part_of_speech_tag = b.part_of_speech_tag and lemmata.language_tag = b.language_tag").where(:variant => nil).where("b.variant IS NOT NULL").each do |l|
       puts "Lemma #{l.lemma} of language #{l.language_tag} occurs both with and without variant numbers"
     end

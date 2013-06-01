@@ -49,6 +49,10 @@ module Proiel
 
   autoload :TokenAnnotationValidator, 'annotation_validator'
   autoload :SentenceAnnotationValidator, 'annotation_validator'
+
+  module Jobs
+    autoload :DatabaseChecker, 'jobs/database_checker'
+  end
 end
 
 require 'presentation'

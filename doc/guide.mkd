@@ -74,6 +74,12 @@ e-emails.
 If you want exception notification, change the configuration in
 `config/initializers/exception_notification.rb`.
 
+## Step 6: Start the server and worker
+
+Start the server and worker processes:
+
+    $ foreman start
+
 # Upgrading the application
 
 Unless otherwise noted, upgrading from one version to another involves the

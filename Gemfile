@@ -30,7 +30,6 @@ gem 'nori'
 gem 'gchartrb', :require => 'google_chart'
 gem 'diff-lcs', :require => 'diff/lcs'
 gem 'alignment'
-gem 'log4r'
 gem 'redcarpet'
 gem 'differ'
 gem 'iso-codes', :require => 'iso_codes'
@@ -45,3 +44,5 @@ end
 group :test do
   gem "sqlite3"
 end
+
+gem 'foreman'

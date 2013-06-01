@@ -1,8 +1,17 @@
 require 'fileutils'
 
+desc "Work the job queue"
+task :work_jobs => :environment do
+  database_checker = Proiel::Jobs::DatabaseChecker.new
+
+  while true do
+    database_checker.run!
+    sleep 1.hour
+  end
+end
+
 namespace :proiel do
   task(:myenvironment => :environment) do
-    require 'jobs'
   end
 
   desc "Validate PROIEL database using extra (non-model) validations"
