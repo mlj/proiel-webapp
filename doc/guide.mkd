@@ -57,7 +57,7 @@ needed. The default setup assumes a MySQL databases called `proiel`.
 
 Initialize a new database by running the following command:
 
-    $ rake db:setup
+    $ bundle exec rake db:setup
 
 Add an administrator account by using Rails' console interface:
 
@@ -92,7 +92,7 @@ Unless otherwise noted, upgrading from one version to another involves the
 following steps
 
     $ bundle install
-    $ RAILS_ENV=production rake db:migrate
+    $ RAILS_ENV=production bundle exec rake db:migrate
 
 Please see below for version-specific upgrade steps.
 

@@ -1,3 +1,14 @@
+1.0.1   31/05/2013
+
+  - Updated dependencies.
+  - Put secret token in a separate file.
+  - Moved some database validation code to a worker.
+  - Relaxed validation of dependency annotation so that only annotated sentences are validated.
+  - Added Source#merge_with_source!
+  - Added initial version of TextImporter.
+  - Updated download page to check for existence of export files and link to all available schemas.
+  - Numerous bug fixes
+
 1.0.0   23/04/2013
 
   - Upgraded to Rails 3.2.13.
