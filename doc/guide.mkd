@@ -74,7 +74,13 @@ e-emails.
 If you want exception notification, change the configuration in
 `config/initializers/exception_notification.rb`.
 
-## Step 6: Start the server and worker
+## Step 6: Generate a secret token
+
+Generate and save a new secret token by running
+
+    $ bundle exec rake secret > config/secret_token
+
+## Step 7: Start the server and worker
 
 Start the server and worker processes:
 

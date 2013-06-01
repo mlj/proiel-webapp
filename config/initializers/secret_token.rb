@@ -4,4 +4,17 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-Proiel::Application.config.secret_token = 'a047d41f2a8c93aff85b426c3c925e9c6800a1e9c4ae70d8a9cd83f6d1356151196e9d0c1f637be6b953148ae86722ce4420633216ac2bbcdd4e9d20a1e7de50'
+
+secret_token_file = Rails.root.join('config', 'secret_token')
+
+if File.exists?(secret_token_file)
+  Proiel::Application.config.secret_token = File.open(secret_token_file).read
+else
+  puts "Missing secret token file #{secret_token_file}"
+  puts
+  puts "*********************************************************************".red
+  puts "Read step 6 of the installation guide (doc/guide.mkd) if this message".red
+  puts "doesn't make sense to you!".red
+  puts "*********************************************************************".red
+  exit
+end
