@@ -70,20 +70,30 @@ Inspect `config/app_config.yml` and make any necessary changes. Also check
 `config/initializers/devise.rb` and adjust the e-mail address for registration
 e-emails.
 
-If you want exception notification, change the configuration in
-`config/initializers/exception_notification.rb`.
+### Step 6: Generate an environment file
 
-### Step 6: Generate a secret token
+Generate an environment file by running
 
-Generate and save a new secret token by running
+    $ rake generate_env
 
-    $ bundle exec rake secret > config/secret_token
+This generates a file called `.env` containing run-time settings that are
+unique to this instance of the application. Inspect the contents of this file
+and edit it if necessary.
+
+The `.env` file contains some information that sould not be made public (e.g.
+in a version control system). If you are using a multi-user system and/or
+configuring a production instance, you should verify that other users are
+unable to read `.env`.
 
 ### Step 7: Start the server and worker
 
 Start the server and worker processes:
 
     $ foreman start
+
+(If you prefer to start the server and worker processes manually, ensure that
+the contents of the `.env` file is available in the enviroment of the server
+process.)
 
 ## Upgrading
 
