@@ -3,8 +3,8 @@ rvm:
   - "1.9.3"
 env:
   - DB=sqlite
-#  - DB=mysql
-#  - DB=postgresql
+  - DB=mysql
+  - DB=postgresql
 before_script:
   - cp config/database.yml.travis config/database.yml
   - rake db:setup
