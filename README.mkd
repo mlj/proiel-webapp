@@ -1,14 +1,126 @@
 # The PROIEL web application
 
-The PROIEL web application (`proiel-web`) is a tool for collaborative treebank
-annotation. It uses a dependency-grammar formalism with multiple levels of
-additional annotation, many of which are customisable.
+The PROIEL web application (`proiel-webapp`) is a tool for collaborative
+treebank annotation. It uses a dependency-grammar formalism with multiple
+levels of additional annotation, many of which are customisable.
 
-Installation, customisation and upgrade instructions, as well as description of
-the data format, are found in the `doc` directory.
+Installation, customisation and upgrade instructions can be found below. A
+description of the data format is found in the `doc` directory.
 
-For user instructions, there is (some) documentation within the application
-itself (see 'Help' in the navigation bar).
+## Installing
+
+`proiel-webapp` is a Ruby on Rails application. This version uses Rails 3.2 and
+Ruby 1.9. Ruby 1.8 will not work. The following instructions assume that you
+have a functional Ruby environment with RubyGems and bundler installed.
+
+### Step 1: Install dependencies
+
+Install required dependencies:
+
+    $ bundle
+
+If you only intend to run the application in production mode (with or without
+customisations), you will not need support for the application's testing and
+development modes:
+
+    $ bundle install --without test development
+
+### Step 2: External binaries
+
+Install [graphviz](http://www.graphviz.org/) for dependency graph
+visualisations. Versions 2.26.3 and 2.30.1 are known to work with this release
+of the PROIEL application, but more recent versions may also work. `graphviz`
+must be compiled with SVG support. The recommended configuration settings are
+the following:
+
+    --with-fontconfig --with-freetype2 --with-pangocairo --with-rsvg
+
+You will also need the [SFST
+toolkit](http://www.ims.uni-stuttgart.de/projekte/gramotron/SOFTWARE/SFST.html).
+This release of `proiel-webapp` is designed to work with version 1.3 of `SFST`.
+
+For validation of XML files, `xmllint` from [libxml2](http://www.xmlsoft.org/)
+is required.
+
+### Step 3: Generate support files
+
+Before starting the application for the first time, the application's support
+files must be generated:
+
+    $ make -C lib
+
+### Step 4: Configure the database
+
+Copy `config/database.yml.example` to `config/database.yml` and customize if
+needed. The default setup assumes a MySQL databases called `proiel`.
+
+Initialize a new database by running the following command:
+
+    $ bundle exec rake db:setup
+
+Add an administrator account by using Rails' console interface:
+
+    $ ./script/rails c
+    Loading development environment (Rails 3.1.3)
+    >> User.create_confirmed_administrator! :login => "username", :first_name => "Foo", :last_name => "Bar", :email => "foo@bar", :password => "foo"
+
+### Step 5: Configure run-time settings
+
+Inspect `config/app_config.yml` and make any necessary changes. Also check
+`config/initializers/devise.rb` and adjust the e-mail address for registration
+e-emails.
+
+If you want exception notification, change the configuration in
+`config/initializers/exception_notification.rb`.
+
+### Step 6: Generate a secret token
+
+Generate and save a new secret token by running
+
+    $ bundle exec rake secret > config/secret_token
+
+### Step 7: Start the server and worker
+
+Start the server and worker processes:
+
+    $ foreman start
+
+## Upgrading
+
+Upgrading from one version to another normally involves only the following
+steps:
+
+    $ bundle install
+    $ RAILS_ENV=production bundle exec rake db:migrate
+
+## Customising the application
+
+This section describes some ways of modifying or extending the application.
+
+### Adding a dependency graph visualization method
+
+The default plugin for visualization of dependency graphs uses `graphviz`.
+As long as you are able to use the `dot` engine from `graphviz`, adding new
+visualizations is trivial:
+
+  1. Create a new visualization template in `plugins/graph_visualizers/graphviz`.
+     Have a look at the existing ones to see how the templates work.
+  2. Add a new visualization choice in
+     `app/views/preferences/edit.html.haml`. This will enable users to select
+     the visualization method.
+  3. Add a new description of the visualization method in `config/locales/en.yml`.
+
+Early testing of new visualisations is probably best done using the Rails
+console. To see the `dot` file produced before it is passed to `graphviz`,
+you can try the following:
+
+    $ ./script/rails c
+    Loading development environment (Rails 3.2.12)
+    >> GraphvizVisualization.new(Sentence.first).generate(:format => :dot, :mode => :linearized)
+
+To run it through `graphviz`, change the format to `svg` or `png`:
+
+    >> GraphvizVisualization.new(Sentence.first).generate(:format => :svg, :mode => :linearized)
 
 ## License
 
