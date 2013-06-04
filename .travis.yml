@@ -1,5 +1,12 @@
 language: ruby
 rvm:
   - "1.9.3"
+env:
+  - DB=sqlite
+#  - DB=mysql
+#  - DB=postgresql
+before_script:
+  - cp config/database.yml.travis config/database.yml
+  - rake db:setup
 # uncomment this line if your project needs to run something other than `rake`:
 # script: bundle exec rspec spec

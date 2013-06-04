@@ -51,8 +51,8 @@ files must be generated:
 
 ### Step 4: Configure the database
 
-Copy `config/database.yml.example` to `config/database.yml` and customize if
-needed. The default setup assumes a MySQL databases called `proiel`.
+Copy `config/database.yml.example` to `config/database.yml` and edit it to fit
+your setup.
 
 Initialize a new database by running the following command:
 
