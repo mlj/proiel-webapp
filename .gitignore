@@ -4,6 +4,6 @@ tmp/**/*
 doc/api
 doc/app
 config/database.yml
-config/secret_token
 *.sqlite3
 .sass-cache
+.env
