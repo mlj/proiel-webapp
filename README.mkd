@@ -1,4 +1,4 @@
-# The PROIEL web application
+# The PROIEL web application [![Build Status](https://travis-ci.org/mlj/proiel-webapp.png)](https://travis-ci.org/mlj/proiel-webapp)
 
 The PROIEL web application (`proiel-webapp`) is a tool for collaborative
 treebank annotation. It uses a dependency-grammar formalism with multiple
