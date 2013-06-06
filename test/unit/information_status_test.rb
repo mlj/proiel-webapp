@@ -19,7 +19,7 @@ class InformationStatusTestCase < ActiveSupport::TestCase
   end
 
   def test_ananphors_relation
-    assert_equal [@anaphor1, @anaphor2, @anaphor3], @antecedent.anaphors
+    assert_equal [@anaphor1, @anaphor2, @anaphor3].sort, @antecedent.anaphors.sort
   end
 
   def test_nearest_anaphor
