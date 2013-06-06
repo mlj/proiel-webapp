@@ -47,3 +47,4 @@ group :test do
 end
 
 gem 'foreman'
+gem 'coveralls', require: false, group: :test
