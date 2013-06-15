@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130508140200) do
+ActiveRecord::Schema.define(:version => 20130606202937) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -203,7 +203,7 @@ ActiveRecord::Schema.define(:version => 20130508140200) do
     t.integer  "antecedent_id"
     t.string   "relation_tag",              :limit => 8
     t.string   "morphology_tag",            :limit => 11
-    t.string   "citation_part",             :limit => 64, :default => "",    :null => false
+    t.string   "citation_part",             :limit => 64
     t.string   "presentation_before",       :limit => 32
     t.string   "presentation_after",        :limit => 32
   end
