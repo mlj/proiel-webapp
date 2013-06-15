@@ -87,9 +87,11 @@ Start the server and worker processes:
 
     $ foreman start
 
-(If you prefer to start the server and worker processes manually, ensure that
-the contents of the `.env` file is available in the enviroment of the server
-process.)
+If you prefer not to use `foreman`, you will need to start both processes
+manually:
+
+    $ bundle exec thin start
+    $ bundle exec rake work_jobs
 
 ## Upgrading
 

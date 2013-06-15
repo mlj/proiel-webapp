@@ -163,6 +163,7 @@ DEPENDENCIES
   devise-encryptable
   diff-lcs
   differ
+  dotenv
   exception_notification
   foreman
   formtastic
