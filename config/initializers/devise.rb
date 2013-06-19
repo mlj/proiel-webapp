@@ -4,7 +4,9 @@ Devise.setup do |config|
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class with default "from" parameter.
-  config.mailer_sender = "mariuslj@ifi.uio.no"
+  unless ENV['PROIEL_REGISTRATION_MAILER_SENDER_ADDRESS'].blank?
+    config.mailer_sender = ENV['PROIEL_REGISTRATION_MAILER_SENDER_ADDRESS']
+  end
 
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"

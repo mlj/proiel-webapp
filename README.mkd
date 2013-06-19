@@ -62,9 +62,7 @@ Add an administrator account by using Rails' console interface:
 
 ### Step 5: Configure run-time settings
 
-Inspect `config/app_config.yml` and make any necessary changes. Also check
-`config/initializers/devise.rb` and adjust the e-mail address for registration
-e-emails.
+Inspect `config/app_config.yml` and make any necessary changes.
 
 ### Step 6: Generate an environment file
 
