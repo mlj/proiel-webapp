@@ -3,9 +3,9 @@
   %head
     %meta{:charset => 'utf-8'}
     %meta{:name => 'viewport',:content => 'width=device-width, initial-scale=1.0'}
-    %link{:rel => 'search', :type => 'application/opensearchdescription+xml', :title => CONFIG.title, :href => '/search.xml'}
+    %link{:rel => 'search', :type => 'application/opensearchdescription+xml', :title => t(:title), :href => '/search.xml'}
 
-    %title= show_title? ? [CONFIG.title, yield(:title)].join(': ') : CONFIG.title
+    %title= show_title? ? [t(:title), yield(:title)].join(': ') : t(:title)
 
     != favicon_link_tag
     != csrf_meta_tag
