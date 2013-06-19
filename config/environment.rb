@@ -15,6 +15,9 @@ Proiel::Application.configure do
 
   # The location for tagset files.
   config.tagset_file_path = Rails.root.join('config', 'tagsets')
+
+  # Pull in configuration variables from the .env file
+  Dotenv.load
 end
 
 # Initialize the rails application

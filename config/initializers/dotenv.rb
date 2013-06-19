@@ -1,5 +1,3 @@
-Dotenv.load
-
 Proiel::Application.configure do
   if ENV['PROIEL_SECRET_TOKEN']
     config.secret_token = ENV['PROIEL_SECRET_TOKEN']
