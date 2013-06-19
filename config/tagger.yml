@@ -1,4 +1,12 @@
 :languages:
+  :orv:
+    :instance_frequencies:
+      :completion_level:
+        reviewed_only
+    :inflections_table:
+      true
+    :source_tag_pattern_filtering:
+      true
   :fro:
     :instance_frequencies:
       :completion_level:

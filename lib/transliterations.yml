@@ -1,3 +1,12 @@
+"orv-ascii":
+  :human_readable_name:
+    "Dumb ASCII transliteration"
+  :languages:
+    - :orv
+  :scripts:
+    - :cyrs
+  :machine:
+    "orv-ascii.a"
 "chu-ascii":
   :human_readable_name:
     "Dumb ASCII transliteration"

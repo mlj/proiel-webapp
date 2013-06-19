@@ -3,6 +3,7 @@ rule '.a' => ['.fst'] do |t|
 end
 
 TRANSLITERATION_FILES = %w{
+  orv-ascii.a
   chu-ascii.a
   got-ascii.a
   lgc-word-filter.a
