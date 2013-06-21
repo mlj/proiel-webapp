@@ -3,7 +3,7 @@
     != breadcrumbs 'Dictionary'
 
 = search_form_for @search, :builder => Formtastic::FormBuilder, :class => 'formtastic' do |f|
-  != f.input :language_tag_eq, label: 'Language', required: false, collection: Lemma.group(:language_tag).map(&:language)
+  != f.input :language_tag_eq, label: 'Language', required: false, collection: Lemma.represented_languages
   %div
     ._l67
       != f.input :lemma_wildcard_matches, :label => 'Lemma base form', :required => false
