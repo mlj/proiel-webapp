@@ -48,7 +48,7 @@ Proiel::Application.routes.draw do
 
     resource :dependency_alignments, :only => [:show, :edit, :update]
 
-    resource :morphtags, :only => [:show, :edit, :update] do
+    resource :morphtags, :only => [:edit, :update] do
       member do
         post :auto_complete_for_morphtags_lemma
       end
