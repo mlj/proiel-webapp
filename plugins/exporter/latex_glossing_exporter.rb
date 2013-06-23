@@ -62,7 +62,13 @@ class LatexGlossingExporter < PROIEL::Exporter
       # FIXME: getting the rough breathing on the right side
       # of the vowel(s) and escaping the circumflex character
       # should really be done in the transducer itself
-      t.generate_string(form).first.gsub(/^(([\^]?[aeiou])+)h/,'h\1').sub(/^([\^]?[AEIOU][aeiou]?)h(.*)$/) { |x| x.sub(/([\^]?[AEIOU][aeiou]?)h/, 'H\1').capitalize }.gsub('^', '\^')
+      f = t.generate_string(form).first
+
+      if f
+        f.gsub(/^(([\^]?[aeiou])+)h/,'h\1').sub(/^([\^]?[AEIOU][aeiou]?)h(.*)$/) { |x| x.sub(/([\^]?[AEIOU][aeiou]?)h/, 'H\1').capitalize }.gsub('^', '\^')
+      else
+        nil
+      end
     when 'chu', 'got'
       t = TransliteratorFactory.get_transliterator("#{language_tag}-ascii")
       t.generate_string(form).first
