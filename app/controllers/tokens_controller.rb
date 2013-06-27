@@ -110,4 +110,8 @@ class TokensController < ApplicationController
       redirect_to tokens_url(:q => { :form_wildcard_matches => "#{q}*" })
     end
   end
+
+  def opensearch
+    response.headers['Content-Type'] = 'application/opensearchdescription+xml; charset=utf-8'
+  end
 end

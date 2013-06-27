@@ -1,5 +1,7 @@
 en:
+  short_title: PROIEL
   title: The PROIEL Web Application
+  opensearch_description: Search the PROIEL corpus for words, lemmata or locations
   preferences:
     edit:
       png: "PNG (bitmap)"
