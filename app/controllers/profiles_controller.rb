@@ -30,11 +30,15 @@ class ProfilesController < ApplicationController
   end
 
   def update
-    @user = current_user
-    @user.preferences_will_change!
-    @user.update_attributes! :graph_format => params[:user][:graph_format],
-      :graph_method => params[:user][:graph_method]
+    if params[:user]
+      @user = current_user
+      @user.preferences_will_change!
+      @user.update_attributes! :graph_format => params[:user][:graph_format],
+        :graph_method => params[:user][:graph_method]
 
-    redirect_to :root
+      redirect_to :root
+    else
+      redirect_to :edit
+    end
   end
 end
