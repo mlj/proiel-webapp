@@ -52,6 +52,9 @@ module Proiel
 
   module Jobs
     autoload :DatabaseChecker, 'jobs/database_checker'
+    autoload :DatabaseValidator, 'jobs/database_validator'
+    autoload :AnnotationValidator, 'jobs/annotation_validator'
+    autoload :Exporter, 'jobs/exporter'
   end
 end
 

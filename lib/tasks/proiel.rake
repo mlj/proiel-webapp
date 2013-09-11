@@ -3,10 +3,22 @@ require 'fileutils'
 desc "Work the job queue"
 task :work_jobs => :environment do
   database_checker = Proiel::Jobs::DatabaseChecker.new
+  database_validator = Proiel::Jobs::DatabaseValidator.new
+  annotation_validator = Proiel::Jobs::AnnotationValidator.new
 
   while true do
+    Rails.logger.info "Running job queue"
+
     database_checker.run!
-    sleep 1.hour
+    database_validator.run!
+    annotation_validator.run!
+
+    %w(proiel conll tigerxml text).each do |format|
+      exporter = Proiel::Jobs::Exporter.new Rails.logger, mode: 'reviewed', format: format
+      exporter.run!
+    end
+
+    sleep 48.hour
   end
 end
 
@@ -14,19 +26,9 @@ namespace :proiel do
   task(:myenvironment => :environment) do
   end
 
-  desc "Validate PROIEL database using extra (non-model) validations"
-  task(:validate => [:myenvironment]) do
-    require 'validation'
-
-    v = Validator.new
-    v.execute!
-  end
-
   namespace :text do
     desc "Import a PROIEL source text. Options: FILE=data_file"
     task(:import => :environment) do
-      options = {}
-
       case ENV['FORMAT']
       when NilClass, 'proiel'
         klass = PROIELXMLImporter
@@ -45,75 +47,16 @@ namespace :proiel do
       klass.new.read(ENV['FILE'])
     end
 
-    desc "Export a PROIEL source text. Optional options: ID=database ID of source (FORMAT={proiel|conll|tigerxml|tiger2} MODE={all|reviewed} DIRECTORY=destination_directory INFO=semtags SOURCE_DIVISION=source division title regexp REMOVE_CYCLES={none|heads|all})"
+    desc "Export a PROIEL source text. Optional options: ID=database_ID_of_source (FORMAT={proiel|conll|tigerxml|tiger2} MODE={all|reviewed} EXPORT_DIRECTORY=destination_directory SEMANTIC_TAGS={false|true} SOURCE_DIVISION=source_division_title_regexp REMOVE_CYCLES={none|heads|all})"
     task(:export => :environment) do
       options = {}
 
-      case ENV['FORMAT']
-      when NilClass, 'proiel'
-        klass = PROIELXMLExporter
-        suffix = '.xml'
-      when 'conll'
-        klass = CoNLLExporter
-        suffix = '.conll'
-      when 'tigerxml'
-        klass = TigerXMLExporter
-        suffix = '.tiger'
-      when 'tiger2'
-        klass = Tiger2Exporter
-        suffix = '.tiger2'
-      when 'text'
-        klass = TextExporter
-        suffix = '.txt'
-      when 'json'
-        klass = JSONExporter
-        suffix = '.json'
-      else
-        raise "Invalid format"
+      %w(FORMAT MODE REMOVE_CYCLES SEMANTIC_TAGS ID SOURCE_DIVISION EXPORT_DIRECTORY).each do |k|
+        options[k.downcase.to_sym] = ENV[k] if ENV.has_key?(k)
       end
 
-      case ENV['MODE']
-      when 'reviewed'
-        options = { :reviewed_only => true }
-      when NilClass, 'all'
-      else
-        raise "Invalid mode"
-      end
-
-      options[:cycles] = ENV['REMOVE_CYCLES'] || 'none'
-
-      case ENV['INFO']
-      when NilClass, 'none'
-      when 'semtags'
-        options[:sem_tags] = true
-      when 'info' # ignore for backwards compatibility
-      when 'both' # for backwards compatibility
-        options[:sem_tags] = true
-      else
-        raise "invalid value for INFO"
-      end
-
-      # Prepare destination directory
-      directory = ENV['DIRECTORY'] || Proiel::Application.config.export_directory_path
-      Dir::mkdir(directory) unless File::directory?(directory)
-
-      # Find sources and iterate them
-      sources = ENV['ID'] ? Source.find_all_by_id(ENV['ID']) : Source.all
-
-      sources.each do |source|
-        file_name = File.join(directory, "#{source.human_readable_id}#{suffix}")
-
-        if ENV['SOURCE_DIVISION']
-          options[:source_division] = source.source_divisions.select { |sd| sd.title =~ Regexp.new(ENV['SOURCE_DIVISION']) }.map(&:id)
-        end
-
-        begin
-          klass.new(source, options).write(file_name)
-        rescue Exception => e
-          STDERR.puts "Error exporting text #{source.human_readable_id} using #{klass}: #{e}"
-          STDERR.puts e.backtrace.join("\n")
-        end
-      end
+      exporter = Proiel::Jobs::Exporter.new Logger.new(STDOUT), options
+      exporter.run!
     end
 
     desc "Import a source text in legacy format. Options: FILE=data_file, FORMAT={proiel}"

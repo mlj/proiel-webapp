@@ -23,23 +23,29 @@
 
 module Proiel
   module Jobs
-    class DatabaseChecker
+    class DatabaseValidator
       def initialize(logger = Rails.logger)
         @logger = logger
       end
 
       def run!
-        Source.transaction do
-          destroy_orphaned_lemmata!
-        end
-      end
+        Dir.glob(Rails.root.join('app', 'models', '**', '*.rb')).each do |file_name|
+          klass = File.basename(file_name, '.rb').camelize.constantize
+          next unless klass.ancestors.include?(ActiveRecord::Base)
 
-      private
-
-      def destroy_orphaned_lemmata!
-        Lemma.includes(:tokens).where('lemmata.foreign_ids IS NULL and tokens.id IS NULL').each do |o|
-          @logger.warn { "Destroying orphaned lemma #{o.id}" }
-          o.destroy
+          total = klass.count
+          chunk_size = 500
+          (total / chunk_size + 1).times do |i|
+            chunk = klass.find(:all, :offset => (i * chunk_size), :limit => chunk_size)
+            chunk.reject(&:valid?).each do |record|
+              if record.class == Sentence
+                @logger.error { "#{record.class} in database fails validation: id=#{record.id} (#{record.is_reviewed? ? 'Reviewed' : 'Not reviewed'})" }
+              else
+                @logger.error { "#{record.class} in database fails validation: id=#{record.id}" }
+              end
+              @logger.error record.errors.full_messages
+            end
+          end
         end
       end
     end
