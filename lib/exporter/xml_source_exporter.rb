@@ -25,7 +25,7 @@
 class XMLSourceExporter < SourceExporter
   def validate!(file_name)
     if self.class.respond_to?(:schema_file_name)
-      unless system("xmllint --path #{Proiel::Application.config.schema_file_path} --nonet --schema #{File.join(Proiel::Application.config.schema_file_path, self.class.schema_file_name)} --noout #{file_name}.tmp")
+      unless system("xmllint --nowarning --path #{Proiel::Application.config.schema_file_path} --nonet --schema #{File.join(Proiel::Application.config.schema_file_path, self.class.schema_file_name)} --noout #{file_name}.tmp")
         raise "exported XML does not validate"
       end
     else
