@@ -32,6 +32,9 @@ module Proiel
         Source.transaction do
           destroy_orphaned_lemmata!
         end
+
+        check_orphaned_tokens
+        check_lemmata
       end
 
       private
@@ -40,6 +43,18 @@ module Proiel
         Lemma.includes(:tokens).where('lemmata.foreign_ids IS NULL and tokens.id IS NULL').each do |o|
           @logger.warn { "Destroying orphaned lemma #{o.id}" }
           o.destroy
+        end
+      end
+
+      def check_orphaned_tokens
+        Token.includes(:sentence).where("sentences.id is null").each do |t|
+          @logger.error { "Token #{t.id} (#{t.to_s}) is orphaned" }
+        end
+      end
+
+      def check_lemmata
+        Lemma.joins("left join lemmata as b on lemmata.lemma = b.lemma and lemmata.part_of_speech_tag = b.part_of_speech_tag and lemmata.language_tag = b.language_tag").where(:variant => nil).where("b.variant IS NOT NULL").each do |l|
+          @logger.error { "Lemma #{l.lemma} of language #{l.language_tag} occurs both with and without variant numbers" }
         end
       end
     end

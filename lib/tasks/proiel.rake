@@ -1,29 +1,35 @@
 require 'fileutils'
 
-desc "Work the job queue"
-task :work_jobs => :environment do
-  database_checker = Proiel::Jobs::DatabaseChecker.new
-  database_validator = Proiel::Jobs::DatabaseValidator.new
-  annotation_validator = Proiel::Jobs::AnnotationValidator.new
-
+desc "Periodically run the checker job"
+task :run_checker_job => :environment do
   while true do
-    Rails.logger.info "Running job queue"
-
+    database_checker = Proiel::Jobs::DatabaseChecker.new
     database_checker.run!
-    database_validator.run!
-    annotation_validator.run!
 
+    sleep 1.hour
+  end
+end
+
+desc "Periodically run the export job"
+task :run_export_job => :environment do
+  while true do
     %w(proiel conll tigerxml text).each do |format|
       exporter = Proiel::Jobs::Exporter.new Rails.logger, mode: 'reviewed', format: format
       exporter.run!
     end
 
-    sleep 48.hour
+    sleep 24.hour
   end
 end
 
 namespace :proiel do
   task(:myenvironment => :environment) do
+  end
+
+  desc "Validate database objects"
+  task(:validate => :environment) do
+    database_validator = Proiel::Jobs::DatabaseValidator.new
+    database_validator.run!
   end
 
   namespace :text do
