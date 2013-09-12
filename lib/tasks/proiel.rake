@@ -2,24 +2,14 @@ require 'fileutils'
 
 desc "Periodically run the checker job"
 task :run_checker_job => :environment do
-  while true do
-    database_checker = Proiel::Jobs::DatabaseChecker.new
-    database_checker.run!
-
-    sleep 1.hour
-  end
+  database_checker = Proiel::Jobs::DatabaseChecker.new
+  database_checker.run_periodically!(1.hour)
 end
 
 desc "Periodically run the export job"
 task :run_export_job => :environment do
-  while true do
-    %w(proiel conll tigerxml text).each do |format|
-      exporter = Proiel::Jobs::Exporter.new Rails.logger, mode: 'reviewed', format: format
-      exporter.run!
-    end
-
-    sleep 24.hour
-  end
+  exporter = Proiel::Jobs::Exporter.new Rails.logger, mode: 'reviewed', format: %w(proiel conll tigerxml text)
+  exporter.run_periodically!(24.hour)
 end
 
 namespace :proiel do

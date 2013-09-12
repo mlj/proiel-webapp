@@ -23,12 +23,8 @@
 
 module Proiel
   module Jobs
-    class DatabaseValidator
-      def initialize(logger = Rails.logger)
-        @logger = logger
-      end
-
-      def run!
+    class DatabaseValidator < Jobs
+      def run_once!
         Dir.glob(Rails.root.join('app', 'models', '**', '*.rb')).each do |file_name|
           klass = File.basename(file_name, '.rb').camelize.constantize
           next unless klass.ancestors.include?(ActiveRecord::Base)

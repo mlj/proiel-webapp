@@ -51,6 +51,7 @@ module Proiel
   autoload :SentenceAnnotationValidator, 'annotation_validator'
 
   module Jobs
+    autoload :Job, 'jobs'
     autoload :DatabaseChecker, 'jobs/database_checker'
     autoload :DatabaseValidator, 'jobs/database_validator'
     autoload :AnnotationValidator, 'jobs/annotation_validator'

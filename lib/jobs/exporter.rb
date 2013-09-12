@@ -23,7 +23,7 @@
 
 module Proiel
   module Jobs
-    class Exporter
+    class Exporter < Job
       FORMATS = {
         'proiel' =>   [PROIELXMLExporter, 'xml'],
         'conll' =>    [CoNLLExporter,     'conll'],
@@ -42,8 +42,10 @@ module Proiel
       # all sources are expored.
       # * <tt>:source_division</tt> - If set to a regular expression, only
       # exports source divisions whose titles match the regular expression.
-      # * <tt>:format</tt> - The export format to use. Valid export formats can be
-      # retrieved using <tt>available_exporters</tt>. The default is <tt>proiel</tt>.
+      # * <tt>:format</tt> - The export format to use. Valid export formats can
+      # be retrieved using <tt>available_exporters</tt>. This can be a string
+      # or an array of strings. The default is to export the <tt>proiel</tt>
+      # format.
       # * <tt>:mode</tt> - If set to 'all', will export all sentences. If
       # 'reviewed', will export only those sentences that have
       # <tt>status_tag</tt> set to <tt>reviewed</tt>. The default is
@@ -56,44 +58,47 @@ module Proiel
       # only relevant to the TigerXML export format. Valid values are
       # <tt>all</tt> and <tt>heads</tt>.
       def initialize(logger = Rails.logger, options = {})
-        @logger = logger
+        super(logger)
 
         @options = options
         @options.symbolize_keys!
         @options.reverse_merge! format: 'proiel', mode: 'all', semantic_tags: false
 
-        raise ArgumentError, 'invalid format' unless FORMATS.has_key?(@options[:format])
+        @options[:format] = [*@options[:format]]
+        raise ArgumentError, 'invalid format' unless @options[:format].all? { |format| FORMATS.has_key?(format) }
+
         raise ArgumentError, 'invalid mode' unless %w(all reviewed).include?(@options[:mode])
       end
 
-      def run!
-        klass, suffix = FORMATS[@options[:format]]
+      def run_once!
+        @options[:format].each do |format|
+          klass, suffix = FORMATS[format]
 
-        options = {}
-        options[:reviewed_only] = true if @options[:mode] == 'reviewed'
-        options[:sem_tags] = true if @options[:semantic_tags]
-        options[:cycles] = @options[:remove_cycles] if @options[:remove_cycles]
+          options = {}
+          options[:reviewed_only] = true if @options[:mode] == 'reviewed'
+          options[:sem_tags] = true if @options[:semantic_tags]
+          options[:cycles] = @options[:remove_cycles] if @options[:remove_cycles]
 
-        # Prepare destination directory
-        directory = @options[:directory] || Proiel::Application.config.export_directory_path
-        Dir::mkdir(directory) unless File::directory?(directory)
+          # Prepare destination directory
+          directory = @options[:directory] || Proiel::Application.config.export_directory_path
+          Dir::mkdir(directory) unless File::directory?(directory)
 
-        # Find sources and iterate them
-        sources = @options[:id] ? Source.find_all_by_id(@options[:id]) : Source.all
+          # Find sources and iterate them
+          sources = @options[:id] ? Source.find_all_by_id(@options[:id]) : Source.all
 
-        sources.each do |source|
-          file_name = File.join(directory, "#{source.human_readable_id}.#{suffix}")
+          sources.each do |source|
+            file_name = File.join(directory, "#{source.human_readable_id}.#{suffix}")
 
-          if @options[:source_division]
-            options[:source_division] = source.source_divisions.select { |sd| sd.title =~ Regexp.new(@options[:source_division]) }.map(&:id)
-          end
+            if @options[:source_division]
+              options[:source_division] = source.source_divisions.select { |sd| sd.title =~ Regexp.new(@options[:source_division]) }.map(&:id)
+            end
 
-          begin
-            @logger.info "Exporting source ID #{source.id} as #{file_name}"
-            klass.new(source, options).write(file_name)
-          rescue Exception => e
-            @logger.error "Error exporting text #{source.human_readable_id} using #{klass}: #{e}"
-            @logger.error e.backtrace.join("\n")
+            begin
+              @logger.info { "#{self.class}: Exporting source ID #{source.id} as #{file_name}" }
+              klass.new(source, options).write(file_name)
+            rescue Exception => e
+              @logger.error { "#{self.class}: Error exporting text #{source.human_readable_id} using #{klass}: #{e}\n" + e.backtrace.join("\n") }
+            end
           end
         end
       end
