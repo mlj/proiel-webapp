@@ -369,7 +369,7 @@ class Sentence < ActiveRecord::Base
 
       # Construct new sentence by moving tokens from the old sentence,
       # inheriting assigned_to and taking over presentation_after from the
-      # old sentence. Then ditch annotation unless result is invalid.
+      # old sentence. Then ditch annotation unless result is valid.
       new_sentence = insert_new_sentence! :assigned_to => assigned_to,
         :presentation_after => presentation_after
 
@@ -378,7 +378,15 @@ class Sentence < ActiveRecord::Base
         t.save!
       end
 
-      new_sentence.remove_syntax_and_info_structure! unless new_sentence.valid?
+      # Inherit the annotation metadata so the validation works properly
+      new_sentence.annotated_by = annotated_by
+      new_sentence.annotated_at = annotated_at
+      new_sentence.reviewed_by = reviewed_by
+      new_sentence.reviewed_at = reviewed_at
+      new_sentence.status_tag = status_tag
+      
+      # Ditch the annotation if the sentence is invalid.
+      new_sentence.remove_syntax_and_info_structure!   unless new_sentence.valid?
 
       # Update old sentence by clearing presentation_after and reloading
       # token association so that any cached tokens do not appear in both
