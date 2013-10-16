@@ -19,7 +19,7 @@ namespace :proiel do
   desc "Validate database objects"
   task(:validate => :environment) do
     database_validator = Proiel::Jobs::DatabaseValidator.new
-    database_validator.run!
+    database_validator.run_once!
   end
 
   namespace :text do
@@ -52,7 +52,7 @@ namespace :proiel do
       end
 
       exporter = Proiel::Jobs::Exporter.new Logger.new(STDOUT), options
-      exporter.run!
+      exporter.run_once!
     end
 
     desc "Import a source text in legacy format. Options: FILE=data_file, FORMAT={proiel}"
