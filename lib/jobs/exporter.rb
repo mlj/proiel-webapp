@@ -80,7 +80,7 @@ module Proiel
           options[:cycles] = @options[:remove_cycles] if @options[:remove_cycles]
 
           # Prepare destination directory
-          directory = @options[:directory] || Proiel::Application.config.export_directory_path
+          directory = @options[:export_directory] || Proiel::Application.config.export_directory_path
           Dir::mkdir(directory) unless File::directory?(directory)
 
           # Find sources and iterate them
