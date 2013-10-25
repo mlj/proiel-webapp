@@ -15,10 +15,8 @@
   - Source.all.each do |s|
     %tr
       %td!= link_to s.author_and_title, s
-      %td!= link_to_if export_file_available?("#{s.human_readable_id}.xml"), "PROIEL format", "/exports/#{s.human_readable_id}.xml"
-      %td!= link_to_if export_file_available?("#{s.human_readable_id}.tiger"), "TigerXML format", "/exports/#{s.human_readable_id}.tiger"
-      %td!= link_to_if export_file_available?("#{s.human_readable_id}.conll"), "CoNLL format", "/exports/#{s.human_readable_id}.conll"
-      %td!= link_to_if export_file_available?("#{s.human_readable_id}.txt"), "Text format", "/exports/#{s.human_readable_id}.txt"
+      - Proiel::export_formats.each do |name, format|
+        %td!= link_to_if Proiel::export_file_available?(s.human_readable_id, format), name, Proiel::export_file_url(s.human_readable_id, format)
 
 %h2 Schema files and documentation
 

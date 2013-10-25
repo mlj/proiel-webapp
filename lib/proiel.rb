@@ -57,6 +57,9 @@ module Proiel
     autoload :AnnotationValidator, 'jobs/annotation_validator'
     autoload :Exporter, 'jobs/exporter'
   end
+
+  autoload :PathHelpers, 'path_helpers'
+  extend PathHelpers
 end
 
 require 'presentation'
