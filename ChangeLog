@@ -1,3 +1,8 @@
+1.2.0   09/12/2013
+
+  - Upgraded to Rails 3.2.16.
+  - Updated dependencies with minor changes.
+
 1.1.0   17/11/2013
   - Removed lemmata.sort_key, lemmata.full_gloss and renamed lemmata.short_gloss to lemmata.gloss.
   - gzip all export files by default.
