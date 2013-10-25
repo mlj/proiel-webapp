@@ -1,5 +1,5 @@
-*.conll
-*.xml
-*.tiger
-*.tiger2
-*.txt
+*.conll.gz
+*.xml.gz
+*.tiger.gz
+*.tiger2.gz
+*.txt.gz

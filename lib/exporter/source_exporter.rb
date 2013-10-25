@@ -44,9 +44,11 @@ class SourceExporter
   end
 
   # Writes exported data to a file.
-  def write(file_name)
+  def write(file_name, do_gzip = true)
+    tmp_file_name = "#{file_name}.tmp"
+
     if Sentence.where(:status_tag => self.exportable_sentence_statuses).joins(:source_division => [:source]).where(:source_divisions => {:source_id => @source.id}).exists?
-      File.open("#{file_name}.tmp", 'w') do |file|
+      File.open(tmp_file_name, 'w') do |file|
         write_toplevel!(file) do |context|
           write_source!(context, @source) do |context|
             sds = @source.source_divisions.order(:position)
@@ -75,7 +77,16 @@ class SourceExporter
 
       validate!(file_name)
 
-      File.rename("#{file_name}.tmp", file_name)
+      if do_gzip
+        Zlib::GzipWriter.open("#{file_name}.gz") do |gz|
+          gz.mtime = File.mtime(tmp_file_name)
+          gz.orig_name = File.basename(file_name)
+          gz.write IO.binread(tmp_file_name)
+        end
+        File.unlink(tmp_file_name)
+      else
+        File.rename(tmp_file_name, file_name)
+      end
     else
       STDERR.puts "Source #{@source.human_readable_id} has no data available for export on this format"
     end
