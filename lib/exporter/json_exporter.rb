@@ -108,7 +108,7 @@ class JSONExporter < SourceExporter
                             presentation_after presentation_before
                             information_status_tag contrast_group
                             empty_token_sort lemma part_of_speech_tag
-                            short_gloss variant unalignable automatic_alignment
+                            gloss variant unalignable automatic_alignment
                             login email last_name first_name automatic_token_alignment
                             tei_header author edition
                             source_morphology_tag source_lemma

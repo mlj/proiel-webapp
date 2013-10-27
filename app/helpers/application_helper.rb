@@ -244,7 +244,7 @@ module ApplicationHelper
     when Lemma
       content_tag(:em, object.export_form, :lang => object.language_tag) +
         " (#{object.pos_summary})" +
-        (@lemma.short_gloss ? " '#{@lemma.short_gloss}'" : "")
+        (@lemma.gloss ? " '#{@lemma.gloss}'" : "")
     when String
       object
     else

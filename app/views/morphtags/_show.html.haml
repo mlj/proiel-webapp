@@ -9,8 +9,8 @@
               .pos= token.morph_features.pos_summary :abbreviated => true
               .morphology= token.morph_features.morphology_summary :abbreviated => true, :skip_inflection => true
               .lemma!= link_to_lemma token.lemma
-              - if token.lemma.short_gloss
-                %q= token.lemma.short_gloss
+              - if token.lemma.gloss
+                %q= token.lemma.gloss
       %br
 - else
   No morphological annotation

@@ -22,13 +22,12 @@
 #++
 
 class Lemma < ActiveRecord::Base
-  attr_accessible :lemma, :variant, :short_gloss,
-    :foreign_ids, :language_tag, :part_of_speech_tag
+  attr_accessible :lemma, :variant, :gloss, :foreign_ids, :language_tag,
+    :part_of_speech_tag
 
   change_logging
 
-  blankable_attributes :foreign_ids, :short_gloss,
-    :variant
+  blankable_attributes :foreign_ids, :gloss, :variant
 
   has_many :tokens
   has_many :notes, :as => :notable, :dependent => :destroy

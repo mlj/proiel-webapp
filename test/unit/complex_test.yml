@@ -7095,7 +7095,7 @@ Lemma:
   11:
     id: 11
     lemma: ὁ
-    short_gloss: the
+    gloss: the
     language_tag: grc
     part_of_speech_tag: S-
   63:
@@ -7111,7 +7111,7 @@ Lemma:
   336:
     id: 336
     lemma: γεννάω
-    short_gloss: become the parent
+    gloss: become the parent
     language_tag: grc
     part_of_speech_tag: V-
   15:
@@ -7167,7 +7167,7 @@ Lemma:
   927:
     id: 927
     lemma: παραγίγνομαι
-    short_gloss: arrive
+    gloss: arrive
     language_tag: grc
     part_of_speech_tag: V-
   59:
@@ -7183,26 +7183,26 @@ Lemma:
   65:
     id: 65
     lemma: λέγω
-    short_gloss: say
+    gloss: say
     language_tag: grc
     part_of_speech_tag: V-
   112:
     id: 112
     lemma: ποῦ
-    short_gloss: where
+    gloss: where
     language_tag: grc
     part_of_speech_tag: Du
   14:
     id: 14
     lemma: εἰμί
     variant: 1
-    short_gloss: be
+    gloss: be
     language_tag: grc
     part_of_speech_tag: V-
   52020:
     id: 52020
     lemma: τίκτω
-    short_gloss: give birth
+    gloss: give birth
     language_tag: grc
     part_of_speech_tag: V-
   124:
@@ -7223,7 +7223,7 @@ Lemma:
   26:
     id: 26
     lemma: αὐτός
-    short_gloss: him, her, it
+    gloss: him, her, it
     language_tag: grc
     part_of_speech_tag: Pp
   903:
@@ -7234,31 +7234,31 @@ Lemma:
   9:
     id: 9
     lemma: καί
-    short_gloss: and
+    gloss: and
     language_tag: grc
     part_of_speech_tag: C-
   158:
     id: 158
     lemma: ἔρχομαι
-    short_gloss: ! 'come  '
+    gloss: ! 'come  '
     language_tag: grc
     part_of_speech_tag: V-
   832:
     id: 832
     lemma: προσκυνέω
-    short_gloss: worship
+    gloss: worship
     language_tag: grc
     part_of_speech_tag: V-
   183:
     id: 183
     lemma: ἀκούω
-    short_gloss: hear
+    gloss: hear
     language_tag: grc
     part_of_speech_tag: V-
   1201:
     id: 1201
     lemma: ταράσσω
-    short_gloss: disturb
+    gloss: disturb
     language_tag: grc
     part_of_speech_tag: V-
   20:
@@ -7274,7 +7274,7 @@ Lemma:
   363:
     id: 363
     lemma: συνάγω
-    short_gloss: gather
+    gloss: gather
     language_tag: grc
     part_of_speech_tag: V-
   2391:
@@ -7295,7 +7295,7 @@ Lemma:
   64347:
     id: 64347
     lemma: πυνθάνομαι
-    short_gloss: ! 'ask  '
+    gloss: ! 'ask  '
     language_tag: grc
     part_of_speech_tag: V-
   238:
@@ -7311,7 +7311,7 @@ Lemma:
   53535:
     id: 53535
     lemma: ὁ
-    short_gloss: he, she
+    gloss: he, she
     language_tag: grc
     part_of_speech_tag: Pp
   192:
@@ -7322,7 +7322,7 @@ Lemma:
   107:
     id: 107
     lemma: γράφω
-    short_gloss: write
+    gloss: write
     language_tag: grc
     part_of_speech_tag: V-
   6:
@@ -7373,13 +7373,13 @@ Lemma:
   396:
     id: 396
     lemma: ἐξέρχομαι
-    short_gloss: go out
+    gloss: go out
     language_tag: grc
     part_of_speech_tag: V-
   52030:
     id: 52030
     lemma: ἡγέομαι
-    short_gloss: ! 'think  '
+    gloss: ! 'think  '
     language_tag: grc
     part_of_speech_tag: V-
   258:
@@ -7390,13 +7390,13 @@ Lemma:
   52031:
     id: 52031
     lemma: ποιμαίνω
-    short_gloss: herd
+    gloss: herd
     language_tag: grc
     part_of_speech_tag: V-
   24:
     id: 24
     lemma: ἐγώ
-    short_gloss: I
+    gloss: I
     language_tag: grc
     part_of_speech_tag: Pp
   658:
@@ -7417,13 +7417,13 @@ Lemma:
   58:
     id: 58
     lemma: καλέω
-    short_gloss: call by  name
+    gloss: call by  name
     language_tag: grc
     part_of_speech_tag: V-
   52032:
     id: 52032
     lemma: ἀκριβόω
-    short_gloss: ascertain
+    gloss: ascertain
     language_tag: grc
     part_of_speech_tag: V-
   528:
@@ -7434,25 +7434,25 @@ Lemma:
   986:
     id: 986
     lemma: φαίνω
-    short_gloss: appear; shine
+    gloss: appear; shine
     language_tag: grc
     part_of_speech_tag: V-
   338:
     id: 338
     lemma: πέμπω
-    short_gloss: send
+    gloss: send
     language_tag: grc
     part_of_speech_tag: V-
   667:
     id: 667
     lemma: πορεύομαι
-    short_gloss: ! 'go  '
+    gloss: ! 'go  '
     language_tag: grc
     part_of_speech_tag: V-
   52033:
     id: 52033
     lemma: ἐξετάζω
-    short_gloss: inquire
+    gloss: inquire
     language_tag: grc
     part_of_speech_tag: V-
   52034:
@@ -7478,13 +7478,13 @@ Lemma:
   276:
     id: 276
     lemma: εὑρίσκω
-    short_gloss: find
+    gloss: find
     language_tag: grc
     part_of_speech_tag: V-
   833:
     id: 833
     lemma: ἀπαγγέλλω
-    short_gloss: announce
+    gloss: announce
     language_tag: grc
     part_of_speech_tag: V-
   149:
@@ -7496,7 +7496,7 @@ Lemma:
     id: 53539
     lemma: καί
     variant: 1
-    short_gloss: even, also
+    gloss: even, also
     language_tag: grc
     part_of_speech_tag: Df
   52:
@@ -7507,7 +7507,7 @@ Lemma:
   1437:
     id: 1437
     lemma: προάγω
-    short_gloss: ! 'lead  '
+    gloss: ! 'lead  '
     language_tag: grc
     part_of_speech_tag: V-
   53:
@@ -7518,7 +7518,7 @@ Lemma:
   520:
     id: 520
     lemma: ἵστημι
-    short_gloss: stand
+    gloss: stand
     language_tag: grc
     part_of_speech_tag: V-
   53663:
@@ -7534,7 +7534,7 @@ Lemma:
   505:
     id: 505
     lemma: χαίρω
-    short_gloss: rejoice
+    gloss: rejoice
     language_tag: grc
     part_of_speech_tag: V-
   968:
@@ -7570,13 +7570,13 @@ Lemma:
   637:
     id: 637
     lemma: πίπτω
-    short_gloss: ! 'fall  '
+    gloss: ! 'fall  '
     language_tag: grc
     part_of_speech_tag: V-
   940:
     id: 940
     lemma: ἀνοίγνυμι
-    short_gloss: open
+    gloss: open
     language_tag: grc
     part_of_speech_tag: V-
   1687:
@@ -7587,7 +7587,7 @@ Lemma:
   2535:
     id: 2535
     lemma: προσφέρω
-    short_gloss: bring forward
+    gloss: bring forward
     language_tag: grc
     part_of_speech_tag: V-
   53620:
@@ -7613,7 +7613,7 @@ Lemma:
   52040:
     id: 52040
     lemma: χρηματίζω
-    short_gloss: make known a divine message
+    gloss: make known a divine message
     language_tag: grc
     part_of_speech_tag: V-
   140:
@@ -7634,7 +7634,7 @@ Lemma:
   52041:
     id: 52041
     lemma: ἀνακάμπτω
-    short_gloss: return
+    gloss: return
     language_tag: grc
     part_of_speech_tag: V-
   159:
@@ -7655,7 +7655,7 @@ Lemma:
   3113:
     id: 3113
     lemma: ἀναχωρέω
-    short_gloss: depart
+    gloss: depart
     language_tag: grc
     part_of_speech_tag: V-
   2563:
@@ -7681,19 +7681,19 @@ Lemma:
   435:
     id: 435
     lemma: ἐγείρω
-    short_gloss: wake up
+    gloss: wake up
     language_tag: grc
     part_of_speech_tag: V-
   708:
     id: 708
     lemma: παραλαμβάνω
-    short_gloss: ! 'take '
+    gloss: ! 'take '
     language_tag: grc
     part_of_speech_tag: V-
   443:
     id: 443
     lemma: φεύγω
-    short_gloss: flee
+    gloss: flee
     language_tag: grc
     part_of_speech_tag: V-
   52042:
@@ -7714,19 +7714,19 @@ Lemma:
   271:
     id: 271
     lemma: μέλλω
-    short_gloss: be about to
+    gloss: be about to
     language_tag: grc
     part_of_speech_tag: V-
   128:
     id: 128
     lemma: ζητέω
-    short_gloss: seek
+    gloss: seek
     language_tag: grc
     part_of_speech_tag: V-
   103:
     id: 103
     lemma: ἀπόλλυμι
-    short_gloss: destroy
+    gloss: destroy
     language_tag: grc
     part_of_speech_tag: V-
   709:
@@ -7747,13 +7747,13 @@ Lemma:
   64:
     id: 64
     lemma: ἵνα
-    short_gloss: that; so that
+    gloss: that; so that
     language_tag: grc
     part_of_speech_tag: G-
   969:
     id: 969
     lemma: πληρόω
-    short_gloss: fill
+    gloss: fill
     language_tag: grc
     part_of_speech_tag: V-
   72:
@@ -7769,19 +7769,19 @@ Lemma:
   38:
     id: 38
     lemma: ὅτι
-    short_gloss: that; because
+    gloss: that; because
     language_tag: grc
     part_of_speech_tag: G-
   4542:
     id: 4542
     lemma: ἐμπαίζω
-    short_gloss: mock
+    gloss: mock
     language_tag: grc
     part_of_speech_tag: V-
   52044:
     id: 52044
     lemma: θυμόω
-    short_gloss: make angry
+    gloss: make angry
     language_tag: grc
     part_of_speech_tag: V-
   1831:
@@ -7792,13 +7792,13 @@ Lemma:
   97:
     id: 97
     lemma: ἀποστέλλω
-    short_gloss: send away
+    gloss: send away
     language_tag: grc
     part_of_speech_tag: V-
   52045:
     id: 52045
     lemma: ἀναιρέω
-    short_gloss: take away
+    gloss: take away
     language_tag: grc
     part_of_speech_tag: V-
   52046:
@@ -7859,7 +7859,7 @@ Lemma:
   504:
     id: 504
     lemma: κλαίω
-    short_gloss: weep
+    gloss: weep
     language_tag: grc
     part_of_speech_tag: V-
   329:
@@ -7875,25 +7875,25 @@ Lemma:
   345:
     id: 345
     lemma: ἐθέλω
-    short_gloss: desire
+    gloss: desire
     language_tag: grc
     part_of_speech_tag: V-
   62:
     id: 62
     lemma: παρακαλέω
-    short_gloss: urge
+    gloss: urge
     language_tag: grc
     part_of_speech_tag: V-
   2321:
     id: 2321
     lemma: τελευτάω
-    short_gloss: die with
+    gloss: die with
     language_tag: grc
     part_of_speech_tag: V-
   1536:
     id: 1536
     lemma: θνῄσκω
-    short_gloss: die
+    gloss: die
     language_tag: grc
     part_of_speech_tag: V-
   907:
@@ -7904,7 +7904,7 @@ Lemma:
   829:
     id: 829
     lemma: εἰσέρχομαι
-    short_gloss: enter
+    gloss: enter
     language_tag: grc
     part_of_speech_tag: V-
   52053:
@@ -7915,7 +7915,7 @@ Lemma:
   52054:
     id: 52054
     lemma: βασιλεύω
-    short_gloss: rule
+    gloss: rule
     language_tag: grc
     part_of_speech_tag: V-
   693:
@@ -7931,13 +7931,13 @@ Lemma:
   1032:
     id: 1032
     lemma: φοβέω
-    short_gloss: be afraid
+    gloss: be afraid
     language_tag: grc
     part_of_speech_tag: V-
   2401:
     id: 2401
     lemma: ἀπέρχομαι
-    short_gloss: depart
+    gloss: depart
     language_tag: grc
     part_of_speech_tag: V-
   699:
@@ -7953,7 +7953,7 @@ Lemma:
   52055:
     id: 52055
     lemma: κατοικέω
-    short_gloss: live
+    gloss: live
     language_tag: grc
     part_of_speech_tag: V-
   1861:

@@ -80,7 +80,7 @@ class LatexGlossingExporter < PROIEL::Exporter
   def gloss(token)
     res = "{"
     if token.lemma
-      res += (token.lemma.short_gloss ? token.lemma.short_gloss.split(/[.,;\/]/).first : 'NOGLOSS')
+      res += (token.lemma.gloss ? token.lemma.gloss.split(/[.,;\/]/).first : 'NOGLOSS')
     end
     g = morphology_gloss(token)
     res += ".{\\sc #{g}}" if g != ""
