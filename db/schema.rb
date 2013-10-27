@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130606202937) do
+ActiveRecord::Schema.define(:version => 20131027230735) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -68,7 +68,6 @@ ActiveRecord::Schema.define(:version => 20130606202937) do
     t.datetime "updated_at"
     t.string   "short_gloss",        :limit => 64
     t.text     "full_gloss"
-    t.string   "sort_key",           :limit => 16
     t.text     "foreign_ids"
     t.string   "language_tag",       :limit => 3,  :default => "", :null => false
     t.string   "part_of_speech_tag", :limit => 2,  :default => "", :null => false

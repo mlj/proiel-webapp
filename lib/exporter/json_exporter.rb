@@ -112,7 +112,6 @@ class JSONExporter < SourceExporter
                             login email last_name first_name automatic_token_alignment
                             tei_header author edition
                             source_morphology_tag source_lemma
-                            sort_key
                             contents notable_type notable_id
                            )
 

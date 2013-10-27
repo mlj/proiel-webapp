@@ -22,12 +22,12 @@
 #++
 
 class Lemma < ActiveRecord::Base
-  attr_accessible :lemma, :variant, :short_gloss, :full_gloss, :sort_key,
+  attr_accessible :lemma, :variant, :short_gloss, :full_gloss,
     :foreign_ids, :language_tag, :part_of_speech_tag
 
   change_logging
 
-  blankable_attributes :foreign_ids, :full_gloss, :short_gloss, :sort_key,
+  blankable_attributes :foreign_ids, :full_gloss, :short_gloss,
     :variant
 
   has_many :tokens
