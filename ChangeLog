@@ -1,3 +1,7 @@
+1.1.0   17/11/2013
+  - Removed lemmata.sort_key, lemmata.full_gloss and renamed lemmata.short_gloss to lemmata.gloss.
+  - gzip all export files by default.
+
 1.0.1   31/05/2013
 
   - Updated dependencies.
