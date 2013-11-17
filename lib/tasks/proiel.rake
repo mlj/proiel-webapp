@@ -6,7 +6,7 @@ task :run_checker_job => :environment do
   database_checker.run_periodically!(1.hour)
 end
 
-desc "Periodically run the export job"
+desc "Periodically run the exporter job"
 task :run_export_job => :environment do
   exporter = Proiel::Jobs::Exporter.new Rails.logger, mode: 'reviewed', format: %w(proiel conll tigerxml text)
   exporter.run_periodically!(24.hour)
