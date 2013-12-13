@@ -1,3 +1,5 @@
+  - Moved mailer configuration to config/environment.rb.
+
 1.2.0   09/12/2013
 
   - Upgraded to Rails 3.2.16.
