@@ -11,7 +11,7 @@ class CSVImportExport
   end
 
   def read(file_name)
-    raise "Import not supported" unless respond_to?(:read_fields)
+    raise "Import not supported" unless respond_to?(:read_fields, true)
 
     Token.transaction do
       File.open(file_name) do |f|
@@ -25,7 +25,7 @@ class CSVImportExport
   end
 
   def write(file_name)
-    raise "Export not supported" unless respond_to?(:write_fields)
+    raise "Export not supported" unless respond_to?(:write_fields, true)
 
     File.open(file_name, 'w') do |f|
       write_fields do |*values|
