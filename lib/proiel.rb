@@ -40,7 +40,7 @@ autoload :Metadata, 'metadata'
 
 module Proiel
   # The application version
-  VERSION = [1, 2, 0]
+  VERSION = [1, 2, 1]
 
   # Returns the application version as a dotted string.
   def self.version

@@ -1,3 +1,5 @@
+1.2.1   16/12/2013
+
   - Made handling of empty citation_parts more robust.
   - Moved mailer configuration to config/environment.rb.
 
