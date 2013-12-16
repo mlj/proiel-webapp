@@ -111,21 +111,71 @@ describe Lemma do
     Lemma.represented_parts_of_speech.should eq part_of_speech_tags.sort_by(&:to_label)
   end
 
-  it "returns possible completions of lemma" do
-    lemmata = %w(diligo dirigo credo)
+  describe '#possible_completions' do
+    it "returns completions given a prefix" do
+      FactoryGirl.create(:lemma, lemma: 'diligo')
+      FactoryGirl.create(:lemma, lemma: 'dirigo')
+      FactoryGirl.create(:lemma, lemma: 'credo')
+      FactoryGirl.create(:lemma, lemma: 'credo', variant: 1)
+      FactoryGirl.create(:lemma, lemma: 'credo', variant: 2)
 
-    lemmata.each do |lemma|
-      FactoryGirl.create(:lemma, lemma: lemma)
+      Lemma.
+        possible_completions('lat', 'dir').
+        map(&:export_form).
+        sort.
+        should eq %w(dirigo)
     end
-    FactoryGirl.create(:lemma, lemma: 'credo', variant: 1)
-    FactoryGirl.create(:lemma, lemma: 'credo', variant: 2)
 
-    Lemma.
-      where(language_tag: 'lat').
-      by_completions(%w{apo dir cred#1}).
-      map(&:export_form).
-      sort.
-      should eq %w(credo#1 dirigo)
+    it "returns completions given multiple prefixes" do
+      FactoryGirl.create(:lemma, lemma: 'diligo')
+      FactoryGirl.create(:lemma, lemma: 'dirigo')
+      FactoryGirl.create(:lemma, lemma: 'credo')
+      FactoryGirl.create(:lemma, lemma: 'credo', variant: 1)
+      FactoryGirl.create(:lemma, lemma: 'credo', variant: 2)
+
+      Lemma.
+        possible_completions('lat', %w{apo dir cred}).
+        map(&:export_form).
+        sort.
+        should eq %w(credo credo#1 credo#2 dirigo)
+    end
+
+    it "respects a variant number when provided" do
+      FactoryGirl.create(:lemma, lemma: 'credo')
+      FactoryGirl.create(:lemma, lemma: 'credo', variant: 1)
+      FactoryGirl.create(:lemma, lemma: 'credo', variant: 2)
+
+      Lemma.
+        possible_completions('lat', %w{cred#1}).
+        map(&:export_form).
+        sort.
+        should eq %w(credo#1)
+    end
+
+    it "applies a restriction only on prefixes with a variant number" do
+      FactoryGirl.create(:lemma, lemma: 'dirigo')
+      FactoryGirl.create(:lemma, lemma: 'credo')
+      FactoryGirl.create(:lemma, lemma: 'credo', variant: 1)
+      FactoryGirl.create(:lemma, lemma: 'credo', variant: 2)
+
+      Lemma.
+        possible_completions('lat', %w{dir cred#1}).
+        map(&:export_form).
+        sort.
+        should eq %w(credo#1 dirigo)
+    end
+
+    it "ignores a blank variant number" do
+      FactoryGirl.create(:lemma, lemma: 'credo')
+      FactoryGirl.create(:lemma, lemma: 'credo', variant: 1)
+      FactoryGirl.create(:lemma, lemma: 'credo', variant: 2)
+
+      Lemma.
+        possible_completions('lat', 'cred#').
+        map(&:export_form).
+        sort.
+        should eq %w(credo credo#1 credo#2)
+    end
   end
 
   it "is mergeable if other lemmata have the same lemma, language tag and part of speech tag" do

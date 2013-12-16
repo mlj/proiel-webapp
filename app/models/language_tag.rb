@@ -74,8 +74,8 @@ class LanguageTag < TagObject
   # to be returned and may be transliterated. The result is returned
   # as two arrays: one with the transliterations of the query and one
   # with completions.
-  def self.find_lemma_completions(language_code, query)
-    language = LanguageTag.new(language_code)
+  def self.find_lemma_completions(language_tag, query)
+    language = LanguageTag.new(language_tag)
 
     if language
       if t = language.transliterator
@@ -86,7 +86,7 @@ class LanguageTag < TagObject
         completion_candidates = [query]
       end
 
-      completions = Lemma.where(:language_tag => language_code).by_completions(completion_candidates)
+      completions = Lemma.possible_completions(language_tag, completion_candidates)
 
       [results.sort.uniq, completions]
     else

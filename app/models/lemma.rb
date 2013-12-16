@@ -41,17 +41,23 @@ class Lemma < ActiveRecord::Base
   validates_uniqueness_of :lemma, :scope => [:language_tag, :part_of_speech_tag, :variant]
   validates_numericality_of :variant, allow_nil: true
 
-  # A lemma that matches a prefix. The prefixes are given in +queries+,
-  # which should be an array of strings on the form +foo+ or +foo#1+, where
-  # +foo+ is a prefix of all lemmata to be matched, and +1+ is a variant
-  # number required to be present.
-  def self.by_completions(queries)
-    statement = queries.map do |query|
+  # Returns possible completions of a lemma given a language tag and one or
+  # more lemma prefixes. +lemma_prefixes+ should be a string or an array of
+  # strings. Each string will be treated as a prefix to be matched against
+  # lemma base forms in the database. If a variant number is appended to the
+  # prefix, e.g.  +foo#1+, +foo+ is treated as a prefix and +1+ as a mandatory
+  # variant number. If no variant number is given (or if the variant number is
+  # blank), e.g. +foo+, any lemma with the prefix +foo+ will match regardless
+  # of whether it has a variant number or not.
+  def self.possible_completions(language_tag, lemma_prefixes)
+    lemma_prefixes = [*lemma_prefixes]
+
+    statement = lemma_prefixes.map do |query|
       _, variant = query.split('#')
       variant.blank? ? '(lemma LIKE ?)' : '(lemma LIKE ? AND variant = ?)'
     end.join(' OR ')
 
-    terms = queries.map do |query|
+    terms = lemma_prefixes.map do |query|
       lemma, variant = query.split('#')
       if variant.blank?
         "#{lemma}%"
@@ -60,7 +66,7 @@ class Lemma < ActiveRecord::Base
       end
     end.flatten
 
-    where(statement, *terms)
+    where(language_tag: language_tag).where(statement, *terms)
   end
 
   # Returns the export-form of the lemma.
