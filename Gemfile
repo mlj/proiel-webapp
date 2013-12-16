@@ -36,16 +36,16 @@ group :production, :development do
   gem 'thin'
 end
 
-group :test do
-  gem "sqlite3"
-end
-
 gem 'foreman'
 gem 'dotenv'
-gem 'coveralls', require: false, group: :test
 
 group :development, :test do
-  gem 'rspec-rails', '~> 2.0'
+  gem 'rspec-rails'
   gem 'factory_girl_rails'
+end
+
+group :test do
   gem 'faker'
+  gem 'sqlite3'
+  gem 'coveralls', require: false
 end

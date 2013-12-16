@@ -207,7 +207,7 @@ DEPENDENCIES
   rails (= 3.2.16)
   ransack (~> 0.7.2)
   redcarpet (~> 2.3.0)
-  rspec-rails (~> 2.0)
+  rspec-rails
   ruby-sfst
   sass-rails
   sqlite3
