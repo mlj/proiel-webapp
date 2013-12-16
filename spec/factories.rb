@@ -8,14 +8,14 @@ end
 
 FactoryGirl.define do
   factory :user do |f|
-    f.login "donald"
-    f.email "x@x.com"
-    f.password "daisyduck"
-    f.password_confirmation "daisyduck"
-    f.first_name { Faker::Name.first_name }
-    f.last_name { Faker::Name.last_name }
-    f.role "reader"
-    f.confirmed_at Time.now
+    f.login 'happylinguist'
+    f.email 'happy@linguist.edu'
+    f.password 'silly_password'
+    f.password_confirmation 'silly_password'
+    f.first_name 'Happy'
+    f.last_name 'Linguist'
+    f.role 'reader'
+    f.confirmed_at Time.new("2014-01-01 08:00:00 +0000")
   end
 
 #  factory :confirmed_user, :parent => :user do
