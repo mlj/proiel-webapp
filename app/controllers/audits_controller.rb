@@ -1,7 +1,8 @@
+# encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -38,7 +39,7 @@ class AuditsController < ApplicationController
       objs << [Sentence, [@sentence]]
       objs << [Token, @tokens]
       s = objs.map { |k, v| "(auditable_type = '#{k}' AND auditable_id IN (?))" }.join(' OR ')
-      v = objs.map { |k, v| v }
+      v = objs.map { |_, v2| v2 }
 
       @audits = Audited::Adapters::ActiveRecord::Audit.where(s, *v).page(current_page)
     elsif params[:user_id]

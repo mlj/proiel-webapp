@@ -1,7 +1,8 @@
+# encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -105,7 +106,7 @@ EOYAML
   end
 
   def applies?(citation)
-    source, book, rest = split_citation(citation)
+    source, book, _ = split_citation(citation)
 
     source and @@definition[@identifier][:books].include?(book)
   end
@@ -129,7 +130,7 @@ class BiblosExternalLinkMapper < BibleExternalLinkMapper
   def to_url(citation)
     raise ArgumentError, 'cannot map citation to link' unless applies?(citation)
 
-    source, book, rest = split_citation(citation)
+    _, book, rest = split_citation(citation)
 
     case rest
     when /^(\d+)\.(\d+)$/
@@ -148,7 +149,7 @@ class BibelenNOExternalLinkMapper < BibleExternalLinkMapper
   def to_url(citation)
     raise ArgumentError, 'cannot map citation to link' unless applies?(citation)
 
-    source, book, rest = split_citation(citation)
+    _, book, rest = split_citation(citation)
 
     case rest
     when /^(\d+)\.(\d+)$/

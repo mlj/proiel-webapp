@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -373,11 +373,6 @@ module PROIEL
       @nodes.delete(identifier)
     end
 
-    def valid?
-      # FIXME: check for cycles
-      true
-    end
-
     def inspect
       root.inspect_subgraph
     end
@@ -491,7 +486,7 @@ module PROIEL
     def test_head_dependent(pos_major, *dependent_relations)
       test_token("may only be the head in a #{dependent_relations.to_sentence(:words_connector => ', ', :two_words_connector => ' or ', :last_word_connector => ', or ')} relation",
                  lambda { |t| !t.is_empty? and t.data[:morph_features].lemma.part_of_speech.major == pos_major }) do |t|
-        t.dependents.all? { |t| dependent_relations.include?(t.relation) }
+        t.dependents.all? { |t2| dependent_relations.include?(t2.relation) }
       end
     end
 

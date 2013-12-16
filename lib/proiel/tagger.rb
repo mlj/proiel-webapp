@@ -1,9 +1,26 @@
-#!/usr/bin/env ruby
+# encoding: UTF-8
+#--
 #
-# tagger.rb - Morphological tagger
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
 #
-# Written by Marius L. Jøhndal, 2007, 2008.
+# This file is part of the PROIEL web application.
 #
+# The PROIEL web application is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# version 2 as published by the Free Software Foundation.
+#
+# The PROIEL web application is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the PROIEL web application.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+#++
+
 require 'lingua/normalisation'
 require 'proiel/tagger/analysis_method'
 require 'proiel/tagger/fst'
@@ -171,10 +188,10 @@ module Tagger
         end
 
         # Filter out duplicates, accumulating scores
-        candidates = raw_candidates.inject({}) do |candidates, raw_candidate|
-          candidates[raw_candidate.morph_features] ||= 0.0
-          candidates[raw_candidate.morph_features] += raw_candidate.weight
-          candidates
+        candidates = raw_candidates.inject({}) do |candidates2, raw_candidate|
+          candidates2[raw_candidate.morph_features] ||= 0.0
+          candidates2[raw_candidate.morph_features] += raw_candidate.weight
+          candidates2
         end
 
         # Try to pick the best match and keep all entries with the

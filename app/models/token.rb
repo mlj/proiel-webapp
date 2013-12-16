@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -212,6 +212,7 @@ class Token < ActiveRecord::Base
   end
 
   MorphFeatures::POS_PREDICATES.keys.each do |k|
+    next if k == :verb? or k == :conjunction?
     delegate k, :to => :morph_features, :allow_nil => true
   end
 
@@ -531,7 +532,7 @@ class Token < ActiveRecord::Base
     # 'reasonable' set of alternative suggestions (for example of
     # alternative lemmata) along for a token with +morph_features+ already
     # set.
-    result, pick, *suggestions = language.guess_morphology(form, morph_features || source_morph_features)
+    _, pick, *suggestions = language.guess_morphology(form, morph_features || source_morph_features)
 
     # Figure out which features to use. The following is the sequence of
     # priority: 1) Any value set by the caller, 2) any value already set on

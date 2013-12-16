@@ -316,8 +316,6 @@ class Sentence < ActiveRecord::Base
   def is_splitable?(t)
     raise ArgumentError unless tokens.include?(t)
 
-    t2 = t.next_object
-
     not t.is_empty? and t.has_previous? and not t.previous_object.is_empty?
   end
 
@@ -467,8 +465,6 @@ class Sentence < ActiveRecord::Base
         t.save!
       end
     end
-
-    i = 0
 
     ts.each_with_index do |t, i|
       t.sentence_id = id

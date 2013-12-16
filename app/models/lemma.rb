@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -46,7 +46,7 @@ class Lemma < ActiveRecord::Base
   # number required to be present.
   def self.by_completions(queries)
     statement = queries.map do |query|
-      lemma, variant = query.split('#')
+      _, variant = query.split('#')
       variant.blank? ? '(lemma LIKE ?)' : '(lemma LIKE ? AND variant = ?)'
     end.join(' OR ')
 
