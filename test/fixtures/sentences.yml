@@ -24,3 +24,12 @@ information_structure2:
   reviewed_by: 1
   presentation_before:
   presentation_after:
+sentence_without_tokens:
+  id: 100
+  source_division_id: 100
+  sentence_number: 1
+  status_tag: unannotated
+  annotated_by: nil
+  reviewed_by: nil
+  presentation_before:
+  presentation_after:

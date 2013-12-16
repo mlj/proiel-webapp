@@ -19,3 +19,17 @@ three:
   citation_part: Pl. Am.
   language_tag: grc
   tei_header: "<tei></tei>"
+source_with_sentences_without_tokens:
+  id: 100
+  title: Plautus, Amphitruo
+  code: pl-am
+  citation_part: Pl. Am.
+  language_tag: grc
+  tei_header: "<tei></tei>"
+source_with_source_division_without_sentences:
+  id: 101
+  title: Plautus, Amphitruo
+  code: pl-am
+  citation_part: Pl. Am.
+  language_tag: grc
+  tei_header: "<tei></tei>"

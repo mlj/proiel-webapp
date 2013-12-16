@@ -2,3 +2,11 @@ one:
   id: 1
   title: Mark
   source_id: 1
+source_division_without_tokens:
+  id: 100
+  title: Mark
+  source_id: 100
+source_division_without_sentences:
+  id: 101
+  title: Mark
+  source_id: 101

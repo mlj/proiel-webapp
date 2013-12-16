@@ -74,11 +74,19 @@ class Token < ActiveRecord::Base
   delegate :part_of_speech_tag, :to => :lemma, :allow_nil => true
   delegate :language, :to => :sentence
   delegate :language_tag, :to => :sentence
+  delegate :source_citation_part, to: :sentence
 
   validates :sentence_id, :token_number, :presence => true
   validates_with Proiel::TokenAnnotationValidator
 
   ordered_on :token_number, "sentence.tokens"
+
+  citation_on
+
+  # A token with +citation_part+ set.
+  def self.with_citation
+    where("citation_part IS NOT NULL AND citation_part != ''")
+  end
 
   # A visible token, i.e. is a non-empty token.
   def self.visible
@@ -231,11 +239,6 @@ class Token < ActiveRecord::Base
 
   def parent
     sentence
-  end
-
-  # Returns a citation for the token.
-  def citation
-    [sentence.source_division.source.citation_part, citation_part].join(' ')
   end
 
   # Returns true if this is an empty token, i.e. a token used for empty nodes

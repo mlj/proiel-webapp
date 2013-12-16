@@ -40,23 +40,24 @@ class SourceDivision < ActiveRecord::Base
 
   ordered_on :position, "source.source_divisions"
 
+  citation_on
+
+  delegate :citation_part, to: :source, prefix: :source
+
+  def tokens_with_citation
+    Token.
+      where(sentence_id: sentences).
+      includes(:sentence).
+      order('sentences.sentence_number', 'tokens.token_number').
+      with_citation
+  end
+
   presentation_on
 
   # Returns the parent object for the source division, which will be its
   # source.
   def parent
     source
-  end
-
-  # Returns a citation for the source division.
-  def citation
-    if sentences.empty?
-      source.citation_part
-    else
-      [source.citation_part,
-        citation_make_range(sentences.first.tokens.first.citation_part,
-                            sentences.last.tokens.last.citation_part)].join(' ')
-    end
   end
 
   # Returns sentence alignments for the source division.

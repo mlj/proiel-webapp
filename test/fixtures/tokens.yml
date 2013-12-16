@@ -64,43 +64,43 @@ information_structure_antecedent:
   token_number: 1
   sentence_id: 2
   form: first
-  citation_part: "2.0"
+  citation_part: "2.1"
 information_structure_filler1:
   id: 10002
   token_number: 2
   sentence_id: 2
   form: second
-  citation_part: "2.0"
+  citation_part: "2.1"
 information_structure_anaphor1:
   id: 10003
   token_number: 3
   sentence_id: 2
   form: third
-  citation_part: "2.0"
+  citation_part: "2.2"
   antecedent_id: 10001
 information_structure_filler2:
   id: 10004
   token_number: 4
   sentence_id: 2
   form: forth
-  citation_part: "2.0"
+  citation_part: "2.2"
 information_structure_anaphor2:
   id: 10005
   token_number: 5
   sentence_id: 2
   form: fifth
-  citation_part: "2.0"
+  citation_part: "2.2"
   antecedent_id: 10001
 information_structure_filler3:
   id: 10006
   token_number: 1
   sentence_id: 3
   form: second
-  citation_part: "2.0"
+  citation_part: "3.1"
 information_structure_anaphor3:
   id: 10007
   token_number: 2
   sentence_id: 3
   form: third
-  citation_part: "2.0"
+  citation_part: "3.2"
   antecedent_id: 10001

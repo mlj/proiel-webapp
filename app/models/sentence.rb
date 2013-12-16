@@ -127,11 +127,12 @@ class Sentence < ActiveRecord::Base
 
   ordered_on :sentence_number, "source_division.sentences"
 
-  # Returns a citation for the sentence.
-  def citation
-    [source_division.source.citation_part,
-      citation_make_range(tokens.first.citation_part,
-                          tokens.last.citation_part)].join(' ')
+  citation_on
+
+  delegate :source_citation_part, to: :source_division
+
+  def tokens_with_citation
+    tokens.with_citation
   end
 
   # All sentences within a window of +before_limit+ sentences before and
