@@ -149,10 +149,10 @@ describe Lemma do
     l3 = FactoryGirl.create(:lemma, variant: nil)
     l4 = FactoryGirl.create(:lemma, lemma: 'fio')
 
-    l1.mergeable_lemmata.map(&:export_form).should eq %w(sum sum#2)
-    l2.mergeable_lemmata.map(&:export_form).should eq %w(sum sum#1)
-    l3.mergeable_lemmata.map(&:export_form).should eq %w(sum#1 sum#2)
-    l4.mergeable_lemmata.map(&:export_form).should eq %w()
+    l1.mergeable_lemmata.map(&:export_form).sort.should eq %w(sum sum#2)
+    l2.mergeable_lemmata.map(&:export_form).sort.should eq %w(sum sum#1)
+    l3.mergeable_lemmata.map(&:export_form).sort.should eq %w(sum#1 sum#2)
+    l4.mergeable_lemmata.map(&:export_form).sort.should eq %w()
   end
 
   it "can be merged with a mergeable lemma" do
