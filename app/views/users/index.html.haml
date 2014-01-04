@@ -1,1 +1,13 @@
-!= render_tabular @users, ['User name', 'Full name', 'E-mail address', 'Role']
+.tabular
+  != paginate @users
+
+  %table
+    %thead
+      %tr
+        %th User name
+        %th Full name
+        %th E-mail address
+        %th Role
+
+    %tbody
+      != render @users

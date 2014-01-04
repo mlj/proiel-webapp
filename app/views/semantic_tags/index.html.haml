@@ -2,4 +2,12 @@
   != f.input :semantic_attribute_value_tag_cont, label: 'Semantic attribute value'
   != f.submit "Search"
 
-!= render_tabular @semantic_tags, ['Reference', 'Tag', '']
+!= paginate @semantic_tags, params: params
+
+%table
+  %thead
+    %tr
+      %th Reference
+      %th Tag
+  %tbody.odd-even-line
+    != render  @semantic_tags
