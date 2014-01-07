@@ -625,7 +625,7 @@ class Token < ActiveRecord::Base
     span = semantic_relation_span(srt)
     span.reject(&:is_empty?).each_with_index do |tk, i|
       res << tk.form
-      res << "..." if tk.next and (i + 1) < span.size and span[i + 1] != tk.next
+      res << "..." if tk.next_object and (i + 1) < span.size and span[i + 1] != tk.next_object
     end
     id.to_s + '\n' + sentence.citation + '\n' + res.each_slice(slice).to_a.map { |i| i.join(' ') }.join('\n')
   end
