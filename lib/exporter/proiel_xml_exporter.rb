@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
 # Copyright 2010, 2011, 2012 Dag Haug
 #
 # This file is part of the PROIEL web application.
@@ -24,6 +24,8 @@
 
 # Source exporter for the PROIEL XML format.
 class PROIELXMLExporter < XMLSourceExporter
+  CURRENT_SCHEMA_VERSION = '2.0'
+
   def self.schema_file_name
     'proiel.xsd'
   end
@@ -36,7 +38,7 @@ class PROIELXMLExporter < XMLSourceExporter
     builder = Builder::XmlMarkup.new(:target => file, :indent => 2)
     builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
 
-    builder.proiel('export-time' => DateTime.now.xmlschema, 'schema-version' => "1.0") do
+    builder.proiel('export-time' => DateTime.now.xmlschema, 'schema-version' => CURRENT_SCHEMA_VERSION) do
       builder.annotation do
         builder.relations do
           RelationTag.all.each do |value|
@@ -73,13 +75,12 @@ class PROIELXMLExporter < XMLSourceExporter
   end
 
   def write_source!(builder, s)
-    builder.source(:id => s.human_readable_id, :language => s.language_tag) do
+    builder.source(id: s.human_readable_id, language: s.language_tag) do
       builder.title s.title
       builder.author s.author unless s.author.blank?
-      builder.edition s.edition if s.edition.blank?
       builder.tag!('citation-part', s.citation_part)
-      builder.tag!('tei-header') do
-        builder << s.metadata.export_form if s.metadata
+      Proiel::Metadata::fields.each do |field|
+        builder.tag!(field.dasherize, s.send(field)) unless s.send(field).blank?
       end
 
       yield builder

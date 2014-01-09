@@ -36,8 +36,6 @@ autoload :PROIELXMLImporter, 'importer/proiel_xml_importer'
 autoload :TextImporter, 'importer/text_importer'
 autoload :JSONImporter, 'importer/json_importer'
 
-autoload :Metadata, 'metadata'
-
 module Proiel
   # The application version
   VERSION = [1, 3, 0]
@@ -61,6 +59,8 @@ module Proiel
 
   autoload :PathHelpers, 'path_helpers'
   extend PathHelpers
+
+  autoload :Metadata, 'metadata'
 end
 
 require 'presentation'

@@ -173,13 +173,12 @@ ActiveRecord::Schema.define(:version => 20140207152826) do
   end
 
   create_table "sources", :force => true do |t|
-    t.string "title",         :limit => 128, :default => "", :null => false
-    t.string "citation_part", :limit => 64,  :default => "", :null => false
-    t.string "language_tag",  :limit => 3,   :default => "", :null => false
-    t.text   "tei_header",                                   :null => false
-    t.text   "author",        :limit => 255
-    t.text   "edition",       :limit => 255
-    t.string "code",          :limit => 32,                  :null => false
+    t.string "title",               :limit => 128, :default => "", :null => false
+    t.string "citation_part",       :limit => 64,  :default => "", :null => false
+    t.string "language_tag",        :limit => 3,   :default => "", :null => false
+    t.text   "author",              :limit => 255
+    t.string "code",                :limit => 32,                  :null => false
+    t.text   "additional_metadata"
   end
 
   create_table "tokens", :force => true do |t|

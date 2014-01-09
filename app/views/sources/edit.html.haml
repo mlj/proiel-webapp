@@ -4,10 +4,24 @@
 
 = semantic_form_for @source do |form|
   != form.input :code, :as => :string
-  != form.input :author, :as => :string
-  != form.input :title, :as => :string
-  != form.input :edition, :as => :string
   != form.input :citation_part
   != form.input :language_tag, :label => 'Language', :collection => LanguageTag.all
-  != form.input :tei_header, :label => 'TEI header'
+  != form.input :author, :as => :string
+  != form.input :title, :as => :string
+  != form.inputs 'Treebank' do
+    %small
+      These fields contain additional information pertaining to the treebank itself.
+    - Proiel::Metadata::treebank_fields_and_labels.each do |(f, l)|
+      != form.input f, label: l
+  != form.inputs 'Electronic text' do
+    %small
+      These fields contain additional information pertaining to the electronic text used as a basis for the treebank.
+    - Proiel::Metadata::electronic_text_fields_and_labels.each do |(f, l)|
+      != form.input f, label: l
+  != form.inputs 'Printed text' do
+    %small
+      These fields contain additional information pertaining to the printed text used as a basis for the electronic text.
+    - Proiel::Metadata::printed_text_fields_and_labels.each do |(f, l)|
+      != form.input f, label: l
+
   != form.submit 'Update'

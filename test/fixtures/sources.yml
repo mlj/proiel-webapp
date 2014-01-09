@@ -4,32 +4,27 @@ one:
   code: vulg
   citation_part: Vulg.
   language_tag: lat
-  tei_header: "<tei></tei>"
 two:
   id: 2
   title: Greek New Testament
   code: gnt
   citation_part: GNT
   language_tag: grc
-  tei_header: "<tei></tei>"
 three:
   id: 3
   title: Plautus, Amphitruo
   code: pl-am
   citation_part: Pl. Am.
   language_tag: grc
-  tei_header: "<tei></tei>"
 source_with_sentences_without_tokens:
   id: 100
   title: Plautus, Amphitruo
   code: pl-am
   citation_part: Pl. Am.
   language_tag: grc
-  tei_header: "<tei></tei>"
 source_with_source_division_without_sentences:
   id: 101
   title: Plautus, Amphitruo
   code: pl-am
   citation_part: Pl. Am.
   language_tag: grc
-  tei_header: "<tei></tei>"

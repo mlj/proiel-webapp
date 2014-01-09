@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -24,11 +24,13 @@
 class Source < ActiveRecord::Base
   attr_accessible :source_id, :code, :position, :title,
     :aligned_source_division_id, :presentation_before, :presentation_after,
-    :language_tag, :citation_part, :created_at, :updated_at
+    :language_tag, :citation_part, :created_at, :updated_at,
+    :author
+  attr_accessible(*Proiel::Metadata.fields)
 
   change_logging
 
-  blankable_attributes :author, :edition
+  blankable_attributes :author
 
   validates_presence_of :title
   validates_presence_of :citation_part
@@ -37,9 +39,9 @@ class Source < ActiveRecord::Base
 
   has_many :source_divisions
 
-  composed_of :metadata, :class_name => 'Metadata', :mapping => %w(tei_header)
-
   has_many :dependency_alignment_terminations
+
+  store :additional_metadata, accessors: Proiel::Metadata.fields
 
   # Returns a citation for the source.
   def citation
@@ -74,6 +76,36 @@ class Source < ActiveRecord::Base
   # Returns a hash with aggregated status statistics for all sources.
   def self.aggregated_status_statistics
     Sentence.count(:group => :status_tag)
+  end
+
+  # Returns a generated metadata field containing the names of all annotators
+  # and the number of sentences each has annotated.
+  def annotator
+    Sentence.
+      includes(:source_division, :annotator).
+      where("source_divisions.source_id" => self).
+      where("annotated_by IS NOT NULL").
+      group(:annotator).
+      count.
+      sort_by { |u, n| -n }.
+      map { |u, n| [u.full_name, "#{n} sentence".pluralize(n)] }.
+      map { |u, n| "#{u} (#{n})" }.
+      to_sentence
+  end
+
+  # Returns a generated metadata field containing the names of all reviewers
+  # and the number of sentences each has reviewed.
+  def reviewer
+    Sentence.
+      includes(:source_division, :reviewer).
+      where("source_divisions.source_id" => self).
+      where("reviewed_by IS NOT NULL").
+      group(:reviewer).
+      count.
+      sort_by { |u, n| -n }.
+      map { |u, n| [u.full_name, "#{n} sentence".pluralize(n)] }.
+      map { |u, n| "#{u} (#{n})" }.
+      to_sentence
   end
 
   # Generates a human-readable ID for the source.

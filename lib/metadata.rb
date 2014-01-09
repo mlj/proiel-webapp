@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,66 +21,80 @@
 #
 #++
 
-class Metadata
-  attr_reader :error_message
+module Proiel
+  module Metadata
+    ADDITIONAL_METADATA_FIELDS = %w(
+      principal funder distributor distributor_address date
+      license license_url
+      reference_system
+      editor editorial_note
+      annotator reviewer
 
-  HTML_STYLESHEET_FILE_NAME = Rails.root.join('lib', 'metadata.xsl')
-  HTML_STYLESHEET = Nokogiri::XSLT(File.read(HTML_STYLESHEET_FILE_NAME))
-  NAMESPACE = 'http://www.tei-c.org/ns/1.0'
-  ROOT_PATH = '/TEI.2/teiHeader'
+      electronic_text_editor electronic_text_title
+      electronic_text_version
+      electronic_text_publisher electronic_text_place electronic_text_date
+      electronic_text_original_url
+      electronic_text_license electronic_text_license_url
 
-  # Creates a new instance from an XML fragment containing the header. The header
-  # should be a TEI header and the top level element in the XML fragment must be
-  # a +teiHeader+ element.
-  def initialize(header)
-    if header.blank?
-      @error_message = 'Header is empty'
-      @valid = false
-    else
-      @error_message = nil
-      @valid = true
+      printed_text_editor printed_text_title
+      printed_text_edition
+      printed_text_publisher printed_text_place printed_text_date
+    )
 
-      @header = Nokogiri::XML(header)
+    # Returns the names of metadata fields.
+    def self.fields
+      ADDITIONAL_METADATA_FIELDS
+    end
 
-      if @header.errors.empty?
-        unless @header./(ROOT_PATH).length == 1
-          @error_message = 'Header top element is invalid'
-          @valid = false
-          @header = nil
-        end
-      else
-        @error_message = @header.errors.join(', ')
-        @valid = false
+    # Returns the names of read-only metadata fields, i.e. those whose values
+    # are to be inferred from other information in the treebank.
+    def self.readonly_fields
+      %w(annotator reviewer)
+    end
+
+    # Returns the names of writeable metadata fields, i.e. those whose values
+    # cannot be inferred from other information in the treebank.
+    def self.writeable_fields
+      fields - readonly_fields
+    end
+
+    # Returns the names of metadata fields that pertain to the treebank.
+    def self.treebank_fields
+      ADDITIONAL_METADATA_FIELDS.select { |s| /^(printed|electronic)_text/ !~ s }
+    end
+
+    # Returns the names of metadata fields that pertain to the electronic text.
+    def self.electronic_text_fields
+      ADDITIONAL_METADATA_FIELDS.grep(/^electronic_text/)
+    end
+
+    # Returns the names of metadata fields that pertain to the printed text.
+    def self.printed_text_fields
+      ADDITIONAL_METADATA_FIELDS.grep(/^printed_text/)
+    end
+
+    # Returns the names of metadata fields that pertain to the treebank
+    # along with human-readable field names.
+    def self.treebank_fields_and_labels
+      treebank_fields.map do |field|
+        [field, field.humanize.sub('url', 'URL')]
       end
     end
-  end
 
-  # Checks if the metadata header is valid.
-  def valid?
-    @valid
-  end
-
-  def to_s
-    @header ? @header.to_s : nil
-  end
-
-  # Coverts the header to TEI using a stylesheet.
-  def to_html
-    if @header
-      HTML_STYLESHEET.transform(@header).to_s
-    else
-      nil
+    # Returns the names of metadata fields that pertain to the electronic text
+    # along with human-readable field names.
+    def self.electronic_text_fields_and_labels
+      electronic_text_fields.map do |field|
+        [field, field.sub(/^electronic_text_/, '').humanize.sub('url', 'URL')]
+      end
     end
-  end
 
-  # Returns the header on a format that is suitable for embedding within
-  # other XML documents, e.g. in text exports. The top-level element is
-  # +teiHeader+ and it contains the correct namespace attribute.
-  def export_form
-    if @header
-      h = @header./(ROOT_PATH).first.dup
-      h.default_namespace = NAMESPACE
-      h.to_s
+    # Returns the names of metadata fields that pertain to the printed text
+    # along with human-readable field names.
+    def self.printed_text_fields_and_labels
+      printed_text_fields.map do |field|
+        [field, field.sub(/^printed_text_/, '').humanize.sub('url', 'URL')]
+      end
     end
   end
 end

@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2013 University of Oslo
-# Copyright 2013 Marius L. Jøhndal
+# Copyright 2013, 2014 University of Oslo
+# Copyright 2013, 2014 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -28,9 +28,12 @@ class TextExporter < SourceExporter
     file.puts "% export_time = #{Time.now}"
     file.puts "% title = #{s.title}"
     file.puts "% author = #{s.author}"
-    file.puts "% edition = #{s.edition}"
     file.puts "% citation_part = #{s.citation_part}"
     file.puts "% language = #{s.language_tag}"
+
+    Proiel::Metadata.fields.each do |f|
+      file.puts "% #{f} = #{s.send(f)}" unless s.send(f).blank?
+    end
 
     yield file
   end

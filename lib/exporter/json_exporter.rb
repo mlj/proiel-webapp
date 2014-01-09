@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2013 University of Oslo
-# Copyright 2013 Marius L. Jøhndal
+# Copyright 2013, 2014 University of Oslo
+# Copyright 2013, 2014 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -110,10 +110,10 @@ class JSONExporter < SourceExporter
                             empty_token_sort lemma part_of_speech_tag
                             gloss variant unalignable automatic_alignment
                             login email last_name first_name automatic_token_alignment
-                            tei_header author edition
+                            author
                             source_morphology_tag source_lemma
                             contents notable_type notable_id
-                           )
+                           ) + Proiel::Metadata::fields
 
   WARNINGS_EMITTED = %w(encrypted_password password_salt confirmed_at
                         preferences remember_created_at sign_in_count reset_password_token confirmation_sent_at

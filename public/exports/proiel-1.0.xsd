@@ -1,51 +1,35 @@
 <?xml version="1.0"?>
 
-<!-- PROIEL XML format version 2.0 -->
+<!-- PROIEL XML format version 1.0 -->
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:tei="http://www.tei-c.org/ns/1.0">
   <xs:import namespace="http://www.w3.org/XML/1998/namespace"
              schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+  <xs:import namespace="http://www.tei-c.org/ns/1.0"
+             schemaLocation="http://www.tei-c.org/release/xml/tei/custom/schema/xsd/teilite.xsd"/>
 
   <xs:annotation>
-    <xs:documentation xml:lang="en">PROIEL XML format version 2.0</xs:documentation>
+    <xs:documentation xml:lang="en">PROIEL XML format version 1.0</xs:documentation>
   </xs:annotation>
 
   <xs:complexType name="Source">
     <xs:sequence>
       <xs:element name="title" minOccurs="1" maxOccurs="1" type="xs:string"/>
       <xs:element name="author" minOccurs="0" maxOccurs="1" type="xs:string"/>
+      <xs:element name="edition" minOccurs="0" maxOccurs="1" type="xs:string"/>
       <xs:element name="citation-part" minOccurs="1" maxOccurs="1" type="xs:string"/>
-      <xs:element name="principal" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="funder" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="distributor" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="address" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="date" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="license" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="license-url" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="reference-system" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="editor" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="editorial-note" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="annotator" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="reviewer" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="electronic-text-editor" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="electronic-text-title" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="electronic-text-version" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="electronic-text-date" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="electronic-text-original-url" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="electronic-text-license" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="electronic-text-license-url" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="printed-text-editor" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="printed-text-title" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="printed-text-edition" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="printed-text-publisher" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="printed-text-place" minOccurs="0" maxOccurs="1" type="xs:string"/>
-      <xs:element name="printed-text-date" minOccurs="0" maxOccurs="1" type="xs:string"/>
-
+      <xs:element name="tei-header" minOccurs="1" maxOccurs="1" type="TeiHeader"/>
       <xs:element name="div" minOccurs="1" maxOccurs="unbounded" type="Div"/>
     </xs:sequence>
     <xs:attribute name="id" type="xs:string" use="required"/>
     <xs:attribute name="language" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="TeiHeader">
+    <xs:sequence>
+      <xs:element ref="tei:teiHeader" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="Div">
@@ -181,7 +165,7 @@
       <xs:element name='source' minOccurs="1" maxOccurs="unbounded" type='Source'/>
     </xs:sequence>
     <xs:attribute name='export-time' type="xs:dateTime" use="optional"/>
-    <xs:attribute name="schema-version" type="xs:decimal" use="required" fixed="2.0"/>
+    <xs:attribute name="schema-version" type="xs:decimal" use="required" fixed="1.0"/>
   </xs:complexType>
 
   <xs:element name='proiel' type='Proiel'/>

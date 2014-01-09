@@ -1,9 +1,9 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
 # Copyright 2007, 2008, 2009, 2010, 2011, 2012 Dag Haug
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -31,7 +31,7 @@ class PROIELXMLImporter < XMLSourceImporter
 
   protected
 
-  SOURCE_ATTRS = %w(@language title author edition citation_part)
+  SOURCE_ATTRS = %w(@language title author citation_part)
 
   SOURCE_DIVISION_ATTRS = %w(title @presentation_before @presentation_after)
 
@@ -42,7 +42,11 @@ class PROIELXMLImporter < XMLSourceImporter
                    @presentation_after @foreign_ids)
 
   def set_attrs!(ar_obj, xml_obj, attrs)
-    attrs.each { |attr| ar_obj.send("#{attr.sub('@', '')}=", xml_obj[attr]) }
+    attrs.each do |attr|
+      if xml_obj[attr]
+        ar_obj.send("#{attr.sub('@', '')}=", xml_obj[attr].to_s)
+      end
+    end
   end
 
   def create_with_attrs!(klass, xml_obj, attrs, other_attrs = {})
@@ -82,17 +86,15 @@ class PROIELXMLImporter < XMLSourceImporter
   # Reads import data. The data source +xml_or_file+ may be an opened
   # file or a string containing the XML.
   def parse(file)
-    # First grab the TEI headers verbatim
-    doc = Nokogiri::XML(file)
-    tei_headers = (doc/:source).map { |source| (source/:"tei-header").to_s }
-
-    # Then parse all the other stuff
     parser = Nori.new(:parser => :nokogiri)
     file.rewind
     data = parser.parse(file.read)
 
     top_level = data['proiel']
-    raise "unsupported PROIEL XML version" unless top_level['@schema_version'] == "1.0"
+
+    schema_version = top_level['@schema_version']
+    raise "unsupported PROIEL XML version" unless
+      schema_version == '1.0' or schema_version == '2.0'
 
     # Verify annotation scheme
     annotation = top_level['annotation']
@@ -113,12 +115,25 @@ class PROIELXMLImporter < XMLSourceImporter
         Token.disable_auditing
 
         token_id_map = {} # map imported token IDs to database token IDs
-        tei_header = tei_headers[source_position] # match the TEI header
         code = source['@id']
 
-        sr = create_with_attrs!(Source, source, SOURCE_ATTRS,
-                                :tei_header => tei_header,
-                                :code => code)
+        if schema_version == '1.0'
+          puts 'Warning: The contents of source/edition will be ignored.' if source['edition']
+          puts 'Warning: The contents of source/tei_header will be ignored.' if source['tei-header']
+        else
+          Proiel::Metadata.readonly_fields.each do |f|
+            puts "Warning: The contents of source/#{f} will be ignored." if source[f]
+          end
+        end
+
+        source_attrs =
+          if schema_version == '1.0'
+            SOURCE_ATTRS
+          else
+            SOURCE_ATTRS + Proiel::Metadata::writeable_fields
+          end
+
+        sr = create_with_attrs!(Source, source, source_attrs, code: code)
 
         arrify(source['div']).each_with_index do |div, div_position|
           sd = create_with_attrs!(sr.source_divisions, div, SOURCE_DIVISION_ATTRS,

@@ -46,7 +46,7 @@ class SourcesController < ApplicationController
   end
 
   def update
-    normalize_unicode_params! params[:source], :author, :edition
+    normalize_unicode_params! params[:source], :author
 
     @source = Source.find(params[:id])
     @source.update_attributes(params[:source])

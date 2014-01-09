@@ -5,14 +5,34 @@
     != breadcrumbs ['Contents', sources_path], @source
   .resources
     != link_to_resources @source, :edit
-
   %p
-    - if @source.metadata.valid?
-      #metadata.toggle-hidden{:title => 'metadata'}
-        != @source.metadata.to_html
-
     %a{:href => '#', :id => 'toggle-sentence-status'}
       Show annotation status
+
+%h2!= @source.author_and_title
+
+%h3 Treebank
+%dl
+  - Proiel::Metadata::treebank_fields_and_labels.each do |(f, l)|
+    - if @source.send(f)
+      %dt= l
+      %dd= @source.send(f)
+
+%h3 Electronic text
+%dl
+  - Proiel::Metadata::electronic_text_fields_and_labels.each do |(f, l)|
+    - if @source.send(f)
+      %dt= l
+      %dd= @source.send(f)
+
+%h3 Printed text
+%dl
+  - Proiel::Metadata::printed_text_fields_and_labels.each do |(f, l)|
+    - if @source.send(f)
+      %dt= l
+      %dd= @source.send(f)
+
+%h3 Table of contents
 
 %p
   != paginate @source_divisions
