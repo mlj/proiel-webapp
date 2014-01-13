@@ -46,5 +46,5 @@ end
 
 group :test do
   gem 'sqlite3'
-  gem 'coveralls', require: false
+  gem 'simplecov', require: false
 end
