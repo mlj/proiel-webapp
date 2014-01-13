@@ -52,5 +52,5 @@
         %th.left
         %th.centre!= sort_link @search, :form, "Matched form"
         %th.right
-    %tbody.odd-even-line
+    %tbody
       != render :partial => 'annotations/annotation', :collection => @tokens

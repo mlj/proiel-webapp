@@ -19,7 +19,7 @@
   .pagination-totals
     != page_entries_info @lemmata, :entry_name => 'matches'
 
-  %table.odd-even-line
+  %table
     %thead
       %tr
         %th!= sort_link @search, :lemma, "Lemma"

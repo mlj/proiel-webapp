@@ -28,7 +28,7 @@
       %th.left
       %th.centre Matched token
       %th.right
-  %tbody.odd-even-line
+  %tbody
     != render :partial => 'annotations/annotation', :collection => @tokens
 
 - layer_if  (is_reviewer? and !@lemma.audits.empty?), "revisions" do
