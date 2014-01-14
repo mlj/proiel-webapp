@@ -1,4 +1,4 @@
-= search_form_for @search, :builder => SimpleForm::FormBuilder, :class => 'simple_form' do |f|
+= search_form_for @search, builder: Formtastic::FormBuilder, class: 'formtastic' do |f|
   != f.input :semantic_attribute_value_tag_cont, label: 'Semantic attribute value'
   != f.submit "Search"
 
