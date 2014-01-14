@@ -1,0 +1,26 @@
+- stylesheet 'alignment'
+- javascript "prototype", "scriptaculous", "utils", "effects", "dragdrop", "controls"
+- javascript 'alignment'
+
+:javascript
+  var authenticity_token = '<%= form_authenticity_token %>';
+
+%table.alignment#alignment-view
+  - @alignments.each do |a|
+    %tr
+      %td
+        - a.left.each do |sentence_group|
+          - sentence_group.each do |sentence|
+            .droppable{:id=>"sentence-#{sentence.id}"}
+              != format_sentence(sentence, sentence_numbers: true)
+      %td
+        - if a.right.first
+          != unalignable_button(a.right.first.first)
+          != unanchor_button(a.right.first.first)
+
+        - a.right.each do |sentence_group|
+          - sentence_group.each do |sentence|
+            - if sentence.unalignable
+              != alignable_button(sentence)
+            .draggable{:id=>"sentence-#{sentence.id}"}
+              != format_sentence(sentence, sentence_numbers: true)
