@@ -16,7 +16,7 @@ digraph G {
     root;
   }
 
-  <% @tokens.select { |t| t.empty_token_sort != 'P' }.inject({}) { |k, e| (k[e.depth] ||= []) << e; k }.sort.each do |depth, tokens| %>
+  <% @tokens.inject({}) { |k, e| (k[e.depth] ||= []) << e; k }.sort.each do |depth, tokens| %>
     node [shape=point]; {
       rank = same;
       <%= node "depth#{depth}" %>
@@ -29,12 +29,12 @@ digraph G {
   node [shape=none]; {
     rank = same;
     WORDS [label=""];
-    <% @tokens.select { |t| t.empty_token_sort != 'P' }.reject { |t| t.is_empty? }.sort_by { |t| t.token_number }.each do |t| %>
+    <% @tokens.reject { |t| t.is_empty? }.sort_by { |t| t.token_number }.each do |t| %>
       <%= node "f#{t.id}", TokenText.token_form_as_html(t.form) %>
     <% end %>
   }
 
-  <% @tokens.select { |t| t.empty_token_sort != 'P' }.each do |t| %>
+  <% @tokens.each do |t| %>
     <% if t.head and t.relation %>
       <%= edge t.head.id, t.id, t.relation.to_s.upcase, :fontcolor => :black, :fontsize => 10 %>
     <% else %>
@@ -53,5 +53,11 @@ digraph G {
 
   <% @tokens.select { |t| t.empty_token_sort.blank? }.sort_by(&:token_number).each_cons(2) do |n1, n2| %>
     <%= edge "f#{n1.id}", "f#{n2.id}", '', :weight => 10.0, :style => :invis %>
+  <% end %>
+
+  <% @tokens.map do |t| %>
+    <% if t.antecedent %>
+      <%= edge t.id, t.antecedent.id, '', color: :orange %>
+    <% end %>
   <% end %>
 }

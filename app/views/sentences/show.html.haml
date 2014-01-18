@@ -6,6 +6,32 @@
 != external_text_links @sentence
 != export_links @sentence
 
+- unless @reflexives.empty?
+  %p
+    %h1 Reflexive binding
+
+    %table.ui.table
+      %thead
+        %tr
+          %th Reflexive
+          %th Predicate
+          %th Binder
+          %th OLD entry/note
+      %tbody
+        - @reflexives.each do |reflexive|
+          %tr
+            %td!= link_to "#{reflexive.form} (#{reflexive.id})", edit_token_url(reflexive)
+            %td
+              - if reflexive.head
+                != link_to reflexive.head
+            %td
+              - if reflexive.binder
+                != link_to "#{reflexive.binder.form} (#{reflexive.binder.id})", edit_token_url(reflexive.binder)
+              - if reflexive.binder.try(:logocentre)
+                [#{reflexive.binder.logocentre}]
+            %td
+              != reflexive.old
+
 %p
   %h1 Sentence in context
   - if is_annotator?

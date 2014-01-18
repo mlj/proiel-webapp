@@ -26,7 +26,7 @@ class Token < ActiveRecord::Base
   blankable_attributes :antecedent_id, :automatic_token_alignment,
     :contrast_group, :dependency_alignment_id, :empty_token_sort, :foreign_ids,
     :form, :head_id, :information_status_tag, :lemma_id, :morphology_tag,
-    :presentation_after, :presentation_before, :relation_tag, :source_lemma,
+    :relation_tag, :source_lemma,
     :source_morphology_tag, :token_alignment_id
 
   belongs_to :sentence
@@ -51,6 +51,8 @@ class Token < ActiveRecord::Base
 
   has_many :anaphors, :class_name => 'Token', :foreign_key => 'antecedent_id', :dependent => :nullify
   belongs_to :antecedent, :class_name => 'Token', :foreign_key => 'antecedent_id'
+
+  belongs_to :binder, class_name: 'Token', foreign_key: 'binder_id'
 
   composed_of :morphology, :mapping => %w(morphology_tag to_s), :allow_nil => true, :converter => Proc.new { |x| Morphology.new(x) }
 
@@ -694,5 +696,72 @@ class Token < ActiveRecord::Base
 
   def slashes
     slash_out_edges.map { |s| { relation_tag: s.relation_tag, target_id: s.slashee_id } }
+  end
+
+  def self.with_semantic_tag(attribute_tag, value_tag = nil)
+    rel = SemanticTag.
+      joins(:semantic_attribute_value => :semantic_attribute).
+      where('semantic_attributes.tag' => attribute_tag)
+
+    rel = rel.where('semantic_attribute_values.tag' => value_tag) if value_tag
+
+    tag_ids = rel.pluck(:id)
+
+    includes(:semantic_tags).where('semantic_tags.id' => tag_ids)
+  end
+
+  def semantic_tags_with_attribute_tag(attribute_tag)
+    t = SemanticAttribute.where(tag: attribute_tag)
+
+    case t.count
+    when 0
+      raise ArgumentError, 'no such attribute defined'
+    when 1
+      semantic_tags.where(semantic_attribute_value_id: t.first.semantic_attribute_values.pluck(:id))
+    else
+      raise ArgumentError, 'multiple defined attributes match'
+    end
+  end
+
+  def has_semantic_tag?(attribute_tag, value_tag = nil)
+    if value_tag.nil?
+      semantic_tags_with_attribute_tag(attribute_tag).exists?
+    else
+      v = SemanticAttributeValue.
+        includes(:semantic_attribute).
+        where('semantic_attribute_values.tag' => value_tag).
+        where('semantic_attributes.tag' => attribute_tag)
+
+      case v.count
+      when 0
+        raise ArgumentError, 'no such attribute or value defined'
+      when 1
+        v = v.first
+        semantic_tags.where(semantic_attribute_value_id: v).exists?
+      else
+        raise ArgumentError, 'multiple defined attributes or values match'
+      end
+    end
+  end
+
+  def add_semantic_tag!(attribute_tag, value_tag)
+    v = SemanticAttributeValue.
+      includes(:semantic_attribute).
+      where('semantic_attribute_values.tag' => value_tag).
+      where('semantic_attributes.tag' => attribute_tag)
+
+    case v.count
+    when 0
+      raise ArgumentError, 'no such attribute or value defined'
+    when 1
+      v = v.first
+      if semantic_tags.where(semantic_attribute_value_id: v).exists?
+        raise ArgumentError, 'already tagged with this attribute and value'
+      else
+        semantic_tags.create! semantic_attribute_value: v
+      end
+    else
+      raise ArgumentError, 'multiple defined attributes or values match'
+    end
   end
 end

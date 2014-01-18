@@ -69,6 +69,10 @@ Rails.application.routes.draw do
   get '/wizard/:action', to: 'wizard#:action'
   get '/wizard', to: 'wizard#index'
 
+  match '/tags',             to: 'tags#index'
+  match '/tags/:tag',        to: 'tags#index'
+  match '/tags/:tag/:value', to: 'tags#index'
+
   # Quick search and search suggestions
   get '/quick_search', to: 'tokens#quick_search'
   get '/quick_search.:format', to: 'tokens#quick_search'

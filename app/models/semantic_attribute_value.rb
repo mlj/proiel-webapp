@@ -1,4 +1,6 @@
 class SemanticAttributeValue < ActiveRecord::Base
+  attr_accessible :tag
+
   belongs_to :semantic_attribute
   has_many :semantic_tags
 

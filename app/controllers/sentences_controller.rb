@@ -42,6 +42,25 @@ class SentencesController < ApplicationController
     @notes = (@sentence.notes + @sentence.tokens.map(&:notes).flatten).sort_by(&:created_at).reverse
     @audits = (@sentence.audits + @sentence.tokens.map(&:audits).flatten).sort_by(&:created_at).reverse
 
+    @reflexives = Token.
+      includes(:lemma).
+      order(:token_number).
+      where('sentence_id' => @sentence.id,
+            'lemmata.part_of_speech_tag' => ['Pk', 'Pt'])
+    @antecedents = Token.
+      includes(:lemma).
+      order(:token_number).
+      where('sentence_id' => @sentence.id)
+#            'lemmata.part_of_speech_tag' => %w('Nb'))
+
+## For tokens we ought to do this too
+#      @semantic_tags = @token.semantic_tags
+#      # Add semantic tags from lemma not present in the token's semantic tags.
+#      @semantic_tags += @token.lemma.semantic_tags.reject { |tag| @semantic_tags.map(&:semantic_attribute).include?(tag.semantic_attribute) } if @token.lemma
+#
+#      @outgoing_semantic_relations = @token.outgoing_semantic_relations
+#      @incoming_semantic_relations = @token.incoming_semantic_relations
+
     mode = params[:method] || user_preferences[:graph_method] || :unsorted
 
     @user = current_user
