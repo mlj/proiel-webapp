@@ -1,10 +1,14 @@
 != paginate @sources
 
-.table-of-sources
-  %ul
-    - @sources.group_by { |source| source.language.name }.sort.each do |language_name, sources|
-      %li
-        =language_name
-        %ul
-          - sources.each do |source|
-            %li!=link_to source.author_and_title, source
+%h1.ui.header
+  Table of contents
+
+.ui.list
+  - @sources.group_by(&:language_name).sort.each do |language_name, sources|
+    .item
+      .header
+        = language_name
+      .ui.list
+        - sources.each do |source|
+          .item
+            != link_to source.author_and_title, source
