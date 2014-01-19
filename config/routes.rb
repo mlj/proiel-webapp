@@ -69,6 +69,10 @@ Rails.application.routes.draw do
 
   resources :semantic_tags, :only => [:index, :show]
 
+  match '/tags',             to: 'tags#index'
+  match '/tags/:tag',        to: 'tags#index'
+  match '/tags/:tag/:value', to: 'tags#index'
+
   # Wizard
   get '/wizard/:action', to: 'wizard#:action'
   get '/wizard', to: 'wizard#index'

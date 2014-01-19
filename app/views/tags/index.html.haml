@@ -1,0 +1,41 @@
+- if @semantic_attributes
+  != paginate @semantic_attributes, params: params
+
+  %table.ui.table.segmented
+    %thead
+      %tr
+        %th Attribute
+    %tbody
+      - @semantic_attributes.each do |s|
+        %tr
+          %td!= link_to s.tag, tags_path(tag: s.tag), class: :tag
+
+- if @semantic_attribute_values
+  != paginate @semantic_attribute_values, params: params
+
+  %table.ui.table.segmented
+    %thead
+      %tr
+        %th Attribute
+        %th Value
+    %tbody
+      - @semantic_attribute_values.each do |s|
+        %tr
+          %td.tag= s.semantic_attribute.tag
+          %td!= link_to s.tag, tags_path(tag: s.semantic_attribute.tag, value: s.tag), class: :tag
+
+- if @semantic_tags
+  != paginate @semantic_tags, params: params
+
+  %table.ui.table.segmented
+    %thead
+      %tr
+        %th Attribute
+        %th Value
+        %th Tagged object
+    %tbody
+      - @semantic_tags.each do |s|
+        %tr
+          %td.tag!= link_to s.semantic_attribute.tag, tags_path(tag: s.semantic_attribute.tag), class: :tag
+          %td.tag= s.semantic_attribute_value.tag
+          %td!= link_to_semantic_tag_taggable(s.taggable)

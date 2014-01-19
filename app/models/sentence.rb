@@ -435,6 +435,15 @@ class Sentence < ActiveRecord::Base
     tokens.reload
   end
 
+  # Deletes information structure annotation from the sentence and associated
+  # tokens.
+  def delete_information_structure_annotation!
+    Sentence.transaction do
+      tokens.where(empty_token_sort: 'P').each(&:destroy)
+      tokens.update_all information_status_tag: nil, antecedent_id: nil
+    end
+  end
+
   private
 
   def append_tokens!(ts) #:nodoc:
@@ -579,5 +588,9 @@ class Sentence < ActiveRecord::Base
     else
       raise ArgumentError, 'invalid format'
     end
+  end
+
+  def inspect
+    "Sentence #{id} (#{citation}): #{to_s}"
   end
 end

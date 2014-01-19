@@ -10,5 +10,6 @@
   != f.input :morphology_tag, required: false
   != f.input :empty_token_sort, required: false
   != f.input :foreign_ids, hint: 'A comma-separated list of key-value pairs that link the lemma to some external resource.', label: 'Foreign IDs', required: false
+  != f.input :binder, collection: @possible_binders, required: false
 
   != f.button :submit, 'Update'

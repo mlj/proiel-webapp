@@ -58,9 +58,6 @@ class LanguageTag < TagObject
   #                          methods are disabled.
   def guess_morphology(form, existing_tags, options = {})
     TAGGER.tag_token(tag.to_sym, form, existing_tags)
-  rescue Exception => e
-    Rails.logger.error { "Tagger failed: #{e}" }
-    [:failed, nil]
   end
 
   # Returns a transliterator for the language or +nil+ if none exists.

@@ -5,8 +5,12 @@ module SemanticTagsHelper
   end
 
   # Creates a readable semantic attribute + attribute-value pair.
-  def readable_semantic_attribute_value(semantic_attribute, semantic_attribute_value, hlight = nil)
-    content_tag(:span, [semantic_attribute.tag, highlight(semantic_attribute_value.tag, hlight)].join(' = '), :class => 'tag')
+  def readable_semantic_attribute_value(semantic_attribute, semantic_attribute_value = nil, hlight = nil)
+    if semantic_attribute_value.nil?
+      content_tag(:span, semantic_attribute.tag, class: :tag)
+    else
+      content_tag(:span, [semantic_attribute.tag, highlight(semantic_attribute_value.tag, hlight)].join(' = '), class: :tag)
+    end
   end
 
   # Creates a link to a semantic tag taggable.

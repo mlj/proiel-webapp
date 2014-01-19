@@ -3,7 +3,7 @@ digraph G {
   graph [truecolor=true,bgcolor=transparent];
   root [label="",shape=circle];
 
-  <% @tokens.select { |t| t.empty_token_sort != 'P' }.each do |token| %>
+  <% @tokens.each do |token| %>
     <% if token.conjunction? %>
       <%= node token.id, TokenText.token_form_as_html(token.form) || token.empty_token_sort, shape: :diamond %>
     <% elsif token.is_empty? %>
@@ -23,6 +23,10 @@ digraph G {
     <% token.slash_out_edges.each do |slash_edge| %>
       <%= edge token.id, slash_edge.slashee.id, slash_edge.relation.to_s.upcase,
           :weight => 0.0, :color => :blue, :style => :dashed %>
+    <% end %>
+
+    <% if token.binder %>
+      <%= edge token.id, token.binder.id, 'BINDER', color: :purple, weight: 0.0 %>
     <% end %>
   <% end %>
 }

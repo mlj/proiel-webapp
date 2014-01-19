@@ -40,6 +40,17 @@ class SentencesController < ApplicationController
     @notes = @sentence.notes
     @audits = @sentence.audits
 
+    @reflexives = Token.
+      includes(:lemma).
+      order(:token_number).
+      where('sentence_id' => @sentence.id,
+            'lemmata.part_of_speech_tag' => 'Pk')
+    @antecedents = Token.
+      includes(:lemma).
+      order(:token_number).
+      where('sentence_id' => @sentence.id)
+#            'lemmata.part_of_speech_tag' => %w('Nb'))
+
     mode = params[:method] || user_preferences[:graph_method] || :unsorted
 
     @user = current_user

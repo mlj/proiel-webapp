@@ -61,6 +61,10 @@ class TokensController < ApplicationController
       @source_division = @sentence.source_division
       @source = @source_division.source
 
+      @possible_binders =
+        Token.with_semantic_tag('LOGOCENTRE').where(sentence_id: @sentence.previous_objects.pluck(:id)) +
+        @sentence.tokens.order(:token_number)
+
       respond_with @token
     end
   end
