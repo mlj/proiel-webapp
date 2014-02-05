@@ -1,3 +1,5 @@
+1.3.0   05/02/2014
+
 	- Relaxed constraints on lemmata.variant to allow any integer value or null.
 	Annotators/reviewers should enfore a convention on the values permitted for
 	lemmata.variant if so desired.
