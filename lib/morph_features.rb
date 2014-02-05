@@ -96,7 +96,7 @@ class MorphFeatures
       raise ArgumentError, "invalid language" unless language
 
       base, variant = base_and_variant.split('#')
-      raise ArgumentError, "invalid variant" unless variant.nil? or variant.to_i > 0
+      raise ArgumentError, "invalid variant" unless variant.nil? or variant.to_i.to_s == variant
 
       if pos and pos.gsub('-', '') != ''
         pos = pos + '-' if pos.length == 1

@@ -1,3 +1,7 @@
+	- Relaxed constraints on lemmata.variant to allow any integer value or null.
+	Annotators/reviewers should enfore a convention on the values permitted for
+	lemmata.variant if so desired.
+
 1.2.1   16/12/2013
 
   - Made handling of empty citation_parts more robust.

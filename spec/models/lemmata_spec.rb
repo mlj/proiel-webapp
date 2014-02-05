@@ -25,6 +25,23 @@ describe Lemma do
     FactoryGirl.build(:lemma, lemma: nil).should_not be_valid
   end
 
+  it "is valid if the variant number is an integer" do
+    FactoryGirl.build(:lemma, variant: 0).should be_valid
+    FactoryGirl.build(:lemma, variant: 1).should be_valid
+    FactoryGirl.build(:lemma, variant: -1).should be_valid
+    FactoryGirl.build(:lemma, variant: 1234567890).should be_valid
+    FactoryGirl.build(:lemma, variant: '1').should be_valid
+    FactoryGirl.build(:lemma, variant: '0').should be_valid
+  end
+
+# FIXME? We can really test this because Active Record's connection adapter
+# will coerce the value of an integer column to an integer or nil.
+#  it "is invalid if the variant number is not an integer, nil or a blank string" do
+#    FactoryGirl.build(:lemma, variant: 'foobar').should_not be_valid
+#    FactoryGirl.build(:lemma, variant: Hash.new).should_not be_valid
+#    FactoryGirl.build(:lemma, variant: :foobar).should_not be_valid
+#  end
+
   it "returns a language tag and a language object" do
     lemma = FactoryGirl.create(:lemma)
     lemma.language_tag.should eq 'lat'

@@ -27,7 +27,7 @@ class Lemma < ActiveRecord::Base
 
   change_logging
 
-  blankable_attributes :foreign_ids, :gloss, :variant
+  blankable_attributes :foreign_ids, :gloss
 
   has_many :tokens
   has_many :notes, :as => :notable, :dependent => :destroy
@@ -39,6 +39,7 @@ class Lemma < ActiveRecord::Base
   validates_presence_of :lemma
   validates_unicode_normalization_of :lemma, :form => UNICODE_NORMALIZATION_FORM
   validates_uniqueness_of :lemma, :scope => [:language_tag, :part_of_speech_tag, :variant]
+  validates_numericality_of :variant, allow_nil: true
 
   # A lemma that matches a prefix. The prefixes are given in +queries+,
   # which should be an array of strings on the form +foo+ or +foo#1+, where
