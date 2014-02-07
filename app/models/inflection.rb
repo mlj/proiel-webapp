@@ -24,6 +24,7 @@ class Inflection < ActiveRecord::Base
   attr_accessible :lemma, :form, :language_tag, :morphology_tag, :part_of_speech_tag
 
   tag_attribute :language, :language_tag, LanguageTag, :allow_nil => false
+  tag_attribute :part_of_speech, :part_of_speech_tag, PartOfSpeechTag, :allow_nil => false
 
   validates_presence_of :form
 

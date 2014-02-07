@@ -1,8 +1,7 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
+# Copyright 2014 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,11 +20,11 @@
 #
 #++
 
-require 'lingua/normalisation'
-require 'proiel/tagger/analysis_method'
-require 'proiel/tagger/fst'
-require 'proiel/tagger/instance_frequency'
-require 'proiel/tagger/inflections_table'
+require 'normalisation'
+require 'analysis_method'
+require 'fst'
+require 'instance_frequency'
+require 'inflections_table'
 
 module Tagger
   class WeightedMorphFeatures

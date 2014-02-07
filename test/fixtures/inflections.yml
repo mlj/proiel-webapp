@@ -5,7 +5,6 @@ amen:
   lemma: amen
   part_of_speech_tag: I-
   language_tag: lat
-  manual_rule: true
 cumC:
   id: 2
   form: cum
@@ -13,7 +12,6 @@ cumC:
   lemma: cum
   part_of_speech_tag: C-
   language_tag: lat
-  manual_rule: true
 cumDq:
   id: 3
   form: cum
@@ -21,7 +19,6 @@ cumDq:
   lemma: cum
   part_of_speech_tag: Dq
   language_tag: lat
-  manual_rule: true
 cumR:
   id: 4
   form: cum
@@ -29,7 +26,6 @@ cumR:
   lemma: cum
   part_of_speech_tag: R-
   language_tag: lat
-  manual_rule: true
 neC:
   id: 5
   form: ne
@@ -37,7 +33,6 @@ neC:
   lemma: ne
   part_of_speech_tag: C-
   language_tag: lat
-  manual_rule: true
 neDf:
   id: 6
   form: ne
@@ -45,7 +40,6 @@ neDf:
   lemma: ne
   part_of_speech_tag: Df
   language_tag: lat
-  manual_rule: true
 neI:
   id: 7
   form: ne
@@ -53,4 +47,3 @@ neI:
   lemma: ne
   part_of_speech_tag: I-
   language_tag: lat
-  manual_rule: true
