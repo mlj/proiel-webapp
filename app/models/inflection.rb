@@ -21,7 +21,7 @@
 #++
 
 class Inflection < ActiveRecord::Base
-  attr_accessible :lemma, :form, :language_tag
+  attr_accessible :lemma, :form, :language_tag, :morphology_tag
 
   tag_attribute :language, :language_tag, LanguageTag, :allow_nil => false
 
