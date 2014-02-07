@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131027232246) do
+ActiveRecord::Schema.define(:version => 20140207152826) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -48,16 +48,17 @@ ActiveRecord::Schema.define(:version => 20131027232246) do
   end
 
   create_table "inflections", :force => true do |t|
-    t.string   "language_tag",   :limit => 3,  :default => "",    :null => false
-    t.string   "form",           :limit => 64
-    t.string   "lemma",          :limit => 64
+    t.string   "language_tag",       :limit => 3,  :default => "",    :null => false
+    t.string   "form",               :limit => 64
+    t.string   "lemma",              :limit => 64
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "manual_rule",                  :default => false, :null => false
-    t.string   "morphology_tag", :limit => 11, :default => "",    :null => false
+    t.string   "morphology_tag",     :limit => 11, :default => "",    :null => false
+    t.string   "part_of_speech_tag", :limit => 2,                     :null => false
+    t.boolean  "manual_rule",                      :default => false, :null => false
   end
 
-  add_index "inflections", ["language_tag", "form", "morphology_tag", "lemma"], :name => "idx_inflections_lfml", :unique => true
+  add_index "inflections", ["language_tag", "form", "morphology_tag", "lemma", "part_of_speech_tag"], :name => "idx_infl_unique", :unique => true
   add_index "inflections", ["language_tag", "form"], :name => "idx_inflections_lf"
   add_index "inflections", ["morphology_tag"], :name => "idx_inflections_m"
 

@@ -230,8 +230,11 @@ class InflectionsImportExport < CSVImportExport
       n = MorphFeatures.new([lemma, pos, language].join(","), morphology)
       if n.valid?
         begin
-          Inflection.create!(:morphology => morphology, :language => language,
-                             :form => form, :lemma => [lemma, pos].join(','))
+          Inflection.create!(morphology_tag: morphology,
+                             language_tag: language,
+                             form: form,
+                             lemma: lemma,
+                             part_of_speech_tag: pos)
         rescue
           STDERR.puts "Disregarding rule #{form} -> #{lemma},#{pos},#{n.morphology_summary}: #{$!}"
         end
@@ -243,8 +246,11 @@ class InflectionsImportExport < CSVImportExport
 
   def write_fields
     Inflection.find_each do |inflection|
-      lemma, pos = inflection.lemma.split(/,/)
-      yield inflection.language.tag, lemma, pos, inflection.form, inflection.morphology
+      yield inflection.language_tag,
+        inflection.lemma,
+        inflection.part_of_speech_tag,
+        inflection.form,
+        inflection.morphology_tag
     end
   end
 end

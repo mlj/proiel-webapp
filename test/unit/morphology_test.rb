@@ -53,7 +53,10 @@ class MorphologyTestCase < ActiveSupport::TestCase
   end
 
   def test_inflection_access
-    t = Inflection.new :lemma => 'cum,R-', :form => 'foo', :language_tag => 'lat'
+    t = Inflection.new lemma: 'cum',
+      part_of_speech_tag: 'R-',
+      form: 'foo',
+      language_tag: 'lat'
     t.morphology = @m1
     t.save
 
