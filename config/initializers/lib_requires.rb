@@ -1,5 +1,4 @@
 require 'google_chart'
-require 'statistics'
 require 'proiel'
 require 'alignment/alignment_support'
 require 'transliterations'

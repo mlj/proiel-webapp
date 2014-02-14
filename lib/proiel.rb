@@ -49,6 +49,7 @@ module Proiel
 
   autoload :TokenAnnotationValidator, 'annotation_validator'
   autoload :SentenceAnnotationValidator, 'annotation_validator'
+  autoload :Statistics, 'statistics'
 
   module Jobs
     autoload :Job, 'jobs'
