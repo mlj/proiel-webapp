@@ -1,5 +1,4 @@
-source "https://rubygems.org"
-ruby "2.0.0"
+source 'https://rubygems.org'
 
 gem 'rails', '3.2.16'
 gem 'json'
