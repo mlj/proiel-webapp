@@ -9,9 +9,12 @@ description of the data format is found in the `doc` directory.
 
 ## Installing
 
-`proiel-webapp` is a Ruby on Rails application. This version uses Rails 3.2 and
-Ruby 1.9. Ruby 1.8 will not work. The following instructions assume that you
-have a functional Ruby environment with RubyGems and bundler installed.
+`proiel-webapp` is a Ruby on Rails application. This version uses Ruby on Rails
+3.2 and requires Ruby 2.0 or Ruby 2.1. Ruby 1.9 may also work, but is
+unsupported. Ruby 1.8 will not work.
+
+The following instructions assume that you have a functional Ruby environment
+with RubyGems and bundler installed.
 
 ### Step 1: Install dependencies
 
