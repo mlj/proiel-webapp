@@ -41,9 +41,6 @@ gem 'dotenv'
 group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
-end
-
-group :test do
   gem 'sqlite3'
   gem 'simplecov', require: false
 end
