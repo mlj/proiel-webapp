@@ -132,6 +132,11 @@ To run it through `graphviz`, change the format to `svg` or `png`:
 
     >> GraphvizVisualization.new(Sentence.first).generate(:format => :svg, :mode => :linearized)
 
+### Documentation
+
+To generate documentation for developers simply run `rdoc` from the top of the
+tree.
+
 ## License
 
 The PROIEL web application is licensed under the terms of the GNU General Public

@@ -1,8 +1,7 @@
 .bundle
 db/*.sqlite3
 tmp/**/*
-doc/api
-doc/app
+doc/
 config/database.yml
 *.sqlite3
 .sass-cache
