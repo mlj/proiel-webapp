@@ -1,23 +1,17 @@
-- javascript 'application'
-
-- context_bar do
-  .breadcrumbs
-    != breadcrumbs ['Contents', sources_path], @source
-  .resources
-    != link_to_resources @source, :edit
-
 %h2.ui.header
   = @source.author_and_title
+  != link_to_resources @source, :edit
 
 - metadata_fields_and_labels(@source).each do |header, fields_and_values|
-  %h3.ui.header
-    = header
-  %table.ui.compact.definition.table.segment
-    %tbody
-      - fields_and_values.each do |(field, value)|
-        %tr
-          %td.four.wide= field
-          %td.twelve.wide= value
+  - unless fields_and_values.empty?
+    %h3.ui.header
+      = header
+    %table.ui.compact.definition.table.segment
+      %tbody
+        - fields_and_values.each do |(field, value)|
+          %tr
+            %td.four.wide= field
+            %td.twelve.wide= value
 
 %h3.ui.header
   Table of contents
