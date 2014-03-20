@@ -1,14 +1,15 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
-  - Replaced the TEI header in the sources table and the column editor in the
-  sources table with multiple metadata fields that are serialised in the
-  column additional_metadata. Migration is not automatic; old TEI headers
-  will be silently dropped.
-  - PROIEL XML updated to version 2.0. Version 2.0 is not backwards compatible
-  with version 1.0. PROIEL XML 1.0 can still be imported but all exports are
-  now in PROIEL XML 2.0.
+1.4.0   20/03/2014
 
+  - Replaced the TEI header in the sources table and the column editor in the
+    sources table with multiple metadata fields that are serialised in the
+    column additional_metadata. Migration is not automatic; old TEI headers
+    will be silently dropped.
+  - PROIEL XML updated to version 2.0. Version 2.0 is not backwards compatible
+    with version 1.0. PROIEL XML 1.0 can still be imported but all exports are
+    now in PROIEL XML 2.0.
   - Split inflections.lemma into inflections.lemma and
     inflections.part_of_speech_tag for consistency.
 
@@ -29,7 +30,9 @@ proiel-webapp. It does not list all changes; see the git history for that.
   - Updated dependencies with minor changes.
 
 1.1.0   17/11/2013
-  - Removed lemmata.sort_key, lemmata.full_gloss and renamed lemmata.short_gloss to lemmata.gloss.
+
+  - Removed lemmata.sort_key, lemmata.full_gloss and renamed
+    lemmata.short_gloss to lemmata.gloss.
   - gzip all export files by default.
 
 1.0.1   31/05/2013
@@ -37,10 +40,12 @@ proiel-webapp. It does not list all changes; see the git history for that.
   - Updated dependencies.
   - Put secret token in a separate file.
   - Moved some database validation code to a worker.
-  - Relaxed validation of dependency annotation so that only annotated sentences are validated.
+  - Relaxed validation of dependency annotation so that only annotated sentences
+    are validated.
   - Added Source#merge_with_source!
   - Added initial version of TextImporter.
-  - Updated download page to check for existence of export files and link to all available schemas.
+  - Updated download page to check for existence of export files and link to all
+    available schemas.
   - Numerous bug fixes
 
 1.0.0   23/04/2013
