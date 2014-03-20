@@ -81,6 +81,25 @@ class TokensController < ApplicationController
   def index
     @search = Token.search(params[:q])
 
+    # Location sorts are actually multi-sorts. Inspecting @search.sorts may
+    # seem like the sensible solution to this, but this is actually an array of
+    # non-inspectable objects. We'll instead peek at params[:q][:s] and
+    # instruct ransack what to do based on its value.
+    case params[:q][:s]
+    when NilClass, '', 'location asc' # default
+      @search.sorts = ['sentence_source_division_source_id asc',
+                       'sentence_source_division_position asc',
+                       'sentence_sentence_number asc',
+                       'token_number asc']
+    when 'location desc'
+      @search.sorts = ['sentence_source_division_source_id desc',
+                       'sentence_source_division_position desc',
+                       'sentence_sentence_number desc',
+                       'token_number desc']
+    else
+      # Do nothing; ransack has already taken care of it.
+    end
+
     respond_to do |format|
       format.html do
         @tokens = @search.result.page(current_page)
