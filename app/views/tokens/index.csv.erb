@@ -1,6 +1,6 @@
-"Sentence ID","Citation","Token ID","Preceding sentence context","Token form","Succeeding sentence context"
+"Sentence ID","Citation","Token ID","Text before token","Token form","Text after token"
 <%- if @search.result %>
 <%- @search.result.find_each do |t| %>
-<%=raw [t.sentence.id, t.citation, t.id, *t.sentence_context_to_s].map { |s| "\"#{s}\"" }.join(",") %>
+<%=raw [t.sentence.id, t.citation, t.id, *t.sentence_context_to_s].map { |s| "\"#{s}\"" }.join(',') %>
 <% end %>
 <% end %>
