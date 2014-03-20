@@ -43,7 +43,7 @@ class TextImporter < SourceImporter
         case field
         when 'export_time'
           # ignore this
-        when 'title', 'author', 'edition', 'citation_part', 'language'
+        when 'title', 'author', 'edition', 'citation_part', 'language', 'code'
           sr.send("#{field}=", value)
         else
           raise SourceImporterParseError, "invalid header field #{field}"
