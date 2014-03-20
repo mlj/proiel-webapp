@@ -19,6 +19,7 @@
       <xs:element name="principal" minOccurs="0" maxOccurs="1" type="xs:string"/>
       <xs:element name="funder" minOccurs="0" maxOccurs="1" type="xs:string"/>
       <xs:element name="distributor" minOccurs="0" maxOccurs="1" type="xs:string"/>
+      <xs:element name="distributor-address" minOccurs="0" maxOccurs="1" type="xs:string"/>
       <xs:element name="address" minOccurs="0" maxOccurs="1" type="xs:string"/>
       <xs:element name="date" minOccurs="0" maxOccurs="1" type="xs:string"/>
       <xs:element name="license" minOccurs="0" maxOccurs="1" type="xs:string"/>
@@ -31,6 +32,8 @@
       <xs:element name="electronic-text-editor" minOccurs="0" maxOccurs="1" type="xs:string"/>
       <xs:element name="electronic-text-title" minOccurs="0" maxOccurs="1" type="xs:string"/>
       <xs:element name="electronic-text-version" minOccurs="0" maxOccurs="1" type="xs:string"/>
+      <xs:element name="electronic-text-publisher" minOccurs="0" maxOccurs="1" type="xs:string"/>
+      <xs:element name="electronic-text-place" minOccurs="0" maxOccurs="1" type="xs:string"/>
       <xs:element name="electronic-text-date" minOccurs="0" maxOccurs="1" type="xs:string"/>
       <xs:element name="electronic-text-original-url" minOccurs="0" maxOccurs="1" type="xs:string"/>
       <xs:element name="electronic-text-license" minOccurs="0" maxOccurs="1" type="xs:string"/>
