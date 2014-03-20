@@ -85,7 +85,9 @@ class TokensController < ApplicationController
     # seem like the sensible solution to this, but this is actually an array of
     # non-inspectable objects. We'll instead peek at params[:q][:s] and
     # instruct ransack what to do based on its value.
-    case params[:q][:s]
+    sort_order = params[:q] ? params[:q][:s] : nil
+
+    case sort_order
     when NilClass, '', 'location asc' # default
       @search.sorts = ['sentence_source_division_source_id asc',
                        'sentence_source_division_position asc',
