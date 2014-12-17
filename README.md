@@ -67,7 +67,7 @@ Add an administrator account by using Rails' console interface:
 
 Generate an environment file by running
 
-    $ rake generate_env
+    $ bundle exec rake generate_env
 
 This generates a file called `.env` containing run-time settings that are
 unique to this instance of the application. Inspect the contents of this file
