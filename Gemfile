@@ -43,4 +43,5 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'sqlite3'
   gem 'simplecov', require: false
+  gem 'test-unit'
 end
