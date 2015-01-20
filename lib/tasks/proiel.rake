@@ -8,7 +8,7 @@ end
 
 desc "Periodically run the exporter job"
 task :run_export_job => :environment do
-  exporter = Proiel::Jobs::Exporter.new Rails.logger, mode: 'reviewed', format: %w(proiel tigerxml text)
+  exporter = Proiel::Jobs::Exporter.new Rails.logger, mode: 'reviewed', format: %w(proiel tigerxml)
   exporter.run_periodically!(1.week)
 end
 
@@ -32,9 +32,6 @@ namespace :proiel do
       when 'json'
         klass = JSONImporter
         suffix = '.json'
-      when 'text'
-        klass = TextImporter
-        suffix = '.txt'
       else
         raise "Invalid format"
       end

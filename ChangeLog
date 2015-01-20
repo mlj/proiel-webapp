@@ -2,8 +2,8 @@ This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
   - Exporter job by default now runs every week instead of every day.
-  - Removed CoNLL exporter. CoNLL can now be generated from PROIEL XML using
-    the PROIEL command-line utilities.
+  - Removed CoNLL and text exporters. PROIEL XML can now be converted to
+    these formats by using the PROIEL command-line utilities.
 
 1.4.0   20/03/2014
 

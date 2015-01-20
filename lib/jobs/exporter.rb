@@ -28,7 +28,6 @@ module Proiel
         'proiel' =>   [PROIELXMLExporter, 'xml'],
         'tigerxml' => [TigerXMLExporter,  'tiger'],
         'tiger2' =>   [Tiger2Exporter,    'tiger2'],
-        'text' =>     [TextExporter,      'txt'],
         'json' =>     [JSONExporter,      'json'],
       }
 
