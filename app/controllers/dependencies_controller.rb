@@ -4,7 +4,7 @@ class DependenciesController < ApplicationController
   def show
     @sentence = Sentence.includes(:tokens => [:lemma]).find(params[:sentence_id])
     mode = user_preferences[:graph_method] ? user_preferences[:graph_method].to_sym : :unsorted
-    visualizer = PROIEL::graph_visualizers.first # FIXME
+    visualizer = GraphvizVisualizer.instance
 
     respond_to do |format|
       format.svg  { send_data visualizer.generate(@sentence, :format => :svg, :fontname => 'Legendum', :mode => mode), :filename => "#{params[:id]}.svg", :disposition => 'inline', :type => :svg }

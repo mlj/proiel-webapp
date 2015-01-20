@@ -2,8 +2,8 @@
 #
 # graphviz.rb - Graph visualization functions using graphviz
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -22,17 +22,15 @@
 #
 #++
 
-require 'plugin.rb'
+require 'singleton'
 require 'erb'
 require 'open3'
 
 class VisualizationError < Exception
 end
 
-class GraphvizVisualizer < PROIEL::GraphVisualizer
-  def initialize
-    super :graphviz, 'Graphviz'
-  end
+class GraphvizVisualizer
+  include Singleton
 
   def generate(sentence, options = {})
     g = GraphvizVisualization.new(sentence)
@@ -60,7 +58,7 @@ class GraphvizVisualization
 
     raise ArgumentError, "invalid format" unless SUPPORTED_FORMATS.include?(options[:format])
 
-    template_file = File.join(File.dirname(__FILE__), 'graphviz', "#{options[:mode]}.dot.erb")
+    template_file = File.join(File.dirname(__FILE__), 'graph_visualization', "#{options[:mode]}.dot.erb")
     content = File.read(template_file)
     template = ERB.new(content)
     template.filename = template_file
@@ -105,5 +103,3 @@ class GraphvizVisualization
     attrs.collect { |attr, value| "#{attr}=\"#{value}\"" }.join(',')
   end
 end
-
-PROIEL::register_plugin GraphvizVisualizer

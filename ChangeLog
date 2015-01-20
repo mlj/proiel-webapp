@@ -3,6 +3,9 @@ proiel-webapp. It does not list all changes; see the git history for that.
 
 1.6.0   unreleased
 
+  - Removed plugin system --- it was never used much.
+  - Removed link mapper for Bibelen.no as site no longer uses predictable
+    URLS. Renamed Biblos link mapper to Biblehub.
   - Removed automatic validation of exported files. This task is now
     delegated to the PROIEL CLI.
   - Removed option to export only reviewed sentences. The PROIEL CLI now

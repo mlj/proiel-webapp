@@ -21,36 +21,24 @@
 #
 #++
 
-require 'plugin.rb'
+require 'singleton'
 require 'yaml'
 
-class LatexGlossingExporter < PROIEL::Exporter
-  def initialize
-    super :latex_glossing, 'LaTeX export'
+class LatexGlossingExporter
+  include Singleton
 
+  def initialize
     @glosses = YAML::load(File.read(__FILE__).sub(/\A.*\n__END__\n/m, ''))
   end
 
-  def applies?(object)
-    object.is_a?(Sentence)
-  end
-
-  def mime_type(object)
-    :html
-  end
-
   def generate(object, options = {})
-    if applies?(object)
-      language_tag = object.language_tag
-      tokens = object.tokens.visible
+    language_tag = object.language_tag
+    tokens = object.tokens.visible
 
-      transcribed_tokens = tokens.map(&:form).map { |form| "{#{transcribe_form(form, language_tag)}}" }.join(' ')
-      glosses = tokens.map { |t| gloss(t) }.join(' ')
+    transcribed_tokens = tokens.map(&:form).map { |form| "{#{transcribe_form(form, language_tag)}}" }.join(' ')
+    glosses = tokens.map { |t| gloss(t) }.join(' ')
 
-      "\\exg." + [transcribed_tokens, glosses, "(#{object.citation}) %#{object.id}"].join("\\\\<br/>")
-    else
-      super
-    end
+    "\\exg." + [transcribed_tokens, glosses, "(#{object.citation}) %#{object.id}"].join("\\\\<br/>")
   end
 
   private
@@ -97,8 +85,6 @@ class LatexGlossingExporter < PROIEL::Exporter
     end
   end
 end
-
-PROIEL::register_plugin LatexGlossingExporter
 
 if __FILE__ == $0
   require 'config/environment'

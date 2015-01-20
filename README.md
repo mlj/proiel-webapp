@@ -98,41 +98,12 @@ steps:
     $ bundle install
     $ RAILS_ENV=production bundle exec rake db:migrate
 
-## Customising the application
-
-This section describes some ways of modifying or extending the application.
-
-### Editing locale files
+## Editing locale files
 
 Some key strings used by the application, such as the application's title, can
 be modified by editing the files in `config/locales`.
 
-### Adding a dependency graph visualization method
-
-The default plugin for visualization of dependency graphs uses `graphviz`.
-As long as you are able to use the `dot` engine from `graphviz`, adding new
-visualizations is trivial:
-
-  1. Create a new visualization template in `plugins/graph_visualizers/graphviz`.
-     Have a look at the existing ones to see how the templates work.
-  2. Add a new visualization choice in
-     `app/views/preferences/edit.html.haml`. This will enable users to select
-     the visualization method.
-  3. Add a new description of the visualization method in `config/locales/en.yml`.
-
-Early testing of new visualisations is probably best done using the Rails
-console. To see the `dot` file produced before it is passed to `graphviz`,
-you can try the following:
-
-    $ ./script/rails c
-    Loading development environment (Rails 3.2.12)
-    >> GraphvizVisualization.new(Sentence.first).generate(:format => :dot, :mode => :linearized)
-
-To run it through `graphviz`, change the format to `svg` or `png`:
-
-    >> GraphvizVisualization.new(Sentence.first).generate(:format => :svg, :mode => :linearized)
-
-### Documentation
+## Documentation
 
 To generate documentation for developers simply run `rdoc` from the top of the
 tree.

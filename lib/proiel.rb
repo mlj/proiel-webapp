@@ -24,6 +24,12 @@
 autoload :PROIELXMLExporter, 'proiel_xml_exporter'
 autoload :PROIELXMLImporter, 'proiel_xml_importer'
 
+autoload :GraphvizVisualizer, 'graph_visualization'
+autoload :LatexGlossingExporter, 'latex_glossing_exporter'
+autoload :ExternalLinkMapper, 'external_link_mapper'
+autoload :BibleExternalLinkMapper, 'external_link_mapper'
+autoload :BiblosExternalLinkMapper, 'external_link_mapper'
+
 module Proiel
   # The application version
   VERSION = [1, 5, 0]

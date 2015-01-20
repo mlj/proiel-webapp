@@ -103,9 +103,10 @@ module ApplicationHelper
 
   # Returns links to external sites for a sentence.
   def external_text_links(sentence)
-    PROIEL::external_link_mappers.map do |l|
-      if l.applies?(sentence.citation)
-        link_to l.name, l.to_url(sentence.citation), :class => :external
+    [BiblosExternalLinkMapper].map do |l|
+      url = l.instance.to_url(sentence.citation)
+      if url
+        link_to(l.instance.site_name, url, class: :external)
       else
         nil
       end
@@ -113,14 +114,14 @@ module ApplicationHelper
   end
 
   # Returns links to exporters of a sentence.
-  def export_links(sentence)
-    PROIEL::exporters.map do |l|
-      if l.applies?(sentence)
-        link_to l.name, { :action => 'export', :exporter_name => l.identifier }
-      else
-        nil
-      end
-    end.compact * ' '
+  #
+  # FIXME: generate LaTeX directly and hide using JS so that we don't need a separate controller call
+  def export_links(obj)
+    if obj.is_a?(Sentence)
+      link_to('Export to LaTeX', action: 'export')
+    else
+      ''
+    end
   end
 
   # Generates a rounded box with a description list inside.

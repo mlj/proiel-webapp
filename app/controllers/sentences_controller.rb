@@ -87,17 +87,10 @@ class SentencesController < ApplicationController
   def export
     @sentence = Sentence.find(params[:id])
 
-    l = PROIEL::exporters.find { |e| e.identifier.to_s == params[:exporter_name] }
+    result = LatexGlossingExporter.instance.generate(@sentence)
 
-    if l and l.applies?(@sentence)
-      result = l.generate(@sentence)
-
-      respond_to do |format|
-        format.html { send_data result, :disposition => 'inline', :type => l.mime_type(@sentence) }
-      end
-    else
-      flash[:error] = 'Invalid export format'
-      redirect_to @sentence
+    respond_to do |format|
+      format.html { send_data result, disposition: 'inline', type: :html }
     end
   end
 end
