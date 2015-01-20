@@ -48,7 +48,6 @@ module Proiel
       {
         'PROIEL format' => 'xml',
         'TigerXML format' => 'tiger',
-        'CoNLL format' => 'conll',
         'Text format' => 'txt'
       }
     end

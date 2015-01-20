@@ -26,7 +26,6 @@ module Proiel
     class Exporter < Job
       FORMATS = {
         'proiel' =>   [PROIELXMLExporter, 'xml'],
-        'conll' =>    [CoNLLExporter,     'conll'],
         'tigerxml' => [TigerXMLExporter,  'tiger'],
         'tiger2' =>   [Tiger2Exporter,    'tiger2'],
         'text' =>     [TextExporter,      'txt'],

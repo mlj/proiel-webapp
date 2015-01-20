@@ -1,6 +1,9 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
+  - Removed CoNLL exporter. CoNLL can now be generated from PROIEL XML using
+    the PROIEL command-line utilities.
+
 1.4.0   20/03/2014
 
   - Replaced the TEI header in the sources table and the column editor in the

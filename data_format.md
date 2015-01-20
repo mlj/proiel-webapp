@@ -200,7 +200,7 @@ correspond to the numeric ID of the source in the database. If no `ID` is given,
 all sources will be exported.
 
 The variable `FORMAT` is used to select the export format. By default, the
-PROIEL XML format is used. Other alternatives are `conll`, `tigerxml` and
+PROIEL XML format is used. Other alternatives are `tigerxml` and
 `tiger2`.
 
 `MODE` is by default `all`, which will export all available data. Alternatively, the

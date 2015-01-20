@@ -8,7 +8,7 @@ end
 
 desc "Periodically run the exporter job"
 task :run_export_job => :environment do
-  exporter = Proiel::Jobs::Exporter.new Rails.logger, mode: 'reviewed', format: %w(proiel conll tigerxml text)
+  exporter = Proiel::Jobs::Exporter.new Rails.logger, mode: 'reviewed', format: %w(proiel tigerxml text)
   exporter.run_periodically!(24.hour)
 end
 
@@ -43,7 +43,7 @@ namespace :proiel do
       klass.new.read(ENV['FILE'])
     end
 
-    desc "Export a PROIEL source text. Optional options: ID=database_ID_of_source (FORMAT={proiel|conll|tigerxml|tiger2|json} MODE={all|reviewed} EXPORT_DIRECTORY=destination_directory SEMANTIC_TAGS={false|true} SOURCE_DIVISION=source_division_title_regexp REMOVE_CYCLES={none|heads|all})"
+    desc "Export a PROIEL source text. Optional options: ID=database_ID_of_source (FORMAT={proiel|tigerxml|tiger2|json} MODE={all|reviewed} EXPORT_DIRECTORY=destination_directory SEMANTIC_TAGS={false|true} SOURCE_DIVISION=source_division_title_regexp REMOVE_CYCLES={none|heads|all})"
     task(:export => :environment) do
       options = {}
 
