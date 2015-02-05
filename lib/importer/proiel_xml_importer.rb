@@ -25,6 +25,8 @@
 require 'nori'
 
 class PROIELXMLImporter
+  SUPPORTED_SCHEMA_VERSION = '2.0'
+
   def read(file_name, options = {})
     # Validate first so that we can assume that required elements/attributes are present.
     validate!(file_name)
@@ -120,8 +122,7 @@ class PROIELXMLImporter
     top_level = data['proiel']
 
     schema_version = top_level['@schema_version']
-    raise "unsupported PROIEL XML version" unless
-      schema_version == '1.0' or schema_version == '2.0'
+    raise ArgumentError, "unsupported PROIEL XML version" unless schema_version == SUPPORTED_SCHEMA_VERSION
 
     # Verify annotation scheme
     annotation = top_level['annotation']
@@ -144,21 +145,11 @@ class PROIELXMLImporter
         token_id_map = {} # map imported token IDs to database token IDs
         code = source['@id']
 
-        if schema_version == '1.0'
-          puts 'Warning: The contents of source/edition will be ignored.' if source['edition']
-          puts 'Warning: The contents of source/tei_header will be ignored.' if source['tei-header']
-        else
-          Proiel::Metadata.readonly_fields.each do |f|
-            puts "Warning: The contents of source/#{f} will be ignored." if source[f]
-          end
+        Proiel::Metadata.readonly_fields.each do |f|
+          puts "Warning: The contents of source/#{f} will be ignored." if source[f]
         end
 
-        source_attrs =
-          if schema_version == '1.0'
-            SOURCE_ATTRS
-          else
-            SOURCE_ATTRS + Proiel::Metadata::writeable_fields
-          end
+        source_attrs = SOURCE_ATTRS + Proiel::Metadata::writeable_fields
 
         sr = create_with_attrs!(Source, source, source_attrs, code: code)
 
