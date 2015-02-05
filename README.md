@@ -38,9 +38,6 @@ the following:
 
     --with-fontconfig --with-freetype2 --with-pangocairo --with-rsvg
 
-For validation of XML files, `xmllint` from [libxml2](http://www.xmlsoft.org/)
-is required.
-
 ### Step 3: Install optional external binaries
 
 _This step is optional_. If you want to be able to regenerate the finite-state

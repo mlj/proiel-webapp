@@ -26,7 +26,7 @@ require 'builder'
 require 'metadata'
 
 # Exporter for the PROIEL XML format.
-class PROIELXMLExporter < XMLSourceExporter
+class PROIELXMLExporter
   # Creates a new exporter that exports the source +source+.
   #
   # ==== Options
@@ -68,8 +68,6 @@ class PROIELXMLExporter < XMLSourceExporter
         end
       end
 
-      validate!(file_name)
-
       if do_gzip
         Zlib::GzipWriter.open("#{file_name}.gz") do |gz|
           gz.mtime = File.mtime(tmp_file_name)
@@ -82,12 +80,6 @@ class PROIELXMLExporter < XMLSourceExporter
       end
     else
       STDERR.puts "Source #{@source.human_readable_id} has no data available for export on this format"
-    end
-  end
-
-  def validate!(file_name)
-    unless system("xmllint --path #{Proiel::Application.config.schema_file_path} --nonet --schema #{File.join(Proiel::Application.config.schema_file_path, 'proiel.xsd')} --noout #{file_name}")
-      raise ArgumentError, "imported XML does not validate"
     end
   end
 

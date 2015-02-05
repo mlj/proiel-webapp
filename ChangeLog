@@ -3,6 +3,8 @@ proiel-webapp. It does not list all changes; see the git history for that.
 
 1.6.0   unreleased
 
+  - Removed automatic validation of exported files. This task is now
+    delegated to the PROIEL CLI.
   - Removed option to export only reviewed sentences. The PROIEL CLI now
     does this. Note that this also means that the files that can be
     downloaded from the 'Downloads' area now contain both reviewed and

@@ -28,9 +28,6 @@ class PROIELXMLImporter
   SUPPORTED_SCHEMA_VERSION = '2.0'
 
   def read(file_name, options = {})
-    # Validate first so that we can assume that required elements/attributes are present.
-    validate!(file_name)
-
     File.open(file_name, 'r') do |file|
       Source.transaction do
         Source.disable_auditing
@@ -41,12 +38,6 @@ class PROIELXMLImporter
 
         parse(file, options)
       end
-    end
-  end
-
-  def validate!(file_name)
-    unless system("xmllint --path #{Proiel::Application.config.schema_file_path} --nonet --schema #{File.join(Proiel::Application.config.schema_file_path, 'proiel.xsd')} --noout #{file_name}")
-      raise ArgumentError, "imported XML does not validate"
     end
   end
 
