@@ -47,7 +47,6 @@ module Proiel
       # TODO: refactor (cf. lib/jobs/exporter.rb and lib/tasks/proiel.rake)
       {
         'PROIEL format' => 'xml',
-        'TigerXML format' => 'tiger',
       }
     end
   end

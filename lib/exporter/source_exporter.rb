@@ -36,7 +36,7 @@ class SourceExporter
   # reviewed_only:: Only include reviewed sentences. Default: +false+.
   # sem_tags:: Include semantic tags. Default: +false+.
   def initialize(source, options = {})
-    options.assert_valid_keys(:reviewed_only, :sem_tags, :source_division, :cycles, :ignore_nils)
+    options.assert_valid_keys(:reviewed_only, :sem_tags, :source_division, :ignore_nils)
     options.reverse_merge! :reviewed_only => false
 
     @source = source

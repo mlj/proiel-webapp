@@ -26,8 +26,6 @@ module Proiel
     class Exporter < Job
       FORMATS = {
         'proiel' =>   [PROIELXMLExporter, 'xml'],
-        'tigerxml' => [TigerXMLExporter,  'tiger'],
-        'tiger2' =>   [Tiger2Exporter,    'tiger2'],
       }
 
       def self.available_exporters
@@ -51,9 +49,6 @@ module Proiel
       # * <tt>:export_directory</tt> - If set, overrides the default export
       # directory, which is provided by
       # <tt>Proiel::Application.config.export_directory_path</tt>.
-      # * <tt>:remove_cycles</tt> - If set, will remove cycles. This option is
-      # only relevant to the TigerXML export format. Valid values are
-      # <tt>all</tt> and <tt>heads</tt>.
       def initialize(logger = Rails.logger, options = {})
         super(logger)
 
@@ -74,7 +69,6 @@ module Proiel
           options = {}
           options[:reviewed_only] = true if @options[:mode] == 'reviewed'
           options[:sem_tags] = true if @options[:semantic_tags]
-          options[:cycles] = @options[:remove_cycles] if @options[:remove_cycles]
 
           # Prepare destination directory
           directory = @options[:export_directory] || Proiel::Application.config.export_directory_path

@@ -24,8 +24,6 @@
 autoload :SourceExporter, 'exporter/source_exporter'
 autoload :XMLSourceExporter, 'exporter/xml_source_exporter'
 autoload :PROIELXMLExporter, 'exporter/proiel_xml_exporter'
-autoload :TigerXMLExporter, 'exporter/tiger_xml_exporter'
-autoload :Tiger2Exporter, 'exporter/tiger2_exporter'
 
 autoload :PROIELXMLImporter, 'importer/proiel_xml_importer'
 
