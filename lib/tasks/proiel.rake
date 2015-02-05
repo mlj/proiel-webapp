@@ -40,16 +40,6 @@ namespace :proiel do
       exporter = Proiel::Jobs::Exporter.new Logger.new(STDOUT), options
       exporter.run_once!
     end
-
-    desc "Import a source text in legacy format. Options: FILE=data_file, FORMAT={proiel}"
-    task(:legacy_import => :environment) do
-      require 'legacy_import'
-      raise "Filename require" unless ENV['FILE']
-      format = ENV['FORMAT']
-      format ||= :proiel
-      li = LegacyImport.new(:proiel)
-      li.read(ENV['FILE'])
-    end
   end
 
   namespace :morphology do
