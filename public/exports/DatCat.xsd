@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-    version="2.0.5" targetNamespace="http://korpling.german.hu-berlin.de/tiger2/V2.0.5/">
-    <xs:simpleType name="datcat">
-        <xs:restriction base="xs:anyURI"/> 
-    </xs:simpleType>
-</xs:schema>

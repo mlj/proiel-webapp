@@ -3,6 +3,8 @@ proiel-webapp. It does not list all changes; see the git history for that.
 
 1.6.0   unreleased
 
+  - Removed Tiger2 exporter. PROIEL XML can now be converted
+    to this format by using the PROIEL command-line utilities.
   - Removed raw text importer. The command-line utilities should now be
     used to preprocess raw text.
   - Removed JSON importer and exporter. This functionality was never
