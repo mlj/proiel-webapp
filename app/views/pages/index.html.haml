@@ -1,11 +1,10 @@
 %h1 Downloadable data files
 
 %p
-  These data files are generated daily from the subset of our data that has been
-  reviewed. If a file is unavailable, the text in question has not yet been reviewed or the file is in the process of being (re)generated.
-
-%p
-  All data files are released under the
+  These data files are generated daily using the
+  != link_to 'PROIEL XML', '/exports/proiel.xsd'
+  format. If a file is unavailable, the file has not yet been generated. All data f
+  iles are released under the
   != link_to "CC BY-NC-SA 3.0", "http://creativecommons.org/licenses/by-nc-sa/3.0/us/"
   license. Please make sure that you are familiar with the terms of this license before downloading any of the files below.
 
@@ -15,12 +14,4 @@
   - Source.all.each do |s|
     %tr
       %td!= link_to s.author_and_title, s
-      - Proiel::export_formats.each do |name, format|
-        %td!= link_to_if Proiel::export_file_available?(s.human_readable_id, format), name, Proiel::export_file_url(s.human_readable_id, format)
-
-%h2 Schema files and documentation
-
-%ul
-  %li
-    PROIEL format:
-    != link_to 'proiel.xsd', '/exports/proiel.xsd'
+      %td!= link_to_if Proiel::export_file_available?(s.human_readable_id), name, Proiel::export_file_url(s.human_readable_id)

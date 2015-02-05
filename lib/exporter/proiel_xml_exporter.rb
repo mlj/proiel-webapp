@@ -22,17 +22,76 @@
 #
 #++
 
-# Source exporter for the PROIEL XML format.
-class PROIELXMLExporter < XMLSourceExporter
-  CURRENT_SCHEMA_VERSION = '2.0'
+require 'builder'
+require 'metadata'
 
-  def self.schema_file_name
-    'proiel.xsd'
+# Exporter for the PROIEL XML format.
+class PROIELXMLExporter < XMLSourceExporter
+  # Creates a new exporter that exports the source +source+.
+  #
+  # ==== Options
+  # sem_tags:: Include semantic tags. Default: +false+.
+  def initialize(source, options = {})
+    options.assert_valid_keys(:sem_tags, :source_division, :ignore_nils)
+
+    @source = source
+    @options = options
   end
 
-  only_exports :reviewed
+  # Writes exported data to a file.
+  def write(file_name, do_gzip = true)
+    tmp_file_name = "#{file_name}.tmp"
 
-  protected
+    if Sentence.joins(source_division: [:source]).where(source_divisions: { source_id: @source.id }).exists?
+      File.open(tmp_file_name, 'w') do |file|
+        write_toplevel!(file) do |context|
+          write_source!(context, @source) do |context|
+            sds = @source.source_divisions.order(:position)
+            sds = sds.where(id: @options[:source_division]) if @options[:source_division]
+
+            sds.each do |sd|
+              if Sentence.joins(:source_division).where(source_division_id: sd.id).exists?
+                write_source_division!(context, sd) do |context|
+                  ss = sd.sentences.order(:sentence_number)
+
+                  ss.each do |s|
+                    write_sentence!(context, s) do |context|
+                      s.tokens.order(:token_number).includes(:lemma, :slash_out_edges).each do |t|
+                        write_token!(context, t)
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+
+      validate!(file_name)
+
+      if do_gzip
+        Zlib::GzipWriter.open("#{file_name}.gz") do |gz|
+          gz.mtime = File.mtime(tmp_file_name)
+          gz.orig_name = File.basename(file_name)
+          gz.write IO.binread(tmp_file_name)
+        end
+        File.unlink(tmp_file_name)
+      else
+        File.rename(tmp_file_name, file_name)
+      end
+    else
+      STDERR.puts "Source #{@source.human_readable_id} has no data available for export on this format"
+    end
+  end
+
+  def validate!(file_name)
+    unless system("xmllint --path #{Proiel::Application.config.schema_file_path} --nonet --schema #{File.join(Proiel::Application.config.schema_file_path, 'proiel.xsd')} --noout #{file_name}")
+      raise ArgumentError, "imported XML does not validate"
+    end
+  end
+
+  CURRENT_SCHEMA_VERSION = '2.0'
 
   def write_toplevel!(file)
     builder = Builder::XmlMarkup.new(:target => file, :indent => 2)

@@ -25,29 +25,22 @@ module Proiel
   # Module with convenience helpers for working with the paths specified by the
   # application configuration in config/environment*.
   module PathHelpers
-    def export_file_name(source_tag, format)
-      [source_tag, format, 'gz'].join('.')
+    def export_file_name(source_tag)
+      "#{source_tag}.xml.gz"
     end
 
-    def export_file_name_with_path(source_tag, format)
-      file_name = export_file_name(source_tag, format)
+    def export_file_name_with_path(source_tag)
+      file_name = export_file_name(source_tag)
       File.join(Proiel::Application.config.export_directory_path, file_name)
     end
 
-    def export_file_url(source_tag, format)
-      file_name = export_file_name(source_tag, format)
+    def export_file_url(source_tag)
+      file_name = export_file_name(source_tag)
       "/exports/#{file_name}"
     end
 
-    def export_file_available?(source_tag, format)
-      File.exists?(export_file_name_with_path(source_tag, format))
-    end
-
-    def export_formats
-      # TODO: refactor (cf. lib/jobs/exporter.rb and lib/tasks/proiel.rake)
-      {
-        'PROIEL format' => 'xml',
-      }
+    def export_file_available?(source_tag)
+      File.exists?(export_file_name_with_path(source_tag))
     end
   end
 end

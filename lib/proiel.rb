@@ -21,10 +21,7 @@
 #
 #++
 
-autoload :SourceExporter, 'exporter/source_exporter'
-autoload :XMLSourceExporter, 'exporter/xml_source_exporter'
 autoload :PROIELXMLExporter, 'exporter/proiel_xml_exporter'
-
 autoload :PROIELXMLImporter, 'importer/proiel_xml_importer'
 
 module Proiel

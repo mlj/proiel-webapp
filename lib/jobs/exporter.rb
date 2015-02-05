@@ -24,27 +24,11 @@
 module Proiel
   module Jobs
     class Exporter < Job
-      FORMATS = {
-        'proiel' =>   [PROIELXMLExporter, 'xml'],
-      }
-
-      def self.available_exporters
-        FORMATS.keys
-      end
-
       # ==== Options
       # * <tt>:id</tt> - If set, only exports the source with the given ID. If not set,
       # all sources are expored.
       # * <tt>:source_division</tt> - If set to a regular expression, only
       # exports source divisions whose titles match the regular expression.
-      # * <tt>:format</tt> - The export format to use. Valid export formats can
-      # be retrieved using <tt>available_exporters</tt>. This can be a string
-      # or an array of strings. The default is to export the <tt>proiel</tt>
-      # format.
-      # * <tt>:mode</tt> - If set to 'all', will export all sentences. If
-      # 'reviewed', will export only those sentences that have
-      # <tt>status_tag</tt> set to <tt>reviewed</tt>. The default is
-      # <tt>all<tt>.
       # * <tt>:semantic_tags</tt> - If true, will also export semantic tags.
       # * <tt>:export_directory</tt> - If set, overrides the default export
       # directory, which is provided by
@@ -54,42 +38,32 @@ module Proiel
 
         @options = options
         @options.symbolize_keys!
-        @options.reverse_merge! format: 'proiel', mode: 'all', semantic_tags: false
-
-        @options[:format] = [*@options[:format]]
-        raise ArgumentError, 'invalid format' unless @options[:format].all? { |format| FORMATS.has_key?(format) }
-
-        raise ArgumentError, 'invalid mode' unless %w(all reviewed).include?(@options[:mode])
+        @options.reverse_merge! semantic_tags: false
       end
 
       def run_once!
-        @options[:format].each do |format|
-          klass, suffix = FORMATS[format]
+        options = {}
+        options[:sem_tags] = true if @options[:semantic_tags]
 
-          options = {}
-          options[:reviewed_only] = true if @options[:mode] == 'reviewed'
-          options[:sem_tags] = true if @options[:semantic_tags]
+        # Prepare destination directory
+        directory = @options[:export_directory] || Proiel::Application.config.export_directory_path
+        Dir::mkdir(directory) unless File::directory?(directory)
 
-          # Prepare destination directory
-          directory = @options[:export_directory] || Proiel::Application.config.export_directory_path
-          Dir::mkdir(directory) unless File::directory?(directory)
+        # Find sources and iterate them
+        sources = @options[:id] ? Source.find_all_by_id(@options[:id]) : Source.all
 
-          # Find sources and iterate them
-          sources = @options[:id] ? Source.find_all_by_id(@options[:id]) : Source.all
+        sources.each do |source|
+          file_name = File.join(directory, "#{source.human_readable_id}.xml")
 
-          sources.each do |source|
-            file_name = File.join(directory, "#{source.human_readable_id}.#{suffix}")
+          if @options[:source_division]
+            options[:source_division] = source.source_divisions.select { |sd| sd.title =~ Regexp.new(@options[:source_division]) }.map(&:id)
+          end
 
-            if @options[:source_division]
-              options[:source_division] = source.source_divisions.select { |sd| sd.title =~ Regexp.new(@options[:source_division]) }.map(&:id)
-            end
-
-            begin
-              @logger.info { "#{self.class}: Exporting source ID #{source.id} as #{file_name}" }
-              klass.new(source, options).write(file_name)
-            rescue Exception => e
-              @logger.error { "#{self.class}: Error exporting text #{source.human_readable_id} using #{klass}: #{e}\n" + e.backtrace.join("\n") }
-            end
+          begin
+            @logger.info { "#{self.class}: Exporting source ID #{source.id} as #{file_name}" }
+            PROIELXMLExporter.new(source, options).write(file_name)
+          rescue Exception => e
+            @logger.error { "#{self.class}: Error exporting text #{source.human_readable_id}: #{e}\n" + e.backtrace.join("\n") }
           end
         end
       end
