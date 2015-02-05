@@ -3,6 +3,8 @@ proiel-webapp. It does not list all changes; see the git history for that.
 
 1.6.0   unreleased
 
+  - Removed JSON importer and exporter. This functionality was never
+    completed.
   - Added option to write an ID mapping file if importing PROIEL XML with
     existing ID attributes.
 
