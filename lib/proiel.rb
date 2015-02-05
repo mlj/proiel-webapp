@@ -21,8 +21,8 @@
 #
 #++
 
-autoload :PROIELXMLExporter, 'exporter/proiel_xml_exporter'
-autoload :PROIELXMLImporter, 'importer/proiel_xml_importer'
+autoload :PROIELXMLExporter, 'proiel_xml_exporter'
+autoload :PROIELXMLImporter, 'proiel_xml_importer'
 
 module Proiel
   # The application version
