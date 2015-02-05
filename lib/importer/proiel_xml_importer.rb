@@ -24,9 +24,28 @@
 
 require 'nori'
 
-class PROIELXMLImporter < XMLSourceImporter
-  def self.schema_file_name
-    'proiel.xsd'
+class PROIELXMLImporter
+  def read(file_name, options = {})
+    # Validate first so that we can assume that required elements/attributes are present.
+    validate!(file_name)
+
+    File.open(file_name, 'r') do |file|
+      Source.transaction do
+        Source.disable_auditing
+        SourceDivision.disable_auditing
+        Sentence.disable_auditing
+        Token.disable_auditing
+        Lemma.disable_auditing
+
+        parse(file, options)
+      end
+    end
+  end
+
+  def validate!(file_name)
+    unless system("xmllint --path #{Proiel::Application.config.schema_file_path} --nonet --schema #{File.join(Proiel::Application.config.schema_file_path, 'proiel.xsd')} --noout #{file_name}")
+      raise ArgumentError, "imported XML does not validate"
+    end
   end
 
   protected
@@ -94,7 +113,7 @@ class PROIELXMLImporter < XMLSourceImporter
   # Reads import data. The data source +xml_or_file+ may be an opened
   # file or a string containing the XML.
   def parse(file, options = {})
-    parser = Nori.new(:parser => :nokogiri)
+    parser = Nori.new(parser: :nokogiri)
     file.rewind
     data = parser.parse(file.read)
 
@@ -145,18 +164,18 @@ class PROIELXMLImporter < XMLSourceImporter
 
         arrify(source['div']).each_with_index do |div, div_position|
           sd = create_with_attrs!(sr.source_divisions, div, SOURCE_DIVISION_ATTRS,
-                                  :position => div_position)
+                                  position: div_position)
           print_id_map options[:id_map_file], :div, div, sd
 
           arrify(div['sentence']).each_with_index do |sentence, sentence_position|
             s = create_with_attrs!(sd.sentences, sentence, SENTENCE_ATTRS,
-                                   :sentence_number => sentence_position,
-                                   :status_tag => 'unannotated')
+                                   sentence_number: sentence_position,
+                                   status_tag: 'unannotated')
             print_id_map options[:id_map_file], :sentence, sentence, s
 
             arrify(sentence['token']).each_with_index do |token, token_position|
               t = create_with_attrs!(s.tokens, token, TOKEN_ATTRS,
-                                     :token_number => token_position)
+                                     token_number: token_position)
               print_id_map options[:id_map_file], :token, token, t
 
               if token['@lemma'] or token['part_of_speech'] or token['@morphology']

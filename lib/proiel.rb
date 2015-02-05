@@ -27,10 +27,7 @@ autoload :PROIELXMLExporter, 'exporter/proiel_xml_exporter'
 autoload :TigerXMLExporter, 'exporter/tiger_xml_exporter'
 autoload :Tiger2Exporter, 'exporter/tiger2_exporter'
 
-autoload :SourceImporter, 'importer/source_importer'
-autoload :XMLSourceImporter, 'importer/xml_source_importer'
 autoload :PROIELXMLImporter, 'importer/proiel_xml_importer'
-autoload :TextImporter, 'importer/text_importer'
 
 module Proiel
   # The application version
