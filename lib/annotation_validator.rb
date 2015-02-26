@@ -24,8 +24,12 @@
 module Proiel
   class TokenAnnotationValidator < ::ActiveModel::Validator
     def validate(record)
-      unless (record.is_empty? and record.form.nil?) or (!record.is_empty? and !record.form.nil?)
+      if record.is_empty? and !record.form.nil?
         record.errors[:base] << "Empty tokens must have NULL form"
+      end
+
+      if !record.is_empty? and record.form.nil?
+        record.errors[:base] << "Non-empty tokens cannot have NULL form"
       end
 
       if record.lemma_id.blank?
