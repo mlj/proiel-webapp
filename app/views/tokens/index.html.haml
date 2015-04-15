@@ -39,18 +39,21 @@
   = f.actions do
     != f.submit "Search"
 
-- if @tokens
-  != paginate @tokens, :params => params
-  .pagination-totals
-    != page_entries_info @tokens, :entry_name => 'matches'
+- if params[:q] and @tokens
+  - if @search.result.count > 5000
+    != @search.result.count
+    results found. Please narrow your query to 5000 results.
+  - else
+    != paginate @tokens, :params => params
+    .pagination-totals
+      != page_entries_info @tokens, :entry_name => 'matches'
 
-- if @tokens
-  %table.concordance
-    %thead
-      %tr
-        %th!= sort_link @search, :location, "Location"
-        %th.left
-        %th.centre!= sort_link @search, :form, "Matched form"
-        %th.right
-    %tbody
-      != render :partial => 'annotations/annotation', :collection => @tokens
+    %table.concordance
+      %thead
+        %tr
+          %th!= sort_link @search, :location, "Location"
+          %th.left
+          %th.centre!= sort_link @search, :form, "Matched form"
+          %th.right
+      %tbody
+        != render :partial => 'annotations/annotation', :collection => @tokens
