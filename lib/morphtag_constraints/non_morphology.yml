@@ -320,3 +320,16 @@
     :morphology:
       n-: {}
 
+  N-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}
+
+  X-:
+    :mask:
+    - :inflection
+    - :mood
+    :morphology:
+      n-: {}

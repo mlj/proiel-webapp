@@ -76,3 +76,11 @@ G-:
 V-:
   abbreviated_summary: verb
   summary: verb
+X-:
+  abbreviated_summary: unass.
+  summary: unassigned
+N-:
+  abbreviated_summary: inf. marker
+  summary: infinitive marker
+
+  
