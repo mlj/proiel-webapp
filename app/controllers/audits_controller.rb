@@ -47,7 +47,7 @@ class AuditsController < ApplicationController
       @user = User.find(params[:user_id])
       @audits = @user.audits.page(current_page)
     else
-      @audits = Audited::Adapters::ActiveRecord::Audit.page(current_page)
+      @audits = Audited::Adapters::ActiveRecord::Audit.where('created_at > ?', 1.week.ago).order('created_at DESC').page(current_page)
     end
 
     respond_with @audits
