@@ -9,7 +9,7 @@ end
 desc "Periodically run the exporter job"
 task :run_export_job => :environment do
   exporter = Proiel::Jobs::Exporter.new Rails.logger, mode: 'reviewed', format: %w(proiel tigerxml text)
-  exporter.run_periodically!(24.hour)
+  exporter.run_periodically!(1.week)
 end
 
 namespace :proiel do
