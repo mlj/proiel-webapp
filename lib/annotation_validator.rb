@@ -101,7 +101,7 @@ module Proiel
       # dependency token with non-nil relation.
       relation_tags = record.tokens.takes_syntax.pluck(:relation_tag)
       if relation_tags.any? and !relation_tags.all?
-        errors[:base] << "Dependency annotation must be complete"
+        record.errors[:base] << "Dependency annotation must be complete"
       end
 
       record.tokens.takes_syntax.each do |t|
