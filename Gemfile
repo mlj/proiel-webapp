@@ -44,4 +44,6 @@ group :development, :test do
   gem 'sqlite3'
   gem 'simplecov', require: false
   gem 'test-unit'
+  gem 'rack-mini-profiler', require: false
+  gem 'flamegraph'
 end
