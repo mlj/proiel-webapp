@@ -19,9 +19,9 @@
 
     %nav#navigation-bar
       %span.left
-        != link_to 'Contents', root_path, :accesskey => 't', :accesskey => '1'
+        != link_to 'Contents', root_path, accesskey: '1'
         != link_to 'Dictionary', lemmata_path
-        != link_to 'Search', tokens_path
+        != link_to 'Search', tokens_path, accesskey: 'S'
         - if is_annotator?
           != link_to 'Annotation', wizard_path
           != link_to 'Statistics', statistics_path
@@ -34,7 +34,7 @@
           != link_to 'Logout', destroy_user_session_path
         - else
           != link_to 'Sign in', new_user_session_path
-        != link_to 'Help', page_path('help'), :accesskey => '6'
+        != link_to 'Help', page_path('help'), accesskey: '6'
         != link_to 'Downloads', page_path('public_data')
       %span.right
         %form.inline{'accept-charset' => 'UTF-8', :action => '/quick_search', :method => 'get'}
