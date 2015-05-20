@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2013 University of Oslo
-# Copyright 2013, 2014 Marius L. Jøhndal
+# Copyright 2013, 2015 University of Oslo
+# Copyright 2013, 2014, 2015 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -36,7 +36,7 @@ autoload :JSONImporter, 'importer/json_importer'
 
 module Proiel
   # The application version
-  VERSION = [1, 4, 0]
+  VERSION = [1, 5, 0]
 
   # Returns the application version as a dotted string.
   def self.version
