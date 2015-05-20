@@ -66,8 +66,8 @@
 - if is_reviewer?
   %h2 Notes
   %ol
-    - unless @sentence.notes.empty?
-      != render :partial => 'notes/summary', :collection => @sentence.notes
+    - unless @notes.empty?
+      != render partial: 'notes/summary', collection: @notes
     - @sentence.tokens.each do |token|
       - unless token.notes.empty?
         != render :partial => 'notes/summary', :collection => token.notes
@@ -75,8 +75,8 @@
   %h2 History
   != render 'audits/legend'
   %ol
-    - unless @sentence.audits.empty?
-      != render :partial => 'audits/summary', :collection => @sentence.audits
+    - unless @audits.empty?
+      != render partial: 'audits/summary', collection: @audits
     - @sentence.tokens.each do |token|
       - unless token.audits.empty?
         != render :partial => 'audits/summary', :collection => token.audits

@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2009, 2010, 2011, 2012, 2015 University of Oslo
+# Copyright 2009, 2010, 2011, 2012, 2015 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -36,6 +36,9 @@ class SentencesController < ApplicationController
 
     @sentence_window = @sentence.sentence_window.includes(:tokens)
     @semantic_tags = @sentence.semantic_tags
+
+    @notes = @sentence.notes
+    @audits = @sentence.audits
 
     respond_with @sentence
   end
