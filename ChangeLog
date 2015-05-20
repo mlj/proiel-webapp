@@ -1,6 +1,14 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
+1.5.0   20/05/2015
+
+  - Upgraded to Rails branch 3-2-stable (Rails 3.2.21 + additional patches).
+  - Moved help pages and additional documentation to the project's github
+    wiki.
+  - Added rack-profiler to development instances.
+  - Restricted changelog display to last week's changes.
+  - Restricted search results to 5,000 results.
   - Exporter job by default now runs every week instead of every day.
   - Removed CoNLL and text exporters. PROIEL XML can now be converted to
     these formats by using the PROIEL command-line utilities.
