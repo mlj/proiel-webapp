@@ -1,4 +1,4 @@
-class PagesController < HighVoltage::PagesController
+class PagesController < ApplicationController
   layout :layout_for_page
 
   def export
