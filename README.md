@@ -147,3 +147,8 @@ License version 2. See the file `COPYING` for details.
 
 The application was written by Marius L. Jøhndal (University of Cambridge), Dag
 Haug (University of Oslo) and Anders Nøklestad (University of Oslo).
+
+The icons on the site are taken from the following collections:
+
+* [Sweetie](http://sweetie.sublink.ca/) icons by Joseph North (<a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike</a>)
+* [Iconize](http://pooliestudios.com/projects/iconize/) by Alexander Kaiser and Mark James (<a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution License</a>)
