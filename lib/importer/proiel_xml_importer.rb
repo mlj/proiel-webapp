@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 University of Oslo
+# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Marius L. Jøhndal
 # Copyright 2007, 2008, 2009, 2010, 2011, 2012 Dag Haug
 #
 # This file is part of the PROIEL web application.
@@ -30,6 +30,14 @@ class PROIELXMLImporter < XMLSourceImporter
   end
 
   protected
+
+  def print_id_map(filename, klass, old_obj, new_obj)
+    if filename and old_obj['@id']
+      File.open(filename, 'a') do |id_map_file|
+        id_map_file.puts [klass, old_obj['@id'], new_obj.id].join(',')
+      end
+    end
+  end
 
   SOURCE_ATTRS = %w(@language title author citation_part)
 
@@ -85,7 +93,7 @@ class PROIELXMLImporter < XMLSourceImporter
 
   # Reads import data. The data source +xml_or_file+ may be an opened
   # file or a string containing the XML.
-  def parse(file)
+  def parse(file, options = {})
     parser = Nori.new(:parser => :nokogiri)
     file.rewind
     data = parser.parse(file.read)
@@ -138,15 +146,18 @@ class PROIELXMLImporter < XMLSourceImporter
         arrify(source['div']).each_with_index do |div, div_position|
           sd = create_with_attrs!(sr.source_divisions, div, SOURCE_DIVISION_ATTRS,
                                   :position => div_position)
+          print_id_map options[:id_map_file], :div, div, sd
 
           arrify(div['sentence']).each_with_index do |sentence, sentence_position|
             s = create_with_attrs!(sd.sentences, sentence, SENTENCE_ATTRS,
                                    :sentence_number => sentence_position,
                                    :status_tag => 'unannotated')
+            print_id_map options[:id_map_file], :sentence, sentence, s
 
             arrify(sentence['token']).each_with_index do |token, token_position|
               t = create_with_attrs!(s.tokens, token, TOKEN_ATTRS,
                                      :token_number => token_position)
+              print_id_map options[:id_map_file], :token, token, t
 
               if token['@lemma'] or token['part_of_speech'] or token['@morphology']
                 t.morph_features = MorphFeatures.new("#{token['@lemma']},#{token['@part_of_speech']},#{sr.language_tag}", token['@morphology'])

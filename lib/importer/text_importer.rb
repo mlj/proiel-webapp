@@ -24,7 +24,7 @@
 class TextImporter < SourceImporter
   protected
 
-  def parse(file)
+  def parse(file, options = {})
     sr = Source.new
     sd = nil
     sd_position = 0

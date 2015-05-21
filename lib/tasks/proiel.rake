@@ -23,21 +23,18 @@ namespace :proiel do
   end
 
   namespace :text do
-    desc "Import a PROIEL source text. Options: FILE=data_file"
+    desc "Import a PROIEL source text. Options: FILE=data_file ID_MAP_FILE=id_map_file"
     task(:import => :environment) do
+      raise "Filename required" unless ENV['FILE']
+
       case ENV['FORMAT']
       when NilClass, 'proiel'
-        klass = PROIELXMLImporter
-        suffix = '.xml'
+        PROIELXMLImporter.new.read(ENV['FILE'], id_map_file: ENV['ID_MAP_FILE'])
       when 'json'
-        klass = JSONImporter
-        suffix = '.json'
+        JSONImporter.new.read(ENV['FILE'])
       else
         raise "Invalid format"
       end
-
-      raise "Filename required" unless ENV['FILE']
-      klass.new.read(ENV['FILE'])
     end
 
     desc "Export a PROIEL source text. Optional options: ID=database_ID_of_source (FORMAT={proiel|tigerxml|tiger2|json} MODE={all|reviewed} EXPORT_DIRECTORY=destination_directory SEMANTIC_TAGS={false|true} SOURCE_DIVISION=source_division_title_regexp REMOVE_CYCLES={none|heads|all})"

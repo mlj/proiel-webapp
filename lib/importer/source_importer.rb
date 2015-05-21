@@ -29,14 +29,14 @@ class SourceImporter
   end
 
   # Reads data to be imported from a file.
-  def read(file_name)
+  def read(file_name, options = {})
     # Validate first so that we can assume that required elements/attributes are present.
     validate!(file_name)
 
     File.open(file_name, 'r') do |file|
       begin
         Source.transaction do
-          parse(file)
+          parse(file, options)
         end
       rescue SourceImporterParseError => e
         puts "Parse error: #{e}".red
@@ -47,7 +47,7 @@ class SourceImporter
   def validate!(file_name)
   end
 
-  def parse(file)
+  def parse(file, options = {})
   end
 end
 

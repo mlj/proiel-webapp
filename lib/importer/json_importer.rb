@@ -25,7 +25,7 @@
 class JSONImporter < SourceImporter
   protected
 
-  def parse(file)
+  def parse(file, options = {})
     # A mapping from old (= export/import file) ID to new (= database) ID for each type of object
     id_map = {}
 
