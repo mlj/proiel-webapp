@@ -1,5 +1,3 @@
-require 'ucodes'
-
 module SentenceFormattingHelper
   # Formats one or more sentences as HTML using their content format.
   # +value+ may either be an array of +Sentence+ objects, a single
@@ -59,8 +57,6 @@ module SentenceFormattingHelper
   end
 
   private
-
-  UNICODE_HORIZONTAL_ELLIPSIS = Unicode::U2026
 
   FormattedReference = Struct.new(:reference_type, :reference_value, :reference_url)
 
@@ -156,8 +152,8 @@ module SentenceFormattingHelper
 
       s += content_tag :span, after, presentation_attributes unless after.empty?
 
-      s.gsub!(Unicode::U2028, '<br>')
-      s.gsub!(Unicode::U2029, '<p>')
+      s.gsub!("\u{2028}", '<br>')
+      s.gsub!("\u{2029}", '<p>')
       s.squish
     end
   end
@@ -180,9 +176,9 @@ module SentenceFormattingHelper
 
     if length_limit and sequence.length > length_limit.abs
       if length_limit < 0
-        UNICODE_HORIZONTAL_ELLIPSIS + join_sequence(sequence.last(-length_limit), options)
+        "\u{2026}" + join_sequence(sequence.last(-length_limit), options)
       else
-        join_sequence(sequence.first(length_limit), options) + UNICODE_HORIZONTAL_ELLIPSIS
+        join_sequence(sequence.first(length_limit), options) + "\u{2026}"
       end
     else
       join_sequence(sequence, options)

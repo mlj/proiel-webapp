@@ -1,7 +1,4 @@
-require 'ucodes'
-
 class NukeReferenceFields < ActiveRecord::Migration
-  EN_DASH = Unicode::U2013
   RANGE_PATTERN = /^(\d+)-(\d+)$/
   ARRAY_PATTERN = /^\[(.*)\]$/
 
@@ -52,7 +49,7 @@ class NukeReferenceFields < ActiveRecord::Migration
             sentence.tokens.each do |token|
               token.citation_part = self.compute(token, sent_reference_fields).inject(reference_format) do |s, (key, value)|
                 case value
-                when Range: value = [value.first, value.last].join(EN_DASH)
+                when Range: value = [value.first, value.last].join("\u{2013}")
                 when Integer, String: value = value.to_s
                 when Array: value = value.join(', ')
                 else

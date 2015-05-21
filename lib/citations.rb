@@ -80,7 +80,7 @@ module Proiel
     when 1
       c.first
     else
-      [cit1, citation_strip_prefix(cit1, cit2)].join(Unicode::U2013)
+      [cit1, citation_strip_prefix(cit1, cit2)].join("\u{2013}")
     end
   end
 

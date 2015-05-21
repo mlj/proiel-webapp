@@ -9,7 +9,6 @@
 
 require 'active_support'
 require 'unicode'
-require 'ucodes'
 
 module Lingua
   module LAT
@@ -37,43 +36,49 @@ module Lingua
   end
 
   module CU
+    # Returns a regular expression that matches all the Unicode characters
+    # in the array +characters+.
+    def self.make_character_class(characters)
+      r = characters.collect { |c| /#{c}/u }
+      Regexp.union(*r)
+    end
+
     # Most OCS-Cyrilic diacritics are governed by no uniform usage, so
     # except for presentation of text, it makes little sense to keep them
     # around
-    CU_DIACRITICS = [ Unicode::U0485, Unicode::U0484, Unicode::U0306,
-      Unicode::U0308, ].freeze
+    CU_DIACRITICS = ["\u{0485}", "\u{0484}", "\u{0306}", "\u{0308}"].freeze
 
     # All variants of the letter/sound i. These correspond to different
     # Glagolitic characters, but are distinguished by orthographic
     # considerations that apparently differ between sources. In transcription,
     # these symbols are conflated to `i', in normalised OCS-Cyrilic orthography,
     # и (U+0438/U+0418) is used..
-    CU_LOWER_CASE_LETTER_I = [ Unicode::U0438, Unicode::U0456, Unicode::UA647 ].freeze
-    CU_UPPER_CASE_LETTER_I = [ Unicode::U0418, Unicode::U0406, Unicode::UA646 ].freeze
+    CU_LOWER_CASE_LETTER_I = ["\u{0438}", "\u{0456}", "\u{A647}"].freeze
+    CU_UPPER_CASE_LETTER_I = ["\u{0418}", "\u{0406}", "\u{A646}"].freeze
 
     # Regexps for all of the above
-    CU_DIACRITICS_REGEXP = Unicode::make_character_class(CU_DIACRITICS).freeze
-    CU_LOWER_CASE_LETTER_I_REGEXP = Unicode::make_character_class(CU_LOWER_CASE_LETTER_I).freeze
-    CU_UPPER_CASE_LETTER_I_REGEXP = Unicode::make_character_class(CU_UPPER_CASE_LETTER_I).freeze
+    CU_DIACRITICS_REGEXP = make_character_class(CU_DIACRITICS).freeze
+    CU_LOWER_CASE_LETTER_I_REGEXP = make_character_class(CU_LOWER_CASE_LETTER_I).freeze
+    CU_UPPER_CASE_LETTER_I_REGEXP = make_character_class(CU_UPPER_CASE_LETTER_I).freeze
 
     # Mapping between non-superscripted characters and superscript characters.
     SUPERSCRIPTS = {
-      Unicode::U0431 => Unicode::U2de0, # b
-      Unicode::U0432 => Unicode::U2de1, # v
-      Unicode::U0433 => Unicode::U2de2, # g
-      Unicode::U0434 => Unicode::U2de3, # d
-      Unicode::Ua649 => Unicode::U2df8, # g'
-      Unicode::U043b => Unicode::U2de7, # l
-      Unicode::U043d => Unicode::U2de9, # n
-      Unicode::U043e => Unicode::U2dea, # o
-      Unicode::U043f => Unicode::U2deb, # p
-      Unicode::U0445 => Unicode::U2def, # x
-      Unicode::U0446 => Unicode::U2df0, # c
-      Unicode::U0447 => Unicode::U2df1, # č
-      Unicode::U043a => Unicode::U2de6, # k
-      Unicode::U0440 => Unicode::U2dec, # r
-      Unicode::U0441 => Unicode::U2ded, # s
-      Unicode::U0442 => Unicode::U2dee, # t
+      "\u{0431}" => "\u{2de0}", # b
+      "\u{0432}" => "\u{2de1}", # v
+      "\u{0433}" => "\u{2de2}", # g
+      "\u{0434}" => "\u{2de3}", # d
+      "\u{a649}" => "\u{2df8}", # g'
+      "\u{043b}" => "\u{2de7}", # l
+      "\u{043d}" => "\u{2de9}", # n
+      "\u{043e}" => "\u{2dea}", # o
+      "\u{043f}" => "\u{2deb}", # p
+      "\u{0445}" => "\u{2def}", # x
+      "\u{0446}" => "\u{2df0}", # c
+      "\u{0447}" => "\u{2df1}", # č
+      "\u{043a}" => "\u{2de6}", # k
+      "\u{0440}" => "\u{2dec}", # r
+      "\u{0441}" => "\u{2ded}", # s
+      "\u{0442}" => "\u{2dee}", # t
     }.freeze
 
     # Returns the superscript character that corresponds to a particular
@@ -85,7 +90,7 @@ module Lingua
 
     REVERSE_SUPERSCRIPTS = SUPERSCRIPTS.invert.freeze
     SUPERSCRIPT_LETTERS = REVERSE_SUPERSCRIPTS.keys.freeze
-    SUPERSCRIPT_LETTERS_REGEXP = Unicode::make_character_class(SUPERSCRIPT_LETTERS).freeze
+    SUPERSCRIPT_LETTERS_REGEXP = make_character_class(SUPERSCRIPT_LETTERS).freeze
 
     # Normalises the orthography of a word.
     #
@@ -97,8 +102,8 @@ module Lingua
       w = word.dup
       w.gsub!(CU_DIACRITICS_REGEXP, '') unless options[:keep_diacritics]
       unless options[:keep_letter_i_variants]
-        w.gsub!(CU_LOWER_CASE_LETTER_I_REGEXP, Unicode::U0438)
-        w.gsub!(CU_UPPER_CASE_LETTER_I_REGEXP, Unicode::U0418)
+        w.gsub!(CU_LOWER_CASE_LETTER_I_REGEXP, "\u{0438}")
+        w.gsub!(CU_UPPER_CASE_LETTER_I_REGEXP, "\u{0418}")
       end
       w.gsub!(SUPERSCRIPT_LETTERS_REGEXP) { |c| REVERSE_SUPERSCRIPTS[$&] }
       options[:no_case_folding] ? w : Unicode::downcase(w)
@@ -108,9 +113,9 @@ module Lingua
   module GRC
     private
 
-    U_ACUTE = Unicode::U0301
-    U_GRAVE = Unicode::U0300
-    U_CIRCUMFLEX = Unicode::U0342
+    U_ACUTE      = "\u{0301}"
+    U_GRAVE      = "\u{0300}"
+    U_CIRCUMFLEX = "\u{0342}"
 
     FINAL_ACUTE_REGEXP = Regexp.new("#{U_ACUTE}$").freeze
     ACUTE_REGEXP = Regexp.new(U_ACUTE).freeze
