@@ -178,7 +178,7 @@ module SentenceFormattingHelper
 
     length_limit = options[:length_limit]
 
-    if length_limit and sequence.length > length_limit
+    if length_limit and sequence.length > length_limit.abs
       if length_limit < 0
         UNICODE_HORIZONTAL_ELLIPSIS + join_sequence(sequence.last(-length_limit), options)
       else
