@@ -40,7 +40,7 @@ module SentenceFormattingHelper
       x = value.tokens_with_dependents_and_info_structure.with_prodrops_in_place
     elsif value.is_a?(Array)
       if value.empty?
-        return []
+        return ''
       elsif value.first.is_a?(Sentence)
         x = value.map { |sentence| sentence.tokens_with_dependents_and_info_structure.with_prodrops_in_place }.flatten
       elsif value.first.is_a?(Token)
@@ -52,7 +52,7 @@ module SentenceFormattingHelper
       markup = format_tokens(x, options, &block)
       "<div class='formatted-text' lang='#{x.first.language}'>#{markup}</div>".html_safe
     else
-      ""
+      ''
     end
   end
 
