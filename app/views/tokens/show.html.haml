@@ -28,8 +28,8 @@
     %dt Foreign IDs:
     %dd.tag= @token.foreign_ids
 
-- layer_unless @token.notes.empty?, "notes" do
-  != notes_summary @token.notes
+- layer_unless @notes.empty?, "notes" do
+  != notes_summary @notes
 
 - layer_unless @semantic_tags.empty?, 'semantic_tags' do
   != semantic_tags_summary @semantic_tags
@@ -40,5 +40,5 @@
 - layer_unless @incoming_semantic_relations.empty?, 'incoming_semantic_relations' do
   != semantic_relations_summary @incoming_semantic_relations
 
-- layer_if (is_reviewer? and !@token.audits.empty?), "revisions" do
-  != audits_summary @token.audits
+- layer_if (is_reviewer? and !@audits.empty?), "revisions" do
+  != audits_summary @audits

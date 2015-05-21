@@ -44,6 +44,9 @@ class TokensController < ApplicationController
       @outgoing_semantic_relations = @token.outgoing_semantic_relations
       @incoming_semantic_relations = @token.incoming_semantic_relations
 
+      @notes = @token.notes
+      @audits = @token.audits
+
       respond_with @token
     end
   end
