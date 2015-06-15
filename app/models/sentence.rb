@@ -212,7 +212,7 @@ class Sentence < ActiveRecord::Base
       dependency_graph.nodes.each do |node|
         token = tokens.find(id_map[node.identifier])
         token.head_id = id_map[node.head.identifier]
-        token.relation_tag = node.relation
+        token.relation_tag = node.relation.to_s
 
         # Slash edges are marked as dependent on the association level, so when we
         # destroyed empty tokens, the orphaned slashes should also have gone away.
