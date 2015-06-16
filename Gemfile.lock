@@ -219,3 +219,6 @@ DEPENDENCIES
   test-unit
   thin
   unicode
+
+BUNDLED WITH
+   1.10.3
