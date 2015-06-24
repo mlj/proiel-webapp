@@ -165,20 +165,20 @@ class PROIELXMLImporter < XMLSourceImporter
 
                 if head_id
                   new_head_id = token_id_map[head_id.to_i]
-                  raise "No head token #{head_id} found for token #{t.id}" unless new_head_id
+                  raise "No head token #{head_id} found for token #{t.id} (original id #{token['@id']})" unless new_head_id
                   t.head_id = new_head_id
                 end
 
                 if antecedent_id
                   new_antecedent_id = token_id_map[antecedent_id.to_i]
-                  raise "No antecedent token #{antecedent_id} found for token #{t.id}" unless new_antecedent_id
+                  raise "No antecedent token #{antecedent_id} found for token #{t.id} (original id #{token['@id']})" unless new_antecedent_id
                   t.antecedent_id = new_antecedent_id
                 end
 
                 arrify(token['slash']).each do |slash|
                   target_id = slash['@target_id']
                   new_target_id = token_id_map[target_id.to_i]
-                  raise "No slash target token #{target_id} found for token #{t.id}" unless new_target_id
+                  raise "No slash target token #{target_id} found for token #{t.id} (original id #{token['@id']})" unless new_target_id
                   t.slash_out_edges.create! :slashee_id => new_target_id, :relation_tag => slash['@relation']
                 end
 
