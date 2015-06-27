@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
-#gem 'rails', '3.2.21'
-gem 'rails', git: 'https://github.com/rails/rails.git', branch: '3-2-stable'
+gem 'rails', '3.2.22'
 gem 'json'
 gem 'sass-rails'
 
