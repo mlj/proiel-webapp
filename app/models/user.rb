@@ -71,14 +71,15 @@ class User < ActiveRecord::Base
   end
 
   def first_assigned_sentence
-    assigned_sentences.first
+    assigned_sentences.
+      includes(:source_division).
+      order("source_divisions.position, sentences.sentence_number").
+      first
   end
 
   def shift_assigned_sentence!
-    assigned_sentences.first.tap do |s|
-      s.assigned_to = nil
-      s.save!
-    end
+    s = first_assigned_sentence
+    s.update_attributes! assigned_to:  nil
   end
 
   def to_s
