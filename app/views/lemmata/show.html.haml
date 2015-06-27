@@ -9,6 +9,9 @@
     - @mergeable_lemmata.each do |l|
       %li
         != link_to l.export_form, l
+        (#{l.pos_summary})
+        - unless l.gloss.nil?
+          '#{l.gloss}'
         != button_to "Merge", :action => 'merge', :id => @lemma, :other_id => l.id
 
 - layer_unless @lemma.notes.empty?, "notes" do
