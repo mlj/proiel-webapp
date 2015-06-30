@@ -460,34 +460,51 @@ class Token < ActiveRecord::Base
   end
 
   def split_token!
-    ts = form.split(/\s+/u)
-    divider = ' '
-
-    unless ts.length > 1
-      ts = form.split(//u)
-      divider = ''
+    if form[/\W+/]
+      # Split on any non-word character like a space or punctuation
+      _split_token! form.split(/(\W+)/)
+    elsif TOKENIZATION_PATTERNS.key?(language_tag) and form[TOKENIZATION_PATTERNS[language_tag]]
+      # Apply language-specific pattern
+      _split_token! form.match(TOKENIZATION_PATTERNS[language_tag]).captures
+    else
+      # Give up and split by character
+      _split_token! form.split(/()/)
     end
+  end
 
-    if ts.length > 1
+  def _split_token!(components)
+    old_surface = form
+    new_surface = components.join
+    empty_forms = components.each_with_index.any? { |t, i| i.even? and t.empty? }
+
+    raise ArgumentError, 'invalid number of components' unless components.length.odd?
+    raise ArgumentError, 'invalid empty token form' if empty_forms
+    raise ArgumentError, 'old and new surface forms do not match' unless old_surface == new_surface
+
+    if components.length > 1
+      # Add the original presentation_after value to the components array. Now
+      # components contains a sequence of form and presentation_after values
+      # that can be iterated in pairs. Duplicate the array to avoid interfering
+      # with the callers copy.
+      ts = components + [presentation_after]
+
       Sentence.transaction do
         sentence.remove_syntax_and_info_structure!
 
-        ts_first, *ts_rest = ts
+        ts.each_slice(2).inject(nil) do |current_token, (new_form, new_presentation_after)|
+          if current_token.nil?
+            # First time around we update ourself and return ourself
+            update_attributes! form: new_form,
+              presentation_after: new_presentation_after
 
-        first_token = self
-
-        last_token = ts_rest.inject(first_token) do |current_token, new_form|
-                       current_token.insert_new_token! :form => new_form,
-                         :presentation_after => divider,
-                         :citation_part => citation_part
-                     end
-
-        last_token.presentation_after = first_token.presentation_after
-        last_token.save!
-
-        first_token.form = ts_first
-        first_token.presentation_after = divider
-        first_token.save!
+            self
+          else
+            # Insert a new token and return it
+            current_token.insert_new_token! form: new_form,
+              presentation_after: new_presentation_after,
+              citation_part: citation_part
+          end
+        end
       end
     end
   end

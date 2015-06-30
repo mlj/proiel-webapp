@@ -57,6 +57,7 @@ module Proiel
   autoload :Metadata, 'metadata'
 end
 
+require 'tokenization'
 require 'presentation'
 require 'ordering'
 require 'blankable'

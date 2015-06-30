@@ -13,6 +13,9 @@ Proiel::Application.configure do
   # The location for tagset files.
   config.tagset_file_path = Rails.root.join('config', 'tagsets')
 
+  # The location for tokenization patterns
+  config.tokenization_patterns_path = Rails.root.join('config', 'tokenization_patterns.json')
+
   # Pull in configuration variables from the .env file
   Dotenv.load
 
