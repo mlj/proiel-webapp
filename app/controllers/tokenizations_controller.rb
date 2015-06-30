@@ -27,6 +27,7 @@ class TokenizationsController < ApplicationController
     @sentence = Sentence.includes(:source_division => [:source]).find(params[:sentence_id])
     @source_division = @sentence.try(:source_division)
     @source = @source_division.try(:source)
+    @sentence_window = @sentence.sentence_window.includes(:tokens).all
   end
 
   def update
