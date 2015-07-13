@@ -48,47 +48,44 @@ class Sentence < ActiveRecord::Base
   tag_attribute :status, :status_tag, StatusTag, :allow_nil => false
 
   # All tokens with dependents and information structure included
-  has_many :tokens_with_dependents_and_info_structure, :class_name => 'Token',
-     :include => [:dependents, :antecedent] do
+  def tokens_with_deps_and_is
+    ts = tokens.includes(:dependents, :antecedent, :lemma, :slash_out_edges)
+    prodrops, others = ts.partition { |token| token.empty_token_sort == 'P' }
 
-    def with_prodrops_in_place
-      prodrops, others = find(:all).partition { |token| token.empty_token_sort == 'P' }
+    prodrops.each do |prodrop|
+      head, head_index = others.each_with_index do |token, index|
+        break [token, index] if token.id == prodrop.head_id
+      end
+      raise "No head found for prodrop element with ID #{prodrop.id}!" unless head
 
-      prodrops.each do |prodrop|
-        head, head_index = others.each_with_index do |token, index|
-          break [token, index] if token.id == prodrop.head_id
-        end
-        raise "No head found for prodrop element with ID #{prodrop.id}!" unless head
+      relation = prodrop.relation.tag.to_s
+      insertion_point = case relation
+                        when 'sub'
+                          # Position subjects before the verb
+                          head_index
 
-        relation = prodrop.relation.tag.to_s
-        insertion_point = case relation
-                          when 'sub'
-                            # Position subjects before the verb
-                            head_index
-
-                          when 'obl'
-                            if others[head_index + 1] && others[head_index + 1].relation &&
-                                                      others[head_index + 1].relation.tag == 'obj'
-                              # Position obliques after the object, if any,...
-                              head_index + 2
-                            else
-                              # ...or otherwise after the verb
-                              head_index + 1
-                            end
-
-                          when 'obj'
-                            # Position objects after the verb
-                            head_index + 1
-
+                        when 'obl'
+                          if others[head_index + 1] && others[head_index + 1].relation &&
+                                                    others[head_index + 1].relation.tag == 'obj'
+                            # Position obliques after the object, if any,...
+                            head_index + 2
                           else
-                            raise "Unknown relation: #{relation}!"
+                            # ...or otherwise after the verb
+                            head_index + 1
                           end
 
-        prodrop.form = 'PRO-' + relation.upcase
-        others.insert(insertion_point, prodrop)
-      end
-      others
+                        when 'obj'
+                          # Position objects after the verb
+                          head_index + 1
+
+                        else
+                          raise "Unknown relation: #{relation}!"
+                        end
+
+      others.insert(insertion_point, prodrop)
     end
+
+    others
   end
 
   # A sentence that has not been annotated.

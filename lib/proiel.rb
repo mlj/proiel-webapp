@@ -32,7 +32,7 @@ autoload :BiblosExternalLinkMapper, 'external_link_mapper'
 
 module Proiel
   # The application version
-  VERSION = [1, 5, 0]
+  VERSION = [1, 5, 1]
 
   # Returns the application version as a dotted string.
   def self.version
