@@ -687,4 +687,10 @@ class Token < ActiveRecord::Base
   def last_visible?
     not next_objects.where('empty_token_sort IS NULL').exists?
   end
+
+  # Returns the token form, if there is one, or generates a form on the format
+  # "PRO-RELATION" if the token is a PRO token.
+  def form_or_pro
+    empty_token_sort == 'P' ? "PRO-#{relation.tag.upcase}" : form
+  end
 end

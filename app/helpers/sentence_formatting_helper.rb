@@ -37,12 +37,12 @@ module SentenceFormattingHelper
     value = value.all if value.is_a?(ActiveRecord::Relation)
 
     if value.is_a?(Sentence)
-      x = value.tokens_with_dependents_and_info_structure.with_prodrops_in_place
+      x = value.tokens_with_deps_and_is
     elsif value.is_a?(Array)
       if value.empty?
         return ''
       elsif value.first.is_a?(Sentence)
-        x = value.map { |sentence| sentence.tokens_with_dependents_and_info_structure.with_prodrops_in_place }.flatten
+        x = value.map { |sentence| sentence.tokens_with_deps_and_is }.flatten
       elsif value.first.is_a?(Token)
         x = value
       end
@@ -145,9 +145,9 @@ module SentenceFormattingHelper
 
       case options[:link_to]
       when :tokens, :sentences
-        s += link_to token.form, object_url, form_attributes
+        s += link_to token.form_or_pro, object_url, form_attributes
       else
-        s += content_tag :span, token.form, form_attributes
+        s += content_tag :span, token.form_or_pro, form_attributes
       end
 
       s += content_tag :span, after, presentation_attributes unless after.empty?
