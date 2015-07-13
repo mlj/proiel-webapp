@@ -106,12 +106,7 @@ class TigerXMLExporter < XMLSourceExporter
     attrs.keys.each do |attr|
       case attr
       when :word, :cat
-        case t.empty_token_sort
-        when 'P'
-          attrs[attr] = "PRO-#{t.relation.tag.upcase}"
-        when NilClass
-          attrs[attr] = t.form
-        end
+        attrs[attr] = t.form_or_pro
       when *@semantic_features
         attrs[attr] = t.sem_tags_to_hash[attr]
       when :lemma
@@ -140,7 +135,7 @@ class TigerXMLExporter < XMLSourceExporter
 
   def write_terminals(s, builder)
     builder.terminals do
-      s.tokens_with_dependents_and_info_structure.with_prodrops_in_place.reject { |t| ['C', 'V'].include?(t.empty_token_sort) }.each do |t|
+      s.tokens_with_deps_and_is.reject { |t| ['C', 'V'].include?(t.empty_token_sort) }.each do |t|
         builder.t(token_attrs(s, t, 'T').merge({ @ident => "w#{t.id}"}))
       end
     end
@@ -189,7 +184,7 @@ class TigerXMLExporter < XMLSourceExporter
 
       # Do the actual nodes including pro drops if we are
       # exporting info structure as well
-      s.tokens_with_dependents_and_info_structure.with_prodrops_in_place.each do |t|
+      s.tokens_with_deps_and_is.each do |t|
         builder.nt(token_attrs(s, t, 'NT').merge({ @ident => "p#{t.id}"})) do
           write_edges(t, builder)
         end

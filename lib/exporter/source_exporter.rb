@@ -63,7 +63,7 @@ class SourceExporter
 
                   ss.each do |s|
                     write_sentence!(context, s) do |context|
-                      s.tokens.order(:token_number).includes(:lemma, :slash_out_edges).each do |t|
+                      s.tokens_with_deps_and_is.each do |t|
                         write_token!(context, t)
                       end
                     end
