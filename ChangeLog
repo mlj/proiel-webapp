@@ -21,10 +21,14 @@ proiel-webapp. It does not list all changes; see the git history for that.
   - Added option to write an ID mapping file if importing PROIEL XML with
     existing ID attributes.
 
+1.5.2   07/08/2015
+
+  - Bug fixes
+
 1.5.1   13/07/2015
 
-  - Bugfixes
-	- Show glosses in lemma views.
+  - Bug fixes
+  - Show glosses in lemma views.
 
 1.5.0   20/05/2015
 
@@ -37,6 +41,12 @@ proiel-webapp. It does not list all changes; see the git history for that.
   - Exporter job by default now runs every week instead of every day.
   - Removed CoNLL and text exporters. PROIEL XML can now be converted to
     these formats by using the PROIEL command-line utilities.
+
+1.4.1   07/08/2015
+
+  - Bug fixes
+  - Updated Norse morphology
+  - Support for OS X Mavericks
 
 1.4.0   20/03/2014
 
