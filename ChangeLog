@@ -18,6 +18,12 @@ proiel-webapp. It does not list all changes; see the git history for that.
   - Removed CoNLL and text exporters. PROIEL XML can now be converted to
     these formats by using the PROIEL command-line utilities.
 
+1.4.1   07/08/2015
+
+  - Bug fixes
+  - Updated Norse morphology
+  - Support for OS X Mavericks
+
 1.4.0   20/03/2014
 
   - Replaced the TEI header in the sources table and the column editor in the
