@@ -1,6 +1,12 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
+1.4.1   07/08/2015
+
+  - Bug fixes
+  - Updated Norse morphology
+  - Support for OS X Mavericks
+
 1.4.0   20/03/2014
 
   - Replaced the TEI header in the sources table and the column editor in the

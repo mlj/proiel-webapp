@@ -38,7 +38,7 @@ autoload :JSONImporter, 'importer/json_importer'
 
 module Proiel
   # The application version
-  VERSION = [1, 4, 0]
+  VERSION = [1, 4, 1]
 
   # Returns the application version as a dotted string.
   def self.version
