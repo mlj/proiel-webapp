@@ -456,23 +456,12 @@ class Token < ActiveRecord::Base
   #   2. it's <tt>form</tt> is non-empty.
 
   def is_splitable?
-    not is_empty? and form.mb_chars.length > 1
+    not is_empty? and PROIEL::Tokenization.is_splitable?(form)
   end
 
   def split_token!
-    if form[/\W+/]
-      # Split on any non-word character like a space or punctuation
-      _split_token! form.split(/(\W+)/)
-    elsif TOKENIZATION_PATTERNS.key?(language_tag) and form[TOKENIZATION_PATTERNS[language_tag]]
-      # Apply language-specific pattern
-      _split_token! form.match(TOKENIZATION_PATTERNS[language_tag]).captures
-    else
-      # Give up and split by character
-      _split_token! form.split(/()/)
-    end
-  end
+    components = PROIEL::Tokenization.split_form(language_tag, form)
 
-  def _split_token!(components)
     old_surface = form
     new_surface = components.join
     empty_forms = components.each_with_index.any? { |t, i| i.even? and t.empty? }

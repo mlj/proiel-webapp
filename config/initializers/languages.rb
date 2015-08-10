@@ -13,3 +13,11 @@ TRANSLITERATORS = {
   :grc => 'grc-betacode',
   :orv => 'orv-ascii',
 }
+
+# Load tokenization patterns
+require 'proiel'
+
+tokenization_patterns_file =
+  Rails.root.join(Proiel::Application.config.tokenization_patterns_path)
+
+PROIEL::Tokenization.load_patterns tokenization_patterns_file

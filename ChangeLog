@@ -1,6 +1,11 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
+1.7.0
+
+  - Added language-specific tokenization patterns to make repetitive
+    token splitting less tedious.
+
 1.6.0   unreleased
 
   - Removed plugin system --- it was never used much.
