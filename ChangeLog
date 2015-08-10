@@ -1,6 +1,11 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
+1.5.3   10/08/2015
+
+  - Optimized loading of text division view
+  - Updated Norse morphology
+
 1.5.2   07/08/2015
 
   - Bug fixes
