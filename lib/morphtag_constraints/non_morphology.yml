@@ -7,6 +7,7 @@
   :voice:
   - a
   - m
+  - p
   :degree:
   - x
   - c
@@ -22,6 +23,10 @@
   - n
   - d
   - g
+  - e
+  - o
+  - z
+  - c
   :gender:
   - x
   - m
@@ -49,7 +54,6 @@
     :morphology:
       i-:
         :case: :all
-        :number: :all
       n-: {}
 
   Ne:
@@ -71,27 +75,53 @@
     :morphology:
       ii:
         :tense: :all
-        :voice: :all
+        :voice:
+        - a
+        - m
         :person: :all
         :number: :all
       iu:
-        :voice: :all
+        :voice:
+        - a
+        - m
       ix:
         :tense: :all
-        :voice: :all
+        :voice:
+        - a
+        - m
         :person: :all
         :number: :all
       im:
         :tense:
         - p
-        :voice: :all
+        :voice:
+        - a
+        - m
+        :person: :all
+        :number: :all
+      if:
+        :tense:
+        - p
+        :voice:
+        - a
+        - m
         :person: :all
         :number: :all
       in:
         :tense:
         - p
         - u
-        :voice: :all
+        - x
+        :voice:
+        - a
+        - m
+      ie:
+        :tense: :all
+        :voice:
+        - a
+        - m
+        :person: :all
+        :number: :all
       ip:
         :tense:
         - p
@@ -100,11 +130,20 @@
         :case: :all
         :gender: :all
         :number: :all
+        :voice: :all
       n-: {}
-
       is:
         :tense: :all
-        :voice: :all
+        :voice:
+        - a
+        - m
+        :person: :all
+        :number: :all
+      ih:
+        :tense: :all
+        :voice:
+        - a
+        - m
         :person: :all
         :number: :all
   A-:
@@ -167,6 +206,7 @@
       i-:
         :case: :all
         :number: :all
+        :gender: :all
       n-: {}
 
   Ps:
@@ -177,6 +217,7 @@
       i-:
         :case: :all
         :number: :all
+        :gender: :all
       n-: {}
 
   Pt:
@@ -187,6 +228,7 @@
       i-:
         :case: :all
         :number: :all
+        :gender: :all
       n-: {}
 
   S-:
@@ -214,7 +256,6 @@
     :morphology:
       i-:
         :case: :all
-        :number: :all
       n-: {}
 
   R-:

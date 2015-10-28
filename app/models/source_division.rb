@@ -135,7 +135,7 @@ class SourceDivision < ActiveRecord::Base
   public
 
   def has_discourse_annotation?
-    tokens.any? do |t|
+    sentences.first.tokens.any? do |t|
       t.has_relation_type?(SemanticRelationType.find_by_tag('Discourse'))
     end
   end
