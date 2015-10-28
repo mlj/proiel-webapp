@@ -1,25 +1,23 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
-1.6.0   unreleased
+1.6.0   28/10/2015
 
   - Removed plugin system --- it was never used much.
   - Removed link mapper for Bibelen.no as site no longer uses predictable
-    URLS. Renamed Biblos link mapper to Biblehub.
-  - Removed automatic validation of exported files. This task is now
-    delegated to the PROIEL CLI.
-  - Removed option to export only reviewed sentences. The PROIEL CLI now
-    does this. Note that this also means that the files that can be
-    downloaded from the 'Downloads' area now contain both reviewed and
-    unreviewed data.
-  - Removed TigerXML and Tiger2 exporters. PROIEL XML can now be converted
-    to these formats by using the PROIEL command-line utilities.
-  - Removed raw text importer. The command-line utilities should now be
-    used to preprocess raw text.
+    URLs.
+  - Renamed Biblos link mapper to Biblehub.
   - Removed JSON importer and exporter. This functionality was never
     completed.
   - Added option to write an ID mapping file if importing PROIEL XML with
     existing ID attributes.
+  - The following functionality has been removed and delegated to proiel-cli:
+      - automatic validation of exported files
+      - option to export only reviewed sentences (note that this also
+        means that the files that can be downloaded from the 'Downloads'
+        area now contain both reviewed and unreviewed data)
+      - TigerXML and Tiger2 exporters
+      - raw text importer
 
 1.5.3   10/08/2015
 
