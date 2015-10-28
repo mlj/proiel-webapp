@@ -29,6 +29,21 @@
   x:
     abbreviated_summary: unc. mood
     summary: uncertain mood
+  y:
+    abbreviated_summary: unspec.fin.
+    summary: finiteness unspecified
+  e:
+    abbreviated_summary: ind./subj.
+    summary: indicative or subjunctive
+  f:
+    abbreviated_summary: ind./imp.
+    summary: indicative or imperative
+  h:
+    abbreviated_summary: subj./imp.
+    summary: subjunctive or imperative
+  t:
+    abbreviated_summary: finite
+    summary: finite
 :inflection:
   n:
     abbreviated_summary: non-infl.
@@ -62,6 +77,9 @@
   e:
     abbreviated_summary: mid./pass.
     summary: middle or passive
+  x:
+    abbreviated_summary: unspec.
+    summary: unspecified
 :case:
   n:
     abbreviated_summary: nom.
@@ -78,6 +96,9 @@
   c:
     abbreviated_summary: gen./dat.
     summary: genitive or dative
+  e:
+    abbreviated_summary: acc./dat.
+    summary: accusative or dative
   d:
     abbreviated_summary: dat.
     summary: dative
@@ -96,6 +117,9 @@
   x:
     abbreviated_summary: unc. case
     summary: uncertain case
+  z:
+    abbreviated_summary: no case
+    summary: no case
 :degree:
   p:
     abbreviated_summary: pos.
@@ -109,6 +133,9 @@
   x:
     abbreviated_summary: unc. deg.
     summary: uncertain degree
+  z:
+    abbreviated_summary: no degree
+    summary: no degree
 :gender:
   m:
     abbreviated_summary: m.
