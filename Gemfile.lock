@@ -96,7 +96,7 @@ GEM
       activerecord (~> 3.0)
     polyglot (0.3.5)
     power_assert (0.2.2)
-    proiel (0.1.0)
+    proiel (1.0.0)
       json (~> 1.8)
       memoist (~> 0.12)
       nokogiri (~> 1.6.6)
@@ -207,7 +207,7 @@ DEPENDENCIES
   nokogiri
   nori
   pg
-  proiel (~> 0.1.0)
+  proiel (~> 1.0)
   rack-mini-profiler
   rails (= 3.2.22)
   ransack (~> 0.7.2)
