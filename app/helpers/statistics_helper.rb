@@ -54,7 +54,7 @@ module StatisticsHelper
     end
 
     average = data.length > 0 ? (data.values.sum / data.length).to_i : 0
-    alfa, beta = Proiel::Statistics::least_squares((0..data.length-1).to_a, data.values)
+    alfa, beta = PROIEL::Statistics.least_squares((0..data.length-1).to_a, data.values)
     lsq = (0..data.length - 1).to_a.map { |x| alfa + beta * x }
 
     image_tag(GoogleChart::LineChart.new("740x200", title, false) do |lc|
