@@ -18,6 +18,6 @@ TRANSLITERATORS = {
 require 'proiel'
 
 tokenization_patterns_file =
-  Rails.root.join(Proiel::Application.config.tokenization_patterns_path)
+  Rails.root.join(Proiel::Application.config.tokenization_patterns_path).to_s
 
 PROIEL::Tokenization.load_patterns tokenization_patterns_file
