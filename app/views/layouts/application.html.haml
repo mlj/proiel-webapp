@@ -35,7 +35,6 @@
         - else
           != link_to 'Sign in', new_user_session_path
         != link_to 'Help', 'https://github.com/mlj/proiel-webapp/wiki', accesskey: '6'
-        != link_to 'Downloads', pages_path
       %span.right
         %form.inline{'accept-charset' => 'UTF-8', :action => '/quick_search', :method => 'get'}
           %input{:placeholder => 'Search', :size => '30', :type => 'search', :name => 'q'}
@@ -49,11 +48,7 @@
         != message_block
 
     #contents
-      - if controller_name == 'pages'
-        .markdown
-          != yield
-      - else
-        != yield
+      != yield
 
     %footer
       %span.tag proiel-webtool

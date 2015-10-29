@@ -51,9 +51,6 @@ module Proiel
     autoload :Exporter, 'jobs/exporter'
   end
 
-  autoload :PathHelpers, 'path_helpers'
-  extend PathHelpers
-
   autoload :Metadata, 'metadata'
 end
 

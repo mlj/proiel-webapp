@@ -3,6 +3,7 @@ proiel-webapp. It does not list all changes; see the git history for that.
 
 1.7.0
 
+  - Removed "Downloads" page.
   - Added language-specific tokenization patterns to make repetitive
     token splitting less tedious.
 

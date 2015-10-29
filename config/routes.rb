@@ -75,10 +75,6 @@ Proiel::Application.routes.draw do
   match '/wizard/:action', :to => 'wizard#:action'
   match '/wizard',         :to => 'wizard#index'
 
-  # Static pages and exported files.
-  resources :pages
-  match '/exports/:id.:format' => 'pages#export', :as => :export, :via => :get
-
   # Quick search and search suggestions
   match '/quick_search', :to => 'tokens#quick_search'
   match '/quick_search.:format', :to => 'tokens#quick_search'
