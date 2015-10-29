@@ -9,23 +9,6 @@ class CitationTestCase < ActiveSupport::TestCase
   def setup
   end
 
-  def test_citation_strip_prefix
-    assert_equal '27',   Proiel::citation_strip_prefix('Matt 5.16', 'Matt 5.27')
-    assert_equal '27',   Proiel::citation_strip_prefix('Matt 5.26', 'Matt 5.27')
-
-    assert_equal '5.27', Proiel::citation_strip_prefix('Matt 4.13', 'Matt 5.27')
-    assert_equal '5.27', Proiel::citation_strip_prefix('Matt 6.13', 'Matt 5.27')
-
-    assert_equal 'Matt 5.27', Proiel::citation_strip_prefix('Mark 1.13', 'Matt 5.27')
-    assert_equal 'Matt 5.27', Proiel::citation_strip_prefix('Mark 5.27', 'Matt 5.27')
-
-    # Degenerate cases
-    assert_equal '',    Proiel::citation_strip_prefix('Matt 5.16', 'Matt 5')
-    assert_equal '', Proiel::citation_strip_prefix('Matt 5.16', '')
-    assert_equal '.16', Proiel::citation_strip_prefix('Matt 5', 'Matt 5.16')
-    assert_equal 'Matt 5.16', Proiel::citation_strip_prefix('', 'Matt 5.16')
-  end
-
   def test_citation
     t = Token.first
 

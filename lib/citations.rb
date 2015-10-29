@@ -57,60 +57,11 @@ module Proiel
         if respond_to?(:tokens_with_citation)
           tw = tokens_with_citation
 
-          Proiel::citation_make_range(tw.first.try(:citation_part),
-                                      tw.last.try(:citation_part))
+          PROIEL::Citations.citation_make_range(tw.first.try(:citation_part),
+                                                tw.last.try(:citation_part))
         else
           citation_part == '' ? nil : citation_part
         end
-      end
-    end
-  end
-
-  def self.citation_make_range(cit1, cit2)
-    raise ArgumentError unless cit1.is_a?(String) or cit1.is_a?(NilClass)
-    raise ArgumentError unless cit2.is_a?(String) or cit1.is_a?(NilClass)
-
-    # Remove any nil and empty-string citation, and reduce a range that starts
-    # and ends with the same citation to a single citation.
-    c = [cit1, cit2].reject(&:blank?).uniq
-
-    case c.length
-    when 0
-      nil
-    when 1
-      c.first
-    else
-      [cit1, citation_strip_prefix(cit1, cit2)].join("\u{2013}")
-    end
-  end
-
-  # Returns +cit2+ with the longest common prefix in +cit1+ and +cit2+ stripped
-  # off. Not any string is considered a common prefix; the regular expression
-  # +dividers+ is used to chunk +cit1+ and +cit2+, and the chunks are compared
-  # as possible prefixes.
-  #
-  # For example, with +dividers+ set to whitespace and a period:
-  #
-  #   citation_strip_prefix('Matt 5.16', 'Matt 5.27') # => "27"
-  #   citation_strip_prefix('Matt 5.26', 'Matt 5.27') # => "27"
-  #   citation_strip_prefix('Matt 4.13', 'Matt 5.27') # => "5.27"
-  #
-  def self.citation_strip_prefix(cit1, cit2, dividers = /([\s\.]+)/u)
-    raise ArgumentError unless cit1.is_a?(String)
-    raise ArgumentError unless cit2.is_a?(String)
-
-    # Chunk cit1 and cit2
-    x = cit1.split(dividers)
-    y = cit2.split(dividers)
-
-    # Interleave x and y but compensate for zip's behaviour when y.length < x.length
-    zipped = x.length >= y.length ? x.zip(y) : y.zip(x).map(&:reverse)
-
-    zipped.inject('') do |d, (a, b)|
-      if not d.empty? or a != b
-        d + (b || '')
-      else
-        ''
       end
     end
   end
