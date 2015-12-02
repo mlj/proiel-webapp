@@ -1,8 +1,3 @@
-var csrf_param = $$('meta[name=csrf-param]')[0],
-    csrf_token = $$('meta[name=csrf-token]')[0];
-var authenticity_param = csrf_param.readAttribute('content'),
-    authenticity_token = csrf_token.readAttribute('content');
-
 // Functionality for creating and removing anaphoric links and contrast groups.
 // Created by Anders Noklestad
 // Drawing of anaphor links inspired by code in the BREDT demonstrator (http://bredt.uib.no) by Oystein Reigem.

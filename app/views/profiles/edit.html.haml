@@ -1,5 +1,3 @@
-- javascript 'application'
-
 != semantic_form_for @user, :url => profile_path, :html => { :method => :put } do |f|
   != f.inputs :name => 'Your profile' do
     != f.input :graph_format, :as => :radio, :collection => %w(PNG SVG), :label => 'Image format'
