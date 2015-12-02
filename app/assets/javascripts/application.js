@@ -4,18 +4,18 @@
 // It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
 // the compiled file.
 
-//= require underscore-min
-//= require jquery.min
-//= require jquery-ui.min
-//= require jquery_ujs
+//= require vendor/underscore-min
+//= require vendor/jquery.min
+//= require vendor/jquery-ui.min
+//= require vendor/jquery_ujs
 //= require noconflict
-//= require prototype
-//= require scriptaculous
+//= require vendor/prototype
+//= require vendor/scriptaculous
 //= require utils
-//= require effects
-//= require dragdrop
-//= require controls
-//= require wz_jsgraphics
+//= require vendor/effects
+//= require vendor/dragdrop
+//= require vendor/controls
+//= require vendor/wz_jsgraphics
 
 var authenticity_param;
 var authenticity_token;
