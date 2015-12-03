@@ -38,3 +38,11 @@ ul.tree ul { margin-left: 10px; }
 ul.tree li { margin: 0; padding: 0 12px; line-height: 20px; background: image_url("node.png") no-repeat; } 
 ul.tree li:last-child { background: #fff image_url("lastnode.png") no-repeat; }
 ul.tree .selected { background: #ccccff; }
+
+label {
+  transition: background-color 0.5s ease;
+}
+
+.highlight-error {
+  background-color: red;
+}

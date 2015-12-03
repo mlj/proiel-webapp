@@ -1,34 +1,27 @@
-- javascript 'dependency_inferences', 'dependency_relations', "tree", "dependencies"
+- javascript "dependencies"
 
-%div{:id => "annotation", :class => "annotation"}
-  != hidden_field_tag 'input-tokens', @sentence.syntactic_annotation_with_tokens(params[:output])[:tokens].to_json
-  != hidden_field_tag 'input-structure', @sentence.syntactic_annotation_with_tokens(params[:output])[:structure].to_json
-  != hidden_field_tag 'input-relations', @sentence.syntactic_annotation_with_tokens(params[:output])[:relations].map(&:tag).to_json
+%div{id: 'annotation-editor', class: 'annotation'}
+  != hidden_field_tag 'data', @sentence.syntactic_annotation_with_tokens(params[:output]).to_json
 
-  %div{:class => "actions"}
-    != button_to_function "Delete subtree", "", :id => 'button-delete', :disabled => true
-    != button_to_function "Cut subtree", "", :id => 'button-cut', :disabled => true
-    != button_to_function "Paste subtree", "", :id => 'button-paste', :disabled => true
-    != button_to_function "Clear", "", :id => "button-clear"
-    != button_to_function "Reset", "", :id => "button-reset"
-    != button_to_function "Add asyndetic conjunction", "", :id => "button-insert-empty-conjunction-node"
-    != button_to_function "Add empty verbal node", "", :id => "button-insert-empty-verbal-node"
-    != button_to_function "Add slash", "", :id => 'button-add-slash', :disabled => true
-    != button_to_function "Remove slashes", "", :id => 'button-remove-slashes', :disabled => true
+  %div{class: 'actions'}
+    %input{type: 'button', value: 'Delete subtree',            id: 'button-delete',                        disabled: true}
+    %input{type: 'button', value: 'Cut subtree',               id: 'button-cut',                           disabled: true}
+    %input{type: 'button', value: 'Paste subtree',             id: 'button-paste',                         disabled: true}
+    %input{type: 'button', value: 'Clear',                     id: 'button-clear',                         disabled: false}
+    %input{type: 'button', value: 'Reset',                     id: 'button-reset',                         disabled: false}
+    %input{type: 'button', value: 'Add asyndetic conjunction', id: 'button-insert-empty-conjunction-node', disabled: false}
+    %input{type: 'button', value: 'Add empty verbal node',     id: 'button-insert-empty-verbal-node',      disabled: false}
+    %input{type: 'button', value: 'Add slash',                 id: 'button-add-slash',                     disabled: true}
+    %input{type: 'button', value: 'Remove slashes',            id: 'button-remove-slashes',                disabled: true}
 
-  %div{:class => "actions"}
+  %div{class: 'actions'}
     %label Build direction
-    != radio_button_to_function "direction", "down", true, "onChangeDirectionClick()", :id => 'build-down'
+    %input{type: 'radio', name: 'direction', value: 'down', id: 'build-down', checked: true}
     Downwards
-    != radio_button_to_function "direction", "up", false, "onChangeDirectionClick()", :id => 'build-up'
+    %input{type: 'radio', name: 'direction', value: 'up',   id: 'build-up',   checked: false}
     Upwards
 
-  %div{:id => "palette"}
-    - @sentence.syntactic_annotation_with_tokens(params[:output])[:relations].each do |v|
-      %label{:for => v.tag}
-        %input{:type => "radio", :name => "relation-palette", :id => v.tag, :value => v.tag}
-        %span
-          != readable_relation(v)
+  %div{id: 'palette'}
 
   %div{:id => "words"}
     - @sentence.tokens.takes_morphology.each do |t|
@@ -40,9 +33,9 @@
           %span{:class => "token-number"}
             = t.token_number
 
-  %ul{:id => "relations", :lang => @sentence.language.tag, :class => "tree"}
+  %ul{id: 'relations', lang: @sentence.language.tag, class: 'tree'}
 
   .button-row
-    != form_tag({ :controller => 'dependencies', :action => 'update', :sentence_id => @sentence, :wizard => params[:wizard]}, :method => :put, :id => 'dependencies-form') do
+    != form_tag({ controller: 'dependencies', action: 'update', sentence_id: @sentence, wizard: params[:wizard]}, method: :put, id: 'dependencies-form') do
       != hidden_field_tag 'output', ''
       != submit_tag 'Save'

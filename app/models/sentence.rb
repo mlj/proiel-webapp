@@ -247,8 +247,6 @@ class Sentence < ActiveRecord::Base
 
     d[:structure] = (overlaid_features and ActiveSupport::JSON.decode(overlaid_features)) || (has_dependency_annotation? ? dependency_graph.to_h : {})
 
-    d[:relations] = RelationTag.all.select(&:primary)
-
     d
   end
 

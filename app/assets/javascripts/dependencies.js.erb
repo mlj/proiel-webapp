@@ -1,3 +1,13 @@
+if (window.Prototype) {
+  delete Object.prototype.toJSON;
+  delete Array.prototype.toJSON;
+  delete Hash.prototype.toJSON;
+  delete String.prototype.toJSON;
+}
+
+<%#encoding: UTF-8%>var relation_inferences = <%= Proiel::INFERENCES.to_json %>;
+var proiel_relations = <%= RelationTag.to_json %>;
+
 // Globals
 var palette = null;
 var sentence_widget = null;
@@ -24,305 +34,413 @@ var hotkeys = {
   x: "aux"
 };
 
-var Widget = Class.create({
-  initialize: function(id, id_prefix) {
-    this.widget = $(id);
-    this.id_prefix = id_prefix;
-    this.selected = null;
-    this.entries = this.widget.getElementsBySelector('li');
-  },
-
-  find: function(id_or_element) {
-    if (Object.isString(id_or_element))
-      return $(this.id_prefix + id_or_element);
-    else
-      return id_or_element;
-  },
-
-  selected: function() { return this.selected; },
-
-  deselect: function() {
-    if (this.selected) {
-      this.find(this.selected).removeClassName("selected");
-      this.selected = null;
-    }
-  },
-
-  select: function(id) {
-    r = this.find(id);
-    if (!r.hasClassName('unavailable')) {
-      this.deselect();
-      if (r) {
-        r.addClassName("selected");
-        this.selected = id;
-      }
-      return true;
-    } else {
-      return false;
-    }
-  },
-
-  disable: function() {
-    this.deselect();
-    this.entries.invoke('addClassName', 'unavailable');
-  },
-
-  enable: function() { this.entries.invoke('removeClassName', 'unavailable'); }
-});
-
-var DependencyStructureWidget = Class.create(Widget, {
-  initialize: function($super, id) { $super(id, 'rel-'); },
-
-  addEntry: function(parent_token_id, new_token_id, child_token_id, word_form, relation) {
-    var ul;
-
-    if (!parent_token_id)
-      ul = this.widget;
-    else
-      ul = this.findOrCreateUL(parent_token_id);
-
-    if (!relation) {
-      if (parent_token_id) {
-        var morphtag = model.getMorphTag(parent_token_id);
-        var relation = tree_widget.getRelation(parent_token_id);
-        relation = getRecommendedRelation(relation, morphtag, model.getMorphTag(new_token_id));
-      } else {
-        relation = getRecommendedRelation(null, null, model.getMorphTag(new_token_id));
-      }
-    }
-
-    var new_node;
-
-    var bad_or_not = '';
-    if (new_token_id != 'ROOT' && !isValidRelation(relation))
-      bad_or_not = 'bad';
-
-    new_node = ul.insert('<li id="rel-' + new_token_id + '"><span class="user-value"><tt class="relation ' + bad_or_not + '">' + relation + '</tt><span class="slashes"></span>&nbsp;' + word_form + '</span><span class="token-number">' + model.getTokenNumber(new_token_id) + '</span></li>');
-
-    if (child_token_id) {
-      // We have a child token ID, i.e. we need to insert a new node between the given
-      // head and child.
-      var ul_for_new_node = this.findOrCreateUL(new_token_id);
-      var child = this.find(child_token_id);
-      ul_for_new_node.appendChild(child);
-    }
-  },
-
-  findOrCreateUL: function(id) {
-    var e = this.find(id);
-    var ul = e.down("ul");
-    if (!ul) {
-      e.insert("<ul></ul>");
-      ul = e.down("ul");
-    }
-    return ul;
-  },
-
-  clear: function() {
-    var e = this.widget.down('li');
-    if (e) {
-      this.deselect();
-      e.remove();
-    }
-    this.addEntry(null, 'ROOT', null, '-', 'ROOT');
-  },
-
-  removeEntry: function(id) { this.find(id).remove(); },
-
-  // Returns an array of non-empty descendants of ID.
-  getNonemptyDescendants: function(id) {
-    var a = new Array;
-    this.find(id).descendants().each(function(e) {
-      if (e.tagName.toLowerCase() == 'li') {
-        var desc_id = e.identify().sub('rel-', '');
-        if (!model.isEmpty(desc_id))
-          a.push(desc_id);
-      }
-    });
-    return a;
-  },
-
-  getRelation: function(id) {
-    var p = this.find(id);
-    return p ? p.down('tt').innerHTML : null;
-  },
-
-  setRelation: function(id, r) {
-    var p = this.find(id);
-    p.down('tt').innerHTML = r;
-  },
-
-  getParentEntry: function(token_id) {
-    var p = this.find(token_id).up('li');
-    if (p) {
-      return p.identify().sub('rel-', '');
-    } else {
-      return null;
-    }
-  },
-
-  getFirstChildEntry: function(token_id) {
-    var p = this.find(token_id).down('li');
-    if (p) {
-      return p.identify().sub('rel-', '');
-    } else {
-      return null;
-    }
-  },
-
-  getPrevSiblingEntry: function(token_id) {
-    var p = this.find(token_id).previous('li');
-    if (p) {
-      return p.identify().sub('rel-', '');
-    } else {
-      return null;
-    }
-  },
-
-  getNextSiblingEntry: function(token_id) {
-    var p = this.find(token_id).next('li');
-    if (p) {
-      return p.identify().sub('rel-', '');
-    } else {
-      return null;
-    }
-  },
-
-  _updateJSON: function() {
-    var root = this.widget.down('ul');
-    $('output').value = root ? this._getSubtree(root).toJSON() : '';
-  },
-
-  _getSubtree: function(lst) {
-    var subtree = new Hash();
-
-    var list_elements = lst.childElements();
-    for (var j = 0; j < list_elements.length; j++) {
-      var i = list_elements[j];
-      if (i.tagName.toLowerCase() == 'li') {
-        var value = new Hash();
-
-        value.set('relation', i.down("tt").innerHTML);
-
-        var dependents = i.down("ul");
-        if (dependents)
-          value.set('dependents', this._getSubtree(dependents));
-
-        var id = i.identify().sub('rel-', '');
-        value.set('empty', model.isEmpty(id));
-
-        // Return the pos to make slash interpretation possible. If
-        // graphs from the editor and graphs from the base were to be
-        // treated in the same way, we'd actually need to return
-        // enough data to make possible the creation of a full
-        // morphtag object, but that seems too much
-        var m = model.getMorphTag(id);
-        value.set('pos', $H(m).get('pos'));
-
-        if (this.hasSlashes(id)) {
-          value.set('slashes', this.getSlashes(id));
-        }
-
-        subtree.set(id, value);
-      }
-    }
-
-    return subtree;
-  },
-
-  // Returns a list of select options with all token numbers
-  _getSelectOptions: function(selected_id) {
-    var options = '';
-    // FIXME: sorting by ID won't always get us what we want
-    model.getTokenIDs().sort().each(function(id) {
-      var selected = '';
-      if (selected_id && selected_id == id)
-        selected = " selected='selected'";
-
-      options += '<option value="' + id + '"' + selected + '>' + model.getTokenNumber(id) + '</option>';
-    });
-    return options;
-  },
-
-  addSlash: function(id, selected_slash_id) {
-    var p = this.find(id).down('span.slashes');
-    var options = this._getSelectOptions(selected_slash_id);
-    p.insert("/<select onchange='onSlashSelect()'>" + options + "</select>");
-  },
-
-  hasSlashes: function(id) {
-    var p = this.find(id).down('span.slashes').down('select');
-    return p ? true : false;
-  },
-
-  getSlashes: function(id) {
-    var slashes = new Array();
-    var p = this.find(id).down('span.slashes');
-    p.descendants().each(function(e) {
-      if (e.tagName.toLowerCase() == 'select') {
-        slashes.push(getSelectSelection(e));
-      }
-    });
-    return slashes;
-  },
-
-  removeSlashes: function(id) {
-    var p = this.find(id).down('span.slashes');
-    removeAllChildren(p);
-  },
-
-  // FIXME: Don't like this...
-  updateSlashSelects: function() {
-    this.widget.select('.slashes select').each(function(select) {
-      var options = tree_widget._getSelectOptions(getSelectSelection(select));
-      select.replace("<select onchange='onSlashSelect()'>" + options + "</selecr>");
-    });
-  } ,
-
-  cut: function(id, cut_buffer) {
-    var subtree = this.find(id);
-    subtree.remove();
-    subtree.removeClassName("selected");
-    //cut_buffer.appendChild(subtree);
-    this.selected = null;
-    cut_buffer.push(subtree);
-  },
-
-  paste: function(id, cut_buffer) {
-    var ul = this.findOrCreateUL(id);
-    //ul.appendChild(cut_buffer.down('li'));
-    ul.appendChild(cut_buffer.pop());
-    // This serves no purpose other than to ensure that the ul-level is updated
-    // properly (in Firefox 1.5 the tree view will not change unless the ul-level
-    // is somehow touched).
-    ul.addClassName('foobar');
-    ul.removeClassName('foobar');
+// Returns the current selection from a selector.
+function getSelectSelection(element) {
+  for (var i = 0; i < element.options.length; i++) {
+    if (element.options[i].selected)
+      return element.options[i].value;
   }
-});
 
-var SentenceWidget = Class.create(RadioGroup, {
-  setConsumed: function(id) { this.find(id).addClassName("consumed"); },
+  return null;
+}
 
-  setUnconsumed: function(id) { this.find(id).removeClassName("consumed"); },
+// relation_inferences
+function _testCriteria(head, dependent, criteria) {
+  var failure = _.some(criteria, function(value, key) {
+    var k = key.split("_");
+    var a = null;
 
-  clear: function() { this.widget.descendants().invoke('removeClassName', 'consumed'); },
+    if (k == 'language' || k[0] == "head")
+      a = head;
+    else if (k[0] == "dependent")
+      a = dependent;
+    else {
+      console.log("Error: unknown inference criterion " + key);
+      return true;
+    }
 
-  isConsumed: function(id) { return this.find(id).hasClassName("consumed"); },
+    var v = null;
 
-  // Returns all unconsumed tokens
-  getUnconsumedTokens: function() { return this.buttons().findAll(function(e) { return !e.hasClassName("consumed"); }); }
-});
+    if (a) {
+      if (k == 'language')
+        v = a[k];
+      else
+        v = a[k[1]];
+    }
+
+    if (!v) // Treat the absence of a value as false
+      v = false;
+
+    var c = new RegExp(value);
+    return !c.test(v);
+  });
+
+  return failure ? false : true;
+}
+
+function _getInference(head, dependent) {
+  var c = _.find(relation_inferences, function(clause) {
+    if (!clause.criteria)
+      return true;
+
+    if (_testCriteria(head, dependent, clause.criteria))
+      return true;
+  });
+
+  if (c)
+    return c.actions;
+  else
+    return null;
+}
+
+function inferRelation(head, dependent) {
+  var i = _getInference(head, dependent);
+
+  if (i)
+    return i.inferred_relation;
+  else {
+    console.log("Error: relation inference failed");
+    return null;
+  }
+}
+
+function isValidRelation(r) {
+  return _.has(proiel_relations, r) && proiel_relations[r].primary;
+}
+
+_.templateSettings = {
+  interpolate: /\{\{(.+?)\}\}/g
+};
+
+var Palette = function(id) {
+  var widget = document.getElementById(id);
+  var template = _.template('<label for="{{ tag }}"><input id="{{ tag }}" name="relation-palette" type="radio" value="{{ tag }}"> <span><span class="relation"><abbr title="{{ summary }}">{{ tag }}</abbr></span></span></label>');
+
+  _.each(proiel_relations, function(v, k) {
+    var html = template({ tag: k, summary: v.summary });
+    widget.insertAdjacentHTML('beforeend', html);
+  });
+
+  this.buttons = widget.querySelectorAll('input');
+
+  this.disable();
+};
+
+Palette.prototype.selection = function() {
+  var r = _.find(this.buttons, function(e) { return e.checked; });
+  return selected ? selected.value : null;
+};
+
+Palette.prototype.select = function(value) {
+  var r = _.find(this.buttons, function(e) { return e.value == value; });
+
+  if (r)
+    r.checked = true;
+};
+
+Palette.prototype.deselect = function() { _.each(this.buttons, function(e) { e.checked = false; }); };
+
+Palette.prototype.disable = function() { _.each(this.buttons, function(e) { e.disabled = true; }); };
+
+Palette.prototype.enable = function() { _.each(this.buttons, function(e) { e.disabled = false; }); };
+
+var DependencyStructureWidget = function(id) {
+  this.widget = document.getElementById(id);
+  this.id_prefix = '#rel-';
+  this.selected = null;
+  this.entries = this.widget.querySelectorAll('li');
+};
+
+DependencyStructureWidget.prototype.find = function(id_or_element) {
+  if (typeof id_or_element === 'string' || id_or_element instanceof String)
+    return document.querySelector(this.id_prefix + id_or_element);
+  else
+    return id_or_element;
+};
+
+DependencyStructureWidget.prototype.selected = function() { return this.selected; };
+
+DependencyStructureWidget.prototype.deselect = function() {
+  if (this.selected) {
+    this.find(this.selected).classList.remove('selected');
+    this.selected = null;
+  }
+};
+
+DependencyStructureWidget.prototype.select = function(id) {
+  r = this.find(id);
+  if (!r.classList.contains('unavailable')) {
+    this.deselect();
+    if (r) {
+      r.classList.add('selected');
+      this.selected = id;
+    }
+    return true;
+  } else {
+    return false;
+  }
+};
+
+DependencyStructureWidget.prototype.addEntry = function(parent_token_id, new_token_id, child_token_id, word_form, relation) {
+  var ul;
+
+  if (!parent_token_id)
+    ul = this.widget;
+  else
+    ul = this.findOrCreateUL(parent_token_id);
+
+  if (!relation) {
+    if (parent_token_id) {
+      var morphtag = model.getMorphTag(parent_token_id);
+      var relation = tree_widget.getRelation(parent_token_id);
+      relation = getRecommendedRelation(relation, morphtag, model.getMorphTag(new_token_id));
+    } else {
+      relation = getRecommendedRelation(null, null, model.getMorphTag(new_token_id));
+    }
+  }
+
+  var new_node;
+
+  var bad_or_not = '';
+  if (new_token_id != 'ROOT' && !isValidRelation(relation))
+    bad_or_not = 'bad';
+
+  var template = _.template('<li id="rel-{{ id }}"><span class="user-value"><tt class="relation {{ bad }}">{{ relation }}</tt><span class="slashes"></span>&nbsp;{{ word }}</span><span class="token-number">{{ token_number }}</span></li>');
+
+  var html = template({
+    id: new_token_id,
+    bad: bad_or_not,
+    relation: relation,
+    word: word_form,
+    token_number: model.getTokenNumber(new_token_id)
+  });
+
+  new_node = ul.insert(html);
+
+  if (child_token_id) {
+    // We have a child token ID, i.e. we need to insert a new node between the given
+    // head and child.
+    var ul_for_new_node = this.findOrCreateUL(new_token_id);
+    var child = this.find(child_token_id);
+    ul_for_new_node.appendChild(child);
+  }
+};
+
+DependencyStructureWidget.prototype.findOrCreateUL = function(id) {
+  var e = this.find(id);
+  var ul = e.down("ul");
+  if (!ul) {
+    e.insert("<ul></ul>");
+    ul = e.down("ul");
+  }
+  return ul;
+};
+
+DependencyStructureWidget.prototype.clear = function() {
+  var e = this.widget.down('li');
+  if (e) {
+    this.deselect();
+    e.remove();
+  }
+  this.addEntry(null, 'ROOT', null, '-', 'ROOT');
+};
+
+DependencyStructureWidget.prototype.removeEntry = function(id) { this.find(id).remove(); };
+
+// Returns an array of non-empty descendants of ID.
+DependencyStructureWidget.prototype.getNonemptyDescendants = function(id) {
+  var a = [];
+
+  this.find(id).descendants().each(function(e) {
+    if (e.tagName.toLowerCase() == 'li') {
+      var desc_id = e.id.sub('rel-', '');
+      if (!model.isEmpty(desc_id))
+        a.push(desc_id);
+    }
+  });
+  return a;
+};
+
+DependencyStructureWidget.prototype.getRelation = function(id) {
+  var p = this.find(id);
+  return p ? p.down('tt').innerHTML : null;
+};
+
+DependencyStructureWidget.prototype.setRelation = function(id, r) {
+  var p = this.find(id);
+  p.down('tt').innerHTML = r;
+};
+
+DependencyStructureWidget.prototype._id = function (token_id, accessor) {
+  var p = accessor(this.find(token_id));
+  return p ? p.id.sub('rel-', '') : null;
+};
+
+DependencyStructureWidget.prototype.getParentEntry = function(token_id) {
+  return this._id(token_id, function(e) { return e.up('li'); });
+};
+
+DependencyStructureWidget.prototype.getFirstChildEntry = function(token_id) {
+  return this._id(token_id, function(e) { return e.down('li'); });
+};
+
+DependencyStructureWidget.prototype.getPrevSiblingEntry = function(token_id) {
+  return this._id(token_id, function(e) { return e.previous('li'); });
+};
+
+DependencyStructureWidget.prototype.getNextSiblingEntry = function(token_id) {
+  return this._id(token_id, function(e) { return e.next('li'); });
+};
+
+DependencyStructureWidget.prototype._updateJSON = function() {
+  var root = this.widget.down('ul');
+
+  if (root) {
+    var json = JSON.stringify(this._getSubtree(root));
+    document.getElementById('output').value = json;
+  } else
+    document.getElementById('output').value = '';
+};
+
+DependencyStructureWidget.prototype._getSubtree = function(lst) {
+  var subtree = {}
+
+  var list_elements = lst.childElements();
+
+  for (var j = 0; j < list_elements.length; j++) {
+    var i = list_elements[j];
+
+    if (i.tagName.toLowerCase() == 'li') {
+      var id = i.id.sub('rel-', '');
+
+      var value = {
+        empty:    model.isEmpty(id),
+        slashes:  this.getSlashes(id),
+        relation: i.down("tt").innerHTML,
+        pos:      model.getMorphTag(id).pos /* Include POS to make slash interpretation possible. */
+      };
+
+      var dependents = i.down("ul");
+
+      if (dependents)
+        value.dependents = this._getSubtree(dependents);
+
+      subtree[id] = value;
+    }
+  }
+
+  return subtree;
+};
+
+// Returns a list of select options with all token numbers
+DependencyStructureWidget.prototype._getSelectOptions = function(selected_id) {
+  var options = '';
+  // FIXME: sorting by ID won't always get us what we want
+  model.getTokenIDs().sort().each(function(id) {
+    var selected = '';
+    if (selected_id && selected_id == id)
+      selected = " selected='selected'";
+
+    options += '<option value="' + id + '"' + selected + '>' + model.getTokenNumber(id) + '</option>';
+  });
+  return options;
+};
+
+DependencyStructureWidget.prototype.addSlash = function(id, selected_slash_id) {
+  var p = this.find(id).down('span.slashes');
+  var options = this._getSelectOptions(selected_slash_id);
+  p.insert("/<select onchange='onSlashSelect()'>" + options + "</select>");
+};
+
+DependencyStructureWidget.prototype.hasSlashes = function(id) {
+  return this.getSlashes(id).length > 0;
+};
+
+DependencyStructureWidget.prototype.getSlashes = function(id) {
+  /* Would need to use find(id).querySelectorAll(':scope > span.slashes >
+     select') here to only get immediate children, but then we need a shim...
+     Instead access directly by getting the parent element.
+   */
+  return _.map(this.widget.querySelectorAll(this.id_prefix + id + '> span.user-value select'),
+               function(e) { return e.value; });
+};
+
+DependencyStructureWidget.prototype.removeSlashes = function(id) {
+  var p = this.find(id).down('span.slashes');
+  while (p.firstChild)
+    p.removeChild(p.firstChild);
+};
+
+// FIXME: Don't like this...
+DependencyStructureWidget.prototype.updateSlashSelects = function() {
+  this.widget.select('.slashes select').each(function(select) {
+    var options = tree_widget._getSelectOptions(getSelectSelection(select));
+    select.replace("<select onchange='onSlashSelect()'>" + options + "</select>");
+  });
+};
+
+DependencyStructureWidget.prototype.cut = function(id, cut_buffer) {
+  var subtree = this.find(id);
+  subtree.remove();
+  subtree.classList.remove('selected');
+  this.selected = null;
+  cut_buffer.push(subtree);
+};
+
+DependencyStructureWidget.prototype.paste = function(id, cut_buffer) {
+  var ul = this.findOrCreateUL(id);
+  ul.appendChild(cut_buffer.pop());
+  // This serves no purpose other than to ensure that the ul-level is updated
+  // properly (in Firefox 1.5 the tree view will not change unless the ul-level
+  // is somehow touched).
+  ul.classList.add('foobar');
+  ul.classList.remove('foobar');
+};
+
+var SentenceWidget = function(id) {
+  this.widget = document.getElementById(id);
+  this.buttons = Array.prototype.slice.call(this.widget.querySelectorAll('#' + id + ' input'));
+};
+
+SentenceWidget.prototype.find = function(value) {
+  return document.querySelector('#word-' + value);
+};
+
+SentenceWidget.prototype.select = function(value) {
+  r = this.find(value);
+  if (r)
+    r.checked = true;
+};
+
+SentenceWidget.prototype.deselect = function() { this.buttons.forEach(function(e) { e.checked = false; }); };
+
+SentenceWidget.prototype.selection = function() {
+  var selected = this.buttons.find(function(e) { return e.checked; });
+  return selected ? selected.value : null;
+};
+
+SentenceWidget.prototype.disable = function() { this.buttons.forEach(function(e) { e.disabled = true; }); };
+
+SentenceWidget.prototype.enable = function() { this.buttons.forEach(function(e) { e.disabled = false; }); };
+
+SentenceWidget.prototype.setConsumed = function(id) {
+  var e = this.find(id);
+  e.classList.add('consumed');
+  e.up('label').classList.remove('validation-error');
+};
+
+SentenceWidget.prototype.setUnconsumed = function(id) { this.find(id).classList.remove('consumed'); };
+
+SentenceWidget.prototype.clear = function() { this.widget.descendants().each(function(e) { e.classList.remove('consumed'); }); }
+
+SentenceWidget.prototype.isConsumed = function(id) { return this.find(id).classList.contains('consumed'); };
+
+SentenceWidget.prototype.getUnconsumedTokens = function() { return this.buttons.findAll(function(e) { return !e.classList.contains('consumed'); }); };
 
 function getRecommendedRelation(head_relation, head, dependent) {
   var guess = inferRelation(head, dependent);
-
-  if (guess == 'COPY')
-    return head_relation;
-  else
-    return guess;
+  return guess == 'COPY' ? head_relation : guess;
 }
-
-// Actual event handlers
 
 function onDependencyStructureClick(ev) {
   var id = findAffectedID(ev, 'li', 'rel-');
@@ -353,11 +471,7 @@ function findAffectedElement(ev, name) {
 /* Same as findAffectedElement, but returns the ID instead. */
 function findAffectedID(ev, name, prefix) {
   var element = findAffectedElement(ev, name);
-
-  if (element)
-    return element.identify().sub(prefix, '');
-  else
-    return null;
+  return element ? element.id.sub(prefix, '') : null;
 }
 
 function onSlashSelect() { tree_widget._updateJSON(); }
@@ -366,504 +480,438 @@ function onPaletteClick(ev) {
   var element = findAffectedElement(ev, 'input');
 
   if (element)
-    controller.changeRelation(element.identify());
+    controller.changeRelation(element.id);
 }
 
-function onChangeDirectionClick() { controller.toggleBuildDirection(); }
-
-// Controller
-
-var Controller = Class.create({
-  initialize: function() {
-    this.has_cut_data = false;
-    this.selection = null; // Currently selected token
-    this.top_down = true; // Build direction
-    this.depth_first = true; // Build direction
-    this.cut_buffer = new Array();
-  },
-
-  setSelection: function(token_id) {
-    if (this.selection) {
-      // Do de-selections and disable buttons and palette
-      sentence_widget.deselect();
-      tree_widget.deselect();
-    }
-
-    if (token_id) {
-      // Do selections and enable buttons and palette
-      if (!model.isEmpty(token_id))
-        sentence_widget.select(token_id);
-      tree_widget.select(token_id);
-
-      r = tree_widget.getRelation(token_id);
-
-      if (isValidRelation(r)) {
-        palette.enable();
-        palette.select(r);
-      }
-    }
-
-    // Save the new reference
-    this.selection = token_id;
-
-    this.updateControls();
-  },
-
-  getSelection: function() { return this.selection; },
-
-  // Actions
-
-  select: function(token_id) {
-    // Check if we have already been selected, in which case we do nothing.
-    if (this.getSelection() == token_id)
-      return;
-
-    if (!model.isEmpty(token_id) && !sentence_widget.isConsumed(token_id)) {
-      // The user wants to insert a new token in the dependency structure.
-      if (this.top_down) {
-        tree_widget.addEntry(this.selection, token_id, null,
-            model.getWordForm(token_id), null);
-      } else {
-        var h = tree_widget.getParentEntry(this.selection);
-        tree_widget.addEntry(h, token_id, this.selection,
-            model.getWordForm(token_id), null);
-      }
-
-      // Flag the token as consumed
-      sentence_widget.setConsumed(token_id);
-
-      // Determine where to move reference. If depth first, select the
-      // recently inserted token, otherwise stay where we are.
-      if (this.depth_first)
-        this.setSelection(token_id);
-    } else {
-      // The user wants to move the reference somewhere.
-      this.setSelection(token_id);
-    }
-
-    tree_widget._updateJSON();
-  },
-
-  clear: function() {
-    sentence_widget.clear();
-    tree_widget.clear();
-    this.setSelection('ROOT');
-    this.updateControls();
-
-    tree_widget._updateJSON();
-  },
-
-  removeEntry: function() {
-    var id = this.selection;
-
-    // Make tokens available in the sentence widget
-    if (!model.isEmpty(id))
-      sentence_widget.setUnconsumed(id);
-
-    tree_widget.getNonemptyDescendants(id).each(function(d) { sentence_widget.setUnconsumed(d); });
-
-    // Determine where to move reference.
-    this.setSelection(tree_widget.getParentEntry(id));
-
-    // Remove the entries.
-    tree_widget.removeEntry(id);
-
-    // If the entry represents a an empty token, remove it from the model.
-    if (model.isEmpty(id))
-      model.deleteEmptyToken(id);
-
-    // Ensure that all slash select boxes are updated
-    tree_widget.updateSlashSelects();
-
-    tree_widget._updateJSON();
-  },
-
-  addEmptyEntry: function(sort) {
-    var new_id;
-
-    // Add new token to the model.
-    new_id = model.createEmptyToken(sort);
-
-    // Add a new entry to the tree widget.
-    if (this.top_down)
-      tree_widget.addEntry(this.selection, new_id, null, sort, null);
-    else {
-      var h = tree_widget.getParentEntry(this.selection);
-      tree_widget.addEntry(h, new_id, this.selection, sort, null);
-    }
-
-    // Ensure that all slash select boxes are updated
-    tree_widget.updateSlashSelects();
-
-    // Determine where to move reference.
-    if (this.depth_first)
-      this.setSelection(new_id);
-
-    tree_widget._updateJSON();
-  },
-
-  changeRelation: function(relation) {
-    tree_widget.setRelation(tree_widget.selected, relation);
-    tree_widget._updateJSON();
-  },
-
-  moveUp: function() {
-    if (this.selection) {
-      var new_id = tree_widget.getParentEntry(this.selection);
-      if (new_id)
-        this.select(new_id);
-    }
-
-    tree_widget._updateJSON();
-  },
-
-  moveDown: function() {
-    if (this.selection) {
-      var new_id = tree_widget.getFirstChildEntry(this.selection);
-      if (new_id)
-        this.select(new_id);
-    }
-
-    tree_widget._updateJSON();
-  },
-
-  moveLeft: function() {
-    if (this.selection) {
-      var new_id = tree_widget.getPrevSiblingEntry(this.selection);
-      if (new_id)
-        this.select(new_id);
-    }
-
-    tree_widget._updateJSON();
-  },
-
-  moveRight: function() {
-    if (this.selection) {
-      var new_id = tree_widget.getNextSiblingEntry(this.selection);
-      if (new_id)
-        this.select(new_id);
-    }
-
-    tree_widget._updateJSON();
-  },
-
-  addSlash: function() {
-    if (this.selection)
-      tree_widget.addSlash(this.selection);
-
-    this.updateControls();
-    tree_widget._updateJSON();
-  },
-
-  removeSlashes: function() {
-    if (this.selection)
-      tree_widget.removeSlashes(this.selection);
-
-    this.updateControls();
-    tree_widget._updateJSON();
-  },
-
-  cut: function() {
-    if (this.selection) {
-      //tree_widget.cut(this.selection, $('cut-buffer'));
-      tree_widget.cut(this.selection, this.cut_buffer);
-      this.has_cut_data = true;
-      this.selection = null;
-    }
-
-    this.updateControls();
-    tree_widget._updateJSON();
-  },
-
-  paste: function() {
-    if (this.selection && this.has_cut_data) {
-      //tree_widget.paste(this.selection, $("cut-buffer"));
-      tree_widget.paste(this.selection, this.cut_buffer);
-      this.has_cut_data = this.cut_buffer.length > 0;
-    }
-
-    this.updateControls();
-    tree_widget._updateJSON();
-  },
-
-  // Reset structure and controls to starting state.
-  reset: function() {
-    // Make sure that everything is cleared first
-    sentence_widget.clear();
-    tree_widget.clear();
-
-    // Update structure with whatever we got as input
-    this._resetStructure(model.structure, 'ROOT');
-
-    // Reset all controls to sane starting states
-    this.resetControls();
-
-    tree_widget._updateJSON();
-  },
-
-  _resetStructure: function(obj, parent_id) {
-    $H(obj).each(function(e) {
-      var token_id = e[0];
-      var relation = e[1]['relation'];
-      var dependents = e[1]['dependents'];
-      var empty = e[1]['empty'];
-      var slashes = e[1]['slashes'];
-
-      // We may receive nodes with new IDs, i.e. unsaved empty nodes, as
-      // input data. We deal with this by adding the nodes to the model
-      if (token_id.startsWith('new')) {
-        var token_number = Number(token_id.sub('new', ''));
-
-        //FIXME
-        var values = new Hash;
-        values.set('empty', empty);
-        values.set('token_number', token_number);
-        model.tokens.set(token_id, values);
-        if (model.new_token_number >= token_number)
-          model.new_token_number = token_number + 1;
-      }
-
-      if (empty)
-        tree_widget.addEntry(parent_id, token_id, null, empty, relation);
-      else {
-        sentence_widget.setConsumed(token_id);
-        tree_widget.addEntry(parent_id, token_id, null,
-          model.getWordForm(token_id), relation);
-      }
-
-      if (slashes) {
-        $A(slashes).each(function(slash) {
-          tree_widget.addSlash(token_id, slash);
-        });
-      }
-
-      controller._resetStructure(dependents, token_id);
-    });
-  },
-
-  // Behaviour changes
-
-  toggleBuildDirection: function() { this.top_down = !this.top_down; },
-
-  buildDownwards: function() {
-    this.top_down = true;
-    $('build-up').checked = false;
-    $('build-down').checked = true;
-  },
-
-  // Control updating
-
-  resetControls: function() {
-    // Reset buttons
-    $('button-delete').disable();
-    $('button-cut').disable();
-    $('button-paste').disable();
-    $('button-clear').enable();
-    $('button-insert-empty-conjunction-node').enable();
-    $('button-insert-empty-verbal-node').enable();
-    $('button-add-slash').disable();
-    $('button-remove-slashes').disable();
-
-    this.buildDownwards();
-
-    palette.disable();
-
-    this.setSelection('ROOT');
-  },
-
-  updateControls: function() {
-    var no_actionable_element = !this.selection || this.selection == 'ROOT';
-
-    $('button-delete').disabled = no_actionable_element;
-    $('button-add-slash').disabled = no_actionable_element;
-
-    $('build-up').disabled = no_actionable_element;
-    if (no_actionable_element)
-      this.buildDownwards();
-
-    if (no_actionable_element) {
-      $('button-remove-slashes').disable();
-      $('button-cut').disable();
-    } else {
-      $('button-remove-slashes').disabled = !tree_widget.hasSlashes(this.selection);
-      //$('button-cut').disabled = this.has_cut_data;
-      $('button-cut').disabled = false;
-    }
-
-    if (!this.selection)
-      $('button-paste').disable();
-    else {
-      if (this.has_cut_data)
-        $('button-paste').enable();
-      else
-        $('button-paste').disable();
-    }
-
-    if (no_actionable_element)
-      palette.disable();
-    else
+function onChangeDirectionClick() {
+  controller.toggleBuildDirection();
+}
+
+var Controller = function() {
+  this.has_cut_data = false;
+  this.selection = null; // Currently selected token
+  this.top_down = true; // Build direction
+  this.depth_first = true; // Build direction
+  this.cut_buffer = [];
+};
+
+Controller.prototype.setSelection = function(token_id) {
+  if (this.selection) {
+    // Do de-selections and disable buttons and palette
+    sentence_widget.deselect();
+    tree_widget.deselect();
+  }
+
+  if (token_id) {
+    // Do selections and enable buttons and palette
+    if (!model.isEmpty(token_id))
+      sentence_widget.select(token_id);
+    tree_widget.select(token_id);
+
+    r = tree_widget.getRelation(token_id);
+
+    if (isValidRelation(r)) {
       palette.enable();
-
-    // IE hacks
-    updateTreeLast();
+      palette.select(r);
+    }
   }
-});
 
-// View
+  // Save the new reference
+  this.selection = token_id;
 
-var Model = Class.create({
-  initialize: function(tokens, structure, relations) {
-    this.tokens = $H(tokens);
-    this.structure = $H(structure);
-    this.relations = $H(relations);
-    this.new_token_number = 1000; //FIXME: set to highest free number
-  },
+  this.updateControls();
+};
 
-  _getTokenKey: function(id, key) {
-    var t = this.tokens.get(id);
-    if (t)
-      return $H(t).get(key);
-    else
-      return null;
-  },
+Controller.prototype.getSelection = function() { return this.selection; };
 
-  getMorphTag: function(id) { return this._getTokenKey(id, 'morph_features'); },
+Controller.prototype.select = function(token_id) {
+  // Check if we have already been selected, in which case we do nothing.
+  if (this.getSelection() == token_id)
+    return;
 
-  getWordForm: function(id) { return this._getTokenKey(id, 'form'); },
+  if (!model.isEmpty(token_id) && !sentence_widget.isConsumed(token_id)) {
+    // The user wants to insert a new token in the dependency structure.
+    if (this.top_down) {
+      tree_widget.addEntry(this.selection, token_id, null, model.getWordForm(token_id), null);
+    } else {
+      var h = tree_widget.getParentEntry(this.selection);
+      tree_widget.addEntry(h, token_id, this.selection, model.getWordForm(token_id), null);
+    }
 
-  // Returns true if the token is empty, false otherwise.
-  isEmpty: function(id) { return id == 'ROOT' || this._getTokenKey(id, 'empty'); },
+    // Flag the token as consumed
+    sentence_widget.setConsumed(token_id);
 
-  // Returns the token number for a particular token ID
-  getTokenNumber: function(id) { return this._getTokenKey(id, 'token_number'); },
+    // Determine where to move reference. If depth first, select the
+    // recently inserted token, otherwise stay where we are.
+    if (this.depth_first)
+      this.setSelection(token_id);
+  } else
+    // The user wants to move the reference somewhere.
+    this.setSelection(token_id);
 
-  // Returns all token IDs in the structure
-  getTokenIDs: function() { return this.tokens.keys(); },
+  tree_widget._updateJSON();
+};
 
-  // Create new empty token
-  createEmptyToken: function(sort) {
-    var id = 'new' + this.new_token_number;
-    var token_number = this.new_token_number;
-    this.new_token_number++;
+Controller.prototype.clear = function() {
+  sentence_widget.clear();
+  tree_widget.clear();
+  this.setSelection('ROOT');
+  this.updateControls();
 
-    var values = new Hash;
-    values.set('empty', sort);
-    values.set('token_number', token_number);
-    this.tokens.set(id, values);
+  tree_widget._updateJSON();
+};
 
-    return id;
-  },
+Controller.prototype.removeEntry = function() {
+  var id = this.selection;
 
-  // Delete empty token
-  deleteEmptyToken: function(id) {
-    var empty = this._getTokenKey(id, 'empty');
-    if (!empty)
-      throw new Error("Cannot remove non-empty token");
+  // Make tokens available in the sentence widget
+  if (!model.isEmpty(id))
+    sentence_widget.setUnconsumed(id);
 
-    this.tokens.unset(id);
+  tree_widget.getNonemptyDescendants(id).each(function(d) { sentence_widget.setUnconsumed(d); });
+
+  // Determine where to move reference.
+  this.setSelection(tree_widget.getParentEntry(id));
+
+  // Remove the entries.
+  tree_widget.removeEntry(id);
+
+  // If the entry represents a an empty token, remove it from the model.
+  if (model.isEmpty(id))
+    model.deleteEmptyToken(id);
+
+  // Ensure that all slash select boxes are updated
+  tree_widget.updateSlashSelects();
+
+  tree_widget._updateJSON();
+};
+
+Controller.prototype.addEmptyEntry = function(sort) {
+  var new_id;
+
+  // Add new token to the model.
+  new_id = model.createEmptyToken(sort);
+
+  // Add a new entry to the tree widget.
+  if (this.top_down)
+    tree_widget.addEntry(this.selection, new_id, null, sort, null);
+  else {
+    var h = tree_widget.getParentEntry(this.selection);
+    tree_widget.addEntry(h, new_id, this.selection, sort, null);
   }
-});
 
-function validate(ev) {
-  var errors = sentence_widget.getUnconsumedTokens();
+  // Ensure that all slash select boxes are updated
+  tree_widget.updateSlashSelects();
 
-  // Unconsumed tokens is a reliable *except* if the user has cut a
-  // subtree, since the tokens in the cut subtree won't be marked as
-  // unconsumed.
-  if (controller.has_cut_data > 0) {
-    alert("Annotation is incomplete. You have a subtree in the paste buffer.");
+  // Determine where to move reference.
+  if (this.depth_first)
+    this.setSelection(new_id);
 
-    Event.stop(ev) // stop event propagation
-  } else if (errors.length > 0) {
-    alert("Annotation is incomplete. Please correct the indicated errors before saving.");
+  tree_widget._updateJSON();
+};
 
-    errors.each(function(e) {
-      // Go up to the label and colour that since the input element itself isn't displayed at all
-      new Effect.Highlight(e.up("label"), { startcolor: '#ff9999', endcolor: '#ffffff' });
-      e.addClassName("validation-error");
-    });
-    Event.stop(ev) // stop event propagation
+Controller.prototype.changeRelation = function(relation) {
+  tree_widget.setRelation(tree_widget.selected, relation);
+  tree_widget._updateJSON();
+};
+
+Controller.prototype.move = function(direction) {
+  if (this.selection) {
+    switch (direction) {
+      case 'up':
+        this.select(tree_widget.getParentEntry(this.selection));
+        break;
+      case 'down':
+        this.select(tree_widget.getFirstChildEntry(this.selection));
+        break;
+      case 'left':
+        this.select(tree_widget.getPrevSiblingEntry(this.selection));
+        break;
+      case 'right':
+        this.select(tree_widget.getNextSiblingEntry(this.selection));
+        break;
+    }
+
+    tree_widget._updateJSON();
   }
-}
+};
 
-// Document hooks
+Controller.prototype.addSlash = function() {
+  if (this.selection)
+    tree_widget.addSlash(this.selection);
 
-Event.observe(window, 'load', function() {
-  // Create model and grab hold of input data
-  model = new Model($('input-tokens').value.evalJSON(),
-    $('input-structure').value.evalJSON(),
-    null
-    //$('input-relations').value.evalJSON()
-    );
+  this.updateControls();
+  tree_widget._updateJSON();
+};
 
-  // Set up "controller"
-  controller = new Controller();
+Controller.prototype.removeSlashes = function() {
+  if (this.selection)
+    tree_widget.removeSlashes(this.selection);
 
-  // Create widgets
-  sentence_widget = new SentenceWidget('words');
-  tree_widget = new DependencyStructureWidget('relations');
-  palette = new RadioGroup('palette');
+  this.updateControls();
+  tree_widget._updateJSON();
+};
+
+Controller.prototype.cut = function() {
+  if (this.selection) {
+    tree_widget.cut(this.selection, this.cut_buffer);
+    this.has_cut_data = true;
+    this.selection = null;
+  }
+
+  this.updateControls();
+  tree_widget._updateJSON();
+};
+
+Controller.prototype.paste = function() {
+  if (this.selection && this.has_cut_data) {
+    tree_widget.paste(this.selection, this.cut_buffer);
+    this.has_cut_data = this.cut_buffer.length > 0;
+  }
+
+  this.updateControls();
+  tree_widget._updateJSON();
+};
+
+// Reset structure and controls to starting state.
+Controller.prototype.reset = function() {
+  // Make sure that everything is cleared first
+  sentence_widget.clear();
+  tree_widget.clear();
+
+  // Update structure with whatever we got as input
+  this._resetStructure(model.structure, 'ROOT');
+
+  // Reset all controls to sane starting states
+  this.resetControls();
+
+  tree_widget._updateJSON();
+};
+
+Controller.prototype._resetStructure = function(obj, parent_id) {
+  _.each(obj, function(v, token_id) {
+    // We may receive nodes with new IDs, i.e. unsaved empty nodes, as
+    // input data. We deal with this by adding the nodes to the model
+    if (token_id.startsWith('new')) {
+      var token_number = Number(token_id.sub('new', ''));
+
+      model._tokens[token_id] = { empty: v.empty, token_number: token_number };
+
+      if (model.new_token_number >= token_number)
+        model.new_token_number = token_number + 1;
+    }
+
+    if (v.empty)
+      tree_widget.addEntry(parent_id, token_id, null, v.empty, v.relation);
+    else {
+      sentence_widget.setConsumed(token_id);
+      tree_widget.addEntry(parent_id, token_id, null, model.getWordForm(token_id), v.relation);
+    }
+
+    if (v.slashes) {
+      _.each(v.slashes, function(slash) {
+        tree_widget.addSlash(token_id, slash);
+      });
+    }
+
+    controller._resetStructure(v.dependents, token_id);
+  });
+},
+
+Controller.prototype.toggleBuildDirection = function() { this.top_down = !this.top_down; },
+
+Controller.prototype.buildDownwards = function() {
+  this.top_down = true;
+  document.getElementById('build-up').checked = false;
+  document.getElementById('build-down').checked = true;
+},
+
+Controller.prototype.resetControls = function() {
+  // Reset buttons
+  document.getElementById('button-delete').disabled = true;
+  document.getElementById('button-add-slash').disabled = true;
+  document.getElementById('button-cut').disabled = true;
+
+  document.getElementById('button-paste').disabled = true;
+  document.getElementById('button-clear').disabled = false;
+  document.getElementById('button-insert-empty-conjunction-node').disabled = false;
+  document.getElementById('button-insert-empty-verbal-node').disabled = false;
+  document.getElementById('button-remove-slashes').disabled = true;
+
+  this.buildDownwards();
+
   palette.disable();
 
-  // Connect event handlers
-  $('palette').observe('change', onPaletteClick);
-  $('words').observe('change', onSentenceClick);
-  $('relations').observe('click', onDependencyStructureClick);
-  $('button-delete').observe('click', function(ev) { controller.removeEntry(); });
-  $('button-clear').observe('click', function(ev) { controller.clear(); });
-  $('button-reset').observe('click', function(ev) { controller.reset(); });
-  $('button-insert-empty-conjunction-node').observe('click', function(ev) { controller.addEmptyEntry("C"); });
-  $('button-insert-empty-verbal-node').observe('click', function(ev) { controller.addEmptyEntry("V"); });
-  $('button-add-slash').observe('click', function(ev) { controller.addSlash(); });
-  $('button-remove-slashes').observe('click', function(ev) { controller.removeSlashes(); });
-  $('button-cut').observe('click', function(ev) { controller.cut(); });
-  $('button-paste').observe('click', function(ev) { controller.paste(); });
-  $('dependencies-form').observe('submit', validate, false);
+  this.setSelection('ROOT');
+},
 
-  // Set starting state.
+Controller.prototype.updateControls = function() {
+  var no_actionable_element = !this.selection || this.selection == 'ROOT';
+
+  document.getElementById('button-delete').disabled = no_actionable_element;
+  document.getElementById('button-add-slash').disabled = no_actionable_element;
+  document.getElementById('button-cut').disabled = no_actionable_element;
+
+  document.getElementById('build-up').disabled = no_actionable_element;
+  document.getElementById('button-remove-slashes').disabled = no_actionable_element || !tree_widget.hasSlashes(this.selection);
+  document.getElementById('button-paste').disabled = !this.selection || !this.has_cut_data;
+
+  if (no_actionable_element) {
+    this.buildDownwards();
+    palette.disable();
+  } else
+    palette.enable();
+}
+
+var Model = function(data) {
+  this._tokens = data.tokens;
+  this.structure = data.structure;
+  this.new_token_number = 1000; //FIXME: set to highest free number
+};
+
+Model.prototype._getTokenKey = function(id, key) {
+  var t = this._tokens[id];
+  return t ? t[key] : null;
+};
+
+Model.prototype.getMorphTag = function(id) { return this._getTokenKey(id, 'morph_features'); };
+
+Model.prototype.getWordForm = function(id) { return this._getTokenKey(id, 'form'); };
+
+// Returns true if the token is empty, false otherwise.
+Model.prototype.isEmpty = function(id) { return id == 'ROOT' || this._getTokenKey(id, 'empty'); };
+
+// Returns the token number for a particular token ID
+Model.prototype.getTokenNumber = function(id) { return this._getTokenKey(id, 'token_number'); };
+
+// Returns all token IDs in the structure
+Model.prototype.getTokenIDs = function() { return _.keys(this._tokens); };
+
+// Create new empty token
+Model.prototype.createEmptyToken = function(sort) {
+  var id = 'new' + this.new_token_number;
+  var token_number = this.new_token_number;
+  this.new_token_number++;
+
+  this._tokens[id] = { empty: sort, token_number: token_number }
+
+  return id;
+};
+
+// Delete empty token
+Model.prototype.deleteEmptyToken = function(id) {
+  var empty = this._getTokenKey(id, 'empty');
+  if (!empty)
+    throw new Error("Cannot remove non-empty token");
+
+  delete this._tokens[id];
+};
+
+function highlightError(e) {
+  e.classList.add('highlight-error');
+  setTimeout(function () { e.classList.remove('highlight-error'); }, 250);
+}
+
+// TODO: convert this to enable/disable on submit button so that validate is no longer necessary
+function validate(ev) {
+  var stop_event = true;
+  var errors = sentence_widget.getUnconsumedTokens();
+
+  // Unconsumed tokens is a reliable test unless the user has cut a
+  // subtree, since the cut tokens will be marked as consumed.
+  if (controller.has_cut_data > 0)
+    alert("Annotation is incomplete. You have a subtree in the paste buffer.");
+  else if (errors.length > 0) {
+    alert("Annotation is incomplete. Please correct the indicated errors before saving.");
+
+    _.each(errors, function(e) {
+      // Go up to the label and colour that since the input element itself isn't displayed at all
+      var lbl = e.up('label');
+      highlightError(lbl);
+    });
+  } else {
+    stop_event = false;
+  }
+
+  if (stop_event) {
+    ev.preventDefault();
+    ev.stopPropagation();
+  }
+}
+
+KEY_CODES = {
+  38: 'up',
+  40: 'down',
+  37: 'left',
+  39: 'right'
+}
+
+// WebKit-based browsers do not fire events for arrow keys
+function keyHandler(e) {
+  var stop_event = true;
+
+  if (!e)
+    var e = window.event;
+
+  var code = e.keyCode || e.which;
+
+  var direction = KEY_CODES[code];
+
+  if (direction)
+    controller.move(direction);
+  else {
+    var character = String.fromCharCode(code);
+
+    if (character in hotkeys) {
+      palette.select(hotkeys[character]);
+      controller.changeRelation(hotkeys[character]);
+    } else {
+      stop_event = false;
+    }
+  }
+
+  if (stop_event) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}
+
+function setup() {
+  var data = JSON.parse(document.getElementById('data').value);
+
+  model = new Model(data);
+  controller = new Controller();
+  sentence_widget = new SentenceWidget('words');
+  tree_widget = new DependencyStructureWidget('relations');
+  palette = new Palette('palette');
+
+  document.getElementById('palette').addEventListener('change', onPaletteClick);
+  document.getElementById('words').addEventListener('change', onSentenceClick);
+  document.getElementById('relations').addEventListener('click', onDependencyStructureClick);
+
+  document.getElementById('button-delete').addEventListener('click', function(e) { controller.removeEntry(); });
+  document.getElementById('button-clear').addEventListener('click', function(e) { controller.clear(); });
+  document.getElementById('button-reset').addEventListener('click', function(e) { controller.reset(); });
+  document.getElementById('button-insert-empty-conjunction-node').addEventListener('click', function(e) { controller.addEmptyEntry("C"); });
+  document.getElementById('button-insert-empty-verbal-node').addEventListener('click', function(e) { controller.addEmptyEntry("V"); });
+  document.getElementById('button-add-slash').addEventListener('click', function(e) { controller.addSlash(); });
+  document.getElementById('button-remove-slashes').addEventListener('click', function(e) { controller.removeSlashes(); });
+  document.getElementById('button-cut').addEventListener('click', function(e) { controller.cut(); });
+  document.getElementById('button-paste').addEventListener('click', function(e) { controller.paste(); });
+
+  document.getElementById('build-down').addEventListener('click', onChangeDirectionClick);
+  document.getElementById('build-up').addEventListener('click', onChangeDirectionClick);
+
+  document.getElementById('dependencies-form').addEventListener('submit', validate, false);
+
   controller.reset();
 
-  // Set up key event observers
-  Event.observe(document, 'keypress', function(e) {
-    var code;
-    var stop_event = false;
+  document.addEventListener('keypress', keyHandler);
+}
 
-    if (!e)
-      var e = window.event;
-
-    if (e.keyCode)
-      code = e.keyCode;
-    else if (e.which)
-      code = e.which;
-
-    if (code == Event.KEY_UP) {
-      controller.moveUp();
-      stop_event = true;
-    }
-    else if (code == Event.KEY_DOWN) {
-      controller.moveDown();
-      stop_event = true;
-    }
-    else if (code == Event.KEY_LEFT) {
-      controller.moveLeft();
-      stop_event = true;
-    }
-    else if (code == Event.KEY_RIGHT) {
-      controller.moveRight();
-      stop_event = true;
-    }
-    else {
-      var character = String.fromCharCode(code);
-
-      if (character in hotkeys) {
-        palette.select(hotkeys[character]);
-        controller.changeRelation(hotkeys[character]);
-        stop_event = true;
-      }
-    }
-
-    if(stop_event) {
-      Event.stop(e);
-    }
-  });
-});
+if (document.readyState != 'loading') {
+  if (document.getElementById('annotation-editor'))
+    setup();
+} else {
+  document.addEventListener('DOMContentLoaded', setup);
+}
