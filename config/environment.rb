@@ -1,4 +1,4 @@
-# Load the rails application
+# Load the Rails application.
 require File.expand_path('../application', __FILE__)
 
 # Settings specific to the PROIEL application (i.e. not Rails). You can
@@ -33,5 +33,5 @@ Proiel::Application.configure do
   }
 end
 
-# Initialize the rails application
-Proiel::Application.initialize!
+# Initialize the Rails application.
+Rails.application.initialize!

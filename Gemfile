@@ -1,19 +1,20 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.22'
+gem 'rails', '4.2.6'
+gem 'protected_attributes'
 gem 'json'
-gem 'sass-rails'
+gem 'sass-rails', '~> 5.0'
 
 gem 'proiel', '~> 1.0'
 
 gem 'formtastic'
 gem 'kaminari'
 gem 'haml'
-gem 'devise', '~> 2.2.4'
+gem 'devise'
 gem 'devise-encryptable'
-gem 'exception_notification', '~> 3.0.1'
-gem 'audited-activerecord', '~> 3.0'
-gem 'ransack', '~> 0.7.2'
+gem 'exception_notification'
+gem 'audited-activerecord', '~> 4.0'
+gem 'ransack'
 
 gem 'unicode'
 
@@ -38,13 +39,22 @@ gem 'foreman'
 gem 'dotenv'
 gem 'unicorn'
 
-group :development, :test do
+group :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
   gem 'sqlite3'
   gem 'simplecov', require: false
   gem 'test-unit'
-  gem 'rack-mini-profiler', require: false
+end
+
+group :development do
+  gem 'rack-mini-profiler'
   gem 'stackprof'
   gem 'flamegraph'
+
+  gem 'web-console', '~> 2.0'
+
+  gem 'spring'
+
+  gem 'pry-rails'
 end

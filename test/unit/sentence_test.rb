@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
 class SentenceTest < ActiveSupport::TestCase
   def setup

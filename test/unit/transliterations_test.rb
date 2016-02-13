@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 require 'transliterations'
 
 class TransliterationTestCase < ActiveSupport::TestCase

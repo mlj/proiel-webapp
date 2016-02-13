@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
 TEST_CONFIG_FILE = File.join(File.dirname(__FILE__), 'tagger_test.yml')
 TEST_DEFAULT_OPTIONS = {

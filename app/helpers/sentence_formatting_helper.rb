@@ -32,28 +32,25 @@ module SentenceFormattingHelper
   # paragraph breaks.
   #
   def format_sentence(value, options = {}, &block)
-    options.reverse_merge! :highlight => []
-    options[:highlight] = [options[:highlight]] if options[:highlight].is_a?(Token) or options[:highlight].is_a?(Sentence)
+    options.reverse_merge! highlight: []
+    options[:highlight] = [*options[:highlight]]
 
-    x = nil
+    x = [*value].map do |obj|
+          case obj
+          when Sentence
+            obj.tokens_with_deps_and_is
+          when Token
+            obj
+          else
+            raise ArgumentError, 'expected Sentence or Token'
+          end
+        end.flatten
 
-    value = value.all if value.is_a?(ActiveRecord::Relation)
-
-    if value.is_a?(Sentence)
-      x = value.tokens_with_deps_and_is
-    elsif value.is_a?(Array)
-      if value.empty?
-        return ''
-      elsif value.first.is_a?(Sentence)
-        x = value.map { |sentence| sentence.tokens_with_deps_and_is }.flatten
-      elsif value.first.is_a?(Token)
-        x = value
-      end
-    end
-
-    if x and x.length > 0
+    if x.length > 0
       markup = format_tokens(x, options, &block)
-      "<div class='formatted-text' lang='#{x.first.language}'>#{markup}</div>".html_safe
+      language = x.first.language
+
+      "<div class='formatted-text' lang='#{language}'>#{markup}</div>".html_safe
     else
       ''
     end

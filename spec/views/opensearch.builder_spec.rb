@@ -23,7 +23,7 @@ RSpec.describe "application/opensearch", type: :view do
   
   context 'image' do
     subject { @xml_element.search('Image').text }
-    it { is_expected.to eq('http://test.host/assets/icon.png') }
+    it { is_expected.to eq('http://test.host/icon.png') }
   end
 
   context 'search terms' do

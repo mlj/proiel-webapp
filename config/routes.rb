@@ -1,4 +1,4 @@
-Proiel::Application.routes.draw do
+Rails.application.routes.draw do
   devise_for :users
   resources :users, :only => [:index, :show]
 
@@ -70,13 +70,13 @@ Proiel::Application.routes.draw do
   resources :semantic_tags, :only => [:index, :show]
 
   # Wizard
-  match '/wizard/:action', :to => 'wizard#:action'
-  match '/wizard',         :to => 'wizard#index'
+  get '/wizard/:action', to: 'wizard#:action'
+  get '/wizard', to: 'wizard#index'
 
   # Quick search and search suggestions
-  match '/quick_search', :to => 'tokens#quick_search'
-  match '/quick_search.:format', :to => 'tokens#quick_search'
-  match '/opensearch.:format', :to => 'tokens#opensearch'
+  get '/quick_search', to: 'tokens#quick_search'
+  get '/quick_search.:format', to: 'tokens#quick_search'
+  get '/opensearch.:format', to: 'tokens#opensearch'
 
   # Default page
   root :to => 'sources#index'

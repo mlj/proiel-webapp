@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007-2016 University of Oslo
+# Copyright 2007-2016 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -36,14 +36,14 @@ module Proiel
       private
 
       def destroy_orphaned_lemmata!
-        Lemma.includes(:tokens).where('lemmata.foreign_ids IS NULL and tokens.id IS NULL').each do |o|
+        Lemma.joins(:tokens).where('lemmata.foreign_ids IS NULL AND tokens.id IS NULL').each do |o|
           @logger.warn { "#{self.class}: Destroying orphaned lemma #{o.id}" }
           o.destroy
         end
       end
 
       def check_orphaned_tokens
-        Token.includes(:sentence).where("sentences.id is null").each do |t|
+        Token.joins(:sentence).where("sentences.id IS NULL").each do |t|
           @logger.error { "#{self.class}: Token #{t.id} (#{t.to_s}) is orphaned" }
         end
       end

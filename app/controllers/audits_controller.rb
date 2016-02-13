@@ -1,8 +1,7 @@
-# encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
+# Copyright 2007-2016 University of Oslo
+# Copyright 2007-2016 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -22,7 +21,6 @@
 #++
 
 class AuditsController < ApplicationController
-  append_view_path AuditsResolver.new
   respond_to :html, :xml
   before_filter :is_annotator?
   before_filter :is_administrator?, :only => [:destroy]
