@@ -29,15 +29,15 @@ namespace :proiel do
       PROIELXMLImporter.new.read(ENV['FILE'], id_map_file: ENV['ID_MAP_FILE'])
     end
 
-    desc "Export a PROIEL source text. Optional options: ID=database_ID_of_source (EXPORT_DIRECTORY=destination_directory SEMANTIC_TAGS={false|true} SOURCE_DIVISION=source_division_title_regexp)"
+    desc "Export a PROIEL source text. Options: ID=database_ID_of_source EXPORT_DIRECTORY=destination_directory SEMANTIC_TAGS={false|true} SOURCE_DIVISION=source_division_title_regexp"
     task(:export => :environment) do
       options = {}
 
-      %w(SEMANTIC_TAGS ID SOURCE_DIVISION EXPORT_DIRECTORY).each do |k|
+      %w(SEMANTIC_TAGS ID SOURCE_DIVISION).each do |k|
         options[k.downcase.to_sym] = ENV[k] if ENV.has_key?(k)
       end
 
-      exporter = Proiel::Jobs::Exporter.new Logger.new(STDOUT), options
+      exporter = Proiel::Jobs::Exporter.new(ENV['EXPORT_DIRECTORY'] || '.', Logger.new(STDOUT), options)
       exporter.run_once!
     end
   end

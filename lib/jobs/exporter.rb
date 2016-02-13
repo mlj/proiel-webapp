@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007-2013 University of Oslo
+# Copyright 2007-2016 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -30,11 +30,12 @@ module Proiel
       # * <tt>:source_division</tt> - If set to a regular expression, only
       # exports source divisions whose titles match the regular expression.
       # * <tt>:semantic_tags</tt> - If true, will also export semantic tags.
-      # * <tt>:export_directory</tt> - If set, overrides the default export
-      # directory, which is provided by
-      # <tt>Proiel::Application.config.export_directory_path</tt>.
-      def initialize(logger = Rails.logger, options = {})
+      def initialize(export_directory, logger = Rails.logger, options = {})
+        raise ArgumentError, "no such directory #{@export_directory}" unless export_directory and File::directory?(export_directory)
+
         super(logger)
+
+        @export_directory = export_directory
 
         @options = options
         @options.symbolize_keys!
@@ -45,15 +46,11 @@ module Proiel
         options = {}
         options[:sem_tags] = true if @options[:semantic_tags]
 
-        # Prepare destination directory
-        directory = @options[:export_directory] || Proiel::Application.config.export_directory_path
-        Dir::mkdir(directory) unless File::directory?(directory)
-
         # Find sources and iterate them
         sources = @options[:id] ? Source.find_all_by_id(@options[:id]) : Source.all
 
         sources.each do |source|
-          file_name = File.join(directory, "#{source.human_readable_id}.xml")
+          file_name = File.join(@export_directory, "#{source.human_readable_id}.xml")
 
           if @options[:source_division]
             options[:source_division] = source.source_divisions.select { |sd| sd.title =~ Regexp.new(@options[:source_division]) }.map(&:id)

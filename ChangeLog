@@ -3,6 +3,8 @@ proiel-webapp. It does not list all changes; see the git history for that.
 
 1.8.0   not released
 
+  - proiel:text:export now exports texts to the current directory by default
+    unless overridden by an environment variable.
   - Changed default production web server from thin to unicorn.
 
 1.7.0   13/02/2016
