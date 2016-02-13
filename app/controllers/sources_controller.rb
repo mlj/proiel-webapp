@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2007-2012 University of Oslo
+# Copyright 2007-2016 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -35,6 +35,12 @@ class SourcesController < ApplicationController
   def show
     @source = Source.includes(:source_divisions).find(params[:id])
     @source_divisions = @source.source_divisions.order(:position).page(current_page).per(300)
+
+    sentences = @source.sentences
+    @activity_stats = sentences.annotated.group("DATE_FORMAT(annotated_at, '%Y-%m-%d')").order('annotated_at DESC').limit(10).count
+    @sentence_completion_stats = @source.aggregated_status_statistics
+    @annotated_by_stats = sentences.annotated.count(group: :annotator).map { |k, v| [k.try(:full_name), v] }
+    @reviewed_by_stats = sentences.reviewed.count(group: :reviewer).map { |k, v| [k.try(:full_name), v] }
 
     respond_with @source
   end

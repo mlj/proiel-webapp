@@ -38,6 +38,7 @@ class Source < ActiveRecord::Base
   tag_attribute :language, :language_tag, LanguageTag, :allow_nil => false
 
   has_many :source_divisions
+  has_many :sentences, through: :source_divisions
 
   has_many :dependency_alignment_terminations
 
@@ -70,12 +71,7 @@ class Source < ActiveRecord::Base
 
   # Returns a hash with aggregated status statistics for the source.
   def aggregated_status_statistics
-    Sentence.where(:source_division_id => source_divisions).count(:group => :status_tag)
-  end
-
-  # Returns a hash with aggregated status statistics for all sources.
-  def self.aggregated_status_statistics
-    Sentence.count(:group => :status_tag)
+    Sentence.where(source_division_id: source_divisions).count(group: :status_tag)
   end
 
   # Returns a generated metadata field containing the names of all annotators
