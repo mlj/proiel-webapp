@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe TokensController do
+RSpec.describe TokensController, type: :controller do
   login_user
 
   describe 'GET #opensearch' do
