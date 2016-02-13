@@ -32,11 +32,11 @@ gem 'colorize'
 group :production, :development do
   gem 'mysql2', '> 0.3.0'
   gem 'pg'
-  gem 'thin'
 end
 
 gem 'foreman'
 gem 'dotenv'
+gem 'unicorn'
 
 group :development, :test do
   gem 'rspec-rails'

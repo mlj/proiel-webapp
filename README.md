@@ -81,13 +81,19 @@ e-mails working properly.
 
 Start the server and worker processes:
 
-    $ foreman start
+    $ RAILS_ENV=production foreman start
 
 If you prefer not to use `foreman`, you will need to start both processes
 manually:
 
-    $ bundle exec thin start
+    $ bundle exec unicorn_rails -E $environment -p $PORT
     $ bundle exec rake work_jobs
+
+If you are doing development, a simpler way is to use Rails' default server:
+
+    $ rails s
+
+Do not use this in a production environment!
 
 ## Upgrading
 
