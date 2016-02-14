@@ -7,26 +7,33 @@
   %p
     != external_text_links @token.sentence
 
-- layer "annotation" do
+%table.ui.collapsing.definition.table
   - if @token.form
-    %dt Form:
-    %dd.foreign-word!= format_token_form @token
+    %tr
+      %td Form
+      %td.foreign-word
+        != format_token_form @token
   - if @token.is_morphtaggable? and @token.morph_features
-    %dt Part of speech:
-    %dd= @token.morph_features.pos_summary.capitalize
-    %dt Morphology:
-    %dd= @token.morph_features.morphology_summary.capitalize
-    %dt Lemma:
-    - if @token.lemma
-      %dd.foreign-word!=link_to_lemma @token.lemma
-    - else
-      &nbsp;
+    %tr
+      %td Part of speech
+      %td= @token.morph_features.pos_summary.capitalize
+    %tr
+      %td Morphology
+      %td= @token.morph_features.morphology_summary.capitalize
+    %tr
+      %td Lemma
+      - if @token.lemma
+        %td.foreign-word!=link_to_lemma @token.lemma
+      - else
+        &nbsp;
   - if @token.relation
-    %dt Dependency relation:
-    %dd!= readable_dependency @token.relation, (@token.head ? link_to(@token.head.id, @token.head) : nil)
+    %tr
+      %td Dependency relation:
+      %td!= readable_dependency @token.relation, (@token.head ? link_to(@token.head.id, @token.head) : nil)
   - if @token.foreign_ids
-    %dt Foreign IDs:
-    %dd.tag= @token.foreign_ids
+    %tr
+      %td Foreign IDs:
+      %td.tag= @token.foreign_ids
 
 - layer_unless @notes.empty?, "notes" do
   != notes_summary @notes
