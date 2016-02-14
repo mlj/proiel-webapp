@@ -48,7 +48,7 @@
     .pagination-totals
       != page_entries_info @tokens, :entry_name => 'matches'
 
-    %table.concordance
+    %table.ui.table.segment.concordance
       %thead
         %tr
           %th!= sort_link @search, :location, "Location"
