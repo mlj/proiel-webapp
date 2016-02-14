@@ -1,8 +1,4 @@
 - if @sentence.has_dependency_annotation?
-  - stylesheet 'dependencies'
-
-  != render 'dependencies/legend'
-
   .dependencies-image
     - if user_preferences[:graph_format] == "svg"
       %object{:data => sentence_dependencies_url(@sentence, :format => :svg), :type => "image/svg+xml"}

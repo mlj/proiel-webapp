@@ -11,4 +11,9 @@
  *= require_tree ./normalize
  *= require_tree ./semantic
  *= require_self
+ *= require screen
+ *= require alignment
+ *= require dependencies
+ *= require dependency_alignment
+ *= require info_statuses
  */

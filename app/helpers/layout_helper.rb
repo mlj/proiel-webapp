@@ -10,11 +10,6 @@ module LayoutHelper
     @show_title
   end
 
-  # Inserts stylesheets in the layout.
-  def stylesheet(*args)
-    content_for(:head) { stylesheet_link_tag(*args) }
-  end
-
   # Inserts javascript files in the layout.
   def javascript(*args)
     content_for(:head) { javascript_include_tag(*args) }

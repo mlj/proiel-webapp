@@ -1,6 +1,5 @@
 - javascript "prototype", "scriptaculous", "utils", "effects", "dragdrop", "controls"
 - javascript 'dependency_inferences', 'dependency_relations', "tree", "dependencies"
-- stylesheet "dependencies"
 
 %div{:id => "annotation", :class => "annotation"}
   != hidden_field_tag 'input-tokens', @sentence.syntactic_annotation_with_tokens(params[:output])[:tokens].to_json
