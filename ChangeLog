@@ -5,6 +5,8 @@ proiel-webapp. It does not list all changes; see the git history for that.
 
   - proiel:text:export now exports texts to the current directory by default
     unless overridden by an environment variable.
+  - Exporter job has been removed since the jobs over time get too heavy to
+    run without proper supervision.
   - Changed default production web server from thin to unicorn.
 
 1.7.0   13/02/2016
