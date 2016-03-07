@@ -32,12 +32,7 @@ autoload :BiblosExternalLinkMapper, 'external_link_mapper'
 
 module Proiel
   # The application version
-  VERSION = [1, 7, 0]
-
-  # Returns the application version as a dotted string.
-  def self.version
-    VERSION.join('.')
-  end
+  VERSION = '1.8.0'
 
   autoload :TokenAnnotationValidator, 'annotation_validator'
   autoload :SentenceAnnotationValidator, 'annotation_validator'

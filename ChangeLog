@@ -1,7 +1,7 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
-1.8.0   not released
+1.8.0   07/03/2016
 
   - proiel:text:export now exports texts to the current directory by default
     unless overridden by an environment variable.
