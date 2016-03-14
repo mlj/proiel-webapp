@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007-2016 University of Oslo
+# Copyright 2007-2016 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -53,9 +53,6 @@ class LanguageTag < TagObject
   #
   # ==== Options
   # <tt>:ignore_instances</tt> -- If set, ignores all instance matches.
-  # <tt>:force_method</tt> -- If set, forces the tagger to use a specific tagging method,
-  #                          e.g. <tt>:manual_rules</tt> for manual rules. All other
-  #                          methods are disabled.
   def guess_morphology(form, existing_tags, options = {})
     TAGGER.tag_token(tag.to_sym, form, existing_tags)
   rescue Exception => e

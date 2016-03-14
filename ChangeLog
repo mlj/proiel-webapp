@@ -1,6 +1,11 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
+  - Removed the proiel:morphology:reassign task, which can be performed by
+    exporting morphology, changing the exported data and re-importing it.
+  - Removed task proiel:morphology:force_manual_tags. This task (which was
+    broken) is easier to perform using the command-line utilities and a
+    batch importer of morphology.
   - Updated ISO 639-2 language tables. This adds support for language codes
     introduced since 2013, among which is Old Lithuanian (olt).
 

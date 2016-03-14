@@ -27,18 +27,12 @@ require 'metadata'
 # Exporter for the PROIEL XML format.
 class PROIELXMLExporter
   # Creates a new exporter that exports the source +source+.
-  #
-  # ==== Options
-  # sem_tags:: Include semantic tags. Default: +false+.
-  def initialize(source, options = {})
-    options.assert_valid_keys(:sem_tags, :source_division, :ignore_nils)
-
+  def initialize(source)
     @source = source
-    @options = options
   end
 
   # Writes exported data to a file.
-  def write(file_name, do_gzip = true)
+  def write(file_name, do_gzip = false)
     tmp_file_name = "#{file_name}.tmp"
 
     if Sentence.joins(source_division: [:source]).where(source_divisions: { source_id: @source.id }).exists?
@@ -46,7 +40,6 @@ class PROIELXMLExporter
         write_toplevel!(file) do |context|
           write_source!(context, @source) do |context|
             sds = @source.source_divisions.order(:position)
-            sds = sds.where(id: @options[:source_division]) if @options[:source_division]
 
             sds.each do |sd|
               if Sentence.joins(:source_division).where(source_division_id: sd.id).exists?
@@ -190,7 +183,6 @@ class PROIELXMLExporter
     end
 
     attrs = pull_features(t, mandatory_features, optional_features)
-    attrs.merge!(t.sem_tags_to_hash) if @options[:sem_tags]
 
     rename_feature!(attrs, :token_alignment_id, :alignment_id)
 

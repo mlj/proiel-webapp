@@ -54,7 +54,7 @@ class Token < ActiveRecord::Base
 
   belongs_to :token_alignment, :class_name => 'Token', :foreign_key => 'token_alignment_id'
   belongs_to :dependency_alignment, :class_name => 'Token', :foreign_key => 'dependency_alignment_id'
-  has_many :dependency_alignment_terminations
+  has_many :dependency_alignment_terminations, class_name: 'DependencyAlignmentTerm'
 
   has_many :anaphors, :class_name => 'Token', :foreign_key => 'antecedent_id', :dependent => :nullify
   belongs_to :antecedent, :class_name => 'Token', :foreign_key => 'antecedent_id'

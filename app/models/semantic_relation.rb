@@ -28,9 +28,9 @@ class SemanticRelation < ActiveRecord::Base
   belongs_to :target, :class_name => 'Token', :foreign_key => 'target_id'
   belongs_to :semantic_relation_tag
 
-  validates_presence_of :semantic_relation_tag
   validates_presence_of :controller
   validates_presence_of :target
+  validates_presence_of :semantic_relation_tag
 
   validate do
     errors[:base] << "Controller and target must be in the same source division" unless controller.sentence.source_division == target.sentence.source_division

@@ -21,7 +21,6 @@
 #
 #++
 
-require 'lingua/normalisation'
 require 'proiel/tagger/analysis_method'
 require 'proiel/tagger/fst'
 require 'proiel/tagger/instance_frequency'
@@ -61,9 +60,6 @@ module Tagger
 
         # The weight given to an FST rule
         :fst => 0.2,
-
-        # The weight given to a hand-written rule from rule files
-        :manual_rules => 1.0,
 
         # The weight *ratio* for existing instances
         :instance_frequencies => 0.5,
@@ -139,22 +135,11 @@ module Tagger
       #
       # ==== Options
       # <tt>:ignore_instances</tt> - If set, ignores all instance matches.
-      # <tt>:force_method</tt> - If set, forces the tagger to use a specific tagging method,
-      #                          e.g. <tt>:manual_rules</tt> for manual rules. All other
-      #                          methods are disabled.
       def tag_token(language, form, existing = nil, options = {})
         raise ArgumentError unless language.class == Symbol
         raise "Undefined language #{language}" unless @methods.has_key?(language)
 
-        raw_candidates = unless options[:force_method]
-                           @methods[language].collect { |method| method.call(form) }.flatten
-                         else
-                           # FIXME
-                           if options[:force_method] == :manual_rules
-                             form = normalise_form(language, form)
-                           end
-                           analyze_form(language, options[:force_method], form)
-                         end
+        raw_candidates = @methods[language].collect { |method| method.call(form) }.flatten
         raw_candidates.sort!
 
         # Try to make sense of any existing information that we have
@@ -208,20 +193,6 @@ module Tagger
         else
           [ordered_candidates.length == 1 ? :unambiguous : :ambiguous,
             ordered_candidates.first.first] + ordered_candidates
-        end
-      end
-
-      private
-
-      def normalise_form(language, form)
-        raise ArgumentError unless language.class == Symbol
-        case language
-        when :grc
-          # Strip all accents
-          # FIXME: duplication
-          form = Lingua::GRC::strip_accents(form)
-        else
-          form
         end
       end
     end

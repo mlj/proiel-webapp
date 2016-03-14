@@ -170,10 +170,6 @@ class MorphFeaturesTestCase < ActiveSupport::TestCase
     assert_equal '-------p', MorphFeatures.new(',Df,lat','-------p--').morphology_abbrev_s
   end
 
-  def test_morphology_as_sql_pattern
-    assert_equal '_______p%', MorphFeatures.new(',Df,lat','-------p').morphology_as_sql_pattern
-  end
-
   def test_subtag
     assert_equal true, MorphFeatures.new(',Df,lat', '-----n').subtag?(MorphFeatures.new(',Df,lat', '-----q'))
     assert_equal false, MorphFeatures.new(',Df,lat', '-----q').subtag?(MorphFeatures.new(',Df,lat', '-----n'))
