@@ -30,15 +30,6 @@ $navbarbg:      $boxbg
 $navbarfghover: $hover
 $navbarborder:  $boxborder
 
-////////////////////////////////////////////////////////////////
-// Logo dimensions and colour scheme
-////////////////////////////////////////////////////////////////
-
-$logo:          unquote("logo.png")
-$logofg:        $fg
-$logobg:        $selected
-$logoheight:    100px
-
 //:focus
 //  outline: 0
 
@@ -458,19 +449,13 @@ abbr
 
 #headline
   display: block
-  color: $logofg
-  background-color: $logobg
-  min-height: $logoheight
-  background-image: image_url($logo)
-  background-repeat: no-repeat
-  background-position: left bottom
-
-  h1
-    font-size: 200%
-    padding-left: 0.5em
-    padding-top: 0.25em
-    padding-bottom: 0.25em
-    display: inline
+  color: $fg
+  background-color: #f7a700
+  min-height: 100px
+  .left
+    float: left
+  .right
+    float: right
 
 #navigation-bar
   height: 2em
