@@ -4,10 +4,10 @@
 
 != paginate @semantic_tags, params: params
 
-%table
+%table.ui.table
   %thead
     %tr
       %th Reference
       %th Tag
   %tbody
-    != render  @semantic_tags
+    != render @semantic_tags
