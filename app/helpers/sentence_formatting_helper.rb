@@ -28,6 +28,10 @@ module SentenceFormattingHelper
   #
   # <tt>:link_to</tt> -- If <tt>:tokens</tt>, will link to tokens. If
   # <tt>:sentences</tt>, will link to sentences.
+  #
+  # <tt>:single_line</tt> -- Ignore characters that indicate linefeeds and
+  # paragraph breaks.
+  #
   def format_sentence(value, options = {}, &block)
     options.reverse_merge! :highlight => []
     options[:highlight] = [options[:highlight]] if options[:highlight].is_a?(Token) or options[:highlight].is_a?(Sentence)
@@ -152,8 +156,14 @@ module SentenceFormattingHelper
 
       s += content_tag :span, after, presentation_attributes unless after.empty?
 
-      s.gsub!("\u{2028}", '<br>')
-      s.gsub!("\u{2029}", '<p>')
+      unless options[:single_line]
+        s.gsub!("\u{2028}", '<br>')
+        s.gsub!("\u{2029}", '<p>')
+      else
+        s.gsub!("\u{2028}", ' ')
+        s.gsub!("\u{2029}", ' ')
+      end
+
       s.squish
     end
   end
