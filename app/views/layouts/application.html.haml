@@ -23,6 +23,7 @@
         != link_to 'Contents', root_path, accesskey: '1'
         != link_to 'Dictionary', lemmata_path
         != link_to 'Search', tokens_path, accesskey: 'S'
+        != link_to 'Semantic tags', semantic_tags_path
         - if is_annotator?
           != link_to 'Annotation', wizard_path
         - if is_reviewer?
