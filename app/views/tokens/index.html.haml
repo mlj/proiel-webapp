@@ -48,12 +48,10 @@
     .pagination-totals
       != page_entries_info @tokens, :entry_name => 'matches'
 
-    %table.ui.table.segment.concordance
+    %table.ui.table
       %thead
         %tr
           %th!= sort_link @search, :location, "Location"
-          %th.left
-          %th.centre!= sort_link @search, :form, "Matched form"
-          %th.right
+          %th{colspan: 3}!= sort_link @search, :form, "Match"
       %tbody
         != render :partial => 'annotations/annotation', :collection => @tokens

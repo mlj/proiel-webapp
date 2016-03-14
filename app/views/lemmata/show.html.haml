@@ -24,13 +24,11 @@
   .pagination-totals
     != page_entries_info @tokens, :entry_name => 'tokens'
 
-%table.concordance
+%table.ui.table
   %thead
     %tr
-      %th Location
-      %th.left
-      %th.centre Matched token
-      %th.right
+      %th= "Location"
+      %th{colspan: 3}= "Match"
   %tbody
     != render :partial => 'annotations/annotation', :collection => @tokens
 
