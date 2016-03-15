@@ -32,7 +32,7 @@ autoload :BiblosExternalLinkMapper, 'external_link_mapper'
 
 module Proiel
   # The application version
-  VERSION = '1.8.0'
+  VERSION = '1.8.1'
 
   autoload :TokenAnnotationValidator, 'annotation_validator'
   autoload :SentenceAnnotationValidator, 'annotation_validator'
@@ -42,6 +42,7 @@ module Proiel
     autoload :DatabaseChecker, 'jobs/database_checker'
     autoload :DatabaseValidator, 'jobs/database_validator'
     autoload :AnnotationValidator, 'jobs/annotation_validator'
+    autoload :Exporter, 'jobs/exporter'
   end
 
   autoload :Metadata, 'metadata'
