@@ -29,7 +29,7 @@ RSpec.describe Lemma, type: :model do
     expect(FactoryGirl.build(:lemma, variant: 0)).to be_valid
     expect(FactoryGirl.build(:lemma, variant: 1)).to be_valid
     expect(FactoryGirl.build(:lemma, variant: -1)).to be_valid
-    expect(FactoryGirl.build(:lemma, variant: 1234567890)).to be_valid
+    expect(FactoryGirl.build(:lemma, variant: 12345)).to be_valid
     expect(FactoryGirl.build(:lemma, variant: '1')).to be_valid
     expect(FactoryGirl.build(:lemma, variant: '0')).to be_valid
   end
