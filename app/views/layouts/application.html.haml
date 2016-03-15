@@ -40,16 +40,17 @@
         %form.inline{'accept-charset' => 'UTF-8', :action => '/quick_search', :method => 'get'}
           %input{:placeholder => 'Search', :size => '30', :type => 'search', :name => 'q'}
 
-    - if show_context_bar?
-      #context-bar
-        != yield(:context_bar)
+    .ui.container
+      - if show_context_bar?
+        #context-bar
+          != yield(:context_bar)
 
-    - if show_message_block?
-      #message-block
-        != message_block
+      - if show_message_block?
+        #message-block
+          != message_block
 
-    #contents
-      != yield
+      #contents
+        != yield
 
     %footer
       %span.tag proiel-webapp
