@@ -11,7 +11,7 @@ module Tagger
     end
 
     def analyze(form)
-      Inflection.find_all_by_language_and_form(@language.to_s, form).map do |instance|
+      Inflection.where(language_tag: @language.to_s, form: form).map do |instance|
         [instance.morph_features, instance.manual_rule ? 1.0 : 0.2]
       end
     end

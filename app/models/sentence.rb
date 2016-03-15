@@ -541,7 +541,7 @@ class Sentence < ActiveRecord::Base
   end
 
   def to_s(options = {})
-    tokens_text = tokens.visible.all.map { |t| t.to_s(options) }.join
+    tokens_text = tokens.visible.map { |t| t.to_s(options) }.join
     [presentation_before, tokens_text, presentation_after].compact.join
   end
 
