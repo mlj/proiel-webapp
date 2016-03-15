@@ -71,7 +71,7 @@ class Source < ActiveRecord::Base
 
   # Returns a hash with aggregated status statistics for the source.
   def aggregated_status_statistics
-    Sentence.where(source_division_id: source_divisions).count(group: :status_tag)
+    Sentence.where(source_division_id: source_divisions).group(:status_tag).count
   end
 
   # Returns a generated metadata field containing the names of all annotators
