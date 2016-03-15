@@ -45,5 +45,6 @@ group :development, :test do
   gem 'simplecov', require: false
   gem 'test-unit'
   gem 'rack-mini-profiler', require: false
+  gem 'stackprof'
   gem 'flamegraph'
 end
