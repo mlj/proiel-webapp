@@ -1,25 +1,27 @@
-require 'test_helper'
+require 'rails_helper'
 
-class SentenceTest < ActiveSupport::TestCase
-  def setup
-    @sd = Source.first.source_divisions.create!
+RSpec.describe Sentence, type: :model do
+  fixtures :sources
+  fixtures :sentences
 
-    @sentence_first_in_sd = @sd.sentences.create! :sentence_number => 0, :status_tag => 'unannotated'
+  before do
+    sd = Source.first.source_divisions.create!
 
-    @sentence_middle_of_sd = @sd.sentences.create! :sentence_number => 1, :status_tag => 'unannotated'
-    @t0 = @sentence_middle_of_sd.tokens.create! :token_number => 0, :form => 'foo', :presentation_after => ', '
-    @t1 = @sentence_middle_of_sd.tokens.create! :token_number => 1, :form => 'foo', :presentation_after => '. '
+    @sentence_first_in_sd = sd.sentences.create! sentence_number: 0, status_tag: 'unannotated'
+    @sentence_middle_of_sd = sd.sentences.create! sentence_number: 1, status_tag: 'unannotated'
+    @t0 = @sentence_middle_of_sd.tokens.create! token_number: 0, form: 'foo', presentation_after: ', '
+    @t1 = @sentence_middle_of_sd.tokens.create! token_number: 1, form: 'foo', presentation_after: '. '
     @sentence_middle_of_sd.tokens.reload
 
-    @sentence_last_in_sd = @sd.sentences.create! :sentence_number => 2, :presentation_after => 'Some text', :status_tag => 'unannotated'
-    @t2 = @sentence_last_in_sd.tokens.create! :token_number => 0, :form => 'foo', :presentation_after => ', '
-    @t3 = @sentence_last_in_sd.tokens.create! :token_number => 1, :form => 'foo', :presentation_after => '. '
+    @sentence_last_in_sd = sd.sentences.create! sentence_number: 2, presentation_after: 'Some text', status_tag: 'unannotated'
+    @t2 = @sentence_last_in_sd.tokens.create! token_number: 0, form: 'foo', presentation_after: ', '
+    @t3 = @sentence_last_in_sd.tokens.create! token_number: 1, form: 'foo', presentation_after: '. '
     @sentence_last_in_sd.tokens.reload
 
-    @sentence_extra_last_in_sd = @sd.sentences.create! :sentence_number => 3, :status_tag => 'unannotated'
+    @sentence_extra_last_in_sd = sd.sentences.create! sentence_number: 3, status_tag: 'unannotated'
   end
 
-  def test_next_previous
+  it "has next and previous" do
     assert @sentence_first_in_sd.has_next?
     assert @sentence_middle_of_sd.has_next?
     assert @sentence_last_in_sd.has_next?
@@ -41,22 +43,22 @@ class SentenceTest < ActiveSupport::TestCase
     assert_equal @sentence_last_in_sd, @sentence_extra_last_in_sd.previous_object
   end
 
-  def test_append_sentence
-    assert_equal 0, @sentence_first_in_sd.tokens.count
-    assert_equal 2, @sentence_middle_of_sd.tokens.count
-    assert_equal 2, @sentence_last_in_sd.tokens.count
-    assert_equal 0, @sentence_extra_last_in_sd.tokens.count
+  it "can append" do
+    expect(@sentence_first_in_sd.tokens.count).to eq 0
+    expect(@sentence_middle_of_sd.tokens.count).to eq 2
+    expect(@sentence_last_in_sd.tokens.count).to eq 2
+    expect(@sentence_extra_last_in_sd.tokens.count).to eq 0
 
-    assert @sentence_first_in_sd.is_next_sentence_appendable?
-    assert @sentence_middle_of_sd.is_next_sentence_appendable?
-    assert !@sentence_last_in_sd.is_next_sentence_appendable? # intervening presetation text
-    assert !@sentence_extra_last_in_sd.is_next_sentence_appendable? # lacks next_sentence
+    expect(@sentence_first_in_sd.is_next_sentence_appendable?).to be_truthy
+    expect(@sentence_middle_of_sd.is_next_sentence_appendable?).to be_truthy
+    expect(@sentence_last_in_sd.is_next_sentence_appendable?).to be_falsey # intervening presetation text
+    expect(@sentence_extra_last_in_sd.is_next_sentence_appendable?).to be_falsey # lacks next_sentence
 
-    assert_raise ArgumentError do
+    assert_raises ArgumentError do
       @sentence_extra_last_in_sd.append_next_sentence!
     end
 
-    assert_raise ArgumentError do
+    assert_raises ArgumentError do
       @sentence_last_in_sd.append_next_sentence!
     end
 
