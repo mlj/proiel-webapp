@@ -1,9 +1,7 @@
 #--
 #
-# graphviz.rb - Graph visualization functions using graphviz
-#
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Marius L. Jøhndal
+# Copyright 2007-2015 University of Oslo
+# Copyright 2007-2016 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -49,11 +47,11 @@ class GraphvizVisualization
   # Generates a graph using dot.
   #
   # ==== Options
-  # format::   Image format. Default is +:png+.
+  # format::   Image format. Default is +:svg+.
   # mode::     Chooses visualization method. Possible values are +:packed+
   #            and +:linearized+. Default is +:packed+.
   def generate(options = {})
-    options[:format] ||= :png
+    options[:format] ||= :svg
     options[:mode] ||= :packed
 
     raise ArgumentError, "invalid format" unless SUPPORTED_FORMATS.include?(options[:format])
