@@ -29,7 +29,6 @@ div#palette {
   margin: 1em;
   line-height: 2.5em;
 }
-div#palette input { display: none; }
 div#palette input + span { -moz-border-radius: 6px; border: 1px solid #CAD8F3; background: #DEE7F8; padding: 6px; color: black; }
 div#palette input:checked + span { border-color: #ccc; background: #9999ff; color: white; }
 div#palette input:disabled + span { border-color: #ccc; background: #ccc; color: white; }
