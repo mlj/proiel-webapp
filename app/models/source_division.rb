@@ -52,6 +52,10 @@ class SourceDivision < ActiveRecord::Base
       with_citation
   end
 
+  def cached_citation
+    read_attribute(:cached_citation) || citation.tap { |x| update_attribute(:cached_citation, x) }
+  end
+
   presentation_on
 
   # Returns the parent object for the source division, which will be its
@@ -140,6 +144,17 @@ class SourceDivision < ActiveRecord::Base
     end
   end
 
+  def cached_has_discourse_annotation?
+    v = read_attribute(:cached_has_discourse_annotation)
+
+    if v.nil?
+      v = has_discourse_annotation?
+      update_attribute(:cached_has_discourse_annotation, v)
+    end
+
+    v
+  end
+
   def aggregate_status
     if sentences.unannotated.exists?
       'unannotated'
@@ -148,6 +163,10 @@ class SourceDivision < ActiveRecord::Base
     else
       'reviewed'
     end
+  end
+
+  def cached_status_tag
+    read_attribute(:cached_status_tag) || aggregate_status.tap { |x| update_attribute(:cached_status_tag, x) }
   end
 
   # Returns all contrast groups defined in the source division.

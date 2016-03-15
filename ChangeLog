@@ -1,6 +1,10 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
+  - Added caching of frequently computed source division values. This
+    introduces another scheduled job that must run regularly to keep the cache
+    synchronised with changes in the database.
+
 1.8.1   15/03/2016
 
   - Fixed incorrect removal of parts of the export job.

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140207152826) do
+ActiveRecord::Schema.define(:version => 20160315182200) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -162,14 +162,17 @@ ActiveRecord::Schema.define(:version => 20140207152826) do
   add_index "slash_edges", ["slasher_id", "slashee_id"], :name => "idx_slash_edges_ser_see", :unique => true
 
   create_table "source_divisions", :force => true do |t|
-    t.integer  "source_id",                                 :default => 0, :null => false
-    t.integer  "position",                                  :default => 0, :null => false
-    t.string   "title",                      :limit => 128
+    t.integer  "source_id",                                      :default => 0, :null => false
+    t.integer  "position",                                       :default => 0, :null => false
+    t.string   "title",                           :limit => 128
     t.integer  "aligned_source_division_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "presentation_before"
     t.text     "presentation_after"
+    t.string   "cached_citation",                 :limit => 128
+    t.string   "cached_status_tag",               :limit => 12
+    t.boolean  "cached_has_discourse_annotation"
   end
 
   create_table "sources", :force => true do |t|

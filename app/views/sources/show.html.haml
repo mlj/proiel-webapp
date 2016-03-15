@@ -31,5 +31,5 @@
 .ui.list
   - @source_divisions.each do |source_division|
     .item
-      != completion_rate source_division.aggregate_status
-      != link_to "#{source_division.title} (#{source_division.citation})", source_division
+      != completion_rate source_division.cached_status_tag
+      != link_to "#{source_division.title} (#{source_division.cached_citation})", source_division
