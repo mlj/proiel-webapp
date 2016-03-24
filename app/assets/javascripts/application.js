@@ -21,6 +21,9 @@
 //= require info_statuses
 //= require alignment
 //= require dependency_alignment
+//= require vue
+//= require vue-resource
+//= require vue-router
 
 var authenticity_param;
 var authenticity_token;
