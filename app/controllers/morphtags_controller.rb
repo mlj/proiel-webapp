@@ -16,10 +16,6 @@ class MorphtagsController < ApplicationController
     render :partial => "transliterations/input"
   end
 
-  def show
-    @sentence = Sentence.find(params[:sentence_id])
-  end
-
   def edit
     @sentence = Sentence.includes(:source_division => [:source]).find(params[:sentence_id])
     @source_division = @sentence.try(:source_division)
