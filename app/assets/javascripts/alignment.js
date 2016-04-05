@@ -1,4 +1,4 @@
-Event.observe(window, 'load', function() {
+function alignmentSetup() {
   $$('.draggable').each(function(el) {
     new Draggable(el, {
       revert: true
@@ -24,4 +24,4 @@ Event.observe(window, 'load', function() {
       }
     });
   });
-});
+}

@@ -277,7 +277,3 @@ var InfoStatus = function() {
         }
     }
 }();
-
-document.observe('dom:loaded', function() {
-    InfoStatus.init();
-});

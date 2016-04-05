@@ -131,7 +131,3 @@ var Prodrop = function() {
         }
     }
 }();
-
-document.observe('dom:loaded', function() {
-    Prodrop.init();
-});

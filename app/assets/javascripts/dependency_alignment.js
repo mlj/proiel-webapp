@@ -5,7 +5,7 @@ function fatal_msg(msg)
 
 var edge_count_el = null;
 
-Event.observe(window, 'load', function() {
+function dependencyAlignmentSetup() {
   var edge_count_el = $('edge_count');
 
   if (!edge_count_el)
@@ -70,4 +70,4 @@ Event.observe(window, 'load', function() {
 //     });
 //   });
 //-------------------------------------------------- 
-});
+}

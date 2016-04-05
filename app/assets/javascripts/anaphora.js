@@ -341,8 +341,3 @@ var AnaphoraAndContrast = function() {
         }
     }
 }();
-
-Event.observe(window, 'load', function() {
-  AnaphoraAndContrast.init();
-  AnaphoraAndContrast.showAntecedentsForAllAnaphors();
-});

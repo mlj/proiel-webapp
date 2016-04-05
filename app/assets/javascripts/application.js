@@ -16,6 +16,11 @@
 //= require vendor/dragdrop
 //= require vendor/controls
 //= require vendor/wz_jsgraphics
+//= require anaphora
+//= require prodrop
+//= require info_statuses
+//= require alignment
+//= require dependency_alignment
 
 var authenticity_param;
 var authenticity_token;
@@ -45,6 +50,26 @@ function setup() {
       return false;
     });
   }
+
+  // Hook up legacy information structure editor
+  if (document.querySelector('#server-message')) {
+    Prodrop.init();
+    InfoStatus.init();
+  }
+
+  if (document.querySelector('#info-status')) {
+    document.observe('dom:loaded', function() {
+      AnaphoraAndContrast.init();
+      AnaphoraAndContrast.showAntecedentsForAllAnaphors();
+    });
+  }
+
+  // Hook up legacy alignment editors
+  if (document.querySelector('#button-commit') && document.querySelector('#alignment-view'))
+    alignmentSetup();
+
+  if (document.querySelector('#dependency-alignment-editor'))
+    dependencyAlignmentSetup();
 }
 
 if (document.readyState != 'loading') {
