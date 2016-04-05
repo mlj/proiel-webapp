@@ -13,6 +13,10 @@ proiel-webapp. It does not list all changes; see the git history for that.
     run without proper supervision.
   - Changed default production web server from thin to unicorn.
 
+1.7.1   16/03/2016
+
+  - Fixed broken tokenization of tokens with certain Unicode characters.
+
 1.7.0   13/02/2016
 
   - Removed "Downloads" page.
