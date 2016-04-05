@@ -21,7 +21,7 @@
 #
 #++
 
-module PROIEL
+module Proiel
   class DependencyGraphNode
     attr_reader :relation
     attr_reader :head

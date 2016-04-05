@@ -509,7 +509,7 @@ class Sentence < ActiveRecord::Base
 
   # Returns the dependency graph for the sentence.
   def dependency_graph
-    PROIEL::DependencyGraph.new do |g|
+    Proiel::DependencyGraph.new do |g|
       tokens.takes_syntax.each { |t| g.badd_node(t.id, t.relation_tag, t.head ? t.head.id : nil,
                                                            Hash[*t.slash_out_edges.map { |se| [se.slashee.id, se.relation_tag ] }.flatten],
                                                            { :empty => t.empty_token_sort || false,

@@ -48,8 +48,8 @@ class DependenciesController < ApplicationController
         # the database, except for any new empty dependency nodes, which will have
         # IDs on the form 'newX'.
         # FIXME: see FIXME above
-        #@sentence.syntactic_annotation = PROIEL::DependencyGraph.new_from_editor(ActiveSupport::JSON.decode(params[:output]))
-        @sentence.syntactic_annotation = PROIEL::DependencyGraph.new_from_editor(JSON.parse(params[:output], :max_nesting => false))
+        #@sentence.syntactic_annotation = Proiel::DependencyGraph.new_from_editor(ActiveSupport::JSON.decode(params[:output]))
+        @sentence.syntactic_annotation = Proiel::DependencyGraph.new_from_editor(JSON.parse(params[:output], :max_nesting => false))
         @sentence.save!
       end
 

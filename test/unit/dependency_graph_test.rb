@@ -1,10 +1,8 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-include PROIEL
-
 class DependencyGraphTestCase < ActiveSupport::TestCase
   def test_each_node
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(1, :foo, nil)
     g.add_node(11, :bar, 1)
     g.add_node(111, :bar, 11)
@@ -16,7 +14,7 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
   end
 
   def test_select
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(1, :foo, nil)
     g.add_node(11, :bar, 1)
     g.add_node(111, :bar, 11)
@@ -28,7 +26,7 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
   end
 
   def test_siblings
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(1, :foo, nil)
     g.add_node(11, :bar, 1)
     g.add_node(111, :bar, 11)
@@ -59,7 +57,7 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
   EMITTER = lambda { |t, m| STDERR.puts "Validation error for node #{t.join(',')}: #{m}" }
 
   def setup_ok_graph
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(250414, "pred", nil, {}, {:empty=>false, :token_number => 17, :morph_features => MorphFeatures.new(',V-,lat', nil) })
     g.add_node(250398, "adv", 250414, {}, {:empty=>false, :token_number => 1, :morph_features => MorphFeatures.new(',V-,lat', nil)})
     g.add_node(250399, "aux", 250414, {}, {:empty=>false, :token_number => 2, :morph_features => MorphFeatures.new(',Df,lat', nil)})
@@ -93,7 +91,7 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
   end
 
   def test_batch_setup
-    k = DependencyGraph.new do |g|
+    k = Proiel::DependencyGraph.new do |g|
       # These are out of sequence and should be refused outside
       # the block. 
       g.badd_node(250398, "adv", 250414, {}, {:empty=>false, :token_number => 1, :morph_features => MorphFeatures.new(',V-,lat', nil)})
@@ -121,7 +119,7 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
   end
 
   def test_slash_storage
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(1, :foo, nil, {})
     g.add_node(2, :bar, nil, { 1 => :foo })
     assert_equal [], g[1].slashes
@@ -129,14 +127,14 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
   end
 
   def test_slash_storage_out_of_sequence
-    DependencyGraph.new do |g|
+    Proiel::DependencyGraph.new do |g|
       g.badd_node(2, :bar, nil, { 1 => :foo })
       g.badd_node(1, :foo, nil, {})
     end
   end
 
   def test_subgraph
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(1, :foo, nil)
     g.add_node(11, :bar, 1)
     g.add_node(111, :bar, 11, { 11 => :bar })
@@ -153,7 +151,7 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
   end
 
   def test_all_slashes_contained
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(1, :foo, nil)
     g.add_node(11, :bar, 1)
     g.add_node(111, :bar, 11, { 11 => :bar })
@@ -175,13 +173,13 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
     assert_equal 1, g[250414].min_token_number
     assert_equal 19, g[250414].max_token_number
 
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(1, :foo, nil, {}, { :empty => true, :token_number => 600 })
     g.add_node(2, :foo, 1, {}, { :empty => false, :token_number => 10 })
     assert_equal 10, g[1].max_token_number
     assert_equal 10, g[2].max_token_number
 
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(1, :foo, nil, {}, { :empty => true, :token_number => 600 })
     g.add_node(2, :foo, 1, {}, { :empty => true, :token_number => 10 })
     assert_equal nil, g[1].max_token_number
@@ -209,7 +207,7 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
 
   def test_proiel_validation_root_daughters
     # Break the graph by adding an ADV directly under the root
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(250414, "adv", nil, {}, { :empty => false, :morph_features => MorphFeatures.new(',Df,lat', nil) })
     g.add_node(250398, "adv", 250414, {}, { :empty => false, :morph_features => MorphFeatures.new(',Df,lat', nil) })
     assert_equal false, g.valid?
@@ -217,7 +215,7 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
 
   def test_all_slashes
     # Simple, ordinary case: a non-empty xobj with a slash
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(1, :pred, nil, {}, { :empty => false, :token_number => 1})
     g.add_node(11, :adv, 1, {}, { :empty => false, :token_number => 2})
     g.add_node(12, :xobj, 1, { 1 => :pred }, { :empty => false, :token_number => 3})
@@ -226,7 +224,7 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
     assert_equal g[12].all_slashes.length, 1
 
     # A pair of coordinated non-empty xobjs sharing a slash
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(1, :pred, nil, {}, { :empty => false, :token_number => 1})
     g.add_node(11, :adv, 1, {}, { :empty => false, :token_number => 2})
     g.add_node(12, :xobj, 1, { 1 => :pred }, { :empty => false, :token_number => 3, :morph_features => MorphFeatures.new(',C-,lat', nil)})
@@ -241,7 +239,7 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
     assert_equal g[122].all_slashes.length, 1
 
     # A pair of coordinated non-empty xobjs sharing a slash but with an empty coordinator
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(1, :pred, nil, {}, { :empty => false, :token_number => 1})
     g.add_node(11, :adv, 1, {}, { :empty => false, :token_number => 2})
     g.add_node(12, :xobj, 1, { 1 => :pred }, { :empty => 'C', :token_number => 3})
@@ -256,7 +254,7 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
     assert_equal g[122].all_slashes.length, 1
 
     # Full-fledged multi-level inheritance with empty coordinator
-    g = DependencyGraph.new
+    g = Proiel::DependencyGraph.new
     g.add_node(1, :pred, nil, {}, { :empty => false, :token_number => 1})
     g.add_node(11, :adv, 1, {}, { :empty => false, :token_number => 2})
     g.add_node(12, :xobj, 1, { 1 => :pred }, { :empty => 'C', :token_number => 3})
@@ -285,7 +283,7 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
 
   def test_editor_to_dg_conversion
     output = {"287650"=>{"empty"=>true, "relation"=>"pred", "dependents"=>{"266690"=>{"slashes"=>["287650"], "empty"=>false, "relation"=>"piv", "dependents"=>{"266691"=>{"empty"=>false, "relation"=>"atr", "dependents"=>{"266692"=>{"empty"=>false, "relation"=>"atr", "dependents"=>{"266693"=>{"empty"=>false, "relation"=>"apos"}, "266694"=>{"empty"=>false, "relation"=>"apos", "dependents"=>{"266695"=>{"empty"=>false, "relation"=>"atr", "dependents"=>{"266696"=>{"empty"=>false, "relation"=>"apos", "dependents"=>{"266697"=>{"empty"=>false, "relation"=>"atr"}}}}}}}}}}}}}}}}
-    g = DependencyGraph.new_from_editor(output)
+    g = Proiel::DependencyGraph.new_from_editor(output)
     assert_equal 1, g[266690].slashes.length
     assert_equal [287650], g[266690].slashes.map(&:identifier)
   end
