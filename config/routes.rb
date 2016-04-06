@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :lemmata, :only => [:index, :show, :edit, :update] do
+  resources :lemmata, :only => [:index, :show, :update] do
     collection do
       get :autocomplete
     end
@@ -74,6 +74,8 @@ Rails.application.routes.draw do
   get '/quick_search', to: 'tokens#quick_search'
   get '/quick_search.:format', to: 'tokens#quick_search'
   get '/opensearch.:format', to: 'tokens#opensearch'
+
+  get '/app', to: 'sentences#annotation'
 
   # Default page
   root :to => 'sources#index'

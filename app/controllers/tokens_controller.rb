@@ -26,6 +26,46 @@ class TokensController < ApplicationController
 
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
+  # GET /tokens.json
+  def index
+    l = Token
+    l = l.where('form LIKE ?', params[:form].gsub('.', '_').gsub('*', '%')) if params[:form]
+#    l = l.where(lemma_id: params[:lemma_id]) if params[:lemma_id]
+
+    @limit = 50
+    @count = l.count
+    @page = params[:page].to_i || 0
+    @pages = (@count / @limit.to_f).ceil
+
+    @tokens = l.limit(@limit).offset(@page * @limit)
+
+#    @search = Token.search(params[:q])
+
+#    # Location sorts are actually multi-sorts. Inspecting @search.sorts may
+#    # seem like the sensible solution to this, but this is actually an array of
+#    # non-inspectable objects. We'll instead peek at params[:q][:s] and
+#    # instruct ransack what to do based on its value.
+#    sort_order = params[:q] ? params[:q][:s] : nil
+#
+#    case sort_order
+#    when NilClass, '', 'location asc' # default
+#      @search.sorts = ['sentence_source_division_source_id asc',
+#                       'sentence_source_division_position asc',
+#                       'sentence_sentence_number asc',
+#                       'token_number asc']
+#    when 'location desc'
+#      @search.sorts = ['sentence_source_division_source_id desc',
+#                       'sentence_source_division_position desc',
+#                       'sentence_sentence_number desc',
+#                       'token_number desc']
+
+    respond_to do |format|
+      format.json
+      format.csv { head :no_content if @search.result.count > 5000 }
+      format.txt { head :no_content if @search.result.count > 5000 }
+    end
+  end
+
   def show
     @token = Token.includes(:sentence => [:source_division => [:source]]).find(params[:id])
 
@@ -78,47 +118,6 @@ class TokensController < ApplicationController
     alignment_set, edge_count = @token.dependency_alignment_set
 
     render :json => { :alignment_set => alignment_set.map(&:id), :edge_count => edge_count }
-  end
-
-  def index
-    @search = Token.search(params[:q])
-
-    # Location sorts are actually multi-sorts. Inspecting @search.sorts may
-    # seem like the sensible solution to this, but this is actually an array of
-    # non-inspectable objects. We'll instead peek at params[:q][:s] and
-    # instruct ransack what to do based on its value.
-    sort_order = params[:q] ? params[:q][:s] : nil
-
-    case sort_order
-    when NilClass, '', 'location asc' # default
-      @search.sorts = ['sentence_source_division_source_id asc',
-                       'sentence_source_division_position asc',
-                       'sentence_sentence_number asc',
-                       'token_number asc']
-    when 'location desc'
-      @search.sorts = ['sentence_source_division_source_id desc',
-                       'sentence_source_division_position desc',
-                       'sentence_sentence_number desc',
-                       'token_number desc']
-    else
-      # Do nothing; ransack has already taken care of it.
-    end
-
-    respond_to do |format|
-      format.html do
-        @tokens = @search.result.page(current_page)
-      end
-      format.csv do
-        if @search.result.count > 5000
-          head :no_content
-        end
-      end
-      format.txt do
-        if @search.result.count > 5000
-          head :no_content
-        end
-      end
-    end
   end
 
   def quick_search

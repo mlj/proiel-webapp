@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '5.0.4'
 gem 'uglifier'
+gem 'jbuilder', '~> 2.0'
 gem 'json'
 gem 'sass-rails', '~> 5.0'
 

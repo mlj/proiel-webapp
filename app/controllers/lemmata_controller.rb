@@ -21,42 +21,84 @@
 #++
 
 class LemmataController < ApplicationController
+  before_action :set_lemma, only: [:show, :update]
+
   respond_to :html
-  before_filter :is_reviewer?, :only => [:edit, :update, :merge]
+  before_filter :is_reviewer?, :only => [:update, :merge]
 
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
-  def show
-    @lemma = Lemma.find(params[:id])
+  # GET /lemmas
+  # GET /lemmas.json
+  def index
+    l = Lemma.order(:lemma)
+    l = l.where(language: params[:language]) if params[:language]
+    l = l.where(part_of_speech_tag: params[:part_of_speech]) if params[:part_of_speech]
 
-    if @lemma.nil?
-      raise ActiveRecord::RecordNotFound
-    else
-      @semantic_tags = @lemma.semantic_tags
-      @tokens = @lemma.tokens.page(current_page)
-      @mergeable_lemmata = @lemma.mergeable_lemmata
+    if params[:form]
+      base, variant = params[:form].split('#')
+      l = l.where("lemma LIKE ?", base.gsub('.', '_').gsub('*', '%')) unless base.blank?
+      l = l.where(variant: variant) unless variant.blank?
+    end
 
-      respond_with @lemma
+    @limit = 50
+    @count = l.count
+    @page = params[:page].to_i || 0
+    @pages = (@count / @limit.to_f).ceil
+
+    @lemmata = l.limit(@limit).offset(@page * @limit)
+
+    respond_to do |format|
+      format.html
+      format.json
     end
   end
 
-  def edit
+  # GET /lemmas/1
+  # GET /lemmas/1.json
+  def show
     @lemma = Lemma.find(params[:id])
 
-    respond_with @lemma
+    respond_to do |format|
+      format.html {
+        if @lemma.nil?
+          raise ActiveRecord::RecordNotFound
+        else
+          @semantic_tags = @lemma.semantic_tags
+          @tokens = @lemma.tokens.page(current_page)
+          @mergeable_lemmata = @lemma.mergeable_lemmata
+          @notes = @lemma.notes.sort_by(&:created_at).reverse
+          @audits = @lemma.audits.sort_by(&:created_at).reverse
+
+          respond_with @lemma
+        end
+      }
+      format.json
+    end
   end
 
+  # POST /lemmata.json
+  def create
+    @lemma = Lemma.new(lemma_params)
+
+    respond_to do |format|
+      if @lemma.save
+        format.json { render :show, status: :created, location: @lemma }
+      else
+        format.json { render json: @lemma.eroors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PATCH/PUT /lemmas/1.json
   def update
-    normalize_unicode_params! params[:lemma], :lemma
-
-    @lemma = Lemma.find(params[:id])
-    @lemma.update(lemma_params)
-
-    respond_with @lemma
-  rescue ActiveRecord::RecordInvalid => invalid
-    flash[:error] = invalid.record.errors.full_messages
-
-    respond_with @lemma
+    respond_to do |format|
+      if @lemma.update(lemma_params)
+        format.json { render :show, status: :ok, location: @lemma }
+      else
+        format.json { render json: @lemma.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def merge
@@ -72,13 +114,6 @@ class LemmataController < ApplicationController
     end
 
     respond_with @lemma
-  end
-
-  def index
-    @search = Lemma.order(:lemma).search(params[:q])
-    @lemmata = @search.result.page(current_page)
-
-    respond_with @dictionary
   end
 
   # Returns potential renderings of transliterated lemmata.
@@ -104,7 +139,12 @@ class LemmataController < ApplicationController
 
   private
 
+  def set_lemma
+    @lemma = Lemma.find(params[:id])
+  end
+
   def lemma_params
+    #params.fetch(:lemma, {})
     params.require(:lemma).permit(:lemma, :variant, :gloss, :foreign_ids, :language_tag, :part_of_speech_tag)
   end
 end

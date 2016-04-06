@@ -1,3 +1,119 @@
+<script type="text/x-template" id="search-view-template">
+  <div>
+    <!--unless @tokens.empty? or @search.result.count  5000
+      link_to 'Download results as CSV', params.merge(format: :csv)
+      link_to 'Download results as text file', params.merge(format: :txt)
+    -->
+
+    <div class="control is-horizontal">
+      <div class="control-label">
+        <label class="label">Language</label>
+      </div>
+      <div class="control">
+        <select class="input" v-model="language_tag">
+          <option value=""></option>
+          <option v-for="l in language_tags" value="{{ $key }}">{{ l }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="control is-horizontal">
+      <div class="control-label">
+        <label class="label">Source</label>
+      </div>
+      <div class="control">
+        <select class="input" v-model="query.source_id">
+          <option value=""></option>
+          <option v-for="s in sources" value="{{ $key }}">{{ s }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="control is-horizontal">
+      <div class="control-label">
+        <label class="label">Sentence status</label>
+      </div>
+      <div class="control">
+        <select class="input" v-model="query.status_tag">
+          <option value=""></option>
+          <option v-for="s in status_tags" value="{{ $key }}">{{ s }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="control is-horizontal">
+      <div class="control-label">
+        <label class="label">Form</label>
+      </div>
+      <div class="control">
+        <!-- ? matches any character, * any string -->
+        <input class="input" type="text" v-model="query.form">
+      </div>
+    </div>
+
+    <div class="control is-horizontal">
+      <div class="control-label">
+        <label class="label">Lemma</label>
+      </div>
+      <div class="control">
+        <!-- ? matches any character, * any string, # separates variant -->
+        <input class="input" type="text" v-model="query.lemma">
+      </div>
+    </div>
+
+    <div class="control is-horizontal">
+      <div class="control-label">
+        <label class="label">Part of speech</label>
+      </div>
+      <div class="control">
+        <select class="input" v-model="query.part_of_speech_tag">
+          <option value=""></option>
+          <option v-for="p in part_of_speech_tags" value="{{ $key }}">{{ p }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="control is-horizontal">
+      <div class="control-label">
+        <label class="label">Relation</label>
+      </div>
+      <div class="control">
+        <select class="input" v-model="query.relation_tag">
+          <option value=""></option>
+          <option v-for="r in relation_tags" value="{{ $key }}">{{ r }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="control is-horizontal">
+      <div class="control-label">
+        <label class="label">Information status</label>
+      </div>
+      <div class="control">
+        <select class="input" v-model="query.information_status_tag">
+          <option value=""></option>
+          <option v-for="i in information_status_tags" value="{{ $key }}">{{ i }}</option>
+        </select>
+      </div>
+    </div>
+
+  <!-- MorphFeatures::MORPHOLOGY_PRESENTATION_SEQUENCE.each_with_index do |field, i| >
+      <= f.input "morphology_tag_char#{MorphFeatures::MORPHOLOGY_POSITIONAL_TAG_SEQUENCE.index(field)}_matches", label: field.to_s.capitalize, collection: search_morphology_field_tags(field) >
+  < end -->
+
+    <table class="table">
+      <tbody>
+        <tr v-for="token in tokens.tokens">
+          <td><a v-link="{ path: '/sentences/' + token.sentence_id }">{{ token.citation }}</a></td>
+          <td class="is-text-right formatted-text" lang="{{ token.language }}">{{{ token.left }}}</td>
+          <td class="highlight is-text-centered" lang="{{ token.language }}">{{{ token.match }}}</td>
+          <td class="is-text-left formatted-text" lang="{{ token.language }}">{{{ token.right }}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</script>
+
 <script type="text/x-template" id="typeahead-template">
   <div class="typeahead">
     <div class="wrapper">
@@ -211,19 +327,155 @@
   </div>
 </script>
 
-<div id="app">
-  <i class="fa fa-spinner fa-spin fa-2x" v-if="loading"></i>
+<script type="text/x-template" id="lemma-view-template">
+  <div class="lemma-view">
+    <table class="table">
+      <tbody>
+        <tr>
+          <td>Form</td>
+          <td @dblclick="editable($event, 'form')">{{ lemma.form }}</td>
+        </tr>
 
-  <div class="ui five item labeled icon menu">
-    <a class="item" :href="'#!/morphology'">
-      <i class="sitemap icon"></i>
-      Morphology
-    </a>
-    <a class="item" :href="'#!/syntax'">
-      <i class="search icon"></i>
-      Syntax
-    </a>
+        <tr>
+          <td>Gloss</td>
+          <td @dblclick="editable($event, 'gloss')">{{ lemma.gloss }}</td>
+        </tr>
+
+        <tr><td>Part of speech</td><td>{{ part_of_speech }}</td></tr><!-- TODO -->
+        <tr><td>Language</td><td>{{ language }}</td></tr><!-- TODO -->
+
+        <tr>
+          <td>Foreign IDs</td>
+          <!-- TODO: A comma-separated list of key-value pairs that link the lemma to some external resource -->
+          <td @dblclick="editable($event, 'foreign_ids')">{{ lemma.foreign_ids }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table">
+      <tbody>
+        <tr v-for="token in tokens.tokens">
+          <td><a v-link="{ path: '/sentences/' + token.sentence_id }">{{ token.citation }}</a></td>
+          <td class="is-text-right formatted-text" lang="{{ token.language }}">{{{ token.left }}}</td>
+          <td class="highlight is-text-centered" lang="{{ token.language }}">{{{ token.match }}}</td>
+          <td class="is-text-left formatted-text" lang="{{ token.language }}">{{{ token.right }}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</script>
+
+<script type="text/x-template" id="dictionary-view-template">
+  <div class="dictionary-view">
+    <section>
+      <div class="control is-horizontal">
+        <div class="control-label">
+          <label class="label">Language</label>
+        </div>
+        <div class="control">
+          <select class="input" v-model="query_language">
+            <option value=""></option>
+            <option v-for="lang in languages" value="{{ $key }}">{{ lang }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="control is-horizontal">
+        <div class="control-label">
+          <label class="label">Lemma</label>
+        </div>
+        <div class="control">
+          <input class="input" type="text" v-model="query_form">
+        </div>
+      </div>
+
+      <div class="control is-horizontal">
+        <div class="control-label">
+          <label class="label">Part of speech</label>
+        </div>
+        <div class="control">
+          <select class="input" v-model="query_part_of_speech">
+            <option value=""></option>
+            <option v-for="pos in parts_of_speech" value="{{ $key }}">{{ pos.long }}</option>
+          </select>
+        </div>
+      </div>
+		</section>
+
+		<section>
+      <pagination :pagination="pagination" :callback="fetchData" :offset="0"></pagination>
+
+      <nav class="pagination">
+        <ul>
+          <li>
+            <a>1</a>
+          </li>
+          <li>
+            <span>...</span>
+          </li>
+          <li>
+            <a>45</a>
+          </li>
+          <li>
+            <a class="is-active">46</a>
+          </li>
+          <li>
+            <a>47</a>
+          </li>
+          <li>
+            <span>...</span>
+          </li>
+          <li>
+            <a>86</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="is-text-centered">
+        {{ count }} matches
+        <!-- %= page_entries_info @lemmata, entry_name: 'matches' % -->
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Lemma</th>
+            <th>Part of speech</th>
+            <th>Gloss</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="lemma in lemmata">
+            <td><a v-link="{ path: '/lemma/' + lemma.id }" lang="{{ lemma.language }}">{{ lemma.form }}</td>
+            <td>{{ parts_of_speech[lemma.part_of_speech].long }}</td>
+            <td>{{ lemma.gloss }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</script>
+
+<div id="app" class="columns">
+  <div class="column is-3">
+    <aside class="menu">
+      <p class="menu-label">Navigation</p>
+      <ul class="menu-list">
+        <li><a v-link-active v-link="{ path: '/dictionary', activeClass: 'is-active' }">Dictionary</a></li>
+        <li><a v-link-active v-link="{ path: '/search', activeClass: 'is-active' }">Search</a></li>
+      </ul>
+      <p class="menu-label">Annotation</p>
+      <ul class="menu-list">
+        <li><a v-link-active v-link="{ path: '/morphology', activeClass: 'is-active' }">Morphology</a></li>
+        <li><a v-link-active v-link="{ path: '/syntax',     activeClass: 'is-active' }">Syntax</a></li>
+      </ul>
+    </aside>
   </div>
 
-  <router-view keep-alive transition transition-mode="out-in"></router-view>
+  <div class="column">
+    <i class="fa fa-spinner fa-spin fa-2x" v-if="loading"></i>
+
+    <router-view keep-alive transition transition-mode="out-in"></router-view>
+  </div>
 </div>

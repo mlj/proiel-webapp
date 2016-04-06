@@ -17,6 +17,7 @@
 //= require vue
 //= require vue-resource
 //= require vue-router
+//= require shared
 //= require app/store
 //= require app/typeahead
 //= require app/morphology_editor
@@ -24,6 +25,9 @@
 //= require app/syntax_editor
 //= require app/editable
 //= require app/app
+//= require app/dictionary_view
+//= require app/lemma_view
+//= require app/search_view
 
 var authenticity_param;
 var authenticity_token;

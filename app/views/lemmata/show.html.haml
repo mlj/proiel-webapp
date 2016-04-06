@@ -15,10 +15,10 @@
           '#{l.gloss}'
         != button_to "Merge", :action => 'merge', :id => @lemma, :other_id => l.id
 
-- unless @lemma.notes.empty?
+- unless @notes.empty?
   %hr
   %h3.title Notes
-  != notes_summary @lemma.notes
+  != render partial: 'notes/summary', collection: @notes
 
 %hr
 %h3.title Semantic tags
@@ -39,3 +39,13 @@
       %th{colspan: 3}= "Match"
   %tbody
     != render :partial => 'annotations/annotation', :collection => @tokens
+
+- if is_reviewer? and !@lemma.audits.empty?
+  %hr
+  %h3.title History
+  != audits_summary @lemma.audits
+
+- unless @audits.empty?
+  %section.section
+    %h2.subtitle History
+    != render partial: 'audits/summary', collection: @audits

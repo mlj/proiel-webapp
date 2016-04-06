@@ -10,6 +10,15 @@ if (document.querySelector('#app')) {
     },
     '/morphology': {
       component: MorphologyEditor
+    },
+    '/lemma/:id': {
+      component: LemmaView
+    },
+    '/dictionary': {
+      component: DictionaryView
+    },
+    '/search': {
+      component: SearchView
     }
   });
 
