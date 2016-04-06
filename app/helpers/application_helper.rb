@@ -42,36 +42,6 @@ module ApplicationHelper
     current_user.try(:has_role?, :reader)
   end
 
-  def message(level, header, body = '')
-    content_tag(:div, content_tag(:b, header) + body, :id => level)
-  end
-
-  def _select_tag(name, value, option_tags, options = {}) #:nodoc:
-    if options[:include_blank]
-      options.delete(:include_blank)
-      if value.nil? or value == ''
-        select_tag name, "<option value='' selected='selected'></options>".html_safe + option_tags, options
-      else
-        select_tag name, "<option value=''></options>".html_safe + option_tags, options
-      end
-    else
-      select_tag name, option_tags, options
-    end
-  end
-
-  def _select_tag_db(name, model, value_field, value, options) #:nodoc:
-    option_tags = options_from_collection_for_select(model.find(:all), :id, value_field, value.to_i)
-    _select_tag name, value, option_tags, options
-  end
-
-  # Returns a select tag for sources.
-  #
-  # ==== Options
-  # +:include_blank+:: If +true+, includes an empty value first.
-  def source_select_tag(name, value, options = {})
-    _select_tag_db(name, Source, :citation, value, options)
-  end
-
   # Returns a radio button with a function as onclick handler.
   def radio_button_to_function(name, value, checked, *args, &block)
     html_options = args.extract_options!
@@ -155,13 +125,6 @@ module ApplicationHelper
   # +layer+.
   def layer_unless(condition, *args, &block)
     layer_if(!condition, *args, &block)
-  end
-
-  # Generates a link if the condition +condition+ is +true+, otherwise
-  # takes no action. The remaining arguments are the same as those
-  # for +link_to+.
-  def show_link_to_if(condition, *args)
-    condition ? link_to(*args) : ''
   end
 
   # Formats a token form with HTML language attributes.
