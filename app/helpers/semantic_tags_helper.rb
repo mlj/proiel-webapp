@@ -13,7 +13,7 @@ module SemanticTagsHelper
   def link_to_semantic_tag_taggable(taggable)
     case taggable
     when Token
-      link_to_token(taggable)
+      link_to "Token #{taggable.id}", taggable.sentence
     when Lemma
       link_to_lemma(taggable)
     else

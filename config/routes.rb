@@ -27,7 +27,7 @@ Proiel::Application.routes.draw do
     end
   end
 
-  resources :tokens, :only => [:index, :show, :edit, :update] do
+  resources :tokens, :only => [:index, :edit, :update] do
     member do
       get :dependency_alignment_group
     end

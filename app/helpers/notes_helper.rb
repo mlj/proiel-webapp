@@ -20,7 +20,7 @@ module NotesHelper
   def link_to_notable(notable)
     case notable
     when Token
-      link_to_token(notable)
+      link_to "Token #{notable.id}", notable.sentence
     when Sentence
       link_to_sentence(notable)
     when Lemma

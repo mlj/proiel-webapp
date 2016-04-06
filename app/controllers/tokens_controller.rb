@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2009-2016 University of Oslo
+# Copyright 2009-2016 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -71,7 +71,7 @@ class TokensController < ApplicationController
     @token = Token.find(params[:id])
     @token.update_attributes(params[:token])
 
-    respond_with @token
+    respond_with @token.sentence
   end
 
   def dependency_alignment_group

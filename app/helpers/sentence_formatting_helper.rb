@@ -26,8 +26,7 @@ module SentenceFormattingHelper
   # <tt>:highlight</tt> -- A token or sentence object or an array of such
   # objects to highlight.
   #
-  # <tt>:link_to</tt> -- If <tt>:tokens</tt>, will link to tokens. If
-  # <tt>:sentences</tt>, will link to sentences.
+  # <tt>:link_to</tt> -- If true, will link to sentences.
   #
   # <tt>:single_line</tt> -- Ignore characters that indicate linefeeds and
   # paragraph breaks.
@@ -147,8 +146,7 @@ module SentenceFormattingHelper
       s = ''
       s += content_tag :span, before, presentation_attributes unless before.empty?
 
-      case options[:link_to]
-      when :tokens, :sentences
+      if options[:link_to]
         s += link_to token.form_or_pro, object_url, form_attributes
       else
         s += content_tag :span, token.form_or_pro, form_attributes
@@ -224,15 +222,12 @@ module SentenceFormattingHelper
 
       extra_attributes = block ? block.call(token) : nil
 
-      case options[:link_to]
-      when :tokens
-        t << FormattedToken.new(token, extra_attributes, url_for(token))
-      when :sentences
+      if options[:link_to]
         t << FormattedToken.new(token, extra_attributes, url_for(token.sentence))
       else
         t << FormattedToken.new(token, extra_attributes)
       end
-      t << FormattedReference.new(:token_number, token.token_number, url_for(token))
+      t << FormattedReference.new(:token_number, token.token_number)
     end
 
     t.compact

@@ -21,7 +21,7 @@ module AuditsHelper
       when Sentence
         link_to_sentence(auditable)
       when Token
-        link_to_token(auditable)
+        link_to "Token #{auditable.id}", auditable.sentence
       when Lemma
         link_to_lemma(auditable)
       else

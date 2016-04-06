@@ -14,7 +14,7 @@
     - if is_annotator?
       != link_to " (Change tokenization or sentence division)", edit_sentence_tokenizations_path(@sentence), :method => :get
 
-  != format_sentence @sentence_window, :citations => true, :sentence_numbers => true, :highlight => @sentence, :sentence_breaks => true, :link_to => :tokens
+  != format_sentence @sentence_window, citations: true, sentence_numbers: true, highlight: @sentence, sentence_breaks: true, link_to: true
 
   .section-heading
     %h1 Annotation status
@@ -78,3 +78,20 @@
     - @sentence.tokens.each do |token|
       - unless token.audits.empty?
         != render :partial => 'audits/summary', :collection => token.audits
+
+  %h2 Semantic tags
+  - @sentence.tokens.each do |t|
+    - unless t.semantic_tags.empty?
+      != semantic_tags_summary t.semantic_tags
+    - unless t.outgoing_semantic_relations.empty?
+      != semantic_relations_summary t.outgoing_semantic_relations
+    - unless t.incoming_semantic_relations.empty?
+      != semantic_relations_summary t.incoming_semantic_relations
+
+  %h2 Foreign keys
+  %table
+    - @sentence.tokens.each do |t|
+      - unless t.foreign_ids.blank?
+        %tr
+          %td= t.id
+          %td.tag= t.foreign_ids

@@ -12,7 +12,7 @@
     - if is_annotator?
       != link_to " (Change tokenization or sentence division)", edit_sentence_tokenizations_path(@sentence), :method => :get
 
-  != format_sentence @sentence_window, :citations => true, :sentence_numbers => true, :highlight => @sentence, :sentence_breaks => true, :link_to => :sentences
+  != format_sentence @sentence_window, citations: true, sentence_numbers: true, highlight: @sentence, sentence_breaks: true, link_to: true
 
   .section-heading
     %h1 Morphology

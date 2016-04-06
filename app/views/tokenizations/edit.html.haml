@@ -20,6 +20,7 @@
       %tr
         %td
           != "#{t.presentation_before}<span class=\"w\">#{t.form}</span>#{t.presentation_after}"
+          != link_to 'Edit token', edit_token_url(t)
         %td.button-row
           - if t.is_splitable?
             != button_to "Split token", { :action => "update", :op => 'split', :op_id => t.id }, "data-remote" => true, "data-disable-with" => "Splitting...", :method => :put

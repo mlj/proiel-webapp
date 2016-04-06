@@ -96,11 +96,6 @@ module ApplicationHelper
     "<span class='relation'><abbr title='#{relation.summary.capitalize}'>#{relation.tag}</abbr></span>"
   end
 
-  # Generates a human readable representation of a dependency.
-  def readable_dependency(relation, head)
-    '(' + readable_relation(relation) + (head ? ", #{head}" : '') + ')'
-  end
-
   # Returns links to external sites for a sentence.
   def external_text_links(sentence)
     [BiblosExternalLinkMapper].map do |l|
