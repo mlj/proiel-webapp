@@ -1,6 +1,10 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
+1.9.1   12/04/2016
+
+  - Support for <sup>, <sub> and <i> in token forms and presentation strings.
+
 1.9.0   05/04/2016
 
   - Under-the-hood changes to ease transition to upcoming 2.0 version.
