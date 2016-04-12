@@ -52,6 +52,7 @@ end
 require 'presentation'
 require 'ordering'
 require 'blankable'
+require 'token_text'
 
 require 'proiel/dependency_graph'
 require 'proiel/tagger'

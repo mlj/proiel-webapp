@@ -156,15 +156,7 @@ module SentenceFormattingHelper
 
       s += content_tag :span, after, presentation_attributes unless after.empty?
 
-      unless options[:single_line]
-        s.gsub!("\u{2028}", '<br>')
-        s.gsub!("\u{2029}", '<p>')
-      else
-        s.gsub!("\u{2028}", ' ')
-        s.gsub!("\u{2029}", ' ')
-      end
-
-      s.squish
+      TokenText.token_form_as_html(s, single_line: options[:single_line]).squish
     end
   end
 
