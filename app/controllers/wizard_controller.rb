@@ -12,14 +12,6 @@ class WizardController < ApplicationController
     end
   end
 
-  # FIXME: duplicated from MorphtagsController
-  def auto_complete_for_morphtags_lemma
-    @transliterations, c = LanguageTag.find_lemma_completions(params[:morphtags][:language], params[:morphtags][:lemma])
-    @completions = c.map(&:export_form).sort.uniq
-
-    render :partial => "transliterations/input"
-  end
-
   def edit_dependencies
   end
 

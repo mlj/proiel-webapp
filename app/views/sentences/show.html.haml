@@ -34,14 +34,14 @@
   %hr
   %h3.title Morphology
   - if is_annotator?
-    != link_to "(Edit)", edit_sentence_morphtags_url(@sentence)
+    != link_to "(Edit)", sentence_url(@sentence) + '/annotation#!/morphology'
   %p
     != render 'morphtags/show'
 
   %hr
   %h3.title Syntax
   - if is_annotator?
-    != link_to "(Edit)", edit_sentence_dependencies_url(@sentence)
+    != link_to "(Edit)", sentence_url(@sentence) + '/annotation#!/syntax'
   %p
     != render 'dependencies/show'
 

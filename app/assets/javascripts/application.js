@@ -1,17 +1,9 @@
-// This is a manifest file that'll be compiled into including all the files listed below.
-// Add new JavaScript/Coffee code in separate files in this directory and they'll automatically
-// be included in the compiled file accessible from http://example.com/assets/application.js
-// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
-// the compiled file.
-
-//= require underscore
 //= require vendor/jquery.min
 //= require vendor/jquery-ui.min
 //= require vendor/jquery_ujs
 //= require noconflict
 //= require vendor/prototype
 //= require vendor/scriptaculous
-//= require utils
 //= require vendor/effects
 //= require vendor/dragdrop
 //= require vendor/controls
@@ -21,9 +13,16 @@
 //= require info_statuses
 //= require alignment
 //= require dependency_alignment
+//= require underscore
 //= require vue
 //= require vue-resource
 //= require vue-router
+//= require app/store
+//= require app/typeahead
+//= require app/morphology_editor
+//= require app/tree
+//= require app/syntax_editor
+//= require app/app
 
 var authenticity_param;
 var authenticity_token;

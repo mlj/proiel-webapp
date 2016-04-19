@@ -346,61 +346,71 @@ h3
     margin-bottom: 0em
 
 // Morphology editing
+.morphology-view
+  .form
+    font-style: italic
+    font-weight: bold
+  .msd
+    font-size: small
+  .lemma
+    font-style: italic
+  .gloss
+    font-style: italic
 
-.morphtags
-  .bad-field-value
-    border: red 2px solid
-
-  .item
+.morphology-view.interlinear
+  table, tr
+    display: inline
+  tr
     float: left
-    padding: .15em .15em .15em .15em
-    margin-left: .10em
-    margin-right: .10em
-    margin-bottom: 1em
-    text-align: center
-    border: white 1px solid
-
-  .form, .pos, .morphology
+    margin: 0.5em 0.1em 0.5em 0.1em
+    padding: 0.15em
+    border: 1px solid white
+    background-color: white // override from above
+  tr.selected
+    background-color: #eeeeee
+    border: #c0c0c0 1px solid
+  td
+    display: block
     margin: 0em
     padding: 0em 0.5em
     text-align: center
 
-  .form
-    font-weight: bold
+  tr[data-status="annotated"]
+    color: green
+  tr[data-status="unambiguous"]
+    color: orange
+  tr[data-status="ambiguous"]
+    color: red
+  td.form
+    color: black
 
-  .morphology
-    font-size: small
+.morphology-view.colour-coded
+  tr
+    border-bottom: 3px solid white
+  tr[data-major-pos="N"]
+    border-bottom-color: red
+  tr[data-major-pos="V"]
+    border-bottom-color: green
+  tr[data-major-pos="C"]
+    border-bottom-color: blue
+  tr[data-major-pos="D"]
+    border-bottom-color: yellow
+  tr[data-major-pos="P"]
+    border-bottom-color: purple
 
-  .selected
-    background-color: #eeeeee
-    border: #c0c0c0 1px solid
-
-  .validation-error
+  .todo-bad-field-value
+    border: red 2px solid
+  .todo-validation-error
     border: red 2px solid
 
-  #palette
-    text-align: left
-    padding: 0.5em 0.5em 0.5em 0.5em
-    margin-bottom: 1em
-
-  br
-    clear: both
-
-  .mannotated
-    color: green
-  .munambiguous
-    color: orange
-  .mambiguous
-    color: red
-  .mannotated-bg
-    background-color: green
-  .munambiguous-bg
-    background-color: orange
-  .mambiguous-bg
-    background-color: red
+.mannotated-bg
+  background-color: green
+.munambiguous-bg
+  background-color: orange
+.mambiguous-bg
+  background-color: red
 
 /* Wizard */
-
 .button-row
   margin-top: 2em
   text-align: center
@@ -422,3 +432,35 @@ div.tokenization span.w
   border: 1px solid grey
   padding: .25em .25em .25em .25em
   margin: 0
+
+// Typeahead
+.typeahead
+  .wrapper
+    position: relative
+    i.fa
+      position: absolute
+      top: 10px
+      left: -50px
+  ul
+    position: absolute
+    padding: 0
+    margin-top: 8px
+    background-color: #fff
+    list-style: none
+    z-index: 1000
+  li
+    padding: 10px 16px
+    border-bottom: 1px solid #ccc
+    cursor: pointer
+  span
+    display: block
+    color: #2c3e50
+  .active
+    background-color: #3aa373
+    span
+      color: white
+  .form
+    font-style: normal
+    font-weight: bold
+  .gloss
+    font-style: italic

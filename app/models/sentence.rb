@@ -224,37 +224,31 @@ class Sentence < ActiveRecord::Base
     end
   end
 
-  def syntactic_annotation_with_tokens(overlaid_features = {})
-    d = {}
-    d[:tokens] = Hash[*tokens.takes_syntax.collect do |token|
-      mh = token.morph_features ? token.morph_features.morphology_to_hash : {}
+  def structure
+    xyz = tokens.takes_syntax.map do |token|
+      mf = token.morph_features
+      mh = mf ? mf.morphology_to_hash : {}
 
       [token.id, {
-        # FIXME: refactor
-        :morph_features => mh.merge({
-          :language => language.tag,
-          :finite => ['i', 's', 'm', 'o'].include?(mh[:mood]),
-          :form => token.form,
-          :lemma => token.lemma ? token.lemma.lemma : nil,
-          :pos => token.morph_features ? token.morph_features.pos_s : nil,
+        id: token.id,
+        relation_tag: token.relation_tag,
+        morph_features: mh.merge({
+          language: language.tag,
+          finite: ['i', 's', 'm', 'o'].include?(mh[:mood]),
+          form: token.form,
+          lemma: token.lemma ? token.lemma.lemma : nil,
+          pos: mf ? mf.pos_s : nil,
         }),
-        :empty => token.is_empty? ? token.empty_token_sort : false,
-        :form => TokenText.token_form_as_html(token.form),
-        :token_number => token.token_number
-      } ]
-    end.flatten]
+        empty: token.is_empty? ? token.empty_token_sort : false,
+        form: TokenText.token_form_as_html(token.form),
+        token_number: token.token_number
+      }]
+    end.to_h
 
-    d[:structure] = (overlaid_features and ActiveSupport::JSON.decode(overlaid_features)) || (has_dependency_annotation? ? dependency_graph.to_h : {})
-
-    d
-  end
-
-  def morphological_annotation(overlaid_features = {})
-    tokens.takes_morphology.map do |token|
-      suggestions = token.guess_morphology!(overlaid_features["morph-features-#{token.id}".to_sym]) #FIXME
-
-      [token, suggestions]
-    end
+    {
+      tokens: xyz,
+      tree: has_dependency_annotation? ? dependency_graph.to_h : {},
+    }
   end
 
   # Returns the maximum token number in the sentence.

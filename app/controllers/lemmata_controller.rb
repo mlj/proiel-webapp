@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2009-2016 University of Oslo
+# Copyright 2009-2016 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -79,5 +79,26 @@ class LemmataController < ApplicationController
     @lemmata = @search.result.page(current_page)
 
     respond_with @dictionary
+  end
+
+  # Returns potential renderings of transliterated lemmata.
+  def autocomplete
+    form, language = params[:form] || '', params[:language]
+
+    if form.empty?
+      # Prevent look-up of all possible completions
+      @transliterations = []
+      @completions = []
+    else
+      @transliterations, @completions = LanguageTag.find_lemma_completions(language, form)
+    end
+
+    a = []
+    @transliterations.each { |t| a << { form: t, gloss: nil, exists: false } }
+    @completions.sort_by { |l| l.form }.uniq.each { |t| a << { form: t.form, gloss: t.gloss, exists: true } }
+
+    respond_to do |format|
+      format.json { render json: a }
+    end
   end
 end

@@ -10,11 +10,6 @@ module LayoutHelper
     end
   end
 
-  # Inserts javascript files in the layout.
-  def javascript(*args)
-    content_for(:head) { javascript_include_tag(*args) }
-  end
-
   def message_block(options = {})
     flash_messages = {}
 

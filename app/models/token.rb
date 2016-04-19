@@ -527,7 +527,7 @@ class Token < ActiveRecord::Base
   # a list of alternative suggestions in order of decreasing probability.
   # To check if the guesser altered the features of the token, check the
   # value of +changed?+.
-  def guess_morphology!(overlaid_features = nil)
+  def guesses
     # Guess morphology using both +morph_features+ and
     # +source_morph_features+. The only way of making use of
     # +source_morph_features+ is to include them here as there is no
@@ -543,17 +543,7 @@ class Token < ActiveRecord::Base
     # priority: 1) Any value set by the caller, 2) any value already set on
     # the token. +source_morphology_tag+ only has an effect on the guessing of
     # morphology.
-    new_morph_features = if overlaid_features
-                           # FIXME
-                           x, y, z, w = overlaid_features.split(',')
-                           MorphFeatures.new([x, y, z].join(','), w)
-                         elsif morph_features
-                           morph_features
-                         elsif pick
-                           pick
-                         else
-                           nil
-                         end
+    new_morph_features = morph_features || pick || nil
 
     # FIXME: find a way of unifying this with morph_features=() ideally by
     # avoiding the implicit saving of objects.
@@ -565,8 +555,19 @@ class Token < ActiveRecord::Base
       self.lemma = nil
     end
 
-    # Return all suggestions but strip off the probabilities.
-    suggestions.map(&:first)
+    suggestions.map do |guess, probability|
+      {
+        probability: probability,
+        lemma: {
+          id: guess.lemma.id,
+          gloss: guess.lemma.gloss,
+          language_tag: guess.lemma.language_tag,
+          part_of_speech_tag: guess.lemma.part_of_speech_tag,
+          form: guess.lemma.form
+        },
+        msd: guess.morphology_to_hash
+      }
+    end
   end
 
   def sem_tags_to_hash
@@ -692,5 +693,13 @@ class Token < ActiveRecord::Base
     else
       token_alignment.sentence.source_division.source
     end
+  end
+
+  def msd
+    morph_features ? morph_features.morphology_to_hash : {}
+  end
+
+  def slashes
+    slash_out_edges.map { |s| { relation_tag: s.relation_tag, target_id: s.slashee_id } }
   end
 end

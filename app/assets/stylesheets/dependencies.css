@@ -4,16 +4,16 @@ div.dependencies-image { text-align: center; }
 .dependencies .head-dependent-relation-bg { background-color: orange; }
 .dependencies .slash-relation-bg { background-color: blue; }
 
-div#words {
+div.words {
   border: 1px solid #ccc;
   text-align: center;
   padding: 3px;
   margin: 1em;
 }
-div#words input { display: none; }
-div#words input + span { padding: .2em .2em .2em .2em; }
-div#words input.consumed + span { background: #CCCCFF; color: black; }
-div#words input:checked + span { background: orange; color: white; }
+div.words input { display: none; }
+div.words input + span { padding: .2em .2em .2em .2em; }
+div.words input.consumed + span { background: #CCCCFF; color: black; }
+div.words input:checked + span { background: orange; color: white; }
 
 .token-number {
   vertical-align: sub;
@@ -22,15 +22,11 @@ div#words input:checked + span { background: orange; color: white; }
   color: blue;
 }
 
-#cut-buffer { display: none; }
-
-div#palette {
-  margin: 1em;
-  line-height: 2.5em;
-}
-div#palette input + span { -moz-border-radius: 6px; border: 1px solid #CAD8F3; background: #DEE7F8; padding: 6px; color: black; }
-div#palette input:checked + span { border-color: #ccc; background: #9999ff; color: white; }
-div#palette input:disabled + span { border-color: #ccc; background: #ccc; color: white; }
+.relation-palette { margin: 1em; line-height: 2.5em; }
+.relation-palette input { display: none; }
+.relation-palette input + span { -moz-border-radius: 6px; border: 1px solid #CAD8F3; background: #DEE7F8; padding: 6px; color: black; }
+.relation-palette input:checked + span { border-color: #ccc; background: #9999ff; color: white; }
+.relation-palette input:disabled + span { border-color: #ccc; background: #ccc; color: white; }
 
 ul.tree, ul.tree ul { list-style-type: none; background: image_url("vline.png") repeat-y; margin: 0; padding: 0; } 
 ul.tree ul { margin-left: 10px; } 
@@ -38,10 +34,4 @@ ul.tree li { margin: 0; padding: 0 12px; line-height: 20px; background: image_ur
 ul.tree li:last-child { background: #fff image_url("lastnode.png") no-repeat; }
 ul.tree .selected { background: #ccccff; }
 
-label {
-  transition: background-color 0.5s ease;
-}
-
-.highlight-error {
-  background-color: red;
-}
+label { transition: background-color 0.5s ease; }

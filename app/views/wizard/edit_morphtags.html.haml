@@ -3,8 +3,8 @@
 != " (#{remaining_assigned_sentences} remaining)"
 != external_text_links @sentence
 
-!= form_tag({ :controller => 'morphtags', :action => 'update', :sentence_id => @sentence, :wizard => true}, :id => "morphtag-form", :method => :put) do
-  != render 'morphtags/form'
-  != submit_tag 'Save'
+#morphology-view.interlinear{"data-sentence-id": @sentence.id}
+  != render 'morphtags/component'
 
-!= button_to 'Skip', :action => 'next_sentence'
+!= button_to 'Continue to syntax', action: 'edit_dependencies'
+!= button_to 'Skip this sentence', action: 'next_sentence'

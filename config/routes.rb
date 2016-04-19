@@ -22,6 +22,10 @@ Rails.application.routes.draw do
   end
 
   resources :lemmata, :only => [:index, :show, :edit, :update] do
+    collection do
+      get :autocomplete
+    end
+
     member do
       post :merge
     end
@@ -43,17 +47,10 @@ Rails.application.routes.draw do
       get :flag_as_not_reviewed # FIXME: should be post
       get :flag_as_reviewed     # FIXME: should be post
       get :export
+      get :annotation
     end
 
     resource :dependency_alignments, :only => [:show, :edit, :update]
-
-    resource :morphtags, :only => [:edit, :update] do
-      member do
-        post :auto_complete_for_morphtags_lemma
-      end
-    end
-
-    resource :dependencies, :only => [:edit, :update]
 
     resource :info_status, :only => [:edit, :update] do
       collection do
@@ -68,6 +65,8 @@ Rails.application.routes.draw do
   resources :notes, :only => [:show, :edit, :update, :destroy]
 
   resources :semantic_tags, :only => [:index, :show]
+
+  resources :schemas, only: [:show]
 
   # Wizard
   get '/wizard/:action', to: 'wizard#:action'

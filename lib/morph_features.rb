@@ -151,6 +151,11 @@ class MorphFeatures
     morphology_s.sub(/-+$/, '')
   end
 
+  MORPHOLOGY_ALL_SUMMARIES = YAML.load_file(Rails.root.join(Proiel::Application.config.tagset_file_path, 'morphology.yml')).inject({}) do |m, v|
+    m[v[0]] = v[1].inject({}) { |m2, v2| m2[v2[0]] = v2[1]; m2 }
+    m
+  end
+
   MORPHOLOGY_SUMMARIES = YAML.load_file(Rails.root.join(Proiel::Application.config.tagset_file_path, 'morphology.yml')).inject({}) do |m, v|
     m[v[0]] = v[1].inject({}) { |m2, v2| m2[v2[0]] = v2[1]["summary"]; m2 }
     m
