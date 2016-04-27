@@ -11,7 +11,7 @@
   - if @token.form
     %tr
       %td Form
-      %td.foreign-word
+      %td
         != format_token_form @token
   - if @token.is_morphtaggable? and @token.morph_features
     %tr
@@ -23,7 +23,7 @@
     %tr
       %td Lemma
       - if @token.lemma
-        %td.foreign-word!=link_to_lemma @token.lemma
+        %td!=link_to_lemma @token.lemma
       - else
         &nbsp;
   - if @token.relation

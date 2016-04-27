@@ -3,7 +3,7 @@
     #tokens
       - @sentence.tokens.takes_morphology.each do |token|
         .item{:id => "item-#{token.id}"}
-          .form!= format_token_form token
+          .form!= format_token_form(token)
           - if token.morph_features
             .morph-lemma-tags
               .pos= token.morph_features.pos_summary :abbreviated => true

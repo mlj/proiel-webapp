@@ -19,7 +19,7 @@
     - @sentence.tokens.visible.each_with_index do |t, i|
       %tr
         %td
-          != "#{t.presentation_before}<span class=\"w\">#{t.form}</span>#{t.presentation_after}"
+          != "#{t.presentation_before}<span class=\"w\">#{TokenText.token_form_as_html(t.form)}</span>#{t.presentation_after}"
         %td.button-row
           - if t.is_splitable?
             != button_to "Split token", { :action => "update", :op => 'split', :op_id => t.id }, "data-remote" => true, "data-disable-with" => "Splitting...", :method => :put
