@@ -4,11 +4,11 @@ digraph G {
   root [label="",shape=none];
   <% @tokens.select { |t| t.empty_token_sort != 'P' }.each do |token| %>
     <% if token.conjunction? %>
-      <%= node token.id, token.form || token.empty_token_sort, :shape => :none %>
+      <%= node token.id, TokenText.token_form_as_html(token.form) || token.empty_token_sort, shape: :none %>
     <% elsif token.is_empty? %>
       <%= node token.id, token.empty_token_sort, :shape => :none %>
     <% else %>
-      <%= node token.id, token.form, :shape => :none %>
+      <%= node token.id, TokenText.token_form_as_html(token.form), shape: :none %>
     <% end %>
 
     <% if token.head and token.relation %>
