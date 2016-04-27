@@ -240,7 +240,7 @@ class Sentence < ActiveRecord::Base
           :pos => token.morph_features ? token.morph_features.pos_s : nil,
         }),
         :empty => token.is_empty? ? token.empty_token_sort : false,
-        :form => token.form,
+        :form => TokenText.token_form_as_html(token.form),
         :token_number => token.token_number
       } ]
     end.flatten]
