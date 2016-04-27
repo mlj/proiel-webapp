@@ -20,7 +20,8 @@ module TokenText
   PUA_CHARACTER_REGEXP = Regexp.union(PUA_CHARACTERS.keys)
 
   def self.token_form_as_html(token_form, single_line: false)
-    (single_line ? token_form.gsub(/[\u{2028}\u{2029}]+/, ' ') : token_form).
+    escaped_token_form = ERB::Util.html_escape(token_form)
+    (single_line ? escaped_token_form.gsub(/[\u{2028}\u{2029}]+/, ' ') : escaped_token_form).
       gsub(PUA_CHARACTER_REGEXP, PUA_CHARACTERS)
   end
 end

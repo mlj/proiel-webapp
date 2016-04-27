@@ -147,16 +147,17 @@ module SentenceFormattingHelper
       s = ''
       s += content_tag :span, before, presentation_attributes unless before.empty?
 
+      form = TokenText.token_form_as_html(token.form_or_pro, single_line: options[:single_line]).html_safe
+
       case options[:link_to]
       when :tokens, :sentences
-        s += link_to token.form_or_pro, object_url, form_attributes
+        s += link_to form, object_url, form_attributes
       else
-        s += content_tag :span, token.form_or_pro, form_attributes
+        s += content_tag :span, form, form_attributes
       end
 
       s += content_tag :span, after, presentation_attributes unless after.empty?
-
-      TokenText.token_form_as_html(s, single_line: options[:single_line]).squish
+      s.squish
     end
   end
 
