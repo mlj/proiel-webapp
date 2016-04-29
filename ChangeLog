@@ -13,6 +13,13 @@ proiel-webapp. It does not list all changes; see the git history for that.
     introduces another scheduled job that must run regularly to keep the cache
     synchronised with changes in the database.
 
+1.8.2   29/04/2016
+
+  - Added workaround for sentences that are flagged as annotated or reviewed
+    by lack a valid annotated_by or reviewed_by. This happens, for example, when
+    texts are exported to PROIEL XML and re-imported, since PROIEL XML does not
+    include any user information.
+
 1.8.1   15/03/2016
 
   - Fixed incorrect removal of parts of the export job.
