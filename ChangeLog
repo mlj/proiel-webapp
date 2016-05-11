@@ -1,6 +1,9 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
+  - Updated ISO 639-2 language tables. This adds support for language codes
+    introduced since 2013, among which is Old Lithuanian (olt).
+
 1.9.1   12/04/2016
 
   - Support for <sup>, <sub> and <i> in token forms and presentation strings.
