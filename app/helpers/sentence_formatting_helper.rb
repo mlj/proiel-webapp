@@ -145,7 +145,7 @@ module SentenceFormattingHelper
       after = token.all_presentation_after
 
       s = ''
-      s += content_tag :span, before, presentation_attributes unless before.empty?
+      s += content_tag :span, TokenText.token_form_as_html(before, single_line: options[:single_line]).html_safe, presentation_attributes unless before.empty?
 
       form = TokenText.token_form_as_html(token.form_or_pro, single_line: options[:single_line]).html_safe
 
@@ -156,7 +156,7 @@ module SentenceFormattingHelper
         s += content_tag :span, form, form_attributes
       end
 
-      s += content_tag :span, after, presentation_attributes unless after.empty?
+      s += content_tag :span, TokenText.token_form_as_html(after, single_line: options[:single_line]).html_safe, presentation_attributes unless after.empty?
       s.squish
     end
   end
