@@ -5,11 +5,11 @@ digraph G {
 
   <% @tokens.each do |token| %>
     <% if token.conjunction? %>
-      <%= node token.id, token.form || token.empty_token_sort, :shape => :none %>
+      <%= node token.id, TokenText.token_form_as_html(token.form) || token.empty_token_sort, shape: :none %>
     <% elsif token.is_empty? %>
       <%= node token.id, token.empty_token_sort, :shape => :none %>
     <% else %>
-      <%= node token.id, [token.form, token.lemma.try { |s| "(#{s.export_form})" }, token.morph_features.try { |s| s.pos_summary(:abbreviated => true) }].join('\n'), :shape => :none %>
+      <%= node token.id, [TokenText.token_form_as_html(token.form), token.lemma.try { |s| " (#{s.export_form})" }, token.morph_features.try { |s| s.pos_summary(:abbreviated => true) }].join(' '), :shape => :none %>
     <% end %>
 
     <% if token.head and token.relation %>

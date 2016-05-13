@@ -86,18 +86,25 @@ class GraphvizVisualization
 
   # Creates a node with identifier +identifier+.
   def node(identifier, label = '', options = {})
-    attrs = { :label => label.gsub('"', '\\"') }.merge(options)
+    attrs = { label: label }.merge(options)
     "#{identifier} [#{join_attributes(attrs)}];"
   end
 
   # Creates an edge from identifier +identifier1+ to identifier
   # +identifier2+.
   def edge(identifier1, identifier2, label = '', options = {})
-    attrs = { :label => label.gsub('"', '\\"') }.merge(options)
+    attrs = { label: label }.merge(options)
     "#{identifier1} -> #{identifier2} [#{join_attributes(attrs)}];"
   end
 
   def join_attributes(attrs)
-    attrs.collect { |attr, value| "#{attr}=\"#{value}\"" }.join(',')
+    attrs.collect do |attr, value|
+      case attr
+      when :label
+        "#{attr}=<#{value}>"
+      else
+        "#{attr}=\"#{value.to_s.gsub('"', '\\"')}\""
+      end
+    end.join(',')
   end
 end

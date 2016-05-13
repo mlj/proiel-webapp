@@ -19,7 +19,7 @@
     - @sentence.tokens.visible.each_with_index do |t, i|
       %tr
         %td
-          != "#{t.presentation_before}<span class=\"w\">#{t.form}</span>#{t.presentation_after}"
+          != "#{t.presentation_before}<span class=\"w\">#{TokenText.token_form_as_html(t.form)}</span>#{t.presentation_after}"
           != link_to 'Edit token', edit_token_url(t)
         %td.button-row
           - if t.is_splitable?

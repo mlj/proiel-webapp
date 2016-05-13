@@ -1,6 +1,13 @@
 This is a history of changes that affect users and maintainers of
 proiel-webapp. It does not list all changes; see the git history for that.
 
+  - Updated ISO 639-2 language tables. This adds support for language codes
+    introduced since 2013, among which is Old Lithuanian (olt).
+
+1.9.1   12/04/2016
+
+  - Support for <sup>, <sub> and <i> in token forms and presentation strings.
+
 1.9.0   05/04/2016
 
   - Under-the-hood changes to ease transition to upcoming 2.0 version.
@@ -8,6 +15,13 @@ proiel-webapp. It does not list all changes; see the git history for that.
   - Added caching of frequently computed source division values. This
     introduces another scheduled job that must run regularly to keep the cache
     synchronised with changes in the database.
+
+1.8.2   29/04/2016
+
+  - Added workaround for sentences that are flagged as annotated or reviewed
+    by lack a valid annotated_by or reviewed_by. This happens, for example, when
+    texts are exported to PROIEL XML and re-imported, since PROIEL XML does not
+    include any user information.
 
 1.8.1   15/03/2016
 

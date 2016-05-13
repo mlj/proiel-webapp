@@ -129,7 +129,7 @@ module ApplicationHelper
 
   # Formats a token form with HTML language attributes.
   def format_token_form(token)
-    content_tag(:span, token.form, :lang => token.language.to_s)
+    content_tag(:span, TokenText.token_form_as_html(token.form).html_safe, lang: token.language.to_s)
   end
 
   # Creates resource links for an object. +actions+ contains a list of

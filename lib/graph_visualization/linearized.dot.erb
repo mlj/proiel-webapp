@@ -30,7 +30,7 @@ digraph G {
     rank = same;
     WORDS [label=""];
     <% @tokens.select { |t| t.empty_token_sort != 'P' }.reject { |t| t.is_empty? }.sort_by { |t| t.token_number }.each do |t| %>
-      <%= node "f#{t.id}", t.form %>
+      <%= node "f#{t.id}", TokenText.token_form_as_html(t.form) %>
     <% end %>
   }
 
