@@ -47,7 +47,7 @@ module Proiel
         options[:sem_tags] = true if @options[:semantic_tags]
 
         # Find sources and iterate them
-        sources = @options[:id] ? Source.find_all_by_id(@options[:id]) : Source.all
+        sources = @options[:id] ? Source.where(id: @options[:id]) : Source.all
 
         sources.each do |source|
           file_name = File.join(@export_directory, "#{source.human_readable_id}.xml")

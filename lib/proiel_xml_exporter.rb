@@ -1,9 +1,8 @@
-# encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
-# Copyright 2010, 2011, 2012 Dag Haug
+# Copyright 2007-2016 University of Oslo
+# Copyright 2007-2016 Marius L. Jøhndal
+# Copyright 2010-2012 Dag Haug
 #
 # This file is part of the PROIEL web application.
 #
@@ -83,7 +82,7 @@ class PROIELXMLExporter
     end
   end
 
-  CURRENT_SCHEMA_VERSION = '2.0'
+  CURRENT_SCHEMA_VERSION = '2.1'
 
   def write_toplevel!(file)
     builder = Builder::XmlMarkup.new(:target => file, :indent => 2)
@@ -126,7 +125,17 @@ class PROIELXMLExporter
   end
 
   def write_source!(builder, s)
-    builder.source(id: s.human_readable_id, language: s.language_tag) do
+    attrs = {
+      id: s.human_readable_id,
+      language: s.language_tag,
+    }
+
+    # If any of the divs, sentences or tokens have an alignment ID set, we
+    # need to identify the source of those alignments on the source element.
+    alignment_id = s.inferred_aligned_source.code
+    attrs[:'alignment-id'] = alignment_id unless alignment_id.nil?
+
+    builder.source(attrs) do
       builder.title s.title
       builder.author s.author unless s.author.blank?
       builder.tag!('citation-part', s.citation_part)
@@ -141,7 +150,9 @@ class PROIELXMLExporter
   def write_source_division!(builder, sd)
     attrs = pull_features(sd,
                           [],
-                          %w(presentation_before presentation_after))
+                          %w(presentation_before presentation_after aligned_source_division_id))
+
+    rename_feature!(attrs, :aligned_source_division_id, :alignment_id)
 
     builder.div(attrs) do
       builder.title sd.title
@@ -153,7 +164,12 @@ class PROIELXMLExporter
   def write_sentence!(builder, s)
     attrs = pull_features(s,
                           %w(id status),
-                          %w(presentation_before presentation_after))
+                          %w(presentation_before presentation_after sentence_alignment_id
+                             annotated_at reviewed_at))
+
+    attrs[:'alignment-id'] = s.sentence_alignment_id unless s.sentence_alignment_id.nil?
+    attrs[:'annotated-by'] = s.annotator.login if s.annotator
+    attrs[:'reviewed-by'] = s.reviewer.login if s.reviewer
 
     builder.sentence(attrs) do
       yield builder
@@ -163,7 +179,7 @@ class PROIELXMLExporter
   def write_token!(builder, t)
     mandatory_features = %w(id)
     optional_features = %w(citation_part lemma part_of_speech morphology head_id relation
-                           antecedent_id information_status contrast_group)
+                           antecedent_id information_status contrast_group token_alignment_id)
 
     if t.empty_token_sort.blank?
       mandatory_features << :form
@@ -175,6 +191,8 @@ class PROIELXMLExporter
 
     attrs = pull_features(t, mandatory_features, optional_features)
     attrs.merge!(t.sem_tags_to_hash) if @options[:sem_tags]
+
+    rename_feature!(attrs, :token_alignment_id, :alignment_id)
 
     unless t.slashees.empty? and t.notes.empty? # this extra test avoids <token></token> style XML
       builder.token attrs do
@@ -192,20 +210,40 @@ class PROIELXMLExporter
 
   private
 
+  def rename_feature!(obj, from, to)
+    f = from.to_s.gsub('_', '-')
+    t = to.to_s.gsub('_', '-')
+
+    if obj.key?(f)
+      obj[t] = obj[f].dup
+      obj.delete(f)
+    end
+  end
+
+  def cast_value(v)
+    if v.respond_to?(:export_form)
+      v.export_form
+    elsif v.is_a?(ActiveSupport::TimeWithZone)
+      v.xmlschema
+    else
+      v.to_s
+    end
+  end
+
   def pull_features(obj, mandatory_features, optional_features)
     attrs = {}
 
     mandatory_features.each do |f|
       v = obj.send(f.to_sym)
 
-      attrs[f.to_s.gsub('_', '-')] = (v.respond_to?(:export_form) ? v.export_form : v.to_s)
+      attrs[f.to_s.gsub('_', '-')] = cast_value(v)
     end
 
     optional_features.each do |f|
       v = obj.send(f.to_sym)
 
       if v and v.to_s != ''
-        attrs[f.to_s.gsub('_', '-')] = (v.respond_to?(:export_form) ? v.export_form : v.to_s)
+        attrs[f.to_s.gsub('_', '-')] = cast_value(v)
       end
     end
 

@@ -1,8 +1,7 @@
-# encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007-2016 University of Oslo
+# Copyright 2007-2016 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -550,4 +549,21 @@ class Sentence < ActiveRecord::Base
   end
 
   presentation_on 'source_division'
+
+  # Returns the alignment source if any descendant object is aligned to an object in another source.
+  #
+  # This does not verify that all descendants with alignments actually refer to the
+  # same source.
+  def inferred_aligned_source
+    if sentence_alignment_id.nil?
+      tokens.each do |t|
+        i = t.inferred_aligned_source
+        return i unless i.nil?
+      end
+
+      nil
+    else
+      sentence_alignment.source
+    end
+  end
 end

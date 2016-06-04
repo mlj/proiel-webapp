@@ -1,8 +1,7 @@
-# encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007-2016 University of Oslo
+# Copyright 2007-2016 Marius L. Jøhndal
 # Copyright 2011 Dag Haug
 #
 # This file is part of the PROIEL web application.
@@ -180,5 +179,22 @@ class SourceDivision < ActiveRecord::Base
     raise 'Invalid contrast number' unless contrast_number > 0
 
     tokens.where('contrast_group LIKE ?', "#{contrast_number}%").update_all :contrast_group => nil
+  end
+
+  # Returns the alignment source if any descendant object is aligned to an object in another source.
+  #
+  # This does not verify that all descendants with alignments actually refer to the
+  # same source.
+  def inferred_aligned_source
+    if aligned_source_division_id.nil?
+      sentences.each do |s|
+        i = s.inferred_aligned_source
+        return i unless i.nil?
+      end
+
+      nil
+    else
+      aligned_source_division.source
+    end
   end
 end

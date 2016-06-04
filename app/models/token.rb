@@ -1,8 +1,7 @@
-# encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
+# Copyright 2007-2016 University of Oslo
+# Copyright 2007-2016 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -681,5 +680,17 @@ class Token < ActiveRecord::Base
   # "PRO-RELATION" if the token is a PRO token.
   def form_or_pro
     empty_token_sort == 'P' ? "PRO-#{relation.tag.upcase}" : form
+  end
+
+  # Returns the alignment source if any descendant object is aligned to an object in another source.
+  #
+  # This does not verify that all descendants with alignments actually refer to the
+  # same source.
+  def inferred_aligned_source
+    if token_alignment_id.nil?
+      nil
+    else
+      token_alignment.source
+    end
   end
 end
