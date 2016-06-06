@@ -132,8 +132,8 @@ class PROIELXMLExporter
 
     # If any of the divs, sentences or tokens have an alignment ID set, we
     # need to identify the source of those alignments on the source element.
-    alignment_id = s.inferred_aligned_source.code
-    attrs[:'alignment-id'] = alignment_id unless alignment_id.nil?
+    alignment = s.inferred_aligned_source
+    attrs[:'alignment-id'] = alignment.code unless alignment.nil?
 
     builder.source(attrs) do
       builder.title s.title

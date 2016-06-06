@@ -690,7 +690,7 @@ class Token < ActiveRecord::Base
     if token_alignment_id.nil?
       nil
     else
-      token_alignment.source
+      token_alignment.sentence.source_division.source
     end
   end
 end
