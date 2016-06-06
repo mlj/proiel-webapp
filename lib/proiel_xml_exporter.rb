@@ -168,8 +168,8 @@ class PROIELXMLExporter
                              annotated_at reviewed_at))
 
     attrs[:'alignment-id'] = s.sentence_alignment_id unless s.sentence_alignment_id.nil?
-    attrs[:'annotated-by'] = s.annotator.login if s.annotator
-    attrs[:'reviewed-by'] = s.reviewer.login if s.reviewer
+    attrs[:'annotated-by'] = s.annotator.login.gsub(/\s+/, '').downcase if s.annotator
+    attrs[:'reviewed-by'] = s.reviewer.login.gsub(/\s+/, '').downcase if s.reviewer
 
     builder.sentence(attrs) do
       yield builder
