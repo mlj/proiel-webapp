@@ -81,7 +81,7 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    memoist (0.12.0)
+    memoist (0.14.0)
     mime-types (1.25.1)
     mini_portile (0.6.2)
     multi_json (1.11.0)
@@ -95,7 +95,7 @@ GEM
       activerecord (~> 3.0)
     polyglot (0.3.5)
     power_assert (0.2.2)
-    proiel (1.0.1)
+    proiel (1.1.1)
       json (~> 1.8)
       memoist (~> 0.12)
       nokogiri (~> 1.6.6)
@@ -213,7 +213,7 @@ DEPENDENCIES
   nokogiri
   nori
   pg
-  proiel (~> 1.0)
+  proiel (= 1.1.1)
   rack-mini-profiler
   rails (= 3.2.22)
   ransack (~> 0.7.2)
@@ -228,4 +228,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   1.12.2
+   1.12.4

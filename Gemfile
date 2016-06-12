@@ -4,7 +4,7 @@ gem 'rails', '3.2.22'
 gem 'json'
 gem 'sass-rails'
 
-gem 'proiel', '~> 1.0'
+gem 'proiel', '1.1.1'
 
 gem 'formtastic'
 gem 'kaminari'
