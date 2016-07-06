@@ -68,7 +68,17 @@ The `.env` file contains information that should not be made public. Make sure t
 
 You may also need to modify `config/initializers/mailer.rb` to get registration e-mails working properly.
 
-### Step 5: Start the server and worker
+### Step 5: Precompile assets
+
+For the production environment, assets should be precompiled:
+
+```shell
+RAILS_ENV=production rake assets:precompile
+```
+
+If you run the application behind nginx or another webserver, you should ensure that the webserver serves the `public` directory. Otherwise, make sure that `RAILS_SERVE_STATIC_ASSETS` in `.env` is set to `true` so that Rails will serve this directory.
+
+### Step 6: Start the server and worker
 
 Start the server and worker processes:
 

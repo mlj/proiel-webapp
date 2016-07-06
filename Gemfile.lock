@@ -67,6 +67,7 @@ GEM
     exception_notification (4.1.4)
       actionmailer (~> 4.0)
       activesupport (~> 4.0)
+    execjs (2.7.0)
     factory_girl (4.7.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.7.0)
@@ -214,6 +215,8 @@ GEM
     tilt (2.0.2)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    uglifier (3.0.0)
+      execjs (>= 0.3.0, < 3)
     unicode (0.4.4.2)
     unicorn (5.1.0)
       kgio (~> 2.6)
@@ -267,6 +270,7 @@ DEPENDENCIES
   sqlite3
   stackprof
   test-unit
+  uglifier
   unicode
   unicorn
   web-console (~> 2.0)
