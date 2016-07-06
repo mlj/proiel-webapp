@@ -4,7 +4,7 @@
 // It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
 // the compiled file.
 
-//= require vendor/underscore-min
+//= require underscore
 //= require vendor/jquery.min
 //= require vendor/jquery-ui.min
 //= require vendor/jquery_ujs
