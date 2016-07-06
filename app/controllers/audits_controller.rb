@@ -30,23 +30,28 @@ class AuditsController < ApplicationController
       # Grab changes related to this sentence, i.e. the object itself and
       # its tokens.
 
-      @sentence = Sentence.find(params[:sentence_id])
-      @tokens = @sentence.tokens.includes(:lemma)
+      sentence = Sentence.find(params[:sentence_id])
+      tokens = @sentence.tokens.includes(:lemma)
 
       objs = []
-      objs << [Sentence, [@sentence]]
-      objs << [Token, @tokens]
+      objs << [Sentence, [sentence]]
+      objs << [Token, tokens]
       s = objs.map { |k, v| "(auditable_type = '#{k}' AND auditable_id IN (?))" }.join(' OR ')
       v = objs.map { |_, v2| v2 }
 
-      @audits = Audited::Adapters::ActiveRecord::Audit.where(s, *v).page(current_page)
+      audits = Audited::Adapters::ActiveRecord::Audit.where(s, *v)
     elsif params[:user_id]
       # Grab changes by this user.
       @user = User.find(params[:user_id])
-      @audits = @user.audits.page(current_page)
+      audits = @user.audits
     else
-      @audits = Audited::Adapters::ActiveRecord::Audit.where('created_at > ?', 1.week.ago).order('created_at DESC').page(current_page)
+      audits = Audited::Adapters::ActiveRecord::Audit
     end
+
+    # Conceptually we want to order by created_at but ordering by ID is
+    # *much* faster and produces the same result. The gem imposes ordering by
+    # `version` so it too needs to be overriden using `reorder`.
+    @audits = audits.reorder('id DESC').page(current_page)
 
     respond_with @audits
   end

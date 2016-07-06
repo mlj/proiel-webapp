@@ -5,7 +5,7 @@ gem 'protected_attributes'
 gem 'json'
 gem 'sass-rails', '~> 5.0'
 
-gem 'proiel', '~> 1.1'
+gem 'proiel', '1.1.1'
 
 gem 'formtastic'
 gem 'kaminari'
