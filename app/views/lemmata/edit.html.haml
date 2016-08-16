@@ -2,14 +2,12 @@
   .breadcrumbs
     != breadcrumbs ['Dictionary', lemmata_path], @lemma, 'Edit'
 
-= semantic_form_for @lemma do |f|
-  = f.inputs do
-    != f.input :lemma, :label => 'Base form'
-    != f.input :part_of_speech_tag, :label => 'Part of speech', :collection => Hash[*PartOfSpeechTag.all.map { |p| [p.summary, p.tag] }.flatten]
-    != f.input :variant, :label => 'Variant number', :hint => 'An integer number differentiating this lemma from other lemmata with the same base form and part of speech.', :required => false
-    != f.input :language_tag, :label => 'Language', :collection => LanguageTag.all
-    != f.input :gloss, :required => false
-    != f.input :foreign_ids, :hint => 'A comma-separated list of key-value pairs that link the lemma to some external resource.', :required => false
+= simple_form_for @lemma do |f|
+  != f.input :lemma, label: 'Base form'
+  != f.input :part_of_speech_tag, label: 'Part of speech', collection: Hash[*PartOfSpeechTag.all.map { |p| [p.summary, p.tag] }.flatten]
+  != f.input :variant, label: 'Variant number', hint: 'An integer number differentiating this lemma from other lemmata with the same base form and part of speech', required: false
+  != f.input :language_tag, label: 'Language', collection: LanguageTag.all
+  != f.input :gloss, required: false
+  != f.input :foreign_ids, hint: 'A comma-separated list of key-value pairs that link the lemma to some external resource', required: false
 
-  = f.actions do
-    != f.submit "Update"
+  != f.button :submit, "Update"

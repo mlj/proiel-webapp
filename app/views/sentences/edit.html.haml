@@ -4,7 +4,7 @@
   %p
     != external_text_links @sentence
 
-= semantic_form_for @sentence do |form|
-  != form.input :presentation_before, :required => false, :label => 'Presentation text before sentence'
-  != form.input :presentation_after, :required => false, :label => 'Presentation text after sentence'
-  != form.submit 'Update'
+= simple_form_for @sentence do |f|
+  != f.input :presentation_before, required: false, label: 'Presentation text before sentence'
+  != f.input :presentation_after,  required: false, label: 'Presentation text after sentence'
+  != f.button :submit, 'Update'

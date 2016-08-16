@@ -1,9 +1,11 @@
-= semantic_form_for resource, :url => registration_path(resource_name) do |f|
-  = f.inputs "Register new account" do
-    != f.input :login, :label => 'User name'
-    != f.input :email, :label => 'E-mail address'
-    != f.input :first_name
-    != f.input :last_name
-    != f.input :password
-    != f.input :password_confirmation, :required => true
-    != f.submit "Sign up"
+%h2.subtitle Register new account
+
+= simple_form_for resource, url: registration_path(resource_name) do |f|
+  != f.input :login, label: 'User name'
+  != f.input :email, label: 'E-mail address'
+  != f.input :first_name
+  != f.input :last_name
+  != f.input :password
+  != f.input :password_confirmation, label: 'Confirm password'
+
+  != f.button :submit, "Sign up"

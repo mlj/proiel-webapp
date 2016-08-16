@@ -1,6 +1,6 @@
-<%= semantic_form_for resource, :url => password_path(resource_name) do |f| %>
-  <%= f.inputs "Reset password" do %>
-    <%= f.input :email, :label => 'E-mail address' %>
-    <%= f.submit "Reset" %>
-  <% end %>
+<h2 class="subtitle">Reset password</h2>
+
+<%= simple_form_for resource, url: password_path(resource_name) do |f| %>
+  <%= f.input :email, label: 'E-mail address' %>
+  <%= f.button :submit, "Reset password" %>
 <% end %>

@@ -1,10 +1,10 @@
-= search_form_for @search, builder: Formtastic::FormBuilder, class: 'formtastic' do |f|
+= search_form_for @search do |f|
   != f.input :semantic_attribute_value_tag_cont, label: 'Semantic attribute value'
   != f.submit "Search"
 
 != paginate @semantic_tags, params: params
 
-%table.ui.table
+%table.table
   %thead
     %tr
       %th Reference

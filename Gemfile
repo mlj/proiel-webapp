@@ -8,7 +8,7 @@ gem 'sass-rails', '~> 5.0'
 
 gem 'proiel', '1.1.1'
 
-gem 'formtastic'
+gem 'simple_form'
 gem 'kaminari'
 gem 'haml'
 gem 'devise'

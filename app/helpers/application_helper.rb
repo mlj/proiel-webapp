@@ -242,4 +242,32 @@ module ApplicationHelper
     crumbs << breadcrumb_title_for(current)
     crumbs.join(' » ')
   end
+
+  def search_language_tags
+    Source.represented_languages
+  end
+
+  def search_sources
+    Source.all.sort_by(&:to_label)
+  end
+
+  def search_status_tags
+    StatusTag.all.map { |t| [t.to_label, t.tag] }
+  end
+
+  def search_part_of_speech_tags
+    Lemma.represented_parts_of_speech
+  end
+
+  def search_relation_tags
+    RelationTag.all.map { |t| [t.to_label, t.tag] }
+  end
+
+  def search_information_status_tags
+    InformationStatusTag.all.map { |t| [t.to_label, t.tag] }
+  end
+
+  def search_morphology_field_tags(field)
+    MorphFeatures::MORPHOLOGY_SUMMARIES[field].map { |x, y| [y, x] }
+  end
 end

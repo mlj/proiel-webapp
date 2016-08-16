@@ -1,8 +1,8 @@
-<h2>Resend confirmation e-mail</h2>
+<h2 class="subtitle">Resend confirmation e-mail</h2>
 
-<%= semantic_form_for resource, :url => confirmation_path(resource_name) do |f| %>
-  <%= f.input :email, :label => 'E-mail address' %>
-  <%= f.submit "Resend" %>
+<%= simple_form_for resource, url: confirmation_path(resource_name) do |f| %>
+  <%= f.input :email, label: 'E-mail address' %>
+  <%= f.button :submit, "Resend" %>
 <% end %>
 
 <%= render "devise/shared/links" %>
