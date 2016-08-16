@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :login, :first_name, :last_name, :email,
     :password, :password_confirmation, :role,
-    :graph_method, :graph_format
+    :graph_method
 
   has_many :assigned_sentences, :class_name => 'Sentence', :foreign_key => 'assigned_to'
   has_many :audits, :class_name => 'Audited::Adapters::ActiveRecord::Audit'
@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   validates_presence_of :first_name, :message => 'cannot be blank.'
   validates_presence_of :last_name, :message => 'cannot be blank.'
 
-  store :preferences, accessors: [:graph_format, :graph_method]
+  store :preferences, accessors: [:graph_method]
 
   # Returns the user's full name.
   def full_name

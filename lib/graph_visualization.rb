@@ -37,7 +37,7 @@ class GraphvizVisualizer
 end
 
 class GraphvizVisualization
-  SUPPORTED_FORMATS = [:png, :svg, :dot]
+  SUPPORTED_FORMATS = [:svg, :dot]
 
   def initialize(sentence)
     @sentence = sentence

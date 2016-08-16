@@ -33,8 +33,7 @@ class ProfilesController < ApplicationController
     if params[:user]
       @user = current_user
       @user.preferences_will_change!
-      @user.update_attributes! :graph_format => params[:user][:graph_format],
-        :graph_method => params[:user][:graph_method]
+      @user.update_attributes! graph_method: params[:user][:graph_method]
 
       redirect_to :root
     else
