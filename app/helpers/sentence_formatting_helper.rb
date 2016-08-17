@@ -131,8 +131,8 @@ module SentenceFormattingHelper
       form_attributes[:class] += ' token'
 
       if options[:highlight].include?(token) or options[:highlight].include?(token.sentence)
-        presentation_attributes[:class] = 'highlight'
-        form_attributes[:class] += ' highlight'
+        presentation_attributes[:class] = 'highlighted'
+        form_attributes[:class] += ' highlighted'
       end
 
       form_attributes[:class].strip!

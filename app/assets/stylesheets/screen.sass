@@ -469,57 +469,6 @@ h3
       text-decoration: underline
 
 ////////////////////////////////////////////////////////////////
-// Formatted text
-////////////////////////////////////////////////////////////////
-
-.formatted-text
-  a
-    color: $fg
-    text-decoration: none
-
-  add:before
-    content: '<'
-  add:after
-    content: '>'
-
-  del
-    text-decoration: line-through
-  del:before
-    content: '['
-  del:after
-    content: ']'
-
-  unclear
-    font-style: italic
-  unclear:before
-    content: '('
-  unclear:after
-    content: ')'
-
-  .sentence-number
-    vertical-align: super
-    line-height: 0
-    font-weight: bold
-    font-size: 65%
-    color: blue
-
-  .token-number
-    vertical-align: sub
-    line-height: 0
-    font-weight: bold
-    font-size: 65%
-    color: blue
-
-  .sentence-break
-    color: $link
-
-  .citation
-    font-size: 100%
-    font-weight: bold
-    color: $link
-    padding-right: .25em
-
-////////////////////////////////////////////////////////////////
 // Statistics
 ////////////////////////////////////////////////////////////////
 
