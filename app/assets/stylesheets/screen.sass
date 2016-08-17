@@ -21,15 +21,6 @@ $selected:      orange
 $selectedboxfg: $fg
 $selectedboxbg: $selected
 
-////////////////////////////////////////////////////////////////
-// Navigation bar colour scheme
-////////////////////////////////////////////////////////////////
-
-$navbarfg:      $fg
-$navbarbg:      $boxbg
-$navbarfghover: $hover
-$navbarborder:  $boxborder
-
 //:focus
 //  outline: 0
 
@@ -253,38 +244,6 @@ abbr
   font-stretch: condensed
   border-bottom: dotted orange 1px
 
-#headline
-  display: block
-  color: $fg
-  background-color: #f7a700
-  min-height: 100px
-  .left
-    float: left
-  .right
-    float: right
-
-#navigation-bar
-  height: 2em
-  font-family: Serif
-  color: $navbarfg
-  background-color: $navbarbg
-  border-bottom: 1px solid $navbarborder
-  border-top: 1px solid $navbarborder
-  padding: 3px 1em 3px 1em
-  .current
-    padding: 1px 4px 1px 4px
-  a
-    color: $navbarfg
-    text-decoration: none
-    padding: 1px 4px 1px 4px
-    &:hover
-      color: $navbarfghover
-  .left
-    vertical-align: middle
-  .right
-    float: right
-    vertical-align: middle
-
 #context-bar
   margin: 1em 3em 1em 3em
   padding: 1em 1em 1em 1em
@@ -301,20 +260,6 @@ abbr
   .resources
     display: inline
     float: right
-
-#contents
-  margin: 1em 2em 1em 2em
-  padding: 1em 1em 1em 1em
-
-  p + p
-    padding-top: 1.5em
-
-footer
-  clear: both
-  margin: 0 0 0 0
-  padding: 1em 1.5em 1em 1.5em
-  border-top: 1px solid #ababab
-  font-size: smaller
 
 ////////////////////////////////////////////////////////////////
 // Toolbar icons
@@ -481,42 +426,6 @@ h3
     float: right
   br
     clear: both
-
-////////////////////////////////////////////////////////////////
-// Message block
-////////////////////////////////////////////////////////////////
-
-=flash-icon($icon)
-  background-image: image_url($icon)
-  background-repeat: no-repeat
-
-#message-block
-  display: block
-  text-align: center
-  width: 80%
-  margin: 0 auto
-
-  ul
-    list-style: none
-
-  ul
-    li
-      margin-left: 24px
-
-  ul.error
-    +flash-icon("message_block/error.gif")
-
-  ul.info
-    +flash-icon("message_block/info.gif")
-
-  ul.notice
-    +flash-icon("message_block/notice.gif")
-
-  ul.confirm
-    +flash-icon("message_block/confirmation.gif")
-
-  ul.warn
-    +flash-icon("message_block/warn.gif")
 
 ////////////////////////////////////////////////////////////////
 // Legends

@@ -2,12 +2,12 @@ module LayoutHelper
   # Sets the title in the layout.
   def title(page_title, show_title = true)
     @content_for_title = page_title.to_s
-    @show_title = show_title
-  end
 
-  # True if the title should be visible in the layout.
-  def show_title?
-    @show_title
+    if show_title
+      content_for :title do
+        page_title
+      end
+    end
   end
 
   # Inserts javascript files in the layout.
@@ -16,17 +16,9 @@ module LayoutHelper
   end
 
   def message_block(options = {})
-    options[:model_error_type] ||= :error
-    options[:flash_types] = [:alert, :notice, :back, :confirm, :error, :info, :warn]
-    options[:on] ||= controller.controller_name.split('/').last.gsub(/\_controller$/, '').singularize.to_sym
-    options[:html] ||= {:id => "message_block", :class => "message_block"}
-    options[:html][:id] = options[:id] if options[:id]
-    options[:html][:class] = options[:class] if options[:class]
-    options[:container] = :div if options[:container].nil?
-
     flash_messages = {}
 
-    options[:flash_types].each do |type|
+    %i(alert notice back confirm error info warn).each do |type|
       entries = flash[type.to_sym]
       next if entries.nil?
       entries = [entries] unless entries.is_a?(Array)
@@ -37,7 +29,6 @@ module LayoutHelper
 
     options[:on] = [options[:on]] unless options[:on].is_a?(Array)
 
-    options[:on] = [options[:on]] unless options[:on].is_a?(Array)
     model_objects = options[:on].map do |model_object|
       if model_object == :all
         assigns.values.select {|o| o.respond_to?(:errors) && o.errors.is_a?(ActiveModel::Errors) }
@@ -50,13 +41,35 @@ module LayoutHelper
 
     model_errors = model_objects.inject([]) {|b, m| b += m.errors.full_messages }
 
-    flash_messages[options[:model_error_type].to_sym] ||= []
-    flash_messages[options[:model_error_type].to_sym] += model_errors
+    flash_messages[:error] ||= []
+    flash_messages[:error] += model_errors
 
-    flash_messages.keys.sort_by(&:to_s).select {|type| !flash_messages[type.to_sym].empty? }.map do |type|
-      "<ul class=\"#{type}\">" + flash_messages[type.to_sym].map {|message| "<li>#{message}</li>" }.join + "</ul>"
-    end.join
-    #content_tag(options[:container], contents, options[:html], false)
+    messages = {}
+
+    flash_messages.keys.sort_by(&:to_s).each do |type|
+      unless flash_messages[type].empty?
+        new_type =
+          case type
+          when :error
+            "is-danger"
+          when :alert, :warn
+            "is-warning"
+          when :notice, :info
+            "is-success"
+          else
+            ""
+          end
+
+        messages[new_type] ||= []
+        messages[new_type] += flash_messages[type]
+      end
+    end
+
+    if messages.empty?
+      ''
+    else
+      render partial: 'shared/message', locals: { messages_by_type: messages }
+    end
   end
 
   def show_message_block?
