@@ -1,10 +1,10 @@
-%h2.ui.header
+%h2.title
   = @source.author_and_title
   != link_to_resources @source, :edit
 
 - metadata_fields_and_labels(@source).each do |header, fields_and_values|
   - unless fields_and_values.empty?
-    %h3.ui.header
+    %h3.subtitle
       = header
     %table.ui.compact.definition.table.segment
       %tbody
@@ -22,14 +22,15 @@
   != statistics "Annotators", "sentence", @annotated_by_stats
   != statistics "Reviewers", "sentence", @reviewed_by_stats
 
-%h3.ui.header
-  Table of contents
+%h3.subtitle Table of contents
 
 %p
   != paginate @source_divisions
 
-.ui.list
-  - @source_divisions.each do |source_division|
-    .item
-      != completion_rate source_division.cached_status_tag
-      != link_to "#{source_division.title} (#{source_division.cached_citation})", source_division
+%table.table
+  %tbody
+    - @source_divisions.each do |source_division|
+      %tr
+        %td
+          != completion_rate source_division.cached_status_tag
+          != link_to "#{source_division.title} (#{source_division.cached_citation})", source_division
