@@ -566,4 +566,18 @@ class Sentence < ActiveRecord::Base
       sentence_alignment.source
     end
   end
+
+  def visualize(format, mode = :unsorted)
+    mode = mode.to_sym
+    visualizer = GraphvizVisualizer.instance
+
+    case format
+    when :svg
+      visualizer.generate(self, format: :svg, mode: mode, fontname: 'Legendum')
+    when :dot
+      visualizer.generate(self, format: :dot, mode: mode)
+    else
+      raise ArgumentError, 'invalid format'
+    end
+  end
 end

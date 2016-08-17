@@ -40,7 +40,17 @@ class SentencesController < ApplicationController
     @notes = @sentence.notes
     @audits = @sentence.audits
 
-    respond_with @sentence
+    mode = params[:method] || user_preferences[:graph_method] || :unsorted
+
+    @user = current_user
+    @user.preferences_will_change!
+    @user.update_attributes! graph_method: mode
+
+    respond_to do |format|
+      format.html
+      format.svg  { send_data @sentence.visualize(:svg, mode), filename: "#{params[:id]}.svg", disposition: :inline, type: :svg }
+      format.dot  { send_data @sentence.visualize(:dot, mode), filename: "#{params[:id]}.dot", disposition: :inline, type: :dot } 
+    end
   end
 
   def edit

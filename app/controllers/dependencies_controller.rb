@@ -1,18 +1,6 @@
 class DependenciesController < ApplicationController
   before_filter :is_annotator?, :only => [:edit, :update]
 
-  def show
-    @sentence = Sentence.includes(:tokens => [:lemma]).find(params[:sentence_id])
-    mode = user_preferences[:graph_method] ? user_preferences[:graph_method].to_sym : :unsorted
-    visualizer = GraphvizVisualizer.instance
-
-    respond_to do |format|
-      format.svg  { send_data visualizer.generate(@sentence, :format => :svg, :fontname => 'Legendum', :mode => mode), :filename => "#{params[:id]}.svg", :disposition => 'inline', :type => :svg }
-      format.png  { send_data visualizer.generate(@sentence, :format => :png, :fontname => 'Legendum', :mode => mode).force_encoding('BINARY'), :filename => "#{params[:id]}.png", :disposition => 'inline', :type => :png }
-      format.dot  { send_data visualizer.generate(@sentence, :format => :dot, :mode => mode), :filename => "#{params[:id]}.dot", :disposition => 'inline', :type => :dot }
-    end
-  end
-
   def edit
     @sentence = Sentence.includes(:source_division => [:source]).find(params[:sentence_id])
     @source_division = @sentence.try(:source_division)

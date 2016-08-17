@@ -53,7 +53,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resource :dependencies, :only => [:show, :edit, :update]
+    resource :dependencies, :only => [:edit, :update]
 
     resource :info_status, :only => [:edit, :update] do
       collection do

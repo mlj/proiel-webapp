@@ -1,5 +1,0 @@
-%h2.title Your profile
-
-!= simple_form_for @user, url: profile_path, html: { method: :put } do |f|
-  != f.input :graph_method, collection: %w(unsorted linearized packed full), label: 'Method', include_blank: false
-  != f.button :submit, 'Save profile'

@@ -73,6 +73,37 @@ function setup() {
 
   if (document.querySelector('#dependency-alignment-editor'))
     dependencyAlignmentSetup();
+
+  // Hook up progressive enhancment Vue apps
+  if (document.querySelector('#app-graph')) {
+    new Vue({
+      el: '#app-graph',
+      data: {
+        current: null,
+        modes: ["unsorted", "linearized", "packed", "full"],
+        graph: ''
+      },
+      ready: function() {
+        this.current = this.$el.dataset.method
+      },
+      watch: {
+        current: function(n) {
+          var self = this;
+          var xhr = new XMLHttpRequest();
+          var url = this.$el.dataset.graphUrl;
+          xhr.open('GET', url + '?method=' + this.current);
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              self.graph = xhr.responseText;
+            } else {
+              alert("Sorry, something went wrong! We've logged the error and will look into it.");
+            }
+          }
+          xhr.send();
+        }
+      }
+    })
+  }
 }
 
 if (document.readyState != 'loading') {
