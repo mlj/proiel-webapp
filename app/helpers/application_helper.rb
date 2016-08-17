@@ -240,7 +240,10 @@ module ApplicationHelper
     *parents, current = objects
     crumbs = parents.map { |o| breadcrumb_link_to(o) }
     crumbs << breadcrumb_title_for(current)
-    crumbs.join(' » ')
+    b = crumbs.map { |c| "<li>#{c}</li>" }.join('')
+    content_for(:breadcrumbs) do
+      "<ol class=\"breadcrumbs\">#{b}</ol>".html_safe
+    end
   end
 
   def search_language_tags
