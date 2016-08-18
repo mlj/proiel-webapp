@@ -1,18 +1,18 @@
-- context_bar do
-  .breadcrumbs
-    != breadcrumbs ['Contents', sources_path], @source, @source_division
-    != completion_rate @source_division.cached_status_tag
-  .resources
-    != link_to_resources @source_division, :edit, :previous, :next
-  %p
-    - if @source_division.aligned_source_division
-      != link_to 'Show sentence alignments', alignment_path(@source_division)
+- title @source_division.title
+- breadcrumbs ['Home', root_path], @source, @source_division
 
-    - if @source_division.cached_has_discourse_annotation?
-      != link_to 'Show discourse annotations', source_division_discourse_path(@source_division)
+!= completion_rate @source_division.cached_status_tag
+.resources
+  != link_to_resources @source_division, :edit, :previous, :next
+%p
+  - if @source_division.aligned_source_division
+    != link_to 'Show sentence alignments', alignment_path(@source_division)
 
-    %a{:href => '#', :id => 'toggle-sentence-status'}
-      Show annotation status
+  - if @source_division.cached_has_discourse_annotation?
+    != link_to 'Show discourse annotations', source_division_discourse_path(@source_division)
+
+  %a{:href => '#', :id => 'toggle-sentence-status'}
+    Show annotation status
 
 %p
   != paginate @sentences

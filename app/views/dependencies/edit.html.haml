@@ -1,5 +1,4 @@
-%p.breadcrumbs
-  != breadcrumbs @source, @source_division, @sentence, 'Syntax'
-  != completion_rate @sentence.status
+!= breadcrumbs ['Home', root_path], @source, @source_division, @sentence, 'Edit syntax'
+!= completion_rate @sentence.status
 
 != render 'form'

@@ -1,6 +1,5 @@
-- context_bar do
-  .breadcrumbs
-    != breadcrumbs ['Contents', sources_path], @source, 'Edit'
+- title @source.author_and_title
+- breadcrumbs ['Home', root_path], @source, 'Edit'
 
 = simple_form_for @source do |form|
   != form.input :code

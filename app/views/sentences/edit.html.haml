@@ -1,8 +1,7 @@
-- context_bar do
-  .breadcrumbs
-    != breadcrumbs ['Contents', sources_path], @source, @source_division, @sentence, 'Edit'
-  %p
-    != external_text_links @sentence
+!= title "Sentence #{@sentence.id}"
+!= breadcrumbs ['Home', root_path], @source, @source_division, @sentence, 'Edit'
+
+!= external_text_links @sentence
 
 = simple_form_for @sentence do |f|
   != f.input :presentation_before, required: false, label: 'Presentation text before sentence'

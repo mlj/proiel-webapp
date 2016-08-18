@@ -1,7 +1,5 @@
-- context_bar do
-  - breadcrumbs @source, @source_division, @sentence, 'Tokenization'
-  %p
-    != external_text_links @sentence
+!= title "Sentence #{@sentence.id}"
+!= breadcrumbs ['Home', root_path], @source, @source_division, @sentence, 'Change tokenization'
 
 != format_sentence @sentence_window,
   citations: true,

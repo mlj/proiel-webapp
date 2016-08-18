@@ -212,11 +212,11 @@ module ApplicationHelper
     when SourceDivision
       object.title
     when Sentence
-      "Sentence #{object.sentence_number}"
+      "Sentence #{object.id}"
     when Token
-      "Token #{object.token_number}"
+      "Token #{object.id}"
     when Lemma
-      content_tag(:em, object.export_form, :lang => object.language_tag) +
+      content_tag(:em, object.export_form, lang: object.language_tag) +
         " (#{object.pos_summary})" +
         (@lemma.gloss ? " '#{@lemma.gloss}'" : "")
     when String
@@ -240,7 +240,7 @@ module ApplicationHelper
     *parents, current = objects
     crumbs = parents.map { |o| breadcrumb_link_to(o) }
     crumbs << breadcrumb_title_for(current)
-    b = crumbs.map { |c| "<li>#{c}</li>" }.join('')
+    b = crumbs.map { |c| "<li>#{c}</li>" }.join(' » ')
     content_for(:breadcrumbs) do
       "<ol class=\"breadcrumbs\">#{b}</ol>".html_safe
     end

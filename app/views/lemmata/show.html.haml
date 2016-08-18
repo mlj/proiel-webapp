@@ -1,8 +1,7 @@
-- context_bar do
-  .breadcrumbs
-    != breadcrumbs ['Dictionary', lemmata_path], @lemma
-  .resources
-    != link_to_resources @lemma, :edit
+!= title content_tag(:em, @lemma.export_form, lang: @lemma.language_tag) + " (#{@lemma.pos_summary})"
+!= breadcrumbs ['Home', root_path], ['Dictionary', lemmata_path], @lemma
+
+!= link_to_resources @lemma, :edit
 
 - layer_if((is_reviewer? and !@mergeable_lemmata.empty?), "similar_lemmata") do
   %ul

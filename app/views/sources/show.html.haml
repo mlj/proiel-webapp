@@ -1,6 +1,6 @@
-%h2.title
-  = @source.author_and_title
-  != link_to_resources @source, :edit
+- title @source.author_and_title
+- breadcrumbs ['Home', root_path], @source
+!= link_to_resources @source, :edit
 
 %table.table.is-narrow
   %tbody

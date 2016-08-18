@@ -1,6 +1,5 @@
-- context_bar do
-  .breadcrumbs
-    != breadcrumbs ['Dictionary', lemmata_path], @lemma, 'Edit'
+!= title content_tag(:em, @lemma.export_form, lang: @lemma.language_tag) + " (#{@lemma.pos_summary})"
+!= breadcrumbs ['Home', root_path], ['Dictionary', lemmata_path], @lemma, 'Edit'
 
 = simple_form_for @lemma do |f|
   != f.input :lemma, label: 'Base form'

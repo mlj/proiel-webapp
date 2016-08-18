@@ -1,12 +1,11 @@
-- context_bar do
-  .breadcrumbs
-    != breadcrumbs @source, @source_division, @sentence, 'Information structure'
-    != completion_rate @sentence.status
-  .resources
-    - if @sentence.has_previous?
-      != link_to '', edit_sentence_info_status_path(@sentence.previous_object), :class => :previous, :accesskey => 'p'
-    - if @sentence.has_next?
-      != link_to '', edit_sentence_info_status_path(@sentence.next_object), :class => :next, :accesskey => 'n'
+!= title "Sentence #{@sentence.id}"
+!= breadcrumbs ['Home', root_path], @source, @source_division, @sentence, 'Edit information structure'
+!= completion_rate @sentence.status
+
+- if @sentence.has_previous?
+  != link_to '', edit_sentence_info_status_path(@sentence.previous_object), :class => :previous, :accesskey => 'p'
+- if @sentence.has_next?
+  != link_to '', edit_sentence_info_status_path(@sentence.next_object), :class => :next, :accesskey => 'n'
 
 .is-view
   %div{:id => "prodrop-menu", :style => "position: absolute; width: 150px; border: 2px solid black; display:none"}
