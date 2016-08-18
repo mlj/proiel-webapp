@@ -1,70 +1,71 @@
-.legend
-  %h3 Legend:
+.is-view
+  .legend
+    %h3 Legend:
 
-  %dl
-    %dt.new
-    %dd
-      new
-    %dt.kind
-    %dd
-      kind
-    %dt.acc-gen
-    %dd
-      acc-gen
-    %dt.acc-sit
-    %dd
-      acc-sit
-    %dt.acc-inf
-    %dd
-      acc-inf
-    %dt.old
-    %dd
-      old
-    %dt.old-inact
-    %dd
-      old-inact
-    %dt.no-info-status
-    %dd
-      annotatable (undecided)
-    %dt.info-unannotatable
-    %dd
-      unannotatable
-  %br
-  %dl
-    %dt.quant
-    %dd
-      quantifier restriction
-    %dt.non-spec
-    %dd
-      non-specific
-    %dt.non-spec-inf
-    %dd
-      inferred from non-specific
-    %dt.non-spec-old
-    %dd
-      non-specific old
-  %br
-  %dl
-    %dt.contrast1
-    %dd
-      in contrast group <b>a</b>
-    %dt.contrast2
-    %dd
-      in contrast group <b>b</b>
-    %dt.contrast3
-    %dd
-      in contrast group <b>c</b>
-    %dt.contrast4
-    %dd
-      in contrast group <b>d</b>
-    %dt.contrast5
-    %dd
-      in contrast group <b>e</b>
-  %br
-  %dl
-    %dt.antecedent
-    %dd
-      antecedent
+    %dl
+      %dt.new
+      %dd
+        new
+      %dt.kind
+      %dd
+        kind
+      %dt.acc-gen
+      %dd
+        acc-gen
+      %dt.acc-sit
+      %dd
+        acc-sit
+      %dt.acc-inf
+      %dd
+        acc-inf
+      %dt.old
+      %dd
+        old
+      %dt.old-inact
+      %dd
+        old-inact
+      %dt.no-info-status
+      %dd
+        annotatable (undecided)
+      %dt.info-unannotatable
+      %dd
+        unannotatable
+    %br
+    %dl
+      %dt.quant
+      %dd
+        quantifier restriction
+      %dt.non-spec
+      %dd
+        non-specific
+      %dt.non-spec-inf
+      %dd
+        inferred from non-specific
+      %dt.non-spec-old
+      %dd
+        non-specific old
+    %br
+    %dl
+      %dt.contrast1
+      %dd
+        in contrast group <b>a</b>
+      %dt.contrast2
+      %dd
+        in contrast group <b>b</b>
+      %dt.contrast3
+      %dd
+        in contrast group <b>c</b>
+      %dt.contrast4
+      %dd
+        in contrast group <b>d</b>
+      %dt.contrast5
+      %dd
+        in contrast group <b>e</b>
+    %br
+    %dl
+      %dt.antecedent
+      %dd
+        antecedent
 
-#info-status.sentence-divisions
-  != format_sentences_for_info_status(@sentence.sentence_window(13, 1, :include_previous_source_division => true))
+  #info-status.sentence-divisions
+    != format_sentences_for_info_status(@sentence.sentence_window(13, 1, :include_previous_source_division => true))

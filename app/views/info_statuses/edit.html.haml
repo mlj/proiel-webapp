@@ -8,20 +8,21 @@
     - if @sentence.has_next?
       != link_to '', edit_sentence_info_status_path(@sentence.next_object), :class => :next, :accesskey => 'n'
 
-%div{:id => "prodrop-menu", :style => "position: absolute; width: 150px; border: 2px solid black; display:none"}
-  %div{:class => "prodrop-menu-item sub"}
-    Insert pro-drop subject
-  %div{:class => "prodrop-menu-item obj"}
-    Insert pro-drop object
-  %div{:class => "prodrop-menu-item obl"}
-    Insert pro-drop oblique
+.is-view
+  %div{:id => "prodrop-menu", :style => "position: absolute; width: 150px; border: 2px solid black; display:none"}
+    %div{:class => "prodrop-menu-item sub"}
+      Insert pro-drop subject
+    %div{:class => "prodrop-menu-item obj"}
+      Insert pro-drop object
+    %div{:class => "prodrop-menu-item obl"}
+      Insert pro-drop oblique
 
-- if @sentence.is_reviewed?
-  != render 'info_statuses/form'
-- else
-  Sentence not yet annotated and reviewed.
+  - if @sentence.is_reviewed?
+    != render 'info_statuses/form'
+  - else
+    Sentence not yet annotated and reviewed.
 
-.annotation-actions
-  %form
-    != submit_tag "Save", :id => 'save'
-  %span{:id => "server-message", :style => "width: 300px; margin-top: 5px; padding-left: 10px; padding-right: 10px"}
+  .annotation-actions
+    %form
+      != submit_tag "Save", :id => 'save'
+    %span{:id => "server-message", :style => "width: 300px; margin-top: 5px; padding-left: 10px; padding-right: 10px"}
