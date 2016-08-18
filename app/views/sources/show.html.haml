@@ -2,16 +2,18 @@
   = @source.author_and_title
   != link_to_resources @source, :edit
 
-- metadata_fields_and_labels(@source).each do |header, fields_and_values|
-  - unless fields_and_values.empty?
-    %h3.subtitle
-      = header
-    %table.ui.compact.definition.table.segment
-      %tbody
+%table.table.is-narrow
+  %tbody
+    - metadata_fields_and_labels(@source).each do |header, fields_and_values|
+      - unless fields_and_values.empty?
+        %tr
+          %td{colspan: 2}
+            %h3.subtitle
+              = header
         - fields_and_values.each do |(field, value)|
           %tr
-            %td.four.wide= field
-            %td.twelve.wide= value
+            %td= field
+            %td= value
 
 %p.centered-images
   - if @activity_stats.length > 1
