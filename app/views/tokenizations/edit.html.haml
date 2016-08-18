@@ -1,6 +1,5 @@
 - context_bar do
-  .breadcrumbs
-    != breadcrumbs @source, @source_division, @sentence, 'Tokenization'
+  - breadcrumbs @source, @source_division, @sentence, 'Tokenization'
   %p
     != external_text_links @sentence
 
@@ -15,17 +14,20 @@
     - if @sentence.is_next_sentence_appendable?
       != button_to "Merge sentence with following sentence", { :action => "update", :op => 'merge_with_next_sentence' }, "data-remote" => true, "data-disable-with" => "Splitting...", :method => :put, :confirm => 'Are you sure that you want to merge this sentence with the next?'
 
-  %table
+  %table.table
     - @sentence.tokens.visible.each_with_index do |t, i|
       %tr
         %td
           != "#{t.presentation_before}<span class=\"w\">#{TokenText.token_form_as_html(t.form)}</span>#{t.presentation_after}"
+        %td
           != link_to 'Edit token', edit_token_url(t)
-        %td.button-row
+        %td
           - if t.is_splitable?
             != button_to "Split token", { :action => "update", :op => 'split', :op_id => t.id }, "data-remote" => true, "data-disable-with" => "Splitting...", :method => :put
+        %td
           - if @sentence.is_splitable?(t)
             != button_to "Start new sentence here", { :action => "update", :op => 'split_sentence', :op_id => t.id }, "data-remote" => true, "data-disable-with" => "Splitting...", :method => :put
+        %td
           - if t.is_joinable?
             != button_to "Join with next token", { :action => "update", :op => 'join', :op_id => t.id }, "data-remote" => true, "data-disable-with" => "Joining...", :method => :put
 
