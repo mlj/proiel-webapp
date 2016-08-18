@@ -5,19 +5,6 @@
   Showing changes by user
   != @user.login
 
-.tabular
-  != paginate @audits
+!= paginate @audits
 
-  %table.table
-    %thead
-      %tr
-        %th Created by
-        %th Created at
-        %th Changed object
-
-    %tbody
-      - @audits.each do |audit|
-        %tr
-          %td.user!= link_to_audit_user audit.user
-          %td.timestamp= audit.created_at
-          %td!= link_to_auditable audit.auditable
+!= render partial: 'audits/summary', collection: @audits
