@@ -15,14 +15,19 @@
             %td= field
             %td= value
 
-%p.centered-images
-  - if @activity_stats.length > 1
-    != line_chart "Recent activity", @activity_stats
-
-%p.centered-images
-  != statistics "Completion", "sentence", @sentence_completion_stats
-  != statistics "Annotators", "sentence", @annotated_by_stats
-  != statistics "Reviewers", "sentence", @reviewed_by_stats
+.tile.is-ancestor.is-vertical
+  .tile.is-parent.is-12
+    .tile.is-child
+      .is-centered
+        - if @activity_stats.length > 1
+          != line_chart "Recent activity", @activity_stats
+  .tile.is-parent
+    .tile.is-child
+      != statistics "Completion", "sentence", @sentence_completion_stats
+    .tile.is-child
+      != statistics "Annotators", "sentence", @annotated_by_stats
+    .tile.is-child
+      != statistics "Reviewers", "sentence", @reviewed_by_stats
 
 %h3.subtitle Table of contents
 
