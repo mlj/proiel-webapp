@@ -21,41 +21,6 @@ $selected:      orange
 $selectedboxfg: $fg
 $selectedboxbg: $selected
 
-//:focus
-//  outline: 0
-
-//:lang(chu)
-//  font-family: "Kliment Std", "RomanCyrillic Std", "Dilyana", "Menaion", "Menaion Medieval", "Gentium", "Code2000"
-
-/* "Typography" */
-
-tt
-  font-family: proportional
-em
-  font-style: italic
-
-blockquote:before, q:before
-  content: '\2018'
-blockquote:after, q:after
-  content: '\2019'
-blockquote, q
-  quotes: "" ""
-
-ol
-  list-style: none
-ul
-  list-style: disc
-
-dt
-  float: left
-  font-weight: bold
-  padding-right: .5em
-
-dl, ul
-  margin-left: 2em
-  margin-top: 0.5em
-  margin-bottom: 0.5em
-
 /* Shared between multiple "widgets" */
 
 .unavailable, .consumed
@@ -90,118 +55,8 @@ a.token
   font-family: Courier, monospace
 
 ////////////////////////////////////////////////////////////////
-// Form styling
-////////////////////////////////////////////////////////////////
-
-form
-  label, .label
-    padding-bottom: 5px
-    abbr
-      color: red
-  label
-    line-height: 1.4em
-    font-size: 13px
-  legend
-    span
-      font-size: 1.4em
-      line-height: 1em
-      &.label
-        font-size: 1em
-  select
-    padding: 3px
-  input, textarea, select
-    font-family: inherit
-  textarea, input
-    border: 1px solid #999999
-    padding: 6px 8px
-    line-height: 100%
-  .date, .time, .datetime
-    li
-      margin: 0 0.3em 0 0
-  #errorExplanation
-    li
-      margin-left: 15px
-  form p, .errors
-    padding: 3px 0px
-  .required
-    input,textarea,select
-      background-color: $boxbg
-      color: $boxfg
-  .error
-    input,textarea,select
-      background-color: #ffcccc
-      border: 1px solid #ff6666
-  .optional
-    input,textarea,select
-      background-color: white
-  .errors
-    color: #aa0000
-    li
-      margin-left: 1.2em
-  p.inline-errors
-    color: red
-  .inline-hints
-    color: #777777
-  .buttons
-    li
-      padding-right: 0.5em
-    input
-      border: 1px solid #999999
-
-form.wide
-  width: 100%
-  max-width: 1200px
-
-textarea, input, select
-  border: 1px solid $boxborder
-  border-radius: 5px
-  -moz-border-radius: 5px
-  -webkit-border-radius: 5px
-  -moz-box-shadow: 0 1px 3px #999
-  -webkit-box-shadow: 0 1px 3px #999
-
-input[type='submit'], input, select
-  -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5)
-  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5)
-  border-bottom: 1px solid rgba(0,0,0,0.25)
-  display: inline-block
-  padding: 5px 10px 6px
-  text-decoration: none
-  line-height: 1
-  border-bottom: 1px solid #222
-  position: relative
-  cursor: pointer
-
-input[type='submit']
-  color: $bg
-  background-color: $link
-  font-weight: bold
-
-input[type='submit']:hover
-  color: $bg
-  background-color: $hover
-
-form.inline
-  display: inline
-
-////////////////////////////////////////////////////////////////
 // Page layout
 ////////////////////////////////////////////////////////////////
-
-body
-  background: white
-  font-family: sans-serif
-  line-height: 1.6em
-  text-rendering: optimizeLegibility
-  background-color: $bg
-  color: $fg
-
-a
-  text-decoration: underline
-  &:link, &:visited
-    color: $link
-  &:link:hover, &:visited:hover
-    color: $hover
 
 abbr
   font-stretch: condensed
@@ -243,24 +98,6 @@ abbr
 ////////////////////////////////////////////////////////////////
 // 'Typography'
 ////////////////////////////////////////////////////////////////
-
-h1, h2, h3, h4, h5
-  color: $fg
-
-h1
-  font-weight: bold
-  font-size: 150%
-  margin-top: .5em
-  margin-bottom: .5em
-  color: $header
-
-h2
-  font-size: 130%
-  margin-top: .5em
-  margin-bottom: .5em
-
-h3
-  font-weight: bold
 
 .highlight
   color:       $selected
@@ -319,31 +156,6 @@ h3
     padding: 0
     margin: 0
     margin-right: 0.5em
-
-////////////////////////////////////////////////////////////////
-// Metadata
-////////////////////////////////////////////////////////////////
-
-#metadata
-  margin-left: 2em
-  margin-right: 2em
-  q, .title
-    font-style: italic
-  div p
-    margin-left: 1em
-    margin-top: 0.5em
-  td p
-    margin-left: 0em
-    margin-top: 0.5em
-  div div
-    margin-bottom: 1em
-  .label
-    width: 25%
-    color: $selected
-    text-align: left
-  td p
-    margin-top: 0em
-    margin-bottom: 0em
 
 // Morphology editing
 .morphology-view
