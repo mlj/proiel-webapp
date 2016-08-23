@@ -1,10 +1,10 @@
 %tr
-  %td.reference
+  %td
     != link_to annotation.citation, annotation.sentence
     != completion_rate annotation.sentence.status
-  %td.right.aligned
+  %td.has-text-right
     != format_sentence annotation.previous_objects, length_limit: -5, single_line: true
-  %td.center.aligned.highlight
+  %td.highlight.has-text-centered
     != format_token_form annotation
-  %td.left.aligned
+  %td.has-text-left
     != format_sentence annotation.next_objects, length_limit: 5, single_line: true
