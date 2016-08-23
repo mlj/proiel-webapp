@@ -97,36 +97,6 @@ module ApplicationHelper
     concat("</dl><br style='clear: both' /></div>".html_safe)
   end
 
-  # Generates a title header and a set of associated links directly
-  # next to the header.
-  def layer(id, options = {}, &block)
-    title = options[:title]
-    title ||= id.to_s.humanize
-    actions = options[:actions]
-    actions = "(#{actions.join(' | ')})" if actions
-
-    content = capture(&block)
-    concat("<div id='#{id}' class='layer'><h1 class='layer-title'>#{title}</h1> <span class='layer-actions'>#{actions}</span><div class='layer-content'>".html_safe)
-    concat(content)
-    concat("</div></div>".html_safe)
-  end
-
-  # Generates a title header and a set of associated links directly
-  # next to the header if the condition +condition+ is +true+. Otherwise
-  # takes no action. The remainin arguments are the same as for
-  # +layer+.
-  def layer_if(condition, *args, &block)
-    condition ? layer(*args, &block) : ''
-  end
-
-  # Generates a title header and a set of associated links directly
-  # next to the header unless the condition +condition+ is +true+. Otherwise
-  # takes no action. The remainin arguments are the same as for
-  # +layer+.
-  def layer_unless(condition, *args, &block)
-    layer_if(!condition, *args, &block)
-  end
-
   # Formats a token form with HTML language attributes.
   def format_token_form(token)
     content_tag(:span, TokenText.token_form_as_html(token.form).html_safe, lang: token.language.to_s)
@@ -219,6 +189,8 @@ module ApplicationHelper
       content_tag(:em, object.export_form, lang: object.language_tag) +
         " (#{object.pos_summary})" +
         (@lemma.gloss ? " '#{@lemma.gloss}'" : "")
+    when Note
+      "Note #{object.id}"
     when String
       object
     else

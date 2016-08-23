@@ -3,7 +3,9 @@
 
 != link_to_resources @lemma, :edit
 
-- layer_if((is_reviewer? and !@mergeable_lemmata.empty?), "similar_lemmata") do
+- if is_reviewer? and !@mergeable_lemmata.empty?
+  %hr
+  %h3.title Similar lemmata
   %ul
     - @mergeable_lemmata.each do |l|
       %li
@@ -13,10 +15,17 @@
           '#{l.gloss}'
         != button_to "Merge", :action => 'merge', :id => @lemma, :other_id => l.id
 
-- layer_unless @lemma.notes.empty?, "notes" do
+- unless @lemma.notes.empty?
+  %hr
+  %h3.title Notes
   != notes_summary @lemma.notes
 
+%hr
+%h3.title Semantic tags
 != semantic_tags_summary @semantic_tags
+
+%hr
+%h3.title Occurrences
 
 .tabular
   != paginate @tokens
@@ -31,5 +40,7 @@
   %tbody
     != render :partial => 'annotations/annotation', :collection => @tokens
 
-- layer_if  (is_reviewer? and !@lemma.audits.empty?), "revisions" do
+- if is_reviewer? and !@lemma.audits.empty?
+  %hr
+  %h3.title History
   != audits_summary @lemma.audits

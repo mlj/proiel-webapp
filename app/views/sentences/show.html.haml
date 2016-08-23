@@ -7,20 +7,19 @@
 != export_links @sentence
 
 %p
-  .section-heading
-    %h1 Sentence in context
-    - if is_annotator?
-      != link_to " (Change tokenization or sentence division)", edit_sentence_tokenizations_path(@sentence), :method => :get
+  %h1 Sentence in context
+  - if is_annotator?
+    != link_to " (Change tokenization or sentence division)", edit_sentence_tokenizations_path(@sentence), :method => :get
 
   != format_sentence @sentence_window, citations: true, sentence_numbers: true, highlight: @sentence, sentence_breaks: true, link_to: true
 
-  .section-heading
-    %h1 Annotation status
-    - if @sentence.is_annotated? and is_reviewer?
-      - if @sentence.is_reviewed?
-        != link_to "(Change to not reviewed)", flag_as_not_reviewed_sentence_path(@sentence)
-      - else
-        != link_to "(Change to reviewed)", flag_as_reviewed_sentence_path(@sentence)
+  %hr
+  %h3.title Annotation status
+  - if @sentence.is_annotated? and is_reviewer?
+    - if @sentence.is_reviewed?
+      != link_to "(Change to not reviewed)", flag_as_not_reviewed_sentence_path(@sentence)
+    - else
+      != link_to "(Change to reviewed)", flag_as_reviewed_sentence_path(@sentence)
 
   %p
     != format_annotator_and_time @sentence
@@ -32,35 +31,30 @@
       - if @sentence.valid?
         Annotation is valid.
 
-  .section-heading
-    %h1 Morphology
-    - if is_annotator?
-      != link_to "(Edit)", edit_sentence_morphtags_url(@sentence)
+  %hr
+  %h3.title Morphology
+  - if is_annotator?
+    != link_to "(Edit)", edit_sentence_morphtags_url(@sentence)
   %p
     != render 'morphtags/show'
 
-  .section-heading
-    %h1 Syntax
-    - if is_annotator?
-      != link_to "(Edit)", edit_sentence_dependencies_url(@sentence)
+  %hr
+  %h3.title Syntax
+  - if is_annotator?
+    != link_to "(Edit)", edit_sentence_dependencies_url(@sentence)
   %p
     != render 'dependencies/show'
 
-  - unless @semantic_tags.empty?
-    .section-heading
-      %h1 Semantic tags
-    %p
-      != semantic_tags_summary @semantic_tags
-
-  .section-heading
-    %h1 Information structure
-    - if is_annotator?
-      != link_to "(Edit)", edit_sentence_info_status_url(@sentence)
+  %hr
+  %h3.title Information structure
+  - if is_annotator?
+    != link_to "(Edit)", edit_sentence_info_status_url(@sentence)
   %p
     != render 'info_statuses/show'
 
 - if is_reviewer?
-  %h2 Notes
+  %hr
+  %h3.title Notes
   %ol
     - unless @notes.empty?
       != render partial: 'notes/summary', collection: @notes
@@ -68,7 +62,8 @@
       - unless token.notes.empty?
         != render :partial => 'notes/summary', :collection => token.notes
 
-  %h2 History
+  %hr
+  %h3.title History
   != render 'audits/legend'
   %ol
     - unless @audits.empty?
@@ -77,7 +72,9 @@
       - unless token.audits.empty?
         != render :partial => 'audits/summary', :collection => token.audits
 
-  %h2 Semantic tags
+  %hr
+  %h3.title Semantic tags
+  != semantic_tags_summary @semantic_tags
   - @sentence.tokens.each do |t|
     - unless t.semantic_tags.empty?
       != semantic_tags_summary t.semantic_tags
@@ -86,7 +83,8 @@
     - unless t.incoming_semantic_relations.empty?
       != semantic_relations_summary t.incoming_semantic_relations
 
-  %h2 Foreign keys
+  %hr
+  %h3.title Foreign keys
   %table
     - @sentence.tokens.each do |t|
       - unless t.foreign_ids.blank?

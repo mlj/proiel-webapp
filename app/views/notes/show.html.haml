@@ -1,10 +1,12 @@
-- roundedbox do
-  %dl
-    %dt Originator:
-    %dd!= link_to_originator @note.originator
-    %dt Reference:
-    %dd!= link_to_notable @note.notable
-  != link_to_resources @note, :edit, :delete
+!= title "Note #{@note.id}"
+!= breadcrumbs ['Home', root_path], @note
 
-- layer 'contents' do
+%h2.subtitle
+  by
+  != link_to_originator @note.originator
+  in reference to
+  != link_to_notable @note.notable
+!= link_to_resources @note, :edit, :delete
+
+%p
   = @note.contents

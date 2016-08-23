@@ -4,15 +4,13 @@
 != external_text_links @sentence
 
 %p
-  .section-heading
-    %h1 Sentence in context
-    - if is_annotator?
-      != link_to " (Change tokenization or sentence division)", edit_sentence_tokenizations_path(@sentence), :method => :get
+  %h3.title Sentence in context
+  - if is_annotator?
+    != link_to " (Change tokenization or sentence division)", edit_sentence_tokenizations_path(@sentence), :method => :get
 
   != format_sentence @sentence_window, citations: true, sentence_numbers: true, highlight: @sentence, sentence_breaks: true, link_to: true
 
-  .section-heading
-    %h1 Syntax
+  %h3.title Syntax
   %p
     != render 'dependencies/form'
 
