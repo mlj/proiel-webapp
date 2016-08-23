@@ -241,64 +241,6 @@ abbr
     display: inline
     float: right
 
-////////////////////////////////////////////////////////////////
-// Toolbar icons
-////////////////////////////////////////////////////////////////
-
-=toolbar-icon($icon, $size)
-  padding-left: $size
-  background-color: transparent
-  background-image: image_url($icon)
-  background-repeat: no-repeat
-  background-attachment: center
-  background-position: left
-  margin-left: 1em
-
-a
-  &.previous
-    +toolbar-icon(unquote("sweetie/24-arrow-previous.png"), 24px)
-  &.next
-    +toolbar-icon(unquote("sweetie/24-arrow-next.png"), 24px)
-  &.index
-    +toolbar-icon(unquote("sweetie/24-columns.png"), 24px)
-  &.delete
-    +toolbar-icon(unquote("sweetie/24-em-cross.png"), 24px)
-  &.edit
-    +toolbar-icon(unquote("sweetie/24-settings-silver.png"), 24px)
-  &.parent
-    +toolbar-icon(unquote("sweetie/24-em-up.png"), 24px)
-  &.remove
-    +toolbar-icon(unquote("sweetie/16-circle-red-remove.png"), 16px)
-  &.add
-    +toolbar-icon(unquote("sweetie/16-circle-green-add.png"), 16px)
-  &.new
-    +toolbar-icon(unquote("sweetie/16-em-plus.png"), 16px)
-
-////////////////////////////////////////////////////////////////
-// Link icons
-////////////////////////////////////////////////////////////////
-
-=link-icon($icon, $size)
-  padding-right: $size
-  background-color: transparent
-  background-image: image_url($icon)
-  background-repeat: no-repeat
-  background-attachment: center
-  background-position: right
-
-a
-  &[href$='.pdf']
-    +link-icon(unquote("iconize/icon_pdf.gif"), 18px)
-
-  &[href^="mailto:"]
-    +link-icon(unquote("iconize/icon_mail.gif"), 20px)
-
-  &[class~="popup"]
-    +link-icon(unquote("iconize/icon_popup.gif"), 18px)
-
-  &[class~="external"]
-    +link-icon(unquote("iconize/icon_external.gif"), 18px)
-
 // Completion icons
 
 =completion-icon($icon)

@@ -71,7 +71,7 @@ module ApplicationHelper
     [BiblosExternalLinkMapper].map do |l|
       url = l.instance.to_url(sentence.citation)
       if url
-        link_to(l.instance.site_name, url, class: :external)
+        link_to(l.instance.site_name, url)
       else
         nil
       end
@@ -160,23 +160,23 @@ module ApplicationHelper
 
   # Creates a resource index link for an object.
   def link_to_index(object)
-    link_to('Index', send("#{object.class.to_s.underscore.pluralize}_url"), :class => :index)
+    link_to('Index', send("#{object.class.to_s.underscore.pluralize}_url"))
   end
 
   # Creates a resource index link for an object or a model.
   def link_to_new(object_or_model)
     klass = object_or_model.is_a?(Class) ? object_or_model : object_or_model.class
-    link_to('New', send("new_#{klass.to_s.underscore}_url"), :class => :new)
+    link_to('New', send("new_#{klass.to_s.underscore}_url"))
   end
 
   # Creates a resource edit link for an object.
   def link_to_edit(object)
-    link_to '', send("edit_#{object.class.to_s.underscore}_url"), :class => :edit
+    link_to('Edit', send("edit_#{object.class.to_s.underscore}_url"))
   end
 
   # Creates a resource delete link for an object.
   def link_to_delete(object)
-    link_to('Delete', object, :method => :delete, :confirm => 'Are you sure?', :class => :delete)
+    link_to('Delete', object, method: :delete, confirm: 'Are you sure?')
   end
 
   # Creates a resource previous link for an object. This is only
@@ -185,7 +185,7 @@ module ApplicationHelper
   # to an access key.
   def link_to_previous(object)
     if object.has_previous?
-      link_to '', object.previous_object, :class => :previous, :accesskey => 'p'
+      link_to('Previous', object.previous_object, accesskey: 'p')
     end
   end
 
@@ -194,7 +194,7 @@ module ApplicationHelper
   # +has_next?+ and +next+. The link will be tied to an access key.
   def link_to_next(object)
     if object.has_next?
-      link_to '', object.next_object, :class => :next, :accesskey => 'n'
+      link_to('Next', object.next_object, accesskey: 'n')
     end
   end
 
@@ -202,7 +202,7 @@ module ApplicationHelper
   # model to respond to +parent+. The link will be tied to an access
   # key.
   def link_to_parent(object)
-    link_to('Parent', object.parent, :class => :parent, :accesskey => 'u')
+    link_to('Parent', object.parent, accesskey: 'u')
   end
 
   def breadcrumb_title_for(object)
