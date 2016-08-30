@@ -1,14 +1,14 @@
-# The PROIEL web application [![Build Status](https://travis-ci.org/mlj/proiel-webapp.png)](https://travis-ci.org/mlj/proiel-webapp)
+# PROIEL Annotator [![Build Status](https://travis-ci.org/mlj/proiel-webapp.png)](https://travis-ci.org/mlj/proiel-webapp)
 
-`proiel-webapp` is a tool for collaborative treebank annotation using a dependency-grammar formalism and multiple levels of additional annotation.
+PROIEL Annotator is a tool for collaborative treebank annotation using the PROIEL dependency-grammar formalism and multiple levels of additional annotation.
 
-Installation, customisation and upgrade instructions are found below. See the [wiki](https://github.com/mlj/proiel-webapp/wiki) for more technical information and the [PROIEL framework page](http://proiel.github.io/framework/) for an overview of associated tools.
+Installation, customisation and upgrade instructions are found below. See the [wiki](https://github.com/mlj/proiel-webapp/wiki) for more technical information, the [PROIEL framework page](http://proiel.github.io/framework/) for an overview of associated tools and the [PROIEL treebanking handbook](http://proiel.github.io/handbook/) for general instructions.
 
 ## Installing
 
-`proiel-webapp` is a Ruby on Rails application. This version uses Ruby on Rails 4.2 and works with either MySQL or PostgreSQL.
+PROIEL Annotator is a Ruby on Rails application. This version uses Ruby on Rails 4.2 and works with MySQL and PostgreSQL on Linux and OS X.
 
-The following instructions assume that you have a functional and up-to-date Ruby environment installed, and that you know how to set up and configure the database server.
+The following instructions assume that you have a functional and up-to-date Ruby environment installed, and that you have already configured your database server.
 
 ### Step 1: Install dependencies
 
@@ -132,6 +132,6 @@ $ bin/rails c
 
 ## License
 
-The PROIEL web application is licensed under the terms of the GNU General Public License version 2. See the file `COPYING` for details.
+PROIEL Annotator is licensed under the terms of the GNU General Public License version 2. See the file `COPYING` for details.
 
-The application was written by Marius L. Jøhndal (University of Cambridge/University of Oslo), Dag Haug (University of Oslo) and Anders Nøklestad (University of Oslo).
+PROIEL Annotator was written by Marius L. Jøhndal (University of Cambridge/University of Oslo), Dag Haug (University of Oslo) and Anders Nøklestad (University of Oslo).
