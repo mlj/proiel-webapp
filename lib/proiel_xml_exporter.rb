@@ -1,7 +1,7 @@
 #--
 #
 # Copyright 2007-2016 University of Oslo
-# Copyright 2007-2016 Marius L. Jøhndal
+# Copyright 2007-2017 Marius L. Jøhndal
 # Copyright 2010-2012 Dag Haug
 #
 # This file is part of the PROIEL web application.
@@ -142,7 +142,7 @@ class PROIELXMLExporter
 
   def write_source_division!(builder, sd)
     attrs = pull_features(sd,
-                          [],
+                          %w(id),
                           %w(presentation_before presentation_after aligned_source_division_id))
 
     rename_feature!(attrs, :aligned_source_division_id, :alignment_id)
