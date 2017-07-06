@@ -80,17 +80,25 @@ module Proiel::Maintenance
       end
     end
 
-    def self.export(filename, id)
-      raise ArgumentError, 'filename expected' unless filename.is_a?(String)
-      raise ArgumentError, 'file already exists' if File.exists?(filename)
+    def self.export(id = nil, filename = nil)
+      if id.nil?
+        Source.all.each { |s| self.export(s.id, filename) }
+      elsif filename.nil?
+        source = Source.find(id)
+        self.export(id, source.code + '.xml')
+      else
+        raise ArgumentError, 'source ID expected' unless id.is_a?(String) or id.is_a?(Numeric)
+        raise ArgumentError, 'filename expected' unless filename.is_a?(String)
+        raise ArgumentError, 'file already exists' if File.exists?(filename)
 
-      source = Source.find(id)
+        source = Source.find(id)
 
-      Proiel::Maintenance.wrap_status("Exporting #{filename}") do
-        e = PROIELXMLExporter.new(source)
-        e.write(filename)
+        Proiel::Maintenance.wrap_status("Exporting #{filename}") do
+          e = PROIELXMLExporter.new(source)
+          e.write(filename)
 
-        true
+          true
+        end
       end
     end
   end
