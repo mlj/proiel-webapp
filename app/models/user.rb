@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
   #  :graph_method
 
   has_many :assigned_sentences, :class_name => 'Sentence', :foreign_key => 'assigned_to'
-  has_many :audits, :class_name => 'Audited::Adapters::ActiveRecord::Audit'
+  has_many :audits, :class_name => 'Audited::Audit'
   has_many :notes, :as => :originator
 
   validates_presence_of :login, :message => 'cannot be blank.'

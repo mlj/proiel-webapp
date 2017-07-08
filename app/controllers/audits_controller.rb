@@ -1,7 +1,7 @@
 #--
 #
 # Copyright 2007-2016 University of Oslo
-# Copyright 2007-2016 Marius L. Jøhndal
+# Copyright 2007-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -38,13 +38,13 @@ class AuditsController < ApplicationController
       s = objs.map { |k, v| "(auditable_type = '#{k}' AND auditable_id IN (?))" }.join(' OR ')
       v = objs.map { |_, v2| v2 }
 
-      audits = Audited::Adapters::ActiveRecord::Audit.where(s, *v)
+      audits = Audited::Audit.where(s, *v)
     elsif params[:user_id]
       # Grab changes by this user.
       @user = User.find(params[:user_id])
       audits = @user.audits
     else
-      audits = Audited::Adapters::ActiveRecord::Audit
+      audits = Audited::Audit
     end
 
     # Conceptually we want to order by created_at but ordering by ID is
@@ -56,13 +56,13 @@ class AuditsController < ApplicationController
   end
 
   def show
-    @audit = Audited::Adapters::ActiveRecord::Audit.find(params[:id])
+    @audit = Audited::Audit.find(params[:id])
 
     respond_with @audit
   end
 
   def destroy
-    @audit = Audited::Adapters::ActiveRecord::Audit.find(params[:id])
+    @audit = Audited::Audit.find(params[:id])
 
     if @audit.auditable.audits.last == @audit
       o = @audit.auditable.revision(:previous)

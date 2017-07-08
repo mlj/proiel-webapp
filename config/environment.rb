@@ -1,5 +1,5 @@
 # Load the Rails application.
-require File.expand_path('../application', __FILE__)
+require_relative 'application'
 
 # Settings specific to the PROIEL application (i.e. not Rails). You can
 # override these settings in config/environments/*.

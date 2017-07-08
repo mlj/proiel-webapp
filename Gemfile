@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.9'
+gem 'rails', '5.0.4'
 gem 'uglifier'
 gem 'json'
 gem 'sass-rails', '~> 5.0'
@@ -13,8 +13,10 @@ gem 'haml'
 gem 'devise'
 gem 'devise-encryptable'
 gem 'exception_notification'
-gem 'audited-activerecord', '~> 4.0'
+gem 'audited', '~> 4.5'
 gem 'ransack'
+
+gem 'rails-controller-testing'
 
 gem 'unicode'
 

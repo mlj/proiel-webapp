@@ -9,5 +9,5 @@ before_script:
   - cp config/database.yml.travis config/database.yml
   - bin/rake db:setup
 script:
-  - bin/rake
+  - bin/rails test
   - bin/rspec

@@ -349,7 +349,7 @@ module Proiel::Maintenance
   module History
     def self.delete
       Proiel::Maintenance.wrap_status("Deleting history") do
-        Audited::Adapters::ActiveRecord::Audit.delete_all
+        Audited::Audit.delete_all
       end
 
       Proiel::Maintenance.wrap_status("Optimising database tables") do
