@@ -22,6 +22,7 @@
 //= require app/morphology_editor
 //= require app/tree
 //= require app/syntax_editor
+//= require app/editable
 //= require app/app
 
 var authenticity_param;

@@ -161,94 +161,121 @@ class Sentence < ActiveRecord::Base
     source_division
   end
 
-  def syntactic_annotation=(dependency_graph)
-    # This is a two step process: first figure out if any tokens have been added or
-    # removed (this only applies to empty dependency tokens). Then update each token
-    # in the sentence with new dependency information.
-    #
-    # Since by validation constraints all tokens in the sentence have to be annotated
-    # if any single one is, we do not have to bother with partial annotations.
+  # Updates annotation for the sentence.
+  #
+  # Returns an array of new tokens.
+  def update_annotation!(updated_tokens)
+    Sentence.transaction do
+      # Make a mapping from IDs to Token objects for existing tokens. We'll use
+      # this to match Token objects with data in updated_tokens, and we'll
+      # delete each Token object from the mapping as we update it so that we
+      # can determine at the end if there are leftover Token objects that
+      # haven't been updated.
+      id_map = tokens.map { |t| [t.id.to_s, t] }.to_h
 
-    # Work inside a transaction since we have lots of small pieces that must go together.
-    Token.transaction do
-      ts = tokens.takes_syntax
+      slash_id_map = {}
 
-      removed_token_ids = ts.map(&:id) - dependency_graph.nodes.map(&:identifier)
-      added_token_ids = dependency_graph.nodes.map(&:identifier) - ts.map(&:id)
-
-      removed_tokens = ts.select { |token| removed_token_ids.include?(token.id) }
-
-      # This list of "removed" tokens is actually not a list of tokens to be
-      # deleted, but all the tokens not included in the dependency graph. We need
-      # to make sure that only empty dependency nodes are actually deleted; if others
-      # are present, the user has given us an incomplete analysis.
-      raise "Incomplete dependency graph" unless removed_tokens.all?(&:is_empty?)
-
-      removed_tokens.each { |token| token.destroy }
-
-      # We will append new empty nodes at the end of the token sequence. Establish
-      # which token_number to start at.
+      # We will append new empty nodes at the end of the token sequence.
+      # Establish which token_number to start at.
       @new_token_number ||= max_token_number + 1
-      id_map = Hash[*tokens.map { |token| [token.id, token.id] }.flatten]
 
-      dependency_graph.nodes.each do |node|
-        unless id_map[node.identifier]
-          raise "Unexpected new node" unless added_token_ids.include?(node.identifier)
-          token = tokens.new
-          token.token_number = @new_token_number
-          token.empty_token_sort = node.data[:empty]
-          token.save!
-          id_map[node.identifier] = token.id
+      # Create new tokens and add them to id_map. We have to create all new
+      # tokens before doing any updating in case a head or slash relation
+      # targets a new token.
+      updated_tokens.each do |u|
+        id = u['id']
+
+        unless id_map.key?(id)
+          raise ArgumentError unless id[/^new/]
+          raise ArgumentError if u['empty_token_sort'].blank?
+
+          t = tokens.new
+          t.empty_token_sort = u['empty_token_sort']
+          t.token_number = @new_token_number
+          t.save!
+
+          id_map[id] = t
+
           @new_token_number += 1
+        else
+          raise ArgumentError unless u['id'].to_i.to_s == u['id']
         end
       end
 
-      # Now we can iterate the sentence and update all tokens with new annotation
-      # and secondary edges.
-      dependency_graph.nodes.each do |node|
-        token = tokens.find(id_map[node.identifier])
-        token.head_id = id_map[node.head.identifier]
-        token.relation_tag = node.relation.to_s
+      updated_tokens.each do |u|
+        id = u['id']
 
-        # Slash edges are marked as dependent on the association level, so when we
-        # destroyed empty tokens, the orphaned slashes should also have gone away.
-        # The remaining slashes will however have to be updated "manually".
-        token.slash_out_edges.each { |edge| edge.destroy }
-        node.slashes_with_interpretations.each do |slashee, interpretation|
-          SlashEdge.create!(:slasher_id => token.id,
-                            :slashee_id => id_map[slashee.identifier],
-                            :relation_tag => interpretation.to_s)
+        raise unless id_map.key?(id)
+
+        t = id_map[id]
+
+        t.morphology = Morphology.new(u['msd'])
+
+        # FIXME: disallow this by separating out lemma creation and dictionary
+        lemma_pos = u['lemma']['part_of_speech_tag']
+        lemma_base, lemma_variant = u['lemma']['form'].split('#')
+        t.lemma = Lemma.find_by_part_of_speech_tag_and_lemma_and_variant_and_language(lemma_pos, lemma_base, lemma_variant, language_tag)
+
+        unless lemma
+          t.lemma = Lemma.create!(part_of_speech_tag: lemma_pos, lemma: lemma_base, variant: lemma_variant, language_tag: language_tag)
         end
-        token.save!
+
+        t.relation_tag = u['relation']
+        t.head_id = id_map[u['head_id']]
+        t.save!
+      end
+
+      # Pass 3: Remove old slashes and add new ones. Do this separately because we need relations to be in place for interpreted relations.
+      updated_tokens.each do |u|
+        id = u['id']
+
+        t = id_map.remove(id)
+
+        t.slash_out_edges.each { |edge| edge.destroy }
+
+        t.slashes.each do |s|
+          raise ArgumentError, "invalid slashee" if s.blank?
+
+          interpretation =
+            if t.is_empty? and
+              (t.empty_token_sort == 'V' or t.relation_tag == 'pred') and
+              (s.empty_token_sort == 'V' or s.relation_tag == 'pred') and
+              t.relation_tag == slashee.relation_tag
+              'pid'
+            elsif t.relation_tag == 'xadv' or t.relation_tag == 'xobj'
+              'xsub'
+            else
+              raise ArgumentError, "slashee has no relation" if slashee.relation_tag.blank?
+              slashee.relation_tag
+            end
+
+          SlashEdge.create!(slasher_id: t.id,
+                            slashee_id: id_map[slashee],
+                            relation_tag: interpretation)
+        end
+      end
+
+      id_map.each do |id, t|
+        # Token is not in the data the caller gave us. If the token we have
+        # in the database is an empty one, we can safely get rid of it. If it
+        # is non-empty, the caller has made a mistake and given us an
+        # incomplete token list.
+        #
+        # FIXME: At this point we ought to check that the token we're deleted
+        # is not the head of any other token.
+        #
+        # Slash edges are marked as dependent on the association level so when we
+        # destroy empty tokens, the orphaned slashes will also gone away.
+        #
+        # FIXME: We need to make sure that no other object in the database
+        # points to this token.
+        if t.is_empty?
+          t.destroy
+        else
+          raise ArgumentError, "tokens missing from token list"
+        end
       end
     end
-  end
-
-  def structure
-    xyz = tokens.takes_syntax.map do |token|
-      mf = token.morph_features
-      mh = mf ? mf.morphology_to_hash : {}
-
-      [token.id, {
-        id: token.id,
-        relation_tag: token.relation_tag,
-        morph_features: mh.merge({
-          language: language.tag,
-          finite: ['i', 's', 'm', 'o'].include?(mh[:mood]),
-          form: token.form,
-          lemma: token.lemma ? token.lemma.lemma : nil,
-          pos: mf ? mf.pos_s : nil,
-        }),
-        empty: token.is_empty? ? token.empty_token_sort : false,
-        form: TokenText.token_form_as_html(token.form),
-        token_number: token.token_number
-      }]
-    end.to_h
-
-    {
-      tokens: xyz,
-      tree: has_dependency_annotation? ? dependency_graph.to_h : {},
-    }
   end
 
   # Returns the maximum token number in the sentence.

@@ -104,18 +104,7 @@ class SentencesController < ApplicationController
 
       format.json do
         tokens = ActiveSupport::JSON.decode(params[:tokens])
-        Sentence.transaction do
-          tokens.each do |token|
-            id = token['id'].to_i
-            msd = token['msd']
-            lemma = token['lemma']['form']
-            pos = token['lemma']['part_of_speech_tag']
-            language = token['lemma']['language_tag']
-            mf = MorphFeatures.new([lemma, pos, language].join(','), Morphology.new(msd))
-            t = Token.find(id)
-            t.morph_features = mf
-          end
-        end
+        @sentence.update_annotation!(tokens)
 
         render json: @sentence
       end

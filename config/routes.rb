@@ -2,8 +2,6 @@ Rails.application.routes.draw do
   devise_for :users
   resources :users, :only => [:index, :show]
 
-  resource :profile, :only => [:edit, :update]
-
   resources :audits, :only => [:index, :destroy]
 
   resources :sources, :only => [:index, :show, :edit, :update]
