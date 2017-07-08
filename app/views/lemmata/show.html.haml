@@ -39,8 +39,3 @@
       %th{colspan: 3}= "Match"
   %tbody
     != render :partial => 'annotations/annotation', :collection => @tokens
-
-- if is_reviewer? and !@lemma.audits.empty?
-  %hr
-  %h3.title History
-  != audits_summary @lemma.audits
