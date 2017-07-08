@@ -39,8 +39,8 @@ class SourcesController < ApplicationController
     sentences = @source.sentences
     @activity_stats = sentences.annotated.where('annotated_at IS NOT NULL').group("DATE_FORMAT(annotated_at, '%Y-%m-%d')").order('annotated_at DESC').limit(10).count
     @sentence_completion_stats = @source.aggregated_status_statistics
-    @annotated_by_stats = sentences.annotated.group(:annotated_by).count.map { |k, v| [User.where(id: k).first.try(:full_name), v] }
-    @reviewed_by_stats = sentences.reviewed.group(:reviewed_by).count.map { |k, v| [User.where(id: k).first.try(:full_name), v] }
+    @annotated_by_stats = sentences.annotated.where('annotated_by IS NOT NULL').group(:annotated_by).count.map { |k, v| [User.where(id: k).first.try(:full_name), v] }
+    @reviewed_by_stats = sentences.reviewed.where('reviewed_by IS NOT NULL').group(:reviewed_by).count.map { |k, v| [User.where(id: k).first.try(:full_name), v] }
 
     respond_with @source
   end

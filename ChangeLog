@@ -19,9 +19,9 @@ proiel-webapp. It does not list all changes; see the git history for that.
 1.8.2   29/04/2016
 
   - Added workaround for sentences that are flagged as annotated or reviewed
-    by lack a valid annotated_by or reviewed_by. This happens, for example, when
-    texts are exported to PROIEL XML and re-imported, since PROIEL XML does not
-    include any user information.
+    by lack a valid annotated_by, reviewed_by, annotated_at or reviewed_at. This
+    happens, for example, when texts are exported to PROIEL XML and re-imported,
+    since PROIEL XML does not include any user information.
 
 1.8.1   15/03/2016
 
