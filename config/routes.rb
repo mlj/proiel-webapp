@@ -60,7 +60,7 @@ Rails.application.routes.draw do
     resource :tokenizations, :only => [:edit, :update]
   end
 
-  resources :notes, :only => [:show, :edit, :update, :destroy]
+  resources :notes, :only => [:edit, :update, :destroy]
 
   resources :semantic_tags, :only => [:index, :show]
 

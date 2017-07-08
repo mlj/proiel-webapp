@@ -1,8 +1,8 @@
 # encoding: UTF-8
 #--
 #
-# Copyright 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2009-2016 University of Oslo
+# Copyright 2009-2016 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -24,12 +24,6 @@
 class NotesController < ApplicationController
   respond_to :html
   before_filter :is_reviewer?, :only => [:edit, :update, :destroy]
-
-  def show
-    @note = Note.find(params[:id])
-
-    respond_with @note
-  end
 
   def edit
     @note = Note.find(params[:id])

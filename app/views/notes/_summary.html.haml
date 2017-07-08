@@ -1,3 +1,17 @@
-%li
-  != [link_to_originator(summary.originator), truncate(summary.contents, :length => 200)].join(': ')
-  != "(#{link_to("Details", summary)})"
+%article.media
+  .media-content
+    .content
+      %p
+        %strong
+          = format_note_originator summary.originator
+        ·
+        != link_to_notable summary.notable
+        ·
+        = summary.created_at
+        %br
+        %em
+          = summary.contents
+        %br
+        %small
+          != link_to 'Edit', edit_note_path(summary)
+          != link_to 'Delete', summary, method: :delete, data: { confirm: 'Are you sure you want to delete the note?' }

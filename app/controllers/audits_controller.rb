@@ -29,13 +29,12 @@ class AuditsController < ApplicationController
     if params[:sentence_id]
       # Grab changes related to this sentence, i.e. the object itself and
       # its tokens.
-
       sentence = Sentence.find(params[:sentence_id])
-      tokens = @sentence.tokens.includes(:lemma)
+      tokens = @sentence.tokens
 
       objs = []
-      objs << [Sentence, [sentence]]
-      objs << [Token, tokens]
+      objs << [Sentence, [sentence.id]]
+      objs << [Token, tokens.pluck(:id)]
       s = objs.map { |k, v| "(auditable_type = '#{k}' AND auditable_id IN (?))" }.join(' OR ')
       v = objs.map { |_, v2| v2 }
 
@@ -51,7 +50,7 @@ class AuditsController < ApplicationController
     # Conceptually we want to order by created_at but ordering by ID is
     # *much* faster and produces the same result. The gem imposes ordering by
     # `version` so it too needs to be overriden using `reorder`.
-    @audits = audits.reorder('id DESC').page(current_page)
+    @audits = audits.reorder(id: :desc).page(current_page)
 
     respond_with @audits
   end

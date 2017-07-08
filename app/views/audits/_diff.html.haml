@@ -1,9 +1,0 @@
-- if diff.action == 'destroy'
-  Removed
-- else
-  %table.diff
-    - diff.audited_changes.each do |attribute, (old, new)|
-      %tr
-        %td=attribute
-        %td.removed.tag=old
-        %td.added.tag=new
