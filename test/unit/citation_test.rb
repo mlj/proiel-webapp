@@ -32,7 +32,7 @@ class CitationTestCase < ActiveSupport::TestCase
     t = s.tokens.new(citation_part: '')
 
     assert_equal 'Vulg.', t.citation
-    assert_equal nil, t.citation_without_source
+    assert_nil t.citation_without_source
 
     #assert_equal 'Vulg. 1.1–4', s.citation
     #assert_equal '1.1–4', s.citation_without_source
@@ -40,7 +40,7 @@ class CitationTestCase < ActiveSupport::TestCase
     t = s.tokens.new(citation_part: nil)
 
     assert_equal 'Vulg.', t.citation
-    assert_equal nil, t.citation_without_source
+    assert_nil t.citation_without_source
 
     #assert_equal 'Vulg. 1.1–4', t.sentence.citation
     #assert_equal '1.1–4', t.sentence.citation_without_source
@@ -51,9 +51,9 @@ class CitationTestCase < ActiveSupport::TestCase
 
     assert_equal 0, s.tokens.length
     assert_equal "Pl. Am.", s.citation
-    assert_equal nil, s.citation_without_source
+    assert_nil s.citation_without_source
     assert_equal "Pl. Am.", s.source_division.citation
-    assert_equal nil, s.source_division.citation_without_source
+    assert_nil s.source_division.citation_without_source
   end
 
   def test_citation_with_empty_source_division
@@ -61,6 +61,6 @@ class CitationTestCase < ActiveSupport::TestCase
 
     assert_equal 0, s.sentences.length
     assert_equal "Pl. Am.", s.citation
-    assert_equal nil, s.citation_without_source
+    assert_nil s.citation_without_source
   end
 end

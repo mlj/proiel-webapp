@@ -182,8 +182,8 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
     g = Proiel::DependencyGraph.new
     g.add_node(1, :foo, nil, {}, { :empty => true, :token_number => 600 })
     g.add_node(2, :foo, 1, {}, { :empty => true, :token_number => 10 })
-    assert_equal nil, g[1].max_token_number
-    assert_equal nil, g[2].max_token_number
+    assert_nil g[1].max_token_number
+    assert_nil g[2].max_token_number
   end
 
   def test_linearly_precedes

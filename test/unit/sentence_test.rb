@@ -28,14 +28,14 @@ class SentenceTest < ActiveSupport::TestCase
     assert_equal @sentence_middle_of_sd, @sentence_first_in_sd.next_object
     assert_equal @sentence_last_in_sd, @sentence_middle_of_sd.next_object
     assert_equal @sentence_extra_last_in_sd, @sentence_last_in_sd.next_object
-    assert_equal nil, @sentence_extra_last_in_sd.next_object
+    assert_nil @sentence_extra_last_in_sd.next_object
 
     assert !@sentence_first_in_sd.has_previous?
     assert @sentence_middle_of_sd.has_previous?
     assert @sentence_last_in_sd.has_previous?
     assert @sentence_extra_last_in_sd.has_previous?
 
-    assert_equal nil, @sentence_first_in_sd.previous_object
+    assert_nil @sentence_first_in_sd.previous_object
     assert_equal @sentence_first_in_sd, @sentence_middle_of_sd.previous_object
     assert_equal @sentence_middle_of_sd, @sentence_last_in_sd.previous_object
     assert_equal @sentence_last_in_sd, @sentence_extra_last_in_sd.previous_object
