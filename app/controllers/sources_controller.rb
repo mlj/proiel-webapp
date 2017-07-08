@@ -1,7 +1,7 @@
 #--
 #
 # Copyright 2007-2012 University of Oslo
-# Copyright 2007-2016 Marius L. Jøhndal
+# Copyright 2007-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -55,8 +55,17 @@ class SourcesController < ApplicationController
     normalize_unicode_params! params[:source], :author
 
     @source = Source.find(params[:id])
-    @source.update_attributes(params[:source])
+    @source.update!(source_params)
 
     respond_with @source
+  end
+
+  private
+
+  def source_params
+    p = [:source_id, :code, :position, :title, :aligned_source_division_id, :presentation_before,
+         :presentation_after, :language_tag, :citation_part, :created_at, :updated_at, :author]
+    p += Proiel::Metadata.fields
+    params.require(:source).permit(*p)
   end
 end

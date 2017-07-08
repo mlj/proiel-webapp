@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2007-2012 University of Oslo
+# Copyright 2007-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,7 +21,7 @@
 #++
 
 class DependencyAlignmentTerm < ActiveRecord::Base
-  attr_accessible :token_id, :source_id
+  #attr_accessible :token_id, :source_id
   change_logging
 
   belongs_to :token

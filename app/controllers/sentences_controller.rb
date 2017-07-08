@@ -1,7 +1,7 @@
 #--
 #
 # Copyright 2009-2016 University of Oslo
-# Copyright 2009-2016 Marius L. Jøhndal
+# Copyright 2009-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -97,7 +97,7 @@ class SentencesController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @sentence.update_attributes(params[:sentence])
+        @sentence.update!(sentence_params)
         flash[:notice] = 'Sentence was successfully updated.'
         respond_with @sentence
       end
@@ -173,5 +173,14 @@ class SentencesController < ApplicationController
     respond_to do |format|
       format.html { send_data result, disposition: 'inline', type: :html }
     end
+  end
+
+  private
+
+  def sentence_params
+    params.require(:sentence).permit(:sentence_number, :annotated_by, :annotated_at, :reviewed_by,
+      :reviewed_at, :unalignable, :automatic_alignment, :sentence_alignment_id,
+      :source_division_id, :assigned_to, :presentation_before, :presentation_after,
+      :status_tag, :created_at, :updated_at)
   end
 end

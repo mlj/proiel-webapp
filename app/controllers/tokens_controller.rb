@@ -1,8 +1,7 @@
-# encoding: UTF-8
 #--
 #
 # Copyright 2009-2016 University of Oslo
-# Copyright 2009-2016 Marius L. Jøhndal
+# Copyright 2009-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -69,7 +68,7 @@ class TokensController < ApplicationController
     normalize_unicode_params! params[:token], :presentation_before, :presentation_after, :form
 
     @token = Token.find(params[:id])
-    @token.update_attributes(params[:token])
+    @token.update!(token_params)
 
     respond_with @token.sentence
   end
@@ -137,5 +136,16 @@ class TokensController < ApplicationController
 
   def opensearch
     response.headers['Content-Type'] = 'application/opensearchdescription+xml; charset=utf-8'
+  end
+
+  private
+
+  def token_params
+    params.require(:token).permit(:sentence_id, :token_number, :form, :lemma_id, :head_id,
+      :source_morphology_tag, :source_lemma, :foreign_ids, :information_status_tag,
+      :empty_token_sort, :contrast_group, :token_alignment_id,
+      :automatic_token_alignment, :dependency_alignment_id, :antecedent_id,
+      :morphology_tag, :citation_part, :presentation_before, :presentation_after,
+      :relation_tag, :created_at, :updated_at)
   end
 end

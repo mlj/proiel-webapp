@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2009-2012 University of Oslo
+# Copyright 2009-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -25,9 +25,9 @@ class User < ActiveRecord::Base
     :recoverable, :rememberable, :trackable, :validatable,
     :encryptable
 
-  attr_accessible :login, :first_name, :last_name, :email,
-    :password, :password_confirmation, :role,
-    :graph_method
+  #attr_accessible :login, :first_name, :last_name, :email,
+  #  :password, :password_confirmation, :role,
+  #  :graph_method
 
   has_many :assigned_sentences, :class_name => 'Sentence', :foreign_key => 'assigned_to'
   has_many :audits, :class_name => 'Audited::Adapters::ActiveRecord::Audit'

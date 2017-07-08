@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Marius L. Jøhndal
+# Copyright 2007-2012 University of Oslo
+# Copyright 2007-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -45,8 +45,16 @@ class SourceDivisionsController < ApplicationController
     normalize_unicode_params! params[:source_division], :presentation_before, :presentation_after
 
     @source_division = SourceDivision.find(params[:id])
-    @source_division.update_attributes(params[:source_division])
+    @source_division.update!(source_division_params)
 
     respond_with @source_division
+  end
+
+  private
+
+  def source_division_params
+    params.require(:source_division).permit(:source_id, :position, :title,
+                                            :aligned_source_division_id, :presentation_before, :presentation_after,
+                                            :created_at, :updated_at)
   end
 end

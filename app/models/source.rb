@@ -1,7 +1,7 @@
 #--
 #
 # Copyright 2007-2016 University of Oslo
-# Copyright 2007-2016 Marius L. Jøhndal
+# Copyright 2007-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,12 +21,6 @@
 #++
 
 class Source < ActiveRecord::Base
-  attr_accessible :source_id, :code, :position, :title,
-    :aligned_source_division_id, :presentation_before, :presentation_after,
-    :language_tag, :citation_part, :created_at, :updated_at,
-    :author
-  attr_accessible(*Proiel::Metadata.fields)
-
   change_logging
 
   blankable_attributes :author

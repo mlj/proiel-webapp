@@ -1,8 +1,7 @@
-# encoding: UTF-8
 #--
 #
-# Copyright 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2009-2013 University of Oslo
+# Copyright 2009-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -22,9 +21,6 @@
 #++
 
 class Lemma < ActiveRecord::Base
-  attr_accessible :lemma, :variant, :gloss, :foreign_ids, :language_tag,
-    :part_of_speech_tag
-
   change_logging
 
   blankable_attributes :foreign_ids, :gloss

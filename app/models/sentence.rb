@@ -1,7 +1,7 @@
 #--
 #
 # Copyright 2007-2016 University of Oslo
-# Copyright 2007-2016 Marius L. Jøhndal
+# Copyright 2007-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,11 +21,6 @@
 #++
 
 class Sentence < ActiveRecord::Base
-  attr_accessible :sentence_number, :annotated_by, :annotated_at, :reviewed_by,
-    :reviewed_at, :unalignable, :automatic_alignment, :sentence_alignment_id,
-    :source_division_id, :assigned_to, :presentation_before, :presentation_after,
-    :status_tag, :created_at, :updated_at
-
   change_logging
 
   blankable_attributes :annotated_at, :annotated_by, :assigned_to,

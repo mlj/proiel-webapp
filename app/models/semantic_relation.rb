@@ -1,7 +1,8 @@
 #--
 #
-# Copyright 2010, 2011, 2012 University of Oslo
-# Copyright 2010, 2011, 2012 Dag Haug
+# Copyright 2010-2012 University of Oslo
+# Copyright 2010-2012 Dag Haug
+# Copyright 2010-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,7 +22,7 @@
 #++
 
 class SemanticRelation < ActiveRecord::Base
-  attr_accessible :target_id, :controller_id, :sematic_relation_tag_id
+  #attr_accessible :target_id, :controller_id, :sematic_relation_tag_id
   change_logging
 
   belongs_to :controller, :class_name => 'Token', :foreign_key => 'controller_id'

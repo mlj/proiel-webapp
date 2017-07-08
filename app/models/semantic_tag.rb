@@ -1,8 +1,7 @@
-# encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 Marius L. Jøhndal
+# Copyright 2007-2013 University of Oslo
+# Copyright 2007-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -22,7 +21,7 @@
 #++
 
 class SemanticTag < ActiveRecord::Base
-  attr_accessible :semantic_attribute_value
+  #attr_accessible :semantic_attribute_value
 
   belongs_to :semantic_attribute_value
   belongs_to :taggable, :polymorphic => true

@@ -50,7 +50,7 @@ class LemmataController < ApplicationController
     normalize_unicode_params! params[:lemma], :lemma
 
     @lemma = Lemma.find(params[:id])
-    @lemma.update_attributes(params[:lemma])
+    @lemma.update(lemma_params)
 
     respond_with @lemma
   rescue ActiveRecord::RecordInvalid => invalid
@@ -100,5 +100,11 @@ class LemmataController < ApplicationController
     respond_to do |format|
       format.json { render json: a }
     end
+  end
+
+  private
+
+  def lemma_params
+    params.require(:lemma).permit(:lemma, :variant, :gloss, :foreign_ids, :language_tag, :part_of_speech_tag)
   end
 end

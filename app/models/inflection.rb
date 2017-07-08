@@ -1,7 +1,7 @@
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Marius L. Jøhndal
+# Copyright 2007-2013 University of Oslo
+# Copyright 2007-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,8 +21,7 @@
 #++
 
 class Inflection < ActiveRecord::Base
-  attr_accessible :lemma, :form, :language_tag, :morphology_tag, :part_of_speech_tag
-
+  #attr_accessible :lemma, :form, :language_tag, :morphology_tag, :part_of_speech_tag
   tag_attribute :language, :language_tag, LanguageTag, :allow_nil => false
 
   validates_presence_of :form

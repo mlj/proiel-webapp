@@ -1,7 +1,7 @@
 #--
 #
 # Copyright 2007-2016 University of Oslo
-# Copyright 2007-2016 Marius L. Jøhndal
+# Copyright 2007-2017 Marius L. Jøhndal
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,13 +21,6 @@
 #++
 
 class Token < ActiveRecord::Base
-  attr_accessible :sentence_id, :token_number, :form, :lemma_id, :head_id,
-    :source_morphology_tag, :source_lemma, :foreign_ids, :information_status_tag,
-    :empty_token_sort, :contrast_group, :token_alignment_id,
-    :automatic_token_alignment, :dependency_alignment_id, :antecedent_id,
-    :morphology_tag, :citation_part, :presentation_before, :presentation_after,
-    :relation_tag, :created_at, :updated_at
-
   change_logging
 
   blankable_attributes :antecedent_id, :automatic_token_alignment,

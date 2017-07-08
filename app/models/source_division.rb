@@ -1,7 +1,7 @@
 #--
 #
 # Copyright 2007-2016 University of Oslo
-# Copyright 2007-2016 Marius L. Jøhndal
+# Copyright 2007-2017 Marius L. Jøhndal
 # Copyright 2011 Dag Haug
 #
 # This file is part of the PROIEL web application.
@@ -24,9 +24,6 @@
 require 'differ'
 
 class SourceDivision < ActiveRecord::Base
-  attr_accessible :source_id, :position, :title, :aligned_source_division_id, :presentation_before, :presentation_after,
-    :created_at, :updated_at
-
   change_logging except: %i(cached_has_discourse_annotation cached_citation cached_status_tag)
 
   blankable_attributes :aligned_source_division_id, :presentation_after,
