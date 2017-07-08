@@ -17,5 +17,5 @@
 %p
   != paginate @sentences
 
-%p
+.box.formatted-text
   != format_sentence @sentences.all, citations: true, sentence_numbers: true, link_to: true, sentence_statuses: true

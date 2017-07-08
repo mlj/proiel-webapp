@@ -133,19 +133,44 @@
 </script>
 
 <script type="text/x-template" id="syntax-editor-template">
-  <div>
+  <div class="syntax-view">
     <div class='annotation'>
-      <div class='actions'>
-        <input type='button' v-bind:disabled='noActionableElement' v-on:click='remove'        value='Remove subtree'>
-        <input type='button' v-bind:disabled='noCutableElement'    v-on:click='cut'           value='Cut subtree'>
-        <input type='button' v-bind:disabled='noPasteableElement'  v-on:click='paste'         value='Paste subtree'>
-        <input type='button'                                       v-on:click='clear'         value='Clear'>
-        <input type='button'                                       v-on:click='reset'         value='Reset'>
-        <input type='button'                                       v-on:click='addEmptyC'     value='Add asyndetic conjunction'>
-        <input type='button'                                       v-on:click='addEmptyV'     value='Add empty verbal node'>
-        <input type='button' v-bind:disabled='noActionableElement' v-on:click='addSlash'      value='Add slash'>
-        <input type='button' v-bind:disabled='noRemoveableSlashes' v-on:click='removeSlashes' value='Remove slashes'>
-      </div>
+        <div class='control is-grouped'>
+          <a class='button' v-bind:disabled='noActionableElement' v-on:click='remove'>
+            <span class="icon is-small">
+              <i class="fa fa-remove"></i>
+            </span>
+            <span>Remove</span>
+          </a>
+
+          <a class='button' v-bind:disabled='noCutableElement' v-on:click='cut'>
+            <span class="icon is-small">
+              <i class="fa fa-cut"></i>
+            </span>
+            <span>Cut</span>
+          </a>
+
+          <a class='button' v-bind:disabled='noPasteableElement' v-on:click='paste'>
+            <span class="icon is-small">
+              <i class="fa fa-paste"></i>
+            </span>
+            <span>Paste</span>
+          </a>
+
+          <input class='button is-danger'  type='button'                                       v-on:click='clear'         value='Clear'>
+
+          <a class='button' v-on:click='reset'>
+            <span class="icon is-small">
+              <i class="fa fa-undo"></i>
+            </span>
+            <span>Reset</span>
+          </a>
+
+          <input class='button is-success' type='button'                                       v-on:click='addEmptyC'     value='Add asyndetic conjunction'>
+          <input class='button is-danger'  type='button'                                       v-on:click='addEmptyV'     value='Add empty verbal node'>
+          <input class='button is-danger'  type='button' v-bind:disabled='noActionableElement' v-on:click='addSlash'      value='Add slash'>
+          <input class='button is-warning' type='button' v-bind:disabled='noRemoveableSlashes' v-on:click='removeSlashes' value='Remove slashes'>
+        </div>
 
       <div class='actions'>
         <label>

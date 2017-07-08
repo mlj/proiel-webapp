@@ -47,10 +47,7 @@ module SentenceFormattingHelper
         end.flatten
 
     if x.length > 0
-      markup = format_tokens(x, options, &block)
-      language = x.first.language
-
-      "<div class='formatted-text' lang='#{language}'>#{markup}</div>".html_safe
+      format_tokens(x, options, &block)
     else
       ''
     end

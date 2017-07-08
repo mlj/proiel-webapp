@@ -11,9 +11,5 @@
  * file per style scope.
  *
  *= require master
- *= require_self
  *= require screen
- *= require alignment
- *= require dependencies
- *= require dependency_alignment
  */

@@ -10,40 +10,59 @@
   %h1 Sentence in context
   - if is_annotator?
     != link_to " (Change tokenization or sentence division)", edit_sentence_tokenizations_path(@sentence), :method => :get
-
-  != format_sentence @sentence_window, citations: true, sentence_numbers: true, highlight: @sentence, sentence_breaks: true, link_to: true
-
-  %hr
-  %h3.title Annotation status
-  - if @sentence.is_annotated? and is_reviewer?
-    - if @sentence.is_reviewed?
-      != link_to "(Change to not reviewed)", flag_as_not_reviewed_sentence_path(@sentence)
-    - else
-      != link_to "(Change to reviewed)", flag_as_reviewed_sentence_path(@sentence)
-
-  %p
-    != format_annotator_and_time @sentence
-    %br
-    != format_reviewer_and_time @sentence
-
+  != format_annotator_and_time @sentence
+  != format_reviewer_and_time @sentence
+- if @sentence.is_annotated? and is_reviewer?
   - if @sentence.is_reviewed?
+    != link_to "(Change to not reviewed)", flag_as_not_reviewed_sentence_path(@sentence)
+  - else
+    != link_to "(Change to reviewed)", flag_as_reviewed_sentence_path(@sentence)
+
+  - if @sentence.is_annotated?
+    - if @sentence.is_reviewed?
+      <span class="tag is-success">Reviewed</span>
+    - else
+      <span class="tag is-info">Annotated</span>
+    - if @sentence.valid?
+      <span class="tag is-success">Valid</span>
+    - else
+      <span class="tag is-danger">Invalid</span>
+  - else
+    <span class="tag is-warning">Unannotated</span>
+
+  .box.formatted-text
+    != format_sentence @sentence_window, citations: true, sentence_numbers: true, highlight: @sentence, sentence_breaks: true, link_to: true
+
+  - if @sentence.has_morphological_annotation?
+    %h3.subtitle Morphology
+    - if is_annotator?
+      != link_to "Edit", sentence_url(@sentence) + '/annotation#!/morphology', class: 'button is-primary'
     %p
-      - if @sentence.valid?
-        Annotation is valid.
+      .morphology-view.interlinear
+        %table
+          - @sentence.tokens.takes_morphology.each do |token|
+            %tr
+              %td.form!= format_token_form token
+              - if token.morph_features
+                %td.pos= token.morph_features.pos_summary abbreviated: true
+                %td.msd= token.morph_features.morphology_summary abbreviated: true, skip_inflection: true
+                %td.lemma!= link_to_lemma token.lemma
+                %td.gloss= token.lemma.gloss ? "‘#{token.lemma.gloss}’" : ''
 
-  %hr
-  %h3.title Morphology
-  - if is_annotator?
-    != link_to "(Edit)", sentence_url(@sentence) + '/annotation#!/morphology'
-  %p
-    != render 'morphtags/show'
+  - if @sentence.has_dependency_annotation?
+    %h3.title Syntax
+    - if is_annotator?
+      != link_to "Edit", sentence_url(@sentence) + '/annotation#!/syntax', class: 'button is-primary'
+    %p
+      .legend.dependencies
+        %h3 Legend:
 
-  %hr
-  %h3.title Syntax
-  - if is_annotator?
-    != link_to "(Edit)", sentence_url(@sentence) + '/annotation#!/syntax'
-  %p
-    != render 'dependencies/show'
+        %dl
+          %dt.head-dependent-relation-bg
+          %dd Head-dependent relation
+          %dt.slash-relation-bg
+          %dd Slash relation
+      %object{data: sentence_url(@sentence, format: :svg), type: 'image/svg+xml'}
 
   %hr
   %h3.title Information structure
@@ -52,29 +71,8 @@
   %p
     != render 'info_statuses/show'
 
-- if is_reviewer?
-  %hr
-  %h3.title Notes
-  %ol
-    - unless @notes.empty?
-      != render partial: 'notes/summary', collection: @notes
-    - @sentence.tokens.each do |token|
-      - unless token.notes.empty?
-        != render :partial => 'notes/summary', :collection => token.notes
-
-  %hr
-  %h3.title History
-  != render 'audits/legend'
-  %ol
-    - unless @audits.empty?
-      != render partial: 'audits/summary', collection: @audits
-    - @sentence.tokens.each do |token|
-      - unless token.audits.empty?
-        != render :partial => 'audits/summary', :collection => token.audits
-
   %hr
   %h3.title Semantic tags
-  != semantic_tags_summary @semantic_tags
   - @sentence.tokens.each do |t|
     - unless t.semantic_tags.empty?
       != semantic_tags_summary t.semantic_tags
@@ -82,12 +80,29 @@
       != semantic_relations_summary t.outgoing_semantic_relations
     - unless t.incoming_semantic_relations.empty?
       != semantic_relations_summary t.incoming_semantic_relations
+  - unless @semantic_tags.empty?
+    != semantic_tags_summary @semantic_tags
 
+- unless @notes.empty?
+  %h3.title Notes
+  != render partial: 'notes/summary', collection: @notes
+
+- unless @tokens_with_foreign_ids.empty?
   %hr
-  %h3.title Foreign keys
-  %table
-    - @sentence.tokens.each do |t|
-      - unless t.foreign_ids.blank?
+  %h3.subtitle Foreign IDs
+  %table.table
+    %thead
+      %tr
+        %th Object
+        %th Foreign IDs
+    %tbody
+      - @tokens_with_foreign_ids.each do |t|
         %tr
-          %td= t.id
-          %td.tag= t.foreign_ids
+          %td= "Token #{t.id}"
+          %td
+            %tt= t.foreign_ids
+
+- unless @audits.empty?
+  %hr
+  %h3.title History
+  != render partial: 'audits/summary', collection: @audits

@@ -38,8 +38,9 @@ class SentencesController < ApplicationController
     @sentence_window = @sentence.sentence_window.includes(:tokens)
     @semantic_tags = @sentence.semantic_tags
 
-    @notes = @sentence.notes
-    @audits = @sentence.audits
+    @tokens_with_foreign_ids = @sentence.tokens.where('foreign_ids IS NOT NULL')
+    @notes = (@sentence.notes + @sentence.tokens.map(&:notes).flatten).sort_by(&:created_at).reverse
+    @audits = (@sentence.audits + @sentence.tokens.map(&:audits).flatten).sort_by(&:created_at).reverse
 
     mode = params[:method] || user_preferences[:graph_method] || :unsorted
 
