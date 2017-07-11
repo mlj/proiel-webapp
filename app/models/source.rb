@@ -92,11 +92,6 @@ class Source < ActiveRecord::Base
       to_sentence
   end
 
-  # Generates a human-readable ID for the source.
-  def human_readable_id
-    code
-  end
-
   # Move all source divisions from +other_source_ to this source. If +position+
   # is +:append+, the source divisions from +other_source+ will be placed after
   # existing ones in this source. If +position+ is +:preprend:, they will be
