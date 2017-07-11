@@ -28,3 +28,10 @@ source_with_source_division_without_sentences:
   code: pl-am
   citation_part: Pl. Am.
   language_tag: grc
+complete_but_without_contents:
+  code: pl-am
+  author: Plautus
+  title: Amphitruo
+  citation_part: Pl. Am.
+  language_tag: lat
+  additional_metadata: MyText
