@@ -5,7 +5,7 @@ gem 'uglifier'
 gem 'json'
 gem 'sass-rails', '~> 5.0'
 
-gem 'proiel', '1.1.1'
+gem 'proiel', '1.2.1'
 
 gem 'simple_form'
 gem 'kaminari'
@@ -21,7 +21,7 @@ gem 'rails-controller-testing'
 gem 'unicode'
 
 gem 'builder' # builder is faster than Nokogiri's built-in builder
-gem 'nokogiri'
+gem 'nokogiri', '> 1.8.0'
 gem 'nori'
 
 gem 'gchartrb', :require => 'google_chart'
