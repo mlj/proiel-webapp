@@ -1,3 +1,16 @@
+%p
+  The PROIEL and ISWOC treebanks can now be browsed using
+  != link_to 'Syntacticus', 'http://syntacticus.org'
+  without a username or password. You will also find links to the raw data and documentation there.
+
+%p
+  If you have already registered with a username and password here, or you depend on functionality not yet offered by
+  != link_to 'Syntacticus', 'http://syntacticus.org'
+  you can still log in below. Please note that access to this site will be restricted in 2018 and eventually disabled.
+
+%p
+  If you are a treebank annotator, treebank reviewer or treebank administrator, please log in below.
+
 = semantic_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
   = f.inputs "Sign in" do
     ._50
