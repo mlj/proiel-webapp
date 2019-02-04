@@ -127,7 +127,7 @@ class InfoStatusesImportExport < CSVImportExport
   def create_prodrop_relation(sentence, relation, verb_id, information_status = nil)
     sentence.append_new_token!(
                                :head_id => verb_id,
-                               :relation => relation,
+                               :relation_tag => relation,
                                :empty_token_sort => 'P',
                                :information_status_tag => information_status).tap do
 
