@@ -138,13 +138,13 @@ class Lemma < ActiveRecord::Base
   # Returns an array of all parts of speech represented among lemmata. The
   # parts of speech are sorted using +to_label+ as sort key.
   def self.represented_parts_of_speech
-    Lemma.uniq.select(:part_of_speech_tag).map(&:part_of_speech).sort_by(&:to_label)
+    Lemma.distinct.select(:part_of_speech_tag).map(&:part_of_speech).sort_by(&:to_label)
   end
 
   # Returns an array of all languages represented among lemmata. The languages
   # are sorted using +to_label+ as sort key.
   def self.represented_languages
-    Lemma.uniq.select(:language_tag).map(&:language).sort_by(&:to_label)
+    Lemma.distinct.select(:language_tag).map(&:language).sort_by(&:to_label)
   end
 
   def language_name

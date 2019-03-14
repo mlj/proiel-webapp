@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '5.0.4'
+gem 'rails', '5.0.7.2'
 gem 'uglifier'
 gem 'json'
 gem 'sass-rails', '~> 5.0'
@@ -23,6 +23,7 @@ gem 'unicode'
 gem 'builder' # builder is faster than Nokogiri's built-in builder
 gem 'nokogiri', '> 1.8.0'
 gem 'nori'
+gem 'irb'
 
 gem 'gchartrb', :require => 'google_chart'
 gem 'diff-lcs', :require => 'diff/lcs'
@@ -54,7 +55,7 @@ group :development do
   gem 'stackprof'
   gem 'flamegraph'
 
-  gem 'web-console', '~> 2.0'
+  gem 'web-console'
 
   gem 'spring'
 
