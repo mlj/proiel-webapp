@@ -8,6 +8,8 @@ env:
   - DB=mysql
   - DB=postgresql
 before_script:
+  - gem update --system
+  - gem install bundler:2.0.1
   - cp config/database.yml.travis config/database.yml
   - bin/rake db:setup
 script:
