@@ -21,32 +21,4 @@ class InformationStatusTestCase < ActiveSupport::TestCase
   def test_ananphors_relation
     assert_equal [@anaphor1, @anaphor2, @anaphor3].sort, @antecedent.anaphors.sort
   end
-
-  def test_nearest_anaphor
-    assert_equal @anaphor1, @antecedent.nearest_anaphor
-  end
-
-  def test_word_distance_between
-    assert_equal 0, @antecedent.word_distance_between(@antecedent)
-
-    assert_equal 2, @antecedent.word_distance_between(@anaphor1)
-    assert_equal 4, @antecedent.word_distance_between(@anaphor2)
-    assert_equal 6, @antecedent.word_distance_between(@anaphor3)
-
-    assert_equal 2, @anaphor1.word_distance_between(@antecedent)
-    assert_equal 4, @anaphor2.word_distance_between(@antecedent)
-    assert_equal 6, @anaphor3.word_distance_between(@antecedent)
-  end
-
-  def test_sentence_distance_between
-    assert_equal 0, @antecedent.sentence_distance_between(@antecedent)
-
-    assert_equal 0, @antecedent.sentence_distance_between(@anaphor1)
-    assert_equal 0, @antecedent.sentence_distance_between(@anaphor2)
-    assert_equal 1, @antecedent.sentence_distance_between(@anaphor3)
-
-    assert_equal 0, @anaphor1.sentence_distance_between(@antecedent)
-    assert_equal 0, @anaphor2.sentence_distance_between(@antecedent)
-    assert_equal 1, @anaphor3.sentence_distance_between(@antecedent)
-  end
 end

@@ -31,8 +31,7 @@ module TagObjectMixin
   module ClassMethods
     # Loads a static model from a file.
     def model_file_name(file_name)
-      full_file_name = Rails.root.join(Proiel::Application.config.tagset_file_path, file_name)
-      #@model = JSON.parse(File.read(file_name)).freeze
+      full_file_name = File.join('config', file_name)
       @model = YAML.load_file(full_file_name).stringify_keys.freeze
     end
 

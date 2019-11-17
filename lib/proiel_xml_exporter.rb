@@ -71,7 +71,7 @@ class PROIELXMLExporter
         File.rename(tmp_file_name, file_name)
       end
     else
-      STDERR.puts "Source #{@source.human_readable_id} has no data available for export on this format"
+      STDERR.puts "Source #{@source.code} has no data available for export on this format"
     end
   end
 
@@ -119,7 +119,7 @@ class PROIELXMLExporter
 
   def write_source!(builder, s)
     attrs = {
-      id: s.human_readable_id,
+      id: s.code,
       language: s.language_tag,
     }
 
@@ -217,6 +217,8 @@ class PROIELXMLExporter
       v.export_form
     elsif v.is_a?(ActiveSupport::TimeWithZone)
       v.xmlschema
+    elsif v.is_a?(Time)
+      v.utc.iso8601
     else
       v.to_s
     end

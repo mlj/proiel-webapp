@@ -76,18 +76,6 @@ module Proiel
       def next_objects
         ordering_collection.where("#{ordered_on_field} > ?", ordering_field)
       end
-
-      # Returns the previous object in the ordering. Returns +nil+ if there is no
-      # previous object.
-      def previous_object
-        previous_objects.order(ordered_on_field).last
-      end
-
-      # Returns the next object in the ordering. Returns +nil+ if there is no next
-      # object.
-      def next_object
-        next_objects.order(ordered_on_field).first
-      end
     end
   end
 end

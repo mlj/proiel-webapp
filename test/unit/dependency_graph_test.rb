@@ -40,16 +40,6 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
     assert_equal [], g[111].siblings
     assert_equal [g[11]], g[12].siblings
     assert_equal [g[122], g[123]], g[121].siblings
-
-    assert_equal false, g[1].has_siblings?
-    assert_equal true, g[11].has_siblings?
-    assert_equal false, g[111].has_siblings?
-    assert_equal true, g[12].has_siblings?
-    assert_equal true, g[121].has_siblings?
-
-    assert_equal true, g[121].has_siblings?(:bay)
-    assert_equal true, g[121].has_siblings?(:baz)
-    assert_equal false, g[121].has_siblings?(:bax)
   end
 end
 
@@ -150,21 +140,6 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
     assert_equal [1211], g[1211].subgraph.collect(&:identifier).sort
   end
 
-  def test_all_slashes_contained
-    g = Proiel::DependencyGraph.new
-    g.add_node(1, :foo, nil)
-    g.add_node(11, :bar, 1)
-    g.add_node(111, :bar, 11, { 11 => :bar })
-    g.add_node(12, :bar, 1)
-    g.add_node(121, :bar, 12, { 11 => :bar })
-
-    assert_equal true, g[1].all_slashes_contained?
-    assert_equal true, g[11].all_slashes_contained?
-    assert_equal false, g[111].all_slashes_contained?
-    assert_equal false, g[12].all_slashes_contained?
-    assert_equal false, g[121].all_slashes_contained?
-  end
-
   def test_min_max_token_number
     g = setup_ok_graph
     assert_equal 1, g[250398].min_token_number
@@ -184,20 +159,6 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
     g.add_node(2, :foo, 1, {}, { :empty => true, :token_number => 10 })
     assert_nil g[1].max_token_number
     assert_nil g[2].max_token_number
-  end
-
-  def test_linearly_precedes
-    g = setup_ok_graph
-    assert_equal true, g[250398].linearly_precedes?(g[250406])
-    assert_equal false, g[250406].linearly_precedes?(g[250398])
-
-    # 250399 occurs second within 250398's subgraph
-    assert_equal false, g[250399].linearly_precedes?(g[250398])
-    assert_equal false, g[250398].linearly_precedes?(g[250399])
-
-    # 250414's subgraph contains 250398
-    assert_equal false, g[250414].linearly_precedes?(g[250398])
-    assert_equal false, g[250398].linearly_precedes?(g[250414])
   end
 
   def test_proiel_validation
@@ -279,12 +240,5 @@ class DependencyGraphTestCase < ActiveSupport::TestCase
     assert_equal g[122].all_slashes.length, 1
     assert_equal g[1221].all_slashes.length, 1
     assert_equal g[1222].all_slashes.length, 1 
-  end
-
-  def test_editor_to_dg_conversion
-    output = {"287650"=>{"empty"=>true, "relation"=>"pred", "dependents"=>{"266690"=>{"slashes"=>["287650"], "empty"=>false, "relation"=>"piv", "dependents"=>{"266691"=>{"empty"=>false, "relation"=>"atr", "dependents"=>{"266692"=>{"empty"=>false, "relation"=>"atr", "dependents"=>{"266693"=>{"empty"=>false, "relation"=>"apos"}, "266694"=>{"empty"=>false, "relation"=>"apos", "dependents"=>{"266695"=>{"empty"=>false, "relation"=>"atr", "dependents"=>{"266696"=>{"empty"=>false, "relation"=>"apos", "dependents"=>{"266697"=>{"empty"=>false, "relation"=>"atr"}}}}}}}}}}}}}}}}
-    g = Proiel::DependencyGraph.new_from_editor(output)
-    assert_equal 1, g[266690].slashes.length
-    assert_equal [287650], g[266690].slashes.map(&:identifier)
   end
 end

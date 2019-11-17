@@ -1,9 +1,0 @@
-:languages:
-  :lat:
-    :inflections_table:
-      true
-    :instance_frequencies:
-      :completion_level:
-        any
-    :source_tag_pattern_filtering:
-      true

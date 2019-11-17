@@ -6,7 +6,5 @@
 /tmp
 /doc
 /config/database.yml
-/.sass-cache
 /.env
 /coverage
-/public/assets

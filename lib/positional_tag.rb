@@ -113,10 +113,6 @@ class PositionalTag
     self.to_s
   end
 
-  def tag=(o)
-    self.value = o
-  end
-
   def each(&block)
     @values.each(&block)
   end

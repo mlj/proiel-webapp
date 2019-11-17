@@ -1,9 +1,0 @@
-- title @source_division.title
-- breadcrumbs ['Home', root_path], @source, @source_division, 'Edit'
-
-= simple_form_for @source_division do |form|
-  != form.input :title
-  != form.input :presentation_before, required: false, label: 'Presentation text before source division'
-  != form.input :presentation_after,  required: false, label: 'Presentation text after source division'
-  != form.input :aligned_source_division, collection: @source_division.alignment_candidates, label_function: :citation
-  != form.button :submit, "Update"

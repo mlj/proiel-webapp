@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe LanguageTag, type: :model do
   it "can be accessed with language accessor" do
     tag1 = 'lat'

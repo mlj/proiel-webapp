@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe Sentence, type: :model do
   fixtures :sources
   fixtures :sentences
@@ -36,11 +34,6 @@ RSpec.describe Sentence, type: :model do
     assert @sentence_middle_of_sd.has_previous?
     assert @sentence_last_in_sd.has_previous?
     assert @sentence_extra_last_in_sd.has_previous?
-
-    assert_nil @sentence_first_in_sd.previous_object
-    assert_equal @sentence_first_in_sd, @sentence_middle_of_sd.previous_object
-    assert_equal @sentence_middle_of_sd, @sentence_last_in_sd.previous_object
-    assert_equal @sentence_last_in_sd, @sentence_extra_last_in_sd.previous_object
   end
 
   it "can append" do

@@ -26,16 +26,6 @@ $ gem install bundler
 $ bundle install --without test development
 ```
 
-### Step 2: Install external binaries
-
-Install [graphviz](http://www.graphviz.org/) for dependency graph visualisations. Versions 2.26.3 and 2.30.1 are known to work, but more recent versions may also work.
-
-`graphviz` must be compiled with SVG support. The recommended settings are the following:
-
-    --with-fontconfig --with-freetype2 --with-pangocairo --with-rsvg
-
-If you want to regenerate the finite-state transducer files, you will also need the [SFST toolkit](http://www.ims.uni-stuttgart.de/projekte/gramotron/SOFTWARE/SFST.html). This release of `proiel-webapp` is designed to work with version 1.3 of `SFST`.
-
 ### Step 3: Configure the database
 
 Copy `config/database.yml.example` to `config/database.yml` and edit it to fit your setup.
@@ -65,18 +55,6 @@ $ bin/rake generate_env
 This generates a file called `.env` with run-time settings that are unique to this instance of the application. Inspect the contents of the file and edit it if necessary.
 
 The `.env` file contains information that should not be made public. Make sure that other users on your system are unable to read `.env`. It is also not a good idea to add the file to a public version control system.
-
-You may also need to modify `config/initializers/mailer.rb` to get registration e-mails working properly.
-
-### Step 5: Precompile assets
-
-For the production environment, assets should be precompiled:
-
-```shell
-RAILS_ENV=production rake assets:precompile
-```
-
-If you run the application behind nginx or another webserver, you should ensure that the webserver serves the `public` directory. Otherwise, make sure that `RAILS_SERVE_STATIC_ASSETS` in `.env` is set to `true` so that Rails will serve this directory.
 
 ### Step 6: Start the server and worker
 

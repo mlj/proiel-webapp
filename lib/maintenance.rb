@@ -64,7 +64,7 @@ module Proiel::Maintenance
 
       valid =
         Proiel::Maintenance.wrap_status("Validating #{filename}") do
-          v = PROIEL::PROIELXML::Validator.new(filename)
+          v = ::PROIEL::PROIELXML::Validator.new(filename)
           v.valid?
         end
 

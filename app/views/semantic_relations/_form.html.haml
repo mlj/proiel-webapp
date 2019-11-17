@@ -1,4 +1,0 @@
-= form.inputs "Semantic relation data", :id => "core" do
-  != form.input :controller_id, :label => 'Controller', :input_html => { :maxlength => 10 }
-  != form.input :target_id, :label => 'Target', :input_html => { :maxlength => 10 }
-  != form.input :semantic_relation_tag, :label => 'Tag', :member_label => :tag, :collection => @semantic_relation.semantic_relation_type.semantic_relation_tags.sort { |x, y| x.tag <=> y.tag }

@@ -1,9 +1,0 @@
-!= title "Sentence #{@sentence.id}"
-!= breadcrumbs ['Home', root_path], @source, @source_division, @sentence, 'Edit'
-
-!= external_text_links @sentence
-
-= simple_form_for @sentence do |f|
-  != f.input :presentation_before, required: false, label: 'Presentation text before sentence'
-  != f.input :presentation_after,  required: false, label: 'Presentation text after sentence'
-  != f.button :submit, 'Update'

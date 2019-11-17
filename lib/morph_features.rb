@@ -47,12 +47,6 @@ class PartOfSpeech
     [:major, :minor]
   end
 
-  # Returns a hash with part of speech tags as keys and summaries as
-  # values.
-  def self.tag_and_summary_hash
-    PartOfSpeechTag.all
-  end
-
   def major
     @tag.split('').first
   end
@@ -145,43 +139,19 @@ class MorphFeatures
     @morphology ? @morphology.tag : ('-' * MORPHOLOGY_LENGTH)
   end
 
-  # Returns the morphology as a positional tag abbreviated as much as
-  # possible. Returns nil if morphology is absent.
-  def morphology_abbrev_s
-    morphology_s.sub(/-+$/, '')
-  end
-
-  MORPHOLOGY_ALL_SUMMARIES = YAML.load_file(Rails.root.join(Proiel::Application.config.tagset_file_path, 'morphology.yml')).inject({}) do |m, v|
+  MORPHOLOGY_ALL_SUMMARIES = YAML.load_file('config/morphology.yml').inject({}) do |m, v|
     m[v[0]] = v[1].inject({}) { |m2, v2| m2[v2[0]] = v2[1]; m2 }
     m
   end
 
-  MORPHOLOGY_SUMMARIES = YAML.load_file(Rails.root.join(Proiel::Application.config.tagset_file_path, 'morphology.yml')).inject({}) do |m, v|
+  MORPHOLOGY_SUMMARIES = YAML.load_file('config/morphology.yml').inject({}) do |m, v|
     m[v[0]] = v[1].inject({}) { |m2, v2| m2[v2[0]] = v2[1]["summary"]; m2 }
     m
   end
 
-  MORPHOLOGY_ABBREVIATED_SUMMARIES = YAML.load_file(Rails.root.join(Proiel::Application.config.tagset_file_path, 'morphology.yml')).inject({}) do |m, v|
+  MORPHOLOGY_ABBREVIATED_SUMMARIES = YAML.load_file('config/morphology.yml').inject({}) do |m, v|
     m[v[0]] = v[1].inject({}) { |m2, v2| m2[v2[0]] = v2[1]["abbreviated_summary"]; m2 }
     m
-  end
-
-  # === Options
-  # <tt>:abbreviated</tt> -- If true, returns the summary on an
-  # abbreviated format.
-  # <tt>:skip_inflection</tt> -- If true, skips the +inflection+
-  # field.
-  def morphology_summary(options = {})
-    # TODO: options
-    h = morphology_to_hash
-    MORPHOLOGY_PRESENTATION_SEQUENCE.map do |field|
-      next if field == :inflection and h[field] == 'i' and options[:skip_inflection]
-      if options[:abbreviated]
-        h[field] == '-' ? nil : MORPHOLOGY_ABBREVIATED_SUMMARIES[field][h[field]]
-      else
-        h[field] == '-' ? nil : MORPHOLOGY_SUMMARIES[field][h[field]]
-      end
-    end.compact.join(', ')
   end
 
   # Returns the morphology as a hash.
@@ -223,28 +193,6 @@ class MorphFeatures
     @lemma.lemma and @lemma.part_of_speech and @morphology and MorphtagConstraints.instance.is_valid?(pos_s + morphology_s, language_s.to_sym)
   end
 
-  def contradict?(o)
-    raise ArgumentError unless o.class == MorphFeatures
-
-    return true if PartOfSpeech.new(pos_s).contradicts?(PartOfSpeech.new(o.pos_s))
-    return true if Morphology.new(morphology_s).contradicts?(Morphology.new(o.morphology_s))
-
-    if lemma.lemma and o.lemma.lemma
-      return true if lemma.lemma != o.lemma.lemma
-      return true if lemma.variant != o.lemma.variant
-    end
-
-    false
-  end
-
-  def self.pos_and_morphology_tag_space(language)
-    MorphtagConstraints::instance.tag_space(language.to_sym).inject({}) do |k, tag|
-      k[tag[0, 2]] ||= []
-      k[tag[0, 2]] << tag[2, 11]
-      k
-    end
-  end
-
   # Generates all possible completions of the possibly incomplete tag.
   def completions
     x = Regexp.new(/#{(pos_s + morphology_s).gsub("-", ".")}/)
@@ -258,58 +206,6 @@ class MorphFeatures
     values.all? { |v| v.nil? }
   end
 
-  OPEN_MAJOR = %w{V A N}
-
-  # Returns +true+ if the features belong to one of the `closed' parts
-  # of speech.
-  def closed?
-    pos_s[0, 1] != '-' and !OPEN_MAJOR.include?(pos_s[0, 1])
-  end
-
-  protected
-
-  def is_gender?(value)
-    raise ArgumentError.new("Invalid gender") unless ['m', 'f', 'n'].include?(value)
-
-    case self.gender
-    when 'm', 'f', 'n'
-      self.gender == value
-    when 'o'
-      value == 'm' or value == 'n'
-    when 'p'
-      value == 'm' or value == 'f'
-    when 'r'
-      value == 'f' or value == 'n'
-    when 'q'
-      value == 'm' or value == 'f' or value == 'n'
-    else
-      false
-    end
-  end
-
-  public
-
-  # Returns +true+ if the tag is a subtag of another tag +o+.
-  def subtag?(o)
-    return false unless lemma_s == o.lemma_s
-
-    # Copy the two tags in question, mask out all fields with inheritance and compare
-    # the rest.
-    a, b = morphology_to_hash, o.morphology_to_hash
-    a[:gender], b[:gender] = '-', '-'
-    return false unless a == b
-
-    # Test the inheritable fields
-    ['m', 'f', 'n'].include?(self.gender) ? o.is_gender?(self.gender) : false
-  end
-
-  # Returns +true+ if the tag is compatible with another tag +o+, i.e.
-  # if the tag is a subtag of the tag +o+ or the tag is a supertag of
-  # the tag +o+ or the tags are identical.
-  def compatible?(o)
-    self == o or subtag?(o) or o.subtag?(self)
-  end
-
   # Returns all the morph-features as a string. This is a
   # concatenation of the various components of the morph-features'
   # string forms.
@@ -318,10 +214,6 @@ class MorphFeatures
   end
 
   def ==(o)
-    o.is_a?(MorphFeatures) && to_s == o.to_s
-  end
-
-  def eql?(o)
     o.is_a?(MorphFeatures) && to_s == o.to_s
   end
 

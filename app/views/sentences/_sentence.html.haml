@@ -1,7 +1,0 @@
-%tr
-  %td
-    = sentence.citation
-    = truncate(sentence.to_s, length: 70, omission: "\u{2026}")
-    != completion_rate sentence.status
-  %td
-    != link_to 'Details', sentence

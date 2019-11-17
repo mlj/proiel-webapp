@@ -1,0 +1,43 @@
+# unique
+
+lib/models/inflection.rb:  validates_uniqueness_of :form, :scope => [:language_tag, :morphology_tag, :lemma, :part_of_speech_tag]
+lib/models/lemma.rb:  validates_uniqueness_of :lemma, :scope => [:language_tag, :part_of_speech_tag, :variant]
+lib/models/semantic_attribute.rb:  validates_uniqueness_of :tag
+lib/models/semantic_attribute_value.rb:  validates_uniqueness_of :tag, :scope => :semantic_attribute_id
+lib/models/semantic_relation_tag.rb:  validates_uniqueness_of :tag
+lib/models/semantic_relation_type.rb:  validates_uniqueness_of :tag
+lib/models/slash_edge.rb: validates_uniqueness_of :slasher_id, :scope => :slashee_id, message: 'Slash edge already exists in dependency structure'
+lib/models/user.rb:  validates_uniqueness_of :login, :case_sensitive => false, message: 'already exists. Please choose a different login.'
+
+# unicode normalization
+
+lib/models/inflection.rb:  validates_unicode_normalization_of :form, form: UNICODE_NORMALIZATION_FORM
+lib/models/inflection.rb:  validates_unicode_normalization_of :lemma, form: UNICODE_NORMALIZATION_FORM
+lib/models/lemma.rb:       validates_unicode_normalization_of :lemma, form: UNICODE_NORMALIZATION_FORM
+lib/models/token.rb:       validates_unicode_normalization_of :form, form: UNICODE_NORMALIZATION_FORM
+
+# non-NULL
+
+lib/models/inflection.rb:  validates_presence_of :form
+lib/models/inflection.rb:  validates_presence_of :morphology_tag
+lib/models/inflection.rb:  validates_presence_of :lemma
+lib/models/lemma.rb:  validates_presence_of :lemma
+lib/models/semantic_attribute.rb:  validates_presence_of :tag
+lib/models/semantic_attribute_value.rb:  validates_presence_of :tag
+lib/models/semantic_relation.rb:  validates_presence_of :controller
+lib/models/semantic_relation.rb:  validates_presence_of :target
+lib/models/semantic_relation.rb:  validates_presence_of :semantic_relation_tag
+lib/models/semantic_relation_tag.rb:  validates_presence_of :tag
+lib/models/semantic_relation_type.rb:  validates_presence_of :tag
+lib/models/semantic_tag.rb:  validates_presence_of :taggable
+lib/models/semantic_tag.rb:  validates_presence_of :semantic_attribute_value
+lib/models/source.rb:  validates_presence_of :title
+lib/models/source.rb:  validates_presence_of :citation_part
+lib/models/user.rb:  validates_presence_of :login, message: 'cannot be blank.'
+lib/models/user.rb:  validates_presence_of :first_name, message: 'cannot be blank.'
+lib/models/user.rb:  validates_presence_of :last_name, message: 'cannot be blank.'
+
+# Length
+
+lib/models/user.rb:28:  validates_length_of :login, :within => 3..40
+lib/models/inflection.rb:28:  validates_length_of :morphology_tag, :is => MorphFeatures::MORPHOLOGY_LENGTH = 10

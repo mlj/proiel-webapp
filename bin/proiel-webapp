@@ -1,9 +1,55 @@
 #!/usr/bin/env ruby
 STDOUT.sync = true
 
-$:.unshift File.join(File.dirname(__FILE__), *%w{ .. })
+$:.unshift File.join(File.dirname(__FILE__), *%w{ ../lib })
 
-require 'config/environment'
+require 'yaml'
+require 'active_record'
+require 'colorize'
+
+require 'proiel'
+
+db_config_file = File.open(File.join(File.dirname(__FILE__), '../config/database.yml'))
+db_config = YAML::load(db_config_file)
+
+ActiveRecord::Base.establish_connection(db_config['development'])
+
+autoload :PROIELXMLExporter, 'proiel_xml_exporter'
+autoload :PROIELXMLImporter, 'proiel_xml_importer'
+
+module Proiel
+  module Jobs
+    class FakeLogger
+      def error(&block)
+        if block_given?
+          STDERR.puts block.call
+        end
+      end
+    end
+
+    class Job
+      def initialize
+        @logger = FakeLogger.new
+      end
+    end
+  end
+
+  autoload :Metadata, 'metadata'
+end
+
+require 'blankable'
+require 'dependency_graph'
+require 'yaml'
+require 'morph_features'
+require 'morphtag_constraints'
+require 'unicode_normalization_validation'
+require 'tagset'
+
+UNICODE_NORMALIZATION_FORM = :c
+
+require 'validator'
+require 'legacy_stubs'
+require 'jobs'
 require 'maintenance'
 
 #rake make_fsts
@@ -40,9 +86,25 @@ def usage(error: false)
   STDERR.puts
   STDERR.puts "Usage:"
   STDERR.puts "   proiel-webapp [OPTIONS] help"
-  STDERR.puts "   proiel-webapp [OPTIONS] import TARGET ARGUMENTS"
-  STDERR.puts "   proiel-webapp [OPTIONS] export TARGET ARGUMENTS"
   STDERR.puts "   proiel-webapp [OPTIONS] delete TARGET ARGUMENTS"
+  STDERR.puts
+  STDERR.puts "   proiel-webapp check"
+  STDERR.puts
+  STDERR.puts "   proiel-webapp import text INPUT_FILENAME"
+  STDERR.puts
+  #STDERR.puts "   proiel-webapp delete text NUMERICAL_TEXT_ID"
+  STDERR.puts
+  STDERR.puts "   proiel-webapp export dependency_alignments OUTPUT_FILENAME"
+  #STDERR.puts "   proiel-webapp export history OUTPUT_FILENAME"
+  STDERR.puts "   proiel-webapp export inflections OUTPUT_FILENAME"
+  STDERR.puts "   proiel-webapp export information_statuses OUTPUT_FILENAME"
+  STDERR.puts "   proiel-webapp export morphology OUTPUT_FILENAME"
+  STDERR.puts "   proiel-webapp export notes OUTPUT_FILENAME"
+  STDERR.puts "   proiel-webapp export semantic_relations OUTPUT_FILENAME"
+  STDERR.puts "   proiel-webapp export semantic_tags OUTPUT_FILENAME"
+  STDERR.puts "   proiel-webapp export token_alignments OUTPUT_FILENAME"
+  STDERR.puts
+  STDERR.puts "   proiel-webapp export text NUMERICAL_TEXT_ID OUTPUT_FILENAME"
   STDERR.puts
   STDERR.puts "Options:"
   STDERR.puts "   -V, --verbose   Display verbose information"
@@ -55,6 +117,9 @@ command, subcommand, *arguments = ARGV.reject { |arg| arg[/^-/] }
 case command
 when 'help'
   usage
+when 'check'
+  job = Proiel::Jobs::DatabaseChecker.new
+  job.run_once!
 when 'import', 'export', 'delete'
   if subcommand
     klass = TARGETS[subcommand.to_sym]

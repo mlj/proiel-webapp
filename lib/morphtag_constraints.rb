@@ -37,7 +37,7 @@ class MorphtagConstraints
 
   def make_tag_space(language)
     all_tags = []
-    m = YAML.load_file(Rails.root.join('lib', 'morphtag_constraints', "#{language}_morphology.yml"))
+    m = YAML.load_file(File.join('lib', 'morphtag_constraints', "#{language}_morphology.yml"))
     m[:constraints].each do |pos, pos_tagset|
       raise "Badly specified morphology for #{language}" unless pos_tagset[:mask] == MorphFeatures::MORPHOLOGY_PRESENTATION_SEQUENCE[0, pos_tagset[:mask].size]
       pos_tagset[:morphology].keys.each do |mask|

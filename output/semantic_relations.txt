@@ -1,0 +1,3206 @@
+SEMANTIC_RELATION_TYPE_TAG,SEMANTIC_RELATION_TAG,CONTROLLER_ID,TARGET_ID
+discourse,EXPANSION_Elaboration_background,321404,321440
+discourse,ATTRIBUTION_Content_verbal non-speech content,321415,321411
+discourse,EXPANSION_Elaboration_explanation,321422,321404
+discourse,TEMPORAL_Synchronous_overlap,321424,321422
+discourse,TEMPORAL_Narration_same story,321430,321404
+discourse,CONTINGENCY_Purpose_,321432,321430
+discourse,EXPANSION_Restatement_specification,759519,321430
+discourse,EXPANSION_Elaboration_characterization,321457,321440
+discourse,CONTINGENCY_Cause_reason,321462,321440
+discourse,CONTINGENCY_Purpose_,321470,321440
+discourse,EXPANSION_Elaboration_characterization,321477,321470
+discourse,TEMPORAL_Narration_same story,321480,321440
+discourse,TEMPORAL_Synchronous_overlap,321484,321480
+discourse,TEMPORAL_Narration_same story,321495,321480
+discourse,TEMPORAL_Narration_same story,321503,321495
+discourse,TEMPORAL_Narration_same story,321506,321503
+discourse,CONTINGENCY_Cause_reason,321513,321506
+discourse,EXPANSION_Elaboration_background,321522,321542
+discourse,TEMPORAL_Synchronous_circumstance,321528,321522
+discourse,TEMPORAL_Continuation_,321530,321528
+discourse,TEMPORAL_Narration_new story,321542,321506
+discourse,TEMPORAL_Narration_same story,321547,321542
+discourse,TEMPORAL_Narration_same story,321551,321547
+discourse,TEMPORAL_Narration_same story,321556,321551
+discourse,ATTRIBUTION_Content_speech content,321562,321556
+discourse,CONTINGENCY_Cause_,321566,321562
+discourse,EXPANSION_Elaboration_characterization,321571,321566
+discourse,ATTRIBUTION_Content_speech content,321577,321566
+discourse,EXPANSION_Elaboration_characterization,321582,321577
+discourse,TEMPORAL_Continuation_,563925,321577
+discourse,EXPANSION_Restatement_specification,321595,563925
+discourse,TEMPORAL_Narration_same story,321603,321556
+discourse,TEMPORAL_Synchronous_circumstance,321610,321603
+discourse,TEMPORAL_Continuation_,321614,321610
+discourse,ATTRIBUTION_Content_speech content,563927,321614
+discourse,COMPARISON_Juxtaposition_parallel,563928,563927
+discourse,TEMPORAL_Narration_same story,321629,321603
+discourse,TEMPORAL_Asynchronous_precedence,321631,321629
+discourse,ATTRIBUTION_Content_speech content,321646,321642
+discourse,TEMPORAL_Narration_same story,321651,321646
+discourse,TEMPORAL_Narration_same story,321664,321629
+discourse,TEMPORAL_Coincidence_manner,321665,321664
+discourse,TEMPORAL_Narration_same story,321668,321664
+discourse,ATTRIBUTION_Content_Non-verbal content,321678,321668
+discourse,TEMPORAL_Asynchronous_precedence,321683,321685
+discourse,TEMPORAL_Narration_same story,321685,321668
+discourse,TEMPORAL_Narration_new story,321701,321685
+discourse,TEMPORAL_Narration_same story,321715,321701
+discourse,CONTINGENCY_Contrast_,321715,321701
+discourse,TEMPORAL_Coincidence_manner,321719,321715
+discourse,TEMPORAL_Narration_same story,321726,321668
+discourse,TEMPORAL_Synchronous_circumstance,321730,321726
+discourse,TEMPORAL_Continuation_,321732,321730
+discourse,COMPARISON_Sameness_,321742,321730
+discourse,TEMPORAL_Asynchronous_precedence,321748,321756
+discourse,TEMPORAL_Narration_new story,321756,321726
+discourse,TEMPORAL_Asynchronous_precedence,321777,321789
+discourse,TEMPORAL_Narration_same story,321789,321756
+discourse,CONTINGENCY_Purpose_,321793,321789
+discourse,COMPARISON_Sameness_,321798,321793
+discourse,ATTRIBUTION_Content_verbal non-speech content,321810,321798
+discourse,TEMPORAL_Continuation_,321814,321793
+discourse,ATTRIBUTION_Content_verbal non-speech content,1158290,321818
+discourse,EXPANSION_Elaboration_background,321835,321884
+discourse,EXPANSION_Elaboration_characterization,321850,321835
+discourse,TEMPORAL_Continuation_,321857,321850
+discourse,TEMPORAL_Continuation_,572378,321857
+discourse,TEMPORAL_Continuation_,321863,321835
+discourse,ATTRIBUTION_Content_,321873,321865
+discourse,TEMPORAL_Asynchronous_precedence,321878,321873
+discourse,TEMPORAL_Narration_same story,321884,321789
+discourse,TEMPORAL_Synchronous_overlap,321895,321914
+discourse,CONTINGENCY_Purpose_,321902,321895
+discourse,TEMPORAL_Narration_same story,321914,321884
+discourse,TEMPORAL_Narration_same story,321920,321914
+discourse,TEMPORAL_Narration_same story,321924,321920
+discourse,ATTRIBUTION_Content_speech content,733544,321924
+discourse,ATTRIBUTION_Expressive_speech expressive,733548,321924
+discourse,CONTINGENCY_Cause_pragmatic cause,733556,733544
+discourse,TEMPORAL_Narration_same story,321969,321924
+discourse,TEMPORAL_Narration_same story,321985,321969
+discourse,TEMPORAL_Narration_same story,321989,321985
+discourse,ATTRIBUTION_Content_speech content,321998,321989
+discourse,TEMPORAL_Narration_same story,322018,321998
+discourse,CONTINGENCY_Result_real result,322023,321998
+discourse,EXPANSION_Elaboration_background,322030,322082
+discourse,EXPANSION_Elaboration_characterization,322067,582021
+discourse,TEMPORAL_Synchronous_circumstance,322073,322067
+discourse,EXPANSION_Elaboration_characterization,582021,322030
+discourse,TEMPORAL_Continuation_,582022,582021
+discourse,TEMPORAL_Narration_same story,322082,321989
+discourse,TEMPORAL_Narration_same story,322083,322082
+discourse,TEMPORAL_Narration_same story,322087,322083
+discourse,TEMPORAL_Asynchronous_precedence,322098,322105
+discourse,TEMPORAL_Narration_same story,322105,322087
+discourse,TEMPORAL_Narration_new story,322117,322105
+discourse,TEMPORAL_Continuation_,322119,322117
+discourse,TEMPORAL_Synchronous_circumstance,322120,322117
+discourse,TEMPORAL_Continuation_,322126,322117
+discourse,TEMPORAL_Asynchronous_background,322131,322167
+discourse,TEMPORAL_Asynchronous_precedence,322146,322150
+discourse,TEMPORAL_Narration_new story,322150,322117
+discourse,TEMPORAL_Narration_same story,322159,322150
+discourse,TEMPORAL_Synchronous_overlap,322165,322167
+discourse,TEMPORAL_Narration_same story,322167,322159
+discourse,TEMPORAL_Narration_same story,322176,322167
+discourse,CONTIGENCY_Cause_reason,322181,322188
+discourse,ATTRIBUTION_Content_Non-verbal content,322184,322181
+discourse,TEMPORAL_Narration_same story,322188,322176
+discourse,TEMPORAL_Narration_same story,322192,322188
+discourse,TEMPORAL_Asynchronous_precedence,322203,322204
+discourse,CONTIGENCY_Cause_reason,322203,322204
+discourse,TEMPORAL_Narration_same story,322204,322192
+discourse,TEMPORAL_Synchronous_circumstance,322207,322204
+discourse,TEMPORAL_Narration_same story,322211,322204
+discourse,ATTRIBUTION_Content_Non-verbal content,322220,322215
+discourse,TEMPORAL_Continuation_,322226,322220
+discourse,TEMPORAL_Continuation_,322229,322226
+discourse,TEMPORAL_Narration_same story,322232,322211
+discourse,TEMPORAL_Asynchronous_precedence,322247,322249
+discourse,TEMPORAL_Narration_same story,322249,322232
+discourse,TEMPORAL_Narration_same story,322252,322249
+discourse,ATTRIBUTION_Expressive_speech expressive,322259,322252
+discourse,ATTRIBUTION_Content_speech content,322262,322252
+discourse,TEMPORAL_Coincidence_manner,322272,322273
+discourse,CONTINGENCY_Cause_pragmatic cause,322273,322262
+discourse,CONTINGENCY_Result_real result,322273,322262
+discourse,TEMPORAL_Narration_same story,322277,322252
+discourse,ATTRIBUTION_Content_speech content,582023,322277
+discourse,CONTINGENCY_Cause_pragmatic cause,322287,582023
+discourse,ATTRIBUTION_Content_Non-verbal content,322294,322287
+discourse,TEMPORAL_Narration_same story,322301,322277
+discourse,TEMPORAL_Narration_same story,322309,322301
+discourse,TEMPORAL_Narration_same story,322313,322309
+discourse,TEMPORAL_Narration_same story,322318,322313
+discourse,TEMPORAL_Narration_same story,322326,322318
+discourse,TEMPORAL_Narration_same story,322337,322326
+discourse,TEMPORAL_Synchronous_overlap,322359,322395
+discourse,TEMPORAL_Continuation_,322366,322359
+discourse,TEMPORAL_Continuation_,322376,322366
+discourse,TEMPORAL_Continuation_,322387,322376
+discourse,TEMPORAL_Narration_same story,322408,322395
+discourse,TEMPORAL_Synchronous_circumstance,322415,322408
+discourse,COMPARISON_Sameness_,322423,322415
+discourse,ATTRIBUTION_Content_verbal non-speech content,361145,322423
+discourse,ATTRIBUTION_Content_speech content,733579,361145
+discourse,EXPANSION_Restatement_specification,733584,733579
+discourse,CONTINGENCY_Cause_,322450,733579
+discourse,TEMPORAL_Continuation_,322456,322450
+discourse,TEMPORAL_Continuation_,322459,322456
+discourse,CONTINGENCY_Result_real result,322472,322450
+discourse,TEMPORAL_Narration_same story,322480,322408
+discourse,ATTRIBUTION_Expressive_speech expressive,322489,322480
+discourse,ATTRIBUTION_Content_speech content,322493,322480
+discourse,TEMPORAL_Continuation_,322501,322493
+discourse,TEMPORAL_Continuation_,322510,322501
+discourse,ATTRIBUTION_Content_speech content,322516,322511
+discourse,CONTINGENCY_Cause_,322520,322510
+discourse,ATTRIBUTION_Content_speech content,322524,322520
+discourse,CONTINGENCY_Cause_,322546,322501
+discourse,CONTINGENCY_Result_real result,322555,322546
+discourse,CONTINGENCY_Purpose_,322555,322546
+discourse,TEMPORAL_Narration_same story,322559,322555
+discourse,TEMPORAL_Narration_same story,322562,322480
+discourse,TEMPORAL_Coincidence_means,322566,322562
+discourse,ATTRIBUTION_Content_speech content,322570,322566
+discourse,TEMPORAL_Narration_same story,322572,322562
+discourse,TEMPORAL_Continuation_,322574,322572
+discourse,ATTRIBUTION_Content_speech content,322581,322574
+discourse,COMPARISON_Juxtaposition_parallel,322591,322581
+discourse,TEMPORAL_Narration_same story,322593,322574
+discourse,CONTINGENCY_Purpose_,322597,322593
+discourse,TEMPORAL_Narration_same story,322599,322593
+discourse,ATTRIBUTION_Expressive_speech expressive,322603,322599
+discourse,ATTRIBUTION_Content_speech content,322606,322599
+discourse,TEMPORAL_Narration_same story,322610,322599
+discourse,ATTRIBUTION_Content_speech content,322620,322610
+discourse,TEMPORAL_Narration_same story,322622,322610
+discourse,TEMPORAL_Coincidence_means,322627,322622
+discourse,ATTRIBUTION_Content_speech content,322630,322627
+discourse,TEMPORAL_Narration_same story,322635,322622
+discourse,ATTRIBUTION_Content_speech content,322640,322635
+discourse,TEMPORAL_Continuation_,322643,322640
+discourse,EXPANSION_Alternative_chosen alternative,322646,322640
+discourse,CONTINGENCY_Cause_reason,322651,322656
+discourse,CONTINGENCY_Cause_reason,322656,322672
+discourse,TEMPORAL_Synchronous_overlap,322656,322672
+discourse,ATTRIBUTION_Content_Non-verbal content,322668,322656
+discourse,TEMPORAL_Narration_same story,322672,322635
+discourse,TEMPORAL_Coincidence_means,322673,322672
+discourse,ATTRIBUTION_Content_speech content,322681,322673
+discourse,EXPANSION_Elaboration_background,322684,322703
+discourse,EXPANSION_Elaboration_characterization,322692,322684
+discourse,COMPARISON_Juxtaposition_contrast,322703,322681
+discourse,CONTINGENCY_Purpose_,322717,398647
+discourse,TEMPORAL_Narration_same story,322722,322717
+discourse,EXPANSION_Elaboration_characterization,398647,322703
+discourse,COMPARISON_Juxtaposition_contrast,322733,322722
+discourse,TEMPORAL_Coincidence_means,322742,322743
+discourse,TEMPORAL_Narration_same story,322743,322672
+discourse,CONTINGENCY_Cause_reason,322753,322772
+discourse,TEMPORAL_Narration_same story,322772,322743
+discourse,EXPANSION_Restatement_specification,322778,322772
+discourse,TEMPORAL_Narration_new story,733624,322772
+discourse,TEMPORAL_Asynchronous_precedence,733628,733624
+discourse,TEMPORAL_Asynchronous_precedence,733634,733624
+discourse,TEMPORAL_Synchronous_overlap,733636,733624
+discourse,TEMPORAL_Narration_same story,733641,733624
+discourse,TEMPORAL_Narration_same story,733656,733641
+discourse,ATTRIBUTION_Content_speech content,733658,733656
+discourse,TEMPORAL_Continuation_,733666,733658
+discourse,EXPANSION_Elaboration_summary,322834,733656
+discourse,TEMPORAL_Synchronous_overlap,322836,322834
+discourse,TEMPORAL_Continuation_,322841,322834
+discourse,ATTRIBUTION_Information source_non-verbal,322845,322841
+discourse,TEMPORAL_Narration_same story,323012,323006
+discourse,TEMPORAL_Synchronous_circumstance,323021,323012
+discourse,TEMPORAL_Continuation_,323028,323012
+discourse,TEMPORAL_Asynchronous_precedence,323036,323038
+discourse,CONTINGENCY_Result_real result,323038,323028
+discourse,TEMPORAL_Narration_same story,323040,323038
+discourse,CONTINGENCY_Condition_factual present,323048,323052
+discourse,ATTRIBUTION_Content_speech content,323052,323040
+discourse,ATTRIBUTION_Content_speech content,323057,323052
+discourse,TEMPORAL_Narration_same story,323061,323040
+discourse,ATTRIBUTION_Content_speech content,323067,323061
+discourse,ATTRIBUTION_Content_verbal non-speech content,323073,323067
+discourse,TEMPORAL_Narration_same story,323078,323061
+discourse,TEMPORAL_Narration_same story,323080,323078
+discourse,TEMPORAL_Narration_same story,323092,323080
+discourse,ATTRIBUTION_Content_speech content,323098,323092
+discourse,CONTINGENCY_Cause_pragmatic cause,323110,323098
+discourse,TEMPORAL_Continuation_,323115,323110
+discourse,CONTINGENCY_Condition_hypothetical,323121,323125
+discourse,CONTINGENCY_Result_real result,323125,323098
+discourse,TEMPORAL_Narration_same story,323130,323092
+discourse,TEMPORAL_Continuation_,323133,323130
+discourse,ATTRIBUTION_Content_speech content,323136,323133
+discourse,ATTRIBUTION_Content_verbal non-speech content,323138,323136
+discourse,TEMPORAL_Continuation_,323146,323138
+discourse,TEMPORAL_Narration_same story,323148,323133
+discourse,TEMPORAL_Narration_same story,323154,323148
+discourse,TEMPORAL_Narration_same story,323162,323154
+discourse,CONTINGENCY_Condition_factual present,323167,323171
+discourse,ATTRIBUTION_Content_speech content,323171,323162
+discourse,CONTINGENCY_Cause_,323176,323171
+discourse,ATTRIBUTION_Content_verbal non-speech content,323182,323176
+discourse,TEMPORAL_Continuation_,323193,323182
+discourse,CONTINGENCY_Purpose_,323197,323193
+discourse,TEMPORAL_Narration_same story,323205,323162
+discourse,TEMPORAL_Continuation_,323206,323205
+discourse,ATTRIBUTION_Content_speech content,323211,323206
+discourse,ATTRIBUTION_Content_speech content,323214,323211
+discourse,TEMPORAL_Asynchronous_precedence,323221,323226
+discourse,TEMPORAL_Narration_same story,323226,323206
+discourse,TEMPORAL_Narration_,323233,323226
+discourse,TEMPORAL_Narration_same story,323247,323233
+discourse,TEMPORAL_Narration_same story,323257,323247
+discourse,TEMPORAL_Synchronous_circumstance,323263,323257
+discourse,TEMPORAL_Narration_new story,323268,323257
+discourse,EXPANSION_Elaboration_characterization,323273,323268
+discourse,TEMPORAL_Narration_same story,323277,323268
+discourse,TEMPORAL_Narration_same story,323292,323277
+discourse,CONTINGENCY_Purpose_,323293,323292
+discourse,TEMPORAL_Narration_same story,323296,323292
+discourse,TEMPORAL_Asynchronous_precedence,323304,323307
+discourse,TEMPORAL_Narration_same story,323307,323296
+discourse,CONTINGENCY_Cause_reason,756143,758263
+discourse,ATTRIBUTION_Content_verbal non-speech content,758263,323311
+discourse,TEMPORAL_Narration_same story,756147,758263
+discourse,CONTINGENCY_Purpose_,756149,756147
+discourse,TEMPORAL_Continuation_,756155,756283
+discourse,TEMPORAL_Continuation_,756159,756155
+discourse,TEMPORAL_Continuation_,756283,756149
+discourse,TEMPORAL_Narration_same story,323345,323307
+discourse,TEMPORAL_Narration_same story,323348,323345
+discourse,TEMPORAL_Narration_same story,323351,323348
+discourse,TEMPORAL_Narration_same story,323360,323351
+discourse,TEMPORAL_Narration_same story,756163,323360
+discourse,ATTRIBUTION_Content_speech content,756170,756165
+discourse,TEMPORAL_Narration_same story,323382,756163
+discourse,TEMPORAL_Continuation_,323385,323382
+discourse,TEMPORAL_Continuation_,323399,323385
+discourse,ATTRIBUTION_Content_speech content,323403,323399
+discourse,TEMPORAL_Narration_same story,323408,323399
+discourse,ATTRIBUTION_Content_speech content,323413,323408
+discourse,ATTRIBUTION_Expressive_speech expressive,323419,323416
+discourse,EXPANSION_Restatement_,323421,323413
+discourse,CONTINGENCY_Result_pragmatic result,323430,323421
+discourse,TEMPORAL_Narration_same story,323438,323408
+discourse,ATTRIBUTION_Content_speech content,323442,323438
+discourse,ATTRIBUTION_Content_speech content,323448,323442
+discourse,TEMPORAL_Continuation_,323457,323442
+discourse,EXPANSION_Elaboration_background,323462,323495
+discourse,TEMPORAL_Synchronous_overlap,323472,323462
+discourse,CONTINGENCY_Result_real result,323483,323472
+discourse,ATTRIBUTION_Content_speech content,323495,323457
+discourse,EXPANSION_Elaboration_background,323510,323522
+discourse,COMPARISON_Juxtaposition_parallel,323522,323495
+discourse,TEMPORAL_Narration_same story,323530,323438
+discourse,TEMPORAL_Synchronous_overlap,323536,323530
+discourse,CONTINGENCY_Cause_reason,323536,323530
+discourse,TEMPORAL_Narration_same story,323540,323530
+discourse,TEMPORAL_Narration_same story,323541,323540
+discourse,TEMPORAL_Narration_same story,323548,323541
+discourse,CONTINGENCY_Purpose_,323562,323548
+discourse,TEMPORAL_Narration_same story,323567,323548
+discourse,TEMPORAL_Narration_same story,323571,323567
+discourse,TEMPORAL_Narration_new story,323574,323571
+discourse,TEMPORAL_Narration_same story,323582,323574
+discourse,TEMPORAL_Narration_same story,323590,323582
+discourse,CONTINGENCY_Cause_reason,323599,323590
+discourse,EXPANSION_Elaboration_background,323608,323616
+discourse,EXPANSION_Elaboration_characterization,323610,323608
+discourse,TEMPORAL_Narration_same story,323616,323590
+discourse,ATTRIBUTION_Expressive_speech expressive,323620,323616
+discourse,ATTRIBUTION_Expressive_speech expressive,323627,323616
+discourse,ATTRIBUTION_Content_speech content,756178,323616
+discourse,TEMPORAL_Continuation_,323630,756178
+discourse,CONTINGENCY_Purpose_,323631,323630
+discourse,TEMPORAL_Continuation_,756179,323630
+discourse,ATTRIBUTION_Content_Non-verbal content,756182,756179
+discourse,EXPANSION_Restatement_specification,756187,756182
+discourse,TEMPORAL_Narration_same story,323645,323616
+discourse,TEMPORAL_Coincidence_means,323649,323645
+discourse,ATTRIBUTION_Content_speech content,323651,323649
+discourse,TEMPORAL_Continuation_,323653,323651
+discourse,TEMPORAL_Narration_same story,323658,323645
+discourse,TEMPORAL_Narration_same story,323665,323658
+discourse,TEMPORAL_Synchronous_circumstance,323669,323665
+discourse,TEMPORAL_Narration_same story,323673,323665
+discourse,TEMPORAL_Narration_same story,323679,323673
+discourse,TEMPORAL_Coincidence_means,323682,323679
+discourse,CONTINGENCY_Cause_Pragmatic reason,323694,756237
+discourse,CONTINGENCY_Result_real result,323700,323694
+discourse,ATTRIBUTION_Content_speech content,756237,323682
+discourse,TEMPORAL_Narration_same story,323703,323679
+discourse,TEMPORAL_Asynchronous_precedence,323713,323718
+discourse,TEMPORAL_Narration_new story,323718,323703
+discourse,EXPANSION_Elaboration_background,323728,323734
+discourse,TEMPORAL_Narration_same story,323734,323718
+discourse,TEMPORAL_Narration_same story,323740,323734
+discourse,TEMPORAL_Narration_same story,323743,323740
+discourse,TEMPORAL_Narration_same story,323748,323743
+discourse,TEMPORAL_Narration_same story,323753,323748
+discourse,TEMPORAL_Narration_same story,323754,323753
+discourse,TEMPORAL_Synchronous_overlap,323757,323767
+discourse,TEMPORAL_Narration_same story,323767,323754
+discourse,TEMPORAL_Coincidence_means,323779,323780
+discourse,TEMPORAL_Narration_same story,323780,323767
+discourse,TEMPORAL_Narration_same story,756243,323780
+discourse,TEMPORAL_Synchronous_circumstance,756249,756243
+discourse,TEMPORAL_Continuation_,756251,756249
+discourse,ATTRIBUTION_Content_speech content,756254,756251
+discourse,TEMPORAL_Coincidence_means,323802,323804
+discourse,TEMPORAL_Narration_same story,323804,756243
+discourse,CONTINGENCY_Cause_reason,323809,323804
+discourse,ATTRIBUTION_Content_Non-verbal content,323813,323809
+discourse,TEMPORAL_Asynchronous_precedence,323815,323818
+discourse,TEMPORAL_Narration_new story,323818,323804
+discourse,TEMPORAL_Narration_same story,323819,323818
+discourse,TEMPORAL_Narration_same story,323827,323819
+discourse,TEMPORAL_Narration_same story,323831,323827
+discourse,TEMPORAL_Narration_same story,323836,323831
+discourse,CONTINGENCY_Purpose_,323840,323836
+discourse,TEMPORAL_Narration_same story,756263,323836
+discourse,ATTRIBUTION_Content_speech content,756273,756263
+discourse,CONTINGENCY_Cause_reason,756281,756273
+discourse,TEMPORAL_Narration_same story,323868,756263
+discourse,TEMPORAL_Synchronous_overlap,323882,323876
+discourse,TEMPORAL_Continuation_,323885,323882
+discourse,TEMPORAL_Narration_same story,323893,323876
+discourse,TEMPORAL_Narration_same story,323901,323893
+discourse,TEMPORAL_Narration_same story,323914,323901
+discourse,TEMPORAL_Narration_same story,323915,323914
+discourse,TEMPORAL_Narration_same story,758541,323915
+discourse,TEMPORAL_Narration_same story,758550,758541
+discourse,ATTRIBUTION_Content_speech content,758555,758550
+discourse,TEMPORAL_Narration_same story,758557,758550
+discourse,TEMPORAL_Narration_same story,758562,758557
+discourse,TEMPORAL_Asynchronous_precedence,323949,323952
+discourse,TEMPORAL_Narration_same story,323952,758562
+discourse,ATTRIBUTION_Content_speech content,323957,323952
+discourse,TEMPORAL_Narration_same story,323962,323957
+discourse,TEMPORAL_Narration_same story,323970,323952
+discourse,TEMPORAL_Continuation_,323972,323970
+discourse,ATTRIBUTION_Expressive_speech expressive,323974,323972
+discourse,COMPARISON_Concession_,323979,323981
+discourse,COMPARISON_Concession_,323981,323988
+discourse,ATTRIBUTION_Content_speech content,323988,323972
+discourse,TEMPORAL_Asynchronous_precedence,323994,323995
+discourse,TEMPORAL_Narration_same story,323995,323972
+discourse,CONTINGENCY_Result_real result,324000,323995
+discourse,TEMPORAL_Narration_same story,324007,323995
+discourse,ATTRIBUTION_Content_,324015,324007
+discourse,TEMPORAL_Narration_same story,324016,324015
+discourse,TEMPORAL_Narration_same story,324020,324007
+discourse,TEMPORAL_Narration_same story,324023,324020
+discourse,CONTINGENCY_Result_real result,324029,324023
+discourse,TEMPORAL_Asynchronous_precedence,324032,324036
+discourse,TEMPORAL_Narration_same story,324036,324023
+discourse,TEMPORAL_Synchronous_circumstance,324040,324036
+discourse,ATTRIBUTION_Content_speech content,324042,324040
+discourse,CONTINGENCY_Cause_pragmatic cause,324049,324042
+discourse,ATTRIBUTION_Expressive_speech expressive,324051,324040
+discourse,CONTINGENCY_Cause_reason,324055,324036
+discourse,EXPANSION_Elaboration_characterization,324080,582052
+discourse,EXPANSION_Addition_,582052,324055
+discourse,TEMPORAL_Narration_same story,324086,324036
+discourse,ATTRIBUTION_Content_speech content,324094,324086
+discourse,TEMPORAL_Continuation_,324100,324094
+discourse,TEMPORAL_Asynchronous_precedence,324104,324111
+discourse,TEMPORAL_Narration_same story,324111,324086
+discourse,TEMPORAL_Narration_same story,324113,324111
+discourse,TEMPORAL_Narration_new story,324117,324113
+discourse,TEMPORAL_Synchronous_overlap,324120,324117
+discourse,TEMPORAL_Narration_same story,582053,324117
+discourse,TEMPORAL_Asynchronous_precedence,324133,324138
+discourse,TEMPORAL_Narration_same story,324138,582053
+discourse,TEMPORAL_Narration_same story,324141,324138
+discourse,TEMPORAL_Coincidence_means,324143,324141
+discourse,ATTRIBUTION_Expressive_speech expressive,324145,324143
+discourse,CONTINGENCY_Condition_hypothetical,324148,324150
+discourse,ATTRIBUTION_Content_speech content,324150,324143
+discourse,TEMPORAL_Narration_same story,324155,324141
+discourse,TEMPORAL_Narration_same story,324158,324155
+discourse,TEMPORAL_Synchronous_circumstance,324160,324158
+discourse,ATTRIBUTION_Content_speech content,324162,324160
+discourse,TEMPORAL_Continuation_,324164,324162
+discourse,TEMPORAL_Narration_same story,324170,324158
+discourse,TEMPORAL_Narration_same story,324176,324170
+discourse,ATTRIBUTION_Content_speech content,324179,324176
+discourse,COMPARISON_Juxtaposition_contrast,324182,324179
+discourse,TEMPORAL_Narration_same story,324183,324182
+discourse,TEMPORAL_Narration_same story,324189,324183
+discourse,COMPARISON_Sameness_,324195,324189
+discourse,TEMPORAL_Narration_new story,324202,324176
+discourse,TEMPORAL_Narration_same story,324211,324202
+discourse,CONTINGENCY_Purpose_,324214,324211
+discourse,TEMPORAL_Continuation_,324216,324214
+discourse,TEMPORAL_Narration_same story,324224,324211
+discourse,TEMPORAL_Narration_same story,324230,324224
+discourse,EXPANSION_Elaboration_background,324233,324284
+discourse,TEMPORAL_Continuation_,324240,324233
+discourse,TEMPORAL_Continuation_,324244,324240
+discourse,EXPANSION_Elaboration_characterization,324251,324244
+discourse,TEMPORAL_Continuation_,324266,324244
+discourse,TEMPORAL_Narration_same story,324284,582054
+discourse,TEMPORAL_Narration_new story,582054,324230
+discourse,CONTINGENCY_Cause_reason,324294,324302
+discourse,ATTRIBUTION_Content_Non-verbal content,324296,324294
+discourse,TEMPORAL_Narration_same story,324302,324284
+discourse,TEMPORAL_Narration_same story,324309,324302
+discourse,TEMPORAL_Asynchronous_precedence,324322,324326
+discourse,TEMPORAL_Narration_same story,324326,324309
+discourse,ATTRIBUTION_Expressive_speech expressive,324328,324326
+discourse,ATTRIBUTION_Content_speech content,324330,324326
+discourse,TEMPORAL_Narration_same story,324337,324326
+discourse,TEMPORAL_Coincidence_means,324344,324337
+discourse,ATTRIBUTION_Content_speech content,324347,324344
+discourse,EXPANSION_Elaboration_characterization,324350,324347
+discourse,CONTINGENCY_Cause_pragmatic cause,324354,324347
+discourse,CONTINGENCY_Cause_reason,324363,324370
+discourse,TEMPORAL_Asynchronous_precedence,324363,324370
+discourse,TEMPORAL_Narration_same story,324370,324337
+discourse,TEMPORAL_Continuation_,324371,324370
+discourse,ATTRIBUTION_Content_speech content,324376,324371
+discourse,TEMPORAL_Continuation_,324383,324376
+discourse,EXPANSION_Restatement_equivalence,324386,324383
+discourse,ATTRIBUTION_Content_speech content,324388,324386
+discourse,EXPANSION_Alternative_disjunctive,324395,324386
+discourse,ATTRIBUTION_Content_speech content,324397,324395
+discourse,TEMPORAL_Narration_same story,324399,324397
+discourse,CONTINGENCY_Purpose_,759853,759866
+discourse,ATTRIBUTION_Content_Non-verbal content,759860,759853
+discourse,TEMPORAL_Narration_same story,759866,324371
+discourse,ATTRIBUTION_Content_speech content,788344,759866
+discourse,ATTRIBUTION_Content_speech content,324424,788344
+discourse,TEMPORAL_Narration_same story,324426,324424
+discourse,TEMPORAL_Narration_same story,324430,324426
+discourse,TEMPORAL_Narration_same story,324438,759866
+discourse,TEMPORAL_Narration_same story,324442,324438
+discourse,TEMPORAL_Narration_same story,324447,324442
+discourse,TEMPORAL_Synchronous_circumstance,324452,324447
+discourse,TEMPORAL_Narration_same story,324458,324447
+discourse,TEMPORAL_Narration_same story,324462,324458
+discourse,TEMPORAL_Narration_same story,324467,324462
+discourse,TEMPORAL_Narration_same story,324469,324467
+discourse,ATTRIBUTION_Content_speech content,324471,324469
+discourse,TEMPORAL_Narration_new story,324478,324469
+discourse,TEMPORAL_Narration_same story,324481,324478
+discourse,ATTRIBUTION_Content_Non-verbal content,324485,324481
+discourse,TEMPORAL_Narration_same story,324491,324481
+discourse,ATTRIBUTION_Content_speech content,324494,324491
+discourse,TEMPORAL_Narration_same story,324498,324491
+discourse,TEMPORAL_Narration_same story,324500,324498
+discourse,TEMPORAL_Narration_same story,324501,324500
+discourse,TEMPORAL_Narration_same story,324505,324501
+discourse,EXPANSION_Elaboration_explanation,324516,324505
+discourse,TEMPORAL_Narration_same story,324529,324505
+discourse,TEMPORAL_Synchronous_circumstance,324540,324529
+discourse,ATTRIBUTION_Content_speech content,324549,324540
+discourse,TEMPORAL_Continuation_,324551,324549
+discourse,TEMPORAL_Narration_same story,324554,324529
+discourse,TEMPORAL_Continuation_,324557,324554
+discourse,ATTRIBUTION_Content_speech content,324563,324557
+discourse,COMPARISON_Juxtaposition_parallel,324573,324563
+discourse,CONTINGENCY_Purpose_,324574,324573
+discourse,TEMPORAL_Narration_same story,324583,324557
+discourse,ATTRIBUTION_Content_speech content,324590,324583
+discourse,TEMPORAL_Continuation_,324594,324590
+discourse,COMPARISON_Juxtaposition_contrast,324606,324590
+discourse,EXPANSION_Addition_,582056,324590
+discourse,TEMPORAL_Narration_same story,324612,324583
+discourse,ATTRIBUTION_Content_speech content,324617,324612
+discourse,TEMPORAL_Synchronous_overlap,324629,324617
+discourse,COMPARISON_Juxtaposition_contrast,324634,324617
+discourse,TEMPORAL_Asynchronous_precedence,324640,324647
+discourse,TEMPORAL_Narration_same story,324647,324634
+discourse,TEMPORAL_Narration_same story,324653,324612
+discourse,ATTRIBUTION_Content_speech content,324665,324653
+discourse,TEMPORAL_Narration_same story,324666,324665
+discourse,CONTINGENCY_Cause_reason,324678,324666
+discourse,TEMPORAL_Continuation_,324683,324678
+discourse,CONTINGENCY_Condition_hypothetical,582066,324678
+discourse,COMPARISON_Juxtaposition_parallel,324693,324665
+discourse,CONTINGENCY_Cause_reason,324704,324693
+discourse,TEMPORAL_Continuation_,324714,324704
+discourse,CONTINGENCY_Condition_hypothetical,582067,324704
+discourse,COMPARISON_Juxtaposition_contrast,758614,324693
+discourse,TEMPORAL_Synchronous_overlap,324730,324732
+discourse,EXPANSION_Addition_,324732,324693
+discourse,CONTINGENCY_Cause_pragmatic cause,324735,324732
+discourse,ATTRIBUTION_Content_speech content,324741,324735
+discourse,TEMPORAL_Narration_same story,324754,324743
+discourse,TEMPORAL_Narration_same story,324761,324754
+discourse,TEMPORAL_Synchronous_circumstance,324762,324761
+discourse,TEMPORAL_Narration_same story,324770,324761
+discourse,ATTRIBUTION_Content_speech content,324773,324770
+discourse,TEMPORAL_Narration_same story,324782,324770
+discourse,TEMPORAL_Continuation_,324787,324782
+discourse,ATTRIBUTION_Content_speech content,324791,324787
+discourse,ATTRIBUTION_Content_verbal non-speech,324793,324791
+discourse,TEMPORAL_Asynchronous_precedence,324796,324793
+discourse,TEMPORAL_Synchronous_overlap,324796,324793
+discourse,EXPANSION_Restatement_specification,324805,324793
+discourse,TEMPORAL_Narration_same story,324816,324805
+discourse,TEMPORAL_Narration_same story,324818,324816
+discourse,TEMPORAL_Narration_same story,324820,324818
+discourse,EXPANSION_Elaboration_characterization,324828,324820
+discourse,TEMPORAL_Narration_same story,324837,324787
+discourse,ATTRIBUTION_Content_speech content,324841,324837
+discourse,TEMPORAL_Narration_new story,324850,324837
+discourse,TEMPORAL_Narration_same story,324861,324850
+discourse,TEMPORAL_Narration_same story,324864,324861
+discourse,EXPANSION_Elaboration_characterization,324873,324864
+discourse,TEMPORAL_Narration_same story,324876,324864
+discourse,ATTRIBUTION_Content_Non-verbal content,324887,324876
+discourse,CONTINGENCY_Purpose_,324890,324876
+discourse,TEMPORAL_Narration_same story,324896,324876
+discourse,TEMPORAL_Narration_same story,324901,324896
+discourse,ATTRIBUTION_Content_speech content,324911,324901
+discourse,TEMPORAL_Narration_same story,324913,324911
+discourse,TEMPORAL_Narration_same story,324919,324901
+discourse,TEMPORAL_Narration_same story,324920,324919
+discourse,TEMPORAL_Narration_same story,324922,324920
+discourse,ATTRIBUTION_Content_speech content,324929,324922
+discourse,ATTRIBUTION_Content_speech content,324933,324929
+discourse,COMPARISON_Juxtaposition_parallel,360934,324933
+discourse,TEMPORAL_Narration_same story,324946,324922
+discourse,TEMPORAL_Narration_same story,324949,324946
+discourse,ATTRIBUTION_Content_speech content,324952,324949
+discourse,TEMPORAL_Narration_same story,324959,324949
+discourse,TEMPORAL_Narration_same story,324962,324959
+discourse,TEMPORAL_Narration_same story,324969,324962
+discourse,TEMPORAL_Narration_same story,324973,324969
+discourse,ATTRIBUTION_Content_speech content,324978,324973
+discourse,TEMPORAL_Narration_new story,324982,324973
+discourse,CONTINGENCY_Purpose_,324993,324982
+discourse,TEMPORAL_Narration_same story,324996,324982
+discourse,TEMPORAL_Asynchronous_precedence,325006,325009
+discourse,TEMPORAL_Narration_same story,325009,324996
+discourse,TEMPORAL_Narration_same story,325015,325009
+discourse,TEMPORAL_Narration_same story,325023,325015
+discourse,TEMPORAL_Narration_same story,325029,325023
+discourse,EXPANSION_Elaboration_comment,325069,325029
+discourse,TEMPORAL_Narration_same story,325073,325029
+discourse,TEMPORAL_Narration_same story,325076,325073
+discourse,TEMPORAL_Narration_same story,325122,758565
+discourse,TEMPORAL_Narration_same story,758565,325076
+discourse,TEMPORAL_Narration_same story,325128,325122
+discourse,CONTINGENCY_Cause_reason,325136,325128
+discourse,TEMPORAL_Narration_same story,325138,325128
+discourse,TEMPORAL_Narration_same story,325143,325138
+discourse,TEMPORAL_Narration_same story,325151,325143
+discourse,CONTINGENCY_Cause_,325159,360928
+discourse,ATTRIBUTION_Content_speech content,360928,325151
+discourse,CONTINGENCY_Cause_,325171,360964
+discourse,COMPARISON_Juxtaposition_parallel,360964,360928
+discourse,CONTINGENCY_Cause_,325179,360965
+discourse,COMPARISON_Juxtaposition_parallel,360965,360964
+discourse,COMPARISON_Juxtaposition_parallel,325182,360965
+discourse,CONTINGENCY_Condition_general,325184,325182
+discourse,TEMPORAL_Continuation_,325191,325184
+discourse,TEMPORAL_Continuation_,325194,325191
+discourse,TEMPORAL_Continuation_,325197,325194
+discourse,TEMPORAL_Continuation_,325208,325182
+discourse,TEMPORAL_Continuation_,325214,325208
+discourse,CONTINGENCY_Cause_reason,360993,325208
+discourse,CONTINGENCY_Cause_pragmatic cause,325230,360993
+discourse,COMPARISON_Juxtaposition_contrast,325238,360928
+discourse,CONTINGENCY_Cause_,325244,325238
+discourse,COMPARISON_Juxtaposition_contrast,325249,360964
+discourse,ATTRIBUTION_Expressive_speech expressive,325253,325151
+discourse,CONTINGENCY_Cause_,325257,325249
+discourse,COMPARISON_Juxtaposition_contrast,325259,360965
+discourse,ATTRIBUTION_Expressive_speech expressive,325262,325151
+discourse,CONTINGENCY_Cause_,325266,325259
+discourse,TEMPORAL_Continuation_,325268,325266
+discourse,COMPARISON_Juxtaposition_contrast,325270,325182
+discourse,CONTINGENCY_Condition_general,325273,325270
+discourse,CONTINGENCY_Cause_,325283,325270
+discourse,COMPARISON_Juxtaposition_contrast,325292,325273
+discourse,ATTRIBUTION_Content_speech content,325296,325292
+discourse,EXPANSION_List_,325302,325296
+discourse,EXPANSION_List_,325307,325302
+discourse,EXPANSION_List_,325312,325307
+discourse,EXPANSION_Instantiation_,325324,325296
+discourse,COMPARISON_Juxtaposition_parallel,325340,325324
+discourse,COMPARISON_Juxtaposition_parallel,325345,325340
+discourse,TEMPORAL_Continuation_,325354,325345
+discourse,COMPARISON_Sameness_,325358,325367
+discourse,ATTRIBUTION_Content_Non-verbal content,325360,325358
+discourse,EXPANSION_Elaboration_summary,325367,325345
+discourse,CONTINGENCY_Condition_general,325373,325381
+discourse,CONTINGENCY_Pragmatic condition_,325373,325381
+discourse,CONTINGENCY_Cause_pragmatic cause,325381,325292
+discourse,CONTINGENCY_Cause_pragmatic cause,325390,325381
+discourse,CONTINGENCY_Condition_general,325395,325403
+discourse,CONTINGENCY_Pragmatic condition_,325395,325403
+discourse,COMPARISON_Juxtaposition_parallel,325403,325381
+discourse,CONTINGENCY_Cause_pragmatic cause,325410,325403
+discourse,CONTINGENCY_Condition_general,325414,325423
+discourse,CONTINGENCY_Pragmatic condition_,325414,325423
+discourse,COMPARISON_Juxtaposition_parallel,325423,325403
+discourse,CONTINGENCY_Cause_pragmatic cause,325428,325423
+discourse,CONTINGENCY_Cause_reason,325430,325428
+discourse,COMPARISON_Juxtaposition_contrast,325435,325381
+discourse,TEMPORAL_Continuation_,325440,325435
+discourse,TEMPORAL_Continuation_,325442,325440
+discourse,TEMPORAL_Coincidence_manner,325444,325442
+discourse,CONTINGENCY_Result_real result,325447,325440
+discourse,TEMPORAL_Continuation_,325454,325447
+discourse,CONTINGENCY_Cause_pragmatic cause,325461,325454
+discourse,TEMPORAL_Continuation_,325468,325442
+discourse,COMPARISON_Sameness_,325476,325468
+discourse,EXPANSION_Instantiation_,325480,325468
+discourse,CONTINGENCY_Result_real result,325485,325480
+discourse,COMPARISON_Juxtaposition_parallel,325489,325480
+discourse,CONTINGENCY_Result_real result,325494,325489
+discourse,COMPARISON_Juxtaposition_parallel,325496,325489
+discourse,CONTINGENCY_Result_real result,325499,325496
+discourse,COMPARISON_Juxtaposition_parallel,325501,325496
+discourse,CONTINGENCY_Result_real result,325504,325501
+discourse,EXPANSION_Restatement_specification,325512,325504
+discourse,CONTINGENCY_Cause_pragmatic cause,325522,325512
+discourse,TEMPORAL_Narration_same story,325525,325151
+discourse,ATTRIBUTION_Content_speech content,325532,325525
+discourse,CONTINGENCY_Cause_pragmatic cause,325541,325532
+discourse,TEMPORAL_Continuation_,325544,325532
+discourse,TEMPORAL_Synchronous_overlap,325550,325553
+discourse,TEMPORAL_Asynchronous_precedence,325550,325553
+discourse,COMPARISON_Juxtaposition_contrast,325553,325544
+discourse,TEMPORAL_Continuation_,325561,325553
+discourse,COMPARISON_Juxtaposition_contrast,325581,325561
+discourse,COMPARISON_Juxtaposition_parallel,787412,325561
+discourse,ATTRIBUTION_Expressive_speech expressive,787417,787413
+discourse,ATTRIBUTION_Content_speech content,787418,787413
+discourse,TEMPORAL_Continuation_,787419,787418
+discourse,COMPARISON_Concession_,787435,787412
+discourse,ATTRIBUTION_Expressive_speech expressive,325612,325525
+discourse,COMPARISON_Juxtaposition_contrast,325614,787412
+discourse,CONTINGENCY_Result_real result,325625,325614
+discourse,CONTINGENCY_Cause_pragmatic cause,325639,325614
+discourse,CONTINGENCY_Cause_pragmatic cause,325661,325639
+discourse,EXPANSION_Instantiation_,325667,325661
+discourse,TEMPORAL_Continuation_,325674,325667
+discourse,COMPARISON_Juxtaposition_parallel,325685,325639
+discourse,COMPARISON_Juxtaposition_parallel,325695,325685
+discourse,CONTINGENCY_Cause_pragmatic cause,325703,325695
+discourse,COMPARISON_Concession_,325711,325718
+discourse,ATTRIBUTION_Expressive_speech expressive,325713,325711
+discourse,ATTRIBUTION_Expressive_speech expressive,325714,325711
+discourse,TEMPORAL_Continuation_,325718,325685
+discourse,TEMPORAL_Continuation_,325736,325718
+discourse,ATTRIBUTION_Content_speech content,325739,325736
+discourse,EXPANSION_Answer_,325743,325739
+discourse,EXPANSION_Elaboration_characterization,325749,325743
+discourse,TEMPORAL_Continuation_,325751,325749
+discourse,TEMPORAL_Continuation_,325753,325751
+discourse,TEMPORAL_Asynchronous_precedence,325761,325762
+discourse,COMPARISON_Concession_,325762,325771
+discourse,CONTINGENCY_Result_real result,325771,325749
+discourse,CONTINGENCY_Cause_reason,325777,325771
+discourse,COMPARISON_Juxtaposition_contrast,325787,325743
+discourse,TEMPORAL_Narration_same story,325798,325787
+discourse,CONTINGENCY_Result_real result,325804,325798
+discourse,TEMPORAL_Continuation_,325807,325804
+discourse,TEMPORAL_Asynchronous_precedence,325816,325827
+discourse,TEMPORAL_Synchronous_circumstance,325836,325837
+discourse,TEMPORAL_Narration_same story,325837,325827
+discourse,EXPANSION_Elaboration_characterization,325841,325837
+discourse,TEMPORAL_Asynchronous_precedence,325845,325850
+discourse,TEMPORAL_Narration_same story,325850,325837
+discourse,CONTINGENCY_Purpose_,325857,325850
+discourse,ATTRIBUTION_Content_speech content,325860,325857
+discourse,TEMPORAL_Narration_same story,325861,325860
+discourse,TEMPORAL_Asynchronous_precedence,325868,325872
+discourse,TEMPORAL_Narration_same story,325872,325850
+discourse,TEMPORAL_Coincidence_means,325876,325872
+discourse,ATTRIBUTION_Content_speech content,325879,325876
+discourse,CONTINGENCY_Cause_reason,325884,325879
+discourse,TEMPORAL_Continuation_,325894,325884
+discourse,TEMPORAL_Narration_same story,325900,325872
+discourse,TEMPORAL_Synchronous_overlap,325909,325912
+discourse,TEMPORAL_Narration_same story,325912,325900
+discourse,TEMPORAL_Synchronous_circumstance,325916,325912
+discourse,ATTRIBUTION_Expressive_speech expressive,325918,325916
+discourse,ATTRIBUTION_Content_speech content,325921,325916
+discourse,CONTINGENCY_Cause_pragmatic cause,325926,325921
+discourse,CONTINGENCY_Result_real result,325937,325926
+discourse,EXPANSION_Alternative_chosen alternative,325943,325921
+discourse,CONTINGENCY_Result_real result,325947,325943
+discourse,CONTINGENCY_Cause_pragmatic cause,760311,325943
+discourse,EXPANSION_Elaboration_characterization,760315,760311
+discourse,TEMPORAL_Narration_same story,760328,760311
+discourse,ATTRIBUTION_Content_speech content,760330,760328
+discourse,CONTINGENCY_Result_real result,760332,760328
+discourse,ATTRIBUTION_Content_speech content,760340,760343
+discourse,CONTINGENCY_Result_real result,760342,760343
+discourse,COMPARISON_Juxtaposition_parallel,760343,760328
+discourse,ATTRIBUTION_Content_speech content,760354,760358
+discourse,CONTINGENCY_Result_real result,760357,760358
+discourse,COMPARISON_Juxtaposition_parallel,760358,760343
+discourse,TEMPORAL_Asynchronous_precedence,325994,325999
+discourse,TEMPORAL_Narration_same story,325999,325912
+discourse,TEMPORAL_Narration_same story,326003,325999
+discourse,TEMPORAL_Narration_same story,326008,326003
+discourse,ATTRIBUTION_Content_speech content,326010,326008
+discourse,ATTRIBUTION_Content_speech content,326019,326010
+discourse,TEMPORAL_Asynchronous_precedence,326022,326028
+discourse,TEMPORAL_Narration_same story,326028,326008
+discourse,ATTRIBUTION_Content_Non-verbal content,326031,326028
+discourse,TEMPORAL_Narration_new story,326034,326028
+discourse,TEMPORAL_Narration_same story,326045,326034
+discourse,TEMPORAL_Asynchronous_precedence,326057,326065
+discourse,TEMPORAL_Narration_same story,326065,326045
+discourse,EXPANSION_Elaboration_characterization,326075,326065
+discourse,TEMPORAL_Continuation_,326083,326075
+discourse,TEMPORAL_Asynchronous_precedence,326088,326092
+discourse,TEMPORAL_Narration_same story,326092,326065
+discourse,TEMPORAL_Narration_same story,326096,326092
+discourse,ATTRIBUTION_Content_speech content,326100,326096
+discourse,TEMPORAL_Narration_same story,326103,326096
+discourse,TEMPORAL_Narration_same story,326104,326103
+discourse,TEMPORAL_Narration_same story,326111,326104
+discourse,TEMPORAL_Narration_same story,326114,326111
+discourse,ATTRIBUTION_Expressive_speech expressive,326116,326114
+discourse,ATTRIBUTION_Content_speech content,326119,326114
+discourse,ATTRIBUTION_Content_speech content,326121,326119
+discourse,TEMPORAL_Narration_same story,326124,326114
+discourse,TEMPORAL_Narration_same story,326128,326124
+discourse,TEMPORAL_Narration_same story,326132,326128
+discourse,TEMPORAL_Narration_same story,326138,326132
+discourse,TEMPORAL_Narration_same story,326144,326138
+discourse,TEMPORAL_Synchronous_circumstance,326147,326144
+discourse,ATTRIBUTION_Content_speech content,326151,326147
+discourse,TEMPORAL_Continuation_,326157,326151
+discourse,TEMPORAL_Narration_new story,326165,326144
+discourse,TEMPORAL_Narration_same story,326181,326165
+discourse,TEMPORAL_Narration_same story,326191,326181
+discourse,TEMPORAL_Narration_same story,326199,326191
+discourse,TEMPORAL_Synchronous_circumstance,326203,326199
+discourse,ATTRIBUTION_Content_speech content,326206,326203
+discourse,EXPANSION_Alternative_disjunctive,326211,326206
+discourse,TEMPORAL_Asynchronous_precedence,326213,326219
+discourse,TEMPORAL_Narration_same story,326219,326199
+discourse,ATTRIBUTION_Content_speech content,326224,326219
+discourse,TEMPORAL_Synchronous_circumstance,326228,326224
+discourse,ATTRIBUTION_Content_speech content,326231,326228
+discourse,EXPANSION_Alternative_disjunctive,326237,326231
+discourse,EXPANSION_Elaboration_background,326243,326260
+discourse,TEMPORAL_Continuation_,326256,326243
+discourse,TEMPORAL_Narration_same story,326260,326219
+discourse,TEMPORAL_Continuation_,326261,326260
+discourse,ATTRIBUTION_Content_speech content,326264,326261
+discourse,TEMPORAL_Narration_same story,326265,326264
+discourse,ATTRIBUTION_Content_Non-verbal content,326274,326270
+discourse,TEMPORAL_Continuation_,326277,326274
+discourse,TEMPORAL_Continuation_,326280,326277
+discourse,TEMPORAL_Continuation_,326282,326280
+discourse,TEMPORAL_Continuation_,326285,326282
+discourse,TEMPORAL_Continuation_,326288,326285
+discourse,TEMPORAL_Continuation_,326292,326265
+discourse,TEMPORAL_Asynchronous_precedence,326300,326305
+discourse,TEMPORAL_Narration_same story,326305,326261
+discourse,ATTRIBUTION_Content_speech content,326314,326306
+discourse,CONTINGENCY_Purpose_,326318,326314
+discourse,EXPANSION_Instantiation_,361089,326318
+discourse,COMPARISON_Juxtaposition_parallel,326327,326314
+discourse,CONTINGENCY_Purpose_,326328,326327
+discourse,EXPANSION_Instantiation_,361090,326328
+discourse,EXPANSION_Elaboration_comment,326347,361090
+discourse,COMPARISON_Juxtaposition_parallel,326351,326327
+discourse,CONTINGENCY_Purpose_,326352,326351
+discourse,EXPANSION_Instantiation_,361091,326352
+discourse,ATTRIBUTION_Expressive_speech expressive,760554,760555
+discourse,TEMPORAL_Continuation_,760555,361091
+discourse,ATTRIBUTION_Content_speech content,760560,760555
+discourse,CONTINGENCY_Cause_reason,326366,760555
+discourse,EXPANSION_Elaboration_characterization,326369,326366
+discourse,ATTRIBUTION_Content_verbal non-speech,326372,326369
+discourse,EXPANSION_Elaboration_characterization,326381,326372
+discourse,TEMPORAL_Continuation_,326388,760555
+discourse,ATTRIBUTION_Content_speech content,326398,326388
+discourse,COMPARISON_Juxtaposition_contrast,326410,326398
+discourse,TEMPORAL_Narration_same story,326420,326305
+discourse,CONTINGENCY_Cause_reason,326424,326420
+discourse,COMPARISON_Juxtaposition_contrast,326439,326420
+discourse,CONTINGENCY_Cause_reason,326444,326439
+discourse,TEMPORAL_Continuation_,326450,326388
+discourse,TEMPORAL_Continuation_,326459,326450
+discourse,EXPANSION_Answer_,326463,326459
+discourse,COMPARISON_Concession_,326475,326479
+discourse,ATTRIBUTION_Content_speech content,326479,326473
+discourse,COMPARISON_Concession_,326481,326484
+discourse,COMPARISON_Juxtaposition_parallel,326484,326479
+discourse,CONTINGENCY_Cause_reason,326486,326463
+discourse,EXPANSION_Elaboration_characterization,326492,326486
+discourse,TEMPORAL_Continuation_,326495,326492
+discourse,TEMPORAL_Narration_same story,326499,326486
+discourse,ATTRIBUTION_Content_speech content,326502,326499
+discourse,COMPARISON_Juxtaposition_parallel,326504,326486
+discourse,EXPANSION_Elaboration_characterization,326509,326504
+discourse,TEMPORAL_Continuation_,326511,326509
+discourse,TEMPORAL_Narration_same story,326514,326504
+discourse,ATTRIBUTION_Content_speech content,361110,326514
+discourse,COMPARISON_Juxtaposition_contrast,326528,326514
+discourse,TEMPORAL_Narration_new story,326537,326439
+discourse,ATTRIBUTION_Content_speech content,326544,326537
+discourse,TEMPORAL_Asynchronous_precedence,326549,326555
+discourse,TEMPORAL_Narration_same story,326555,326537
+discourse,EXPANSION_Elaboration_characterization,326561,326555
+discourse,TEMPORAL_Asynchronous_precedence,326568,326577
+discourse,ATTRIBUTION_Content_Non-verbal content,326570,326568
+discourse,TEMPORAL_Narration_same story,326577,760562
+discourse,TEMPORAL_Narration_same story,326581,326577
+discourse,TEMPORAL_Synchronous_overlap,326587,326591
+discourse,TEMPORAL_Narration_same story,326591,326581
+discourse,TEMPORAL_Narration_same story,326602,326591
+discourse,TEMPORAL_Narration_same story,326605,326602
+discourse,TEMPORAL_Narration_same story,326610,326605
+discourse,TEMPORAL_Narration_same story,760562,326555
+discourse,TEMPORAL_Asynchronous_precedence,326614,326621
+discourse,TEMPORAL_Narration_same story,326621,326610
+discourse,TEMPORAL_Coincidence_means,326624,326621
+discourse,CONTINGENCY_Condition_unreal present,326628,326631
+discourse,ATTRIBUTION_Content_speech content,326631,326624
+discourse,EXPANSION_Restatement_equivalence,326644,361111
+discourse,ATTRIBUTION_Content_Non-verbal content,361111,326631
+discourse,TEMPORAL_Narration_same story,326647,326621
+discourse,TEMPORAL_Continuation_,326650,326647
+discourse,ATTRIBUTION_Expressive_speech expressive,326654,326650
+discourse,ATTRIBUTION_Content_speech content,326656,326650
+discourse,ATTRIBUTION_Expressive_speech expressive,758570,758572
+discourse,ATTRIBUTION_Content_speech content,758571,758572
+discourse,TEMPORAL_Narration_same story,758572,326650
+discourse,ATTRIBUTION_Content_speech content,326672,326650
+discourse,EXPANSION_Elaboration_characterization,326678,326672
+discourse,TEMPORAL_Continuation_,361112,326678
+discourse,TEMPORAL_Asynchronous_precedence,326688,326692
+discourse,TEMPORAL_Narration_same story,326692,326672
+discourse,EXPANSION_Elaboration_summary,326698,326692
+discourse,TEMPORAL_Narration_same story,326701,758572
+discourse,TEMPORAL_Continuation_,326703,326701
+discourse,ATTRIBUTION_Content_speech content,326705,326703
+discourse,ATTRIBUTION_Content_Non-verbal content,361113,326705
+discourse,TEMPORAL_Narration_same story,326714,326703
+discourse,ATTRIBUTION_Content_speech content,326718,326714
+discourse,TEMPORAL_Narration_same story,326721,326714
+discourse,TEMPORAL_Narration_same story,326727,326721
+discourse,ATTRIBUTION_Content_speech content,326729,326727
+discourse,TEMPORAL_Continuation_,326734,326729
+discourse,TEMPORAL_Narration_same story,326746,326734
+discourse,COMPARISON_Juxtaposition_contrast,326752,326746
+discourse,TEMPORAL_Narration_same story,326760,326752
+discourse,TEMPORAL_Narration_same story,326765,326746
+discourse,TEMPORAL_Asynchronous_precedence,326771,326773
+discourse,COMPARISON_Juxtaposition_contrast,326773,326765
+discourse,TEMPORAL_Narration_same story,326784,326765
+discourse,COMPARISON_Juxtaposition_contrast,326789,326784
+discourse,CONTINGENCY_Result_real result,326797,326746
+discourse,ATTRIBUTION_Content_speech content,326800,326797
+discourse,CONTINGENCY_Cause_reason,326808,326800
+discourse,COMPARISON_Juxtaposition_contrast,326817,326800
+discourse,TEMPORAL_Narration_same story,326819,326727
+discourse,ATTRIBUTION_Content_speech content,326823,326819
+discourse,TEMPORAL_Narration_same story,326829,326819
+discourse,ATTRIBUTION_Content_speech content,326838,326832
+discourse,EXPANSION_Elaboration_characterization,326843,326838
+discourse,TEMPORAL_Narration_same story,326845,326829
+discourse,ATTRIBUTION_Content_speech content,326854,326845
+discourse,TEMPORAL_Continuation_,326857,326854
+discourse,TEMPORAL_Continuation_,326868,326862
+discourse,TEMPORAL_Synchronous_circumstance,326873,326868
+discourse,TEMPORAL_Continuation_,326875,326873
+discourse,TEMPORAL_Narration_same story,758573,326868
+discourse,TEMPORAL_Synchronous_overlap,326930,326941
+discourse,TEMPORAL_Continuation_,326938,326930
+discourse,TEMPORAL_Narration_same story,326941,758573
+discourse,ATTRIBUTION_Content_speech content,326945,326941
+discourse,CONTINGENCY_Purpose_,326949,326945
+discourse,TEMPORAL_Synchronous_overlap,326957,326961
+discourse,TEMPORAL_Narration_same story,326961,326945
+discourse,TEMPORAL_Narration_same story,326967,326961
+discourse,TEMPORAL_Narration_same story,326973,326967
+discourse,COMPARISON_Juxtaposition_,326978,326961
+discourse,TEMPORAL_Asynchronous_precedence,326984,326985
+discourse,TEMPORAL_Narration_same story,326985,326978
+discourse,CONTINGENCY_Cause_reason,326989,326985
+discourse,COMPARISON_Juxtaposition_,326994,326978
+discourse,TEMPORAL_Asynchronous_precedence,327001,327004
+discourse,TEMPORAL_Narration_same story,327004,326994
+discourse,COMPARISON_Juxtaposition_,327009,326994
+discourse,TEMPORAL_Asynchronous_precedence,327017,327018
+discourse,TEMPORAL_Narration_same story,327018,327009
+discourse,TEMPORAL_Synchronous_overlap,327023,327024
+discourse,TEMPORAL_Narration_same story,327024,326941
+discourse,ATTRIBUTION_Content_speech content,327030,327024
+discourse,TEMPORAL_Narration_same story,327032,327024
+discourse,ATTRIBUTION_Content_speech content,327040,327032
+discourse,TEMPORAL_Narration_same story,327046,327032
+discourse,ATTRIBUTION_Content_speech content,327049,327046
+discourse,COMPARISON_Concession_,327065,327067
+discourse,CONTINGENCY_Result_real result,327067,361114
+discourse,COMPARISON_Concession_,327069,327071
+discourse,CONTINGENCY_Result_real result,327071,361114
+discourse,COMPARISON_Juxtaposition_contrast,361114,327049
+discourse,TEMPORAL_Continuation_,327073,361114
+discourse,EXPANSION_List_,327081,327073
+discourse,EXPANSION_List_,327092,327081
+discourse,TEMPORAL_Narration_same story,327097,327092
+discourse,TEMPORAL_Narration_same story,327101,327097
+discourse,CONTINGENCY_Result_real result,327111,327101
+discourse,TEMPORAL_Narration_same story,327112,327111
+discourse,EXPANSION_List_,361115,327092
+discourse,TEMPORAL_Narration_same story,327132,361115
+discourse,EXPANSION_List_,758581,361115
+discourse,TEMPORAL_Synchronous_overlap,758593,758594
+discourse,TEMPORAL_Narration_same story,758594,758581
+discourse,CONTINGENCY_Result_real result,758597,758594
+discourse,EXPANSION_List_,327179,758581
+discourse,TEMPORAL_Asynchronous_precedence,327198,327199
+discourse,TEMPORAL_Continuation_,327199,327179
+discourse,EXPANSION_Alternative_,327205,327199
+discourse,EXPANSION_Alternative_chosen alternative,327210,327205
+discourse,CONTINGENCY_Purpose_,327215,327210
+discourse,CONTINGENCY_Cause_pragmatic cause,327221,327215
+discourse,CONTINGENCY_Result_pragmatic result,327239,327221
+discourse,ATTRIBUTION_Content_Non-verbal content,327242,327239
+discourse,CONTINGENCY_Cause_reason,327249,327239
+discourse,ATTRIBUTION_Content_Non-verbal content,327261,327260
+discourse,COMPARISON_Juxtaposition_contrast,327262,327249
+discourse,TEMPORAL_Narration_new story,327266,327046
+discourse,TEMPORAL_Narration_same story,327280,327266
+discourse,TEMPORAL_Narration_same story,758598,327280
+discourse,ATTRIBUTION_Content_speech content,758609,758598
+discourse,ATTRIBUTION_Content_Non-verbal content,758611,758613
+discourse,CONTINGENCY_Cause_reason,758613,758609
+discourse,TEMPORAL_Narration_same story,327306,758598
+discourse,TEMPORAL_Continuation_,327307,327306
+discourse,ATTRIBUTION_Content_speech content,327317,327307
+discourse,TEMPORAL_Narration_new story,327327,327307
+discourse,TEMPORAL_Continuation_,327335,327327
+discourse,TEMPORAL_Narration_same story,327344,327335
+discourse,ATTRIBUTION_Content_speech content,327348,327344
+discourse,TEMPORAL_Narration_same story,327356,327344
+discourse,TEMPORAL_Synchronous_overlap,327358,327361
+discourse,TEMPORAL_Narration_same story,327361,327356
+discourse,TEMPORAL_Narration_same story,327364,327361
+discourse,CONTINGENCY_Result_real result,327372,327364
+discourse,TEMPORAL_Narration_same story,327374,327372
+discourse,TEMPORAL_Narration_same story,327376,327374
+discourse,TEMPORAL_Narration_same story,327378,327376
+discourse,TEMPORAL_Synchronous_circumstance,327380,327378
+discourse,ATTRIBUTION_Expressive_speech expressive,327382,327380
+discourse,ATTRIBUTION_Expressive_speech expressive,327383,327380
+discourse,ATTRIBUTION_Content_speech content,327385,327380
+discourse,TEMPORAL_Asynchronous_precedence,327389,327390
+discourse,TEMPORAL_Narration_same story,327390,327378
+discourse,CONTINGENCY_Result_real result,327400,327390
+discourse,TEMPORAL_Continuation_,327403,327400
+discourse,TEMPORAL_Narration_same story,327406,327390
+discourse,ATTRIBUTION_Content_speech content,361117,327406
+discourse,TEMPORAL_Narration_same story,327415,327406
+discourse,TEMPORAL_Narration_same story,327417,327415
+discourse,TEMPORAL_Synchronous_circumstance,327419,327417
+discourse,ATTRIBUTION_Content_speech content,327426,327419
+discourse,CONTINGENCY_Cause_pragmatic cause,327432,327426
+discourse,TEMPORAL_Continuation_,327438,327432
+discourse,TEMPORAL_Narration_new story,327442,327417
+discourse,TEMPORAL_Asynchronous_precedence,327455,327461
+discourse,TEMPORAL_Narration_same story,327461,327442
+discourse,EXPANSION_Elaboration_characterization,327474,327461
+discourse,TEMPORAL_Continuation_,327481,327474
+discourse,TEMPORAL_Asynchronous_precedence,327487,327491
+discourse,TEMPORAL_Narration_same story,327491,327461
+discourse,TEMPORAL_Narration_same story,327492,327491
+discourse,TEMPORAL_Narration_same story,327497,327492
+discourse,ATTRIBUTION_Expressive_speech expressive,327504,327497
+discourse,ATTRIBUTION_Content_speech content,361119,327497
+discourse,TEMPORAL_Continuation_,758685,361119
+discourse,ATTRIBUTION_Content_speech content,758689,758685
+discourse,CONTINGENCY_Cause_reason,327518,327497
+discourse,ATTRIBUTION_Content_speech content,327524,327518
+discourse,CONTINGENCY_Cause_reason,327532,327518
+discourse,TEMPORAL_Narration_same story,327536,327532
+discourse,TEMPORAL_Synchronous_overlap,327540,327536
+discourse,TEMPORAL_Narration_same story,327543,327536
+discourse,TEMPORAL_Narration_same story,327546,327543
+discourse,TEMPORAL_Narration_same story,327554,327497
+discourse,TEMPORAL_Coincidence_means,327559,327554
+discourse,ATTRIBUTION_Content_speech content,327564,327559
+discourse,TEMPORAL_Narration_same story,327568,327554
+discourse,CONTINGENCY_Cause_reason,327573,327568
+discourse,ATTRIBUTION_Content_speech content,788849,327568
+discourse,TEMPORAL_Narration_same story,327580,327568
+discourse,ATTRIBUTION_Content_speech content,327584,327580
+discourse,ATTRIBUTION_Content_speech content,327589,327584
+discourse,TEMPORAL_Narration_same story,327591,327580
+discourse,TEMPORAL_Narration_same story,327603,327591
+discourse,ATTRIBUTION_Content_speech content,327606,327603
+discourse,TEMPORAL_Narration_same story,327613,327603
+discourse,TEMPORAL_Narration_same story,327616,327613
+discourse,TEMPORAL_Narration_same story,327623,327616
+discourse,TEMPORAL_Narration_same story,327629,327623
+discourse,TEMPORAL_Narration_same story,327639,327629
+discourse,TEMPORAL_Asynchronous_precedence,327641,327647
+discourse,TEMPORAL_Narration_new story,327647,327639
+discourse,TEMPORAL_Narration_same story,327649,327647
+discourse,TEMPORAL_Narration_same story,327658,327649
+discourse,CONTINGENCY_Purpose_,327660,327658
+discourse,TEMPORAL_Narration_same story,327665,327658
+discourse,TEMPORAL_Narration_same story,327671,327665
+discourse,ATTRIBUTION_Content_Non-verbal content,327682,327671
+discourse,TEMPORAL_Continuation_,327684,327682
+discourse,TEMPORAL_Narration_same story,327692,327671
+discourse,TEMPORAL_Narration_same story,327694,327692
+discourse,ATTRIBUTION_Content_speech content,327700,327694
+discourse,TEMPORAL_Narration_same story,327705,327694
+discourse,ATTRIBUTION_Content_speech content,327714,327705
+discourse,CONTINGENCY_Cause_reason,327721,327705
+discourse,TEMPORAL_Narration_same story,327725,327705
+discourse,TEMPORAL_Narration_same story,327728,327725
+discourse,COMPARISON_Concession_,327730,327745
+discourse,ATTRIBUTION_Content_speech content,327741,327730
+discourse,TEMPORAL_Narration_same story,327745,327728
+discourse,TEMPORAL_Synchronous_circumstance,327748,327745
+discourse,ATTRIBUTION_Content_speech content,327750,327748
+discourse,TEMPORAL_Narration_same story,327757,327750
+discourse,TEMPORAL_Narration_same story,327765,327745
+discourse,TEMPORAL_Synchronous_circumstance,327771,327765
+discourse,TEMPORAL_Narration_new story,758690,327765
+discourse,TEMPORAL_Synchronous_overlap,758694,758690
+discourse,CONTINGENCY_Cause_reason,327790,758690
+discourse,TEMPORAL_Narration_same story,327798,758690
+discourse,EXPANSION_Elaboration_characterization,327809,327798
+discourse,TEMPORAL_Narration_same story,327812,327798
+discourse,TEMPORAL_Narration_same story,327817,327812
+discourse,ATTRIBUTION_Content_speech content,327819,327817
+discourse,CONTINGENCY_Cause_reason,327828,327817
+discourse,TEMPORAL_Continuation_,327835,327828
+discourse,TEMPORAL_Synchronous_overlap,327840,327844
+discourse,TEMPORAL_Narration_same story,327844,327817
+discourse,TEMPORAL_Narration_same story,327869,327844
+discourse,TEMPORAL_Narration_same story,327871,327869
+discourse,TEMPORAL_Narration_same story,327880,327871
+discourse,TEMPORAL_Narration_same story,327888,327880
+discourse,ATTRIBUTION_Content_speech content,361130,327888
+discourse,TEMPORAL_Synchronous_overlap,327897,327900
+discourse,TEMPORAL_Narration_same story,327900,327888
+discourse,ATTRIBUTION_Expressive_speech expressive,327908,327900
+discourse,ATTRIBUTION_Content_speech content,327912,327900
+discourse,TEMPORAL_Continuation_,327915,327912
+discourse,TEMPORAL_Narration_same story,327920,327900
+discourse,ATTRIBUTION_Content_speech content,327922,327920
+discourse,CONTINGENCY_Cause_pragmatic cause,327928,327922
+discourse,ATTRIBUTION_Content_Non-verbal content,327930,327928
+discourse,CONTINGENCY_Cause_reason,327934,327943
+discourse,TEMPORAL_Asynchronous_precedence,327934,327943
+discourse,ATTRIBUTION_Content_Non-verbal content,327940,327934
+discourse,TEMPORAL_Synchronous_circumstance,327942,327943
+discourse,TEMPORAL_Narration_same story,327943,327920
+discourse,TEMPORAL_Narration_same story,327945,327943
+discourse,ATTRIBUTION_Content_speech content,327950,327952
+discourse,TEMPORAL_Narration_same story,327952,327945
+discourse,TEMPORAL_Continuation_,327960,327950
+discourse,TEMPORAL_Narration_same story,327965,327952
+discourse,ATTRIBUTION_Expressive_speech expressive,327968,327965
+discourse,ATTRIBUTION_Content_speech content,327973,327965
+discourse,CONTINGENCY_Result_real result,327976,327973
+discourse,TEMPORAL_Synchronous_overlap,758706,758707
+discourse,TEMPORAL_Narration_same story,758707,327965
+discourse,TEMPORAL_Synchronous_circumstance,758712,758707
+discourse,ATTRIBUTION_Content_speech content,758736,758707
+discourse,CONTINGENCY_Result_real result,758741,758736
+discourse,TEMPORAL_Asynchronous_precedence,328003,328004
+discourse,TEMPORAL_Narration_same story,328004,758707
+discourse,ATTRIBUTION_Content_speech content,328008,328004
+discourse,COMPARISON_Juxtaposition_contrast,328011,328008
+discourse,CONTINGENCY_Result_real result,328014,328011
+discourse,TEMPORAL_Asynchronous_precedence,328016,328022
+discourse,TEMPORAL_Narration_same story,328022,328004
+discourse,EXPANSION_Exception_,328030,328022
+discourse,TEMPORAL_Narration_same story,328043,328022
+discourse,TEMPORAL_Continuation_,328047,328043
+discourse,TEMPORAL_Narration_same story,328052,328047
+discourse,ATTRIBUTION_Content_speech content,328055,328052
+discourse,CONTINGENCY_Cause_pragmatic cause,328058,328055
+discourse,COMPARISON_Juxtaposition_contrast,328060,328058
+discourse,TEMPORAL_Narration_same story,328063,328052
+discourse,CONTINGENCY_Cause_reason,328066,328063
+discourse,ATTRIBUTION_Content_Non-verbal content,328068,328066
+discourse,TEMPORAL_Narration_same story,328072,328063
+discourse,TEMPORAL_Narration_same story,328076,328072
+discourse,TEMPORAL_Coincidence_means,328077,328076
+discourse,ATTRIBUTION_Expressive_speech expressive,328080,328077
+discourse,ATTRIBUTION_Content_speech content,328082,328077
+discourse,TEMPORAL_Narration_same story,328085,328076
+discourse,TEMPORAL_Narration_same story,328091,328085
+discourse,TEMPORAL_Narration_same story,328095,328091
+discourse,ATTRIBUTION_Content_speech content,328097,328095
+discourse,TEMPORAL_Narration_same story,328101,328095
+discourse,TEMPORAL_Narration_same story,328108,328101
+discourse,ATTRIBUTION_Content_speech content,328111,328108
+discourse,TEMPORAL_Narration_same story,328119,328115
+discourse,TEMPORAL_Narration_same story,328133,328119
+discourse,CONTINGENCY_Purpose_,328135,328133
+discourse,TEMPORAL_Continuation_,328141,328135
+discourse,TEMPORAL_Narration_same story,328144,328133
+discourse,ATTRIBUTION_Content_speech content,328149,328144
+discourse,TEMPORAL_Continuation_,361135,328149
+discourse,TEMPORAL_Narration_same story,328177,328149
+discourse,TEMPORAL_Narration_same story,328180,328177
+discourse,TEMPORAL_Asynchronous_precedence,758750,758762
+discourse,TEMPORAL_Continuation_,758762,328180
+discourse,TEMPORAL_Narration_same story,328207,328144
+discourse,TEMPORAL_Narration_same story,328209,328207
+discourse,TEMPORAL_Synchronous_circumstance,328213,328209
+discourse,TEMPORAL_Continuation_,328215,328213
+discourse,TEMPORAL_Narration_new story,328218,328209
+discourse,TEMPORAL_Narration_same story,328228,328218
+discourse,CONTINGENCY_Cause_reason,328231,328228
+discourse,ATTRIBUTION_Content_speech content,328236,328231
+discourse,ATTRIBUTION_Content_speech content,328245,677751
+discourse,ATTRIBUTION_Content_speech content,328254,677752
+discourse,COMPARISON_Juxtaposition_contrast,677751,328231
+discourse,COMPARISON_Juxtaposition_contrast,677752,677751
+discourse,TEMPORAL_Narration_same story,328256,328228
+discourse,CONTINGENCY_Pragmatic condition_,328262,328266
+discourse,ATTRIBUTION_Content_speech content,328266,328256
+discourse,TEMPORAL_Narration_same story,328274,328256
+discourse,TEMPORAL_Asynchronous_precedence,328279,328282
+discourse,TEMPORAL_Narration_same story,328282,328209
+discourse,ATTRIBUTION_Content_speech content,328285,328282
+discourse,TEMPORAL_Narration_same story,328288,328282
+discourse,TEMPORAL_Narration_same story,328290,328288
+discourse,TEMPORAL_Asynchronous_precedence,328301,328302
+discourse,TEMPORAL_Narration_same story,328302,328290
+discourse,TEMPORAL_Narration_same story,328306,328302
+discourse,TEMPORAL_Narration_same story,328308,328306
+discourse,TEMPORAL_Narration_same story,328321,328308
+discourse,TEMPORAL_Narration_same story,328326,328321
+discourse,TEMPORAL_Narration_same story,328329,328326
+discourse,TEMPORAL_Narration_same story,328333,328329
+discourse,ATTRIBUTION_Content_speech content,328336,328333
+discourse,CONTINGENCY_Purpose_,328341,328336
+discourse,TEMPORAL_Narration_same story,328348,328341
+discourse,TEMPORAL_Narration_same story,328350,328348
+discourse,CONTINGENCY_Cause_reason,328358,328336
+discourse,TEMPORAL_Narration_same story,328360,328333
+discourse,ATTRIBUTION_Content_speech content,328365,328360
+discourse,TEMPORAL_Narration_same story,328372,328360
+discourse,ATTRIBUTION_Content_speech content,328375,328372
+discourse,CONTINGENCY_Condition_hypothetical,328387,328375
+discourse,TEMPORAL_Narration_same story,328389,328387
+discourse,EXPANSION_Elaboration_explanation,328397,328372
+discourse,TEMPORAL_Narration_same story,328403,328372
+discourse,ATTRIBUTION_Content_speech content,328410,328403
+discourse,TEMPORAL_Narration_same story,328417,328403
+discourse,TEMPORAL_Narration_same story,328420,328417
+discourse,TEMPORAL_Narration_same story,328423,328420
+discourse,TEMPORAL_Narration_same story,328433,328423
+discourse,TEMPORAL_Narration_same story,328437,328433
+discourse,TEMPORAL_Narration_same story,328440,328437
+discourse,TEMPORAL_Narration_same story,328443,328440
+discourse,CONTINGENCY_Purpose_,328446,328443
+discourse,TEMPORAL_Narration_same story,328451,328443
+discourse,TEMPORAL_Narration_same story,328453,328451
+discourse,TEMPORAL_Narration_same story,328457,328453
+discourse,TEMPORAL_Narration_new story,328467,328457
+discourse,TEMPORAL_Synchronous_overlap,328470,328467
+discourse,TEMPORAL_Narration_same story,328481,328467
+discourse,TEMPORAL_Coincidence_means,328483,328481
+discourse,ATTRIBUTION_Content_speech content,328489,328483
+discourse,ATTRIBUTION_Content_speech content,328490,328489
+discourse,TEMPORAL_Narration_same story,328494,328481
+discourse,TEMPORAL_Continuation_,328495,328494
+discourse,ATTRIBUTION_Content_speech content,328497,361144
+discourse,ATTRIBUTION_Content_speech content,328503,758775
+discourse,ATTRIBUTION_Content_speech content,328512,758776
+discourse,ATTRIBUTION_Content_speech content,361144,328495
+discourse,COMPARISON_Juxtaposition_contrast,758775,361144
+discourse,COMPARISON_Juxtaposition_contrast,758776,758775
+discourse,TEMPORAL_Narration_same story,328514,328495
+discourse,ATTRIBUTION_Content_speech content,328522,328514
+discourse,ATTRIBUTION_Content_speech content,328523,328522
+discourse,TEMPORAL_Narration_same story,328527,328514
+discourse,TEMPORAL_Continuation_,328528,328527
+discourse,ATTRIBUTION_Content_speech content,361148,328528
+discourse,TEMPORAL_Narration_same story,328537,328528
+discourse,TEMPORAL_Narration_same story,328539,328537
+discourse,ATTRIBUTION_Content_speech content,328541,328539
+discourse,TEMPORAL_Narration_same story,328544,328539
+discourse,ATTRIBUTION_Content_speech content,328546,328544
+discourse,TEMPORAL_Narration_same story,328570,328544
+discourse,CONTINGENCY_Condition_hypothetical,328577,328582
+discourse,ATTRIBUTION_Content_Non-verbal content,328580,328577
+discourse,ATTRIBUTION_Content_speech content,328582,328570
+discourse,TEMPORAL_Narration_same story,328585,328582
+discourse,TEMPORAL_Narration_same story,328593,328585
+discourse,CONTINGENCY_Cause_reason,328605,328582
+discourse,COMPARISON_Juxtaposition_contrast,328619,328605
+discourse,CONTINGENCY_Cause_reason,328624,328582
+discourse,CONTINGENCY_Condition_hypothetical,328626,328624
+discourse,COMPARISON_Juxtaposition_contrast,328633,328626
+discourse,EXPANSION_Alternative_conjunctive,328635,328633
+discourse,COMPARISON_Juxtaposition_parallel,328652,328624
+discourse,TEMPORAL_Asynchronous_precedence,328655,328652
+discourse,TEMPORAL_Continuation_,328668,328582
+discourse,ATTRIBUTION_Content_speech content,328673,328668
+discourse,TEMPORAL_Narration_new story,328691,328570
+discourse,TEMPORAL_Continuation_,328703,328691
+discourse,TEMPORAL_Narration_same story,328709,328703
+discourse,CONTINGENCY_Purpose_,328713,328709
+discourse,TEMPORAL_Narration_same story,328716,328709
+discourse,TEMPORAL_Synchronous_overlap,328719,328716
+discourse,TEMPORAL_Continuation_,766359,328716
+discourse,TEMPORAL_Narration_same story,328738,766359
+discourse,EXPANSION_Elaboration_characterization,328742,328738
+discourse,TEMPORAL_Narration_same story,328748,328738
+discourse,TEMPORAL_Narration_same story,328751,328748
+discourse,TEMPORAL_Narration_same story,328769,328751
+discourse,TEMPORAL_Asynchronous_precedence,328773,328775
+discourse,TEMPORAL_Narration_same story,328775,328769
+discourse,TEMPORAL_Narration_same story,789018,328775
+discourse,TEMPORAL_Synchronous_overlap,789021,789018
+discourse,ATTRIBUTION_Expressive_speech expressive,789031,789025
+discourse,ATTRIBUTION_Content_speech content,789033,789025
+discourse,TEMPORAL_Continuation_,789038,789033
+discourse,TEMPORAL_Synchronous_overlap,789050,789018
+discourse,EXPANSION_Instantiation_,789056,789038
+discourse,TEMPORAL_Continuation_,789057,789056
+discourse,TEMPORAL_Continuation_,789058,789057
+discourse,TEMPORAL_Synchronous_overlap,328832,328833
+discourse,TEMPORAL_Narration_same story,328833,789018
+discourse,TEMPORAL_Narration_same story,328836,328833
+discourse,TEMPORAL_Narration_same story,328839,328836
+discourse,TEMPORAL_Asynchronous_precedence,328843,328839
+discourse,TEMPORAL_Narration_same story,328851,328839
+discourse,TEMPORAL_Synchronous_circumstance,328855,328851
+discourse,ATTRIBUTION_Content_speech content,328858,328855
+discourse,CONTINGENCY_Result_real result,328866,328858
+discourse,TEMPORAL_Asynchronous_precedence,328871,328874
+discourse,TEMPORAL_Narration_same story,328874,328851
+discourse,TEMPORAL_Narration_same story,328880,328874
+discourse,TEMPORAL_Continuation_,328883,328880
+discourse,TEMPORAL_Narration_new story,328892,328883
+discourse,TEMPORAL_Asynchronous_precedence,328897,328892
+discourse,TEMPORAL_Narration_same story,328913,328892
+discourse,TEMPORAL_Coincidence_means,328914,328913
+discourse,ATTRIBUTION_Expressive_speech expressive,328916,328914
+discourse,ATTRIBUTION_Content_speech content,328918,328914
+discourse,ATTRIBUTION_Content_speech content,328920,328918
+discourse,CONTINGENCY_Cause_reason,328929,328918
+discourse,TEMPORAL_Narration_same story,328934,328929
+discourse,TEMPORAL_Narration_same story,328938,328934
+discourse,TEMPORAL_Narration_same story,328940,328938
+discourse,TEMPORAL_Narration_same story,328947,328940
+discourse,TEMPORAL_Synchronous_circumstance,328950,328947
+discourse,CONTINGENCY_Cause_reason,328954,328918
+discourse,ATTRIBUTION_Content_speech content,328959,328954
+discourse,TEMPORAL_Narration_same story,328964,328954
+discourse,TEMPORAL_Narration_same story,328966,328913
+discourse,TEMPORAL_Continuation_,328970,328966
+discourse,ATTRIBUTION_Expressive_speech expressive,328973,328970
+discourse,ATTRIBUTION_Content_speech content,328980,328970
+discourse,TEMPORAL_Continuation_,328984,328980
+discourse,TEMPORAL_Continuation_,328987,328980
+discourse,TEMPORAL_Synchronous_overlap,328995,328997
+discourse,TEMPORAL_Narration_same story,328997,328970
+discourse,TEMPORAL_Narration_same story,329002,328997
+discourse,TEMPORAL_Narration_same story,329004,329002
+discourse,TEMPORAL_Narration_same story,329014,329004
+discourse,TEMPORAL_Narration_same story,329018,329014
+discourse,TEMPORAL_Narration_same story,329024,329018
+discourse,TEMPORAL_Synchronous_overlap,329035,329041
+discourse,TEMPORAL_Narration_same story,329041,329024
+discourse,ATTRIBUTION_Content_speech content,329047,329041
+discourse,CONTINGENCY_Cause_pragmatic cause,329062,329047
+discourse,TEMPORAL_Narration_same story,329070,329041
+discourse,TEMPORAL_Narration_same story,329076,329070
+discourse,CONTINGENCY_Purpose_,329082,329076
+discourse,TEMPORAL_Narration_same story,329086,329076
+discourse,TEMPORAL_Narration_new story,329094,329086
+discourse,ATTRIBUTION_Content_speech content,329103,329096
+discourse,TEMPORAL_Asynchronous_precedence,329110,329117
+discourse,TEMPORAL_Narration_same story,329117,329094
+discourse,TEMPORAL_Narration_same story,329119,329117
+discourse,TEMPORAL_Narration_same story,329125,329119
+discourse,ATTRIBUTION_Content_speech content,329140,329125
+discourse,COMPARISON_Juxtaposition_parallel,329148,329140
+discourse,CONTINGENCY_Cause_pragmatic cause,329161,329148
+discourse,TEMPORAL_Narration_same story,329164,329125
+discourse,TEMPORAL_Continuation_,329168,329164
+discourse,ATTRIBUTION_Expressive_speech expressive,329170,329168
+discourse,ATTRIBUTION_Content_speech content,329172,329168
+discourse,ATTRIBUTION_Content_Non-verbal content,329178,329172
+discourse,TEMPORAL_Narration_same story,329182,329172
+discourse,CONTINGENCY_Cause_reason,329187,329182
+discourse,TEMPORAL_Narration_same story,329191,329168
+discourse,ATTRIBUTION_Content_speech content,329198,329191
+discourse,CONTINGENCY_Cause_reason,329209,329198
+discourse,TEMPORAL_Narration_new story,329211,329191
+discourse,TEMPORAL_Synchronous_overlap,329215,329211
+discourse,CONTINGENCY_Purpose_,329228,329211
+discourse,TEMPORAL_Narration_same story,329233,329211
+discourse,TEMPORAL_Narration_same story,329240,329233
+discourse,TEMPORAL_Narration_same story,329241,329240
+discourse,CONTINGENCY_Purpose_,329247,329241
+discourse,TEMPORAL_Narration_same story,329252,329241
+discourse,CONTINGENCY_Cause_reason,329259,329252
+discourse,TEMPORAL_Asynchronous_precedence,329264,329271
+discourse,TEMPORAL_Narration_same story,329271,329252
+discourse,ATTRIBUTION_Expressive_speech expressive,329273,329271
+discourse,ATTRIBUTION_Content_speech content,329275,329271
+discourse,ATTRIBUTION_Content_Non-verbal content,329276,329275
+discourse,ATTRIBUTION_Content_speech content,329278,329276
+discourse,TEMPORAL_Narration_same story,329283,329278
+discourse,TEMPORAL_Narration_same story,329286,329271
+discourse,TEMPORAL_Narration_same story,329288,329286
+discourse,TEMPORAL_Narration_same story,329292,329288
+discourse,TEMPORAL_Synchronous_overlap,329298,329303
+discourse,TEMPORAL_Narration_new story,329303,329292
+discourse,ATTRIBUTION_Content_speech content,329308,329303
+discourse,TEMPORAL_Narration_same story,329315,329303
+discourse,ATTRIBUTION_Content_speech content,329323,329315
+discourse,COMPARISON_Juxtaposition_parallel,361159,329323
+discourse,COMPARISON_Juxtaposition_contrast,329337,361159
+discourse,TEMPORAL_Narration_same story,329343,329315
+discourse,ATTRIBUTION_Content_speech content,329348,329343
+discourse,TEMPORAL_Narration_same story,329353,329343
+discourse,ATTRIBUTION_Content_speech content,329355,329353
+discourse,ATTRIBUTION_Content_speech content,329358,329355
+discourse,TEMPORAL_Narration_same story,329359,329358
+discourse,TEMPORAL_Narration_same story,329364,329353
+discourse,ATTRIBUTION_Content_speech content,329368,329364
+discourse,ATTRIBUTION_Content_Non-verbal content,329371,329368
+discourse,COMPARISON_Juxtaposition_contrast,329378,329368
+discourse,TEMPORAL_Narration_same story,329379,329378
+discourse,TEMPORAL_Narration_same story,329385,329364
+discourse,ATTRIBUTION_Content_speech content,329390,329385
+discourse,ATTRIBUTION_Expressive_speech expressive,329393,329385
+discourse,COMPARISON_Juxtaposition_contrast,329397,329390
+discourse,ATTRIBUTION_Content_speech content,329399,329397
+discourse,TEMPORAL_Narration_same story,329406,329385
+discourse,ATTRIBUTION_Content_speech content,329426,329406
+discourse,TEMPORAL_Narration_same story,329443,329435
+discourse,TEMPORAL_Narration_same story,329460,329443
+discourse,ATTRIBUTION_Content_speech content,361161,329460
+discourse,COMPARISON_Juxtaposition_contrast,361160,361161
+discourse,CONTINGENCY_Result_real result,329475,361160
+discourse,ATTRIBUTION_Content_speech content,329483,329475
+discourse,TEMPORAL_Continuation_,329489,329475
+discourse,EXPANSION_Elaboration_comment,329492,329489
+discourse,TEMPORAL_Continuation_,329501,329489
+discourse,TEMPORAL_Continuation_,329514,329501
+discourse,CONTINGENCY_Condition_general,329520,329524
+discourse,TEMPORAL_Continuation_,329524,329514
+discourse,ATTRIBUTION_Content_speech content,361162,329524
+discourse,CONTINGENCY_Condition_hypothetical,329533,329538
+discourse,CONTINGENCY_Result_real result,329538,329524
+discourse,COMPARISON_Juxtaposition_contrast,329551,329538
+discourse,CONTINGENCY_Condition_hypothetical,765668,329551
+discourse,TEMPORAL_Continuation_,329558,329524
+discourse,TEMPORAL_Synchronous_circumstance,329560,329558
+discourse,TEMPORAL_Continuation_,329562,329560
+discourse,CONTINGENCY_Cause_pragmatic cause,361163,329558
+discourse,EXPANSION_Restatement_equivalence,329576,329558
+discourse,CONTINGENCY_Condition_general,329587,329592
+discourse,TEMPORAL_Narration_same story,329589,329587
+discourse,TEMPORAL_Continuation_,329592,329558
+discourse,TEMPORAL_Narration_same story,329598,329592
+discourse,TEMPORAL_Continuation_,329605,329598
+discourse,ATTRIBUTION_Content_speech content,329608,329605
+discourse,CONTINGENCY_Condition_general,329621,329627
+discourse,TEMPORAL_Narration_same story,329624,329621
+discourse,COMPARISON_Juxtaposition_contrast,329627,329592
+discourse,TEMPORAL_Narration_same story,329632,329627
+discourse,COMPARISON_Concession_,329647,329652
+discourse,ATTRIBUTION_Content_speech content,329652,329632
+discourse,ATTRIBUTION_Content_Non-verbal content,329654,329652
+discourse,COMPARISON_Juxtaposition_parallel,329660,329632
+discourse,ATTRIBUTION_Content_speech content,329670,329660
+discourse,TEMPORAL_Continuation_,329676,329670
+discourse,ATTRIBUTION_Expressive_speech expressive,329679,329460
+discourse,COMPARISON_Juxtaposition_parallel,329681,329676
+discourse,ATTRIBUTION_Expressive_speech expressive,329683,329460
+discourse,CONTINGENCY_Condition_unreal past,329691,329706
+discourse,TEMPORAL_Synchronous_circumstance,329705,329706
+discourse,CONTINGENCY_Cause_pragmatic cause,329706,329676
+discourse,COMPARISON_Juxtaposition_contrast,329713,329706
+discourse,ATTRIBUTION_Expressive_speech expressive,329723,329460
+discourse,COMPARISON_Juxtaposition_parallel,329728,329676
+discourse,EXPANSION_Answer_,329732,329728
+discourse,CONTINGENCY_Cause_reason,329738,329670
+discourse,COMPARISON_Juxtaposition_parallel,329745,329738
+discourse,COMPARISON_Juxtaposition_parallel,329751,329745
+discourse,TEMPORAL_Narration_new story,329756,329460
+discourse,TEMPORAL_Synchronous_circumstance,329762,329756
+discourse,ATTRIBUTION_Expressive_speech expressive,329764,329762
+discourse,ATTRIBUTION_Content_speech content,329769,329762
+discourse,TEMPORAL_Narration_same story,329776,329756
+discourse,ATTRIBUTION_Content_speech content,329780,329776
+discourse,ATTRIBUTION_Content_Non-verbal content,329788,329780
+discourse,COMPARISON_Concession_,329791,329821
+discourse,CONTINGENCY_Result_real result,329815,329791
+discourse,ATTRIBUTION_Content_speech content,329821,329776
+discourse,ATTRIBUTION_Content_Non-verbal content,329826,329821
+discourse,COMPARISON_Juxtaposition_contrast,329828,329821
+discourse,ATTRIBUTION_Content_Non-verbal content,329834,329828
+discourse,TEMPORAL_Narration_same story,329843,329776
+discourse,TEMPORAL_Narration_same story,329850,329843
+discourse,ATTRIBUTION_Content_speech content,329852,329850
+discourse,ATTRIBUTION_Expressive_speech expressive,329854,329850
+discourse,CONTINGENCY_Cause_reason,329864,329852
+discourse,TEMPORAL_Continuation_,329872,329864
+discourse,ATTRIBUTION_Expressive_speech expressive,329876,329850
+discourse,ATTRIBUTION_Expressive_speech expressive,329878,329850
+discourse,CONTINGENCY_Cause_reason,329882,329872
+discourse,TEMPORAL_Narration_same story,329888,329850
+discourse,TEMPORAL_Narration_same story,329892,329888
+discourse,ATTRIBUTION_Content_speech content,329896,329892
+discourse,TEMPORAL_Narration_same story,329904,329896
+discourse,ATTRIBUTION_Content_Non-verbal content,329906,329904
+discourse,COMPARISON_Juxtaposition_parallel,329916,329906
+discourse,TEMPORAL_Narration_same story,329932,329892
+discourse,TEMPORAL_Narration_same story,329938,329932
+discourse,ATTRIBUTION_Content_speech content,361165,329938
+discourse,CONTINGENCY_Cause_pragmatic cause,329948,361165
+discourse,COMPARISON_Concession_,329956,329964
+discourse,ATTRIBUTION_Content_Non-verbal content,329957,329956
+discourse,ATTRIBUTION_Content_speech content,329964,329948
+discourse,COMPARISON_Juxtaposition_parallel,329972,329964
+discourse,COMPARISON_Concession_,766112,329972
+discourse,TEMPORAL_Narration_new story,329978,329938
+discourse,CONTINGENCY_Purpose_,329979,329978
+discourse,TEMPORAL_Coincidence_means,329982,329979
+discourse,ATTRIBUTION_Expressive_speech expressive,329984,329982
+discourse,TEMPORAL_Coincidence_means,329987,329990
+discourse,ATTRIBUTION_Content_speech content,329990,329982
+discourse,TEMPORAL_Narration_same story,329994,329978
+discourse,ATTRIBUTION_Content_speech content,330002,329994
+discourse,EXPANSION_Restatement_specification,330005,330002
+discourse,TEMPORAL_Narration_same story,330009,329994
+discourse,TEMPORAL_Continuation_,330010,330009
+discourse,ATTRIBUTION_Content_speech content,330012,330010
+discourse,COMPARISON_Juxtaposition_parallel,766409,330012
+discourse,TEMPORAL_Narration_same story,330048,330010
+discourse,ATTRIBUTION_Content_speech content,330053,330048
+discourse,CONTINGENCY_Result_pragmatic result,330056,330053
+discourse,CONTINGENCY_Result_real result,330059,330056
+discourse,CONTINGENCY_Cause_reason,330063,330066
+discourse,TEMPORAL_Narration_same story,330066,330048
+discourse,ATTRIBUTION_Content_speech content,330073,330066
+discourse,TEMPORAL_Narration_same story,330077,330066
+discourse,TEMPORAL_Narration_same story,330080,330077
+discourse,ATTRIBUTION_Content_speech content,330084,330080
+discourse,TEMPORAL_Narration_same story,330092,330084
+discourse,TEMPORAL_Narration_same story,330096,330092
+discourse,TEMPORAL_Narration_same story,330100,330096
+discourse,TEMPORAL_Narration_same story,330101,330100
+discourse,TEMPORAL_Narration_same story,330103,330101
+discourse,TEMPORAL_Narration_same story,330111,330103
+discourse,TEMPORAL_Asynchronous_precedence,330118,330120
+discourse,COMPARISON_Concession_,330118,330120
+discourse,TEMPORAL_Narration_same story,330120,330111
+discourse,TEMPORAL_Asynchronous_precedence,766448,766452
+discourse,TEMPORAL_Narration_same story,766452,330120
+discourse,TEMPORAL_Narration_same story,766454,766452
+discourse,TEMPORAL_Narration_same story,766455,766454
+discourse,TEMPORAL_Synchronous_overlap,330139,330140
+discourse,TEMPORAL_Narration_same story,330140,766455
+discourse,TEMPORAL_Asynchronous_precedence,330144,330145
+discourse,TEMPORAL_Narration_same story,330145,330140
+discourse,TEMPORAL_Narration_same story,330148,330145
+discourse,TEMPORAL_Narration_same story,330149,330148
+discourse,TEMPORAL_Synchronous_circumstance,330153,330149
+discourse,TEMPORAL_Narration_same story,330158,330149
+discourse,TEMPORAL_Narration_same story,330165,330158
+discourse,TEMPORAL_Narration_same story,330170,330165
+discourse,TEMPORAL_Narration_same story,330177,330170
+discourse,TEMPORAL_Narration_same story,330180,330177
+discourse,TEMPORAL_Narration_same story,330184,330180
+discourse,ATTRIBUTION_Content_speech content,330186,330184
+discourse,TEMPORAL_Asynchronous_precedence,330197,330199
+discourse,TEMPORAL_Narration_same story,330199,330186
+discourse,EXPANSION_Elaboration_summary,330207,330184
+discourse,ATTRIBUTION_Content_Non-verbal content,330209,330207
+discourse,TEMPORAL_Narration_same story,330218,330080
+discourse,ATTRIBUTION_Content_speech content,361167,330218
+discourse,TEMPORAL_Narration_same story,330227,330218
+discourse,ATTRIBUTION_Content_speech content,792055,330227
+discourse,TEMPORAL_Narration_same story,792058,792055
+discourse,TEMPORAL_Narration_new story,330239,330227
+discourse,TEMPORAL_Synchronous_overlap,330243,330239
+discourse,TEMPORAL_Continuation_,330247,330239
+discourse,TEMPORAL_Narration_same story,330257,330247
+discourse,EXPANSION_Elaboration_characterization,330265,330257
+discourse,TEMPORAL_Narration_same story,330272,330257
+discourse,TEMPORAL_Narration_same story,330278,330272
+discourse,TEMPORAL_Narration_same story,330286,330278
+discourse,TEMPORAL_Narration_same story,330291,330286
+discourse,TEMPORAL_Narration_same story,330293,330291
+discourse,ATTRIBUTION_Expressive_speech expressive,330295,330293
+discourse,ATTRIBUTION_Content_speech content,330298,330293
+discourse,CONTINGENCY_Cause_reason,330306,330298
+discourse,TEMPORAL_Continuation_,330309,330298
+discourse,ATTRIBUTION_Content_speech content,330314,330309
+discourse,TEMPORAL_Narration_same story,330316,330293
+discourse,TEMPORAL_Continuation_,330318,330316
+discourse,ATTRIBUTION_Expressive_speech expressive,330323,330318
+discourse,ATTRIBUTION_Expressive_speech expressive,330324,330318
+discourse,ATTRIBUTION_Content_speech content,330326,330318
+discourse,TEMPORAL_Continuation_,330328,330326
+discourse,COMPARISON_Juxtaposition_contrast,330334,330326
+discourse,TEMPORAL_Narration_same story,330342,330334
+discourse,TEMPORAL_Synchronous_overlap,330353,330350
+discourse,TEMPORAL_Asynchronous_precedence,330361,330350
+discourse,ATTRIBUTION_Expressive_speech expressive,330371,330363
+discourse,ATTRIBUTION_Content_speech content,330373,330363
+discourse,COMPARISON_Sameness_,330380,330373
+discourse,TEMPORAL_Narration_same story,330385,330350
+discourse,TEMPORAL_Synchronous_overlap,330390,330392
+discourse,ATTRIBUTION_Content_speech content,330392,330385
+discourse,ATTRIBUTION_Expressive_speech expressive,330394,330392
+discourse,ATTRIBUTION_Content_speech content,330396,330392
+discourse,COMPARISON_Juxtaposition_parallel,330401,330396
+discourse,TEMPORAL_Continuation_,330411,330401
+discourse,TEMPORAL_Continuation_,330418,330411
+discourse,CONTINGENCY_Cause_reason,330427,330418
+discourse,TEMPORAL_Continuation_,330434,330418
+discourse,TEMPORAL_Narration_same story,330440,330385
+discourse,ATTRIBUTION_Content_speech content,330447,330440
+discourse,TEMPORAL_Continuation_,330451,330447
+discourse,TEMPORAL_Narration_same story,330456,330451
+discourse,ATTRIBUTION_Expressive_speech expressive,330459,330456
+discourse,ATTRIBUTION_Content_speech content,330461,330456
+discourse,CONTINGENCY_Cause_,330469,330461
+discourse,TEMPORAL_Continuation_,330476,330469
+discourse,TEMPORAL_Narration_same story,330484,330456
+discourse,TEMPORAL_Continuation_,330485,330484
+discourse,ATTRIBUTION_Content_speech content,330490,330485
+discourse,CONTINGENCY_Cause_reason,330495,330490
+discourse,TEMPORAL_Continuation_,330506,330495
+discourse,CONTINGENCY_Result_real result,330509,330495
+discourse,TEMPORAL_Continuation_,330514,330485
+discourse,TEMPORAL_Narration_same story,330520,330522
+discourse,COMPARISON_Concession_,330522,330534
+discourse,CONTINGENCY_Cause_reason,330525,330520
+discourse,ATTRIBUTION_Content_speech content,330534,330514
+discourse,TEMPORAL_Narration_same story,330535,330534
+discourse,TEMPORAL_Continuation_,330543,330514
+discourse,ATTRIBUTION_Content_speech content,330545,330543
+discourse,CONTINGENCY_Result_real result,330548,330545
+discourse,COMPARISON_Juxtaposition_parallel,330551,330545
+discourse,CONTINGENCY_Result_real result,330554,330551
+discourse,COMPARISON_Juxtaposition_parallel,330556,330551
+discourse,CONTINGENCY_Result_real result,330559,330556
+discourse,CONTINGENCY_Cause_reason,330566,330545
+discourse,COMPARISON_Juxtaposition_parallel,330571,330566
+discourse,COMPARISON_Juxtaposition_parallel,330576,330571
+discourse,CONTINGENCY_Condition_hypothetical,330584,330591
+discourse,TEMPORAL_Continuation_,330591,330576
+discourse,COMPARISON_Juxtaposition_parallel,784179,330591
+discourse,CONTINGENCY_Condition_hypothetical,784180,784179
+discourse,CONTINGENCY_Condition_hypothetical,784183,784186
+discourse,COMPARISON_Juxtaposition_parallel,784186,784179
+discourse,COMPARISON_Concession_,330619,330620
+discourse,CONTINGENCY_Condition_factual present,330620,330635
+discourse,ATTRIBUTION_Content_Non-verbal content,330623,330620
+discourse,CONTINGENCY_Result_pragmatic result,330635,330591
+discourse,TEMPORAL_Narration_new story,330643,330440
+discourse,TEMPORAL_Continuation_,330648,330643
+discourse,TEMPORAL_Narration_same story,784191,330648
+discourse,TEMPORAL_Asynchronous_precedence,784195,784191
+discourse,TEMPORAL_Narration_same story,330662,784195
+discourse,CONTINGENCY_Result_real result,330662,784195
+discourse,TEMPORAL_Narration_same story,330670,330662
+discourse,ATTRIBUTION_Content_speech content,330678,330670
+discourse,TEMPORAL_Coincidence_means,330684,330688
+discourse,COMPARISON_Juxtaposition_contrast,330688,330670
+discourse,TEMPORAL_Synchronous_overlap,330694,330698
+discourse,CONTINGENCY_Cause_reason,330694,330698
+discourse,TEMPORAL_Narration_same story,330698,330688
+discourse,ATTRIBUTION_Content_speech content,330706,330698
+discourse,COMPARISON_Juxtaposition_parallel,330712,330706
+discourse,CONTINGENCY_Condition_factual past,330721,330724
+discourse,COMPARISON_Juxtaposition_contrast,330724,330712
+discourse,CONTINGENCY_Cause_pragmatic cause,330730,330724
+discourse,ATTRIBUTION_Content_speech content,330733,330730
+discourse,CONTINGENCY_Condition_factual present,330743,330752
+discourse,TEMPORAL_Continuation_,330752,330724
+discourse,CONTINGENCY_Result_pragmatic result,330758,330752
+discourse,CONTINGENCY_Condition_factual present,330766,330771
+discourse,COMPARISON_Juxtaposition_contrast,330771,330758
+discourse,TEMPORAL_Asynchronous_precedence,330782,330783
+discourse,TEMPORAL_Synchronous_overlap,330782,330783
+discourse,CONTINGENCY_Condition_general,330783,330790
+discourse,TEMPORAL_Continuation_,330790,330771
+discourse,CONTINGENCY_Condition_general,330799,330806
+discourse,TEMPORAL_Narration_same story,330800,330799
+discourse,COMPARISON_Juxtaposition_contrast,330806,330790
+discourse,EXPANSION_Elaboration_characterization,330809,330806
+discourse,TEMPORAL_Narration_same story,330815,330806
+discourse,TEMPORAL_Continuation_,330824,330815
+discourse,COMPARISON_Juxtaposition_parallel,330832,330824
+discourse,CONTINGENCY_Condition_general,330838,330843
+discourse,TEMPORAL_Continuation_,330843,330832
+discourse,TEMPORAL_Synchronous_circumstance,330847,330843
+discourse,CONTINGENCY_Cause_reason,330852,330854
+discourse,TEMPORAL_Narration_same story,330854,330843
+discourse,ATTRIBUTION_Content_speech content,330856,330854
+discourse,EXPANSION_Elaboration_characterization,330862,330856
+discourse,TEMPORAL_Asynchronous_precedence,330865,330866
+discourse,TEMPORAL_Narration_same story,330866,330854
+discourse,ATTRIBUTION_Content_Non-verbal content,330867,330866
+discourse,TEMPORAL_Continuation_,330869,330867
+discourse,TEMPORAL_Narration_same story,330872,330866
+discourse,TEMPORAL_Narration_same story,330874,330872
+discourse,TEMPORAL_Narration_same story,330882,330874
+discourse,TEMPORAL_Narration_same story,330883,330882
+discourse,TEMPORAL_Narration_same story,330887,330883
+discourse,CONTINGENCY_Result_real result,330887,330883
+discourse,TEMPORAL_Narration_new story,330897,330698
+discourse,TEMPORAL_Synchronous_overlap,330901,330897
+discourse,TEMPORAL_Coincidence_manner,330904,330897
+discourse,ATTRIBUTION_Content_speech content,361168,330911
+discourse,TEMPORAL_Narration_same story,330927,330897
+discourse,ATTRIBUTION_Content_speech content,361169,330927
+discourse,TEMPORAL_Synchronous_overlap,330943,330944
+discourse,TEMPORAL_Narration_new story,330944,330927
+discourse,ATTRIBUTION_Content_speech content,330952,330945
+discourse,EXPANSION_Restatement_specification,330955,330952
+discourse,COMPARISON_Juxtaposition_contrast,330960,330955
+discourse,EXPANSION_Exception_,330962,330960
+discourse,COMPARISON_Sameness_,330970,330977
+discourse,CONTINGENCY_Cause_reason,330977,330960
+discourse,TEMPORAL_Continuation_,330989,330952
+discourse,TEMPORAL_Narration_same story,331000,330989
+discourse,CONTINGENCY_Cause_reason,331004,331000
+discourse,CONTINGENCY_Purpose_,331010,331004
+discourse,TEMPORAL_Narration_same story,361170,331004
+discourse,COMPARISON_Juxtaposition_parallel,331023,330989
+discourse,TEMPORAL_Narration_same story,331032,331023
+discourse,CONTINGENCY_Cause_reason,331036,331032
+discourse,TEMPORAL_Narration_same story,361171,331036
+discourse,TEMPORAL_Asynchronous_precedence,331050,331053
+discourse,TEMPORAL_Continuation_,331053,331032
+discourse,CONTINGENCY_Purpose_,331069,790715
+discourse,EXPANSION_Alternative_chosen alternative,790715,331053
+discourse,TEMPORAL_Continuation_,331075,790715
+discourse,CONTINGENCY_Condition_general,331085,331093
+discourse,CONTINGENCY_Result_real result,331093,331075
+discourse,CONTINGENCY_Condition_general,331098,361173
+discourse,COMPARISON_Juxtaposition_contrast,361173,331093
+discourse,CONTINGENCY_Result_,331106,331075
+discourse,ATTRIBUTION_Content_Non-verbal content,331115,331106
+discourse,TEMPORAL_Synchronous_circumstance,331126,361174
+discourse,CONTINGENCY_Cause_reason,331131,331106
+discourse,COMPARISON_Sameness_,331140,331131
+discourse,CONTINGENCY_Condition_general,361174,331131
+discourse,TEMPORAL_Synchronous_overlap,331146,331147
+discourse,TEMPORAL_Narration_new story,331147,330944
+discourse,ATTRIBUTION_Content_speech content,331151,331147
+discourse,TEMPORAL_Narration_same story,331155,331147
+discourse,TEMPORAL_Narration_same story,331157,331155
+discourse,TEMPORAL_Asynchronous_precedence,331162,331163
+discourse,TEMPORAL_Narration_same story,331163,331157
+discourse,ATTRIBUTION_Content_Non-verbal content,331167,331163
+discourse,TEMPORAL_Narration_same story,331172,331163
+discourse,ATTRIBUTION_Expressive_speech expressive,331182,331172
+discourse,ATTRIBUTION_Content_speech content,331190,331172
+discourse,COMPARISON_Juxtaposition_contrast,331196,331190
+discourse,ATTRIBUTION_Expressive_speech expressive,331201,331172
+discourse,COMPARISON_Concession_,331211,331190
+discourse,EXPANSION_Alternative_chosen alternative,331216,331190
+discourse,CONTINGENCY_Result_real result,331224,331216
+discourse,COMPARISON_Juxtaposition_contrast,331227,331224
+discourse,COMPARISON_Concession_,331233,331244
+discourse,CONTINGENCY_Cause_reason,331244,331227
+discourse,EXPANSION_Alternative_chosen alternative,331254,331244
+discourse,COMPARISON_Juxtaposition_parallel,331261,331227
+discourse,CONTINGENCY_Cause_reason,331267,331261
+discourse,COMPARISON_Juxtaposition_parallel,331280,331261
+discourse,CONTINGENCY_Cause_reason,331284,331280
+discourse,EXPANSION_Elaboration_characterization,331298,331284
+discourse,TEMPORAL_Narration_same story,331300,331172
+discourse,TEMPORAL_Narration_same story,331305,331300
+discourse,ATTRIBUTION_Expressive_speech expressive,331308,331305
+discourse,TEMPORAL_Coincidence_means,331311,331314
+discourse,ATTRIBUTION_Content_speech content,331314,331305
+discourse,TEMPORAL_Narration_same story,331318,331305
+discourse,ATTRIBUTION_Content_speech content,331324,331318
+discourse,CONTINGENCY_Cause_reason,331327,331324
+discourse,COMPARISON_Juxtaposition_contrast,331340,331327
+discourse,COMPARISON_Juxtaposition_parallel,331344,331324
+discourse,CONTINGENCY_Cause_reason,331348,331344
+discourse,COMPARISON_Juxtaposition_parallel,331358,331348
+discourse,CONTINGENCY_Result_real result,331363,331348
+discourse,TEMPORAL_Continuation_,331365,331363
+discourse,CONTINGENCY_Cause_reason,331375,331363
+discourse,COMPARISON_Juxtaposition_parallel,331379,331375
+discourse,CONTINGENCY_Result_real result,331388,331348
+discourse,ATTRIBUTION_Content_speech content,331390,331388
+discourse,TEMPORAL_Narration_same story,331400,331390
+discourse,TEMPORAL_Continuation_,331402,331400
+discourse,CONTINGENCY_Result_real result,331405,331400
+discourse,ATTRIBUTION_Expressive_speech expressive,331436,331318
+discourse,TEMPORAL_Continuation_,331437,331388
+discourse,ATTRIBUTION_Content_speech content,331440,331437
+discourse,COMPARISON_Juxtaposition_parallel,331446,331344
+discourse,CONTINGENCY_Cause_reason,331452,331446
+discourse,EXPANSION_Restatement_specification,331460,331452
+discourse,COMPARISON_Juxtaposition_parallel,331464,331460
+discourse,TEMPORAL_Asynchronous_precedence,331468,331470
+discourse,TEMPORAL_Narration_same story,331470,331318
+discourse,TEMPORAL_Synchronous_circumstance,331484,331470
+discourse,CONTINGENCY_Purpose_,331486,331484
+discourse,TEMPORAL_Asynchronous_precedence,331495,331505
+discourse,CONTINGENCY_Result_real result,331502,331495
+discourse,ATTRIBUTION_Content_speech content,331513,331506
+discourse,EXPANSION_Elaboration_characterization,331522,331513
+discourse,CONTINGENCY_Cause_,331528,331513
+discourse,EXPANSION_Restatement_equivalence,818196,331528
+discourse,EXPANSION_Instantiation_,331550,331528
+discourse,TEMPORAL_Continuation_,331562,331550
+discourse,TEMPORAL_Continuation_,331567,331513
+discourse,ATTRIBUTION_Content_speech content,331575,331567
+discourse,COMPARISON_Juxtaposition_contrast,331590,331567
+discourse,ATTRIBUTION_Content_,331594,331590
+discourse,EXPANSION_Restatement_specification,331596,331590
+discourse,ATTRIBUTION_Expressive_speech expressive,331608,331506
+discourse,TEMPORAL_Continuation_,331609,331567
+discourse,ATTRIBUTION_Content_speech content,331613,331609
+discourse,CONTINGENCY_Cause_pragmatic cause,331618,331613
+discourse,COMPARISON_Concession_,331627,331618
+discourse,COMPARISON_Juxtaposition_contrast,331641,331627
+discourse,TEMPORAL_Continuation_,331644,331613
+discourse,CONTINGENCY_Cause_,331648,331644
+discourse,TEMPORAL_Continuation_,331650,331644
+discourse,ATTRIBUTION_Content_speech content,331669,331650
+discourse,COMPARISON_Juxtaposition_contrast,331685,331669
+discourse,COMPARISON_Juxtaposition_parallel,331703,331669
+discourse,COMPARISON_Juxtaposition_contrast,331714,331703
+discourse,CONTINGENCY_Condition_general,331718,331731
+discourse,TEMPORAL_Continuation_,331731,331650
+discourse,EXPANSION_Alternative_conjunctive,331735,789062
+discourse,EXPANSION_Alternative_conjunctive,331738,331735
+discourse,ATTRIBUTION_Content_verbal non-speech content,789062,331731
+discourse,CONTINGENCY_Cause_,331744,331731
+discourse,TEMPORAL_Narration_same story,331754,331505
+discourse,ATTRIBUTION_Expressive_speech expressive,331762,331754
+discourse,ATTRIBUTION_Content_speech content,331764,331754
+discourse,ATTRIBUTION_Content_speech content,331768,331764
+discourse,TEMPORAL_Narration_same story,331776,331754
+discourse,ATTRIBUTION_Expressive_speech expressive,331779,331776
+discourse,ATTRIBUTION_Content_speech content,331783,331776
+discourse,TEMPORAL_Narration_same story,331790,331776
+discourse,ATTRIBUTION_Content_speech content,331795,331790
+discourse,TEMPORAL_Continuation_,331797,331795
+discourse,CONTINGENCY_Cause_,331811,331795
+discourse,TEMPORAL_Narration_same story,331817,331790
+discourse,TEMPORAL_Coincidence_manner,331822,331817
+discourse,EXPANSION_Elaboration_background,331827,331850
+discourse,TEMPORAL_Continuation_,331832,331827
+discourse,TEMPORAL_Coincidence_manner,331835,331832
+discourse,ATTRIBUTION_Content_,331838,331835
+discourse,CONTINGENCY_Cause_pragmatic cause,331842,331838
+discourse,ATTRIBUTION_Content_speech content,331850,331822
+discourse,ATTRIBUTION_Content_speech content,331853,331850
+discourse,EXPANSION_Restatement_specification,331855,331853
+discourse,TEMPORAL_Narration_same story,331861,331855
+discourse,TEMPORAL_Narration_same story,331864,331861
+discourse,TEMPORAL_Narration_same story,331876,331864
+discourse,ATTRIBUTION_Expressive_speech expressive,331881,331876
+discourse,ATTRIBUTION_Content_speech content,331883,331876
+discourse,CONTINGENCY_Result_real result,331891,331883
+discourse,TEMPORAL_Continuation_,331893,331891
+discourse,TEMPORAL_Continuation_,331895,331893
+discourse,TEMPORAL_Continuation_,331897,331895
+discourse,TEMPORAL_Narration_same story,331899,331850
+discourse,ATTRIBUTION_Expressive_speech expressive,331905,331899
+discourse,ATTRIBUTION_Content_speech content,331913,331899
+discourse,CONTINGENCY_Result_pragmatic result,331922,331913
+discourse,EXPANSION_Elaboration_summary,361184,331922
+discourse,TEMPORAL_Narration_same story,331934,331817
+discourse,ATTRIBUTION_Content_speech content,331944,331934
+discourse,ATTRIBUTION_Content_speech content,331947,331944
+discourse,ATTRIBUTION_Content_Non-verbal content,331951,331947
+discourse,ATTRIBUTION_Content_Non-verbal content,331957,789064
+discourse,EXPANSION_Alternative_conjunctive,789064,331947
+discourse,CONTINGENCY_Cause_,331962,331947
+discourse,CONTINGENCY_Cause_,784879,789064
+discourse,EXPANSION_Instantiation_,331971,331947
+discourse,ATTRIBUTION_Content_Non-verbal content,331977,331971
+discourse,COMPARISON_Juxtaposition_parallel,331979,331977
+discourse,EXPANSION_Elaboration_characterization,331983,331977
+discourse,COMPARISON_Juxtaposition_contrast,331991,331977
+discourse,COMPARISON_Juxtaposition_contrast,331997,331971
+discourse,TEMPORAL_Coincidence_means,332005,332006
+discourse,CONTINGENCY_Cause_pragmatic cause,332006,331947
+discourse,CONTINGENCY_Condition_factual present,332018,332024
+discourse,CONTINGENCY_Result_pragmatic result,332024,332006
+discourse,COMPARISON_Juxtaposition_parallel,332026,331971
+discourse,ATTRIBUTION_Content_Non-verbal content,332032,332026
+discourse,COMPARISON_Juxtaposition_parallel,332034,332032
+discourse,COMPARISON_Juxtaposition_contrast,332036,332026
+discourse,ATTRIBUTION_Content_speech content,332047,332036
+discourse,CONTINGENCY_Cause_pragmatic cause,332068,361186
+discourse,ATTRIBUTION_Expressive_speech expressive,332074,331934
+discourse,COMPARISON_Juxtaposition_contrast,361186,332047
+discourse,EXPANSION_Restatement_equivalence,332079,331947
+discourse,TEMPORAL_Continuation_,332088,332079
+discourse,CONTINGENCY_Cause_pragmatic cause,332097,332079
+discourse,TEMPORAL_Continuation_,332103,332097
+discourse,ATTRIBUTION_Content_Non-verbal content,332105,332103
+discourse,COMPARISON_Juxtaposition_contrast,332109,332079
+discourse,CONTINGENCY_Result_real result,332116,332109
+discourse,TEMPORAL_Continuation_,332120,332026
+discourse,ATTRIBUTION_Expressive_speech expressive,332124,331934
+discourse,CONTINGENCY_Cause_,332127,332120
+discourse,ATTRIBUTION_Content_Non-verbal content,332131,332127
+discourse,TEMPORAL_Continuation_,332136,332120
+discourse,TEMPORAL_Continuation_,332141,332136
+discourse,TEMPORAL_Continuation_,332144,332141
+discourse,CONTINGENCY_Cause_,332176,332144
+discourse,TEMPORAL_Continuation_,332178,332144
+discourse,TEMPORAL_Continuation_,784960,332178
+discourse,TEMPORAL_Continuation_,361187,332178
+discourse,CONTINGENCY_Cause_,361188,361187
+discourse,ATTRIBUTION_Expressive_speech expressive,332223,331934
+discourse,TEMPORAL_Continuation_,332224,361187
+discourse,ATTRIBUTION_Content_speech content,332227,332224
+discourse,TEMPORAL_Narration_same story,332229,332227
+discourse,TEMPORAL_Narration_same story,332232,332229
+discourse,TEMPORAL_Narration_same story,332233,332232
+discourse,EXPANSION_Alternative_disjunctive,332248,789067
+discourse,TEMPORAL_Narration_same story,332250,332248
+discourse,EXPANSION_Restatement_,332254,361188
+discourse,CONTINGENCY_Condition_hypothetical,789067,332254
+discourse,TEMPORAL_Continuation_,332258,332254
+discourse,CONTINGENCY_Condition_unreal present,332262,332273
+discourse,ATTRIBUTION_Content_Non-verbal content,332269,332262
+discourse,ATTRIBUTION_Content_Non-verbal content,332273,332258
+discourse,CONTINGENCY_Result_pragmatic result,332281,332258
+discourse,CONTINGENCY_Cause_,332293,332281
+discourse,TEMPORAL_Narration_same story,332295,331934
+discourse,ATTRIBUTION_Expressive_speech expressive,332301,332295
+discourse,ATTRIBUTION_Content_speech content,332308,332295
+discourse,TEMPORAL_Narration_same story,332315,332295
+discourse,ATTRIBUTION_Content_speech content,332321,332315
+discourse,TEMPORAL_Asynchronous_precedence,332349,332353
+discourse,EXPANSION_Elaboration_characterization,332353,361189
+discourse,TEMPORAL_Continuation_,361189,332321
+discourse,CONTINGENCY_Cause_pragmatic cause,332358,361189
+discourse,ATTRIBUTION_Content_speech content,332366,332358
+discourse,CONTINGENCY_Condition_hypothetical,784315,784342
+discourse,ATTRIBUTION_Content_speech content,784323,784315
+discourse,TEMPORAL_Narration_same story,784329,784315
+discourse,COMPARISON_Juxtaposition_contrast,784342,361189
+discourse,TEMPORAL_Narration_same story,784360,784342
+discourse,TEMPORAL_Continuation_,784369,784360
+discourse,EXPANSION_Restatement_equivalence,332453,784342
+discourse,CONTINGENCY_Condition_hypothetical,332461,332466
+discourse,COMPARISON_Juxtaposition_contrast,332466,332453
+discourse,EXPANSION_Elaboration_summary,332476,332453
+discourse,TEMPORAL_Continuation_,332486,332476
+discourse,TEMPORAL_Continuation_,332490,332321
+discourse,CONTINGENCY_Purpose_,332491,332490
+discourse,EXPANSION_Elaboration_comment,332498,332490
+discourse,TEMPORAL_Continuation_,332505,332490
+discourse,EXPANSION_Elaboration_comment,332510,332505
+discourse,TEMPORAL_Asynchronous_succession,332513,332510
+discourse,TEMPORAL_Continuation_,332515,332505
+discourse,ATTRIBUTION_Content_Non-verbal content,332518,332515
+discourse,CONTINGENCY_Purpose_,332519,332518
+discourse,ATTRIBUTION_Expressive_speech expressive,332524,332315
+discourse,ATTRIBUTION_Information source_speech,332526,361191
+discourse,COMPARISON_Juxtaposition_contrast,361191,332519
+discourse,CONTINGENCY_Cause_pragmatic cause,332533,361191
+discourse,EXPANSION_Restatement_,332551,332533
+discourse,TEMPORAL_Continuation_,361206,332551
+discourse,COMPARISON_Juxtaposition_parallel,361207,332551
+discourse,TEMPORAL_Continuation_,361208,361207
+discourse,COMPARISON_Juxtaposition_parallel,361209,361207
+discourse,TEMPORAL_Continuation_,361210,361209
+discourse,TEMPORAL_Narration_same story,332579,332315
+discourse,CONTINGENCY_Condition_general,332586,332593
+discourse,ATTRIBUTION_Content_speech content,332593,332579
+discourse,ATTRIBUTION_Content_speech content,332596,332593
+discourse,TEMPORAL_Narration_same story,332599,332593
+discourse,COMPARISON_Juxtaposition_parallel,332607,332593
+discourse,ATTRIBUTION_Content_speech content,332610,332607
+discourse,TEMPORAL_Narration_same story,332613,332607
+discourse,CONTINGENCY_Condition_general,361213,332607
+discourse,ATTRIBUTION_Expressive_speech expressive,332615,332579
+discourse,EXPANSION_Elaboration_summary,332624,332593
+discourse,COMPARISON_Juxtaposition_contrast,332633,332624
+discourse,TEMPORAL_Continuation_,332641,332633
+discourse,TEMPORAL_Synchronous_circumstance,332647,332658
+discourse,CONTINGENCY_Result_pragmatic result,332658,332641
+discourse,CONTINGENCY_Purpose_,332665,332658
+discourse,TEMPORAL_Narration_same story,332675,332665
+discourse,TEMPORAL_Narration_same story,332683,332675
+discourse,ATTRIBUTION_Information source_,332687,332692
+discourse,CONTINGENCY_Cause_,332692,332658
+discourse,TEMPORAL_Asynchronous_succession,332699,332692
+discourse,TEMPORAL_Synchronous_circumstance,332708,332701
+discourse,EXPANSION_Elaboration_characterization,332717,332708
+discourse,TEMPORAL_Narration_same story,332724,332701
+discourse,TEMPORAL_Narration_same story,332725,332724
+discourse,ATTRIBUTION_Content_speech content,332728,332725
+discourse,ATTRIBUTION_Content_Non-verbal content,332738,332728
+discourse,CONTINGENCY_Cause_pragmatic cause,332742,332738
+discourse,ATTRIBUTION_Content_speech content,332744,332745
+discourse,COMPARISON_Juxtaposition_contrast,332745,332728
+discourse,CONTINGENCY_Condition_hypothetical,332751,332755
+discourse,COMPARISON_Juxtaposition_contrast,332755,332744
+discourse,COMPARISON_Juxtaposition_parallel,332774,332728
+discourse,ATTRIBUTION_Content_Non-verbal content,332778,332774
+discourse,ATTRIBUTION_Content_speech content,332788,332789
+discourse,COMPARISON_Juxtaposition_contrast,332789,332774
+discourse,CONTINGENCY_Condition_hypothetical,332795,332799
+discourse,COMPARISON_Juxtaposition_contrast,332799,332788
+discourse,TEMPORAL_Narration_same story,332801,332725
+discourse,ATTRIBUTION_Content_speech content,332808,332805
+discourse,TEMPORAL_Continuation_,332817,332808
+discourse,TEMPORAL_Synchronous_circumstance,332818,332817
+discourse,COMPARISON_Juxtaposition_contrast,332824,332817
+discourse,TEMPORAL_Narration_same story,332826,332824
+discourse,TEMPORAL_Synchronous_overlap,332837,361214
+discourse,TEMPORAL_Synchronous_circumstance,332838,332837
+discourse,COMPARISON_Juxtaposition_contrast,332846,332837
+discourse,ATTRIBUTION_Content_speech content,361214,332826
+discourse,CONTINGENCY_Result_pragmatic result,332848,361214
+discourse,CONTINGENCY_Cause_pragmatic cause,332855,332848
+discourse,TEMPORAL_Narration_same story,332859,332826
+discourse,TEMPORAL_Narration_same story,332860,332859
+discourse,ATTRIBUTION_Expressive_speech expressive,332863,332860
+discourse,ATTRIBUTION_Content_speech content,332865,332860
+discourse,TEMPORAL_Asynchronous_succession,332874,332865
+discourse,TEMPORAL_Narration_same story,332878,332874
+discourse,CONTINGENCY_Condition_hypothetical,332884,793967
+discourse,TEMPORAL_Narration_same story,793967,332878
+discourse,COMPARISON_Juxtaposition_contrast,332894,793967
+discourse,CONTINGENCY_Condition_hypothetical,785035,332894
+discourse,TEMPORAL_Narration_new story,332897,332801
+discourse,EXPANSION_Elaboration_characterization,332918,361216
+discourse,TEMPORAL_Narration_same story,361216,332897
+discourse,TEMPORAL_Asynchronous_precedence,332928,332933
+discourse,TEMPORAL_Narration_same story,332933,361216
+discourse,TEMPORAL_Narration_same story,332935,332933
+discourse,ATTRIBUTION_Expressive_speech expressive,332938,332935
+discourse,ATTRIBUTION_Content_speech content,332940,332935
+discourse,TEMPORAL_Narration_same story,332947,332935
+discourse,TEMPORAL_Narration_same story,332954,332947
+discourse,TEMPORAL_Narration_same story,332957,332954
+discourse,TEMPORAL_Narration_same story,332961,332957
+discourse,TEMPORAL_Synchronous_circumstance,332966,332974
+discourse,CONTINGENCY_Cause_reason,332966,332974
+discourse,CONTINGENCY_Cause_reason,332970,332966
+discourse,TEMPORAL_Narration_same story,332974,332961
+discourse,ATTRIBUTION_Content_speech content,332980,332974
+discourse,CONTINGENCY_Result_real result,332989,332980
+discourse,TEMPORAL_Narration_same story,332990,332989
+discourse,TEMPORAL_Narration_same story,332998,332974
+discourse,TEMPORAL_Narration_same story,333004,332998
+discourse,ATTRIBUTION_Expressive_speech expressive,333006,333004
+discourse,ATTRIBUTION_Content_speech content,333013,333004
+discourse,TEMPORAL_Narration_same story,333024,333013
+discourse,TEMPORAL_Narration_same story,333025,333024
+discourse,EXPANSION_Elaboration_characterization,333034,333044
+discourse,COMPARISON_Juxtaposition_parallel,333044,333013
+discourse,CONTINGENCY_Result_pragmatic result,333044,333013
+discourse,TEMPORAL_Synchronous_overlap,333057,333059
+discourse,TEMPORAL_Narration_same story,333059,333004
+discourse,TEMPORAL_Continuation_,333069,333059
+discourse,TEMPORAL_Narration_,333079,333059
+discourse,ATTRIBUTION_Content_speech content,333084,333079
+discourse,TEMPORAL_Continuation_,333092,333084
+discourse,EXPANSION_Answer_,333096,333084
+discourse,EXPANSION_Elaboration_characterization,333101,333096
+discourse,TEMPORAL_Narration_same story,333103,333101
+discourse,CONTINGENCY_Result_real result,333109,333103
+discourse,TEMPORAL_Narration_same story,333111,333109
+discourse,TEMPORAL_Narration_same story,333120,333111
+discourse,TEMPORAL_Narration_same story,333128,333079
+discourse,ATTRIBUTION_Content_speech content,333131,333128
+discourse,EXPANSION_Answer_,333138,333131
+discourse,EXPANSION_Elaboration_characterization,333142,333138
+discourse,TEMPORAL_Narration_same story,333144,333142
+discourse,TEMPORAL_Asynchronous_succession,333152,333144
+discourse,TEMPORAL_Narration_new story,333156,333128
+discourse,TEMPORAL_Synchronous_circumstance,333161,333156
+discourse,TEMPORAL_Synchronous_overlap,333164,333156
+discourse,TEMPORAL_Narration_new story,333168,333156
+discourse,ATTRIBUTION_Expressive_speech expressive,333173,333168
+discourse,ATTRIBUTION_Content_speech content,361219,333168
+discourse,TEMPORAL_Narration_same story,333182,333168
+discourse,ATTRIBUTION_Content_speech content,333186,333182
+discourse,CONTINGENCY_Cause_,333196,333186
+discourse,ATTRIBUTION_Content_speech content,333199,333196
+discourse,COMPARISON_Juxtaposition_contrast,333203,333199
+discourse,TEMPORAL_Asynchronous_precedence,333208,333217
+discourse,TEMPORAL_Narration_same story,333212,333208
+discourse,CONTINGENCY_Cause_,333217,333186
+discourse,TEMPORAL_Synchronous_circumstance,333224,333217
+discourse,ATTRIBUTION_Expressive_speech expressive,333226,333224
+discourse,ATTRIBUTION_Content_speech content,333228,333224
+discourse,TEMPORAL_Narration_same story,333232,333217
+discourse,TEMPORAL_Narration_same story,333233,333232
+discourse,ATTRIBUTION_Content_speech content,333237,333233
+discourse,ATTRIBUTION_Content_Non-verbal content,333240,333237
+discourse,TEMPORAL_Narration_same story,333243,333233
+discourse,ATTRIBUTION_Content_speech content,333246,333244
+discourse,TEMPORAL_Continuation_,333250,333246
+discourse,TEMPORAL_Continuation_,333257,333250
+discourse,TEMPORAL_Narration_same story,333260,333243
+discourse,ATTRIBUTION_Content_speech content,333262,333260
+discourse,ATTRIBUTION_Content_speech content,333266,333262
+discourse,ATTRIBUTION_Content_Non-verbal content,333269,333266
+discourse,TEMPORAL_Continuation_,333271,333266
+discourse,ATTRIBUTION_Expressive_speech expressive,333275,333260
+discourse,TEMPORAL_Continuation_,333279,333260
+discourse,TEMPORAL_Asynchronous_precedence,333289,333279
+discourse,ATTRIBUTION_Content_Non-verbal content,1161844,333289
+discourse,COMPARISON_Juxtaposition_contrast,785156,1161844
+discourse,TEMPORAL_Continuation_,333311,333279
+discourse,TEMPORAL_Narration_same story,333321,333311
+discourse,TEMPORAL_Continuation_,333330,333321
+discourse,COMPARISON_Juxtaposition_parallel,333337,333330
+discourse,TEMPORAL_Narration_new story,333347,333182
+discourse,TEMPORAL_Synchronous_circumstance,333350,333347
+discourse,ATTRIBUTION_Content_speech content,333353,333350
+discourse,TEMPORAL_Narration_same story,333355,333353
+discourse,CONTINGENCY_Cause_reason,333360,333353
+discourse,TEMPORAL_Narration_same story,333365,333347
+discourse,ATTRIBUTION_Content_speech content,333368,333365
+discourse,TEMPORAL_Narration_same story,333369,333368
+discourse,COMPARISON_Concession_,333375,333390
+discourse,TEMPORAL_Continuation_,333379,333375
+discourse,TEMPORAL_Narration_same story,333387,333379
+discourse,ATTRIBUTION_Content_speech content,333390,333369
+discourse,CONTINGENCY_Cause_reason,333402,333390
+discourse,ATTRIBUTION_Expressive_speech expressive,333408,333365
+discourse,TEMPORAL_Continuation_,333409,333369
+discourse,EXPANSION_Elaboration_characterization,333412,333409
+discourse,TEMPORAL_Continuation_,333416,333412
+discourse,TEMPORAL_Continuation_,333423,333369
+discourse,COMPARISON_Juxtaposition_contrast,333440,333423
+discourse,TEMPORAL_Continuation_,333443,333423
+discourse,TEMPORAL_Continuation_,333449,333443
+discourse,ATTRIBUTION_Content_speech content,333454,333449
+discourse,TEMPORAL_Asynchronous_succession,333457,333459
+discourse,ATTRIBUTION_Content_speech content,361221,333459
+discourse,TEMPORAL_Asynchronous_precedence,333472,333469
+discourse,CONTINGENCY_Purpose_,333482,333472
+discourse,TEMPORAL_Narration_same story,333487,333469
+discourse,TEMPORAL_Narration_same story,333495,333487
+discourse,TEMPORAL_Narration_same story,333501,333495
+discourse,TEMPORAL_Narration_same story,333504,333501
+discourse,TEMPORAL_Coincidence_means,333510,333504
+discourse,ATTRIBUTION_Content_speech content,333512,333510
+discourse,EXPANSION_Alternative_disjunctive,361222,333512
+discourse,TEMPORAL_Narration_same story,333521,333504
+discourse,TEMPORAL_Narration_same story,333524,333521
+discourse,TEMPORAL_Narration_same story,333525,333524
+discourse,TEMPORAL_Narration_same story,333528,333525
+discourse,TEMPORAL_Narration_same story,333531,333528
+discourse,TEMPORAL_Narration_same story,333534,333531
+discourse,ATTRIBUTION_Content_speech content,333543,333534
+discourse,TEMPORAL_Narration_same story,333548,333543
+discourse,TEMPORAL_Narration_same story,333557,333534
+discourse,TEMPORAL_Narration_new story,333562,333557
+discourse,TEMPORAL_Synchronous_overlap,333569,333562
+discourse,ATTRIBUTION_Content_Non-verbal content,333573,333569
+discourse,TEMPORAL_Coincidence_means,333575,333562
+discourse,CONTINGENCY_Condition_general,333580,333587
+discourse,ATTRIBUTION_Content_speech content,333587,333575
+discourse,CONTINGENCY_Purpose_,333595,333587
+discourse,CONTINGENCY_Result_real result,333601,333595
+discourse,TEMPORAL_Narration_same story,333607,333601
+discourse,ATTRIBUTION_Content_speech content,333610,333607
+discourse,TEMPORAL_Narration_same story,333616,333607
+discourse,CONTINGENCY_Condition_general,333626,333627
+discourse,EXPANSION_Alternative_chosen alternative,333627,333587
+discourse,TEMPORAL_Narration_same story,333628,333627
+discourse,TEMPORAL_Asynchronous_precedence,333636,333640
+discourse,CONTINGENCY_Result_real result,333640,333628
+discourse,ATTRIBUTION_Expressive_speech expressive,333643,333640
+discourse,ATTRIBUTION_Content_speech content,333645,333640
+discourse,CONTINGENCY_Result_real result,333649,333640
+discourse,CONTINGENCY_Cause_reason,333663,333649
+discourse,COMPARISON_Juxtaposition_,333669,333663
+discourse,TEMPORAL_Narration_same story,333671,333562
+discourse,CONTINGENCY_Condition_general,333679,333685
+discourse,ATTRIBUTION_Content_speech content,333685,333671
+discourse,CONTINGENCY_Purpose_,333704,333685
+discourse,CONTINGENCY_Result_real result,333707,333704
+discourse,CONTINGENCY_Condition_general,333713,333716
+discourse,EXPANSION_Alternative_chosen alternative,333716,333685
+discourse,CONTINGENCY_Result_real result,333727,333716
+discourse,CONTINGENCY_Cause_reason,333731,333727
+discourse,CONTINGENCY_Result_real result,333735,333731
+discourse,TEMPORAL_Asynchronous_precedence,333744,333750
+discourse,TEMPORAL_Narration_same story,333750,333671
+discourse,ATTRIBUTION_Content_speech content,361223,333750
+discourse,TEMPORAL_Narration_same story,333765,333750
+discourse,ATTRIBUTION_Content_speech content,333770,333765
+discourse,TEMPORAL_Narration_same story,333775,333770
+discourse,TEMPORAL_Narration_same story,333779,333775
+discourse,CONTINGENCY_Purpose_,333787,333779
+discourse,ATTRIBUTION_Content_speech content,333791,333787
+discourse,CONTINGENCY_Cause_,333796,333791
+discourse,TEMPORAL_Narration_same story,333799,333779
+discourse,EXPANSION_Instantiation_,333807,333799
+discourse,ATTRIBUTION_Content_speech content,333811,333807
+discourse,TEMPORAL_Continuation_,333813,333811
+discourse,CONTINGENCY_Result_real result,333819,333813
+discourse,ATTRIBUTION_Content_speech content,333822,333819
+discourse,COMPARISON_Juxtaposition_parallel,333828,333807
+discourse,ATTRIBUTION_Content_speech content,333832,333828
+discourse,TEMPORAL_Continuation_,333835,333832
+discourse,CONTINGENCY_Purpose_,333836,333835
+discourse,CONTINGENCY_Result_real result,333839,333835
+discourse,ATTRIBUTION_Content_speech content,333842,333839
+discourse,COMPARISON_Juxtaposition_parallel,333848,333828
+discourse,ATTRIBUTION_Content_speech content,333851,333848
+discourse,CONTINGENCY_Result_real result,333856,333851
+discourse,TEMPORAL_Narration_same story,333860,333848
+discourse,TEMPORAL_Narration_same story,333863,333860
+discourse,TEMPORAL_Narration_same story,333870,333863
+discourse,TEMPORAL_Narration_same story,333873,333870
+discourse,ATTRIBUTION_Content_speech content,333878,333873
+discourse,TEMPORAL_Narration_same story,333897,333878
+discourse,TEMPORAL_Narration_same story,333901,333873
+discourse,ATTRIBUTION_Expressive_speech expressive,333905,333901
+discourse,ATTRIBUTION_Content_speech content,333907,333901
+discourse,TEMPORAL_Continuation_,333914,333907
+discourse,COMPARISON_Juxtaposition_contrast,333914,333907
+discourse,TEMPORAL_Narration_same story,333917,333901
+discourse,ATTRIBUTION_Content_speech content,333924,333917
+discourse,TEMPORAL_Narration_same story,333931,333924
+discourse,CONTINGENCY_Result_real result,333935,333931
+discourse,CONTINGENCY_Cause_,333940,333924
+discourse,ATTRIBUTION_Content_speech content,333950,333940
+discourse,TEMPORAL_Narration_new story,333955,333765
+discourse,TEMPORAL_Narration_same story,333962,333955
+discourse,TEMPORAL_Narration_same story,333963,333962
+discourse,CONTINGENCY_Condition_hypothetical,333969,334002
+discourse,EXPANSION_Elaboration_characterization,333974,333969
+discourse,ATTRIBUTION_Content_speech content,334002,333963
+discourse,COMPARISON_Juxtaposition_parallel,334019,334002
+discourse,CONTINGENCY_Condition_hypothetical,334028,334033
+discourse,ATTRIBUTION_Content_Non-verbal content,334030,334028
+discourse,CONTINGENCY_Cause_reason,334033,334002
+discourse,TEMPORAL_Narration_same story,334034,334033
+discourse,ATTRIBUTION_Content_Non-verbal content,334039,334034
+discourse,CONTINGENCY_Condition_general,334045,334055
+discourse,COMPARISON_Juxtaposition_contrast,334050,334045
+discourse,CONTINGENCY_Purpose_,334055,334034
+discourse,TEMPORAL_Coincidence_means,334059,334055
+discourse,ATTRIBUTION_Content_speech content,334064,334059
+discourse,COMPARISON_Juxtaposition_contrast,334068,334064
+discourse,CONTINGENCY_Condition_hypothetical,334074,334081
+discourse,CONTINGENCY_Purpose_,334077,334074
+discourse,COMPARISON_Juxtaposition_parallel,334081,334033
+discourse,TEMPORAL_Narration_same story,334083,334081
+discourse,ATTRIBUTION_Content_Non-verbal content,334086,334083
+discourse,TEMPORAL_Synchronous_overlap,334106,334108
+discourse,TEMPORAL_Coincidence_means,334108,334109
+discourse,EXPANSION_Alternative_disjunctive,334109,334081
+discourse,CONTINGENCY_Condition_hypothetical,785997,334109
+discourse,CONTINGENCY_Result_pragmatic result,334127,334033
+discourse,TEMPORAL_Continuation_,377897,334127
+discourse,CONTINGENCY_Condition_hypothetical,334142,334146
+discourse,COMPARISON_Juxtaposition_contrast,334146,377897
+discourse,CONTINGENCY_Cause_reason,334155,334158
+discourse,EXPANSION_Answer_,334158,334146
+discourse,TEMPORAL_Continuation_,334164,334158
+discourse,CONTINGENCY_Purpose_,334176,334166
+discourse,TEMPORAL_Narration_same story,334180,334166
+discourse,TEMPORAL_Synchronous_circumstance,334187,334180
+discourse,ATTRIBUTION_Content_speech content,334191,334187
+discourse,TEMPORAL_Continuation_,334193,334191
+discourse,TEMPORAL_Narration_same story,334196,334180
+discourse,TEMPORAL_Coincidence_means,334203,334196
+discourse,CONTINGENCY_Condition_hypothetical,765758,765767
+discourse,TEMPORAL_Narration_same story,765762,765758
+discourse,ATTRIBUTION_Content_speech content,765767,334203
+discourse,TEMPORAL_Narration_same story,765774,765767
+discourse,TEMPORAL_Asynchronous_succession,765779,765774
+discourse,TEMPORAL_Asynchronous_precedence,334236,334237
+discourse,TEMPORAL_Narration_same story,334237,765774
+discourse,TEMPORAL_Synchronous_circumstance,334242,334237
+discourse,TEMPORAL_Asynchronous_precedence,334245,334249
+discourse,TEMPORAL_Narration_same story,334249,334237
+discourse,TEMPORAL_Coincidence_means,334256,334249
+discourse,ATTRIBUTION_Content_speech content,334259,334256
+discourse,CONTINGENCY_Cause_reason,334263,334259
+discourse,TEMPORAL_Continuation_,786635,334249
+discourse,ATTRIBUTION_Content_speech content,786643,786635
+discourse,EXPANSION_Elaboration_characterization,334298,334307
+discourse,CONTINGENCY_Condition_hypothetical,334302,334307
+discourse,COMPARISON_Juxtaposition_parallel,334307,765767
+discourse,TEMPORAL_Narration_same story,334310,334307
+discourse,TEMPORAL_Continuation_,334314,334310
+discourse,TEMPORAL_Asynchronous_succession,334318,334314
+discourse,TEMPORAL_Asynchronous_precedence,334321,334322
+discourse,TEMPORAL_Narration_same story,334322,334314
+discourse,TEMPORAL_Coincidence_means,334327,334322
+discourse,ATTRIBUTION_Content_speech content,334329,334327
+discourse,CONTINGENCY_Cause_reason,334333,334329
+discourse,TEMPORAL_Continuation_,334341,334322
+discourse,ATTRIBUTION_Content_speech content,334344,334341
+discourse,TEMPORAL_Narration_same story,334356,334196
+discourse,ATTRIBUTION_Content_speech content,334361,334356
+discourse,TEMPORAL_Narration_same story,334366,334361
+discourse,ATTRIBUTION_Expressive_speech expressive,334373,334366
+discourse,ATTRIBUTION_Content_speech content,334375,334366
+discourse,TEMPORAL_Narration_same story,334384,334366
+discourse,TEMPORAL_Narration_same story,334394,334384
+discourse,TEMPORAL_Narration_same story,334399,334394
+discourse,TEMPORAL_Narration_same story,334406,334399
+discourse,TEMPORAL_Coincidence_means,334410,334406
+discourse,TEMPORAL_Asynchronous_precedence,334413,334417
+discourse,TEMPORAL_Narration_same story,334417,334406
+discourse,TEMPORAL_Narration_same story,334427,334417
+discourse,TEMPORAL_Narration_same story,334431,334427
+discourse,TEMPORAL_Narration_same story,334432,334431
+discourse,TEMPORAL_Narration_same story,334441,334432
+discourse,CONTINGENCY_Purpose_,334447,334441
+discourse,TEMPORAL_Narration_same story,334451,334441
+discourse,ATTRIBUTION_Content_Non-verbal content,334452,334451
+discourse,TEMPORAL_Continuation_,334466,334451
+discourse,TEMPORAL_Asynchronous_precedence,334472,334473
+discourse,TEMPORAL_Narration_same story,334473,334466
+discourse,ATTRIBUTION_Content_speech content,334480,334473
+discourse,COMPARISON_Juxtaposition_contrast,334487,334480
+discourse,CONTINGENCY_Result_pragmatic result,334489,334480
+discourse,TEMPORAL_Narration_same story,334490,334489
+discourse,TEMPORAL_Narration_same story,334496,334490
+discourse,ATTRIBUTION_Expressive_speech expressive,334499,334496
+discourse,ATTRIBUTION_Content_speech content,334501,334496
+discourse,CONTINGENCY_Result_real result,334510,334501
+discourse,CONTINGENCY_Result_real result,334516,334510
+discourse,TEMPORAL_Narration_same story,334525,334473
+discourse,TEMPORAL_Narration_same story,334526,334525
+discourse,TEMPORAL_Synchronous_overlap,334536,334537
+discourse,TEMPORAL_Narration_same story,334537,334526
+discourse,TEMPORAL_Narration_same story,334543,334537
+discourse,TEMPORAL_Narration_same story,334546,334543
+discourse,TEMPORAL_Narration_same story,334547,334546
+discourse,TEMPORAL_Narration_same story,334553,334547
+discourse,TEMPORAL_Narration_same story,334556,334553
+discourse,ATTRIBUTION_Expressive_speech expressive,334562,334556
+discourse,ATTRIBUTION_Content_speech content,334564,334556
+discourse,CONTINGENCY_Result_real result,334573,334564
+discourse,TEMPORAL_Narration_same story,334579,334556
+discourse,ATTRIBUTION_Content_speech content,334588,334579
+discourse,TEMPORAL_Narration_same story,334593,334588
+discourse,TEMPORAL_Continuation_,334597,334593
+discourse,TEMPORAL_Narration_same story,334610,786836
+discourse,TEMPORAL_Continuation_,786836,334597
+discourse,TEMPORAL_Narration_same story,334616,334610
+discourse,TEMPORAL_Synchronous_circumstance,334618,334619
+discourse,TEMPORAL_Narration_same story,334619,334616
+discourse,COMPARISON_Concession_,334627,334629
+discourse,CONTINGENCY_Cause_reason,334629,334619
+discourse,COMPARISON_Concession_,334631,334634
+discourse,COMPARISON_Juxtaposition_parallel,334634,334629
+discourse,TEMPORAL_Narration_same story,334637,334579
+discourse,EXPANSION_Elaboration_background,334640,334657
+discourse,TEMPORAL_Coincidence_manner,334652,334653
+discourse,TEMPORAL_Asynchronous_precedence,334653,334657
+discourse,TEMPORAL_Narration_same story,334657,334637
+discourse,TEMPORAL_Narration_same story,334663,334657
+discourse,TEMPORAL_Narration_same story,334667,334663
+discourse,ATTRIBUTION_Content_speech content,334669,334667
+discourse,TEMPORAL_Narration_same story,334674,334667
+discourse,ATTRIBUTION_Content_speech content,334680,334674
+discourse,TEMPORAL_Narration_same story,334683,334680
+discourse,CONTINGENCY_Cause_reason,334695,334683
+discourse,TEMPORAL_Narration_same story,334697,334674
+discourse,TEMPORAL_Continuation_,334701,334697
+discourse,TEMPORAL_Narration_same story,334708,334701
+discourse,TEMPORAL_Narration_same story,334709,334708
+discourse,TEMPORAL_Narration_same story,334714,334709
+discourse,TEMPORAL_Continuation_,334715,334714
+discourse,COMPARISON_Concession_,334722,334733
+discourse,TEMPORAL_Continuation_,334728,334722
+discourse,ATTRIBUTION_Content_speech content,334733,334715
+discourse,CONTINGENCY_Purpose_,334740,334733
+discourse,TEMPORAL_Asynchronous_precedence,334755,334757
+discourse,COMPARISON_Juxtaposition_contrast,334757,334733
+discourse,TEMPORAL_Narration_same story,334765,334715
+discourse,ATTRIBUTION_Expressive_speech expressive,334768,334765
+discourse,ATTRIBUTION_Content_speech content,334774,334765
+discourse,COMPARISON_Juxtaposition_parallel,334781,334774
+discourse,COMPARISON_Juxtaposition_contrast,334787,334774
+discourse,COMPARISON_Concession_,334795,334797
+discourse,CONTINGENCY_Cause_reason,334797,334787
+discourse,COMPARISON_Juxtaposition_parallel,334802,334797
+discourse,COMPARISON_Concession_,398543,334802
+discourse,EXPANSION_Elaboration_background,334813,334821
+discourse,EXPANSION_Elaboration_characterization,334816,334813
+discourse,ATTRIBUTION_Content_speech content,334821,334804
+discourse,ATTRIBUTION_Content_speech content,334824,334821
+discourse,TEMPORAL_Narration_same story,334830,334821
+discourse,TEMPORAL_Narration_same story,334832,334830
+discourse,ATTRIBUTION_Content_speech content,334837,334832
+discourse,TEMPORAL_Continuation_,334841,334837
+discourse,CONTINGENCY_Cause_,334850,334841
+discourse,TEMPORAL_Narration_same story,334854,334832
+discourse,ATTRIBUTION_Content_speech content,334862,334854
+discourse,CONTINGENCY_Cause_pragmatic cause,334868,334862
+discourse,TEMPORAL_Continuation_,334876,334868
+discourse,COMPARISON_Juxtaposition_parallel,334879,334876
+discourse,TEMPORAL_Continuation_,334881,334862
+discourse,ATTRIBUTION_Content_Non-verbal content,334883,334881
+discourse,TEMPORAL_Asynchronous_precedence,334887,334891
+discourse,CONTINGENCY_Purpose_,334891,334883
+discourse,TEMPORAL_Narration_same story,334899,334854
+discourse,TEMPORAL_Narration_same story,334907,334899
+discourse,ATTRIBUTION_Content_speech content,334912,334907
+discourse,TEMPORAL_Narration_same story,334919,334907
+discourse,ATTRIBUTION_Content_speech content,398545,334919
+discourse,TEMPORAL_Narration_same story,334927,334919
+discourse,ATTRIBUTION_Content_speech content,334930,334927
+discourse,TEMPORAL_Narration_same story,334935,334930
+discourse,TEMPORAL_Narration_same story,334937,334935
+discourse,ATTRIBUTION_Content_verbal non-speech content,334938,334937
+discourse,TEMPORAL_Narration_same story,334942,334927
+discourse,ATTRIBUTION_Content_speech content,334947,334942
+discourse,TEMPORAL_Narration_same story,334951,334942
+discourse,ATTRIBUTION_Content_speech content,398546,334951
+discourse,TEMPORAL_Narration_same story,334957,334951
+discourse,ATTRIBUTION_Content_speech content,334960,334957
+discourse,TEMPORAL_Narration_same story,334965,334960
+discourse,ATTRIBUTION_Content_verbal non-speech content,334966,334965
+discourse,TEMPORAL_Narration_same story,334969,334957
+discourse,CONTINGENCY_Cause_reason,334978,334969
+discourse,CONTINGENCY_Cause_reason,334997,334969
+discourse,TEMPORAL_Continuation_,335002,334969
+discourse,ATTRIBUTION_Content_speech content,335005,335002
+discourse,TEMPORAL_Asynchronous_precedence,335015,335016
+discourse,CONTINGENCY_Purpose_,335016,335005
+discourse,CONTINGENCY_Cause_,335031,335005
+discourse,COMPARISON_Juxtaposition_parallel,335042,335031
+discourse,CONTINGENCY_Condition_factual past,335052,335058
+discourse,EXPANSION_Instantiation_,335058,335042
+discourse,CONTINGENCY_Condition_factual past,335067,335072
+discourse,COMPARISON_Juxtaposition_parallel,335072,335058
+discourse,TEMPORAL_Continuation_,335077,335072
+discourse,CONTINGENCY_Cause_reason,335086,335077
+discourse,COMPARISON_Juxtaposition_contrast,335090,335086
+discourse,EXPANSION_Alternative_disjunctive,335094,335086
+discourse,COMPARISON_Juxtaposition_contrast,335098,335094
+discourse,EXPANSION_Restatement_,335101,335077
+discourse,TEMPORAL_Narration_same story,335107,334804
+discourse,TEMPORAL_Narration_same story,335117,335107
+discourse,TEMPORAL_Narration_same story,335121,335117
+discourse,COMPARISON_Concession_,335125,335136
+discourse,ATTRIBUTION_Content_speech content,335136,335121
+discourse,CONTINGENCY_Cause_pragmatic cause,398558,335136
+discourse,TEMPORAL_Continuation_,398559,335136
+discourse,COMPARISON_Juxtaposition_contrast,335165,398559
+discourse,TEMPORAL_Continuation_,335170,335165
+discourse,TEMPORAL_Continuation_,335174,335170
+discourse,TEMPORAL_Continuation_,335197,335174
+discourse,COMPARISON_Juxtaposition_parallel,335205,335197
+discourse,EXPANSION_Elaboration_background,335210,335256
+discourse,EXPANSION_Elaboration_characterization,335214,335210
+discourse,TEMPORAL_Continuation_,335218,335214
+discourse,TEMPORAL_Continuation_,335228,335210
+discourse,EXPANSION_Elaboration_characterization,335233,335228
+discourse,TEMPORAL_Continuation_,335235,335233
+discourse,ATTRIBUTION_Content_Non-verbal content,335236,335235
+discourse,TEMPORAL_Continuation_,335250,335235
+discourse,TEMPORAL_Narration_same story,335251,335250
+discourse,TEMPORAL_Continuation_,335256,335197
+discourse,TEMPORAL_Narration_same story,335262,335256
+discourse,TEMPORAL_Narration_same story,335272,335262
+discourse,TEMPORAL_Narration_same story,335278,335272
+discourse,TEMPORAL_Narration_same story,335284,335278
+discourse,TEMPORAL_Synchronous_overlap,335289,335284
+discourse,TEMPORAL_Narration_same story,335293,335284
+discourse,TEMPORAL_Coincidence_means,335306,335307
+discourse,TEMPORAL_Narration_same story,335307,335293
+discourse,ATTRIBUTION_Expressive_speech expressive,335310,335307
+discourse,ATTRIBUTION_Content_speech content,335312,335307
+discourse,TEMPORAL_Narration_same story,335315,335312
+discourse,CONTINGENCY_Purpose_,335318,335315
+discourse,TEMPORAL_Narration_same story,335326,335318
+discourse,CONTINGENCY_Cause_reason,335332,335315
+discourse,TEMPORAL_Narration_same story,335338,335307
+discourse,ATTRIBUTION_Expressive_speech expressive,335342,335338
+discourse,ATTRIBUTION_Content_speech content,335344,335338
+discourse,ATTRIBUTION_Content_Non-verbal content,335346,335344
+discourse,COMPARISON_Juxtaposition_parallel,398560,335346
+discourse,CONTINGENCY_Result_real result,335364,335346
+discourse,COMPARISON_Juxtaposition_contrast,335364,335346
+discourse,COMPARISON_Juxtaposition_contrast,335368,335364
+discourse,TEMPORAL_Continuation_,335380,335344
+discourse,ATTRIBUTION_Content_Non-verbal content,335385,335384
+discourse,CONTINGENCY_Purpose_,335390,335380
+discourse,COMPARISON_Juxtaposition_parallel,335397,335390
+discourse,TEMPORAL_Narration_same story,335399,335338
+discourse,ATTRIBUTION_Content_speech content,789408,335399
+discourse,ATTRIBUTION_Expressive_speech expressive,789411,335399
+discourse,ATTRIBUTION_Content_speech content,789413,789408
+discourse,CONTINGENCY_Cause_reason,789421,789408
+discourse,CONTINGENCY_Purpose_,789426,789413
+discourse,CONTINGENCY_Purpose_,789432,789426
+discourse,TEMPORAL_Narration_same story,335439,335399
+discourse,ATTRIBUTION_Content_speech content,335444,335439
+discourse,CONTINGENCY_Result_pragmatic result,335450,335444
+discourse,TEMPORAL_Narration_same story,335455,335439
+discourse,ATTRIBUTION_Expressive_speech expressive,335457,335455
+discourse,ATTRIBUTION_Expressive_speech expressive,335460,335455
+discourse,CONTINGENCY_Condition_hypothetical,335467,335471
+discourse,ATTRIBUTION_Content_speech content,335471,335455
+discourse,TEMPORAL_Narration_same story,335473,335455
+discourse,CONTINGENCY_Condition_factual present,335483,335491
+discourse,CONTINGENCY_Condition_hypothetical,335490,335491
+discourse,ATTRIBUTION_Content_speech content,335491,335473
+discourse,COMPARISON_Concession_,335501,335508
+discourse,ATTRIBUTION_Content_speech content,335508,335493
+discourse,EXPANSION_Restatement_specification,335514,335508
+discourse,TEMPORAL_Continuation_,335538,335508
+discourse,CONTINGENCY_Condition_hypothetical,335542,335547
+discourse,EXPANSION_Instantiation_,335547,335538
+discourse,CONTINGENCY_Condition_hypothetical,335552,335554
+discourse,COMPARISON_Juxtaposition_parallel,335554,335547
+discourse,CONTINGENCY_Condition_hypothetical,335562,335574
+discourse,TEMPORAL_Narration_same story,335567,335562
+discourse,TEMPORAL_Synchronous_circumstance,335570,335567
+discourse,ATTRIBUTION_Content_speech content,335572,335570
+discourse,COMPARISON_Juxtaposition_parallel,335574,335554
+discourse,TEMPORAL_Narration_,335578,335493
+discourse,ATTRIBUTION_Content_speech content,335584,335578
+discourse,TEMPORAL_Narration_same story,335588,335578
+discourse,CONTINGENCY_Condition_unreal present,335594,335600
+discourse,ATTRIBUTION_Content_speech content,335600,335588
+discourse,ATTRIBUTION_Content_speech content,335606,335600
+discourse,TEMPORAL_Narration_same story,335608,335606
+discourse,CONTINGENCY_Result_real result,335614,335600
+discourse,TEMPORAL_Asynchronous_precedence,335629,398563
+discourse,TEMPORAL_Continuation_,398563,335614
+discourse,ATTRIBUTION_Content_speech content,335637,335633
+discourse,TEMPORAL_Narration_same story,335638,335637
+discourse,EXPANSION_Alternative_chosen alternative,335642,398563
+discourse,ATTRIBUTION_Content_speech content,335645,335642
+discourse,TEMPORAL_Narration_same story,335650,335645
+discourse,TEMPORAL_Narration_same story,335651,335650
+discourse,TEMPORAL_Asynchronous_succession,335654,335651
+discourse,TEMPORAL_Continuation_,335656,335654
+discourse,TEMPORAL_Narration_same story,335661,335651
+discourse,TEMPORAL_Continuation_,335663,335661
+discourse,EXPANSION_Elaboration_summary,335667,335642
+discourse,CONTINGENCY_Cause_reason,335672,335667
+discourse,CONTINGENCY_Condition_general,335681,335687
+discourse,COMPARISON_Juxtaposition_parallel,335687,335667
+discourse,ATTRIBUTION_Content_speech content,335691,335687
+discourse,CONTINGENCY_Cause_reason,335696,335691
+discourse,TEMPORAL_Narration_new story,335699,335588
+discourse,TEMPORAL_Synchronous_overlap,335702,335699
+discourse,TEMPORAL_Continuation_,335707,335699
+discourse,TEMPORAL_Synchronous_overlap,335715,335720
+discourse,TEMPORAL_Narration_same story,335720,335707
+discourse,EXPANSION_Elaboration_characterization,335727,335720
+discourse,TEMPORAL_Narration_same story,335732,335720
+discourse,TEMPORAL_Synchronous_circumstance,335734,335732
+discourse,ATTRIBUTION_Expressive_speech expressive,335736,335734
+discourse,ATTRIBUTION_Content_speech content,335739,335734
+discourse,TEMPORAL_Asynchronous_precedence,335743,335744
+discourse,TEMPORAL_Narration_same story,335744,335732
+discourse,ATTRIBUTION_Content_speech content,335747,335744
+discourse,TEMPORAL_Narration_same story,335748,335747
+discourse,TEMPORAL_Narration_same story,335754,335744
+discourse,TEMPORAL_Synchronous_overlap,335757,335754
+discourse,TEMPORAL_Asynchronous_precedence,335766,335770
+discourse,ATTRIBUTION_Content_Non-verbal content,335768,335766
+discourse,TEMPORAL_Narration_same story,335770,335754
+discourse,TEMPORAL_Synchronous_circumstance,335774,335770
+discourse,TEMPORAL_Narration_same story,335779,335770
+discourse,TEMPORAL_Synchronous_circumstance,335786,335779
+discourse,EXPANSION_Elaboration_characterization,335791,335779
+discourse,TEMPORAL_Narration_same story,335794,335779
+discourse,TEMPORAL_Continuation_,335798,335794
+discourse,ATTRIBUTION_Content_speech content,335803,335798
+discourse,TEMPORAL_Continuation_,398564,335803
+discourse,EXPANSION_Restatement_specification,335810,398564
+discourse,CONTINGENCY_Purpose_,335812,335810
+discourse,EXPANSION_Exception_,335816,335810
+discourse,TEMPORAL_Narration_same story,335823,335798
+discourse,ATTRIBUTION_Content_speech content,335826,335823
+discourse,TEMPORAL_Narration_same story,335827,335826
+discourse,TEMPORAL_Continuation_,335832,335827
+discourse,TEMPORAL_Asynchronous_precedence,335835,335847
+discourse,ATTRIBUTION_Content_speech content,335841,335835
+discourse,TEMPORAL_Narration_new story,335847,335823
+discourse,TEMPORAL_Continuation_,335850,335847
+discourse,ATTRIBUTION_Content_speech content,335853,335850
+discourse,COMPARISON_Juxtaposition_parallel,335862,335853
+discourse,ATTRIBUTION_Content_speech content,796092,335862
+discourse,EXPANSION_Alternative_conjunctive,796093,796092
+discourse,CONTINGENCY_Cause_reason,335878,335862
+discourse,CONTINGENCY_Cause_pragmatic cause,335878,335853
+discourse,TEMPORAL_Narration_same story,335880,335850
+discourse,ATTRIBUTION_Content_speech content,789544,335880
+discourse,ATTRIBUTION_Content_Non-verbal content,789555,789547
+discourse,COMPARISON_Juxtaposition_contrast,789558,789544
+discourse,TEMPORAL_Narration_same story,335905,789558
+discourse,ATTRIBUTION_Content_speech content,850648,335905
+discourse,COMPARISON_Juxtaposition_parallel,850650,850648
+discourse,COMPARISON_Juxtaposition_contrast,335915,335905
+discourse,TEMPORAL_Continuation_,335917,335915
+discourse,COMPARISON_Sameness_,335923,335936
+discourse,TEMPORAL_Continuation_,335933,335923
+discourse,CONTINGENCY_Cause_reason,335936,335915
+discourse,COMPARISON_Juxtaposition_contrast,335948,335936
+discourse,COMPARISON_Sameness_,335961,335968
+discourse,COMPARISON_Juxtaposition_parallel,335968,335936
+discourse,EXPANSION_Restatement_specification,790331,335961
+discourse,TEMPORAL_Continuation_,790332,790331
+discourse,COMPARISON_Juxtaposition_parallel,790333,790331
+discourse,TEMPORAL_Continuation_,790334,790333
+discourse,TEMPORAL_Asynchronous_succession,790338,790331
+discourse,TEMPORAL_Narration_same story,790344,790338
+discourse,TEMPORAL_Narration_same story,790348,790344
+discourse,COMPARISON_Sameness_,336005,791605
+discourse,COMPARISON_Juxtaposition_parallel,791605,335968
+discourse,EXPANSION_Restatement_specification,336011,336005
+discourse,TEMPORAL_Continuation_,336013,336011
+discourse,COMPARISON_Juxtaposition_parallel,336015,336011
+discourse,TEMPORAL_Continuation_,336017,336015
+discourse,COMPARISON_Juxtaposition_parallel,336019,336015
+discourse,TEMPORAL_Continuation_,336021,336019
+discourse,TEMPORAL_Asynchronous_precedence,336026,336031
+discourse,COMPARISON_Juxtaposition_contrast,336031,336011
+discourse,TEMPORAL_Narration_same story,336038,336031
+discourse,EXPANSION_Elaboration_summary,336044,335968
+discourse,EXPANSION_Instantiation_,336071,336044
+discourse,CONTINGENCY_Purpose_,336072,336071
+discourse,COMPARISON_Juxtaposition_parallel,336081,336071
+discourse,CONTINGENCY_Cause_pragmatic cause,336086,336071
+discourse,EXPANSION_Restatement_generalization,336099,336086
+discourse,COMPARISON_Juxtaposition_contrast,336107,336099
+discourse,TEMPORAL_Continuation_,336110,336107
+discourse,ATTRIBUTION_Content_speech content,336116,336110
+discourse,TEMPORAL_Narration_same story,336123,336116
+discourse,COMPARISON_Juxtaposition_contrast,336127,336123
+discourse,COMPARISON_Juxtaposition_parallel,336129,336116
+discourse,TEMPORAL_Narration_same story,336138,336129
+discourse,COMPARISON_Juxtaposition_contrast,336142,336138
+discourse,TEMPORAL_Narration_same story,336145,335880
+discourse,TEMPORAL_Continuation_,336146,336145
+discourse,ATTRIBUTION_Expressive_speech expressive,336151,336146
+discourse,ATTRIBUTION_Content_speech content,398566,336146
+discourse,TEMPORAL_Narration_same story,336155,336146
+discourse,ATTRIBUTION_Content_speech content,336166,336155
+discourse,CONTINGENCY_Purpose_,336174,336168
+discourse,EXPANSION_Restatement_specification,336182,336168
+discourse,EXPANSION_Elaboration_background,336186,336222
+discourse,TEMPORAL_Continuation_,336201,336186
+discourse,TEMPORAL_Continuation_,336208,336201
+discourse,TEMPORAL_Synchronous_circumstance,336211,336208
+discourse,ATTRIBUTION_Content_speech content,336213,336211
+discourse,TEMPORAL_Narration_same story,336222,336208
+discourse,ATTRIBUTION_Content_speech content,336229,336222
+discourse,COMPARISON_Concession_,336238,336253
+discourse,TEMPORAL_Continuation_,336241,336238
+discourse,CONTINGENCY_Cause_reason,336246,336253
+discourse,ATTRIBUTION_Content_speech content,336253,336229
+discourse,TEMPORAL_Coincidence_means,336260,336261
+discourse,CONTINGENCY_Purpose_,336261,336253
+discourse,TEMPORAL_Narration_same story,336264,336168
+discourse,ATTRIBUTION_Content_speech content,336269,336264
+discourse,ATTRIBUTION_Content_speech content,336275,336269
+discourse,TEMPORAL_Continuation_,336282,336269
+discourse,TEMPORAL_Continuation_,336296,336282
+discourse,EXPANSION_Answer_,336300,336282
+discourse,ATTRIBUTION_Content_speech content,336303,336300
+discourse,TEMPORAL_Asynchronous_precedence,336315,336317
+discourse,COMPARISON_Juxtaposition_contrast,336317,336300
+discourse,TEMPORAL_Narration_same story,336324,336264
+discourse,ATTRIBUTION_Content_Non-verbal content,336334,336330
+discourse,ATTRIBUTION_Content_speech content,336346,336324
+discourse,CONTINGENCY_Purpose_,336350,336346
+discourse,EXPANSION_Elaboration_characterization,797214,336350
+discourse,TEMPORAL_Continuation_,797215,797214
+discourse,TEMPORAL_Narration_same story,336362,336346
+discourse,TEMPORAL_Narration_same story,336364,336362
+discourse,ATTRIBUTION_Expressive_speech expressive,336367,336364
+discourse,ATTRIBUTION_Content_speech content,336369,336364
+discourse,CONTINGENCY_Cause_reason,336373,336369
+discourse,CONTINGENCY_Cause_pragmatic cause,336393,336373
+discourse,TEMPORAL_Continuation_,336398,336393
+discourse,COMPARISON_Juxtaposition_contrast,336407,336362
+discourse,TEMPORAL_Narration_same story,336409,336407
+discourse,ATTRIBUTION_Content_Non-verbal content,336413,336409
+discourse,COMPARISON_Juxtaposition_contrast,336419,336409
+discourse,TEMPORAL_Synchronous_circumstance,336423,336419
+discourse,ATTRIBUTION_Expressive_speech expressive,336426,336423
+discourse,ATTRIBUTION_Content_speech content,336428,336423
+discourse,EXPANSION_Elaboration_summary,336433,336419
+discourse,ATTRIBUTION_Content_speech content,336436,336433
+discourse,EXPANSION_Elaboration_characterization,336438,336436
+discourse,CONTINGENCY_Cause_pragmatic cause,336452,336436
+discourse,COMPARISON_Juxtaposition_contrast,336458,336452
+discourse,TEMPORAL_Narration_new story,336460,336324
+discourse,CONTINGENCY_Purpose_,336468,336460
+discourse,TEMPORAL_Asynchronous_precedence,336470,336474
+discourse,TEMPORAL_Narration_same story,336474,336460
+discourse,TEMPORAL_Narration_same story,336480,336474
+discourse,TEMPORAL_Coincidence_means,336482,336480
+discourse,ATTRIBUTION_Content_speech content,336484,336482
+discourse,ATTRIBUTION_Content_Non-verbal content,336487,336484
+discourse,TEMPORAL_Continuation_,336492,336484
+discourse,CONTINGENCY_Cause_,336498,336484
+discourse,ATTRIBUTION_Expressive_speech expressive,336504,336482
+discourse,CONTINGENCY_Cause_pragmatic cause,336505,336498
+discourse,ATTRIBUTION_Content_speech content,336521,336505
+discourse,TEMPORAL_Narration_new story,336526,336480
+discourse,TEMPORAL_Coincidence_means,336530,336526
+discourse,ATTRIBUTION_Expressive_speech expressive,336532,336530
+discourse,TEMPORAL_Coincidence_means,336536,336539
+discourse,ATTRIBUTION_Content_speech content,336539,336530
+discourse,TEMPORAL_Narration_same story,336541,336526
+discourse,ATTRIBUTION_Content_speech content,336549,336541
+discourse,CONTINGENCY_Cause_pragmatic cause,398570,336549
+discourse,TEMPORAL_Continuation_,336561,336549
+discourse,EXPANSION_List_,336564,336561
+discourse,EXPANSION_List_,336567,336564
+discourse,EXPANSION_List_,336570,336570
+discourse,EXPANSION_List_,336573,336573
+discourse,EXPANSION_List_,336575,336575
+discourse,TEMPORAL_Narration_same story,336586,336541
+discourse,ATTRIBUTION_Content_speech content,336590,336586
+discourse,TEMPORAL_Asynchronous_precedence,336594,336598
+discourse,TEMPORAL_Narration_same story,336598,336586
+discourse,ATTRIBUTION_Content_speech content,336604,336598
+discourse,EXPANSION_Restatement_specification,336609,336604
+discourse,TEMPORAL_Narration_same story,336611,336609
+discourse,CONTINGENCY_Result_real result,336615,336609
+discourse,TEMPORAL_Narration_same story,336622,336611
+discourse,TEMPORAL_Asynchronous_precedence,336627,336630
+discourse,TEMPORAL_Narration_same story,336630,336598
+discourse,CONTINGENCY_Cause_reason,336632,336630
+discourse,TEMPORAL_Asynchronous_precedence,336637,336642
+discourse,TEMPORAL_Narration_same story,336642,336630
+discourse,ATTRIBUTION_Content_speech content,336655,336642
+discourse,CONTINGENCY_Cause_reason,336659,336655
+discourse,TEMPORAL_Narration_same story,336674,336642
+discourse,ATTRIBUTION_Content_speech content,336681,336674
+discourse,TEMPORAL_Narration_same story,336686,336674
+discourse,ATTRIBUTION_Content_speech content,336696,336686
+discourse,TEMPORAL_Narration_same story,336698,336686
+discourse,ATTRIBUTION_Expressive_speech expressive,336702,336698
+discourse,ATTRIBUTION_Content_speech content,336704,336698
+discourse,TEMPORAL_Narration_same story,336707,336704
+discourse,TEMPORAL_Narration_same story,336712,336698
+discourse,ATTRIBUTION_Expressive_speech expressive,336715,336712
+discourse,ATTRIBUTION_Content_speech content,336716,336712
+discourse,ATTRIBUTION_Content_speech content,336720,336716
+discourse,TEMPORAL_Narration_new story,336757,336712
+discourse,TEMPORAL_Narration_same story,336761,336757
+discourse,ATTRIBUTION_Expressive_speech expressive,336765,336761
+discourse,ATTRIBUTION_Content_speech content,336766,336761
+discourse,TEMPORAL_Narration_same story,336771,336766
+discourse,EXPANSION_Restatement_specification,336783,336771
+discourse,TEMPORAL_Narration_same story,336788,336783
+discourse,TEMPORAL_Continuation_,336790,336788
+discourse,TEMPORAL_Continuation_,336792,336790
+discourse,TEMPORAL_Narration_same story,336795,336792
+discourse,TEMPORAL_Narration_same story,336796,336795
+discourse,TEMPORAL_Narration_same story,336804,336796
+discourse,TEMPORAL_Narration_same story,336810,336761
+discourse,CONTINGENCY_Cause_reason,336813,336810
+discourse,EXPANSION_Restatement_equivalence,336813,336810
+discourse,TEMPORAL_Continuation_,336823,336813
+discourse,EXPANSION_Elaboration_background,336827,336852
+discourse,TEMPORAL_Synchronous_overlap,336831,336827
+discourse,TEMPORAL_Synchronous_circumstance,336841,336827
+discourse,TEMPORAL_Asynchronous_precedence,336843,336847
+discourse,ATTRIBUTION_Content_Non-verbal content,336846,336843
+discourse,TEMPORAL_Continuation_,336847,336827
+discourse,ATTRIBUTION_Content_speech content,336849,336847
+discourse,TEMPORAL_Narration_new story,336852,336810
+discourse,ATTRIBUTION_Content_speech content,336859,336852
+discourse,TEMPORAL_Narration_same story,336862,336852
+discourse,TEMPORAL_Coincidence_means,336863,336862
+discourse,ATTRIBUTION_Expressive_speech expressive,336865,336863
+discourse,ATTRIBUTION_Content_speech content,336869,336863
+discourse,TEMPORAL_Narration_same story,336875,336862
+discourse,ATTRIBUTION_Content_speech content,336878,336875
+discourse,COMPARISON_Juxtaposition_contrast,336884,336875
+discourse,ATTRIBUTION_Expressive_speech expressive,336886,336884
+discourse,ATTRIBUTION_Content_speech content,336889,336884
+discourse,TEMPORAL_Narration_same story,336892,336884
+discourse,TEMPORAL_Narration_same story,336896,336892
+discourse,ATTRIBUTION_Content_speech content,336898,336896
+discourse,TEMPORAL_Asynchronous_precedence,336902,336905
+discourse,TEMPORAL_Narration_same story,336905,336896
+discourse,ATTRIBUTION_Content_speech content,336910,336905
+discourse,ATTRIBUTION_Content_Non-verbal content,336911,336910
+discourse,TEMPORAL_Narration_same story,336915,336905
+discourse,ATTRIBUTION_Expressive_speech expressive,336917,336915
+discourse,ATTRIBUTION_Content_Non-verbal content,336920,398571
+discourse,ATTRIBUTION_Content_speech content,398571,336915
+discourse,TEMPORAL_Narration_same story,336925,336915
+discourse,ATTRIBUTION_Content_speech content,336928,336925
+discourse,CONTINGENCY_Cause_,336933,336928
+discourse,TEMPORAL_Narration_same story,336938,336925
+discourse,TEMPORAL_Narration_same story,336941,336938
+discourse,TEMPORAL_Synchronous_circumstance,336943,336941
+discourse,TEMPORAL_Asynchronous_precedence,336951,336952
+discourse,TEMPORAL_Narration_same story,336952,336941
+discourse,TEMPORAL_Narration_same story,336959,336958
+discourse,TEMPORAL_Narration_same story,398574,336959
+discourse,EXPANSION_Elaboration_characterization,336972,398574
+discourse,TEMPORAL_Continuation_,336975,336972
+discourse,TEMPORAL_Narration_same story,336979,398574
+discourse,ATTRIBUTION_Content_Non-verbal content,336984,336980
+discourse,COMPARISON_Juxtaposition_contrast,336988,336979
+discourse,CONTINGENCY_Cause_reason,336997,336988
+discourse,TEMPORAL_Narration_same story,337000,336988
+discourse,TEMPORAL_Narration_same story,337004,337000
+discourse,CONTINGENCY_Purpose_,337009,337004
+discourse,CONTINGENCY_Cause_reason,337014,337004
+discourse,TEMPORAL_Asynchronous_precedence,337019,337024
+discourse,TEMPORAL_Narration_same story,337024,337004
+discourse,TEMPORAL_Narration_same story,337027,337024
+discourse,ATTRIBUTION_Expressive_speech expressive,337031,337027
+discourse,TEMPORAL_Coincidence_manner,337033,337034
+discourse,ATTRIBUTION_Content_speech content,337034,337027
+discourse,CONTINGENCY_Cause_,337042,337034
+discourse,TEMPORAL_Coincidence_manner,337047,337048
+discourse,TEMPORAL_Narration_same story,337048,337027
+discourse,TEMPORAL_Narration_same story,337051,337048
+discourse,TEMPORAL_Synchronous_circumstance,337053,337051
+discourse,TEMPORAL_Asynchronous_precedence,337056,337058
+discourse,TEMPORAL_Narration_same story,337058,337048
+discourse,TEMPORAL_Coincidence_means,337060,337058
+discourse,ATTRIBUTION_Content_speech content,337065,337060
+discourse,CONTINGENCY_Purpose_,337066,337065
+discourse,TEMPORAL_Narration_same story,337068,337058
+discourse,TEMPORAL_Narration_same story,337071,337068
+discourse,ATTRIBUTION_Expressive_speech expressive,337083,337071
+discourse,ATTRIBUTION_Content_speech content,337087,337071
+discourse,CONTINGENCY_Condition_general,337093,337094
+discourse,TEMPORAL_Continuation_,337094,337087
+discourse,TEMPORAL_Narration_same story,337097,337071
+discourse,ATTRIBUTION_Content_speech content,337109,337097
+discourse,CONTINGENCY_Cause_reason,800537,337109
+discourse,CONTINGENCY_Cause_reason,337117,337109
+discourse,CONTINGENCY_Purpose_,337123,337117
+discourse,TEMPORAL_Narration_same story,337125,337123
+discourse,TEMPORAL_Synchronous_overlap,337129,337133
+discourse,TEMPORAL_Asynchronous_precedence,337129,337133
+discourse,TEMPORAL_Narration_same story,337133,337097
+discourse,TEMPORAL_Continuation_,337134,337133
+discourse,CONTINGENCY_Cause_reason,337140,337134
+discourse,TEMPORAL_Continuation_,337144,337140
+discourse,ATTRIBUTION_Content_Non-verbal content,337148,337144
+discourse,EXPANSION_Restatement_equivalence,337155,337134
+discourse,ATTRIBUTION_Content_speech content,337161,337155
+discourse,CONTINGENCY_Purpose_,337166,337161
+discourse,TEMPORAL_Narration_same story,337170,337166
+discourse,TEMPORAL_Narration_same story,337172,337161
+discourse,TEMPORAL_Narration_same story,337177,337172
+discourse,TEMPORAL_Narration_same story,337183,337177
+discourse,ATTRIBUTION_Content_speech content,337187,337183
+discourse,TEMPORAL_Asynchronous_succession,337190,337187
+discourse,CONTINGENCY_Cause_reason,337196,337200
+discourse,TEMPORAL_Narration_same story,337200,337183
+discourse,TEMPORAL_Synchronous_circumstance,337204,337200
+discourse,ATTRIBUTION_Content_speech content,337207,337204
+discourse,ATTRIBUTION_Content_Non-verbal content,337209,337207
+discourse,TEMPORAL_Narration_same story,337214,337200
+discourse,TEMPORAL_Asynchronous_precedence,337217,337214
+discourse,TEMPORAL_Asynchronous_precedence,337219,337217
+discourse,TEMPORAL_Continuation_,337224,337214
+discourse,ATTRIBUTION_Content_speech content,337225,337224
+discourse,CONTINGENCY_Purpose_,337236,337225
+discourse,TEMPORAL_Narration_same story,337241,337224
+discourse,TEMPORAL_Synchronous_circumstance,337245,337241
+discourse,ATTRIBUTION_Expressive_speech expressive,337247,337245
+discourse,ATTRIBUTION_Content_speech content,337253,337245
+discourse,TEMPORAL_Narration_same story,337257,337241
+discourse,ATTRIBUTION_Expressive_speech expressive,337260,337257
+discourse,ATTRIBUTION_Expressive_speech expressive,337263,337257
+discourse,CONTINGENCY_Cause_reason,337269,337271
+discourse,ATTRIBUTION_Content_speech content,337271,337257
+discourse,TEMPORAL_Narration_same story,337279,337257
+discourse,TEMPORAL_Synchronous_circumstance,337282,337279
+discourse,ATTRIBUTION_Expressive_speech expressive,337288,337282
+discourse,ATTRIBUTION_Content_speech content,337290,337282
+discourse,TEMPORAL_Narration_same story,337294,337279
+discourse,ATTRIBUTION_Content_speech content,337302,337294
+discourse,TEMPORAL_Narration_same story,337309,337294
+discourse,TEMPORAL_Synchronous_circumstance,337310,337309
+discourse,ATTRIBUTION_Expressive_speech expressive,337312,337310
+discourse,TEMPORAL_Continuation_,337320,398577
+discourse,ATTRIBUTION_Content_speech content,398577,337310
+discourse,CONTINGENCY_Cause_reason,337325,337320
+discourse,CONTINGENCY_Cause_reason,337332,337325
+discourse,CONTINGENCY_Cause_pragmatic cause,337334,337332
+discourse,COMPARISON_Juxtaposition_parallel,337340,337334
+discourse,TEMPORAL_Narration_same story,337345,337309
+discourse,ATTRIBUTION_Content_speech content,337352,337345
+discourse,ATTRIBUTION_Expressive_speech expressive,337356,337345
+discourse,TEMPORAL_Continuation_,337358,337352
+discourse,ATTRIBUTION_Content_Non-verbal content,337363,337358
+discourse,CONTINGENCY_Result_pragmatic result,337380,337358
+discourse,TEMPORAL_Asynchronous_precedence,337389,337394
+discourse,CONTINGENCY_Result_real result,337394,337380
+discourse,TEMPORAL_Narration_same story,337399,337345
+discourse,ATTRIBUTION_Content_speech content,337401,337399
+discourse,TEMPORAL_Narration_same story,337407,337401
+discourse,TEMPORAL_Narration_same story,337415,337399
+discourse,ATTRIBUTION_Expressive_speech expressive,337418,337415
+discourse,ATTRIBUTION_Content_speech content,337420,337415
+discourse,ATTRIBUTION_Content_speech content,337424,337399
+discourse,ATTRIBUTION_Content_speech content,337430,337424
+discourse,COMPARISON_Juxtaposition_contrast,337440,337430
+discourse,ATTRIBUTION_Content_Non-verbal content,337451,337449
+discourse,TEMPORAL_Continuation_,337454,337424
+discourse,TEMPORAL_Narration_same story,337457,337454
+discourse,TEMPORAL_Asynchronous_precedence,337463,337465
+discourse,TEMPORAL_Narration_new story,337465,337415
+discourse,EXPANSION_Restatement_specification,337467,337465
+discourse,TEMPORAL_Narration_same story,337473,337465
+discourse,TEMPORAL_Asynchronous_precedence,337475,337473
+discourse,TEMPORAL_Synchronous_circumstance,337491,337473
+discourse,ATTRIBUTION_Content_speech content,337493,337491
+discourse,TEMPORAL_Synchronous_overlap,337501,337502
+discourse,TEMPORAL_Narration_same story,337502,337493
+discourse,TEMPORAL_Narration_same story,337514,337502
+discourse,TEMPORAL_Narration_same story,337516,337514
+discourse,CONTINGENCY_Condition_hypothetical,763002,763007
+discourse,ATTRIBUTION_Content_speech content,763005,763002
+discourse,TEMPORAL_Narration_same story,763007,337516
+discourse,CONTINGENCY_Cause_reason,337536,398579
+discourse,ATTRIBUTION_Content_speech content,398579,763007
+discourse,TEMPORAL_Narration_same story,337538,337491
+discourse,TEMPORAL_Narration_same story,337542,337538
+discourse,TEMPORAL_Synchronous_overlap,337547,337552
+discourse,TEMPORAL_Narration_same story,337552,337542
+discourse,ATTRIBUTION_Content_speech content,337560,337552
+discourse,TEMPORAL_Narration_same story,337566,337552
+discourse,CONTINGENCY_Cause_reason,337573,398580
+discourse,ATTRIBUTION_Content_speech content,398580,337566
+discourse,TEMPORAL_Narration_same story,337576,337566
+discourse,TEMPORAL_Narration_same story,337583,337576
+discourse,TEMPORAL_Narration_same story,337590,337583
+discourse,TEMPORAL_Synchronous_overlap,337594,337597
+discourse,TEMPORAL_Narration_same story,337597,337590
+discourse,TEMPORAL_Synchronous_overlap,337605,337616
+discourse,TEMPORAL_Narration_same story,337616,337597
+discourse,TEMPORAL_Synchronous_circumstance,337622,337616
+discourse,TEMPORAL_Coincidence_means,337634,337616
+discourse,ATTRIBUTION_Content_speech content,398581,337634
+discourse,TEMPORAL_Continuation_,398582,398581
+discourse,TEMPORAL_Continuation_,398583,398582
+discourse,TEMPORAL_Narration_same story,337659,337616
+discourse,ATTRIBUTION_Expressive_speech expressive,337663,337659
+discourse,ATTRIBUTION_Content_speech content,337665,337659
+discourse,TEMPORAL_Narration_same story,337671,337659
+discourse,TEMPORAL_Continuation_,337672,337671
+discourse,ATTRIBUTION_Content_speech content,337674,337672
+discourse,CONTINGENCY_Condition_hypothetical,337680,337684
+discourse,ATTRIBUTION_Content_speech content,337684,337674
+discourse,TEMPORAL_Asynchronous_precedence,337688,337690
+discourse,TEMPORAL_Narration_new story,337690,337672
+discourse,TEMPORAL_Narration_same story,337693,337690
+discourse,TEMPORAL_Coincidence_means,337697,337693
+discourse,ATTRIBUTION_Content_speech content,337700,337697
+discourse,COMPARISON_Juxtaposition_contrast,337716,337700
+discourse,CONTINGENCY_Cause_pragmatic cause,337722,337700
+discourse,EXPANSION_Elaboration_characterization,337728,337722
+discourse,TEMPORAL_Narration_same story,337735,337728
+discourse,TEMPORAL_Narration_same story,337738,337735
+discourse,TEMPORAL_Narration_same story,337743,337738
+discourse,TEMPORAL_Narration_same story,337754,337743
+discourse,CONTINGENCY_Cause_reason,337764,337754
+discourse,TEMPORAL_Narration_new story,337772,337693
+discourse,TEMPORAL_Narration_same story,337776,337772
+discourse,TEMPORAL_Synchronous_circumstance,337781,337776
+discourse,ATTRIBUTION_Content_speech content,337784,337781
+discourse,ATTRIBUTION_Content_verbal non-speech content,337787,337784
+discourse,COMPARISON_Juxtaposition_contrast,337797,337784
+discourse,TEMPORAL_Narration_new story,337802,337776
+discourse,TEMPORAL_Narration_same story,337817,337802
+discourse,COMPARISON_Juxtaposition_contrast,337828,337817
+discourse,CONTINGENCY_Cause_reason,337837,337828
+discourse,TEMPORAL_Synchronous_circumstance,337839,337837
+discourse,TEMPORAL_Synchronous_overlap,337847,337842
+discourse,TEMPORAL_Continuation_,337855,337847
+discourse,TEMPORAL_Narration_same story,337867,337842
+discourse,TEMPORAL_Coincidence_means,337868,337867
+discourse,ATTRIBUTION_Content_speech content,337872,337868
+discourse,ATTRIBUTION_Content_speech content,337878,337872
+discourse,TEMPORAL_Continuation_,337882,337878
+discourse,TEMPORAL_Narration_same story,337890,337867
+discourse,TEMPORAL_Continuation_,337892,337890
+discourse,ATTRIBUTION_Content_speech content,337896,337892
+discourse,TEMPORAL_Narration_same story,337903,337896
+discourse,EXPANSION_Restatement_specification,337912,337896
+discourse,TEMPORAL_Narration_same story,790435,337892
+discourse,TEMPORAL_Coincidence_means,790438,790435
+discourse,CONTINGENCY_Condition_hypothetical,790441,790444
+discourse,ATTRIBUTION_Content_speech content,790444,790438
+discourse,ATTRIBUTION_Content_speech content,799091,790441
+discourse,ATTRIBUTION_Content_speech content,790448,790444
+discourse,CONTINGENCY_Condition_hypothetical,790452,790458
+discourse,COMPARISON_Juxtaposition_contrast,790458,790444
+discourse,ATTRIBUTION_Content_speech content,799090,790452
+discourse,CONTINGENCY_Cause_reason,337953,790458
+discourse,ATTRIBUTION_Content_Non-verbal content,337956,337953
+discourse,TEMPORAL_Narration_same story,337959,790435
+discourse,ATTRIBUTION_Content_speech content,337961,337959
+discourse,ATTRIBUTION_Content_Non-verbal content,799600,337961
+discourse,TEMPORAL_Narration_same story,337967,337959
+discourse,ATTRIBUTION_Content_speech content,337972,337967
+discourse,ATTRIBUTION_Content_speech content,337978,337972
+discourse,TEMPORAL_Narration_same story,337980,337967
+discourse,ATTRIBUTION_Content_speech content,337991,337985
+discourse,TEMPORAL_Narration_same story,337994,337991
+discourse,TEMPORAL_Narration_same story,337999,337994
+discourse,TEMPORAL_Narration_same story,338005,337999
+discourse,CONTINGENCY_Purpose_,338017,338005
+discourse,TEMPORAL_Narration_same story,338023,338005
+discourse,TEMPORAL_Synchronous_circumstance,338025,338023
+discourse,TEMPORAL_Narration_same story,338029,338023
+discourse,TEMPORAL_Narration_same story,338038,338029
+discourse,TEMPORAL_Continuation_,338040,338038
+discourse,TEMPORAL_Narration_same story,338041,338040
+discourse,TEMPORAL_Narration_same story,338045,338041
+discourse,TEMPORAL_Narration_same story,338053,338045
+discourse,TEMPORAL_Narration_same story,338054,338053
+discourse,TEMPORAL_Narration_same story,338056,338054
+discourse,ATTRIBUTION_Content_speech content,338064,338056
+discourse,EXPANSION_Answer_,338066,338064
+discourse,CONTINGENCY_Cause_reason,338075,338066
+discourse,TEMPORAL_Asynchronous_precedence,338077,338082
+discourse,TEMPORAL_Narration_same story,338082,338056
+discourse,TEMPORAL_Coincidence_means,338085,338082
+discourse,ATTRIBUTION_Content_speech content,338088,338085
+discourse,TEMPORAL_Continuation_,338092,338088
+discourse,CONTINGENCY_Purpose_,338097,338092
+discourse,TEMPORAL_Narration_same story,338102,338082
+discourse,TEMPORAL_Narration_same story,338107,338102
+discourse,EXPANSION_Elaboration_summary,338111,338107
+discourse,EXPANSION_Answer_,338118,338111
+discourse,TEMPORAL_Narration_same story,338120,338118
+discourse,TEMPORAL_Narration_same story,338126,338120
+discourse,TEMPORAL_Asynchronous_precedence,338131,338133
+discourse,TEMPORAL_Narration_same story,338133,337980
+discourse,ATTRIBUTION_Content_speech content,338136,338133
+discourse,TEMPORAL_Narration_same story,338140,338133
+discourse,TEMPORAL_Narration_same story,338142,338140
+discourse,ATTRIBUTION_Content_speech content,338146,338142
+discourse,EXPANSION_Elaboration_characterization,338153,338158
+discourse,ATTRIBUTION_Content_verbal non-speech content,338158,338148
+discourse,TEMPORAL_Continuation_,338170,338146
+discourse,EXPANSION_Elaboration_characterization,338176,338178
+discourse,COMPARISON_Juxtaposition_parallel,338178,338170
+discourse,TEMPORAL_Narration_same story,338182,338142
+discourse,TEMPORAL_Narration_same story,338199,338182
+discourse,TEMPORAL_Continuation_,338199,338182
+discourse,CONTINGENCY_Cause_reason,338203,338199
+discourse,ATTRIBUTION_Content_Non-verbal content,338208,338203
+discourse,TEMPORAL_Narration_same story,338214,338199
+discourse,TEMPORAL_Narration_same story,338215,338214
+discourse,ATTRIBUTION_Content_Non-verbal content,338220,338217
+discourse,CONTINGENCY_Purpose_,338223,338215
+discourse,CONTINGENCY_Purpose_,338228,338223
+discourse,TEMPORAL_Narration_same story,338239,338215
+discourse,TEMPORAL_Coincidence_means,338241,338239
+discourse,ATTRIBUTION_Expressive_speech expressive,338243,338241
+discourse,ATTRIBUTION_Content_speech content,338245,338241
+discourse,ATTRIBUTION_Content_Non-verbal content,338248,338245
+discourse,TEMPORAL_Continuation_,338250,338248
+discourse,TEMPORAL_Continuation_,338253,338250
+discourse,COMPARISON_Juxtaposition_contrast,338263,338253
+discourse,TEMPORAL_Continuation_,338265,338245
+discourse,CONTINGENCY_Result_pragmatic result,338265,338245
+discourse,EXPANSION_Alternative_disjunctive,398588,338265
+discourse,TEMPORAL_Narration_same story,338273,338239
+discourse,TEMPORAL_Narration_same story,338278,338273
+discourse,ATTRIBUTION_Content_speech content,338282,338278
+discourse,TEMPORAL_Continuation_,338287,338282
+discourse,TEMPORAL_Narration_same story,338294,338278
+discourse,ATTRIBUTION_Content_speech content,398589,338294
+discourse,TEMPORAL_Narration_same story,338300,338294
+discourse,ATTRIBUTION_Content_speech content,338305,338300
+discourse,COMPARISON_Juxtaposition_parallel,398590,338305
+discourse,TEMPORAL_Narration_same story,338318,338300
+discourse,TEMPORAL_Synchronous_circumstance,338327,338332
+discourse,TEMPORAL_Narration_same story,338332,338318
+discourse,TEMPORAL_Narration_new story,338334,338332
+discourse,EXPANSION_Elaboration_characterization,338341,338334
+discourse,ATTRIBUTION_Content_Non-verbal content,338344,338341
+discourse,TEMPORAL_Narration_same story,338346,338334
+discourse,TEMPORAL_Coincidence_means,338348,338346
+discourse,ATTRIBUTION_Expressive_speech expressive,338350,338348
+discourse,EXPANSION_Elaboration_background,338353,338385
+discourse,CONTINGENCY_Condition_hypothetical,338359,338369
+discourse,TEMPORAL_Synchronous_circumstance,338360,338359
+discourse,TEMPORAL_Continuation_,338366,338359
+discourse,ATTRIBUTION_Content_verbal non-speech content,338369,338353
+discourse,TEMPORAL_Narration_same story,338376,338369
+discourse,ATTRIBUTION_Content_speech content,338385,338348
+discourse,TEMPORAL_Narration_same story,338390,338385
+discourse,TEMPORAL_Narration_same story,338392,338390
+discourse,TEMPORAL_Narration_same story,338401,338392
+discourse,TEMPORAL_Narration_same story,338410,338401
+discourse,TEMPORAL_Continuation_,338413,338410
+discourse,TEMPORAL_Narration_same story,338419,338413
+discourse,EXPANSION_Elaboration_summary,338429,338419
+discourse,CONTINGENCY_Cause_pragmatic cause,338435,338429
+discourse,TEMPORAL_Narration_same story,338440,338346
+discourse,ATTRIBUTION_Content_speech content,338450,338440
+discourse,TEMPORAL_Continuation_,338452,338450
+discourse,COMPARISON_Juxtaposition_contrast,338468,338450
+discourse,TEMPORAL_Continuation_,338470,338468
+discourse,CONTINGENCY_Cause_reason,338476,338470
+discourse,CONTINGENCY_Cause_reason,338480,338476
+discourse,TEMPORAL_Continuation_,338484,338476
+discourse,TEMPORAL_Synchronous_circumstance,338489,338484
+discourse,ATTRIBUTION_Content_Non-verbal content,338493,338499
+discourse,TEMPORAL_Continuation_,338499,338470
+discourse,TEMPORAL_Coincidence_means,338505,338499
+discourse,CONTINGENCY_Cause_reason,338520,338499
+discourse,CONTINGENCY_Cause_reason,338528,338520
+discourse,TEMPORAL_Narration_same story,338530,338440
+discourse,TEMPORAL_Continuation_,338535,338530
+discourse,ATTRIBUTION_Expressive_speech expressive,338537,338535
+discourse,ATTRIBUTION_Content_speech content,338540,338535
+discourse,CONTINGENCY_Cause_reason,338544,338535
+discourse,TEMPORAL_Narration_same story,338549,338535
+discourse,ATTRIBUTION_Content_speech content,338555,338549
+discourse,ATTRIBUTION_Content_speech content,338558,338555
+discourse,CONTINGENCY_Cause_pragmatic cause,338565,338555
+discourse,ATTRIBUTION_Content_verbal non-speech content,338570,338565
+discourse,ATTRIBUTION_Content_speech content,338577,338570
+discourse,TEMPORAL_Asynchronous_succession,338583,338577
+discourse,EXPANSION_Restatement_equivalence,338596,338565
+discourse,CONTINGENCY_Result_pragmatic result,338602,338596
+discourse,TEMPORAL_Synchronous_overlap,338604,338609
+discourse,TEMPORAL_Narration_new story,338609,338549
+discourse,ATTRIBUTION_Content_speech content,338613,338609
+discourse,ATTRIBUTION_Content_Non-verbal content,338619,338618
+discourse,EXPANSION_Elaboration_characterization,338640,338613
+discourse,TEMPORAL_Continuation_,338648,338640
+discourse,CONTINGENCY_Cause_,338651,338613
+discourse,TEMPORAL_Narration_same story,338657,338655
+discourse,TEMPORAL_Continuation_,338668,338657
+discourse,TEMPORAL_Narration_same story,338668,338657
+discourse,TEMPORAL_Narration_same story,338679,338668
+discourse,ATTRIBUTION_Content_speech content,338682,338679
+discourse,ATTRIBUTION_Content_speech content,338692,338682
+discourse,CONTINGENCY_Cause_,338701,338692
+discourse,COMPARISON_Juxtaposition_contrast,338717,338701
+discourse,TEMPORAL_Synchronous_overlap,338721,338733
+discourse,ATTRIBUTION_Content_speech content,338731,338721
+discourse,TEMPORAL_Narration_new story,338733,338679
+discourse,ATTRIBUTION_Content_speech content,790463,338733
+discourse,EXPANSION_Elaboration_characterization,790468,790463
+discourse,EXPANSION_Elaboration_characterization,790474,790468
+discourse,TEMPORAL_Narration_same story,338753,338733
+discourse,TEMPORAL_Coincidence_means,338756,338753
+discourse,ATTRIBUTION_Expressive_speech expressive,338758,338756
+discourse,ATTRIBUTION_Content_speech content,338763,338756
+discourse,TEMPORAL_Synchronous_overlap,338770,398593
+discourse,TEMPORAL_Asynchronous_succession,338770,398593
+discourse,TEMPORAL_Continuation_,398593,338763
+discourse,EXPANSION_Addition_,398593,338763
+discourse,TEMPORAL_Narration_same story,338776,338753
+discourse,ATTRIBUTION_Content_speech content,338778,338776
+discourse,CONTINGENCY_Cause_,338784,338778
+discourse,TEMPORAL_Synchronous_circumstance,338790,338784
+discourse,ATTRIBUTION_Content_speech content,338793,338790
+discourse,TEMPORAL_Continuation_,338798,338793
+discourse,TEMPORAL_Continuation_,338801,338778
+discourse,TEMPORAL_Asynchronous_precedence,338807,338813
+discourse,TEMPORAL_Continuation_,338813,338801
+discourse,CONTINGENCY_Cause_,338815,338813
+discourse,COMPARISON_Juxtaposition_contrast,398594,338815
+discourse,TEMPORAL_Narration_same story,338828,338776
+discourse,ATTRIBUTION_Content_speech content,338831,338828
+discourse,COMPARISON_Juxtaposition_parallel,398595,338831
+discourse,COMPARISON_Juxtaposition_parallel,338849,790288
+discourse,TEMPORAL_Continuation_,790288,398595
+discourse,COMPARISON_Juxtaposition_parallel,338858,338849
+discourse,TEMPORAL_Continuation_,338864,338858
+discourse,TEMPORAL_Narration_same story,338871,338864
+discourse,TEMPORAL_Coincidence_means,338873,338871
+discourse,TEMPORAL_Continuation_,338880,338873
+discourse,CONTINGENCY_Result_real result,338890,338871
+discourse,CONTINGENCY_Result_pragmatic result,338895,338890
+discourse,ATTRIBUTION_Content_Non-verbal content,338902,338895
+discourse,CONTINGENCY_Cause_,338907,338895
+discourse,TEMPORAL_Narration_same story,338924,338890
+discourse,TEMPORAL_Narration_same story,338937,338924
+discourse,COMPARISON_Concession_,338942,338959
+discourse,TEMPORAL_Continuation_,338959,338937
+discourse,TEMPORAL_Continuation_,338965,338959
+discourse,TEMPORAL_Asynchronous_precedence,338972,338979
+discourse,ATTRIBUTION_Content_Non-verbal content,338973,338972
+discourse,TEMPORAL_Continuation_,338979,338965
+discourse,ATTRIBUTION_Content_Non-verbal content,338981,338979
+discourse,TEMPORAL_Narration_same story,338991,338979
+discourse,COMPARISON_Juxtaposition_parallel,339001,338991
+discourse,COMPARISON_Juxtaposition_parallel,339009,339001
+discourse,CONTINGENCY_Cause_,339017,338991
+discourse,CONTINGENCY_Purpose_,339019,339017
+discourse,TEMPORAL_Continuation_,339024,339009
+discourse,CONTINGENCY_Cause_reason,339037,339024
+discourse,TEMPORAL_Narration_same story,339051,398596
+discourse,EXPANSION_Restatement_specification,339051,339037
+discourse,TEMPORAL_Continuation_,339055,339051
+discourse,TEMPORAL_Continuation_,339063,339055
+discourse,TEMPORAL_Asynchronous_succession,339070,339063
+discourse,COMPARISON_Juxtaposition_parallel,398596,339037
+discourse,TEMPORAL_Continuation_,339075,339063
+discourse,TEMPORAL_Synchronous_circumstance,339097,398597
+discourse,COMPARISON_Juxtaposition_parallel,398597,339075
+discourse,CONTINGENCY_Cause_reason,339113,398597
+discourse,TEMPORAL_Narration_same story,339117,398597
+discourse,ATTRIBUTION_Content_Non-verbal content,339122,339117
+discourse,TEMPORAL_Synchronous_overlap,339131,339135
+discourse,TEMPORAL_Continuation_,339135,339117
+discourse,TEMPORAL_Narration_same story,339137,339135
+discourse,CONTINGENCY_Cause_,339143,339137
+discourse,TEMPORAL_Narration_same story,339149,338828
+discourse,ATTRIBUTION_Content_speech content,339153,339149
+discourse,CONTINGENCY_Condition_general,339162,339165
+discourse,TEMPORAL_Synchronous_circumstance,339165,339168
+discourse,EXPANSION_Restatement_generalization,339168,339153
+discourse,ATTRIBUTION_Content_Non-verbal content,339174,339168
+discourse,TEMPORAL_Asynchronous_precedence,339181,339185
+discourse,COMPARISON_Juxtaposition_parallel,339185,339168
+discourse,ATTRIBUTION_Content_Non-verbal content,339188,339185
+discourse,ATTRIBUTION_Expressive_speech expressive,339194,339149
+discourse,TEMPORAL_Continuation_,339195,339185
+discourse,ATTRIBUTION_Content_speech content,339200,339195
+discourse,TEMPORAL_Asynchronous_succession,339207,339200
+discourse,COMPARISON_Concession_,339214,339222
+discourse,COMPARISON_Juxtaposition_parallel,339222,339200
+discourse,TEMPORAL_Continuation_,339224,339222
+discourse,CONTINGENCY_Purpose_,339228,339224
+discourse,CONTINGENCY_Result_real result,339241,339228
+discourse,CONTINGENCY_Cause_,339251,339224
+discourse,EXPANSION_Restatement_,339263,339224
+discourse,TEMPORAL_Synchronous_circumstance,339268,339263
+discourse,ATTRIBUTION_Content_speech content,339270,339268
+discourse,TEMPORAL_Narration_new story,339286,339149
+discourse,COMPARISON_Juxtaposition_contrast,339298,339286
+discourse,TEMPORAL_Narration_same story,339299,339298
+discourse,TEMPORAL_Continuation_,339311,339299
+discourse,CONTINGENCY_Purpose_,339317,339311

@@ -1,7 +1,0 @@
-<li>
-  <% if page.current? %>
-    <%= link_to page, "#", class: 'button is-primary' %>
-  <% else %>
-    <%= link_to_unless page.current?, page, url, {:remote => remote, :rel => page.next? ? 'next' : page.prev? ? 'prev' : nil, class: 'button' } %>
-  <% end %>
-</li>

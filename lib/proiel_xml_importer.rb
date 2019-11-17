@@ -1,9 +1,8 @@
-# encoding: UTF-8
 #--
 #
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 University of Oslo
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Marius L. Jøhndal
-# Copyright 2007, 2008, 2009, 2010, 2011, 2012 Dag Haug
+# Copyright 2007-2015 University of Oslo
+# Copyright 2007-2019 Marius L. Jøhndal
+# Copyright 2007-2012 Dag Haug
 #
 # This file is part of the PROIEL web application.
 #
@@ -21,21 +20,14 @@
 # <http://www.gnu.org/licenses/>.
 #
 #++
-
 require 'nori'
 
 class PROIELXMLImporter
-  SUPPORTED_SCHEMA_VERSION = '2.0'
+  SUPPORTED_SCHEMA_VERSIONS = %w(2.0 2.1)
 
   def read(file_name, options = {})
     File.open(file_name, 'r') do |file|
       Source.transaction do
-        Source.disable_auditing
-        SourceDivision.disable_auditing
-        Sentence.disable_auditing
-        Token.disable_auditing
-        Lemma.disable_auditing
-
         parse(file, options)
       end
     end
@@ -113,7 +105,7 @@ class PROIELXMLImporter
     top_level = data['proiel']
 
     schema_version = top_level['@schema_version']
-    raise ArgumentError, "unsupported PROIEL XML version" unless schema_version == SUPPORTED_SCHEMA_VERSION
+    raise ArgumentError, "unsupported PROIEL XML version" unless SUPPORTED_SCHEMA_VERSIONS.include?(schema_version)
 
     # Verify annotation scheme
     annotation = top_level['annotation']
@@ -128,11 +120,6 @@ class PROIELXMLImporter
     # Process sources
     arrify(top_level['source']).each_with_index do |source, source_position|
       Source.transaction do
-        Source.disable_auditing
-        SourceDivision.disable_auditing
-        Sentence.disable_auditing
-        Token.disable_auditing
-
         token_id_map = {} # map imported token IDs to database token IDs
         code = source['@id']
 

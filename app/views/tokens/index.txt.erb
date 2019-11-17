@@ -1,5 +1,0 @@
-<%- if @search.result %>
-<%- @search.result.find_each do |t| %>
-<%=raw "#{t.sentence.id} (#{t.citation}): #{t.sentence_context_to_s.join('*')}" %>
-<% end %>
-<% end %>
