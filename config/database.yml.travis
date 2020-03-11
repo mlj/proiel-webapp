@@ -1,0 +1,16 @@
+mysql: &mysql
+  adapter: mysql2
+
+production:
+  database: proiel
+  <<: *mysql
+
+development:
+  database: proiel
+  <<: *mysql
+
+test:
+  adapter: sqlite3
+  database: db/test.sqlite3
+  pool: 5
+  timeout: 5000

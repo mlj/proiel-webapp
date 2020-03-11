@@ -11,7 +11,5 @@ before_install:
   - gem install bundler:2.1.4
 before_script:
   - cp config/database.yml.travis config/database.yml
-  - bin/rake db:setup
 script:
-  - bin/rails test
-  - bin/rspec
+  - bundle exec bin/proiel-webapp
