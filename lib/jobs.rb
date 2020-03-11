@@ -145,13 +145,11 @@ module Proiel
           error { "token #{o.id} is reviewed but relation_tag is NULL" }
         end
 
-        print("M")
-#        Token.joins(:sentence, :lemma).where('sentences.status_tag = "reviewed"').where('morphology_tag IS NOT NULL').each do |o|
-#          unless MorphFeatures.new([o.lemma.export_form, o.part_of_speech_tag, o.language_tag].join(','), o.morphology_tag).valid?
-#            error { "token #{o.id} is reviewed and has morphology_tag but morphology_tag is invalid" }
-#          end
-#        end
-        print("D")
+        Token.joins(:sentence, :lemma).where('sentences.status_tag = "reviewed"').where('morphology_tag IS NOT NULL').each do |o|
+          unless MorphFeatures.new([o.lemma.export_form, o.part_of_speech_tag, o.language_tag].join(','), o.morphology_tag).valid?
+            error { "token #{o.id} is reviewed and has morphology_tag but morphology_tag is invalid" }
+          end
+        end
       end
 
       def check_sentences
