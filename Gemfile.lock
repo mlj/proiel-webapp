@@ -1,17 +1,18 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (6.0.2.1)
-      activesupport (= 6.0.2.1)
-    activerecord (6.0.2.1)
-      activemodel (= 6.0.2.1)
-      activesupport (= 6.0.2.1)
-    activesupport (6.0.2.1)
+    activemodel (5.2.4.1)
+      activesupport (= 5.2.4.1)
+    activerecord (5.2.4.1)
+      activemodel (= 5.2.4.1)
+      activesupport (= 5.2.4.1)
+      arel (>= 9.0)
+    activesupport (5.2.4.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-      zeitwerk (~> 2.2)
+    arel (9.0.0)
     builder (3.2.4)
     colorize (0.8.1)
     concurrent-ruby (1.1.6)
@@ -25,7 +26,7 @@ GEM
     memoist (0.16.2)
     mini_portile2 (2.4.0)
     minitest (5.14.0)
-    mysql2 (0.5.3)
+    mysql2 (0.4.10)
     nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
     nori (2.6.0)
@@ -61,17 +62,16 @@ GEM
     tzinfo (1.2.6)
       thread_safe (~> 0.1)
     unicode (0.4.4.4)
-    zeitwerk (2.3.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord
+  activerecord (~> 5.2.0)
   builder
   colorize
   factory_girl
-  mysql2
+  mysql2 (~> 0.4.0)
   nokogiri
   nori
   proiel

@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'activerecord'
+# Stay with activerecord 5.x to keep support for MySQL < 5.5.8
+gem 'activerecord', '~> 5.2.0'
 gem 'builder'
 gem 'colorize'
 gem 'nokogiri'
