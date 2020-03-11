@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
 gem 'activerecord'
-gem 'builder' # builder is faster than Nokogiri's built-in builder
+gem 'builder'
 gem 'colorize'
 gem 'nokogiri'
 gem 'nori'
-gem 'proiel', '~> 1.3.0'
+gem 'proiel'
 gem 'unicode'
 gem 'tzinfo'
 
