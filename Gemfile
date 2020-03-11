@@ -10,7 +10,8 @@ gem 'unicode'
 gem 'tzinfo'
 
 group :production, :development do
-  gem 'mysql2'
+  # Stay on 0.4 to keep support for MySQL < 5.5
+  gem 'mysql2', '~> 0.4.0'
 end
 
 group :test do
