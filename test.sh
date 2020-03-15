@@ -4,6 +4,7 @@ set -e
 ./bin/proiel-webapp check
 
 rm -f output/greeknt.xml && ./bin/proiel-webapp export text 1 output/greeknt.xml
+rm -f output/greeknt.xml && ./bin/proiel-webapp export text 73 output/pl-am.xml
 
 rm -f output/dependency_alignments.txt && ./bin/proiel-webapp export dependency_alignments output/dependency_alignments.txt
 rm -f output/inflections.txt && ./bin/proiel-webapp export inflections output/inflections.txt
