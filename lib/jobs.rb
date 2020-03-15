@@ -121,6 +121,7 @@ module Proiel
           error { "token #{o.id} is empty but has source_lemma" }
         end
 
+        # TODO: Check lemma.lemma is not null
         Token.where('morphology_tag IS NOT NULL').where('lemma_id IS NULL').each do |o|
           error { "token #{o.id} has morphology but not lemma" }
         end
@@ -145,9 +146,16 @@ module Proiel
           error { "token #{o.id} is reviewed but relation_tag is NULL" }
         end
 
-        Token.joins(:sentence, :lemma).where('sentences.status_tag = "reviewed"').where('morphology_tag IS NOT NULL').each do |o|
-          unless MorphFeatures.new([o.lemma.export_form, o.part_of_speech_tag, o.language_tag].join(','), o.morphology_tag).valid?
-            error { "token #{o.id} is reviewed and has morphology_tag but morphology_tag is invalid" }
+        # TODO: Check lemma.language_tag and token.language_tag consistency
+        Token.joins(:sentence, :lemma).where('sentences.status_tag = "reviewed"').where('morphology_tag IS NOT NULL').select(%i(lemma_id morphology_tag)).distinct.each do |t|
+          language_tag = t.lemma.language_tag.to_sym
+          full_tag = t.lemma.part_of_speech_tag + t.morphology_tag
+          unless MorphtagConstraints.instance.is_valid?(full_tag, language_tag)
+            morphology_tag = t.morphology_tag
+            lemma_id = t.lemma_id
+            Token.joins(:sentence, :lemma).where('sentences.status_tag = "reviewed"').where(morphology_tag: morphology_tag, lemma_id: lemma_id).find_each do |t|
+              error { "token #{t.id} is reviewed and has morphology_tag but (part_of_speech_tag, morphology_tag) = #{full_tag} is invalid for language #{language_tag}" }
+            end
           end
         end
       end

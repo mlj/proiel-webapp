@@ -1,19 +1,19 @@
 #!/bin/sh
 set -e
 
-./bin/proiel-webapp check
+bundle exec bundle exec bin/proiel-webapp check
 
-rm -f output/greeknt.xml && ./bin/proiel-webapp export text 1 output/greeknt.xml
-rm -f output/greeknt.xml && ./bin/proiel-webapp export text 73 output/pl-am.xml
+rm -f output/greeknt.xml && bundle exec bin/proiel-webapp export text 1 output/greeknt.xml
+rm -f output/greeknt.xml && bundle exec bin/proiel-webapp export text 73 output/pl-am.xml
 
-rm -f output/dependency_alignments.txt && ./bin/proiel-webapp export dependency_alignments output/dependency_alignments.txt
-rm -f output/inflections.txt && ./bin/proiel-webapp export inflections output/inflections.txt
-rm -f output/information_statuses.txt && ./bin/proiel-webapp export information_statuses output/information_statuses.txt
-rm -f output/morphology.txt && ./bin/proiel-webapp export morphology output/morphology.txt
-rm -f output/notes.txt && ./bin/proiel-webapp export notes output/notes.txt
-rm -f output/semantic_relations.txt && ./bin/proiel-webapp export semantic_relations output/semantic_relations.txt
-rm -f output/semantic_tags.txt && ./bin/proiel-webapp export semantic_tags output/semantic_tags.txt
-rm -f output/token_alignments.txt && ./bin/proiel-webapp export token_alignments output/token_alignments.txt
+rm -f output/dependency_alignments.txt && bundle exec bin/proiel-webapp export dependency_alignments output/dependency_alignments.txt
+rm -f output/inflections.txt && bundle exec bin/proiel-webapp export inflections output/inflections.txt
+rm -f output/information_statuses.txt && bundle exec bin/proiel-webapp export information_statuses output/information_statuses.txt
+rm -f output/morphology.txt && bundle exec bin/proiel-webapp export morphology output/morphology.txt
+rm -f output/notes.txt && bundle exec bin/proiel-webapp export notes output/notes.txt
+rm -f output/semantic_relations.txt && bundle exec bin/proiel-webapp export semantic_relations output/semantic_relations.txt
+rm -f output/semantic_tags.txt && bundle exec bin/proiel-webapp export semantic_tags output/semantic_tags.txt
+rm -f output/token_alignments.txt && bundle exec bin/proiel-webapp export token_alignments output/token_alignments.txt
 
 exit
 

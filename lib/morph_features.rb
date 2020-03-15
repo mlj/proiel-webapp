@@ -189,9 +189,9 @@ class MorphFeatures
     @lemma.language.to_s
   end
 
-  def valid?
-    @lemma.lemma and @lemma.part_of_speech and @morphology and MorphtagConstraints.instance.is_valid?(pos_s + morphology_s, language_s.to_sym)
-  end
+  #def valid?
+  #  @lemma.lemma and @lemma.part_of_speech and @morphology and MorphtagConstraints.instance.is_valid?(pos_s + morphology_s, language_s.to_sym)
+  #end
 
   # Generates all possible completions of the possibly incomplete tag.
   def completions

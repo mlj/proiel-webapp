@@ -367,18 +367,6 @@ class Lemma < ActiveRecord::Base
   def export_form
     self.variant ? "#{self.lemma}##{self.variant}" : self.lemma
   end
-
-# def morph_features
-#   MorphFeatures.new(self, nil)
-# end
-#
-# def to_s
-#   [export_form, part_of_speech.to_s].join(',')
-# end
-#
-# def language_name
-#   LanguageTag.new(language_tag).try(:name)
-# end
 end
 
 class SemanticTag < ActiveRecord::Base
@@ -610,36 +598,36 @@ class Source < ActiveRecord::Base
 #   language.name
 # end
 
-# Returns a generated metadata field containing the names of all annotators
-# and the number of sentences each has annotated.
-def annotator
-  Sentence.
-    includes(:source_division, :annotator).
-    where("source_divisions.source_id" => self).
-    where("annotated_by IS NOT NULL").
-    group(:annotator).
-    count.
-    sort_by { |u, n| -n }.
-    map { |u, n| [u.full_name, "#{n} sentence".pluralize(n)] }.
-    map { |u, n| "#{u} (#{n})" }.
-    to_sentence
-end
+  # Returns a generated metadata field containing the names of all annotators
+  # and the number of sentences each has annotated.
+  def annotator
+    Sentence.
+      includes(:source_division, :annotator).
+      where("source_divisions.source_id" => self).
+      where("annotated_by IS NOT NULL").
+      group(:annotator).
+      count.
+      sort_by { |u, n| -n }.
+      map { |u, n| [u.full_name, "#{n} sentence".pluralize(n)] }.
+      map { |u, n| "#{u} (#{n})" }.
+      to_sentence
+  end
 
-# Returns a generated metadata field containing the names of all reviewers
-# and the number of sentences each has reviewed.
-def reviewer
-  Sentence.
-    includes(:source_division, :reviewer).
-    where("source_divisions.source_id" => self).
-    where("reviewed_by IS NOT NULL").
-    group(:reviewer).
-    count.
-    sort_by { |u, n| -n }.
-    map { |u, n| [u.full_name, "#{n} sentence".pluralize(n)] }.
-    map { |u, n| "#{u} (#{n})" }.
-    to_sentence
-end
-#
+  # Returns a generated metadata field containing the names of all reviewers
+  # and the number of sentences each has reviewed.
+  def reviewer
+    Sentence.
+      includes(:source_division, :reviewer).
+      where("source_divisions.source_id" => self).
+      where("reviewed_by IS NOT NULL").
+      group(:reviewer).
+      count.
+      sort_by { |u, n| -n }.
+      map { |u, n| [u.full_name, "#{n} sentence".pluralize(n)] }.
+      map { |u, n| "#{u} (#{n})" }.
+      to_sentence
+  end
+
 # # Generates a human-readable ID for the source.
 # def human_readable_id
 #   code
