@@ -1,7 +1,7 @@
 #--
 #
 # Copyright 2007-2016 University of Oslo
-# Copyright 2007-2019 Marius L. Jøhndal
+# Copyright 2007-2020 Marius L. Jøhndal
 # Copyright 2010-2012 Dag Haug
 #
 # This file is part of the PROIEL web application.
@@ -610,35 +610,35 @@ class Source < ActiveRecord::Base
 #   language.name
 # end
 
-# # Returns a generated metadata field containing the names of all annotators
-# # and the number of sentences each has annotated.
-# def annotator
-#   Sentence.
-#     includes(:source_division, :annotator).
-#     where("source_divisions.source_id" => self).
-#     where("annotated_by IS NOT NULL").
-#     group(:annotator).
-#     count.
-#     sort_by { |u, n| -n }.
-#     map { |u, n| [u.full_name, "#{n} sentence".pluralize(n)] }.
-#     map { |u, n| "#{u} (#{n})" }.
-#     to_sentence
-# end
-#
-# # Returns a generated metadata field containing the names of all reviewers
-# # and the number of sentences each has reviewed.
-# def reviewer
-#   Sentence.
-#     includes(:source_division, :reviewer).
-#     where("source_divisions.source_id" => self).
-#     where("reviewed_by IS NOT NULL").
-#     group(:reviewer).
-#     count.
-#     sort_by { |u, n| -n }.
-#     map { |u, n| [u.full_name, "#{n} sentence".pluralize(n)] }.
-#     map { |u, n| "#{u} (#{n})" }.
-#     to_sentence
-# end
+# Returns a generated metadata field containing the names of all annotators
+# and the number of sentences each has annotated.
+def annotator
+  Sentence.
+    includes(:source_division, :annotator).
+    where("source_divisions.source_id" => self).
+    where("annotated_by IS NOT NULL").
+    group(:annotator).
+    count.
+    sort_by { |u, n| -n }.
+    map { |u, n| [u.full_name, "#{n} sentence".pluralize(n)] }.
+    map { |u, n| "#{u} (#{n})" }.
+    to_sentence
+end
+
+# Returns a generated metadata field containing the names of all reviewers
+# and the number of sentences each has reviewed.
+def reviewer
+  Sentence.
+    includes(:source_division, :reviewer).
+    where("source_divisions.source_id" => self).
+    where("reviewed_by IS NOT NULL").
+    group(:reviewer).
+    count.
+    sort_by { |u, n| -n }.
+    map { |u, n| [u.full_name, "#{n} sentence".pluralize(n)] }.
+    map { |u, n| "#{u} (#{n})" }.
+    to_sentence
+end
 #
 # # Generates a human-readable ID for the source.
 # def human_readable_id
@@ -1005,4 +1005,9 @@ class User < ActiveRecord::Base
   has_many :audits, :class_name => 'Audited::Audit'
   has_many :notes, :as => :originator
   store :preferences, accessors: [:graph_method]
+
+  # Returns the user's full name.
+  def full_name
+    "#{first_name} #{last_name}"
+  end
 end
