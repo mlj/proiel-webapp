@@ -3,8 +3,8 @@ set -e
 
 bundle exec bundle exec bin/proiel-webapp check
 
-rm -f output/greeknt.xml && bundle exec bin/proiel-webapp export text 1 output/greeknt.xml
-rm -f output/greeknt.xml && bundle exec bin/proiel-webapp export text 73 output/pl-am.xml
+rm -f output/greek-nt.xml && bundle exec bin/proiel-webapp export text 1 output/greek-nt.xml
+rm -f output/pl-am.xml && bundle exec bin/proiel-webapp export text 73 output/pl-am.xml
 
 rm -f output/dependency_alignments.txt && bundle exec bin/proiel-webapp export dependency_alignments output/dependency_alignments.txt
 rm -f output/inflections.txt && bundle exec bin/proiel-webapp export inflections output/inflections.txt

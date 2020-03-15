@@ -23,29 +23,10 @@
 module Proiel
   module Jobs
     class DatabaseChecker < Job
-      PERSISTED_MODELS = [
-        DependencyAlignmentTerm,
-        ImportSource,
-        Inflection,
-        Lemma,
-        Note,
-        SemanticAttribute,
-        SemanticAttributeValue,
-        SemanticRelation,
-        SemanticRelationType,
-        Sentence,
-        SlashEdge,
-        Source,
-        SourceDivision,
-        Token,
-        User,
-      ]
-
       def run_once!
         check_lemmata
         check_tokens
         check_sentences
-        check_persisted_models
       end
 
       # TODO: move to job and keep this as an error
@@ -191,25 +172,6 @@ module Proiel
 
         reviewed_sentences.where('reviewed_at IS NULL').each do |o|
           @logger.error { "#{self.class}: Sentence #{o.id} is tagged as reviewed but reviewed_at is missing" }
-        end
-      end
-
-      def check_persisted_models
-        PERSISTED_MODELS.each do |klass|
-          puts "Validating #{klass}..."
-          klass.find_each do |record|
-            unless record.valid?
-              case record
-              when Sentence
-                @logger.error { "#{self.class}: #{record.class} in database fails validation: id=#{record.id} (#{record.is_reviewed? ? 'Reviewed' : 'Not reviewed'})" }
-              else
-                @logger.error { "#{self.class}: #{record.class} in database fails validation: id=#{record.id}" }
-              end
-              record.errors.full_messages do |message|
-                @logger.error { "#{self.class}: #{message}" }
-              end
-            end
-          end
         end
       end
     end

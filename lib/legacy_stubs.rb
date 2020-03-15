@@ -685,12 +685,11 @@ class Source < ActiveRecord::Base
 end
 
 class Token < ActiveRecord::Base
-  blankable_attributes :antecedent_id, :automatic_token_alignment,
-    :contrast_group, :dependency_alignment_id, :empty_token_sort, :foreign_ids,
-    :form, :head_id, :information_status_tag, :lemma_id, :morphology_tag,
-    :presentation_after, :presentation_before, :relation_tag, :source_lemma,
-    :source_morphology_tag, :token_alignment_id
-
+  #blankable_attributes :antecedent_id, :automatic_token_alignment,
+  #  :contrast_group, :dependency_alignment_id, :empty_token_sort, :foreign_ids,
+  #  :form, :head_id, :information_status_tag, :lemma_id, :morphology_tag,
+  #  :presentation_after, :presentation_before, :relation_tag, :source_lemma,
+  #  :source_morphology_tag, :token_alignment_id
   belongs_to :antecedent, :class_name => 'Token', :foreign_key => 'antecedent_id'
   belongs_to :dependency_alignment, :class_name => 'Token', :foreign_key => 'dependency_alignment_id'
   belongs_to :head, :class_name => 'Token'
@@ -771,30 +770,30 @@ class Token < ActiveRecord::Base
     end
   end
 
-  # Sets the morphological features for the token. Executes a +save!+
-  # on the token object, which will result in validation of all token
-  # attributes. Will also create a new Lemma object if necessary.
-  # Returns the morphological features. It is guaranteed that no
-  # updating will take place if the morph-features are unchanged.
-  def morph_features=(f)
-    Token.transaction do
-      if f.nil?
-        self.morphology = nil
-        self.lemma = nil
-        self.save!
-      elsif f.is_a?(String)
-        s1, s2, s3, s4 = f.split(',')
-        self.morph_features = MorphFeatures.new([s1, s2, s3].join(','), s4)
-      elsif self.morphology != f.morphology or f.lemma.new_record? or f.lemma != self.lemma
-        self.morphology = f.morphology
-        f.lemma.save! if f.lemma.new_record?
-        self.lemma = f.lemma
-        self.save!
-      end
-    end
-
-    f
-  end
+  # # Sets the morphological features for the token. Executes a +save!+
+  # # on the token object, which will result in validation of all token
+  # # attributes. Will also create a new Lemma object if necessary.
+  # # Returns the morphological features. It is guaranteed that no
+  # # updating will take place if the morph-features are unchanged.
+  # def morph_features=(f)
+  #   Token.transaction do
+  #     if f.nil?
+  #       self.morphology = nil
+  #       self.lemma = nil
+  #       self.save!
+  #     elsif f.is_a?(String)
+  #       s1, s2, s3, s4 = f.split(',')
+  #       self.morph_features = MorphFeatures.new([s1, s2, s3].join(','), s4)
+  #     elsif self.morphology != f.morphology or f.lemma.new_record? or f.lemma != self.lemma
+  #       self.morphology = f.morphology
+  #       f.lemma.save! if f.lemma.new_record?
+  #       self.lemma = f.lemma
+  #       self.save!
+  #     end
+  #   end
+  #
+  #   f
+  # end
 
   # Returns the source morphological features for the token or nil if
   # none are set.
@@ -810,27 +809,27 @@ class Token < ActiveRecord::Base
     end
   end
 
-  # Sets the source morphological features for the token. Executes a
-  # +save!+ on the token object, which will result in validation of
-  # all token attributes.  Returns the morphological features. It is
-  # guaranteed that no updating will take place if the morph-features
-  # are unchanged.
-  def source_morph_features=(f)
-    Token.transaction do
-      if f.nil?
-        self.source_morphology_tag = nil
-        self.source_lemma = nil
-        self.save!
-      elsif f.is_a?(String)
-        s1, s2, s3, s4 = f.split(',')
-        self.source_morph_features = MorphFeatures.new([s1, s2, s3].join(','), s4)
-      elsif self.source_morphology_tag != f.morphology or f.lemma_s != self.source_lemma
-        self.source_morphology_tag = f.morphology
-        self.source_lemma = f.lemma_s
-        self.save!
-      end
-    end
-  end
+  # # Sets the source morphological features for the token. Executes a
+  # # +save!+ on the token object, which will result in validation of
+  # # all token attributes.  Returns the morphological features. It is
+  # # guaranteed that no updating will take place if the morph-features
+  # # are unchanged.
+  # def source_morph_features=(f)
+  #   Token.transaction do
+  #     if f.nil?
+  #       self.source_morphology_tag = nil
+  #       self.source_lemma = nil
+  #       self.save!
+  #     elsif f.is_a?(String)
+  #       s1, s2, s3, s4 = f.split(',')
+  #       self.source_morph_features = MorphFeatures.new([s1, s2, s3].join(','), s4)
+  #     elsif self.source_morphology_tag != f.morphology or f.lemma_s != self.source_lemma
+  #       self.source_morphology_tag = f.morphology
+  #       self.source_lemma = f.lemma_s
+  #       self.save!
+  #     end
+  #   end
+  # end
 
   MorphFeatures::POS_PREDICATES.keys.each do |k|
     next if k == :verb? or k == :conjunction?

@@ -89,7 +89,7 @@ module Proiel::Maintenance
       else
         raise ArgumentError, 'source ID expected' unless id.is_a?(String) or id.is_a?(Numeric)
         raise ArgumentError, 'filename expected' unless filename.is_a?(String)
-        raise ArgumentError, 'file already exists' if File.exists?(filename)
+        raise ArgumentError, "file #{filename} already exists" if File.exists?(filename)
 
         source = Source.find(id)
 
