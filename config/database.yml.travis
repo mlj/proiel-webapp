@@ -5,24 +5,9 @@ sqlite: &sqlite
 
 mysql: &mysql
   adapter: mysql2
+  database: proiel_test
   username: travis
   encoding: utf8
-  password:
 
-defaults: &defaults
-  pool: 5
-  timeout: 5000
-  host: localhost
+test: &defaults
   <<: *<%= ENV['DB'] || "sqlite" %>
-
-production:
-  database: proiel
-  <<: *defaults
-
-development:
-  database: proiel_dev
-  <<: *defaults
-
-test:
-  database: proiel_test
-  <<: *defaults
