@@ -34,8 +34,11 @@ gem 'colorize'
 gem 'rack-cache', '< 1.10.0'
 
 group :production, :development do
-    # Stay on 0.4 to keep support for MySQL < 5.5
-  gem 'mysql2', '~> 0.4.0'
+  # Stay on 0.4 to keep support for MySQL < 5.5
+  #gem 'mysql2', '~> 0.4.0'
+  # Rails 3.2.22.x has it's own crazy requirement for a 0.3 version (see
+  # activerecord-3.2.22.2/lib/active_record/connection_adapters/mysql2_adapter.rb)
+  gem 'mysql2', '~> 0.3.0'
 end
 
 gem 'foreman'
