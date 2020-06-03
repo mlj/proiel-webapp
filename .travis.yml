@@ -13,8 +13,9 @@ env:
   - DB=mysql
 before_script:
   - cp config/database.yml.travis config/database.yml
-  - bundle exec rake db:setup
   - mysql --version
+  - bundle exec rake db:setup
+  - bundle exec rake db:migrate
 script:
   - bundle exec rake
   - bundle exec rspec
