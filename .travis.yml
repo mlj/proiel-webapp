@@ -4,10 +4,11 @@ os: linux
 rvm:
   - 2.2.3
   - 2.4.10
+services:
+  - mysql
 env:
   - DB=sqlite
   - DB=mysql
-  - DB=postgresql
 before_script:
   - cp config/database.yml.travis config/database.yml
   - bundle exec rake db:setup

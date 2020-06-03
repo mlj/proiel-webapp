@@ -1,16 +1,13 @@
 sqlite: &sqlite
   adapter: sqlite3
+  database: ":memory:"
+  timeout: 500
 
 mysql: &mysql
   adapter: mysql2
-  username: root
+  username: travis
+  encoding: utf8
   password:
-
-postgresql: &postgresql
-  adapter: postgresql
-  username: postgres
-  password:
-  min_messages: ERROR
 
 defaults: &defaults
   pool: 5
