@@ -46,9 +46,5 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
   gem 'sqlite3'
-  gem 'simplecov', require: false
   gem 'test-unit'
-  gem 'rack-mini-profiler', require: false
-  gem 'stackprof'
-  gem 'flamegraph'
 end
