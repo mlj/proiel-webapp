@@ -1,4 +1,6 @@
 language: ruby
+dist: xenial
+os: linux
 rvm:
   - 2.2.3
   - 2.4.10
@@ -9,6 +11,7 @@ env:
 before_script:
   - cp config/database.yml.travis config/database.yml
   - bundle exec rake db:setup
+  - mysql --version
 script:
   - bundle exec rake
   - bundle exec rspec
