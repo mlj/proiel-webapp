@@ -61,6 +61,9 @@
   p:
     abbreviated_summary: pl.
     summary: plural
+  e:
+    abbreviated_summary: sg./pl.
+    summary: singular or plural
   x:
     abbreviated_summary: unc. nb.
     summary: uncertain number
@@ -87,6 +90,9 @@
   a:
     abbreviated_summary: acc.
     summary: accusative
+  k:
+    abbreviated_summary: nom./acc.
+    summary: nominative or accusative
   o:
     abbreviated_summary: obl.
     summary: oblique

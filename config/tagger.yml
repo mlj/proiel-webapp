@@ -93,3 +93,7 @@
     :fst:
       :analysis:
         lat.a
+  :san:
+    :instance_frequencies:
+      :completion_level:
+        any
