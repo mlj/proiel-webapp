@@ -1,3 +1,9 @@
+# Monkey patch to avoid "All parts of a PRIMARY KEY must be NOT NULL; if you need NULL in a key, use UNIQUE instead"
+# https://github.com/brianmario/mysql2/issues/784
+class ActiveRecord::ConnectionAdapters::Mysql2Adapter
+  NATIVE_DATABASE_TYPES[:primary_key] = "int(11) auto_increment PRIMARY KEY"
+end
+
 # Monkey patch active_support 3.2.22 for Ruby => 2.4.
 # https://stackoverflow.com/questions/41703128/error-while-trying-to-load-the-gem-devise-activesupport-duration-cant-be-coe
 
