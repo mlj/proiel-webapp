@@ -1,6 +1,6 @@
 sqlite: &sqlite
   adapter: sqlite3
-  database: ":memory:"
+  database: db/proiel_test.db
   timeout: 500
 
 mysql: &mysql
