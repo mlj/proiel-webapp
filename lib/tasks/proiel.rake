@@ -6,12 +6,6 @@ task :run_cache_updater => :environment do
   job.run_periodically!(1.hour)
 end
 
-desc "Periodically run the checker job"
-task :run_checker_job => :environment do
-  database_checker = Proiel::Jobs::DatabaseChecker.new
-  database_checker.run_periodically!(1.hour)
-end
-
 namespace :proiel do
   task(:myenvironment => :environment) do
   end
