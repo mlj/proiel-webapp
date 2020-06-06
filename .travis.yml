@@ -1,8 +1,11 @@
 language: ruby
 rvm:
-  - 2.6.5
-  - 2.5.7
-  - 2.4.9
+  - 2.4.10
+  - 2.5.8
+  - 2.6.6
+  - 2.7.1
+dist: xenial
+os: linux
 env:
   - DB=sqlite
   - DB=mysql
@@ -13,3 +16,5 @@ before_script:
   - cp config/database.yml.travis config/database.yml
 script:
   - bundle exec bin/proiel-webapp
+  - echo "Rubocop $(bundle exec rubocop --version)"
+  - bundle exec rubocop -S -E
