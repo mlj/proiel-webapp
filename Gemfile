@@ -32,7 +32,7 @@ gem 'iso-codes', :require => 'iso_codes'
 gem 'ruby-sfst', :require => 'sfst'
 
 group :production, :development do
-  gem 'mysql2', '> 0.3.0'
+  gem 'mysql2', '>= 0.3.18', '< 0.6.0'
 end
 
 gem 'foreman'
@@ -42,7 +42,7 @@ gem 'unicorn'
 group :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
-  gem 'sqlite3'
+  gem 'sqlite3', '~> 1.3.6'
   gem 'simplecov', require: false
   gem 'test-unit'
 end

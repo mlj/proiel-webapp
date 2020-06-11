@@ -11,7 +11,7 @@ env:
   - DB=sqlite
   - DB=mysql
 before_install:
-  - gem install bundler:2.0.1
+  - gem install bundler:2.1.4
 before_script:
   - cp config/database.yml.travis config/database.yml
   - mysql --version
