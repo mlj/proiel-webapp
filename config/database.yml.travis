@@ -1,31 +1,13 @@
 sqlite: &sqlite
   adapter: sqlite3
+  database: db/proiel_test.db
+  timeout: 500
 
 mysql: &mysql
   adapter: mysql2
-  username: root
-  password:
-
-postgresql: &postgresql
-  adapter: postgresql
-  username: postgres
-  password:
-  min_messages: ERROR
-
-defaults: &defaults
-  pool: 5
-  timeout: 5000
-  host: localhost
-  <<: *<%= ENV['DB'] || "sqlite" %>
-
-production:
-  database: proiel
-  <<: *defaults
-
-development:
-  database: proiel_dev
-  <<: *defaults
-
-test:
   database: proiel_test
-  <<: *defaults
+  username: travis
+  encoding: utf8
+
+test: &defaults
+  <<: *<%= ENV['DB'] || "sqlite" %>

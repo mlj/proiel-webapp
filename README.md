@@ -6,9 +6,9 @@ Installation, customisation and upgrade instructions are found below. See the [w
 
 ## Installing
 
-PROIEL Annotator is a Ruby on Rails application. This version uses Ruby on Rails 4.2 and works with MySQL and PostgreSQL on Linux and OS X.
+PROIEL Annotator is a Ruby on Rails application. This version uses Ruby on Rails 4.2 and works with MySQL on Linux and OS X.
 
-The following instructions assume that you have a functional and up-to-date Ruby environment installed, and that you have already configured your database server. You will need Ruby >= 2.4 to run this application
+The following instructions assume that you have a functional and up-to-date Ruby environment installed, and that you have already configured your database server. You will need Ruby >= 2.5 to run this application
 
 ### Step 1: Install dependencies
 
