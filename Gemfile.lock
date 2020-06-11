@@ -102,6 +102,8 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
+    rack-utf8_sanitizer (1.7.0)
+      rack (>= 1.0, < 3.0)
     rails (3.2.22.2)
       actionmailer (= 3.2.22.2)
       actionpack (= 3.2.22.2)
@@ -198,6 +200,7 @@ DEPENDENCIES
   nori
   proiel (= 1.1.1)
   rack-cache (< 1.10.0)
+  rack-utf8_sanitizer
   rails (= 3.2.22.2)
   ransack (~> 0.7.2)
   rspec-rails
