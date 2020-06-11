@@ -49,8 +49,6 @@ GEM
     differ (0.1.2)
     dotenv (0.9.0)
     erubis (2.7.0)
-    exception_notification (3.0.1)
-      actionmailer (>= 3.0.4)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.4.1)
@@ -186,7 +184,6 @@ DEPENDENCIES
   diff-lcs
   differ
   dotenv
-  exception_notification (~> 3.0.1)
   factory_girl_rails
   foreman
   formtastic
