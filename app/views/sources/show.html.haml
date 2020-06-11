@@ -15,20 +15,6 @@
             %td= field
             %td= value
 
-.tile.is-ancestor.is-vertical
-  .tile.is-parent.is-12
-    .tile.is-child
-      .is-centered
-        - if @activity_stats.length > 1
-          != line_chart "Recent activity", @activity_stats
-  .tile.is-parent
-    .tile.is-child
-      != statistics "Completion", "sentence", @sentence_completion_stats
-    .tile.is-child
-      != statistics "Annotators", "sentence", @annotated_by_stats
-    .tile.is-child
-      != statistics "Reviewers", "sentence", @reviewed_by_stats
-
 %h3.subtitle Table of contents
 
 %p

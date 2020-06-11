@@ -22,7 +22,6 @@ gem 'unicode'
 
 gem 'nokogiri', '> 1.8.0'
 gem 'nori'
-gem 'gchartrb', :require => 'google_chart'
 gem 'diff-lcs', :require => 'diff/lcs'
 gem 'alignment'
 gem 'differ'

@@ -1,4 +1,3 @@
-require 'google_chart'
 require 'lib_files'
 require 'alignment/alignment_support'
 require 'transliterations'
