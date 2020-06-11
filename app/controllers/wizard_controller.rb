@@ -1,6 +1,6 @@
 class WizardController < ApplicationController
-  before_filter :is_annotator?
-  before_filter :find_sentence
+  before_action :is_annotator?
+  before_action :find_sentence
 
   def index
     redirect_to :action => :edit_morphtags

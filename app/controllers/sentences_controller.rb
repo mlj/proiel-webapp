@@ -22,8 +22,8 @@
 
 class SentencesController < ApplicationController
   respond_to :html
-  before_filter :is_reviewer?, :only => [:flag_as_reviewed, :flag_as_not_reviewed]
-  before_filter :is_annotator?, :only => [:edit, :update]
+  before_action :is_reviewer?, :only => [:flag_as_reviewed, :flag_as_not_reviewed]
+  before_action :is_annotator?, :only => [:edit, :update]
 
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 

@@ -23,7 +23,7 @@
 
 class NotesController < ApplicationController
   respond_to :html
-  before_filter :is_reviewer?, :only => [:edit, :update, :destroy]
+  before_action :is_reviewer?, :only => [:edit, :update, :destroy]
 
   def edit
     @note = Note.find(params[:id])

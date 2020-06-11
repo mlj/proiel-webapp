@@ -1,6 +1,6 @@
 class InfoStatusesController < ApplicationController
-  before_filter :find_sentence
-  before_filter :is_annotator?, :only => [:edit, :update]
+  before_action :find_sentence
+  before_action :is_annotator?, :only => [:edit, :update]
 
   # GET /sentences/1/info_status/edit
   def edit

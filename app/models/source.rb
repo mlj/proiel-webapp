@@ -50,7 +50,7 @@ class Source < ActiveRecord::Base
 
   # Returns an array of all languages represented in sources.
   def self.represented_languages
-    Source.uniq.pluck(:language_tag).map { |l| LanguageTag.new(l) }.sort_by(&:to_label)
+    Source.pluck(:language_tag).uniq.map { |l| LanguageTag.new(l) }.sort_by(&:to_label)
   end
 
   def to_label

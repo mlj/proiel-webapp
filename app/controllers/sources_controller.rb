@@ -22,7 +22,7 @@
 
 class SourcesController < ApplicationController
   respond_to :html, :xml
-  before_filter :is_administrator?, :only => [:edit, :update]
+  before_action :is_administrator?, :only => [:edit, :update]
 
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 

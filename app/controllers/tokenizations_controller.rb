@@ -21,7 +21,7 @@
 #++
 
 class TokenizationsController < ApplicationController
-  before_filter :is_annotator?, :only => [:edit, :update]
+  before_action :is_annotator?, :only => [:edit, :update]
 
   def edit
     @sentence = Sentence.includes(:source_division => [:source]).find(params[:sentence_id])

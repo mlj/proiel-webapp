@@ -22,7 +22,7 @@
 
 class LemmataController < ApplicationController
   respond_to :html
-  before_filter :is_reviewer?, :only => [:edit, :update, :merge]
+  before_action :is_reviewer?, :only => [:edit, :update, :merge]
 
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 

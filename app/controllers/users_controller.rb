@@ -22,7 +22,7 @@
 
 class UsersController < ApplicationController
   respond_to :html
-  before_filter :is_administrator?
+  before_action :is_administrator?
 
   def index
     @users = User.order('login').page(current_page)

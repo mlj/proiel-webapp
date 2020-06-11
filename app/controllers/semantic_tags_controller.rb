@@ -22,7 +22,7 @@
 
 class SemanticTagsController < ApplicationController
   respond_to :html
-  before_filter :is_reviewer?
+  before_action :is_reviewer?
 
   def show
     @semantic_tag = SemanticTag.find(params[:id])
