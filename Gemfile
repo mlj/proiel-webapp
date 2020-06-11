@@ -12,7 +12,6 @@ gem 'kaminari'
 gem 'haml'
 gem 'devise'
 gem 'devise-encryptable'
-gem 'exception_notification'
 gem 'audited', '~> 4.5'
 gem 'ransack'
 
