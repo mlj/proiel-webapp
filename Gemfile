@@ -6,6 +6,7 @@ gem 'json'
 gem 'sass-rails', '~> 5.0'
 
 gem 'proiel', '1.2.1'
+gem 'rack-utf8_sanitizer'
 
 gem 'simple_form'
 gem 'kaminari'

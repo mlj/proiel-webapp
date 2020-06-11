@@ -118,6 +118,8 @@ GEM
     rack (2.0.6)
     rack-test (0.6.3)
       rack (>= 1.0)
+    rack-utf8_sanitizer (1.7.0)
+      rack (>= 1.0, < 3.0)
     rails (5.0.7.2)
       actioncable (= 5.0.7.2)
       actionmailer (= 5.0.7.2)
@@ -240,6 +242,7 @@ DEPENDENCIES
   nokogiri (> 1.8.0)
   nori
   proiel (= 1.2.1)
+  rack-utf8_sanitizer
   rails (= 5.0.7.2)
   rails-controller-testing
   ransack
