@@ -43,9 +43,7 @@ GEM
     audited (4.5.0)
       activerecord (>= 4.0, < 5.2)
     bcrypt (3.1.12)
-    bindex (0.5.0)
     builder (3.2.3)
-    coderay (1.1.1)
     concurrent-ruby (1.1.5)
     crass (1.0.4)
     devise (4.6.1)
@@ -70,7 +68,6 @@ GEM
     factory_girl_rails (4.8.0)
       factory_girl (~> 4.8.0)
       railties (>= 3.0.0)
-    flamegraph (0.9.5)
     foreman (0.84.0)
       thor (~> 0.19.1)
     gchartrb (0.8)
@@ -81,7 +78,6 @@ GEM
       tilt
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
-    irb (1.0.0)
     iso-codes (1.0.1)
     json (1.8.6)
     kaminari (1.0.1)
@@ -122,15 +118,7 @@ GEM
       memoist (~> 0.12)
       nokogiri (~> 1.8)
       sax-machine (~> 1.3)
-    pry (0.10.4)
-      coderay (~> 1.1.0)
-      method_source (~> 0.8.1)
-      slop (~> 3.4)
-    pry-rails (0.3.6)
-      pry (>= 0.10.4)
     rack (2.0.6)
-    rack-mini-profiler (0.10.5)
-      rack (>= 1.2.0)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.0.7.2)
@@ -205,9 +193,6 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.1)
-    slop (3.6.0)
-    spring (2.0.2)
-      activesupport (>= 4.2)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -216,7 +201,6 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     sqlite3 (1.3.13)
-    stackprof (0.2.10)
     temple (0.8.1)
     test-unit (3.2.5)
       power_assert
@@ -233,11 +217,6 @@ GEM
       raindrops (~> 0.7)
     warden (1.2.8)
       rack (>= 2.0.6)
-    web-console (3.7.0)
-      actionview (>= 5.0)
-      activemodel (>= 5.0)
-      bindex (>= 0.4.0)
-      railties (>= 5.0)
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
@@ -255,11 +234,9 @@ DEPENDENCIES
   dotenv
   exception_notification
   factory_girl_rails
-  flamegraph
   foreman
   gchartrb
   haml
-  irb
   iso-codes
   json
   kaminari
@@ -267,8 +244,6 @@ DEPENDENCIES
   nokogiri (> 1.8.0)
   nori
   proiel (= 1.2.1)
-  pry-rails
-  rack-mini-profiler
   rails (= 5.0.7.2)
   rails-controller-testing
   ransack
@@ -277,14 +252,11 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   simple_form
   simplecov
-  spring
   sqlite3 (~> 1.3.6)
-  stackprof
   test-unit
   uglifier
   unicode
   unicorn
-  web-console
 
 BUNDLED WITH
    2.1.4

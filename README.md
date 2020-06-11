@@ -110,13 +110,6 @@ For development, run the server using
 $ bin/rails s
 ```
 
-This will run the server with [spring](https://github.com/rails/spring),
-[web-console](https://github.com/rails/web-console) and
-[rack-mini-profiler](https://github.com/MiniProfiler/rack-mini-profiler)
-enabled. *Make sure that you never run the system like this in production
-since it is possible to execute arbitrary commands on the server with
-web-console.*
-
 Tests are run using
 
 ```shell

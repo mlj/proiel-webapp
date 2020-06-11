@@ -22,8 +22,6 @@ gem 'unicode'
 
 gem 'nokogiri', '> 1.8.0'
 gem 'nori'
-gem 'irb'
-
 gem 'gchartrb', :require => 'google_chart'
 gem 'diff-lcs', :require => 'diff/lcs'
 gem 'alignment'
@@ -45,16 +43,4 @@ group :test do
   gem 'sqlite3', '~> 1.3.6'
   gem 'simplecov', require: false
   gem 'test-unit'
-end
-
-group :development do
-  gem 'rack-mini-profiler'
-  gem 'stackprof'
-  gem 'flamegraph'
-
-  gem 'web-console'
-
-  gem 'spring'
-
-  gem 'pry-rails'
 end
