@@ -20,7 +20,6 @@ gem 'rails-controller-testing'
 
 gem 'unicode'
 
-gem 'builder' # builder is faster than Nokogiri's built-in builder
 gem 'nokogiri', '> 1.8.0'
 gem 'nori'
 gem 'irb'
@@ -31,7 +30,6 @@ gem 'alignment'
 gem 'differ'
 gem 'iso-codes', :require => 'iso_codes'
 gem 'ruby-sfst', :require => 'sfst'
-gem 'colorize'
 
 group :production, :development do
   gem 'mysql2', '> 0.3.0'
