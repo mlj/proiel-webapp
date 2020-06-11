@@ -59,7 +59,6 @@ GEM
       thor (>= 0.13.6)
     formtastic (2.2.1)
       actionpack (>= 3.0)
-    gchartrb (0.8)
     haml (4.0.4)
       tilt
     hike (1.2.3)
@@ -187,7 +186,6 @@ DEPENDENCIES
   factory_girl_rails
   foreman
   formtastic
-  gchartrb
   haml
   iso-codes
   json
