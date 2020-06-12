@@ -10,7 +10,7 @@ description of the data format is found in the `doc` directory.
 ## Installing
 
 `proiel-webapp` is a Ruby on Rails application. This version uses Ruby on Rails
-3.2 and requires Ruby 2.1.
+3.2 and requires Ruby 2.2, 2.5 or 2.6.
 
 The following instructions assume that you have a functional Ruby environment
 with RubyGems and bundler installed.
