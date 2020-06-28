@@ -32,7 +32,6 @@ Proiel::Application.routes.draw do
       get :dependency_alignment_group
     end
     get :quick_search, on: :collection
-    get :opensearch, on: :collection
   end
 
   resources :sentences, :only => [:show, :edit, :update] do
@@ -76,7 +75,6 @@ Proiel::Application.routes.draw do
   # Quick search and search suggestions
   match '/quick_search', :to => 'tokens#quick_search'
   match '/quick_search.:format', :to => 'tokens#quick_search'
-  match '/opensearch.:format', :to => 'tokens#opensearch'
 
   # Default page
   root :to => 'sources#index'

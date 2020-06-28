@@ -3,7 +3,6 @@
   %head
     %meta{:charset => 'utf-8'}
     %meta{:name => 'viewport',:content => 'width=device-width, initial-scale=1.0'}
-    %link{:rel => 'search', :type => 'application/opensearchdescription+xml', :title => t(:title), :href => '/opensearch.xml'}
 
     %title= show_title? ? [t(:title), yield(:title)].join(': ') : t(:title)
 
