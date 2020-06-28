@@ -25,7 +25,6 @@ class AuditsController < ApplicationController
   append_view_path AuditsResolver.new
   respond_to :html, :xml
   before_filter :is_annotator?
-  before_filter :is_administrator?, :only => [:destroy]
 
   def index
     if params[:sentence_id]
@@ -62,23 +61,5 @@ class AuditsController < ApplicationController
     @audit = Audited::Adapters::ActiveRecord::Audit.find(params[:id])
 
     respond_with @audit
-  end
-
-  def destroy
-    @audit = Audited::Adapters::ActiveRecord::Audit.find(params[:id])
-
-    if @audit.auditable.audits.last == @audit
-      o = @audit.auditable.revision(:previous)
-
-      if o.valid?
-        o.without_auditing { o.save! }
-        destroy!
-        flash[:notice] = 'Change was successfully reverted'
-      else
-        flash[:error] = 'Unable to revert: resulting object state is invalid'
-      end
-    else
-      flash[:error] = "Object has been modified after this revision"
-    end
   end
 end
