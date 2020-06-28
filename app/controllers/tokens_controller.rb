@@ -134,10 +134,6 @@ class TokensController < ApplicationController
     end
   end
 
-  def opensearch
-    response.headers['Content-Type'] = 'application/opensearchdescription+xml; charset=utf-8'
-  end
-
   private
 
   def token_params
