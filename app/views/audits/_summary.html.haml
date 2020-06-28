@@ -23,6 +23,3 @@
                   %td.attribute=attribute
                   %td.old=old
                   %td.new=new
-        %small
-          - if summary.auditable and summary.auditable.audits.last == summary
-            != link_to 'Revert', audit_path(summary), method: :delete, confirm: 'The object will be reverted to its previous revision and the audit deleted. Are you sure?', class: 'level-item'
