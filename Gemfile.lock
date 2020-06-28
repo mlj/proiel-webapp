@@ -74,7 +74,7 @@ GEM
     mail (2.5.5)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    memoist (0.14.0)
+    memoist (0.16.2)
     mime-types (1.25.1)
     mini_portile2 (2.1.0)
     multi_json (1.14.1)
@@ -87,7 +87,7 @@ GEM
       activerecord (~> 3.0)
     polyglot (0.3.5)
     power_assert (0.2.2)
-    proiel (1.1.1)
+    proiel (1.2.0)
       json (~> 1.8)
       memoist (~> 0.12)
       nokogiri (~> 1.6.6)
@@ -193,7 +193,7 @@ DEPENDENCIES
   mysql2 (~> 0.4.0)
   nokogiri
   nori
-  proiel (= 1.1.1)
+  proiel
   rack-utf8_sanitizer
   rails (= 3.2.22.2)
   ransack (~> 0.7.2)

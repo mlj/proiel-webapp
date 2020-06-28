@@ -3,8 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.22.2'
 gem 'json'
 gem 'sass-rails'
-
-gem 'proiel', '1.1.1'
+gem 'proiel'
 gem 'rack-utf8_sanitizer'
 
 gem 'formtastic'
