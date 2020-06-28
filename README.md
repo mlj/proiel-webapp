@@ -4,8 +4,8 @@ The PROIEL web application (`proiel-webapp`) is a tool for collaborative
 treebank annotation. It uses a dependency-grammar formalism with multiple
 levels of additional annotation, many of which are customisable.
 
-Installation, customisation and upgrade instructions can be found below. A
-description of the data format is found in the `doc` directory.
+This software is no longer developed or supported. Future updates are aimed at
+deprecating and deleting functionality that has been superseded.
 
 ## Installing
 
