@@ -28,10 +28,6 @@ gem 'iso-codes', :require => 'iso_codes'
 gem 'ruby-sfst', :require => 'sfst'
 gem 'colorize'
 
-# Stay below rack-cache 1.10.0 while we have to support Ruby 2.2
-# https://github.com/rtomayko/rack-cache/commit/ec14406240c177df05ea641cbb790cc182d48b25
-gem 'rack-cache', '< 1.10.0'
-
 group :production, :development do
   if ENV['HOSTNAME'] == 'hf-tekstlab-ny02.uio.no'
     # Stay on 0.4 to keep support for MySQL < 5.5
