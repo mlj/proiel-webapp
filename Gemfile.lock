@@ -76,11 +76,11 @@ GEM
       treetop (~> 1.4.8)
     memoist (0.14.0)
     mime-types (1.25.1)
-    mini_portile (0.6.2)
+    mini_portile2 (2.1.0)
     multi_json (1.14.1)
-    mysql2 (0.3.21)
-    nokogiri (1.6.6.2)
-      mini_portile (~> 0.6.0)
+    mysql2 (0.4.10)
+    nokogiri (1.6.8.1)
+      mini_portile2 (~> 2.1.0)
     nori (2.3.0)
     orm_adapter (0.5.0)
     polyamorous (0.5.0)
@@ -186,11 +186,11 @@ DEPENDENCIES
   factory_girl_rails
   foreman
   formtastic
-  haml
+  haml (~> 4.0.4)
   iso-codes
   json
   kaminari
-  mysql2 (~> 0.3.0)
+  mysql2 (~> 0.4.0)
   nokogiri
   nori
   proiel (= 1.1.1)
@@ -207,4 +207,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   1.16.0
+   1.17.2
