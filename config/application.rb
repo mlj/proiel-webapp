@@ -57,5 +57,9 @@ module Proiel
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.1'
+
+    if ENV['HOSTNAME'] == 'hf-tekstlab-ny02.uio.no'
+      config.relative_url_root = "/proiel"
+    end
   end
 end
