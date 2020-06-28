@@ -28,14 +28,12 @@ gem 'ruby-sfst', :require => 'sfst'
 gem 'colorize'
 
 group :production, :development do
-  if ENV['HOSTNAME'] == 'hf-tekstlab-ny02.uio.no'
-    # Stay on 0.4 to keep support for MySQL < 5.5
-    gem 'mysql2', '~> 0.4.0'
-  else
-    # Rails 3.2.22.x has it's own crazy requirement for a 0.3 version (see
-    # activerecord-3.2.22.2/lib/active_record/connection_adapters/mysql2_adapter.rb)
-    gem 'mysql2', '~> 0.3.0'
-  end
+  # This is actually incompatible with Rails 3.2.22.x, which has it's own
+  # requirement for a 0.3 version in
+  # activerecord-3.2.22.2/lib/active_record/connection_adapters/mysql2_adapter.rb).
+  # There's an ugly hack in config/application.rb that gets around this by
+  # redefining gem.
+  gem 'mysql2', '~> 0.4.0'
 end
 
 gem 'foreman'

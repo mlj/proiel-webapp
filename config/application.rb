@@ -1,5 +1,13 @@
 require File.expand_path('../boot', __FILE__)
 
+def gem(gem_name, *requirements)
+  if gem_name == 'mysql2' and requirements.first == '~> 0.3.10'
+    # Trap active_record 3.2.22.2 trying to restrict mysql to 0.3.x
+  else
+    Kernel.gem(gem_name, *requirements)
+  end
+end
+
 require 'rails/all'
 
 if defined?(Bundler)
