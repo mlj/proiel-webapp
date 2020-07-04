@@ -4,7 +4,6 @@
 # and the `slashee' is the element that would fill the `gap'.
 class SlashEdge < ActiveRecord::Base
   attr_accessible :slasher_id, :slashee_id, :relation_tag
-  change_logging
 
   belongs_to :slasher, :class_name => 'Token', :foreign_key => 'slasher_id'
   belongs_to :slashee, :class_name => 'Token', :foreign_key => 'slashee_id'

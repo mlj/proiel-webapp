@@ -28,8 +28,6 @@ class Source < ActiveRecord::Base
     :author
   attr_accessible(*Proiel::Metadata.fields)
 
-  change_logging
-
   blankable_attributes :author
 
   validates_presence_of :title

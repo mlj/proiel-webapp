@@ -11,7 +11,6 @@ gem 'kaminari'
 gem 'haml', '~> 4.0.4'
 gem 'devise', '~> 2.2.4'
 gem 'devise-encryptable'
-gem 'audited-activerecord', '~> 3.0'
 gem 'ransack', '~> 0.7.2'
 
 gem 'unicode'

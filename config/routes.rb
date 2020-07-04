@@ -4,8 +4,6 @@ Proiel::Application.routes.draw do
 
   resource :profile, :only => [:edit, :update]
 
-  resources :audits, :only => [:index, :destroy]
-
   resources :sources, :only => [:index, :show, :edit, :update]
 
   resources :source_divisions, :only => [:show, :edit, :update] do

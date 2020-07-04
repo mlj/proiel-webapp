@@ -27,8 +27,6 @@ class Sentence < ActiveRecord::Base
     :source_division_id, :assigned_to, :presentation_before, :presentation_after,
     :status_tag, :created_at, :updated_at
 
-  change_logging
-
   blankable_attributes :annotated_at, :annotated_by, :assigned_to,
     :automatic_alignment, :presentation_after, :presentation_before,
     :reviewed_at, :reviewed_by, :sentence_alignment_id

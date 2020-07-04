@@ -30,10 +30,6 @@ GEM
       multi_json (~> 1.0)
     alignment (0.2.0)
     arel (3.0.3)
-    audited (3.0.0)
-    audited-activerecord (3.0.0)
-      activerecord (~> 3.0)
-      audited (= 3.0.0)
     bcrypt-ruby (3.1.2)
     builder (3.0.4)
     colorize (0.6.0)
@@ -175,7 +171,6 @@ PLATFORMS
 
 DEPENDENCIES
   alignment
-  audited-activerecord (~> 3.0)
   builder
   colorize
   devise (~> 2.2.4)

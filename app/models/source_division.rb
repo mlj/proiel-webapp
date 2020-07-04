@@ -28,8 +28,6 @@ class SourceDivision < ActiveRecord::Base
   attr_accessible :source_id, :position, :title, :aligned_source_division_id, :presentation_before, :presentation_after,
     :created_at, :updated_at
 
-  change_logging except: %i(cached_has_discourse_annotation cached_citation cached_status_tag)
-
   blankable_attributes :aligned_source_division_id, :presentation_after,
     :presentation_before, :title
 

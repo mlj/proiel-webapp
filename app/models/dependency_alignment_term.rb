@@ -22,7 +22,6 @@
 
 class DependencyAlignmentTerm < ActiveRecord::Base
   attr_accessible :token_id, :source_id
-  change_logging
 
   belongs_to :token
   belongs_to :source

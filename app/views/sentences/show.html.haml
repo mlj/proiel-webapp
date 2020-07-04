@@ -69,12 +69,3 @@
     - @sentence.tokens.each do |token|
       - unless token.notes.empty?
         != render :partial => 'notes/summary', :collection => token.notes
-
-  %h2 History
-  != render 'audits/legend'
-  %ol
-    - unless @audits.empty?
-      != render partial: 'audits/summary', collection: @audits
-    - @sentence.tokens.each do |token|
-      - unless token.audits.empty?
-        != render :partial => 'audits/summary', :collection => token.audits

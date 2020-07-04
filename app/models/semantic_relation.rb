@@ -22,7 +22,6 @@
 
 class SemanticRelation < ActiveRecord::Base
   attr_accessible :target_id, :controller_id, :sematic_relation_tag_id
-  change_logging
 
   belongs_to :controller, :class_name => 'Token', :foreign_key => 'controller_id'
   belongs_to :target, :class_name => 'Token', :foreign_key => 'target_id'

@@ -27,7 +27,6 @@
         - if is_annotator?
           != link_to 'Annotation', wizard_path
         - if is_reviewer?
-          != link_to 'Changelog', audits_path
           != link_to 'Users', users_path
         - if user_signed_in?
           != link_to 'Your profile', edit_profile_path

@@ -28,9 +28,8 @@ class SentencesController < ApplicationController
 
   def show
     @sentence = Sentence.includes(:source_division => [:source],
-                                  :tokens => [:lemma, :audits, :notes],
-                                  :notes => [],
-                                  :audits => [:auditable]).find(params[:id])
+                                  :tokens => [:lemma, :notes],
+                                  :notes => []).find(params[:id])
     @source_division = @sentence.source_division
     @source = @source_division.try(:source)
 
@@ -38,7 +37,6 @@ class SentencesController < ApplicationController
     @semantic_tags = @sentence.semantic_tags
 
     @notes = @sentence.notes
-    @audits = @sentence.audits
 
     respond_with @sentence
   end

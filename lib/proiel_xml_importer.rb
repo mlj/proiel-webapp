@@ -30,12 +30,6 @@ class PROIELXMLImporter
   def read(file_name, options = {})
     File.open(file_name, 'r') do |file|
       Source.transaction do
-        Source.disable_auditing
-        SourceDivision.disable_auditing
-        Sentence.disable_auditing
-        Token.disable_auditing
-        Lemma.disable_auditing
-
         parse(file, options)
       end
     end
@@ -128,11 +122,6 @@ class PROIELXMLImporter
     # Process sources
     arrify(top_level['source']).each_with_index do |source, source_position|
       Source.transaction do
-        Source.disable_auditing
-        SourceDivision.disable_auditing
-        Sentence.disable_auditing
-        Token.disable_auditing
-
         token_id_map = {} # map imported token IDs to database token IDs
         code = source['@id']
 

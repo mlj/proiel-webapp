@@ -46,6 +46,3 @@
 
 - layer_unless @incoming_semantic_relations.empty?, 'incoming_semantic_relations' do
   != semantic_relations_summary @incoming_semantic_relations
-
-- layer_if (is_reviewer? and !@audits.empty?), "revisions" do
-  != audits_summary @audits

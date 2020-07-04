@@ -29,8 +29,6 @@ class Token < ActiveRecord::Base
     :morphology_tag, :citation_part, :presentation_before, :presentation_after,
     :relation_tag, :created_at, :updated_at
 
-  change_logging
-
   blankable_attributes :antecedent_id, :automatic_token_alignment,
     :contrast_group, :dependency_alignment_id, :empty_token_sort, :foreign_ids,
     :form, :head_id, :information_status_tag, :lemma_id, :morphology_tag,

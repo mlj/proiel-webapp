@@ -25,8 +25,6 @@ class Lemma < ActiveRecord::Base
   attr_accessible :lemma, :variant, :gloss, :foreign_ids, :language_tag,
     :part_of_speech_tag
 
-  change_logging
-
   blankable_attributes :foreign_ids, :gloss
 
   has_many :tokens

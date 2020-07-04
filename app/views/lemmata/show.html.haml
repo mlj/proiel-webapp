@@ -31,6 +31,3 @@
       %th{colspan: 3}= "Match"
   %tbody
     != render :partial => 'annotations/annotation', :collection => @tokens
-
-- layer_if  (is_reviewer? and !@lemma.audits.empty?), "revisions" do
-  != audits_summary @lemma.audits
