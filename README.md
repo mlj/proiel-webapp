@@ -74,8 +74,8 @@ in a version control system). If you are using a multi-user system and/or
 configuring a production instance, you should verify that other users are
 unable to read `.env`.
 
-You may also need to modify `config/initializers/mailer.rb` to get registration
-e-mails working properly.
+You may also need to override some of the settings in `config/environment.rb`
+to get registration e-mails working properly.
 
 ### Step 6: Start the server and worker
 
