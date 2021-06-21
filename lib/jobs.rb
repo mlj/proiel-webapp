@@ -159,7 +159,7 @@ module Proiel
         reviewed_sentences = Sentence.where(status_tag: :reviewed)
 
         annotated_sentences.joins(:tokens).where('tokens.empty_token_sort IS NULL OR tokens.empty_token_sort != "P"').where('tokens.relation_tag IS NULL').each do |o|
-          @logger.error { "#{base_url}/sentences/#{o.id} is tagged as annotated but annotated_by is missing" }
+          @logger.error { "#{base_url}/sentences/#{o.id} is annotated but has non-empty token or non-pro token without relation_tag" }
         end
 
         annotated_and_reviewed_sentences.where('annotated_by IS NULL').each do |o|
