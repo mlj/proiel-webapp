@@ -23,6 +23,10 @@
 module Proiel
   module Jobs
     class DatabaseChecker < Job
+      def base_url
+        "http://foni.uio.no/proiel"
+      end
+
       def run_once!
         check_lemmata
         check_tokens
@@ -40,11 +44,11 @@ module Proiel
       private
 
       def warning(&block)
-        STDERR.puts "#{self.class}: #{block.call}"
+        STDERR.puts block.call
       end
 
       def error(&block)
-        STDERR.puts "#{self.class}: #{block.call}"
+        STDERR.puts block.call
       end
 
       def check_lemmata
@@ -68,63 +72,63 @@ module Proiel
 
       def check_tokens
         Token.joins(:sentence).where("sentences.id IS NULL").each do |t|
-          error { "token #{t.id} is orphaned" }
+          error { "#{base_url}/tokens/#{t.id} is orphaned" }
         end
 
         Token.where('token_number is NULL').each do |o|
-          error { "token #{o.id} lacks token_number" }
+          error { "#{base_url}/tokens/#{o.id} lacks token_number" }
         end
 
         empty_tokens = Token.where('empty_token_sort IS NOT NULL')
         non_empty_tokens = Token.where('empty_token_sort IS NULL')
 
         empty_tokens.where('form IS NOT NULL').each do |o|
-          error { "token #{o.id} is empty but has non-NULL form" }
+          error { "#{base_url}/tokens/#{o.id} is empty but has non-NULL form" }
         end
 
         non_empty_tokens.where('form IS NULL').each do |o|
-          error { "token #{o.id} is non-empty but has NULL form" }
+          error { "#{base_url}/tokens/#{o.id} is non-empty but has NULL form" }
         end
 
         empty_tokens.where('lemma_id IS NOT NULL').each do |o|
-          error { "token #{o.id} is empty but has lemma_id" }
+          error { "#{base_url}/tokens/#{o.id} is empty but has lemma_id" }
         end
 
         empty_tokens.where('morphology_tag IS NOT NULL').each do |o|
-          error { "token #{o.id} is empty but has morphology_tag" }
+          error { "#{base_url}/tokens/#{o.id} is empty but has morphology_tag" }
         end
 
         empty_tokens.where('source_morphology_tag IS NOT NULL').each do |o|
-          error { "token #{o.id} is empty but has source_morphology_tag" }
+          error { "#{base_url}/tokens/#{o.id} is empty but has source_morphology_tag" }
         end
 
         empty_tokens.where('source_lemma IS NOT NULL').each do |o|
-          error { "token #{o.id} is empty but has source_lemma" }
+          error { "#{base_url}/tokens/#{o.id} is empty but has source_lemma" }
         end
 
         # TODO: Check lemma.lemma is not null
         Token.where('morphology_tag IS NOT NULL').where('lemma_id IS NULL').each do |o|
-          error { "token #{o.id} has morphology but not lemma" }
+          error { "#{base_url}/tokens/#{o.id} has morphology but not lemma" }
         end
 
         Token.where('morphology_tag IS NULL').where('lemma_id IS NOT NULL').each do |o|
-          error { "token #{o.id} has lemma but not morphology" }
+          error { "#{base_url}/tokens/#{o.id} has lemma but not morphology" }
         end
 
         Token.where('head_id IS NOT NULL and relation_tag IS NULL').each do |o|
-          error { "token #{o.id} has head_id but no relation_tag" }
+          error { "#{base_url}/tokens/#{o.id} has head_id but no relation_tag" }
         end
 
         non_empty_tokens.joins(:sentence).where('sentences.status_tag = "reviewed"').where("lemma_id IS NULL").each do |o|
-          error { "token #{o.id} is non-empty and reviewed but lemma_id is NULL" }
+          error { "#{base_url}/tokens/#{o.id} is non-empty and reviewed but lemma_id is NULL" }
         end
 
         non_empty_tokens.joins(:sentence).where('sentences.status_tag = "reviewed"').where("morphology_tag IS NULL").each do |o|
-          error { "token #{o.id} is non-empty and reviewed but morphology_tag is NULL" }
+          error { "#{base_url}/tokens/#{o.id} is non-empty and reviewed but morphology_tag is NULL" }
         end
 
         Token.joins(:sentence).where('sentences.status_tag = "reviewed"').where("relation_tag IS NULL").each do |o|
-          error { "token #{o.id} is reviewed but relation_tag is NULL" }
+          error { "#{base_url}/tokens/#{o.id} is reviewed but relation_tag is NULL" }
         end
 
         # TODO: Check lemma.language_tag and token.language_tag consistency
@@ -135,7 +139,7 @@ module Proiel
             morphology_tag = t.morphology_tag
             lemma_id = t.lemma_id
             Token.joins(:sentence, :lemma).where('sentences.status_tag = "reviewed"').where(morphology_tag: morphology_tag, lemma_id: lemma_id).find_each do |t|
-              error { "token #{t.id} is reviewed and has morphology_tag but (part_of_speech_tag, morphology_tag) = #{full_tag} is invalid for language #{language_tag}" }
+              error { "#{base_url}/tokens/#{t.id} is reviewed and has morphology_tag but (part_of_speech_tag, morphology_tag) = #{full_tag} is invalid for language #{language_tag}" }
             end
           end
         end
@@ -143,11 +147,11 @@ module Proiel
 
       def check_sentences
         Sentence.joins(:source_division).where("source_divisions.id IS NULL").each do |o|
-          error { "sentence #{o.id} is orphaned" }
+          error { "#{base_url}/sentences/#{o.id} is orphaned" }
         end
 
         Sentence.where('sentence_number is NULL').each do |o|
-          error { "sentence #{o.id} lacks sentence_number" }
+          error { "#{base_url}/sentences/#{o.id} lacks sentence_number" }
         end
 
         annotated_and_reviewed_sentences = Sentence.where(status_tag: %i(annotated reviewed))
@@ -155,23 +159,23 @@ module Proiel
         reviewed_sentences = Sentence.where(status_tag: :reviewed)
 
         annotated_sentences.joins(:tokens).where('tokens.empty_token_sort IS NULL OR tokens.empty_token_sort != "P"').where('tokens.relation_tag IS NULL').each do |o|
-          @logger.error { "#{self.class}: Sentence #{o.id} is tagged as annotated but annotated_by is missing" }
+          @logger.error { "#{base_url}/sentences/#{o.id} is tagged as annotated but annotated_by is missing" }
         end
 
         annotated_and_reviewed_sentences.where('annotated_by IS NULL').each do |o|
-          @logger.error { "#{self.class}: Sentence #{o.id} is tagged as annotated but annotated_by is missing" }
+          @logger.error { "#{base_url}/sentences/#{o.id} is tagged as annotated but annotated_by is missing" }
         end
 
         annotated_and_reviewed_sentences.where('annotated_at IS NULL').each do |o|
-          @logger.error { "#{self.class}: Sentence #{o.id} is tagged as annotated but annotated_at is missing" }
+          @logger.error { "#{base_url}/sentences/#{o.id} is tagged as annotated but annotated_at is missing" }
         end
 
         reviewed_sentences.where('reviewed_by IS NULL').each do |o|
-          @logger.error { "#{self.class}: Sentence #{o.id} is tagged as reviewed but reviewed_by is missing" }
+          @logger.error { "#{base_url}/sentences/#{o.id} is tagged as reviewed but reviewed_by is missing" }
         end
 
         reviewed_sentences.where('reviewed_at IS NULL').each do |o|
-          @logger.error { "#{self.class}: Sentence #{o.id} is tagged as reviewed but reviewed_at is missing" }
+          @logger.error { "#{base_url}/sentences/#{o.id} is tagged as reviewed but reviewed_at is missing" }
         end
       end
     end
