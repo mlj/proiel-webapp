@@ -109,7 +109,7 @@ GEM
     minitest (5.14.4)
     mysql2 (0.5.3)
     nio4r (2.5.8)
-    nokogiri (1.12.5-x86_64-linux)
+    nokogiri (1.13.5-x86_64-linux)
       racc (~> 1.4)
     nori (2.6.0)
     orm_adapter (0.5.0)
