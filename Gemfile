@@ -5,7 +5,7 @@ gem 'activerecord', '~> 5.2.0'
 gem 'builder'
 gem 'colorize'
 gem 'nori'
-gem 'proiel'
+gem 'proiel', '1.3.2'
 gem 'unicode'
 gem 'tzinfo'
 
