@@ -15,7 +15,6 @@ db_config = YAML::load(db_config_file)
 ActiveRecord::Base.establish_connection(db_config['development'])
 
 autoload :PROIELXMLExporter, 'proiel_xml_exporter'
-autoload :PROIELXMLImporter, 'proiel_xml_importer'
 
 module Proiel
   module Jobs

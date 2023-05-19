@@ -58,28 +58,6 @@ module Proiel::Maintenance
   end
 
   module Texts
-    def self.import(filename)
-      raise ArgumentError, 'filename expected' unless filename.is_a?(String)
-      raise ArgumentError, 'file not found' unless File.exists?(filename)
-
-      valid =
-        Proiel::Maintenance.wrap_status("Validating #{filename}") do
-          v = ::PROIEL::PROIELXML::Validator.new(filename)
-          v.valid?
-        end
-
-      if valid
-        id_map_filename = nil #FIXME
-
-        Proiel::Maintenance.wrap_status("Importing #{filename}") do
-          i = PROIELXMLImporter.new
-          i.read(filename, id_map_file: id_map_filename)
-
-          true
-        end
-      end
-    end
-
     def self.export(id = nil, filename = nil)
       if id.nil?
         Source.all.each { |s| self.export(s.id, filename) }
